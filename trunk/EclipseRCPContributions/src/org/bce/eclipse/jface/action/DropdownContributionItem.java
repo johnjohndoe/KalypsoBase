@@ -33,7 +33,7 @@ public class DropdownContributionItem<T> extends ControlContribution
   {
     super( id );
 
-    m_items = items;
+    setItems ( items );
   }
 
   public void dispose( )
@@ -78,6 +78,8 @@ public class DropdownContributionItem<T> extends ControlContribution
         for( int i = 0; i < m_items.length; i++ )
           m_combo.add( m_items[i].toString() );
       }
+      
+      m_combo.setEnabled( m_items != null );
     }
   }
 
