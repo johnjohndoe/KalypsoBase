@@ -26,10 +26,10 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
  */
 public class DateRangeInputDialog extends TitleAreaDialog
 {
-  private final static String msg = "Wählen Sie zwischen Tagesanzahl- oder Zeitraumeingabe.\n"
-      + "- Tagesanzahl: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum)\n"
-      + "- Zeitraum: Eingabe-Von und Eingabe-Bis (Beispielformat: 22.01.2000 13:30)";
-
+  public final static String msg = "Wählen Sie zwischen Tagesanzahl- oder Zeitraumeingabe.\n"
+    + "- Tagesanzahl: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum)\n"
+    + "- Zeitraum: Eingabe-Von und Eingabe-Bis (Beispielformat: 22.01.2000 13:30:00)";
+  
   private final static String title = "Repository-Vorschau Konfiguration";
 
   private final static String errTitle = "Eingabe bitte prufen...";
