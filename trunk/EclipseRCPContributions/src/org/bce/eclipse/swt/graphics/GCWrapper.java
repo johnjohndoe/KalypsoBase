@@ -97,17 +97,6 @@ public class GCWrapper
 
   public void drawPolyline( final int[] pointArray )
   {
-    // TODO: we got ugly lines if zoom is to small
-    // check if we have the same effekt on windows
-//    final int[] newpoints = new int[pointArray.length];
-//    for( int i = 0; i < pointArray.length; i++ )
-//    {
-//      System.out.println( pointArray[i++] + " - " + pointArray[i] );
-//    }
-//    System.out.println(  );
-//    System.out.println(  );
-//    System.out.println(  );
-    
     m_gc.drawPolyline( pointArray );
   }
 
