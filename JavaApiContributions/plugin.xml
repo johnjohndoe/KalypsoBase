@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.bce.java.contributions"
+   name="JavaApiContributions Plug-in"
+   version="0.0.1"
+   provider-name="bce.org">
+
+   <runtime>
+      <library name="JavaApiContributions.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+</plugin>
