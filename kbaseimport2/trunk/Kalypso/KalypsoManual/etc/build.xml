@@ -94,18 +94,6 @@
       />
     </copy>
 
-    <!--
-    <copy todir="${manual.dir}">
-      <fileset dir="${help.dir}" casesensitive="no">
-        <include name="**/*.*" />
-        <exclude name="**/CVS/**" />
-        <exclude name="*.xml" />
-        <exclude name="*.xsl" />
-        <exclude name="*.dtd" />
-      </fileset>
-    </copy>
-    -->
-
     <antcall target="pdfproc">
       <param name="pdfproc.out.dir" value="${build.pdf.dir}" />
       <param name="pdfproc.out.name" value="manual" />
