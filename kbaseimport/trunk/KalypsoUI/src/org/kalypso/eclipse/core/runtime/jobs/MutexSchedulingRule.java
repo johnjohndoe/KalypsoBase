@@ -52,12 +52,13 @@ public class MutexSchedulingRule implements ISchedulingRule
   /**
    * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
-  public boolean contains( ISchedulingRule rule )
+  public boolean contains( final ISchedulingRule rule )
   {
-    return true;
+    // TODO2: geht auch nicht: verletzt die Rule-Regeln!
+//    return true;
     // TODO: geändert von Belger: sonst gibts Probleme beim Laden der Zeitreihen
     // --> Prüfen ob das immer noch der Fall ist?
-//    return this == rule;
+    return this == rule;
   }
 
   /**

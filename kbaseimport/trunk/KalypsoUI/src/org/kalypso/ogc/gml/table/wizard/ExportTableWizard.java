@@ -45,7 +45,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.bce.eclipse.jface.wizard.SaveFileWizardPage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -65,13 +68,18 @@ public class ExportTableWizard extends Wizard
 {
   private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage(
       "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
-  private final ExportTableFilePage m_filePage = new ExportTableFilePage(
-      "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
+  private final SaveFileWizardPage m_filePage;
 
   private final LayerTableViewer m_layerTable;
 
   public ExportTableWizard( final LayerTableViewer layerTable )
   {
+    final Map formats = new HashMap();
+    formats.put( "Comma Separated Values (CSV)", "csv" );
+    
+    m_filePage = new SaveFileWizardPage(
+        "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT, "Export Ziel", formats );
+    
     final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
@@ -96,7 +104,7 @@ public class ExportTableWizard extends Wizard
 
   public boolean performFinish()
   {
-    final ExportTableFilePage filePage = m_filePage;
+    final SaveFileWizardPage filePage = m_filePage;
     final ExportTableOptionsPage optionPage = m_optionPage;
     
     final LayerTableViewer layerTable = m_layerTable;
