@@ -105,7 +105,7 @@ public class CopyOrMoveTransformation extends AbstractTransformation
         throw new TransformationException( "input file doesn't exist or is not a file: " + input );
 
       final IFile outputFile = root.getFile( new Path( output ) );
- 
+
       try
       {
         FolderUtilities.mkdirs( outputFile.getParent() );
