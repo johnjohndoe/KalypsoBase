@@ -33,6 +33,8 @@ public class NewMapWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
-  {}
+  {
+  //  
+  }
 
 }
