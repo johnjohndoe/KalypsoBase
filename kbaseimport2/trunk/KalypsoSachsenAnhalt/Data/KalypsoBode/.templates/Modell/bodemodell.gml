@@ -93,8 +93,8 @@
         </bodepegel:WasserlaufModell>
       </bodepegel:PegelMember>
       <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WLM_Niendorf">
-          <bodepegel:Name>Niendorf</bodepegel:Name>
+        <bodepegel:WasserlaufModell fid="WLM_Nienhagen">
+          <bodepegel:Name>Nienhagen</bodepegel:Name>
           <bodepegel:Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
               <gml:coordinates cs="," decimal="." ts=" ">5236078.022653717,5763414.323225588</gml:coordinates>
