@@ -70,8 +70,6 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
 
   private String m_linkName;
 
-  private String m_linkNamespace;
-
   /*
    * 
    * @author doemming
@@ -79,7 +77,6 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
   {
     m_linkName = ftp.getName();
-    m_linkNamespace = ftp.getNamespace();
     m_name = "link_" + ftp.getName();
     m_type = GM_LineString.class.getName();
     m_annotations = new HashMap();
@@ -145,7 +142,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
 
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
-    if(workspace==null)
+    if( workspace == null )
       return null;
     try
     {
