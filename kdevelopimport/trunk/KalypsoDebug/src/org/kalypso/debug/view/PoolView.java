@@ -69,8 +69,6 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 {
   private ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  // private ListViewer m_viewer;
-
   private TimerTask m_task;
 
   private Timer m_timer;
@@ -106,7 +104,9 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       {
         public void run()
         {
-          viewer.setInput( pool.getInfos() );
+          // to avoid exception when window is closed test for content provider
+          if( viewer.getContentProvider() != null )
+            viewer.setInput( pool.getInfos() );
         }
       } );
     }
