@@ -42,7 +42,11 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 
@@ -58,8 +62,10 @@ public final class AddFeatureAction extends Action
 
   private Feature m_parentFeature;
 
+  private Shell m_shell;
+
   public AddFeatureAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, int i )
+      String propertyName, int i, Shell shell )
   {
     super( type.getName() );
     m_propertyName = propertyName;
@@ -67,12 +73,13 @@ public final class AddFeatureAction extends Action
     m_workspace = workspace;
     m_type = type;
     m_parentFeature = parentFeature;
+    m_shell = shell;
   }
 
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  public void run() 
+  public void run()
   {
     AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_type, m_parentFeature,
         m_propertyName, pos );
@@ -83,6 +90,10 @@ public final class AddFeatureAction extends Action
     }
     catch( Exception e )
     {
+      // TODO notify user
+      IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, e
+          .getMessage(), null );
+      ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();
     }
   }
