@@ -12,8 +12,8 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
  */
 public class ObservationCache
 {
-  /** timeout of 5 minutes */
-  private final static int timeout = 1000 * 60 * 5;
+  /** timeout of 4 minutes */
+  private final static int timeout = 1000 * 60 * 4;
 
   /** cache size of 200 */
   private final static int size = 200;
