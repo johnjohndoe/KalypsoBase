@@ -123,9 +123,7 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>70.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag>
-                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
-            </Niederschlag>
+            <Niederschlag/>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -141,9 +139,7 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>130.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag>
-                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
-            </Niederschlag>
+            <Niederschlag/>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -159,9 +155,7 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>70.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag>
-                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
-            </Niederschlag>
+            <Niederschlag/>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -177,9 +171,7 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>200.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag>
-                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
-            </Niederschlag>
+            <Niederschlag/>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -195,9 +187,7 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>310.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag>
-                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
-            </Niederschlag>
+            <Niederschlag/>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
