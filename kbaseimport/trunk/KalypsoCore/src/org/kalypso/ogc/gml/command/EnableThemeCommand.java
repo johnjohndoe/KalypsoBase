@@ -57,7 +57,7 @@ public class EnableThemeCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Theme " + ( m_bEnable ? "aktivieren" : "deaktivieren" );
+    return "Theme " + ( m_bEnable ? "anzeigen" : "verstecken" );
   }
 
 }
