@@ -17,11 +17,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -50,12 +47,8 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
   private Collection m_oldCalcCases = new LinkedList();
 
-  private Button m_checkbox;
-
   private final AddCalcCasePage m_page;
   
-  private boolean m_isUpdateCalcCase = false;
-
   public ContinueOldCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
   {
     m_label = label;
@@ -80,27 +73,6 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     viewer.setInput( m_oldCalcCases );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Button checkbox = new Button( panel, SWT.CHECK );
-    checkbox.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    checkbox.setText( "Zeitreihen aktualisieren" );
-    checkbox.setSelection( m_isUpdateCalcCase );
-    m_checkbox = checkbox;
-    
-    m_checkbox.addSelectionListener( new SelectionAdapter() 
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( final SelectionEvent e )
-      {
-        if( e.detail == SWT.CHECK )
-        {
-          setUpdate( checkbox.getSelection() );
-        }
-      }
-      
-    } );
-
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -118,7 +90,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
     try
     {
-      update( new NullProgressMonitor() );
+      refresh( new NullProgressMonitor() );
     }
     catch( final CoreException e )
     {
@@ -126,24 +98,20 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     }
   }
 
-  protected void setUpdate( final boolean update )
-  {
-    m_isUpdateCalcCase = update;
-  }
-
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
   }
   
-  public void update( final IProgressMonitor monitor ) throws CoreException
+  public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
     final IFolder prognoseFolder = nature.getPrognoseFolder();
 
     // alle Prognosen finden
     final CalcCaseCollector calcCaseCollector = new CalcCaseCollector();
-    prognoseFolder.accept( calcCaseCollector );
+    if( prognoseFolder.exists() )
+      prognoseFolder.accept( calcCaseCollector );
     final IFolder[] calcCases = calcCaseCollector.getCalcCases();
 
     final List usedCalcCases = m_page.getCalcCases();
@@ -216,11 +184,11 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#isUpdateCalcCase()
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#shouldUpdate()
    */
-  public boolean isUpdateCalcCase()
+  public boolean shouldUpdate()
   {
-    return m_isUpdateCalcCase;
+    return false;
   }
 
 }
