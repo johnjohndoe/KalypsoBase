@@ -13,8 +13,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="EZCollectionAssociation" type="spree:EZCollectionAssociationType"/>
-					<element name="FlusslaufModellCollectionAssociation" type="spree:FlusslaufModellCollectionAssociationType"/>
+					<element name="PegelCollectionAssociation" type="spree:PegelCollectionAssociationType"/>
 					<element name="TalsperreCollectionAssociation" type="spree:TalsperreCollectionAssociationType"/>
 					<element name="FlutungCollectionAssociation" type="spree:FlutungCollectionAssociationType"/>
 					<element name="ZuflussCollectionAssociation" type="spree:ZuflussCollectionAssociationType"/>
@@ -22,53 +21,48 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="EZCollectionAssociationType">
+	<complexType name="PegelCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="spree:EZCollection"/>
+					<element ref="spree:PegelCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="EZCollection" type="spree:EZCollectionType"/>
-	<complexType name="EZCollectionType">
+	<element name="PegelCollection" type="spree:PegelCollectionType"/>
+	<complexType name="PegelCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="EZMember" type="spree:EZAssociationType" minOccurs="5" maxOccurs="5"/>
+					<element name="PegelMember" type="spree:PegelAssociationType" minOccurs="10" maxOccurs="10"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="EZAssociationType">
+	<complexType name="PegelAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="spree:Einzugsgebiet"/>
+					<element ref="spree:_Pegel"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
+	
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-	<element name="Einzugsgebiet" type="spree:_EinzugsgebietType"/>
-	<complexType name="_EinzugsgebietType">
+	
+	<element name="_Pegel" abstract="true"  type="spree:_PegelType" substitutionGroup="gml:_Feature" />
+	<complexType name="_PegelType">
 		<complexContent>
 			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="BodenfeuchteMin" type="double"/>
-					<element name="Bodenfeuchte" type="double"/>
-					<element name="BodenfeuchteMax" type="double"/>
-					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_prognose" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_rechnung" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
@@ -76,48 +70,33 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="FlusslaufModellCollectionAssociationType">
+
+	<element name="Einzugsgebiet" type="spree:_EinzugsgebietType" substitutionGroup="spree:_Pegel" />
+	<complexType name="_EinzugsgebietType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<extension base="spree:_PegelType">
 				<sequence>
-					<element ref="spree:FlusslaufModellCollection"/>
+					<element name="BodenfeuchteMin" type="double"/>
+					<element name="Bodenfeuchte" type="double"/>
+					<element name="BodenfeuchteMax" type="double"/>
+					<element name="Ausdehnung" type="double"/>
+					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLink"/>
+					<element name="Niederschlag_prognose" type="obslink:TimeseriesLink"/>
+					<element name="Niederschlag_rechnung" type="spree:TimeseriesLinkType"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
-	<element name="FlusslaufModellCollection" type="spree:FlusslaufModellCollectionType"/>
-	<complexType name="FlusslaufModellCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="FlusslaufModellMember" type="spree:FlusslaufModellAssociationType" minOccurs="5" maxOccurs="5"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="FlusslaufModellAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="spree:FlusslaufModell"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="FlusslaufModell" type="spree:_FlusslaufModellType"/>
+
+	<element name="FlusslaufModell" type="spree:_FlusslaufModellType" substitutionGroup="spree:_Pegel"/>
 	<complexType name="_FlusslaufModellType">
 		<complexContent>
-			<extension base="spree:EmptyFeatureBaseType">
+			<extension base="spree:_PegelType">
 				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="Korrektur_Faktor" type="double"/>
 					<element name="Korrektur_Niveau" type="double"/>
 					<element name="Korrektur_Laufzeit" type="double"/>
 					<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
-					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
