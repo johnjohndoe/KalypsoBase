@@ -85,7 +85,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       }
     };
 
-    m_timer = new Timer( "PoolViewTimer" );
+    m_timer = new Timer( );
     m_timer.schedule( m_task, 1000, 1000 );
   }
 
