@@ -822,5 +822,6 @@
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>
-  </NamedLayer>
+	</NamedLayer>
+	
 </StyledLayerDescriptor>
