@@ -1,37 +1,35 @@
+/** TODO: license definieren
+*/
+
 package org.kalypso.editor.mapeditor.commands;
 
-import org.eclipse.jface.viewers.ISelectionProvider;
+import org.deegree.model.geometry.GM_Envelope;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.plugin.ImageProvider;
+import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.widgets.ChangeExtentCommand;
 import org.kalypso.util.command.ICommandManager;
-import org.kalypso.xml.types.ILayerTypeFactory;
-import org.kalypso.xml.types.ILayerlistProvider;
 
 /**
- * @author belger
+ *
+ * @author von DÃ¶mming
  */
 public class ZoomOutAction extends FullAction
 {
-  private final ICommandManager m_commandManager;
-  private final ILayerlistProvider m_listProvider;
-  private ISelectionProvider m_selectionProvider;
-  private ILayerTypeFactory m_layerFactory;
-
-  public ZoomOutAction( final ICommandManager commandManager, final ILayerlistProvider listProvider, final ISelectionProvider selectionProvider, final ILayerTypeFactory layerFactory )
-  {
-    super( "Add Layer", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema hinzufügen" );
-
-    m_commandManager = commandManager;
-    m_listProvider = listProvider;
-    m_selectionProvider = selectionProvider;
-    m_layerFactory = layerFactory;
-  }
+  private final ICommandManager myCommandManager;
+  private final MapPanel myMapPanel;
   
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
-  public void run()
-  {
-    m_commandManager.postCommand( new AddLayerCommand( m_listProvider, m_selectionProvider, m_layerFactory ) );
-  }
+    public ZoomOutAction(final String text,final ImageDescriptor imageDescriptor,final String toolTipText, final MapPanel mapPanel, final ICommandManager commandManager  )
+    {
+      super(text,imageDescriptor,toolTipText);
+      myCommandManager=commandManager;
+      myMapPanel=mapPanel;
+    }
+    
+    public void run()
+    {
+      GM_Envelope zoomBox = myMapPanel.getMapModell().getZoomOutBoundingBox();
+
+      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),zoomBox));
+    }  
 }
