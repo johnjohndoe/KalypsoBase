@@ -60,29 +60,13 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.deegree.graphics.displayelements;
 
-import org.opengis.gc.GC_GridCoverage;
-
 /**
  * 
  * 
  * @version $Revision$
  * @author $author$
  */
-public interface RasterDisplayElement extends DisplayElement
+public interface RasterDisplayElement extends GeometryDisplayElement
 {
-  /**
-   * sets the grid coverage that represents the content of the
-   * <tt>RasterDisplayElement</tt>
-   * 
-   * @param gc
-   */
-  void setRaster( GC_GridCoverage gc );
-
-  /**
-   * returns the content of the <tt>RasterDisplayElement</tt>
-   * 
-   * @return
-   */
-  GC_GridCoverage getRaster();
 
 }

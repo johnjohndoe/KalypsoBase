@@ -145,6 +145,8 @@ public class VirtualFeatureAssociationTypeProperty implements VirtuelFeatureType
 
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
+    if(workspace==null)
+      return null;
     try
     {
       final GM_Object srcGeo = feature.getDefaultGeometryProperty();
