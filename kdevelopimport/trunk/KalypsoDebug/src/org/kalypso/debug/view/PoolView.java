@@ -46,15 +46,22 @@ import java.util.TimerTask;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
@@ -85,7 +92,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       }
     };
 
-    m_timer = new Timer( );
+    m_timer = new Timer();
     m_timer.schedule( m_task, 1000, 1000 );
   }
 
@@ -130,7 +137,25 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( this );
 
+    m_viewer.addOpenListener( new IOpenListener()
+    {
+      public void open( final OpenEvent event )
+      {
+        final ISelection selection = event.getSelection();
+        if( !selection.isEmpty() && selection instanceof IStructuredSelection )
+        {
+          final KeyInfo info = (KeyInfo)((IStructuredSelection)selection).getFirstElement();
+          
+          final IPoolListener[] listeners = info.getListeners();
+          
+          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(), listeners, new ArrayContentProvider(), new LabelProvider(), "Listeners for KeyInfo: " + info );
+          dialog.open();
+        }
+      }
+    } );
+
     final Table table = m_viewer.getTable();
+    table.setToolTipText( "Doppelklick für Liste der Listener" );
     table.setHeaderVisible( true );
 
     final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
@@ -204,7 +229,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       return "" + key.getLocation();
 
     case 1:
-      return "" + info.getListeners();
+      return "" + info.getListeners().length;
 
     case 2:
       return "" + info.getObject();
