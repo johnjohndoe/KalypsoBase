@@ -55,9 +55,4 @@
         <xs:attribute name="type" type="xs:string" use="required"/>
         <xs:attribute name="objectid" type="xs:string" use="required"/>
     </xs:complexType>
-    <xs:complexType name="ObservationLink">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="observation" type="xlink:xlink-base"></xs:element>        
-        </xs:sequence>
-    </xs:complexType>
 </xs:schema>
