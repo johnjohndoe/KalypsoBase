@@ -208,6 +208,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
               final IObservation obs = ZmlFactory.parseXML( new File( files[i] )
                   .toURL(), files[i] );
 
+              // TODO use other version of addObs...
               m_template.addObservation( obs, null );
             }
 

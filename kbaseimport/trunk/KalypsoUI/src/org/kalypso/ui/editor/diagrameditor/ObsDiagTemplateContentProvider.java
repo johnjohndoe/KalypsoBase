@@ -87,8 +87,7 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    //System.out.println( "INPUT CHANGED (ContentProvider)" );
-//    m_template = (IDiagramTemplate) newInput;
+    // empty
   }
 
   /**
