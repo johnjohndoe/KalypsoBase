@@ -13,7 +13,7 @@ import java.util.Vector;
  * 
  * @author schlienger
  */
-public class CSV
+public class CSV implements ITabledValues
 {
   private final Reader m_reader;
 
