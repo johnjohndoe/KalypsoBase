@@ -43,7 +43,7 @@ public class GCWrapper
 
   public void drawLine( final int x1, final int y1, final int x2, final int y2 )
   {
-    m_gc.drawLine( x1, y1, x2, y2 );
+    m_gc.drawLine( Math.max( -10000, Math.min( 10000, x1 ) ), Math.max( -10000, Math.min( 10000, y1 ) ), Math.max( -10000, Math.min( 10000, x2 ) ), Math.max( -10000, Math.min( 10000, y2 ) ) );
   }
 
   public void drawImage( final Image image, final int x, final int y )
