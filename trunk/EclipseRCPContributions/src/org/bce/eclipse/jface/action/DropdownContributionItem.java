@@ -85,6 +85,9 @@ public class DropdownContributionItem<T> extends ControlContribution
 
   public T getSelectedItem( )
   {
+    if( m_combo == null || m_combo.isDisposed() )
+      return null;
+    
     final int index = m_combo.getSelectionIndex();
     if( index == -1 )
       return null;
