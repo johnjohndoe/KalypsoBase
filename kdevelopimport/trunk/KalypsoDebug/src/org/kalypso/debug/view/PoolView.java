@@ -41,6 +41,9 @@
 
 package org.kalypso.debug.view;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,6 +61,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -74,6 +80,25 @@ import org.kalypso.util.pool.ResourcePool;
  */
 public class PoolView extends ViewPart implements ITableLabelProvider
 {
+  private static abstract class PoolViewColumn
+  {
+    public final int width;
+
+    public final String text;
+
+    public PoolViewColumn( final String text, final IMemento memento )
+    {
+      this.text = text;
+      
+      final Integer mementoWidth = memento == null ? null : memento.getInteger( text );
+      this.width = mementoWidth == null ? 100 : mementoWidth.intValue();
+    }
+
+    public abstract String getValue( final KeyInfo info );
+  }
+
+  private final Collection m_columns = new ArrayList( 3 );
+
   private ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
   private TimerTask m_task;
@@ -144,11 +169,13 @@ public class PoolView extends ViewPart implements ITableLabelProvider
         final ISelection selection = event.getSelection();
         if( !selection.isEmpty() && selection instanceof IStructuredSelection )
         {
-          final KeyInfo info = (KeyInfo)((IStructuredSelection)selection).getFirstElement();
-          
+          final KeyInfo info = (KeyInfo)( (IStructuredSelection)selection ).getFirstElement();
+
           final IPoolListener[] listeners = info.getListeners();
-          
-          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(), listeners, new ArrayContentProvider(), new LabelProvider(), "Listeners for KeyInfo: " + info );
+
+          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer()
+              .getControl().getShell(), listeners, new ArrayContentProvider(), new LabelProvider(),
+              "Listeners for KeyInfo: " + info );
           dialog.open();
         }
       }
@@ -158,17 +185,14 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     table.setToolTipText( "Doppelklick für Liste der Listener" );
     table.setHeaderVisible( true );
 
-    final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
-    keytc.setText( "Key" );
-    keytc.pack();
-
-    final TableColumn listenertc = new TableColumn( table, SWT.BEGINNING );
-    listenertc.setText( "Listener" );
-    listenertc.pack();
-
-    final TableColumn objecttc = new TableColumn( table, SWT.BEGINNING );
-    objecttc.setText( "Object" );
-    objecttc.pack();
+    for( final Iterator cIt = m_columns.iterator(); cIt.hasNext(); )
+    {
+      final PoolViewColumn col = (PoolViewColumn)cIt.next();
+      
+      final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
+      keytc.setText( col.text );
+      keytc.setWidth( col.width );
+    }
   }
 
   /**
@@ -238,4 +262,54 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     return null;
   }
 
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite,
+   *      org.eclipse.ui.IMemento)
+   */
+  public void init( final IViewSite site, final IMemento memento ) throws PartInitException
+  {
+    super.init( site, memento );
+
+    m_columns.add( new PoolViewColumn( "Key", memento )
+    {
+      public String getValue( final KeyInfo info )
+      {
+        final IPoolableObjectType key = info.getKey();
+        return "" + key.getLocation();
+      }
+    } );
+
+    m_columns.add( new PoolViewColumn( "Listener", memento )
+    {
+      public String getValue( final KeyInfo info )
+      {
+        return "" + info.getListeners().length;
+      }
+    } );
+    
+    m_columns.add( new PoolViewColumn( "Object", memento )
+    {
+      public String getValue( final KeyInfo info )
+      {
+        return "" + info.getObject();
+      }
+    } );
+
+  }
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+   */
+  public void saveState( final IMemento memento )
+  {
+    super.saveState( memento );
+
+    final Table table = m_viewer.getTable();
+    final TableColumn[] columns = table.getColumns();
+    for( int i = 0; i < columns.length; i++ )
+    {
+      final TableColumn column = columns[i];
+      memento.putInteger( column.getText(), column.getWidth() );
+    }
+  }
 }
