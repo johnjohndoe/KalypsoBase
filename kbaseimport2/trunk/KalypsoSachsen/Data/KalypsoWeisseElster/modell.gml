@@ -15639,6 +15639,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15659,7 +15660,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...578110?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...578110?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -15667,6 +15668,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...578110.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15692,6 +15696,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15712,7 +15717,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576400?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576400?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -15720,6 +15725,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576400.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15745,6 +15753,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15770,6 +15779,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15795,6 +15805,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15820,6 +15831,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15845,6 +15857,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15870,6 +15883,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15895,6 +15909,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15921,6 +15936,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...578090.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15941,7 +15959,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_oberthau.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_oberthau.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -15949,6 +15967,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576900.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -15969,7 +15990,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_zeitz.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_zeitz.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -15977,6 +15998,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576610.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16002,6 +16026,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16021,7 +16046,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576410?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576410?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16029,6 +16054,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576410.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16049,7 +16077,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576421?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576421?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16057,6 +16085,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576421.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16082,6 +16113,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16107,6 +16139,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8802"/>
         </Node>
@@ -16127,7 +16160,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576440?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576440?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16135,6 +16168,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576440.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16161,6 +16197,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577211.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16186,6 +16225,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8801"/>
         </Node>
@@ -16211,6 +16251,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16227,17 +16268,17 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7203"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepositoryVorhersage>
           <zuflussZR>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\koberbach.kz</nzufPfad>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16245,6 +16286,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577501.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16270,6 +16314,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16286,10 +16331,10 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1300"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepositoryVorhersage>
           <zuflussZR>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16302,6 +16347,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16327,6 +16373,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8802.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16347,7 +16394,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_weida.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_weida.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16355,6 +16402,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577320.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16380,6 +16430,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16405,6 +16456,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16426,6 +16478,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node9001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16451,6 +16504,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8802"/>
         </Node>
@@ -16476,6 +16530,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16496,7 +16551,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_greiz.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_greiz.zml?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16504,6 +16559,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576470.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16529,6 +16587,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16549,7 +16608,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576631?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576631?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16557,6 +16616,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576631.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16582,6 +16644,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8801.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16607,6 +16670,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16632,6 +16696,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16648,10 +16713,10 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel6000"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepositoryVorhersage>
           <zuflussZR>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16664,6 +16729,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16689,6 +16755,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16714,6 +16781,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16739,6 +16807,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16765,6 +16834,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576391.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16785,7 +16857,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577510?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577510?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16793,6 +16865,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577510.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16813,7 +16888,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576520?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576520?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16821,6 +16896,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576520.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16841,6 +16919,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node10000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16866,6 +16945,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16891,6 +16971,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16916,6 +16997,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16932,10 +17014,10 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7004"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepositoryVorhersage>
           <zuflussZR>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16948,6 +17030,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -16968,7 +17051,7 @@
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577211?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577211?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -16976,6 +17059,9 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577211.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="W" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </pegelBerechnetZRAblage>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -17001,6 +17087,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -17017,10 +17104,10 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1401"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500?&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepositoryVorhersage>
           <zuflussZR>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -17033,6 +17120,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -17058,6 +17146,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
@@ -17083,6 +17172,7 @@
           <qberechnetZR>
             <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
+          <pegelBerechnetZRAblage/>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
         </Node>
