@@ -102,6 +102,12 @@ public class TextInputPanel {
 		return labelText;
 	}
 	
+	public void setInputText(String textInput)
+	{
+		labelText = textInput;
+		text.setText(textInput);
+	}
+	
 	// sets the inputField to a default state
 	public void reset()
 	{
