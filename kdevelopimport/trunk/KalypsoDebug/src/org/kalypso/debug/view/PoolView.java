@@ -60,6 +60,8 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 
 /**
+ * Zeigt den Inhalt des {@link org.kalypso.util.pool.ResourcePool}in Form einer
+ * Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
  * 
  * @author belger
  */
@@ -127,18 +129,21 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     m_viewer = new TableViewer( parent, SWT.NONE );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( this );
-    
+
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
 
     final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
     keytc.setText( "Key" );
+    keytc.pack();
+
+    final TableColumn listenertc = new TableColumn( table, SWT.BEGINNING );
+    listenertc.setText( "Listener" );
+    listenertc.pack();
 
     final TableColumn objecttc = new TableColumn( table, SWT.BEGINNING );
     objecttc.setText( "Object" );
-    
-    final TableColumn listenertc = new TableColumn( table, SWT.BEGINNING );
-    listenertc.setText( "Listener" );
+    objecttc.pack();
   }
 
   /**
@@ -192,19 +197,19 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   {
     final KeyInfo info = (KeyInfo)element;
     final IPoolableObjectType key = info.getKey();
-    
+
     switch( columnIndex )
     {
     case 0:
       return "" + key.getLocation();
-      
+
     case 1:
-      return "" + info.getObject();
+      return "" + info.getListeners();
 
     case 2:
-      return "" + info.getListeners();
+      return "" + info.getObject();
     }
-    
+
     return null;
   }
 
