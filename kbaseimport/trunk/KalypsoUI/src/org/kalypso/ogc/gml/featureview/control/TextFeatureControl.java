@@ -94,8 +94,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     if( m_text != null )
       m_text.dispose();
-
-    m_text.dispose();
   }
 
   /**
