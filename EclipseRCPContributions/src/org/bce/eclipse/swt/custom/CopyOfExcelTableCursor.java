@@ -23,19 +23,19 @@ public class CopyOfExcelTableCursor extends TableCursor
       public String toString( )
       {
         return "nach &unten setzen";
-      };
+      }
     },
     RIGHT {
       public String toString( )
       {
         return "nach &rechts setzen";
-      };
+      }
     },
     NONE {
       public String toString( )
       {
         return "&nicht verändern";
-      };
+      }
     };
   }
 

@@ -27,19 +27,19 @@ public class ExcelTableCursor extends TableCursor
       public String toString( )
       {
         return "nach &unten setzen";
-      };
+      }
     },
     RIGHT {
       public String toString( )
       {
         return "nach &rechts setzen";
-      };
+      }
     },
     NONE {
       public String toString( )
       {
         return "&nicht verändern";
-      };
+      }
     };
   }
 
@@ -145,6 +145,7 @@ public class ExcelTableCursor extends TableCursor
       public void editorValueChanged( boolean oldValidState,
           boolean newValidState )
       {
+        // 
       }
     } );
 

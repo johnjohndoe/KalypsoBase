@@ -9,6 +9,7 @@ public final class NumberUtils
 {
   private NumberUtils( )
   {
+    // do not instantiate
   }
 
   public static final boolean isDouble( final String string )
