@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<project name="KalypsoRepositoryBuild" default="deploy">
+<project name="KalypsoRepositoryBuild" default="deploy" basedir="../..">
 
   <!-- Propertys aus einer Datei laden -->
-  <property file="../../../projectbuild.properties" />
+  <property file="../projectbuild.properties" />
 
   <property name="project" value="${workspace}/KalypsoRepository" />
   <property name="project.build" value="${project}/build" />
@@ -62,8 +62,43 @@
     </jar>
   </target>
 
+  <target name="deploy.plugin" depends="wsdp">
+    <eclipse.buildScript  elements="plugin@org.kalypso.repository"
+                         install="${project}"
+                         children="true"
+                         recursivegeneration="true"
+    />
+
+    <ant antfile="${project}/build.xml"
+         inheritall="false"
+         target="zip.plugin"
+    />
+    <move todir="${project.build}">
+      <fileset dir="${project}">
+        <include name="**/org.kalypso*.zip" />
+        <include name="**/kalypso*.zip" />
+        <include name="**/kalypso*.jar" />
+      </fileset>
+    </move>
+    <delete file="${project}/build.xml" />
+  </target>
+
+  <target name="javadoc" depends="prepare">
+    <echo message="Erzeuge die Dokumentation ..." />
+    <javadoc destdir="${project.doc}"
+             failonerror="true"
+             classpathref="project.classpath"
+    >
+      <fileset dir="${project.src}" casesensitive="false">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
+  </target>
+
+
   <target name="clean">
-    <echo message="Rauume auf ..." />
+    <echo message="Raeume auf ..." />
     <delete dir="${project.build}" />
     <ant antfile="${project}/etc/xmlbinding/build.xml"
          target="clean"
