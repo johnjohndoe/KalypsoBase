@@ -1,24 +1,16 @@
 package org.kalypso.java.lang;
 
 /**
- * <p>This thread catches all thrown exceptions and stores it into a variable</p>
- * <p>Implementors must implement {@link #runIntern()}.
- * 
  * @author belger
  */
 public abstract class CatchThread extends Thread
 {
   private Throwable m_throwable = null;
 
-  public Throwable getThrowable()
-  {
-    return m_throwable;
-  }
-  
   /**
-   * @see java.lang.Thread#run()
+   * @see java.lang.Runnable#run()
    */
-  public void run()
+  public final void run()
   {
     try
     {
@@ -26,9 +18,15 @@ public abstract class CatchThread extends Thread
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
       m_throwable = t;
     }
   }
+  
+  protected abstract void runIntern()  throws Throwable;
 
-  protected abstract void runIntern() throws Throwable;
+  public Throwable getThrown()
+  {
+    return m_throwable;
+  }
 }
