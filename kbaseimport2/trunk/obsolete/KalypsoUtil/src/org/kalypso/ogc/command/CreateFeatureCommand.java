@@ -1,7 +1,5 @@
 package org.kalypso.ogc.command;
 
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
