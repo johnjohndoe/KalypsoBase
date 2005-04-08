@@ -43,8 +43,6 @@ public class ExcelTableCursor extends TableCursor
     };
   }
 
-  // private final ControlEditor m_editor = new ControlEditor( this );
-
   private ADVANCE_MODE m_mode;
 
   private final TableViewer m_viewer;
