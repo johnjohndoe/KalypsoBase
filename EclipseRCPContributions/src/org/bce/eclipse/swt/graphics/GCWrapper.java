@@ -5,9 +5,11 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.eclipse.swt.graphics.Transform;
 
 /**
  * Same as {@link org.eclipse.swt.graphics.GC}, but adds helper methods and
@@ -347,5 +349,50 @@ public class GCWrapper
   public String toString( )
   {
     return m_gc.toString();
+  }
+
+  public void drawPath( final Path path )
+  {
+    m_gc.drawPath( path );
+  }
+
+  public void fillPath( final Path path )
+  {
+    m_gc.fillPath( path );
+  }
+
+  public int getAlpha( )
+  {
+    return m_gc.getAlpha();
+  }
+
+  public int getFillRule( )
+  {
+    return m_gc.getFillRule();
+  }
+
+  public void getTransform( Transform transform )
+  {
+    m_gc.getTransform( transform );
+  }
+
+  public void setAlpha( int alpha )
+  {
+    m_gc.setAlpha( alpha );
+  }
+
+  public void setClipping( Path path )
+  {
+    m_gc.setClipping( path );
+  }
+
+  public void setFillRule( int rule )
+  {
+    m_gc.setFillRule( rule );
+  }
+
+  public void setTransform( Transform transform )
+  {
+    m_gc.setTransform( transform );
   }
 }
