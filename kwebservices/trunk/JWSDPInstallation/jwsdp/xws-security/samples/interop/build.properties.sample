@@ -1,0 +1,60 @@
+# This file is referenced by the build.xml file.
+# java and jwsdp
+javahome=/root/javahome/j2sdk1.4.2
+
+#container homes (uncomment the appropriate container home property)
+#Note: only one of the 3 below should be uncommented at any point of time
+#tomcat.home=/test9thapr/tomcat
+sjsas.home=/test9thapr/appserver8
+#sjsws.home=/test9thapr/webserver
+
+# Replace username and password values with the admin user/password
+# for the appropriate container instance being used for this sample
+username=admin
+password=admin123
+
+# the host and port for the endpoint
+endpoint.host=localhost
+endpoint.port=8080
+
+#VS.DIR : virtual server name for SJSWS
+VS.DIR=https-user.india.Sun.COM
+
+#place where JWSDP is installed, used on client side
+jwsdp.home=/test9thapr/jwsdp-1.4
+
+#keystores and truststore locations for client side
+javax.net.ssl.keyStore=${jwsdp.home}/xws-security/etc/client-keystore.jks
+javax.net.ssl.keyStorePassword=changeit
+javax.net.ssl.keyStoreType=JKS
+javax.net.ssl.trustStore=${jwsdp.home}/xws-security/etc/client-truststore.jks
+javax.net.ssl.trustStorePassword=changeit
+javax.net.ssl.trustStoreType=JKS
+# session key URL
+sessionkey.url=${jwsdp.home}/xws-security/etc/sessionkey
+trust.aliases=s1as
+key.aliases=xws-security-client
+key.passwords=changeit
+
+# proxy server settings in case of remote endpoints
+http.proxyHost=webcache.india.sun.com
+http.proxyPort=8080
+
+# Set to true or false to control jaxrpc tool output
+jaxrpc.tool.verbose=false
+
+# do not edit below
+# Name of this particular example
+example=interop
+
+# Service URL
+scenario1.service.url=/pingservice/Ping1
+scenario2.service.url=/pingservice/Ping2
+scenario3.service.url=/pingservice/Ping3
+scenario4.service.url=/pingservice/Ping4
+scenario5.service.url=/pingservice/Ping5
+scenario6.service.url=/pingservice/Ping6
+scenario7.service.url=/pingservice/Ping7
+
+
+

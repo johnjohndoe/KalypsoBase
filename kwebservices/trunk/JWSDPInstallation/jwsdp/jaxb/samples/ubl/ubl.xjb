@@ -1,0 +1,72 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               version="1.0">
+  <!--
+    $Id: ubl.xjb,v 1.1 2003/10/21 22:06:28 ryans Exp $
+
+    Copyright 2003 Sun Microsystems, Inc. All rights reserved.
+    SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  -->
+  <!--
+    Binding customizations defining package names for generated code.
+  -->
+  <jaxb:bindings schemaLocation="0p70/xsd/CoreComponentParameters.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.corecomponentparameters"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/CoreComponentTypes.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.corecomponenttypes"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_Reusable.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.commonaggregatetypes"/>
+    </jaxb:schemaBindings>
+    <jaxb:bindings node="./xsd:element[@name='TofollowReason']">
+      <jaxb:class name="TofollowReasonX"/>
+    </jaxb:bindings>
+    <jaxb:bindings node="./xsd:element[@name='ServicelevelCode']">
+      <jaxb:class name="ServicelevelCodeX"/>
+    </jaxb:bindings>
+    <jaxb:bindings node="./xsd:element[@name='TofollowQuantity']">
+      <jaxb:class name="TofollowQuantityX"/>
+    </jaxb:bindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_DespatchAdvice.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.despatchadvice"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_Invoice.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.invoice"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_Order.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.order"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_OrderCancellation.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.ordercancellation"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_OrderResponse.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.orderresponse"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_OrderResponseSimple.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.orderresponsesimple"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="0p70/xsd/UBL_Library_0p70_ReceiptAdvice.xsd" node="/xsd:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.oasis.ubl.receiptadvice"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+</jaxb:bindings>

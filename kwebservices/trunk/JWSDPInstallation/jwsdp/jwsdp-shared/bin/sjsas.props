@@ -1,0 +1,8 @@
+#Mon Jan 10 13:37:36 CET 2005
+http.proxyPort=
+ADMIN_PORT=<replace_with_your_admin_port>
+http.proxyHost=
+SJSAS_PORT=<replace_with_your_http_server_port>
+USERNAME=<replace_with_your_admin_username>
+SJSAS_HOST=localhost
+PASSWORD=<replace_with_your_admin_password>
