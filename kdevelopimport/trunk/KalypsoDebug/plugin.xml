@@ -17,6 +17,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension
          point="org.eclipse.ui.views">
@@ -29,6 +30,15 @@
             category="org.kalypso.view.debug"
             name="Resource Pool"
             id="org.kalypso.debug.view.pool"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            launcher="org.kalypso.debug.editor.GmlConvertLauncher"
+            default="false"
+            name="GML Converter"
+            id="org.kalypso.debug.editor.gmlconvert"
+            extensions="gmc"/>
    </extension>
 
 </plugin>

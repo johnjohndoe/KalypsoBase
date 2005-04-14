@@ -21,6 +21,11 @@ public class KalypsoDebugPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
+  public final String getID()
+  {
+    return getBundle().getSymbolicName();
+  }
+  
 	/**
 	 * This method is called upon plug-in activation
 	 */
