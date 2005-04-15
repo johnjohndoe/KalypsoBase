@@ -19,16 +19,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.debug.KalypsoDebugPlugin;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gml.util.GmlconvertType;
 import org.kalypso.gml.util.ObjectFactory;
+import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
-import org.kalypso.ogc.gml.convert.SourceHandlerException;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.url.UrlResolver;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.InputSource;
 
@@ -37,7 +37,6 @@ import org.xml.sax.InputSource;
  */
 public class GmlConvertLauncher implements IEditorLauncher
 {
-
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
@@ -50,8 +49,6 @@ public class GmlConvertLauncher implements IEditorLauncher
         try
         {
           final IWorkbench workbench = PlatformUI.getWorkbench();
-          final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-          final Shell shell = window == null ? null : window.getShell();
 
           final IWorkspace workspace = ResourcesPlugin.getWorkspace();
           final IWorkspaceRoot root = workspace.getRoot();
@@ -69,8 +66,11 @@ public class GmlConvertLauncher implements IEditorLauncher
               reader ) );
 
           final URL context = ResourceUtilities.createURL( convertFile );
-          final GMLWorkspace gml = GmlConvertFactory.loadSource( context, convert.getSource() );
-          GmlConvertFactory.writeIntoTarget( KalypsoGisPlugin.getDefault().getLoaderFactory(), context, gml, convert.getTarget() );
+          
+          final IUrlResolver resolver = new UrlResolver();
+          
+          final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource() );
+          GmlConvertFactory.writeIntoTarget( resolver, context, gml, convert.getTarget() );
 
           final Action showStatusAction = new Action( "View Convert Status" )
           {
@@ -79,6 +79,8 @@ public class GmlConvertLauncher implements IEditorLauncher
              */
             public void run()
             {
+              final Shell shell = workbench.getDisplay().getActiveShell();
+              
               final String outHref = convert.getTarget().getHref();
               MessageDialog.openInformation( shell, "GML Konvertierung abgeschlossen",
                   "Das GML wurde erfolgreich konvertiert und nach " + outHref + " geschrieben." );
@@ -91,7 +93,7 @@ public class GmlConvertLauncher implements IEditorLauncher
             setProperty( IProgressConstants.KEEP_PROPERTY, Boolean.TRUE );
           }
           else
-            shell.getDisplay().asyncExec( new Runnable()
+            workbench.getDisplay().asyncExec( new Runnable()
             {
               public void run()
               {
@@ -99,13 +101,17 @@ public class GmlConvertLauncher implements IEditorLauncher
               }
             } );
         }
-        catch( final SourceHandlerException e )
+        catch( final GmlConvertException e )
         {
+          e.printStackTrace();
+          
           return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
               e.getLocalizedMessage(), e.getCause() );
         }
         catch( final Exception e )
         {
+          e.printStackTrace();
+          
           return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
               "Fehler beim Konvertieren", e );
         }
