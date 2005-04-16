@@ -68,7 +68,9 @@ public final class DBaseException extends Exception
 
   //constructor
   public DBaseException()
-  {}
+  {
+    // empty
+  }
 
   //constructor
   public DBaseException( String message )
