@@ -18,6 +18,7 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.ui"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.bce.eclipse.platform.contrib"/>
    </requires>
    <extension
          point="org.eclipse.ui.views">
