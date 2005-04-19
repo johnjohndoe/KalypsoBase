@@ -80,26 +80,6 @@ public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDeleg
     }
   }
 
-  //  /**
-  //   * @see
-  // org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshEnabled()
-  //   */
-  //  public void refreshEnabled()
-  //  {
-  //    boolean enabled = false;
-  //    final GisMapEditor editor = (GisMapEditor)getEditor();
-  //    IAction action = getAction();
-  //    if( editor != null )
-  //    {
-  //      final MapPanel mapPanel = editor.getMapPanel();
-  //      IMapModell mapModell = mapPanel.getMapModell();
-  //      if( mapModell != null && mapModell.getActiveTheme() instanceof
-  // IKalypsoFeatureTheme )
-  //        enabled = true;
-  //    }
-  //    action.setEnabled( enabled );
-  //  }
-
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
