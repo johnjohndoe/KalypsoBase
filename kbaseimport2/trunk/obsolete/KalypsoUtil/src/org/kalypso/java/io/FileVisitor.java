@@ -41,6 +41,7 @@
 package org.kalypso.java.io;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Ein FileVisitor führt eine Operation auf einer Datei durch.
@@ -55,5 +56,5 @@ public interface FileVisitor
    * @return ob, bei einem recursiven Durchgang, die Rekursion weiterlaufen darf
    *         oder nicht
    */
-  public boolean visit( final File file );
+  public boolean visit( final File file ) throws IOException;
 }
