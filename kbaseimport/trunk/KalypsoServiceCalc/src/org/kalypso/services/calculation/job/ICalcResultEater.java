@@ -42,46 +42,26 @@ package org.kalypso.services.calculation.job;
 
 import java.io.File;
 
-import javax.activation.DataHandler;
-
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
- * <p>
  * Sammelt die Ergebnisse des
  * {@link org.kalypso.services.calculation.job.ICalcJob}.
- * </p>
- * 
- * <p>
- * Daneben sammelt der Dateien, die später gelöscht werden sollen, das ist aber
- * nur für internen gebrauch gedacht.
- * </p>
  * 
  * @author belger
  */
 public interface ICalcResultEater
 {
-  public void addResult( final String id, final File file ) throws CalcJobServiceException;
-
-  /** Gibt zurück, welche Ergebnisse momentan verfügbar sind. */
-  public String[] getCurrentResults();
-
   /**
-   * Verpackt die aktuell vorliegenden Ergebnisse
+   * Für den {@link ICalcJob}: wird aufgerufen, um ein Ergebnis an den Client
+   * zurückzugeben
    * 
-   * @throws CalcJobServiceException
+   * @param id
+   *          Eine ID aus der Model-Spec
+   * @param file
+   *          Eine beliebige Datei oder ein Verzeichnis. Wenns ein Verzeichnis
+   *          ist, wird der gesamte Inhalt (auch rekursiv) zum Client
+   *          zurückgeshrieben
    */
-  public DataHandler packCurrentResults() throws CalcJobServiceException;
-
-  /**
-   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch
-   * gedacht.
-   */
-  public void addFile( final File file );
-
-  /**
-   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
-   * auch der Inhalt rekursiv gelöscht.
-   */
-  public void disposeFiles();
+  public void addResult( final String id, final File file ) throws CalcJobServiceException;
 }
