@@ -11,6 +11,9 @@
       <library name="KalypsoDebug.jar">
          <export name="*"/>
       </library>
+      <library name="lib/debugBinding.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>

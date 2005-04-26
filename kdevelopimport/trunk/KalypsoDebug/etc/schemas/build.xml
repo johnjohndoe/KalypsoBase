@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="KalypsoDebug-binding" default="deploy">
+	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
+
+	<property name="project" value="${workspace}/KalypsoDebug" />
+	<property name="project-name" value="debugBinding" />
+
+	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
+</project>
+
