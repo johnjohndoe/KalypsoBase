@@ -42,13 +42,12 @@ package org.kalypso.debug.action;
 
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.internal.CompareEditor;
@@ -61,7 +60,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -75,6 +77,7 @@ import org.kalypso.compare.ResourceType;
 import org.kalypso.compare.ResourceType.PathType;
 import org.kalypso.debug.KalypsoDebugPlugin;
 import org.kalypso.ui.action.CalcCaseHelper;
+import org.kalypso.ui.action.CalcCaseJob;
 import org.xml.sax.InputSource;
 
 /**
@@ -121,96 +124,75 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     {
       final IFolder folder = calcCasesToCalc[i];
 
-      // dann ein diff-ant-skript ausführen
-
-      final Job job = new Job( "Vergleiche Ergebnisse" )
+      final Job diffJob = new Job( "Vergleiche Ergebnisse für: " + folder.getName() )
       {
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
           {
-            final Unmarshaller unmarshaller = new ObjectFactory().createUnmarshaller();
-            final IFile file = folder.getFile( ".test.xml" );
-            final InputStreamReader reader = new InputStreamReader( new BufferedInputStream( file
-                .getContents() ), file.getCharset() );
-            final CompareType compare = (CompareType)unmarshaller.unmarshal( new InputSource(
-                reader ) );
+            monitor.beginTask( "Öffne Vergleichsdaten für: " + folder.getName(), 2000 );
 
-            final IProject project = folder.getProject();
-
-            final List diffList = compare.getDiff();
-            for( final Iterator diffIt = diffList.iterator(); diffIt.hasNext(); )
+            // Für jedes Vergleichspaar wird ein eigener Vergleichseditor geöffnet
+            final ISelection[] selections = readTestDiffForCalcCase( folder,
+                new SubProgressMonitor( monitor, 1000 ) );
+            for( int j = 0; j < selections.length; j++ )
             {
-              final Object diff = diffIt.next();
-              if( diff instanceof ResourceType )
+              final ISelection resourceSel = selections[j];
+
+              final CompareConfiguration cc = new CompareConfiguration();
+              cc.setProperty( CompareEditor.CONFIRM_SAVE_PROPERTY, new Boolean( false ) );
+              cc.setLeftEditable( false );
+              cc.setRightEditable( false );
+
+              final ResourceCompareInputWrapper inputWrapper = new ResourceCompareInputWrapper( cc );
+              inputWrapper.setSelection( resourceSel );
+              inputWrapper.initializeCompareConfiguration();
+
+              final Runnable runnable = new Runnable()
               {
-                final ResourceType resource = (ResourceType)diff;
-                final List pathList = resource.getPath();
-                final ResourceType.PathType first = (PathType)pathList.get( 0 );
-                final ResourceType.PathType second = (PathType)pathList.get( 1 );
-
-                final IResource firstRes = first.isRelativeToCalcCase() ? folder.findMember( first
-                    .getName() ) : project.findMember( first.getName() );
-                final IResource secondRes = second.isRelativeToCalcCase() ? folder
-                    .findMember( second.getName() ) : project.findMember( second.getName() );
-
-                if( firstRes == null || secondRes == null )
-                  return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
-                      "Resourcen-Diff enthält Resource, die nicht vorhanden sind.", null );
-
-                final CompareConfiguration cc = new CompareConfiguration();
-                cc.setProperty( CompareEditor.CONFIRM_SAVE_PROPERTY, new Boolean( false ) );
-                cc.setLeftEditable( false );
-                cc.setRightEditable( false );
-
-                final ResourceCompareInputWrapper inputWrapper = new ResourceCompareInputWrapper(
-                    cc );
-                inputWrapper.setSelection( new StructuredSelection( new IResource[]
+                public void run()
                 {
-                    firstRes,
-                    secondRes } ) );
-                inputWrapper.initializeCompareConfiguration();
+                  CompareUI.openCompareEditor( inputWrapper );
+                }
+              };
 
-                final Runnable runnable = new Runnable()
-                {
-                  public void run()
-                  {
-                    CompareUI.openCompareEditor( inputWrapper );
-                  }
-                };
-
-                display.asyncExec( runnable );
-              }
-              else
-                return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
-                    "Unbekannter Diff-Typ: " + diff.getClass().getName(), null );
+              display.asyncExec( runnable );
             }
 
           }
-          catch( final JAXBException e )
+          catch( final CoreException e )
           {
             e.printStackTrace();
 
-            return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
-                "Konnte Test-Konfiguration nicht lesen.", e );
+            return e.getStatus();
           }
-          catch( final UnsupportedEncodingException e )
+          finally
           {
-            e.printStackTrace();
-
-            return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
-                "Konnte Test-Konfiguration nicht lesen.", e );
-          }
-          catch( CoreException e )
-          {
-            e.printStackTrace();
+            monitor.done();
           }
 
           return Status.OK_STATUS;
         }
       };
-      job.setUser( true );
-      job.schedule();
+      diffJob.setUser( true );
+
+      // die Berechnung durchführen
+      final CalcCaseJob calcJob = new CalcCaseJob( calcCasesToCalc[i] );
+
+      calcJob.addJobChangeListener( new JobChangeAdapter()
+      {
+        /**
+         * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+         */
+        public void done( final IJobChangeEvent event )
+        {
+          // nur falls die Berechnung erfolgreich war, den diff-job starten
+          if( event.getResult().isOK() )
+            diffJob.schedule();
+        }
+      } );
+
+      calcJob.schedule();
     }
   }
 
@@ -221,5 +203,88 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   // egal
+  }
+
+  protected static ISelection[] readTestDiffForCalcCase( final IFolder calcCaseFolder,
+      final IProgressMonitor monitor ) throws CoreException
+  {
+    InputStreamReader reader = null;
+    try
+    {
+      monitor.beginTask( "Lese Vergleichskonfiguration", 1000 );
+      
+      // ein eigener unmarshaller pro job, weil die jaxb Klasse nicht thread
+      // safe sind
+      final Unmarshaller unmarshaller = new ObjectFactory().createUnmarshaller();
+
+      final IFile file = calcCaseFolder.getFile( ".test.xml" );
+      reader = new InputStreamReader( new BufferedInputStream( file.getContents() ), file
+          .getCharset() );
+      final CompareType compare = (CompareType)unmarshaller.unmarshal( new InputSource( reader ) );
+      reader.close();
+
+      final List diffList = compare.getDiff();
+
+      final ISelection[] selections = new ISelection[diffList.size()];
+      int count = 0;
+      for( final Iterator diffIt = diffList.iterator(); diffIt.hasNext(); )
+      {
+        final Object diff = diffIt.next();
+        if( diff instanceof ResourceType )
+        {
+          final ResourceType resource = (ResourceType)diff;
+          final List pathList = resource.getPath();
+          final ResourceType.PathType first = (PathType)pathList.get( 0 );
+          final ResourceType.PathType second = (PathType)pathList.get( 1 );
+
+          final IResource firstRes = getResource( first, calcCaseFolder );
+          final IResource secondRes = getResource( second, calcCaseFolder );
+
+          selections[count++] = new StructuredSelection( new IResource[]
+          {
+              firstRes,
+              secondRes } );
+        }
+        else
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault()
+              .getID(), 0, "Unbekannter Diff-Typ: " + diff.getClass().getName(), null ) );
+      }
+
+      return selections;
+    }
+    catch( final CoreException ce )
+    {
+      throw ce;
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(),
+          0, "Konnte Test-Konfiguration nicht lesen.", e ) );
+    }
+    finally
+    {
+      monitor.done();
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  private static final IResource getResource( final ResourceType.PathType path,
+      final IFolder calcCaseFolder ) throws CoreException
+  {
+    final IProject project = calcCaseFolder.getProject();
+    final String name = path.getName();
+    final boolean relativeToCalcCase = path.isRelativeToCalcCase();
+    final IResource resource = relativeToCalcCase ? calcCaseFolder.findMember( name ) : project
+        .findMember( name );
+
+    if( resource == null )
+    {
+      final String location = relativeToCalcCase ? "der Rechenvariante" : "des Projekts";
+      final String message = "Pfad existiert nicht innerhalb " + location + ": " + name;
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(),
+          0, message, null ) );
+    }
+
+    return resource;
   }
 }
