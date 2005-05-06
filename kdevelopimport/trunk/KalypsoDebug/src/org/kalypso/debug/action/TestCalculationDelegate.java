@@ -48,10 +48,10 @@ import java.util.List;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.bce.eclipse.compare.ResourceCompareInputCopy;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.internal.CompareEditor;
-import org.eclipse.compare.internal.ResourceCompareInputWrapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -144,7 +144,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
               cc.setLeftEditable( false );
               cc.setRightEditable( false );
 
-              final ResourceCompareInputWrapper inputWrapper = new ResourceCompareInputWrapper( cc );
+              final ResourceCompareInputCopy inputWrapper = new ResourceCompareInputCopy( cc );
               inputWrapper.setSelection( resourceSel );
               inputWrapper.initializeCompareConfiguration();
 
