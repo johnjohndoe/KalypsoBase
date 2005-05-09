@@ -7,7 +7,7 @@
 	<property name="project-name" value="debugBinding" />
 
 	  <patternset id="binding.schemata">
-	    <include name="etc/schemas/**/*.xsd"/>
+	    <include name="etc/schemas/*.xsd"/>
 	  </patternset>
   
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
