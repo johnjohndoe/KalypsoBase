@@ -40,8 +40,9 @@
 *  ---------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A url-catalog made up from several url-catalogs.
@@ -50,31 +51,32 @@ import java.net.URL;
  */
 public class MultiUrlCatalog implements IUrlCatalog
 {
-  private final IUrlCatalog[] m_catalogs;
+  private final Map m_catalog = new HashMap();
 
   public MultiUrlCatalog( final IUrlCatalog[] catalogs )
   {
-    m_catalogs = catalogs;
+    for( int i = 0; i < catalogs.length; i++ )
+    {
+      final IUrlCatalog catalog = catalogs[i];
+      m_catalog.putAll( catalog.getCatalog() );
+    }
   }
 
   /**
    * Iterates the child catalogs to find the url. The order is as given in the constructor.
    * 
-   * @throws MalformedURLException if any of the child catalogs throws it.
-   * 
    * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
    */
-  public URL getURL( final String key ) throws MalformedURLException
+  public URL getURL( final String namespace )
   {
-    for( int i = 0; i < m_catalogs.length; i++ )
-    {
-      final IUrlCatalog catalog = m_catalogs[i];
-      final URL url = catalog.getURL( key );
-      if( url != null )
-        return url;
-    }
-
-    return null;
+    return (URL)m_catalog.get( namespace );
   }
 
+  /**
+   * @see org.kalypso.java.net.IUrlCatalog#getCatalog()
+   */
+  public Map getCatalog()
+  {
+    return m_catalog;
+  }
 }
