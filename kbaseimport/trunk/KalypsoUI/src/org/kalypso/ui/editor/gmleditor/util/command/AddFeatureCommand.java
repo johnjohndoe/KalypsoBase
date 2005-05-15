@@ -143,7 +143,7 @@ public class AddFeatureCommand implements ICommand
 
   private void addFeature() throws Exception
   {
-    m_workspace.addFeature( m_parentFeature, m_propName, m_pos, newFeature );
+    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
   }
 }
