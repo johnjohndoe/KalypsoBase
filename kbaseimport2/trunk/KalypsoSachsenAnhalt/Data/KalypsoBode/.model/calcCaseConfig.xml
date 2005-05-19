@@ -2,10 +2,10 @@
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcCaseConfig.xsd">
 	<!-- Rechenfall anlegen, ohne Zeitreihen -->
 	<createTransformations logFile="createCalcCase.log">
-		<!-- Bodemodell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
+		<!-- modell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/bodemodell.gml"/>
-			<argument name="output" value=":calcdir:bodemodell.gml"/>
+			<argument name="input" value=":project:.templates/Modell/modell.gml"/>
+			<argument name="output" value=":calcdir:modell.gml"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/Info_Rechenvariante.gft"/>
@@ -18,6 +18,10 @@
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/wiskiimport_gesamt.gml"/>
 			<argument name="output" value=":calcdir:wiskiimport_gesamt.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Modell/wiskiimport_prognose.gml"/>
+			<argument name="output" value=":calcdir:wiskiimport_prognose.gml"/>
 		</transformation>
 
 		<!-- Kartenansichten  -->
@@ -63,6 +67,19 @@
 			<argument name="feature" value="Wiski"/>
 			<argument name="sourceObservation1" value="wiski_vergangenheit"/>
 			<argument name="rangeMode1" value="start-middle"/>
+			<argument name="targetObservation" value="lokal"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		
+        <!-- Pseudo-Import, um leere ZML für die Abgabe an der Überleitung zu generieren -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:wiskiimport_prognose.gml"/>
+			<argument name="feature" value="Wiski"/>
+			<argument name="sourceObservation1" value="wiski_vergangenheit"/>
+			<argument name="rangeMode1" value="middle-stop"/>
 			<argument name="targetObservation" value="lokal"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>

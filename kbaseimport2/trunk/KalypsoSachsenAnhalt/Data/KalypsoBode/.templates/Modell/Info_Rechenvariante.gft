@@ -20,7 +20,7 @@
 		<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
 		<subcomposite property="MetadataAssociation" style="SWT.NONE">
-			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+				<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		</subcomposite>
 	</group>
 </view>

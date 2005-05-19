@@ -5,8 +5,8 @@
 	<!-- automatisches Erzeugen der FeatureID ist konfigurierbar, die entstehenden sind dann eindeutig und besser verständlich -->
 	<!-- noch in zwei GMCs aufteilen: Messung und Gesamt -->
 	<!-- es gibt mittlerweile noch viele nette Features zum automatischen Generieren (auch Besucher :-)) -->
-		<gmlsource xlink:href="../bodemodell.gml"/>
-		<gmlsource xlink:href="wiskiimport_leer.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
+		<gmlsource xlink:href="wiskiimport_template.gml"/>
 		<addFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember[Pegel]" toPath="WiskiMember" overwriteExisting="true">
 			<map from="Ganglinie_gemessen" to="lokal"/>
 		</addFeaturesMapping>
