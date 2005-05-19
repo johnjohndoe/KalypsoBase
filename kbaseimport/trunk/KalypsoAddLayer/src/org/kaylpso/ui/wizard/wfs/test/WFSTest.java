@@ -67,7 +67,15 @@ public class WFSTest extends TestCase
   {
     URL url = new URL( base + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
         + layer );
-    GMLSchema schema=new GMLSchema(url);
+    GMLSchema schema = null;
+    try
+    {
+      schema = new GMLSchema(url);
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     FeatureType[] featureTypes = schema.getFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
