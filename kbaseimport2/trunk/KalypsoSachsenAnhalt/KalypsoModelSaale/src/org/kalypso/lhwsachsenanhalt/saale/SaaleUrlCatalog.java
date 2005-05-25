@@ -60,6 +60,5 @@ public final class SaaleUrlCatalog extends AbstractUrlCatalog
     catalog.put( "org.kalypso.saale.common", myClass.getResource( "schemata/common.xsd" ) );
     catalog.put( "org.kalypso.saale.control", myClass.getResource( "schemata/control.xsd" ) );
     catalog.put( "org.kalypso.saale.steuerung", myClass.getResource( "schemata/steuerung.xsd" ) );
-//    catalog.put( "org.kalypso.bode.wiski", myClass.getResource( "schemata/wiski.xsd" ) );
   }
 }
