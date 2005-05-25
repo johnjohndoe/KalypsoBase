@@ -63,4 +63,15 @@ public class CalculationSchemaStreamHandler extends AbstractURLStreamHandlerServ
     
     return new CalculationSchemaURLConnection( u );
   }
+  
+  /**
+   * Overwritten for performance reasons. The super-method does hostname-lookup,
+   * which results in a huge perfomance loss, becaue my 'hosts' are almost always not available.
+   * 
+   * @see org.osgi.service.url.AbstractURLStreamHandlerService#equals(java.net.URL, java.net.URL)
+   */
+  public boolean equals( final URL u1, final URL u2 )
+  {
+    return ( "" + u1 ).equals( "" + u2 );
+  }
 }
