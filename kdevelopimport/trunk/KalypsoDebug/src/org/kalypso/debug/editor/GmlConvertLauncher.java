@@ -2,6 +2,7 @@ package org.kalypso.debug.editor;
 
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.bce.eclipse.core.runtime.InformSuccessJobChangeAdapter;
 import org.eclipse.core.resources.IFile;
@@ -58,7 +59,7 @@ public class GmlConvertLauncher implements IEditorLauncher
           final IUrlResolver resolver = new UrlResolver();
           final URL context = ResourceUtilities.createURL( convertFile );
 
-          return GmlConvertFactory.convertXml( inputSource, resolver, context );
+          return GmlConvertFactory.convertXml( inputSource, resolver, context, new HashMap() );
         }
         catch( final GmlConvertException e )
         {
