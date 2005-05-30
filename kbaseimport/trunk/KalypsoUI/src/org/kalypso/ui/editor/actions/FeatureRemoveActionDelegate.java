@@ -46,7 +46,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
-
 /**
  * FeatureRemoveActionDelegate
  * <p>
@@ -104,7 +103,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
       action.setEnabled( true );
       String text = action.getText();
       String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-      action.setText(newText);
+      action.setText( newText );
     }
     else
       action.setEnabled( false );
