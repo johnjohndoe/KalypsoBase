@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.java.swing.table.TableUtils;
 import org.kalypso.ui.metadoc.IExportableTableDocument;
 
 /**
@@ -57,8 +57,6 @@ public class ExportableObservationTable implements IExportableTableDocument
 {
   private final ObservationTable m_table;
 
-  private boolean m_onlySelected;
-
   public ExportableObservationTable( final ObservationTable table )
   {
     m_table = table;
@@ -69,23 +67,19 @@ public class ExportableObservationTable implements IExportableTableDocument
    */
   public void setOnlySelectedRows( final boolean flag )
   {
-    m_onlySelected = flag;
+    // ignored
   }
 
   /**
-   * TODO: use the table and its renderer for exporting! so that the decimals
-   * are correctly set (according to the view)
-   * 
    * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
    */
   public void exportDocument( final OutputStream outs ) throws Exception
   {
-    final ITuppleModel values = ((ObservationTableModel) m_table.getModel()).getValues( m_onlySelected ? m_table.getSelectedRows() : null );
-
-    final OutputStreamWriter writer = new OutputStreamWriter( outs );
+    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(
+        outs ) );
     try
     {
-      ObservationUtilities.dump( values, ";", writer );
+      TableUtils.dump( m_table, "\t", writer );
     }
     finally
     {
@@ -96,7 +90,7 @@ public class ExportableObservationTable implements IExportableTableDocument
   /**
    * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
    */
-  public String getDocumentExtension( )
+  public String getDocumentExtension()
   {
     return ".csv";
   }
