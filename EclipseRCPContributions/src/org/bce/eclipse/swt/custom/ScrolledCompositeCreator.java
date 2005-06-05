@@ -68,7 +68,7 @@ public abstract class ScrolledCompositeCreator
     scrolledComposite.setContent( m_contentControl );
 
     m_scrolledComposite = scrolledComposite;
-    parent.addControlListener( new ControlAdapter()
+    final ControlAdapter controlAdapter = new ControlAdapter()
     {
       /**
        * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
@@ -77,8 +77,10 @@ public abstract class ScrolledCompositeCreator
       {
         updateControlSize( true );
       }
-    } );
-    
+    };
+
+    scrolledComposite.addControlListener( controlAdapter );
+
     updateControlSize( false );
   }
 
@@ -88,7 +90,8 @@ public abstract class ScrolledCompositeCreator
     final Rectangle clientArea = m_scrolledComposite.getClientArea();
     final int psizex = clientArea.width;
     final int psizey = clientArea.height;
-    if( ignoreZeroClientSize && ( psizex == 0 || psizey == 0  ) )
+//    Logger.getLogger( getClass().getName() ).info( "clientArea: x= " + psizex + " y=" + psizey );
+    if( ignoreZeroClientSize && (psizex == 0 || psizey == 0) )
       return;
 
     final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y,
@@ -96,15 +99,15 @@ public abstract class ScrolledCompositeCreator
     m_contentControl.setSize( newSize );
   }
 
-  public Control getContentControl()
+  public Control getContentControl( )
   {
     return m_contentControl;
   }
 
-  public ScrolledComposite getScrolledComposite()
+  public ScrolledComposite getScrolledComposite( )
   {
     return m_scrolledComposite;
   }
 
-  protected abstract Control createContents( final Composite parent, final int style );
+  protected abstract Control createContents( final ScrolledComposite parent, final int style );
 }
