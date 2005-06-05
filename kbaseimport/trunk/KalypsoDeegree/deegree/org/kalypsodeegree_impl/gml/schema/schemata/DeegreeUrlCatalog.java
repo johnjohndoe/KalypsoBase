@@ -53,6 +53,7 @@ import org.kalypso.java.net.AbstractUrlCatalog;
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
+
   /**
    * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
