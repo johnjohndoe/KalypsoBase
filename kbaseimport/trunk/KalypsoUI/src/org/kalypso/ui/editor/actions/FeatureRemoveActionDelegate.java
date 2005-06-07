@@ -99,12 +99,15 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
     if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
     {
       m_selection = (ICommandableFeatureSelection)selection;
-      action.setEnabled( true );
-      String text = action.getText();
-      String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-      action.setText( newText );
+      if( m_selection.size() >= 2 )
+      {
+        action.setEnabled( true );
+        String text = action.getText();
+        String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
+        action.setText( newText );
+        return;
+      }
     }
-    else
-      action.setEnabled( false );
+    action.setEnabled( false );
   }
 }
