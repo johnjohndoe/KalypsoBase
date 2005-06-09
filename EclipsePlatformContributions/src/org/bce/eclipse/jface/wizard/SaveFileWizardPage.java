@@ -44,7 +44,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,7 +94,7 @@ public class SaveFileWizardPage extends WizardPage
 
   private final String m_groupname;
 
-  private final Map m_formats = new HashMap();
+  private final Map<Object, String> m_formats = new HashMap<Object, String>();
 
   private StructuredViewer m_formatViewer;
 
@@ -103,7 +102,7 @@ public class SaveFileWizardPage extends WizardPage
    * @param formats format objects -> file extension
    */
   public SaveFileWizardPage( final String pageName, final String title,
-      final ImageDescriptor titleImage, final String groupname, final Map formats )
+      final ImageDescriptor titleImage, final String groupname, final Map<Object, String> formats )
   {
     super( pageName, title, titleImage );
 
@@ -289,9 +288,8 @@ public class SaveFileWizardPage extends WizardPage
     filterExts[0] = "*";
     filterNames[0] = "Alle Dateien";
     int count = 1;
-    for( final Iterator fIt = m_formats.entrySet().iterator(); fIt.hasNext(); )
+    for( final Entry<Object, String> entry : m_formats.entrySet() )
     {
-      final Map.Entry entry = (Map.Entry)fIt.next();
       filterNames[count] = entry.getKey().toString();
       filterExts[count] = "*." + entry.getValue().toString();
       
@@ -337,9 +335,8 @@ public class SaveFileWizardPage extends WizardPage
     if( index != -1 )
     {
       final String ext = selectedFileName.substring( index + 1 );
-      for( Iterator fIt = m_formats.entrySet().iterator(); fIt.hasNext(); )
+      for( final Entry<Object, String> entry : m_formats.entrySet() )
       {
-        final Map.Entry entry = (Entry)fIt.next();
         if( entry.getKey().equals( ext ) )
           setDestinationFormat( entry.getKey() );
       }
@@ -376,10 +373,8 @@ public class SaveFileWizardPage extends WizardPage
 
   private void setDestinationFormat( final Object format )
   {
-    for( final Iterator fIt = m_formats.keySet().iterator(); fIt.hasNext();  )
+    for( final Object key : m_formats.keySet() )
     {
-      final Object key = fIt.next();
-      
       if( key.equals( format ) )
       {
         m_formatViewer.setSelection( new StructuredSelection( key ) );
@@ -394,7 +389,7 @@ public class SaveFileWizardPage extends WizardPage
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
     {
-      final List history = new ArrayList( Arrays.asList( m_destinationNameField.getItems() ) );
+      final List<String> history = new ArrayList<String>( Arrays.asList( m_destinationNameField.getItems() ) );
       history.remove( getDestinationValue() );
       history.add( 0, getDestinationValue() );
 
@@ -403,7 +398,7 @@ public class SaveFileWizardPage extends WizardPage
       if( history.size() > COMBO_HISTORY_LENGTH )
         history.remove( COMBO_HISTORY_LENGTH );
 
-      settings.put( STORE_DESTINATION_NAMES_ID, (String[])history.toArray( new String[history
+      settings.put( STORE_DESTINATION_NAMES_ID, history.toArray( new String[history
           .size()] ) );
     }
   }
