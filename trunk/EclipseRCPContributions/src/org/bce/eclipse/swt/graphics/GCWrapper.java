@@ -326,11 +326,6 @@ public class GCWrapper
     m_gc.setLineWidth( width );
   }
 
-  public void setXORMode( boolean xor )
-  {
-    m_gc.setXORMode( xor );
-  }
-
   public Point stringExtent( String string )
   {
     return m_gc.stringExtent( string );

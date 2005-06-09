@@ -1,8 +1,8 @@
 package org.bce.eclipse.platform.adapter;
 
-import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 
 /**
@@ -17,6 +17,7 @@ import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
  * @author gernot
  *
  */
+@SuppressWarnings("restricted")
 public class JavaFileEditorInputAdapter implements IAdapterFactory
 {
   /**

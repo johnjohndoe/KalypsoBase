@@ -68,15 +68,13 @@ public final class StatusUtilities
     StringTokenizer strTok;
     String sMainMessage;
     strTok = new StringTokenizer( message, delim );
-    final Collection stati = new ArrayList( strTok.countTokens() - 1 > 0 ? strTok.countTokens() - 1
+    final Collection<IStatus> stati = new ArrayList<IStatus>( strTok.countTokens() - 1 > 0 ? strTok.countTokens() - 1
         : 0 );
     if( strTok.hasMoreTokens() )
     {
       sMainMessage = strTok.nextToken();
       while( strTok.hasMoreTokens() )
-      {
         stati.add( new Status( severity, pluginId, code, strTok.nextToken(), null ) );
-      }
     }
     else
     {
@@ -86,7 +84,7 @@ public final class StatusUtilities
     // die severity informirt ist
     stati.add( new Status( severity, pluginId, code, "", null ) );
 
-    final IStatus[] childStati = (IStatus[])stati.toArray( new IStatus[stati.size()] );
+    final IStatus[] childStati = stati.toArray( new IStatus[stati.size()] );
     return new MultiStatus( pluginId, code, childStati, sMainMessage, throwable );
   }
 }

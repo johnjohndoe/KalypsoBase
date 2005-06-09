@@ -21,6 +21,7 @@
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.bce.eclipse.rcp.contrib"/>
    </requires>
    <extension
          point="org.eclipse.core.runtime.adapters">
