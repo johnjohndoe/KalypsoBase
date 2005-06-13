@@ -166,7 +166,7 @@ public class RasterizeLanduseJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return getClass().getResource( "resources/rasterCalcjob_spec.xml" );
+    return getClass().getResource( "resources/rasterLanduseCalcjob_spec.xml" );
   }
 
 }
