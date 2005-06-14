@@ -23,7 +23,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.xml.sax.InputSource;
 
 /**
