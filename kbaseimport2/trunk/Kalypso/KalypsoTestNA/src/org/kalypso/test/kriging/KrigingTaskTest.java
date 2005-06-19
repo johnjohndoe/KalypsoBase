@@ -96,10 +96,12 @@ public class KrigingTaskTest extends TestCase
     mappingKriging.setSourceGMLIDLinkProperty( "DWDID" );
     mappingKriging.setSourceGMLObservationLinkProperty( "N" );
     // setting outputs
-    mappingKriging.setHrefGeneratesGml( "C:\\TMP\\mappingOut.gml" );
+    String hrefResult = "C:\\TMP\\mappingOut.gml";
+    mappingKriging.setHrefGeneratesGml( hrefResult );
 
     mappingKriging.setTimeStepMinutes( 15 );
     mappingKriging.execute();
+    System.out.println( "wrote mapping to " + hrefResult );
 
   }
 }
