@@ -73,8 +73,8 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 
 /**
- * Zeigt den Inhalt des {@link org.kalypso.util.pool.ResourcePool}in Form einer
- * Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
+ * Zeigt den Inhalt des {@link org.kalypso.util.pool.ResourcePool}in Form einer Tabelle an. Die Tabelle wird alle 2
+ * Sekunden aktualisiert.
  * 
  * @author belger
  */
@@ -89,7 +89,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     public PoolViewColumn( final String text, final IMemento memento )
     {
       this.text = text;
-      
+
       final Integer mementoWidth = memento == null ? null : memento.getInteger( text );
       this.width = mementoWidth == null ? 100 : mementoWidth.intValue();
     }
@@ -173,9 +173,8 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
           final IPoolListener[] listeners = info.getListeners();
 
-          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer()
-              .getControl().getShell(), listeners, new ArrayContentProvider(), new LabelProvider(),
-              "Listeners for KeyInfo: " + info );
+          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(),
+              listeners, new ArrayContentProvider(), new LabelProvider(), "Listeners for KeyInfo: " + info );
           dialog.open();
         }
       }
@@ -188,7 +187,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     for( final Iterator cIt = m_columns.iterator(); cIt.hasNext(); )
     {
       final PoolViewColumn col = (PoolViewColumn)cIt.next();
-      
+
       final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
       keytc.setText( col.text );
       keytc.setWidth( col.width );
@@ -212,8 +211,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {
@@ -230,8 +228,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
@@ -239,8 +236,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( Object element, int columnIndex )
   {
@@ -263,8 +259,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite,
-   *      org.eclipse.ui.IMemento)
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
@@ -286,7 +281,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
         return "" + info.getListeners().length;
       }
     } );
-    
+
     m_columns.add( new PoolViewColumn( "Object", memento )
     {
       public String getValue( final KeyInfo info )

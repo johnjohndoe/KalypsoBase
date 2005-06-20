@@ -111,11 +111,10 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     final Display display = m_window.getShell().getDisplay();
 
     // erstmal genauso wie eie normale berechnung
-    final ISelection selection = m_window.getSelectionService().getSelection(
-        IPageLayout.ID_RES_NAV );
+    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(),
-        selection, "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
+    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
+        "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
 
     if( calcCasesToCalc == null )
       return;
@@ -133,8 +132,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
             monitor.beginTask( "Öffne Vergleichsdaten für: " + folder.getName(), 2000 );
 
             // Für jedes Vergleichspaar wird ein eigener Vergleichseditor geöffnet
-            final ISelection[] selections = readTestDiffForCalcCase( folder,
-                new SubProgressMonitor( monitor, 1000 ) );
+            final ISelection[] selections = readTestDiffForCalcCase( folder, new SubProgressMonitor( monitor, 1000 ) );
             for( int j = 0; j < selections.length; j++ )
             {
               final ISelection resourceSel = selections[j];
@@ -205,21 +203,20 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   // egal
   }
 
-  protected static ISelection[] readTestDiffForCalcCase( final IFolder calcCaseFolder,
-      final IProgressMonitor monitor ) throws CoreException
+  protected static ISelection[] readTestDiffForCalcCase( final IFolder calcCaseFolder, final IProgressMonitor monitor )
+      throws CoreException
   {
     InputStreamReader reader = null;
     try
     {
       monitor.beginTask( "Lese Vergleichskonfiguration", 1000 );
-      
+
       // ein eigener unmarshaller pro job, weil die jaxb Klasse nicht thread
       // safe sind
       final Unmarshaller unmarshaller = new ObjectFactory().createUnmarshaller();
 
       final IFile file = calcCaseFolder.getFile( ".test.xml" );
-      reader = new InputStreamReader( new BufferedInputStream( file.getContents() ), file
-          .getCharset() );
+      reader = new InputStreamReader( new BufferedInputStream( file.getContents() ), file.getCharset() );
       final CompareType compare = (CompareType)unmarshaller.unmarshal( new InputSource( reader ) );
       reader.close();
 
@@ -246,8 +243,8 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
               secondRes } );
         }
         else
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault()
-              .getID(), 0, "Unbekannter Diff-Typ: " + diff.getClass().getName(), null ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
+              "Unbekannter Diff-Typ: " + diff.getClass().getName(), null ) );
       }
 
       return selections;
@@ -258,8 +255,8 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(),
-          0, "Konnte Test-Konfiguration nicht lesen.", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
+          "Konnte Test-Konfiguration nicht lesen.", e ) );
     }
     finally
     {
@@ -268,21 +265,19 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     }
   }
 
-  private static final IResource getResource( final ResourceType.PathType path,
-      final IFolder calcCaseFolder ) throws CoreException
+  private static final IResource getResource( final ResourceType.PathType path, final IFolder calcCaseFolder )
+      throws CoreException
   {
     final IProject project = calcCaseFolder.getProject();
     final String name = path.getName();
     final boolean relativeToCalcCase = path.isRelativeToCalcCase();
-    final IResource resource = relativeToCalcCase ? calcCaseFolder.findMember( name ) : project
-        .findMember( name );
+    final IResource resource = relativeToCalcCase ? calcCaseFolder.findMember( name ) : project.findMember( name );
 
     if( resource == null )
     {
       final String location = relativeToCalcCase ? "der Rechenvariante" : "des Projekts";
       final String message = "Pfad existiert nicht innerhalb " + location + ": " + name;
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(),
-          0, message, null ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0, message, null ) );
     }
 
     return resource;

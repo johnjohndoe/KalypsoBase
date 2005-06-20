@@ -52,8 +52,7 @@ public class GmlConvertLauncher implements IEditorLauncher
           if( convertFile == null )
             throw new Exception( "Datei nicht im Workspace gefunden: " + filePath.toOSString() );
 
-          final InputStreamReader reader = new InputStreamReader( convertFile.getContents(),
-              convertFile.getCharset() );
+          final InputStreamReader reader = new InputStreamReader( convertFile.getContents(), convertFile.getCharset() );
           final InputSource inputSource = new InputSource( reader );
 
           final IUrlResolver resolver = new UrlResolver();
@@ -65,15 +64,14 @@ public class GmlConvertLauncher implements IEditorLauncher
         {
           e.printStackTrace();
 
-          return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0, e
-              .getLocalizedMessage(), e.getCause() );
+          return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0, e.getLocalizedMessage(), e
+              .getCause() );
         }
         catch( final Exception e )
         {
           e.printStackTrace();
 
-          return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0,
-              "Fehler beim Konvertieren", e );
+          return new Status( IStatus.ERROR, KalypsoDebugPlugin.getDefault().getID(), 0, "Fehler beim Konvertieren", e );
         }
       }
     };
