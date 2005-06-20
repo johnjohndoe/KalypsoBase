@@ -7,8 +7,8 @@ package org.kalypso.jwsdp;
  */
 public class Fake
 {
-  private Fake( )
+  private Fake()
   {
-    // empty
+  // empty
   }
 }
