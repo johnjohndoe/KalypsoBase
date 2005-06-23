@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.bce.eclipse.core.runtime.InformSuccessJobChangeAdapter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -18,12 +17,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.InformSuccessJobChangeAdapter;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.debug.KalypsoDebugPlugin;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
-import org.kalypso.util.UrlResolver;
 import org.xml.sax.InputSource;
 
 /**

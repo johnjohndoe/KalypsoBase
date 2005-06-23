@@ -48,7 +48,6 @@ import java.util.List;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.bce.eclipse.compare.ResourceCompareInputCopy;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.internal.CompareEditor;
@@ -75,6 +74,7 @@ import org.kalypso.compare.CompareType;
 import org.kalypso.compare.ObjectFactory;
 import org.kalypso.compare.ResourceType;
 import org.kalypso.compare.ResourceType.PathType;
+import org.kalypso.contribs.eclipse.compare.ResourceCompareInputCopy;
 import org.kalypso.debug.KalypsoDebugPlugin;
 import org.kalypso.ui.action.CalcCaseHelper;
 import org.kalypso.ui.action.CalcCaseJob;
