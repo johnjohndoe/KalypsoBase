@@ -1,3 +1,1 @@
-currently using:
-
-JWSDP-1.4
+DESCRIPTION=currently using: JWSDP-1.4
