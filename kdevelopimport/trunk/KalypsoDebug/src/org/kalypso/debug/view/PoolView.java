@@ -73,7 +73,7 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 
 /**
- * Zeigt den Inhalt des {@link org.kalypso.commons.pool.ResourcePool}in Form einer Tabelle an. Die Tabelle wird alle 2
+ * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2
  * Sekunden aktualisiert.
  * 
  * @author belger
