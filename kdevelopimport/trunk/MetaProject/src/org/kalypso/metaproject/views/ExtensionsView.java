@@ -91,7 +91,6 @@ public class ExtensionsView extends ViewPart
     m_extsTCP = new ExtensionsTreeContentProvider();
     m_viewer.setContentProvider( m_extsTCP );
     m_viewer.setLabelProvider( new ExtensionsLabelProvider() );
-    m_viewer.getControl().setToolTipText( "Double-click opens the Plugin-XML dialog" );
 
     refreshPluginsList();
 

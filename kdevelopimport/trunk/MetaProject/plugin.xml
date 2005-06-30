@@ -24,6 +24,8 @@
    </requires>
 
    <extension
+         id="org.eclipse.ui.views"
+         name="views"
          point="org.eclipse.ui.views">
       <category
             name="Meta-Information"
