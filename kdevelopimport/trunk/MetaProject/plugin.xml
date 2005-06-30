@@ -24,7 +24,7 @@
    </requires>
 
    <extension
-         id="org.eclipse.ui.views"
+         id="views"
          name="views"
          point="org.eclipse.ui.views">
       <category
