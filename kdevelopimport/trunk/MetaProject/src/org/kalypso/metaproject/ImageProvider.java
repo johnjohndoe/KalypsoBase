@@ -64,4 +64,5 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_REDUCED = id( "icons/reduced.gif" );
   public static final ImageDescriptor IMAGE_COLLAPSE = id( "icons/collapse_all.gif" );
   public static final ImageDescriptor IMAGE_DETAILS = id( "icons/details.gif" );
+  public static final ImageDescriptor IMAGE_COPY = id( "icons/copy.gif" );
 }
