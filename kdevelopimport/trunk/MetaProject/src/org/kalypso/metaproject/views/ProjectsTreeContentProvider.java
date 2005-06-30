@@ -53,7 +53,7 @@ import org.eclipse.jface.viewers.Viewer;
  * 
  * @author schlienger
  */
-public class ProjectTreeContentProvider implements ITreeContentProvider
+public class ProjectsTreeContentProvider implements ITreeContentProvider
 {
   /**
    * reduced view flag: if true, only the projects that have no refenrencing projects are firstly displayed. Other

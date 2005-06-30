@@ -113,7 +113,7 @@ public class ProjectsView extends ViewPart
   private Button m_btnSave;
   private Text m_text;
 
-  private ProjectTreeContentProvider m_projectTCP;
+  private ProjectsTreeContentProvider m_projectTCP;
   private Action m_actionDump;
 
   /**
@@ -124,7 +124,7 @@ public class ProjectsView extends ViewPart
     m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
 
     m_viewer = new TreeViewer( m_sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_projectTCP = new ProjectTreeContentProvider();
+    m_projectTCP = new ProjectsTreeContentProvider();
     m_viewer.setContentProvider( m_projectTCP );
     m_viewer.setLabelProvider( new WorkbenchLabelProvider() );
     m_viewer.getControl().setToolTipText( "Double-click opens the Project-Properties dialog" );

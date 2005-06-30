@@ -25,12 +25,22 @@
 
    <extension
          point="org.eclipse.ui.views">
+      <category
+            name="Meta-Information"
+            id="org.kalypso.metainfo"/>
       <view
             name="ProjectDependencies"
             icon="icons/tree.gif"
-            category="org.eclipse.ui"
+            category="org.kalypso.metainfo"
             class="org.kalypso.metaproject.views.ProjectsView"
             id="org.kalypso.metaproject.views.ProjectsView">
+      </view>
+      <view
+            name="Extensions and ExtensionPoins"
+            icon="icons/extpoints.gif"
+            category="org.kalypso.metainfo"
+            class="org.kalypso.metaproject.views.ExtensionsView"
+            id="org.kalypso.metaproject.views.ExtensionsView">
       </view>
    </extension>
 

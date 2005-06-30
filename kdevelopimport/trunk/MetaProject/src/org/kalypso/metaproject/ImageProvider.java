@@ -65,4 +65,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_COLLAPSE = id( "icons/collapse_all.gif" );
   public static final ImageDescriptor IMAGE_DETAILS = id( "icons/details.gif" );
   public static final ImageDescriptor IMAGE_COPY = id( "icons/copy.gif" );
+  public static final ImageDescriptor IMAGE_PLUGIN = id( "icons/plugin.gif" );
+  public static final ImageDescriptor IMAGE_EXTENSION = id( "icons/ext.gif" );
+  public static final ImageDescriptor IMAGE_EXTENSIONPOINT = id( "icons/extpoint.gif" );
 }
