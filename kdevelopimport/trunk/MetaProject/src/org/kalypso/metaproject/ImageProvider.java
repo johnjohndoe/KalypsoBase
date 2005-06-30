@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+
+ --------------------------------------------------------------------------*/
 package org.kalypso.metaproject;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -45,6 +45,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Convenience class for storing references to image descriptors used by this plugin.
+ * 
+ * @author schlienger
  */
 public class ImageProvider
 {
@@ -59,4 +61,7 @@ public class ImageProvider
   }
 
   public static final ImageDescriptor IMAGE_REFRESH = id( "icons/refresh.gif" );
+  public static final ImageDescriptor IMAGE_REDUCED = id( "icons/reduced.gif" );
+  public static final ImageDescriptor IMAGE_COLLAPSE = id( "icons/collapse_all.gif" );
+  public static final ImageDescriptor IMAGE_DETAILS = id( "icons/details.gif" );
 }

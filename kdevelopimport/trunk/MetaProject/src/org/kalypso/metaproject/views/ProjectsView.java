@@ -1,8 +1,60 @@
+/*--------------- Kalypso-Header ------------------------------------------
+
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+
+ --------------------------------------------------------------------------*/
 package org.kalypso.metaproject.views;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
+
+import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -34,63 +86,58 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.metaproject.ImageProvider;
-import org.kalypso.metaproject.MetaProject;
-import org.kalypso.metaproject.ProjectsAnalyser;
+import org.kalypso.metaproject.MetaProjectPlugin;
 
 /**
- * ProjectsView
+ * This is the dependency-view of the projects available in the current workspace.
+ * 
+ * @author schlienger
  */
 public class ProjectsView extends ViewPart
 {
-  private TreeViewer m_viewer;
-
   private Action m_actionRefresh;
-
+  private Action m_actionLayoutReduced;
+  private Action m_actionCollapse;
+  private Action m_actionShowDescription;
   private Action doubleClickAction;
 
+  private SashForm m_sashForm;
+  private TreeViewer m_viewer;
+  private Composite m_cmpDesc;
+  private Button m_btnSave;
   private Text m_text;
 
-  private Button m_btnSave;
-
-  /**
-   * The constructor.
-   */
-  public ProjectsView()
-  {}
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
-  public void dispose()
-  {}
+  private ProjectTreeContentProvider m_projectTCP;
 
   /**
    * This is a callback that will allow us to create the viewer and initialize it.
    */
   public void createPartControl( Composite parent )
   {
-    final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
+    m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
 
-    m_viewer = new TreeViewer( sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.setContentProvider( new MetaProjectTreeContentProvider() );
-    m_viewer.setLabelProvider( new MetaProjectLabelProvider() );
+    m_viewer = new TreeViewer( m_sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_projectTCP = new ProjectTreeContentProvider();
+    m_viewer.setContentProvider( m_projectTCP );
+    m_viewer.setLabelProvider( new WorkbenchLabelProvider() );
     m_viewer.getControl().setToolTipText( "Double-click opens the Project-Properties dialog" );
 
-    Composite cmpDesc = new Composite( sashForm, SWT.NONE );
-    cmpDesc.setLayout( new GridLayout( 2, false ) );
+    m_cmpDesc = new Composite( m_sashForm, SWT.NONE );
+    m_cmpDesc.setLayout( new GridLayout( 2, false ) );
 
-    final Label lbl = new Label( cmpDesc, SWT.NONE );
+    final Label lbl = new Label( m_cmpDesc, SWT.NONE );
     lbl.setText( "Project Description:" );
 
-    m_btnSave = new Button( cmpDesc, SWT.FLAT );
+    m_btnSave = new Button( m_cmpDesc, SWT.FLAT );
     m_btnSave.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
     m_btnSave.setText( "Save" );
     m_btnSave.setToolTipText( "Saves the project description in the file" );
     m_btnSave.setEnabled( false );
 
-    m_text = new Text( cmpDesc, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+    m_text = new Text( m_cmpDesc, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
     final GridData gdText = new GridData( GridData.FILL_BOTH );
     gdText.horizontalSpan = 2;
     m_text.setLayoutData( gdText );
@@ -99,14 +146,7 @@ public class ProjectsView extends ViewPart
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
-        final MetaProject mp = (MetaProject)( (IStructuredSelection)event.getSelection() ).getFirstElement();
-
-        if( mp != null )
-          m_text.setText( mp.getDescription() );
-        else
-          m_text.setText( "" );
-
-        m_btnSave.setEnabled( false );
+        updateText();
       }
     } );
 
@@ -114,10 +154,10 @@ public class ProjectsView extends ViewPart
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final MetaProject mp = (MetaProject)( (IStructuredSelection)m_viewer.getSelection() ).getFirstElement();
-        if( mp != null )
+        final IProject project = (IProject)( (IStructuredSelection)m_viewer.getSelection() ).getFirstElement();
+        if( project != null )
         {
-          mp.setDescription( m_text.getText() );
+          setDescription( project, m_text.getText() );
           m_btnSave.setEnabled( false );
         }
       }
@@ -170,11 +210,22 @@ public class ProjectsView extends ViewPart
   private void fillLocalPullDown( IMenuManager manager )
   {
     manager.add( m_actionRefresh );
+    manager.add( m_actionLayoutReduced );
+    manager.add( new Separator() );
+    manager.add( m_actionCollapse );
+    manager.add( new Separator() );
+    manager.add( m_actionShowDescription );
   }
 
   private void fillContextMenu( IMenuManager manager )
   {
     manager.add( m_actionRefresh );
+    manager.add( m_actionLayoutReduced );
+    manager.add( new Separator() );
+    manager.add( m_actionCollapse );
+    manager.add( new Separator() );
+    manager.add( m_actionShowDescription );
+
     manager.add( new Separator() );
     // Other plug-ins can contribute there actions here
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -183,43 +234,86 @@ public class ProjectsView extends ViewPart
   private void fillLocalToolBar( IToolBarManager manager )
   {
     manager.add( m_actionRefresh );
+    manager.add( m_actionLayoutReduced );
+    manager.add( new Separator() );
+    manager.add( m_actionCollapse );
+    manager.add( new Separator() );
+    manager.add( m_actionShowDescription );
     manager.add( new Separator() );
   }
 
   private void makeActions()
   {
-    m_actionRefresh = new Action()
+    m_actionRefresh = new Action( "Refresh" )
     {
       public void run()
       {
         refreshProjectsList();
       }
     };
-    m_actionRefresh.setText( "Refresh" );
     m_actionRefresh.setToolTipText( "Refresh Projects List" );
     m_actionRefresh.setImageDescriptor( ImageProvider.IMAGE_REFRESH );
+
+    m_actionLayoutReduced = new Action( "Reduced-View", IAction.AS_CHECK_BOX )
+    {
+      public void run()
+      {
+        m_projectTCP.setLayoutReduced( m_actionLayoutReduced.isChecked() );
+        m_viewer.refresh();
+      }
+    };
+    m_actionLayoutReduced
+        .setToolTipText( "The reduced-view only displays projects that are not referenced by other projects" );
+    m_actionLayoutReduced.setImageDescriptor( ImageProvider.IMAGE_REDUCED );
+
+    m_actionCollapse = new Action( "Collapse All" )
+    {
+      public void run()
+      {
+        m_viewer.collapseAll();
+      }
+    };
+    m_actionCollapse.setImageDescriptor( ImageProvider.IMAGE_COLLAPSE );
+
+    m_actionShowDescription = new Action( "Show Description", IAction.AS_CHECK_BOX )
+    {
+      public void run()
+      {
+        m_cmpDesc.setVisible( m_actionShowDescription.isChecked() );
+        
+        if( m_cmpDesc.isVisible() )
+          m_sashForm.setWeights( new int[]{1, 1} );
+        else
+          m_sashForm.setWeights( new int[]{1, 0} );
+        
+        updateText();
+      }
+    };
+    m_actionShowDescription.setToolTipText("Toggle display of project-description pane");
+    m_actionShowDescription.setImageDescriptor( ImageProvider.IMAGE_DETAILS );
+    m_actionShowDescription.setChecked( true );
 
     doubleClickAction = new Action()
     {
       public void run()
       {
         final ISelection selection = m_viewer.getSelection();
-        final MetaProject pd = (MetaProject)( (IStructuredSelection)selection ).getFirstElement();
+        final IProject project = (IProject)( (IStructuredSelection)selection ).getFirstElement();
 
         final ISelectionProvider selpro = new ISelectionProvider()
         {
-          public void addSelectionChangedListener( ISelectionChangedListener listener )
+          public void addSelectionChangedListener( final ISelectionChangedListener listener )
           {}
 
           public ISelection getSelection()
           {
-            return new StructuredSelection( pd.getProject() );
+            return new StructuredSelection( project );
           }
 
-          public void removeSelectionChangedListener( ISelectionChangedListener listener )
+          public void removeSelectionChangedListener( final ISelectionChangedListener listener )
           {}
 
-          public void setSelection( ISelection sel )
+          public void setSelection( final ISelection sel )
           {}
         };
 
@@ -242,19 +336,83 @@ public class ProjectsView extends ViewPart
 
   private void refreshProjectsList()
   {
-    try
+    m_viewer.setInput( ResourcesPlugin.getWorkspace().getRoot().getProjects() );
+  }
+  
+  private void updateText()
+  {
+    if( m_cmpDesc.isVisible() )
     {
-      final MetaProject[] dependencies = ProjectsAnalyser.analyse( ResourcesPlugin.getWorkspace().getRoot()
-          .getProjects() );
+      final IProject project = (IProject)( (IStructuredSelection)m_viewer.getSelection() ).getFirstElement();
 
-      m_viewer.setInput( dependencies );
+      if( project != null )
+        m_text.setText( getDescription( project ) );
+      else
+        m_text.setText( "" );
+
+      m_btnSave.setEnabled( false );
     }
-    catch( final CoreException e )
+  }
+
+  private String getDescription( final IProject project )
+  {
+    final IFile readme = project.getFile( "readme.txt" );
+    if( readme.exists() )
     {
-      MessageDialog.openError( m_viewer.getControl().getShell(), 
-          "ProjectDependencies - Error occured while analysing projects", e
-          .getLocalizedMessage() );
+      InputStream contents = null;
+      try
+      {
+        contents = readme.getContents();
+
+        final StringWriter writer = new StringWriter();
+        CopyUtils.copy( contents, writer, readme.getCharset() );
+
+        contents.close();
+
+        return writer.toString();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        MessageDialog.openError( m_viewer.getControl().getShell(),
+            "ProjectDependencies - Error while getting project description", e.getLocalizedMessage() );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( contents );
+      }
     }
+
+    return "";
+  }
+
+  public void setDescription( final IProject project, final String text )
+  {
+    final IFile readme = project.getFile( "readme.txt" );
+
+    final Job job = new Job( "Saving File " + readme.getName() )
+    {
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          if( readme.exists() )
+            readme.setContents( new ByteArrayInputStream( text.getBytes( readme.getCharset() ) ), true, true, monitor );
+          else
+            readme.create( new ByteArrayInputStream( text.getBytes( readme.getCharset() ) ), true, monitor );
+        }
+        catch( final Exception e )
+        {
+          return new Status( IStatus.ERROR, MetaProjectPlugin.getId(), 0,
+              "Error while saving file " + readme.getName(), e );
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    job.schedule();
   }
 
   /**
