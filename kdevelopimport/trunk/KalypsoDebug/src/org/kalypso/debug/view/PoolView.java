@@ -86,11 +86,11 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     public final String text;
 
-    public PoolViewColumn( final String text, final IMemento memento )
+    public PoolViewColumn( final String txt, final IMemento memento )
     {
-      this.text = text;
+      this.text = txt;
 
-      final Integer mementoWidth = memento == null ? null : memento.getInteger( text );
+      final Integer mementoWidth = memento == null ? null : memento.getInteger( txt );
       this.width = mementoWidth == null ? 100 : mementoWidth.intValue();
     }
 
