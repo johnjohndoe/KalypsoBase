@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.simulation.ui"
+   name="KalypsoSimulationUI Plug-in"
+   version="0.0.1"
+   provider-name="kalypso.org"
+   class="org.kalypso.simulation.ui.KalypsoSimulationUIPlugin">
+
+   <runtime>
+      <library name="KalypsoSimulationUI.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
+      <import plugin="org.kalypso.ui"/>
+   </requires>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Kalypso Simulation"
+            visible="true"
+            id="org.kalypso.simulation.ui.actionSet">
+         <action
+               label="Vorhersage durchführen"
+               class="org.kalypso.simulation.ui.actions.StartCalcWizardPerspectiveAction"
+               icon="icons/kalypso16.gif"
+               menubarPath="org.kalypso.menu.model/prognoseStart"
+               id="org.kalypso.action.model.startPrognosePerspective">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.simulation.ui.perspective.CalcWizardPerspective"
+            fixed="true"
+            name="Vorhersage Assistent"
+            id="org.kalypso.simulation.ui.perspective.CalcWizardPerspective"/>
+   </extension>
+
+</plugin>
