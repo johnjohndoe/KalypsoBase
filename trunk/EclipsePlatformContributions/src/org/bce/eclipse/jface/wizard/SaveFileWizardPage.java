@@ -224,7 +224,6 @@ public class SaveFileWizardPage extends WizardPage
         updatePageCompletion();
       }
     } );
-    // TODO?
     // destinationNameField.addListener( SWT.Selection, this );
     final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;

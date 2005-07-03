@@ -184,7 +184,6 @@ public class ResourceCompareInputCopy extends CompareEditorInput
         {
           fOpenAction = new Action()
           {
-            @SuppressWarnings( "syntheticAccess" )
             public void run( )
             {
               handleOpen( null );

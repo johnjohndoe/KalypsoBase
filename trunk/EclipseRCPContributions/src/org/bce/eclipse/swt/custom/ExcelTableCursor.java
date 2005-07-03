@@ -94,7 +94,7 @@ public class ExcelTableCursor extends TableCursor
 
     public void editorValueChanged( boolean oldValidState, boolean newValidState )
     {
-      // nothing TODO change color of something ?
+      // nothing (maybe change color of something ?)
     }
   };
 
@@ -121,7 +121,6 @@ public class ExcelTableCursor extends TableCursor
         // handle ESCAPE
         final CellEditor cellEditor = getViewer().getCellEditors()[getColumn()];
         cellEditor.performUndo();
-        // TODO implement performUndo() or similar
       }
       else if( e.keyCode == SWT.CR )
       {
