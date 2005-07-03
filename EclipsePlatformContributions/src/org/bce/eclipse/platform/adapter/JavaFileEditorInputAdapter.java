@@ -17,7 +17,6 @@ import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
  * @author gernot
  *
  */
-@SuppressWarnings("restricted")
 public class JavaFileEditorInputAdapter implements IAdapterFactory
 {
   /**
