@@ -32,10 +32,6 @@ public class GCWrapper
     m_gc.dispose();
   }
 
-  public void drawrectangle( final Rectangle r )
-  {
-    drawRectangle( r.x, r.y, r.width, r.height );
-  }
 
   public void drawRectangle( final int x, final int y, final int width,
       final int height )
