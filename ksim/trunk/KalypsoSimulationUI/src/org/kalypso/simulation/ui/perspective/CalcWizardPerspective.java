@@ -40,10 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.perspective;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.contribs.eclipse.jface.wizard.view.WizardNavigationView;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 
 /**
@@ -59,10 +57,12 @@ public class CalcWizardPerspective implements IPerspectiveFactory
     layout.setEditorAreaVisible( false );
     layout.setFixed( false );
 
-    final IFolderLayout folderLayout = layout.createFolder( "folder", IPageLayout.RIGHT, 40, layout.getEditorArea() );
-    folderLayout.addView( WizardNavigationView.class.getName() );
+    layout.addStandaloneView( WizardView.class.getName(), false, IPageLayout.TOP, 95, layout.getEditorArea() );
+//    folderLayout.addView( WizardView.class.getName() );
+//    final IFolderLayout folderLayout = layout.createFolder( "folder", IPageLayout.TOP, 45f, layout.getEditorArea() );
+//    folderLayout.addView( WizardView.class.getName() );
 
-    final IFolderLayout folderLayout2 = layout.createFolder( "folder2", IPageLayout.TOP, 45f, "folder" );
-    folderLayout2.addView( WizardView.class.getName() );
+//    final IFolderLayout folderLayout2 = layout.createFolder( "folder2", IPageLayout.RIGHT, 40, "folder" );
+//    folderLayout2.addView( WizardNavigationView.class.getName() );
   }
 }
