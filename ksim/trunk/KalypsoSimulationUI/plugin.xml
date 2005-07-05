@@ -11,6 +11,9 @@
       <library name="KalypsoSimulationUI.jar">
          <export name="*"/>
       </library>
+      <library name="lib/simulationUIBinding.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
@@ -18,30 +21,191 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.contribs.eclipseplatform"/>
       <import plugin="org.kalypso.ui"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
    </requires>
 
-   <extension
+      <extension
+         id="actionSets"
+         name="actionSets"
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="Kalypso Simulation"
-            visible="true"
+            description="Aktionen zum Verwalten und Bearbeiten von Simulations-Modellen."
+            visible="false"
             id="org.kalypso.simulation.ui.actionSet">
+         <menu
+               label="Modell"
+               path="additions"
+               id="org.kalypso.simulation.ui.menu.model">
+            <groupMarker
+                  name="modelStart">
+            </groupMarker>
+            <separator
+                  name="modelSep">
+            </separator>
+            <groupMarker
+                  name="prognoseStart">
+            </groupMarker>
+         </menu>
          <action
                label="Vorhersage durchführen"
+               icon="icons/elcl16/startPrognose.gif"
                class="org.kalypso.simulation.ui.actions.StartCalcWizardPerspectiveAction"
-               icon="icons/kalypso16.gif"
-               menubarPath="org.kalypso.menu.model/prognoseStart"
-               id="org.kalypso.action.model.startPrognosePerspective">
+               menubarPath="org.kalypso.simulation.ui.menu.model/prognoseStart"
+               id="org.kalypso.action.model.startPrognose">
+         </action>
+         <action
+               label="Vorhersagen organisieren"
+               class="org.kalypso.simulation.ui.actions.ManagePrognosesAction"
+               style="push"
+               menubarPath="org.kalypso.simulation.ui.menu.model/prognoseStart"
+               id="org.kalypso.action.model.manageCalcCases"/>
+         <action
+               label="Berechnung(en) durchführen"
+               icon="icons/elcl16/startCalulation.gif"
+               class="org.kalypso.simulation.ui.actions.StartCalculationActionDelegate"
+               tooltip="Führt die Berechnung der selektierten Rechenvarianten aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.runCalcCase">
+         </action>
+         <action
+               label="Zurückspeichern"
+               icon="icons/elcl16/commitModel.gif"
+               class="org.kalypso.simulation.ui.actions.CommitModelDelegate"
+               tooltip="Speichert die Änderungen am Modell auf den Server zurück"
+               menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
+               id="org.kalypso.action.model.commitModel">
+         </action>
+         <action
+               label="Modell aktualisieren"
+               icon="icons/elcl16/updateModel.gif"
+               class="org.kalypso.simulation.ui.actions.UpdateModelDelegate"
+               tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
+               menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
+               id="org.kalypso.action.model.updateModel">
+         </action>
+         <action
+               label="Vom Server laden..."
+               icon="icons/elcl16/updateModel.gif"
+               helpContextId="org.kalypso.manual.menu_modell"
+               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
+               class="org.kalypso.simulation.ui.actions.GetModelDelegate"
+               menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
+               id="org.kalypso.action.model.checkoutModel">
+         </action>
+         <action
+               label="Kopieren..."
+               icon="icons/elcl16/copyModel.gif"
+               class="org.kalypso.simulation.ui.actions.CopyModelDelegate"
+               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
+               retarget="false"
+               menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
+               id="org.kalypso.action.model.copyModel">
+         </action>
+         <menu
+               label="Rechenvariante"
+               path="org.kalypso.simulation.ui.menu.model"
+               id="org.kalypso.simulation.ui.menu.calcCase">
+            <groupMarker
+                  name="calcCaseStart">
+            </groupMarker>
+         </menu>
+         <action
+               label="Archivieren"
+               icon="icons/elcl16/commitCalcCase.gif"
+               class="org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate"
+               tooltip="legt eine Rechenvariante auf dem Server ab"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.commitCalcCase">
+         </action>
+         <action
+               label="Vom Server laden..."
+               icon="icons/elcl16/updateCalcCase.gif"
+               class="org.kalypso.simulation.ui.actions.GetCalcCaseDelegate"
+               tooltip="lädt eine vorhandene Rechenvariante vom Server"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.getCalcCase">
+         </action>
+         <action
+               label="Zeitreihen aktualisieren"
+               icon="icons/elcl16/refreshCalcCase.gif"
+               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
+               class="org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.updateCalcCaseTimeseries">
+         </action>
+         <action
+               label="Kopieren..."
+               icon="icons/elcl16/copyCalcCase.gif"
+               class="org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate"
+               tooltip="legt eine Kopie der selektierten Rechenvariante an"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.copyCalcCase">
+         </action>
+         <action
+               label="Neu..."
+               icon="icons/elcl16/createCalcCase.gif"
+               tooltip="Erzeugt eine neue Rechenvariante"
+               class="org.kalypso.simulation.ui.actions.NewCalcCaseAction"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.newCalcCase">
          </action>
       </actionSet>
+      <actionSet
+            label="Kalypso Simulation Debug"
+            description="Aktionen zum Testen der Kalypso Simulation"
+            visible="false"
+            id="org.kalypso.simulation.ui.actionSet">
+         <menu
+               label="Simulation Debug"
+               path="additions"
+               id="org.kalypso.simulation.ui.menu.debug">
+            <groupMarker name="start"/>
+         </menu>
+         <action
+               label="Berechnung(en) testen"
+               class="org.kalypso.simulation.ui.actions.TestCalculationDelegate"
+               tooltip="Berechnet die selektierte(n) Rechenvariante(n) und vergleicht das Ergebnis mit dem soll-Zustand."
+               style="push"
+               menubarPath="org.kalypso.simulation.ui.menu.debug/start"
+               id="org.kalypso.action.debug.testCalcCase"/>
+      </actionSet>
    </extension>
+   
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.kalypso.simulation.ui.perspective.CalcWizardPerspective"
+            icon="icons/eview16/calcwizardPersp.gif"
+            class="org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective"
             fixed="true"
             name="Vorhersage Assistent"
-            id="org.kalypso.simulation.ui.perspective.CalcWizardPerspective"/>
+            id="org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective"/>
+      <perspective
+            name="Hochwasser Vorhersage"
+            icon="icons/eview16/startingPersp.gif"
+            fixed="true"
+            class="org.kalypso.simulation.ui.startscreen.PrognosePerspective"
+            id="org.kalypso.simulation.ui.startscreen.PrognosePerspective">
+      </perspective>
+   </extension>
+
+   <extension
+         id="ModelNature"
+         name="ModelNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.simulation.ui.calccase.ModelNature">
+         </run>
+      </runtime>
+      <options
+            allowLinking="true">
+      </options>
    </extension>
 
 </plugin>

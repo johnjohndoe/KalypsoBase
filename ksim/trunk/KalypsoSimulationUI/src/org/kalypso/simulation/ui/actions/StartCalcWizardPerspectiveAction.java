@@ -55,12 +55,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.ClosePerspectiveAction;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
-import org.kalypso.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.simulation.ui.perspective.CalcWizardPerspective;
-import org.kalypso.ui.calcwizard.CalcWizard;
+import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
+import org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective;
 
 /**
  * Action Delegate zum Starten des Berechnungs-Wizards
@@ -84,7 +84,7 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void init( IWorkbenchWindow window )
+  public void init( final IWorkbenchWindow window )
   {
     m_window = window;
   }
@@ -104,20 +104,25 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
       return;
     }
 
-    final CalcWizard wizard = new CalcWizard( projects[0] );
+    openCalculactionWizardOnProject( m_window, projects[0] );
+  }
+
+  public static void openCalculactionWizardOnProject( final IWorkbenchWindow workbenchWindow, final IProject project )
+  {
+    final CalcWizard wizard = new CalcWizard( project );
 
     // remeber old perspective
-    final IWorkbenchPage page = m_window.getActivePage();
-    final IPerspectiveDescriptor perspective = page.getPerspective();
+    final IWorkbenchPage activePage = workbenchWindow.getActivePage();
 
     // change to wizard perspective
-    final IPerspectiveRegistry perspectiveRegistry = m_window.getWorkbench().getPerspectiveRegistry();
+    final IPerspectiveRegistry perspectiveRegistry = workbenchWindow.getWorkbench().getPerspectiveRegistry();
     final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
         .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
-    page.setPerspective( wizardPerspective );
+    activePage.setPerspective( wizardPerspective );
+    
     try
     {
-      final WizardView part = (WizardView)page.showView( WizardView.class.getName() );
+      final WizardView part = (WizardView)activePage.showView( WizardView.class.getName() );
       part.setWizard( wizard );
       part.addWizardContainerListener( new WizardContainerAdapter()
       {
@@ -129,11 +134,11 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
         {
           if( reason == IWizardContainerListener.REASON_FINISHED || reason == IWizardContainerListener.REASON_CANCELED )
           {
-            // close the wizard perspective 
-            final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( m_window );
-            closePerspAction.run();
+            part.removeWizardContainerListener( this );
 
-            page.setPerspective( perspective );
+            // close the wizard perspective 
+            final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( workbenchWindow );
+            closePerspAction.run();
           }
         }
       } );

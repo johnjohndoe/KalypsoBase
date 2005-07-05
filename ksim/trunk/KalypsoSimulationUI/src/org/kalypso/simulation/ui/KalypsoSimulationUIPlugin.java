@@ -13,6 +13,11 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin {
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 	
+	public static String getID()
+	{
+	  return getDefault().getBundle().getSymbolicName();
+	}
+	
 	/**
 	 * The constructor.
 	 */
