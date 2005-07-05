@@ -11,9 +11,6 @@
       <library name="KalypsoDebug.jar">
          <export name="*"/>
       </library>
-      <library name="lib/debugBinding.jar">
-         <export name="*"/>
-      </library>
    </runtime>
 
    <requires>
@@ -44,27 +41,4 @@
             id="org.kalypso.debug.editor.gmlconvert"
             extensions="gmc"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="Kalypso Debug"
-            description="Aktionen zum Debuggen von Kalypso"
-            visible="true"
-            id="org.kalypso.actionSet.debug">
-         <menu
-               label="Kalypso Debug"
-               path="org.kalypso.menu.calcCase"
-               id="org.kalypso.menu.debug">
-            <groupMarker name="start"/>
-         </menu>
-         <action
-               label="Berechnung(en) testen"
-               class="org.kalypso.debug.action.TestCalculationDelegate"
-               tooltip="Berechnet die selektierte(n) Rechenvariante(n) und vergleicht das Ergebnis mit dem soll-Zustand."
-               style="push"
-               menubarPath="org.kalypso.menu.debug/start"
-               id="org.kalypso.action.debug.testCalcCase"/>
-      </actionSet>
-   </extension>
-
 </plugin>
