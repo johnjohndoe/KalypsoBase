@@ -51,7 +51,7 @@ import org.kalypso.ui.repository.view.ObservationChooser;
  * 
  * @author schlienger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclipse.jface.action.FullAction
+public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
 {
   private final ObservationChooser m_explorer;
 
