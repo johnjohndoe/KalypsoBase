@@ -56,4 +56,6 @@ public interface IWizard2 extends IWizard
    * @return false, if something went wrong. Don't change the page now.
    */
   public boolean finishPage( final IWizardPage page );
+  
+  public boolean hasCancelButton();
 }
