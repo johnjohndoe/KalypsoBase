@@ -44,7 +44,6 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -822,14 +821,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IWizard wizard = getWizard();
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException
       {
+        final IWizardPage[] pages = wizard.getPages();
+
+        monitor.beginTask( "Berechnung wird durchgeführt", 1000 + pages.length * 100 );
+
         try
         {
-          final IWizardPage[] pages = wizard.getPages();
-
-          monitor.beginTask( "Berechnung wird durchgeführt", 1000 + pages.length * 100 );
-
           for( int i = 0; i < pages.length; i++ )
           {
             final IWizardPage page = pages[i];
@@ -852,12 +851,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
           }
 
-          if( !status.isOK() )
-            throw new CoreException( status );
+          return status;
         }
-        catch( final CoreException e )
+        finally
         {
-          throw new InvocationTargetException( e );
+          monitor.done();
         }
       }
     };

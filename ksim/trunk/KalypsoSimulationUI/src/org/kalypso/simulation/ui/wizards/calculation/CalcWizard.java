@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -69,7 +71,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.model.xml.ArgListType;
 import org.kalypso.model.xml.ArgType;
-import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -103,6 +104,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   private boolean m_buttonsLocked;
 
+  private CalcwizardType m_calcwizard;
+
+  /** Must call {@link #initWizard(IProgressMonitor)} afterwards. */
   public CalcWizard( final IProject project )
   {
     m_project = project;
@@ -113,12 +117,38 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     m_synchronizer = new ModelSynchronizer( project, serverProject );
   }
 
+  public void initWizard( final IProgressMonitor monitor ) throws CoreException
+  {
+    final IFile wizardConfigFile = (IFile)m_project.findMember( ModelNature.MODELLTYP_CALCWIZARD_XML );
+
+    monitor.beginTask( "Lade " + wizardConfigFile.getName(),  1000 );
+    
+    try
+    {
+      final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
+      inputSource.setEncoding( wizardConfigFile.getCharset() );
+
+      m_calcwizard = (CalcwizardType)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung", e ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   public void addPages()
   {
-    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen",
+    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage erzeugen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     m_createCalcCasePage.addChoiceListener( this );
 
@@ -146,18 +176,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     try
     {
-      monitor.beginTask( "Seiten zur Modellbearbeitung werden geladen", 2000 );
+      monitor.beginTask( "Seiten zur Modellbearbeitung werden geladen", 1000 );
 
-      // wizard seiten hinzufügen!
-      final IFile wizardConfigFile = (IFile)m_project.findMember( ModelNature.MODELLTYP_CALCWIZARD_XML );
-      final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
-      inputSource.setEncoding( wizardConfigFile.getCharset() );
-
-      final Calcwizard calcwizardData = (Calcwizard)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
-
-      monitor.worked( 1000 );
-
-      final java.util.List pages = calcwizardData.getPage();
+      final java.util.List pages = m_calcwizard.getPage();
       for( final Iterator pIt = pages.iterator(); pIt.hasNext(); )
       {
         final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
@@ -175,12 +196,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
         addPage( wizardPage );
       }
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      throw e;
     }
     catch( final Exception e )
     {
@@ -585,5 +600,13 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   public boolean hasCancelButton()
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#getInitialBrowserSize()
+   */
+  public int getInitialBrowserSize()
+  {
+    return m_calcwizard.getBrowserInitialSize();
   }
 }

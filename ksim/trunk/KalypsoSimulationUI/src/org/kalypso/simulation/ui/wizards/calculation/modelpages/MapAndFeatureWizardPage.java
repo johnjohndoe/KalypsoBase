@@ -42,7 +42,7 @@ package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -51,6 +51,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -66,6 +67,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -214,7 +216,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         try
         {
@@ -226,20 +228,23 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
             m_templateviewer.createControls( parent, SWT.BORDER );
           }
+          
+          return Status.OK_STATUS;
         }
-        catch( final Exception e )
+        catch( UnsupportedEncodingException e )
         {
-          m_templateviewer.dispose();
-
-          final Label label = new Label( parent, SWT.NONE );
-          label.setText( "Vorlage konnte nicht geladen werden: " + templateFileName );
-
-          throw new InvocationTargetException( e, errorMsg );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "", e ) );
         }
       }
     };
 
-    op.runAndHandleOperation( getShell(), false, true, "Feature Template laden", errorMsg );
+    if( !op.runAndHandleOperation( getShell(), false, true, "Feature Template laden", errorMsg ).isOK() )
+      {
+      m_templateviewer.dispose();
+
+      final Label label = new Label( parent, SWT.NONE );
+      label.setText( "Vorlage konnte nicht geladen werden: " + templateFileName );
+      };
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException

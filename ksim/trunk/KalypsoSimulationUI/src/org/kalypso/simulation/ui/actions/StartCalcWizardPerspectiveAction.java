@@ -43,6 +43,10 @@ package org.kalypso.simulation.ui.actions;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -50,12 +54,14 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.ClosePerspectiveAction;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
@@ -111,6 +117,18 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
   {
     final CalcWizard wizard = new CalcWizard( project );
 
+    final RunnableContextHelper helper = new RunnableContextHelper( workbenchWindow )
+    {
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+          wizard.initWizard( monitor );
+          return Status.OK_STATUS;
+      }
+    };
+    if( !helper.runAndHandleOperation( workbenchWindow.getShell(), false, true, "Vorhersage Assistent",
+        "Der Vorhersage Assistent konnte nicht initialisiert werden." ).isOK() )
+      return;
+
     // remeber old perspective
     final IWorkbenchPage activePage = workbenchWindow.getActivePage();
 
@@ -119,29 +137,35 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
     final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
         .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
     activePage.setPerspective( wizardPerspective );
-    
+
     try
     {
-      final WizardView part = (WizardView)activePage.showView( WizardView.class.getName() );
-      part.setWizard( wizard );
-      part.addWizardContainerListener( new WizardContainerAdapter()
+      final IViewPart showView = activePage.showView( WizardView.class.getName() );
+      if( showView instanceof WizardView )
       {
-        /**
-         * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
-         *      int)
-         */
-        public void onWizardChanged( final IWizard newwizard, final int reason )
+        final WizardView part = (WizardView)showView;
+        part.setErrorBackgroundBehaviour( true );
+        part.setWizard( wizard );
+        part.addWizardContainerListener( new WizardContainerAdapter()
         {
-          if( reason == IWizardContainerListener.REASON_FINISHED || reason == IWizardContainerListener.REASON_CANCELED )
+          /**
+           * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
+           *      int)
+           */
+          public void onWizardChanged( final IWizard newwizard, final int reason )
           {
-            part.removeWizardContainerListener( this );
+            if( reason == IWizardContainerListener.REASON_FINISHED
+                || reason == IWizardContainerListener.REASON_CANCELED )
+            {
+              part.removeWizardContainerListener( this );
 
-            // close the wizard perspective 
-            final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( workbenchWindow );
-            closePerspAction.run();
+              // close the wizard perspective
+              final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( workbenchWindow );
+              closePerspAction.run();
+            }
           }
-        }
-      } );
+        } );
+      }
     }
     catch( final PartInitException e )
     {

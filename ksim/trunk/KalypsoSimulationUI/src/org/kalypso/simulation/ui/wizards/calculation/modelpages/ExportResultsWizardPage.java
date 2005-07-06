@@ -115,8 +115,8 @@ import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.bericht.ExportWizardBerichtWizard;
-import org.kalypso.ui.bericht.IBerichtExporter;
+import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
+import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
 import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -132,7 +132,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * Unterstützte Argument:
  * </p>
  * <p>
- * exporterN: Namen von Klassen, welche {@link org.kalypso.ui.bericht.IBerichtExporter}implementieren.
+ * exporterN: Namen von Klassen, welche {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter}implementieren.
  * </p>
  * <p>
  * Aus diesen kann der Nutzer für den Brichtsexport auswählen
@@ -392,16 +392,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         final MultiDocumentServiceWrapper msw = metadocService;
         final RunnableContextHelper helper = new RunnableContextHelper( getContainer() )
         {
-          public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+          public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
           {
-            try
-            {
-              exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
-            }
-            catch( final CoreException e )
-            {
-              throw new InvocationTargetException( e );
-            }
+            exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
+            return Status.OK_STATUS;
           }
         };
         helper.runAndHandleOperation( shell, false, true, "Berichtsablage", "Fehler bei der Berichtsablage." );
@@ -776,7 +770,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
@@ -784,6 +778,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
           if( !monitor.isCanceled() )
             GrafikLauncher.startGrafikODT( "grafik", xml, grafikFolder, monitor );
+          
+          return Status.OK_STATUS;
         }
         catch( final SensorException se )
         {
