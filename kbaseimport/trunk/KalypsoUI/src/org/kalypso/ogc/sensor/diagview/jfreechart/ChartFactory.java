@@ -51,10 +51,6 @@ public final class ChartFactory
 {
   /**
    * Creates and returns an observation chart.
-   * 
-   * @param template
-   * @return plot
-   * @throws SensorException
    */
   static Plot createObservationPlot( final DiagView template ) throws SensorException
   {
