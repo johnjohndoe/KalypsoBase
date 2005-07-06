@@ -200,14 +200,26 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
       createMapPanel( sashForm );
+      
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
 
       final Composite rightTopPanel = new Composite( rightSash, SWT.NONE );
       rightTopPanel.setLayout( new GridLayout( 2, false ) );
       createDataButtonsPanel( rightTopPanel ).setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
       createCalccasesGroup( rightTopPanel ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      
-      createDiagramPanel( rightSash );
+
+      final Composite rightBottomPanel = new Composite( rightSash, SWT.NONE );
+      rightBottomPanel.setLayout( new GridLayout() );
+            
+      initDiagram( rightBottomPanel ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      initButtons( rightBottomPanel, "Zeitreihe(n) bearbeiten",
+          "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung", new SelectionAdapter()
+          {
+            public void widgetSelected( final SelectionEvent e )
+            {
+              startGrafik();
+            }
+          } );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -250,44 +262,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     }
   }
 
-  private void createDiagramPanel( final Composite parent )
-  {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout() );
-
-    final Control diag = initDiagram( panel );
-    diag.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    final Composite buttonPanel = new Composite( panel, SWT.NONE );
-    buttonPanel.setLayout( new GridLayout( 2, false ) );
-    buttonPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
-    final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
-    ignoreData.horizontalAlignment = GridData.BEGINNING;
-    createIgnoreButtonPanel( buttonPanel ).setLayoutData( ignoreData );
-
-    final Button button = new Button( buttonPanel, SWT.PUSH );
-    button.setText( "Zeitreihe(n) bearbeiten" );
-    button.setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
-      {
-        startGrafik();
-      }
-    } );
-  }
-
   private Control createCalccasesGroup( final Composite parent )
   {
     final Group treeGroup = new Group( parent, SWT.NONE );
     treeGroup.setText( "Rechenvarianten im Diagram" );
     treeGroup.setLayout( new GridLayout() );
 
-    final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER | SWT.SINGLE | SWT.CHECK | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
+    final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER
+        | SWT.SINGLE | SWT.CHECK | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
     calcCaseViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     calcCaseViewer.setInput( getProject().getFolder( ModelNature.PROGNOSE_FOLDER ) );
     calcCaseViewer.setSelection( new StructuredSelection( getCalcFolder() ), true );
@@ -296,17 +278,18 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         m_checkedElements = calcCaseViewer.getCheckedElements();
-        
+
         refreshDiagram();
       }
     } );
     calcCaseViewer.setChecked( getCalcFolder(), true );
     // the last line will not notify the listeners, so do it myself
-    m_checkedElements = new Object[] { getCalcFolder() };
-    
+    m_checkedElements = new Object[]
+    { getCalcFolder() };
+
     return treeGroup;
   }
-  
+
   private Control createDataButtonsPanel( final Composite parent )
   {
     m_berichtExporters = createExporters();
@@ -346,7 +329,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     } );
 
     doItButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
-    
+
     return buttonGroup;
   }
 
@@ -778,7 +761,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
           if( !monitor.isCanceled() )
             GrafikLauncher.startGrafikODT( "grafik", xml, grafikFolder, monitor );
-          
+
           return Status.OK_STATUS;
         }
         catch( final SensorException se )

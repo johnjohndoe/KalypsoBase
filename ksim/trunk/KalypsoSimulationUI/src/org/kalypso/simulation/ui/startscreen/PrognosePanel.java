@@ -190,20 +190,21 @@ public class PrognosePanel
         headingLabel.getDisplay() );
     headingLabel.setFont( headingFont );
     headingLabel.setBackground( background );
-    headingLabel.setText( "Bitte wählen Sie das Einzugsgebiet" );
+    headingLabel.setText( "Einzugsgebiet:" );
 
     ////////////////
     // LEFT PANEL //
     ////////////////
-    final Composite leftPanel = new Composite( m_control, SWT.NONE );
-    leftPanel.setLayout( new GridLayout() );
-    leftPanel.setLayoutData( new GridData() );
+    final Composite leftPanel = new Composite( m_control, SWT.NO_MERGE_PAINTS );
+    leftPanel.setLayout( new GridLayout(  ) );
+    leftPanel.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
     leftPanel.setBackground( background );
     
     final List list = new List( leftPanel, SWT.SINGLE );
-    final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false );
+    final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, true );
     list.setLayoutData( listGridData );
-    final Font listfont = m_fontUtils.createChangedFontData( list.getFont().getFontData(), 10, SWT.NONE, list
+    final Font font = list.getFont();
+    final Font listfont = m_fontUtils.createChangedFontData( font.getFontData(), 10, SWT.NONE, list
         .getDisplay() );
     list.setFont( listfont );
 
@@ -214,9 +215,14 @@ public class PrognosePanel
     final Label separator = new Label( leftPanel, SWT.NONE );
     separator.setText( "" );
     
+    final Font buttonfont = m_fontUtils.createChangedFontData( font.getFontData(), 3, SWT.NONE, list
+        .getDisplay() );
+
     final Button startButton = new Button( leftPanel, SWT.PUSH | SWT.FLAT );
-    startButton.setLayoutData( new GridData() );
-    startButton.setText( "Hochwasser-Vorhersage starten" );
+    startButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    startButton.setText( "Vorhersage starten" );
+    startButton.setToolTipText( "Hochwasser-Vorhersage starten" );
+    startButton.setFont(buttonfont);
     startButton.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )
@@ -228,8 +234,10 @@ public class PrognosePanel
     } );
 
     final Button organizeButton = new Button( leftPanel, SWT.PUSH | SWT.FLAT );
-    organizeButton.setLayoutData( new GridData() );
-    organizeButton.setText( "Hochwasser-Vorhersagen verwalten" );
+    organizeButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    organizeButton.setFont(buttonfont);
+    organizeButton.setText( "Vorhersagen verwalten" );
+    organizeButton.setToolTipText( "Hochwasser-Vorhersage verwalten" );
     organizeButton.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )

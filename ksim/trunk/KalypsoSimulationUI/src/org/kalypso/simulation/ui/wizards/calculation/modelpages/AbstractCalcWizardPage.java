@@ -74,6 +74,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -151,11 +152,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private static final String PROP_IGNORELABEL2 = "ignoreLabel2";
 
-  
+  private static final String PROP_BUTTON_TEXT = "buttonText";
+  private static final String PROP_BUTTON_LAUNCH = "buttonLaunch";
+  private static final String PROP_BUTTON_TOOLTIP = "buttonTooltip";
+
   /**
-   * If set, the argument ins interpetated as an URL file and loaded as a html content.
-   * The html will then be viewed inside the calculation wizard for nice navigation.
-   * <p>The URL must be project relative</p>
+   * If set, the argument ins interpetated as an URL file and loaded as a html content. The html will then be viewed
+   * inside the calculation wizard for nice navigation.
+   * <p>
+   * The URL must be project relative
+   * </p>
    */
   private static final String PROP_HTML_URL = "htmlURL";
 
@@ -223,7 +229,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private ObservationChart m_obsChart = null;
 
-  // protected so that subclasses can access it
   protected DiagView m_diagView = null;
 
   private Frame m_tableFrame = null;
@@ -314,8 +319,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#init(IProject, String, ImageDescriptor, Arguments,
-   *      IFolder)
+   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#init(IProject, String, ImageDescriptor,
+   *      Arguments, IFolder)
    */
   public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc,
       final Arguments arguments, final IFolder calcFolder )
@@ -349,7 +354,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       e.printStackTrace();
     }
-    
+
     // load HTML
     final String htmlURL = arguments.getProperty( PROP_HTML_URL, null );
     if( htmlURL != null )
@@ -361,7 +366,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         // May be better to have the global mechanism for urls?
         final URL url = new URL( projectURL, htmlURL );
         stream = url.openStream();
-        m_html = IOUtils.toString(stream);
+        m_html = IOUtils.toString( stream );
         stream.close();
       }
       catch( final IOException e )
@@ -370,7 +375,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
       finally
       {
-         IOUtils.closeQuietly(stream);
+        IOUtils.closeQuietly( stream );
       }
     }
   }
@@ -773,7 +778,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, ignoreType1 );
 
     if( ignoreType1 == null || ignoreType2 == null )
+    {
+      panel.dispose();
       return null;
+    }
 
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
@@ -954,7 +962,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     return "true".equals( getArguments().getProperty( PROP_SELECT_FIRST_FEATURE_BY_DEFAULT, "true" ) );
   }
-  
+
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage#getHtml()
    */
@@ -962,4 +970,83 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     return m_html;
   }
+
+  protected void initButtons( final Composite parent, final String buttonText, final String tooltipText,
+      final SelectionListener buttonListener )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
+    final Composite radioPanel = createIgnoreButtonPanel( panel );
+    if( radioPanel != null )
+    {
+      final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
+      ignoreData.horizontalAlignment = GridData.BEGINNING;
+      radioPanel.setLayoutData( ignoreData );
+    }
+
+    Button button = createButton( panel, buttonText, tooltipText, buttonListener );
+    if( button == null )
+    {
+      final String antLaunch = getArguments().getProperty( PROP_BUTTON_LAUNCH, null );
+      final String buttonTextOwn = getArguments().getProperty( PROP_BUTTON_TEXT, null );
+      final String buttonTooltipOwn = getArguments().getProperty( PROP_BUTTON_TOOLTIP, null );
+      button = createButton( panel, buttonTextOwn, buttonTooltipOwn, new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetSelected( final SelectionEvent e )
+        {
+          launchAnt( antLaunch, buttonTextOwn, buttonTooltipOwn );
+        }
+      } );
+    }
+
+    if( button != null )
+    {
+      final GridData buttonData = new GridData(  );
+      buttonData.horizontalAlignment = SWT.END;
+      buttonData.grabExcessHorizontalSpace = true;
+      button.setLayoutData( buttonData );
+    }
+
+    if( radioPanel != null && button != null )
+      panel.setLayout( new GridLayout( 2, false ) );
+    else
+      panel.setLayout( new GridLayout(  ) );
+      
+    // if nothing was created, dispose the panel, if not it will still use some place
+    if( radioPanel == null && button == null )
+      panel.dispose();
+    else panel.layout();
+  }
+
+  protected void launchAnt( final String antLaunch, final String title, final String description )
+  {
+    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    {
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
+        return nature.launchAnt( antLaunch, getCalcFolder(), monitor );
+      }
+    };
+
+    op.runAndHandleOperation( getShell(), true, false, title, description );
+  }
+
+  private Button createButton( final Composite parent, final String text, final String tooltip,
+      final SelectionListener listener )
+  {
+    if( text == null || listener == null )
+      return null;
+
+    final Button button = new Button( parent, SWT.NONE | SWT.PUSH );
+    button.setText( text );
+    button.setToolTipText( tooltip );
+    button.addSelectionListener( listener );
+    return button;
+  }
+
 }

@@ -49,7 +49,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -121,9 +120,14 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     final SashForm rightSash = new SashForm( rightPanel, SWT.VERTICAL );
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     createTablePanel( rightSash );
-    createDiagramPanel( rightSash );
-
-    createButtonPanel( rightPanel );
+    initDiagram( rightSash );
+    initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
+        {
+      public void widgetSelected( final SelectionEvent e )
+      {
+        runCalculation();
+      }
+    } );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -146,32 +150,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
         maximizeMap();
       }
     } );
-  }
-
-  private void createButtonPanel( final Composite parent )
-  {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 2, false ) );
-
-    final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
-    ignoreData.horizontalAlignment = GridData.BEGINNING;
-    createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
-
-    final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
-    button.setText( "Berechnung durchführen" );
-
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        runCalculation();
-      }
-    } );
-  }
-
-  private void createDiagramPanel( final Composite parent )
-  {
-    initDiagram( parent );
   }
 
   private void createTablePanel( final Composite parent )

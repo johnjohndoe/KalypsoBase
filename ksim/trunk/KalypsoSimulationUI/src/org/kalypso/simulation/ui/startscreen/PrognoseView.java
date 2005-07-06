@@ -117,12 +117,10 @@ public class PrognoseView extends ViewPart
     else
     {
       final Composite panelControl = m_panel.createControl( form.getBody(), getSite().getWorkbenchWindow() );
-      final GridData gridData = new GridData( GridData.FILL_BOTH );
-      gridData.horizontalAlignment = GridData.CENTER;
+      final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
       panelControl.setLayoutData( gridData );
 
       panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-      panelControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     }
     
     form.layout();

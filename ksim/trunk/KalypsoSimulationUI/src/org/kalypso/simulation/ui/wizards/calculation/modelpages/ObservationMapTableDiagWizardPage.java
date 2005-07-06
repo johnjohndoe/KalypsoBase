@@ -105,7 +105,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       if( e instanceof CoreException )
         status = ( (CoreException)e ).getStatus();
       else
-        status = KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
+      {
+        final String localizedMessage = e.getLocalizedMessage();
+        status = KalypsoGisPlugin.createErrorStatus( localizedMessage == null ? "" : localizedMessage, e );
+      }
 
       ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
     }
@@ -123,9 +126,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     createTablePanel( rightSash );
-    createDiagramPanel( rightSash );
-
-    createButtonPanel( rightPanel );
+    initDiagram( rightSash ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    initButtons( rightPanel, null, null, null );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -142,44 +144,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
-  }
-
-  private void createButtonPanel( final Composite parent )
-  {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 4, false ) );
-    panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
-    final Composite ignoreButtonPanel = createIgnoreButtonPanel( panel );
-    if( ignoreButtonPanel != null )
-    {
-      final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
-      ignoreData.horizontalAlignment = GridData.BEGINNING;
-      ignoreButtonPanel.setLayoutData( ignoreData );
-    }
-    else
-    {
-      // ansonsten sdas panel gleich wieder verschwinden lassen, da es sonst
-      // trotzdem Platz beansprucht
-      panel.dispose();
-    }
-    
-    // TODO: hier den Knopf fürs Gebietsniederschlagsmodell ansiedeln?
-    //    final Button button = new Button( panel, SWT.PUSH );
-    //    button.setText( "Berechnung durchführen" );
-    //
-    //    button.addSelectionListener( new SelectionAdapter()
-    //    {
-    //      public void widgetSelected( SelectionEvent e )
-    //      {
-    //        runCalculation();
-    //      }
-    //    } );
-  }
-
-  private void createDiagramPanel( final SashForm rightSash )
-  {
-    initDiagram( rightSash );
   }
 
   private void createTablePanel( final Composite parent )
