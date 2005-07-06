@@ -42,8 +42,8 @@ package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
 import java.awt.Color;
 import java.awt.Frame;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import java.util.Properties;
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -151,6 +151,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private static final String PROP_IGNORELABEL2 = "ignoreLabel2";
 
+  
+  /**
+   * If set, the argument ins interpetated as an URL file and loaded as a html content.
+   * The html will then be viewed inside the calculation wizard for nice navigation.
+   * <p>The URL must be project relative</p>
+   */
+  private static final String PROP_HTML_URL = "htmlURL";
+
   /**
    * One of 'selected' or 'all'. If 'selected', only Timeseries of selectede features will be shown, else, timeseries of
    * all features will be shown (in zmlTable)
@@ -241,6 +249,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private final int m_selectSource;
 
   private String m_ignoreType;
+
+  private String m_html = null;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -338,6 +348,30 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
+    }
+    
+    // load HTML
+    final String htmlURL = arguments.getProperty( PROP_HTML_URL, null );
+    if( htmlURL != null )
+    {
+      InputStream stream = null;
+      try
+      {
+        final URL projectURL = ResourceUtilities.createURL( getProject() );
+        // May be better to have the global mechanism for urls?
+        final URL url = new URL( projectURL, htmlURL );
+        stream = url.openStream();
+        m_html = IOUtils.toString(stream);
+        stream.close();
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+         IOUtils.closeQuietly(stream);
+      }
     }
   }
 
@@ -926,15 +960,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public String getHtml()
   {
-    final File file = new File( "C:/tmp/defaultHtml.html" );
-    try
-    {
-      return FileUtils.readFileToString( file, "ISO-8859-1" );
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return m_html;
   }
 }
