@@ -89,7 +89,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -106,6 +105,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
@@ -689,7 +689,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           final URL urlRS = resolver.resolveURL( context, lnkRS.href );
           final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
 
-          final String destRef = ZmlURL.insertDateRange( lnkPG.href, new DateRangeArgument( new Date(), new Date() ) );
+          final String destRef = ZmlURL.insertRequest( lnkPG.href, new ObservationRequest( new Date(), new Date() ) );
           final URL urlPG = resolver.resolveURL( context, destRef );
           final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
