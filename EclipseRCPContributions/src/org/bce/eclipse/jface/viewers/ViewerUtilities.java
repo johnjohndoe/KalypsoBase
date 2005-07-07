@@ -40,7 +40,8 @@ public final class ViewerUtilities
         {
           public void run( )
           {
-            viewer.refresh();
+            if( !viewer.getControl().isDisposed() )
+              viewer.refresh();
           }
         };
         final Display display = control.getDisplay();

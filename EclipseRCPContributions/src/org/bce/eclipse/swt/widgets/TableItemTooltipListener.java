@@ -43,7 +43,7 @@ package org.bce.eclipse.swt.widgets;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.TableItem;
 
 /**
  * Provides Tooltips for TableItems
@@ -66,15 +66,15 @@ public final class TableItemTooltipListener extends AbstractControlTooltipListen
 
   public TableItemTooltipListener( final Table table )
   {
-    super( table.getShell(), TOOLTIP_PROPERTY );
+    super( table.getShell() );
     m_table = table;
   }
 
-  /**
-   * @see org.bce.eclipse.swt.widgets.AbstractControlTooltipListener#getItemForEvent(org.eclipse.swt.widgets.Event)
-   */
-  protected Widget getItemForEvent( final Event event )
+  @Override
+  protected String getTooltipForEvent( final Event event )
   {
-      return m_table.getItem( new Point( event.x, event.y ) );
+    final TableItem item = m_table.getItem( new Point( event.x, event.y ) );
+    final Object tooltipData = item == null ? null : item.getData( TOOLTIP_PROPERTY );
+    return tooltipData == null ? null : tooltipData.toString();
   }
 }
