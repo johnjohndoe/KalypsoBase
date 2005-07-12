@@ -68,4 +68,5 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_PLUGIN = id( "icons/plugin.gif" );
   public static final ImageDescriptor IMAGE_EXTENSION = id( "icons/ext.gif" );
   public static final ImageDescriptor IMAGE_EXTENSIONPOINT = id( "icons/extpoint.gif" );
+  public static final ImageDescriptor IMAGE_ANT = id( "icons/ant.gif" );
 }

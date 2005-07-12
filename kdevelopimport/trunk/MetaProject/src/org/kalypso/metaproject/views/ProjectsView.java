@@ -51,6 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -106,6 +107,8 @@ public class ProjectsView extends ViewPart
   private Action m_actionCollapse;
   private Action m_actionShowDescription;
   private Action doubleClickAction;
+  private Action m_actionDump;
+  private Action m_actionAnt;
 
   private SashForm m_sashForm;
   private TreeViewer m_viewer;
@@ -114,7 +117,6 @@ public class ProjectsView extends ViewPart
   private Text m_text;
 
   private ProjectsTreeContentProvider m_projectTCP;
-  private Action m_actionDump;
 
   /**
    * This is a callback that will allow us to create the viewer and initialize it.
@@ -221,6 +223,8 @@ public class ProjectsView extends ViewPart
     manager.add( m_actionShowDescription );
     manager.add( new Separator() );
     manager.add( m_actionDump );
+    manager.add( new Separator() );
+    manager.add( m_actionAnt );
   }
 
   private void fillContextMenu( IMenuManager manager )
@@ -233,6 +237,8 @@ public class ProjectsView extends ViewPart
     manager.add( m_actionShowDescription );
     manager.add( new Separator() );
     manager.add( m_actionDump );
+    manager.add( new Separator() );
+    manager.add( m_actionAnt );
 
     manager.add( new Separator() );
     // Other plug-ins can contribute there actions here
@@ -318,9 +324,57 @@ public class ProjectsView extends ViewPart
         final StringSelection stsel = new StringSelection( dump );
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
       }
+
+      private String dumpTree()
+      {
+        final ITreeContentProvider cp = (ITreeContentProvider)m_viewer.getContentProvider();
+        final Object[] projects = cp.getElements( m_viewer.getInput() );
+        final StringBuffer bf = new StringBuffer();
+        for( int i = 0; i < projects.length; i++ )
+          dumpTreeInternal( cp, bf, (IProject)projects[i], "" );
+
+        return bf.toString();
+      }
+
+      private void dumpTreeInternal( final ITreeContentProvider cp, final StringBuffer bf, final IProject project,
+          final String separator )
+      {
+        bf.append( separator ).append( project.getName() ).append( "\n" );
+
+        final Object[] children = cp.getChildren( project );
+        for( int i = 0; i < children.length; i++ )
+          dumpTreeInternal( cp, bf, (IProject)children[i], separator + "\t" );
+      }
     };
     m_actionDump.setToolTipText( "Copy the whole tree in the clipboard" );
     m_actionDump.setImageDescriptor( ImageProvider.IMAGE_COPY );
+
+    m_actionAnt = new Action( "Kalypso Ant Dependencies" )
+    {
+      public void run()
+      {
+        final ISelection selection = m_viewer.getSelection();
+        final IProject project = (IProject)( (IStructuredSelection)selection ).getFirstElement();
+
+        try
+        {
+          final IProject[] projects = project.getReferencedProjects();
+          final StringBuffer bf = new StringBuffer();
+          for( int i = 0; i < projects.length; i++ )
+            bf.append( "<fileset dir=\"${workspace}/" ).append( projects[i].getName() ).append(
+                "/build/deploy\" includes=\"**/*.jar\" />\n" );
+          
+          final StringSelection stsel = new StringSelection( bf.toString() );
+          Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    };
+    m_actionAnt.setToolTipText( "Generate the ant script snippet that contains the dependencies of this project" );
+    m_actionAnt.setImageDescriptor( ImageProvider.IMAGE_ANT );
 
     doubleClickAction = new Action()
     {
@@ -381,27 +435,6 @@ public class ProjectsView extends ViewPart
 
       m_btnSave.setEnabled( false );
     }
-  }
-
-  private String dumpTree()
-  {
-    final ITreeContentProvider cp = (ITreeContentProvider)m_viewer.getContentProvider();
-    final Object[] projects = cp.getElements( m_viewer.getInput() );
-    final StringBuffer bf = new StringBuffer();
-    for( int i = 0; i < projects.length; i++ )
-      dumpTreeInternal( cp, bf, (IProject)projects[i], "" );
-
-    return bf.toString();
-  }
-
-  private void dumpTreeInternal( final ITreeContentProvider cp, final StringBuffer bf, final IProject project,
-      final String separator )
-  {
-    bf.append( separator ).append( project.getName() ).append( "\n" );
-
-    final Object[] children = cp.getChildren( project );
-    for( int i = 0; i < children.length; i++ )
-      dumpTreeInternal( cp, bf, (IProject)children[i], separator + "\t" );
   }
 
   private String getDescription( final IProject project )
