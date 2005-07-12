@@ -54,9 +54,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.user.UserRights;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.users.UserServiceConstants;
 
 /**
  * @author bce
@@ -96,7 +96,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
 
       // nur Administratoren dürfen Projekte überschreiben
       if( serverProject.exists()
-          && !KalypsoGisPlugin.getDefault().getUser().hasRight( UserServiceConstants.RIGHT_ADMIN ) )
+          && !KalypsoAuthPlugin.getDefault().getCurrentUser( ).hasRight( UserRights.RIGHT_ADMIN ) )
       {
         MessageDialog
             .openWarning( m_window.getShell(), "Modell zurückspeichern",
