@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -82,12 +83,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -105,7 +108,6 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.simulation.ui.calccase.ModelNature;
-import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizardHelper;
 import org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
@@ -861,9 +863,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void runCalculation()
   {
     final IWizard wizard = getWizard();
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation(  )
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      public void execute( IProgressMonitor monitor ) throws CoreException
       {
         final IWizardPage[] pages = wizard.getPages();
 
@@ -893,7 +895,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
           }
 
-          return status;
+          throw new CoreException( status );
         }
         finally
         {
@@ -902,16 +904,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    // lock buttons
-    try
-    {
-      ( (CalcWizard)getWizard() ).setButtonsLocked( true );
-      op.runAndHandleOperation( getShell(), true, true, "Hochwasser Vorhersage", "Berechnung" );
-    }
-    finally
-    {
-      ( (CalcWizard)getWizard() ).setButtonsLocked( false );
-    }
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+    if( !status.isOK() )
+      ErrorDialog.openError( getShell(), "Modellrechnung", "Modellrechnung fehlgeschlagen", status );
   }
 
   protected void postCreateControl()
@@ -998,7 +993,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
          */
         public void widgetSelected( final SelectionEvent e )
         {
-          launchAnt( antLaunch, buttonTextOwn, buttonTooltipOwn );
+          launchAnt( antLaunch, buttonTextOwn );
         }
       } );
     }
@@ -1022,9 +1017,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     else panel.layout();
   }
 
-  protected void launchAnt( final String antLaunch, final String title, final String description )
+  protected void launchAnt( final String antLaunch, final String title )
   {
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
@@ -1033,7 +1028,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    op.runAndHandleOperation( getShell(), true, false, title, description );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
+    if( !status.isOK() )
+      ErrorDialog.openError( getShell(), title, "Operation fehlgeschlagen", status );
   }
 
   private Button createButton( final Composite parent, final String text, final String tooltip,

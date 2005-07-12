@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -61,6 +62,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.ClosePerspectiveAction;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
@@ -117,17 +119,21 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
   {
     final CalcWizard wizard = new CalcWizard( project );
 
-    final RunnableContextHelper helper = new RunnableContextHelper( workbenchWindow )
+    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-          wizard.initWizard( monitor );
-          return Status.OK_STATUS;
+        wizard.initWizard( monitor );
+        return Status.OK_STATUS;
       }
     };
-    if( !helper.runAndHandleOperation( workbenchWindow.getShell(), false, true, "Vorhersage Assistent",
-        "Der Vorhersage Assistent konnte nicht initialisiert werden." ).isOK() )
+    final IStatus status = RunnableContextHelper.execute( workbenchWindow, false, true, runnable );
+    if( !status.isOK() )
+    {
+      ErrorDialog.openError( workbenchWindow.getShell(), "Vorhersage Assistent",
+          "Der Vorhersage Assistent konnte nicht initialisiert werden.", status );
       return;
+    }
 
     // remeber old perspective
     final IWorkbenchPage activePage = workbenchWindow.getActivePage();
@@ -136,6 +142,7 @@ public class StartCalcWizardPerspectiveAction implements IWorkbenchWindowActionD
     final IPerspectiveRegistry perspectiveRegistry = workbenchWindow.getWorkbench().getPerspectiveRegistry();
     final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
         .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
+
     activePage.setPerspective( wizardPerspective );
 
     try

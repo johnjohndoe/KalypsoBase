@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -65,6 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
@@ -190,9 +192,8 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   {
     final String featureTemplateArgument = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
     final Properties featureTemplateProps = PropertiesHelper.parseFromString( featureTemplateArgument, '#' );
-    final String errorMsg = "Fehler beim Laden des FeatureTemplate: " + featureTemplateArgument;
     final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
@@ -216,13 +217,16 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
       }
     };
 
-    if( !op.runAndHandleOperation( getShell(), false, true, "Feature Template laden", errorMsg ).isOK() )
-      {
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+    {
+      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName, status );
+
       m_templateviewer.dispose();
 
       final Label label = new Label( parent, SWT.NONE );
       label.setText( "Vorlage konnte nicht geladen werden: " + templateFileName );
-      };
+    }
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException

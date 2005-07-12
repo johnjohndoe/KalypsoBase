@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.simulation.ui.SimulationImageProvider;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate.CommitCalcCaseJob;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -83,7 +84,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
   private IFolder m_prognoseFolder;
 
-  private Action m_removeAction = new Action( "Löschen", ImageProvider.ID_REMOVE )
+  private Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -94,7 +95,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     }
   };
 
-  private Action m_archiveAction = new Action( "Archivieren", ImageProvider.IMAGE_CALCCASE_COPY2SERVER )
+  private Action m_archiveAction = new Action( "Archivieren", SimulationImageProvider.IMAGE_CALCCASE_COPY2SERVER )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)

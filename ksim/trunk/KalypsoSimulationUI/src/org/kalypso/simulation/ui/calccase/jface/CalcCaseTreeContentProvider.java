@@ -95,12 +95,7 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    final Object[] calcCasesForElement = getCalcCasesForElement( inputElement );
-    
-    if( calcCasesForElement == null || calcCasesForElement.length == 0 )
-      return new Object[] { "<keine Rechenvarianten vorhanden>" };
-    
-    return calcCasesForElement;
+    return getCalcCasesForElement( inputElement );
   }
 
   /**

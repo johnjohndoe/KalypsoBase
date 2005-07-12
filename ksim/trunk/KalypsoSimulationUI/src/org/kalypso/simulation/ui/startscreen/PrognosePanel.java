@@ -50,12 +50,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -76,14 +78,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.model.xml.Modellist;
 import org.kalypso.model.xml.ModellistType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.ModellistType.ModelType;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.actions.StartCalcWizardPerspectiveAction;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.dialogs.OrganisePrognosesDialog;
@@ -182,7 +185,7 @@ public class PrognosePanel
     {
       e.printStackTrace();
     }
-    
+
     final Label headingLabel = new Label( m_control, SWT.SINGLE );
     final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false, 2, 2 );
     headingLabel.setLayoutData( headingGridData );
@@ -196,16 +199,15 @@ public class PrognosePanel
     // LEFT PANEL //
     ////////////////
     final Composite leftPanel = new Composite( m_control, SWT.NO_MERGE_PAINTS );
-    leftPanel.setLayout( new GridLayout(  ) );
+    leftPanel.setLayout( new GridLayout() );
     leftPanel.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
     leftPanel.setBackground( background );
-    
+
     final List list = new List( leftPanel, SWT.SINGLE );
     final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, true );
     list.setLayoutData( listGridData );
     final Font font = list.getFont();
-    final Font listfont = m_fontUtils.createChangedFontData( font.getFontData(), 10, SWT.NONE, list
-        .getDisplay() );
+    final Font listfont = m_fontUtils.createChangedFontData( font.getFontData(), 10, SWT.NONE, list.getDisplay() );
     list.setFont( listfont );
 
     final ListViewer viewer = new ListViewer( list );
@@ -214,20 +216,19 @@ public class PrognosePanel
 
     final Label separator = new Label( leftPanel, SWT.NONE );
     separator.setText( "" );
-    
-    final Font buttonfont = m_fontUtils.createChangedFontData( font.getFontData(), 3, SWT.NONE, list
-        .getDisplay() );
+
+    final Font buttonfont = m_fontUtils.createChangedFontData( font.getFontData(), 3, SWT.NONE, list.getDisplay() );
 
     final Button startButton = new Button( leftPanel, SWT.PUSH | SWT.FLAT );
     startButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     startButton.setText( "Vorhersage starten" );
     startButton.setToolTipText( "Hochwasser-Vorhersage starten" );
-    startButton.setFont(buttonfont);
+    startButton.setFont( buttonfont );
     startButton.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        final IProject project = updateModel();
+        final IProject project = updateModel( window );
         if( project != null )
           StartCalcWizardPerspectiveAction.openCalculactionWizardOnProject( window, project );
       }
@@ -235,14 +236,14 @@ public class PrognosePanel
 
     final Button organizeButton = new Button( leftPanel, SWT.PUSH | SWT.FLAT );
     organizeButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    organizeButton.setFont(buttonfont);
+    organizeButton.setFont( buttonfont );
     organizeButton.setText( "Vorhersagen verwalten" );
     organizeButton.setToolTipText( "Hochwasser-Vorhersage verwalten" );
     organizeButton.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        final IProject project = updateModel();
+        final IProject project = updateModel( window );
         if( project != null )
           new OrganisePrognosesDialog( parent.getShell(), project ).open();
       }
@@ -313,57 +314,41 @@ public class PrognosePanel
     m_control.redraw();
   }
 
-  protected IProject updateModel() throws IllegalStateException
+  protected IProject updateModel( final IWorkbenchWindow window ) throws IllegalStateException
   {
-    // Projekt updaten
-    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = workspace.getRoot();
+    final String modelName = m_model.getName();
+    final IProject project = root.getProject( modelName );
 
-    if( serverRoot == null )
-      throw new IllegalStateException( "Modellwurzel exisitiert nicht! Prognose kann nicht gestartet werden." );
-
-    final File serverProject = new File( serverRoot, m_model.getName() );
-    if( !serverProject.exists() )
-      throw new IllegalStateException( "Servermodell existiert nicht! Prognose kann nicht gestartet werden." );
-
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IProject project = root.getProject( m_model.getName() );
-
-    final IRunnableWithProgress op = new IRunnableWithProgress()
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
-      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+          InterruptedException
       {
-        try
-        {
-          final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-          synchronizer.updateLocal( monitor );
-        }
-        catch( final CoreException ce )
-        {
-          ce.printStackTrace();
-          throw new InvocationTargetException( ce );
-        }
+        final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+
+        if( serverRoot == null )
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
+              "Kein serverseitiges Modellverzeichnis definiert. Prognose kann nicht gestartet werden.", null ) );
+
+        final File serverProject = new File( serverRoot, modelName );
+        if( !serverProject.exists() )
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
+              "Servermodell existiert nicht! Prognose kann nicht gestartet werden.", null ) );
+
+        final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+        synchronizer.updateLocal( monitor );
       }
     };
-
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    try
+    
+    final IStatus status = RunnableContextHelper.execute( window, false, true, operation );
+    if( !status.isOK() )
     {
-      workbench.getProgressService().busyCursorWhile( op );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      final CoreException ce = (CoreException)e.getTargetException();
-      ErrorDialog.openError( workbench.getDisplay().getActiveShell(), "Vorhersage starten",
-          "Modell konnte nicht aktualisiert werden", ce.getStatus() );
-      
+      ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
       return null;
     }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-    }
+
     return project;
   }
 }

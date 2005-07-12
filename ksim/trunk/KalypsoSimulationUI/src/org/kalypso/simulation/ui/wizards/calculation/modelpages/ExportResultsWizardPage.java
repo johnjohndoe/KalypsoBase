@@ -91,6 +91,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
@@ -373,7 +374,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
 
         final MultiDocumentServiceWrapper msw = metadocService;
-        final RunnableContextHelper helper = new RunnableContextHelper( getContainer() )
+        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
         {
           public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
           {
@@ -381,7 +382,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
             return Status.OK_STATUS;
           }
         };
-        helper.runAndHandleOperation( shell, false, true, "Berichtsablage", "Fehler bei der Berichtsablage." );
+        final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+        if( !status.isOK() )
+          ErrorDialog.openError( shell, "Berichtsablage", "Fehler bei der Berichtsablage.", status );
       }
     }
     catch( final CoreException e )
@@ -751,7 +754,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       return;
     }
 
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -776,7 +779,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     };
 
-    op.runAndHandleOperation( getShell(), true, false, "Hochwasser Vorhersage", "Grafik öffnen" );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+      ErrorDialog.openError( getShell(), "Hochwasser Vorhersage", "Grafik öffnen", status );
   }
 
   /**
