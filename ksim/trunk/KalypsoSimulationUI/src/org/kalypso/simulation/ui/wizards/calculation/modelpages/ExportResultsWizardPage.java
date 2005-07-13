@@ -128,17 +128,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * 
- * <p>
- * Unterstützte Argument:
- * </p>
- * <p>
- * exporterN: Namen von Klassen, welche {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter}implementieren.
- * </p>
- * <p>
- * Aus diesen kann der Nutzer für den Brichtsexport auswählen
- * </p>
- * 
  * @author Belger
  */
 public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
@@ -158,26 +147,41 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   //    </page>
   //  
 
-  /** Position des Haupt-Sash: Integer von 0 bis 100 */
+  /**
+   * Argument: Ein oder mehrere Exporter für den den Berichtsexport. Mehrere Exporter werden durch mehrere 'exporter'
+   * Elemente, unterschieden durch eine beliebig angehängte Zeichenkette unterschieden.
+   * <p>
+   * Dieses Argumetn kann Unterargumente enthalten, welche an den eigentlichen Berichtsexporter weitergereicht werden.
+   * </p>
+   * <p>
+   * Minimal muss das Unterargument 'class' definiert sein, welches eine konkrete Klasse beschreibt, welche
+   * {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter}implementiert.
+   */
+  private static final String PROP_EXPORTER = "exporter";
+
+  /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   private final static String PROP_MAINSASH = "mainSash";
 
-  /** Position des rechten Sash: Integer von 0 bis 100 */
+  /** Argument: Position des rechten Sash: Integer von 0 bis 100 */
   private final static String PROP_RIGHTSASH = "rightSash";
 
-  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  /** Argument: Pfad auf die Vorlage für das Diagramm (.odt Datei) */
   private final static String PROP_DIAGTEMPLATE = "diagTemplate";
+
+  /** Argument: */
+  private static final String PROP_RESULT_TS_NAME = "resultProperty";
+
+  /** Argument: */
+  private static final String PROP_PROGNOSE_TS_NAME = "prognoseProperty";
+
+  /** Argument: */
+  private static final String PROP_PEGEL_NAME = "pegelNameProperty";
+
+  protected Object[] m_checkedElements;
 
   protected ObsdiagviewType m_obsdiagviewType;
 
   private IBerichtExporter[] m_berichtExporters;
-
-  private static final String PROP_RESULT_TS_NAME = "resultProperty";
-
-  private static final String PROP_PROGNOSE_TS_NAME = "prognoseProperty";
-
-  private static final String PROP_PEGEL_NAME = "pegelNameProperty";
-
-  protected Object[] m_checkedElements;
 
   public ExportResultsWizardPage()
   {
@@ -201,7 +205,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
       createMapPanel( sashForm );
-      
+
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
 
       final Composite rightTopPanel = new Composite( rightSash, SWT.NONE );
@@ -211,7 +215,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
       final Composite rightBottomPanel = new Composite( rightSash, SWT.NONE );
       rightBottomPanel.setLayout( new GridLayout() );
-            
+
       initDiagram( rightBottomPanel ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
       initButtons( rightBottomPanel, "Zeitreihe(n) bearbeiten",
           "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung", new SelectionAdapter()
@@ -374,7 +378,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
 
         final MultiDocumentServiceWrapper msw = metadocService;
-        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
+        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
         {
           public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
           {
@@ -472,7 +476,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final Map.Entry entry = (Entry)aIt.next();
       final String key = (String)entry.getKey();
-      if( key.startsWith( "exporter" ) )
+      if( key.startsWith( PROP_EXPORTER ) )
       {
         try
         {
@@ -754,7 +758,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       return;
     }
 
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {

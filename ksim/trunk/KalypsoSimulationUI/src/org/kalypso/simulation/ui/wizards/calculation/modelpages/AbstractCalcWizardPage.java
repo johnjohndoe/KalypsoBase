@@ -135,32 +135,68 @@ import org.opengis.cs.CS_CoordinateSystem;
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage, ICommandTarget,
     ModellEventListener
 {
-  public static final int SELECT_FROM_MAPVIEW = 0;
+  /**
+   * Argument: If this page is asked for the next page and this arugment is set, it will try to find the next-page by
+   * this name. Else, the normal behaviour is taken,i.e. the wizard determines the order (normally just the order in the
+   * calcWizard.xml)
+   */
+  private static final String PROP_NEXTPAGE = "nextPage";
 
-  public static final int SELECT_FROM_TABLEVIEW = 1;
+  /**
+   * Argument: If this page is asked for the next page and this arugment is set, it will try to find the next-page by
+   * this name. Else, the normal behaviour is taken,i.e. the wizard determines the order (normally just the order in the
+   * calcWizard.xml)
+   */
+  private static final String PROP_PREVPAGE = "prevPage";
 
-  public static final int SELECT_FROM_FEATUREVIEW = 2;
+  /**
+   * Argument: If set, this value is taken as the page-name (page-id)
+   */
+  private static final String PROP_PAGE_ID = "pageID";
 
-  private int m_selectionID = 0x1;
-
-  /** name der modelspec datei, die verwendet wird */
+  /** Argument: Name der modelspec datei, die verwendet wird, falls nicht gesetzt wird der Standard benutzt. */
   public final static String PROP_MODELSPEC = "modelspec";
 
+  /**
+   * Argument: Falls diese Argumente konfiguriert sind, wird unter dem Diagramm eine Auswahl in Form von Radio-Buttons
+   * eingeblendet, mit welcher zwischen zwei verschiedenen Diasgramm Ansichten umgeschaltet wird. Jeder Radio-Button
+   * stellt in Wirklichkeit eineen Filter dar, mit dem bestimmte Datentypen im diagramm unterdrückt werden. Damit kann
+   * zum Beispiel eine Umschaltung zwischen W und Q bei W/Q-Zeitreihen erreicht werden.
+   * <ul>
+   * <li>ignoreType1: Unterdrückter Typ des ersten Knopfs, einer der Konstanten aus
+   * {@link org.kalypso.ogc.sensor.timeseries.TimeserieConstants}</li>
+   * <li>ignoreType2: Unterdrückter Typ des zweiten Knopfs</li>
+   * <li>ignoreLabel1: Label des ersten Knopfes</li>
+   * <li>ignoreLabel2: Label des zweiten Knopfes</li>
+   * </ul>
+   */
   private static final String PROP_IGNORETYPE1 = "ignoreType1";
 
+  /** @see #PROP_IGNORETYPE1 */
   private static final String PROP_IGNORETYPE2 = "ignoreType2";
 
+  /** @see #PROP_IGNORETYPE1 */
   private static final String PROP_IGNORELABEL1 = "ignoreLabel1";
 
+  /** @see #PROP_IGNORETYPE1 */
   private static final String PROP_IGNORELABEL2 = "ignoreLabel2";
 
+  /**
+   * Argument: diese Argumente dienen dazu, einen weiteren Konfigurierbaren Knopf unterhalb des Diagramms anzubringen.
+   * Der Knopf löst einen Ant-Launch aus.
+   * <ul>
+   * <li>buttonText: Beschriftung des Knopfs</li>
+   * <li>buttonLaunch: Name des Ant-Launchs, welcher im .model/lunach Vrzeichnis liegen muss.</li>
+   * <li>buttonTooltip: Tooltip des Knopfs</li>
+   * </ul>
+   */
   private static final String PROP_BUTTON_TEXT = "buttonText";
   private static final String PROP_BUTTON_LAUNCH = "buttonLaunch";
   private static final String PROP_BUTTON_TOOLTIP = "buttonTooltip";
 
   /**
-   * If set, the argument ins interpetated as an URL file and loaded as a html content. The html will then be viewed
-   * inside the calculation wizard for nice navigation.
+   * Argument: If set, the argument ins interpetated as an URL file and loaded as a html content. The html will then be
+   * viewed inside the calculation wizard for nice navigation.
    * <p>
    * The URL must be project relative
    * </p>
@@ -168,48 +204,56 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_HTML_URL = "htmlURL";
 
   /**
-   * One of 'selected' or 'all'. If 'selected', only Timeseries of selectede features will be shown, else, timeseries of
-   * all features will be shown (in zmlTable)
+   * Argument: One of 'selected' or 'all'. If 'selected', only Timeseries of selectede features will be shown, else,
+   * timeseries of all features will be shown (in zmlTable)
    */
   private final static String PROP_ZMLTABLE_SHOW = "zmlTableShow";
 
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
-  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
   /**
-   * Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonten wie üblich auf die .gtt
-   * Kartei
+   * Argument: Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonsten wie üblich auf die
+   * .gtt Datei.
    */
   public final static String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase";
 
-  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_SELECTIONID = "selectionID";
 
   /**
-   * Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Karte geladen wurde. Ansonsten das erste
-   * Feature
+   * Argument: Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Karte geladen wurde. Ansonsten das
+   * erste Feature
    */
   private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
 
   /**
-   * Falls true, wird die Karte auf den FullExtent maximiert, sonst wird {@link #m_wishBoundingBox}angesetzt
+   * Argument: Falls true, wird die Karte auf den FullExtent maximiert, sonst wird {@link #m_wishBoundingBox}angesetzt
    */
   private static final String PROP_MAXIMIZEMAP = "maximizeMap";
 
   /**
-   * feature with this id will be in the center of the map
+   * Argument: feature with this id will be in the center of the map
    */
   private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId";
 
   /**
-   * select first feature of acitve layer by default ?<br>
+   * Argument: select first feature of acitve layer by default ?<br>
    * default is "true" <br>
    * valid values are "true" or "false"
    */
   private static final String PROP_SELECT_FIRST_FEATURE_BY_DEFAULT = "selectFirstFeatureByDefault";
+
+  public static final int SELECT_FROM_MAPVIEW = 0;
+
+  public static final int SELECT_FROM_TABLEVIEW = 1;
+
+  public static final int SELECT_FROM_FEATUREVIEW = 2;
+
+  private int m_selectionID = 0x1;
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -560,7 +604,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void initFeatureTable( final Composite parent )
   {
     try
-    {
+    {// TODO: fall kein tabletemplate da, denn sash verschwinden lassen!
       final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
@@ -863,7 +907,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void runCalculation()
   {
     final IWizard wizard = getWizard();
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation(  )
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
       public void execute( IProgressMonitor monitor ) throws CoreException
       {
@@ -1000,7 +1044,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( button != null )
     {
-      final GridData buttonData = new GridData(  );
+      final GridData buttonData = new GridData();
       buttonData.horizontalAlignment = SWT.END;
       buttonData.grabExcessHorizontalSpace = true;
       button.setLayoutData( buttonData );
@@ -1009,17 +1053,18 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( radioPanel != null && button != null )
       panel.setLayout( new GridLayout( 2, false ) );
     else
-      panel.setLayout( new GridLayout(  ) );
-      
+      panel.setLayout( new GridLayout() );
+
     // if nothing was created, dispose the panel, if not it will still use some place
     if( radioPanel == null && button == null )
       panel.dispose();
-    else panel.layout();
+    else
+      panel.layout();
   }
 
   protected void launchAnt( final String antLaunch, final String title )
   {
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
@@ -1046,4 +1091,53 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return button;
   }
 
+  /**
+   * Overriden in order to make it configurable by the calcWizard.xml.
+   * 
+   * @see org.eclipse.jface.wizard.IWizardPage#getNextPage()
+   */
+  public IWizardPage getNextPage()
+  {
+    final IWizardPage page = getPageFromProperty( PROP_NEXTPAGE );
+    if( page != null )
+      return page;
+
+    return super.getNextPage();
+  }
+
+  /**
+   * Overriden in order to make it configurable by the calcWizard.xml.
+   * 
+   * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
+   */
+  public IWizardPage getPreviousPage()
+  {
+    final IWizardPage page = getPageFromProperty( PROP_PREVPAGE );
+    if( page != null )
+      return page;
+
+   return super.getPreviousPage();
+  }
+
+  private IWizardPage getPageFromProperty( final String prop )
+  {
+    final String nextPageID = getArguments().getProperty( prop, null );
+    if( nextPageID != null )
+    {
+      final IWizard wizard = getWizard();
+      return wizard == null ? null : wizard.getPage( nextPageID );
+    }
+
+    return null;
+  }
+  
+  /**
+   * Overriden in order to make it configurable by the calcWizard.xml.
+   * 
+   * @see org.eclipse.jface.wizard.IWizardPage#getName()
+   */
+  public String getName()
+  {
+    return getArguments().getProperty( PROP_PAGE_ID, super.getName() );
+  }
 }

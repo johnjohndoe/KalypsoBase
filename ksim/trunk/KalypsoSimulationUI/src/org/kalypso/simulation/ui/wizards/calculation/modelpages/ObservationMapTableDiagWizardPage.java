@@ -59,17 +59,18 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
-  /** Der Titel der Seite */
+  /** Argument: Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Position des Haupt-Sash: Integer von 0 bis 100 */
+  /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   public final static String PROP_MAINSASH = "mainSash";
 
-  /** Position des rechten Sash: Integer von 0 bis 100 */
+  /** Argument: Position des rechten Sash: Integer von 0 bis 100 */
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine f?r jede Kurventyp.
+   * Argument: Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine f?r jede
+   * Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 

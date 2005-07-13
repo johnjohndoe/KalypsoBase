@@ -82,13 +82,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
-  /** Position des Haupt-Sash: Integer von 0 bis 100 */
+  /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   private final static String PROP_MAINSASH = "mainSash";
 
-  /** Position des rechten Sash: Integer von 0 bis 100 */
+  /** Argument: Position des rechten Sash: Integer von 0 bis 100 */
   private final static String PROP_RIGHTSASH = "rightSash";
 
-  /** Pfad auf Vorlage für die Feature-View (.gft Datei) */
+  /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
 
   /**
@@ -144,7 +144,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     createFeaturePanel( rightSash );
     initDiagram( rightSash );
     initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
-        {
+    {
       public void widgetSelected( final SelectionEvent e )
       {
         runCalculation();
@@ -193,7 +193,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     final String featureTemplateArgument = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
     final Properties featureTemplateProps = PropertiesHelper.parseFromString( featureTemplateArgument, '#' );
     final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
@@ -207,7 +207,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
             m_templateviewer.createControls( parent, SWT.BORDER );
           }
-          
+
           return Status.OK_STATUS;
         }
         catch( UnsupportedEncodingException e )
@@ -220,7 +220,8 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
     {
-      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName, status );
+      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName,
+          status );
 
       m_templateviewer.dispose();
 
