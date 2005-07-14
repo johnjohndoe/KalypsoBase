@@ -462,13 +462,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Erzeugt die Karte und alle Daten die dranhängen und gibt die enthaltende Control zurück
-   * 
-   * @param parent
-   * @param widgetID
-   * @return control
-   * @throws IOException
-   * @throws JAXBException
-   * @throws CoreException
    */
   protected Control initMap( final Composite parent, final String widgetID ) throws IOException, JAXBException,
       CoreException
@@ -1114,6 +1107,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void launchAnt( final String antLaunch, final String title, final String message )
   {
+    // TODO: vor der Launch sollten die Daten gespeichert werden
+    
     final ICoreRunnableWithProgress antRunnable = new ICoreRunnableWithProgress()
     {
       public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
@@ -1127,6 +1122,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, antRunnable );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, message, status );
+    
+    // TODO: nach dem Launch sollten die Wizard-Seiten aktualisiert werden
   }
 
   private Button createButton( final Composite parent, final String text, final String tooltip,
