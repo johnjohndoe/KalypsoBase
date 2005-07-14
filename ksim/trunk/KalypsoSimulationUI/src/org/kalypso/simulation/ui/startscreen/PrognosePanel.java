@@ -87,7 +87,7 @@ import org.kalypso.model.xml.ModellistType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.ModellistType.ModelType;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.simulation.ui.actions.StartCalcWizardPerspectiveAction;
+import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.dialogs.OrganisePrognosesDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -230,7 +230,7 @@ public class PrognosePanel
       {
         final IProject project = updateModel( window );
         if( project != null )
-          StartCalcWizardPerspectiveAction.openCalculactionWizardOnProject( window, project );
+          StartCalcWizardDelegate.openCalculactionWizardOnProject( window, project );
       }
     } );
 

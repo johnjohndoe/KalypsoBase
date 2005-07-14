@@ -105,8 +105,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
     final SashForm rightSash = new SashForm( rightPanel, SWT.VERTICAL );
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    createTablePanel( rightSash );
-    initDiagram( rightSash );
+    final Control featureTableControl = initFeatureTable( rightSash );
+    final Control diagramControl = initDiagram( rightSash );
     initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
         {
       public void widgetSelected( final SelectionEvent e )
@@ -128,13 +128,11 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
         rightWeight,
         100 - rightWeight } );
 
+    if( featureTableControl == null )
+      rightSash.setMaximizedControl( diagramControl );
+    
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
-  }
-
-  private void createTablePanel( final Composite parent )
-  {
-    initFeatureTable( parent );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException

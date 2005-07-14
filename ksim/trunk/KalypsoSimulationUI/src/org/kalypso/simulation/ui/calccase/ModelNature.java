@@ -316,16 +316,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String launchName, final IFolder folder, final IProgressMonitor monitor )
+  public IStatus launchAnt( final String progressText, final String launchName, final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( "Führe Operation durch: " + launchName, 5000 );
+    monitor.beginTask( progressText, 5000 );
 
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
 
     try
     {
+      // TODO: Problem: ${project_loc} muss im launch benutzt werden, damit der Projektname nicht fets kodiert ist,
+      // aber: ${project_loc} wird anhand der globalen selektion bestimmt, die sich a) während des wizard ändern kann,
+      // b) vielleicht grade aus dem aktiven editor kommt und somit gar nicht gesetzt ist
+      // 
+      // Lösungsidde: eine neue dynamische Variable project_copy_loc definieren und diese dann überall
+      // in den attributen durch project.dir ersetzen
       final Properties userProperties = createVariablesForAntLaunch( folder );
 
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
@@ -457,10 +463,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
+    final String message = "Rechenvariante wird erzeugt";
+    
     if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( "Rechenvariante erzeugen", TRANS_TYPE_CREATE, folder, monitor );
+      return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
-    return launchAnt( "createCalcCase", folder, monitor );
+    return launchAnt( message, "createCalcCase", folder, monitor );
   }
 
   /**
@@ -474,10 +482,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
+    final String message = "Rechenvariante wird aktualisiert";
+    
     if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( "Rechenvariante aktualisieren", TRANS_TYPE_UPDTAE, folder, monitor );
+      return doCalcTransformation( message, TRANS_TYPE_UPDTAE, folder, monitor );
 
-    return launchAnt( "updateCalcCase", folder, monitor );
+    return launchAnt( message, "updateCalcCase", folder, monitor );
   }
 
   /**
@@ -487,10 +497,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus afterCalcTransform( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
+    final String message = "Rechenvariante wird aktualisiert";
     if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( "Rechenvariante aktualisieren", ModelNature.TRANS_TYPE_AFTERCALC, folder, monitor );
+      return doCalcTransformation( message, ModelNature.TRANS_TYPE_AFTERCALC, folder, monitor );
 
-    return launchAnt( "afterCalc", folder, monitor );
+    return launchAnt( message, "afterCalc", folder, monitor );
   }
 
   /**
@@ -830,15 +841,28 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( modelSpec == null )
       return runCalculation( calcCaseFolder, monitor );
 
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
-
-    if( !isCalcCalseFolder( calcCaseFolder ) )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis ist keine Rechenvariante:"
-          + calcCaseFolder.getName(), null ) );
-
     try
     {
       final ModeldataType modelspec = getModelspec( modelSpec );
+
+      return runCaclulation( calcCaseFolder, monitor, modelspec );
+    }
+    catch( final ServiceException e )
+    {
+      e.printStackTrace();
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechendienst konnte nicht initialisiert werden", e ) );
+    }
+  }
+
+  public IStatus runCaclulation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final ModeldataType modelspec ) throws ServiceException, CoreException
+  {
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
+
+    try
+    {
+      if( !isCalcCalseFolder( calcCaseFolder ) )
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis ist keine Rechenvariante:"
+            + calcCaseFolder.getName(), null ) );
 
       final String typeID = modelspec.getTypeID();
       final ICalculationService calcService = findCalulationServiceForType( typeID );
@@ -854,19 +878,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       {
           runStatus,
           transStatus }, "Berechnung abgeschlossen.", null );
-      //      if( !transStatus.isOK() )
-      //        return transStatus;
-      //      
-      //      if( transStatus.isOK() && finishText != null )
-      //        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-      // finishText, null );
-      //
-      //      return transStatus;
     }
-    catch( final ServiceException e )
+    finally
     {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechendienst konnte nicht initialisiert werden", e ) );
+      monitor.done();
     }
   }
 

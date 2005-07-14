@@ -152,7 +152,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     m_createCalcCasePage.addChoiceListener( this );
 
-    m_controlPage = new SteuerparameterWizardPage( this, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false );
+    m_controlPage = new SteuerparameterWizardPage( this, ImageProvider.IMAGE_KALYPSO_ICON_BIG, true );
 
     m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
         m_createCalcCasePage ) );
@@ -456,13 +456,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       // first page or page not found
       return null;
 
-    final IWizardPage prevPage = (IWizardPage)m_pages.get( index - 1 );
-
-    // von den Modelpages gehts nicht mehr zurück
-    if( prevPage instanceof CreateCalcCasePage )
-      return null;
-
-    return prevPage;
+    return (IWizardPage)m_pages.get( index - 1 );
   }
 
   /**

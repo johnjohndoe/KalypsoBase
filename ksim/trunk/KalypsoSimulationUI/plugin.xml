@@ -14,20 +14,24 @@
       <library name="lib/simulationUIBinding.jar">
          <export name="*"/>
       </library>
+      <library name="lib/simulationUIAnt.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.contribs.eclipseplatform"/>
-      <import plugin="org.kalypso.ui"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.externaltools"/>
       <import plugin="org.eclipse.core.variables"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.kalypso.ui"/>
       <import plugin="org.kalypso.auth"/>
+      <import plugin="org.eclipse.ant.core"/>
    </requires>
 
       <extension
@@ -56,7 +60,7 @@
          <action
                label="Vorhersage durchführen"
                icon="icons/elcl16/startPrognose.gif"
-               class="org.kalypso.simulation.ui.actions.StartCalcWizardPerspectiveAction"
+               class="org.kalypso.simulation.ui.actions.StartCalcWizardDelegate"
                menubarPath="org.kalypso.simulation.ui.menu.model/prognoseStart"
                id="org.kalypso.action.model.startPrognose">
          </action>
@@ -181,12 +185,6 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            icon="icons/eview16/calcwizardPersp.gif"
-            class="org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective"
-            fixed="true"
-            name="Vorhersage Assistent"
-            id="org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective"/>
-      <perspective
             name="Hochwasser Vorhersage"
             icon="icons/eview16/startingPersp.gif"
             fixed="true"
@@ -207,6 +205,15 @@
       <options
             allowLinking="true">
       </options>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            eclipseRuntime="true"
+            class="org.kalypso.simulation.ui.ant.RunCalculationTask"
+            library="lib/simulationUIAnt.jar"
+            headless="false"
+            name="kalypso.runCalculation"/>
    </extension>
 
 </plugin>

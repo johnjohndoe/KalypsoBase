@@ -44,6 +44,9 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -104,6 +107,7 @@ import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
@@ -113,6 +117,7 @@ import org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -155,7 +160,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_PAGE_ID = "pageID";
 
   /** Argument: Name der modelspec datei, die verwendet wird, falls nicht gesetzt wird der Standard benutzt. */
-  public final static String PROP_MODELSPEC = "modelspec";
+  private final static String PROP_MODELSPEC = "modelspec";
 
   /**
    * Argument: Falls diese Argumente konfiguriert sind, wird unter dem Diagramm eine Auswahl in Form von Radio-Buttons
@@ -183,7 +188,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Argument: diese Argumente dienen dazu, einen weiteren Konfigurierbaren Knopf unterhalb des Diagramms anzubringen.
-   * Der Knopf löst einen Ant-Launch aus.
+   * Der Knopf löst einen Ant-Launch aus. Falls gesetzt, wird ein evtl. vorhandener interner Knopf überschrieben.
    * <ul>
    * <li>buttonText: Beschriftung des Knopfs</li>
    * <li>buttonLaunch: Name des Ant-Launchs, welcher im .model/lunach Vrzeichnis liegen muss.</li>
@@ -204,13 +209,26 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_HTML_URL = "htmlURL";
 
   /**
-   * Argument: One of 'selected' or 'all'. If 'selected', only Timeseries of selectede features will be shown, else,
-   * timeseries of all features will be shown (in zmlTable)
+   * Argument: a string indicating, how the Timeseries-Table is filled with timeseries.
+   * 
+   * <ul>
+   * <li>all: the timeseries of all features of the active theme are shown</li>
+   * <li>selected: only the timeseries of the selected features are shown</li>
+   * <li>template: no dynamic behaviiour, a template is loaded (@see #PROP_ZMLTABLE_TEMPLATE)</li>
+   * </ul>
+   * 
+   * One of 'selected' or 'all'. If 'selected', only Timeseries of selectede features will be shown, else, timeseries of
+   * all features will be shown (in zmlTable)
    */
   private final static String PROP_ZMLTABLE_SHOW = "zmlTableShow";
 
+  /**
+   * Argument: applies only, if {@link #PROP_ZMLTABLE_SHOW}is set to 'template'
+   */
+  private final static String PROP_ZMLTABLE_TEMPLATE = "zmlTableTemplate";
+
   /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
-  public final static String PROP_TABLETEMPLATE = "tableTemplate";
+  private final static String PROP_TABLETEMPLATE = "tableTemplate";
 
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
@@ -295,7 +313,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   };
 
-  private boolean m_showZmlTableOnlySelected = true;
+  private String m_showZmlTable = "selected";
 
   private final int m_selectSource;
 
@@ -378,9 +396,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_tsProps = CalcWizardHelper.parseTimeserieFeatureProps( arguments );
 
     m_calcFolder = calcFolder;
-
-    final String zmlTableSelected = m_arguments.getProperty( PROP_ZMLTABLE_SHOW, "selected" );
-    m_showZmlTableOnlySelected = "selected".equalsIgnoreCase( zmlTableSelected );
 
     try
     {
@@ -583,7 +598,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public void refreshZMLTable()
   {
-    final TSLinkWithName[] obs = getObservationsToShow( m_showZmlTableOnlySelected );
+    if( "template".equals( m_showZmlTable ) )
+      return;
+
+    final TSLinkWithName[] obs = getObservationsToShow( "selected".equalsIgnoreCase( m_showZmlTable ) );
     refreshZmlTableForContext( obs, getContext() );
   }
 
@@ -601,11 +619,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected abstract TSLinkWithName[] getObservationsToShow( final boolean onlySelected );
 
-  protected void initFeatureTable( final Composite parent )
+  protected Control initFeatureTable( final Composite parent )
   {
     try
-    {// TODO: fall kein tabletemplate da, denn sash verschwinden lassen!
+    {
       final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
+
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
 
@@ -613,12 +632,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           .createFeatureTypeCellEditorFactory(), getSelectionID() );
       m_gisTableViewer.applyTableTemplate( template, getContext() );
 
+      return m_gisTableViewer.getControl();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       final Text text = new Text( parent, SWT.NONE );
       text.setText( "Fehler beim Laden des TableTemplate" );
+
+      return null;
     }
   }
 
@@ -626,7 +648,28 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
+      m_showZmlTable = m_arguments.getProperty( PROP_ZMLTABLE_SHOW, "selected" );
+      ObstableviewType obsTemplate = null;
+      if( "template".equalsIgnoreCase( m_showZmlTable ) )
+      {
+        final String templateFileName = m_arguments.getProperty( PROP_ZMLTABLE_TEMPLATE, null );
+        if( templateFileName == null )
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Keine Vorlagendatei definiert. Die Property "
+              + PROP_ZMLTABLE_TEMPLATE + " muss definiert sein.", null ) );
+
+        final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+        if( templateFile == null )
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: "
+              + templateFileName, null ) );
+
+        final InputStream templateStream = templateFile.getContents();
+        obsTemplate = TableViewUtils.loadTableTemplateXML( templateStream );
+        templateStream.close();
+      }
+
       m_tableTemplate = new TableView();
+      if( obsTemplate != null )
+        TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
       m_table = new ObservationTable( m_tableTemplate );
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
@@ -649,9 +692,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       // todo error handling?
       e.printStackTrace();
+      final StringWriter sw = new StringWriter();
+      e.printStackTrace( new PrintWriter( sw ) );
 
-      final Text text = new Text( parent, SWT.CENTER );
-      text.setText( "Keine Tabelle vorhanden" );
+      final Text text = new Text( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
+
+      text.setText( "Fehler beim Anzeigen der Tabelle:\n\n" + e.getLocalizedMessage() + "\n\n" + sw.toString() );
 
       return text;
     }
@@ -735,7 +781,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       refreshDiagram();
 
-      if( m_showZmlTableOnlySelected )
+      if( "selected".equalsIgnoreCase( m_showZmlTable ) )
       {
         // Save the observations before refreshing else
         // changes are lost
@@ -1024,23 +1070,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       radioPanel.setLayoutData( ignoreData );
     }
 
-    Button button = createButton( panel, buttonText, tooltipText, buttonListener );
-    if( button == null )
+    // first try ant button
+    final String antLaunch = getArguments().getProperty( PROP_BUTTON_LAUNCH, null );
+    final String buttonTextOwn = getArguments().getProperty( PROP_BUTTON_TEXT, null );
+    final String buttonTooltipOwn = getArguments().getProperty( PROP_BUTTON_TOOLTIP, null );
+    Button button = createButton( panel, buttonTextOwn, buttonTooltipOwn, new SelectionAdapter()
     {
-      final String antLaunch = getArguments().getProperty( PROP_BUTTON_LAUNCH, null );
-      final String buttonTextOwn = getArguments().getProperty( PROP_BUTTON_TEXT, null );
-      final String buttonTooltipOwn = getArguments().getProperty( PROP_BUTTON_TOOLTIP, null );
-      button = createButton( panel, buttonTextOwn, buttonTooltipOwn, new SelectionAdapter()
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( final SelectionEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        public void widgetSelected( final SelectionEvent e )
-        {
-          launchAnt( antLaunch, buttonTextOwn );
-        }
-      } );
-    }
+        launchAnt( antLaunch, buttonTextOwn, buttonTooltipOwn );
+      }
+    } );
+
+    // else, try internal button
+    if( button == null )
+      button = createButton( panel, buttonText, tooltipText, buttonListener );
 
     if( button != null )
     {
@@ -1062,20 +1109,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       panel.layout();
   }
 
-  protected void launchAnt( final String antLaunch, final String title )
+  protected void launchAnt( final String antLaunch, final String title, final String message )
   {
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress antRunnable = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+          InterruptedException
       {
         final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
-        return nature.launchAnt( antLaunch, getCalcFolder(), monitor );
+        return nature.launchAnt( message, antLaunch, getCalcFolder(), new NullProgressMonitor() );
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, antRunnable );
     if( !status.isOK() )
-      ErrorDialog.openError( getShell(), title, "Operation fehlgeschlagen", status );
+      ErrorDialog.openError( getShell(), title, message, status );
   }
 
   private Button createButton( final Composite parent, final String text, final String tooltip,
@@ -1116,7 +1164,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( page != null )
       return page;
 
-   return super.getPreviousPage();
+    return super.getPreviousPage();
   }
 
   private IWizardPage getPageFromProperty( final String prop )
@@ -1130,7 +1178,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     return null;
   }
-  
+
   /**
    * Overriden in order to make it configurable by the calcWizard.xml.
    * 
