@@ -106,7 +106,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   private CalcwizardType m_calcwizard;
 
-  /** Must call {@link #initWizard(IProgressMonitor)} afterwards. */
+  /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
   {
     m_project = project;
@@ -121,8 +121,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     final IFile wizardConfigFile = (IFile)m_project.findMember( ModelNature.MODELLTYP_CALCWIZARD_XML );
 
-    monitor.beginTask( "Lade " + wizardConfigFile.getName(),  1000 );
-    
+    monitor.beginTask( "Lade " + wizardConfigFile.getName(), 1000 );
+
     try
     {
       final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
@@ -156,12 +156,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
         m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen",
-        m_project, m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice(
-           "vorhandenen Rechenfall kopieren", m_project, m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
-        "auf dem Server archivierte Rechenvariante kopieren", m_project, m_createCalcCasePage, m_synchronizer ) );
+    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen", m_project,
+        m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandenen Rechenfall kopieren", m_project,
+        m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren",
+        m_project, m_createCalcCasePage, m_synchronizer ) );
     addPage( m_createCalcCasePage );
     addPage( m_controlPage );
   }
@@ -233,51 +233,55 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean performFinish()
   {
+    // TODO von Marc: die Zeitreihen sollten gespeichert werden wenn der Benutzer
+    // auf finish clickt, damit es Einheitlich ist: alle Daten werden gespeichert.
+    // saveDirtyObservation()...
+
     // TODO: vielleicht nur eine frage, ob archiviert werden soll? und nur, wenns noch nicht geschehen war?
-//    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), calcCases,
-//        new ArrayContentProvider(), new WorkbenchLabelProvider(),
-//        "Wählen Sie die Rechenvarianten,\nwelche auf dem Server archiviert werden sollen:" );
-//    dialog.setInitialElementSelections( calcCases );
-//    if( dialog.open() != Window.OK )
-//      return false;
-//
-//    final ModelSynchronizer synchronizer = m_synchronizer;
-//
-//    final Object[] saveCases = dialog.getResult();
-//    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-//    {
-//      protected void execute( final IProgressMonitor monitor ) throws CoreException
-//      {
-//        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
-//        for( int i = 0; i < saveCases.length; i++ )
-//        {
-//          final IFolder calcCase = (IFolder)saveCases[i];
-//
-//          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
-//        }
-//
-//        monitor.done();
-//      }
-//    };
-//
-//    try
-//    {
-//      getContainer().run( false, false, op );
-//    }
-//    catch( final InvocationTargetException e )
-//    {
-//      e.printStackTrace();
-//
-//      final CoreException ce = (CoreException)e.getCause();
-//      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle archivieren",
-//          "Rechenfälle konnten nicht arhciviert werden", ce.getStatus() );
-//
-//      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
-//    }
-//    catch( final InterruptedException e )
-//    {
-//      e.printStackTrace();
-//    }
+    //    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), calcCases,
+    //        new ArrayContentProvider(), new WorkbenchLabelProvider(),
+    //        "Wählen Sie die Rechenvarianten,\nwelche auf dem Server archiviert werden sollen:" );
+    //    dialog.setInitialElementSelections( calcCases );
+    //    if( dialog.open() != Window.OK )
+    //      return false;
+    //
+    //    final ModelSynchronizer synchronizer = m_synchronizer;
+    //
+    //    final Object[] saveCases = dialog.getResult();
+    //    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    //    {
+    //      protected void execute( final IProgressMonitor monitor ) throws CoreException
+    //      {
+    //        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
+    //        for( int i = 0; i < saveCases.length; i++ )
+    //        {
+    //          final IFolder calcCase = (IFolder)saveCases[i];
+    //
+    //          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
+    //        }
+    //
+    //        monitor.done();
+    //      }
+    //    };
+    //
+    //    try
+    //    {
+    //      getContainer().run( false, false, op );
+    //    }
+    //    catch( final InvocationTargetException e )
+    //    {
+    //      e.printStackTrace();
+    //
+    //      final CoreException ce = (CoreException)e.getCause();
+    //      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle archivieren",
+    //          "Rechenfälle konnten nicht arhciviert werden", ce.getStatus() );
+    //
+    //      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
+    //    }
+    //    catch( final InterruptedException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
 
     return true;
   }
@@ -298,8 +302,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     // can allways finish
     // this is important, as we do not show the cancel button
     return true;
-//    final IWizardPage currentPage = getContainer().getCurrentPage();
-//    return ( currentPage instanceof IModelWizardPage );
+    //    final IWizardPage currentPage = getContainer().getCurrentPage();
+    //    return ( currentPage instanceof IModelWizardPage );
   }
 
   /**
@@ -437,7 +441,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     if( page == m_controlPage && getPageCount() == 2 )
       return page;
-    
+
     final int index = m_pages.indexOf( page );
     if( index == m_pages.size() - 1 || index == -1 )
       // last page or page not found
@@ -508,9 +512,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       final IWizardPage page = (IWizardPage)pageIt.next();
       if( pageName.equals( page.getName() ) )
-          return page;
+        return page;
     }
-    
+
     return null;
   }
 
@@ -585,8 +589,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener#onChoiceChanged(IAddCalcCaseChoice)
    */
   public void onChoiceChanged( final IAddCalcCaseChoice newChoice )
-  {
-  }
+  {}
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#hasCancelButton()

@@ -843,6 +843,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     m_ignoreType = ignoreType;
 
+    // save observations else changes are lost
+    saveDirtyObservations( new NullProgressMonitor() );
+    
     refreshDiagram();
     refreshZMLTable();
   }
