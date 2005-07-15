@@ -91,6 +91,9 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -576,10 +579,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * fügt eine Reihe von Tokens zum ReplaceToken hinzu. Unter anderem für :project: etc Ausserdem werden die Start,
    * Mittel und Endzeit der Simulation aus der Rechenvariante ausgelesen (.calculation) und als Token hinzugefgügt.
-   * 
-   * @param calcFolder
-   * @param replaceTokens
-   * @throws CoreException
    */
   private void configureReplaceTokensForCalcCase( final IFolder calcFolder, final ReplaceTokens replaceTokens )
       throws CoreException
@@ -590,19 +589,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final Token timeToken = new ReplaceTokens.Token();
     timeToken.setKey( "SYSTEM_TIME" );
     timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).format( new Date( System.currentTimeMillis() ) ) );
-
     replaceTokens.addConfiguredToken( timeToken );
 
     final Token calcdirToken = new ReplaceTokens.Token();
     calcdirToken.setKey( "calcdir" );
     calcdirToken.setValue( calcFolder.getFullPath().toString() + "/" );
-
     replaceTokens.addConfiguredToken( calcdirToken );
 
     final Token projectToken = new ReplaceTokens.Token();
     projectToken.setKey( "project" );
     projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
-
     replaceTokens.addConfiguredToken( projectToken );
 
     // jetzt werte aus der .calculation des aktuellen Rechenfalls lesen und
@@ -771,11 +767,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IUrlResolver urlResolver = new UrlResolver();
 
+    final IKalypsoUser currentUser = KalypsoAuthPlugin.getDefault().getCurrentUser();
+    final IScenario scenario = currentUser.getScenario();
+    urlResolver.addReplaceToken( "scenarioId",  scenario.getId() );
+    urlResolver.addReplaceToken( "scenarioName",  scenario.getName() );
+    urlResolver.addReplaceToken( "scenarioDescription",  scenario.getDescription() );
+    
     final String user = System.getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
     urlResolver.addReplaceToken( "user", user );
 
     final Date now = new Date();
-
     urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now ) );
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
