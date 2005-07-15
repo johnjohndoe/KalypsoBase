@@ -48,21 +48,23 @@ package org.kalypso.auth.scenario;
  */
 public class Scenario implements IScenario
 {
-  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", "" );
+  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", "", "" );
   
   private final String m_text;
   private final String m_desc;
+  private final String m_id;
 
-  public Scenario( final String text, final String desc )
+  public Scenario(final String id, final String text, final String desc )
   {
+    m_id = id;
     m_text = text;
     m_desc = desc;
   }
 
   /**
-   * @see org.kalypso.auth.scenario.IScenario#getText()
+   * @see org.kalypso.auth.scenario.IScenario#getName()
    */
-  public String getText()
+  public String getName()
   {
     return m_text;
   }
@@ -81,5 +83,13 @@ public class Scenario implements IScenario
   public String toString()
   {
     return m_text;
+  }
+
+  /**
+   * @see org.kalypso.auth.scenario.IScenario#getId()
+   */
+  public String getId()
+  {
+    return m_id;
   }
 }
