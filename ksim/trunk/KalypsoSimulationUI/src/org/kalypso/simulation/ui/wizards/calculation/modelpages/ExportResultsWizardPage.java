@@ -50,10 +50,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -98,8 +98,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
@@ -115,6 +113,7 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * @author Belger
@@ -136,6 +135,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   //    </page>
   //  
 
+  private static final String STR_EXPORT_PROGNOSEN = "Export Prognosen";
   /**
    * Argument: Ein oder mehrere Exporter für den den Berichtsexport. Mehrere Exporter werden durch mehrere 'exporter'
    * Elemente, unterschieden durch eine beliebig angehängte Zeichenkette unterschieden.
@@ -159,10 +159,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   /** Argument: */
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
-
-  /** Argument: */
-  private static final String PROP_PROGNOSE_TS_NAME = "prognoseProperty";
-
+  
   /** Argument: */
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
 
@@ -293,7 +290,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     buttonGroup.setLayout( new GridLayout() );
 
     final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
-    exportPrognosesButton.setText( "Export Prognosen" );
+    exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
     exportPrognosesButton.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
     exportPrognosesButton.setLayoutData( new GridData() );
     exportPrognosesButton.addSelectionListener( new SelectionAdapter()
@@ -519,8 +516,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         return null;
 
       final Object[] result = dialog.getResult();
-      final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result, new Feature[result.length] );
-      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(), resultFeatures );
+      final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result,
+          new Feature[result.length] );
+      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(),
+          resultFeatures );
     }
     catch( final MalformedURLException e )
     {
@@ -582,141 +581,38 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     if( featureList == null )
       return;
 
-    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
-    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
+//    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
+//    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
 
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+    // put feature-ids in feature-path'es
+    final StringBuffer sb = new StringBuffer();
+    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
-      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
-      {
-        try
-        {
-          // TODO: put it into an ant task
-          final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-          final URL context = ResourceUtilities.createURL( calcFolder );
-          final CommitPrognoseFeatureVisitor visitor = new CommitPrognoseFeatureVisitor( srv, new UrlResolver(),
-              context, resultTsName, prognoseTsName, monitor );
+      final Feature f = (Feature)iter.next();
+      final String featurePath = new FeaturePath( f ).toString();
+      sb.append( featurePath );
+      if( iter.hasNext() )
+        sb.append( ':' );
+    }
+    final Properties antProps = new Properties();
+    antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
 
-          monitor.beginTask( "Prognosen werden veröffentlicht", featureList.size() );
-          featureList.accept( visitor );
+    // call ant - with properties
+    launchAnt( "exportPrognosen", STR_EXPORT_PROGNOSEN, "Prognose-Zeitreihen werden auf den Server gespeichert",
+        antProps );
 
-          return new org.eclipse.core.runtime.MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, visitor.getStati(),
-              "Fehler sind während des Exports aufgetaucht.", null );
-        }
-        catch( final ServiceException e )
-        {
-          throw new InvocationTargetException( e, "Zeitreihendienst" );
-        }
-        catch( final MalformedURLException e )
-        {
-          e.printStackTrace();
-          throw new InvocationTargetException( e );
-        }
-      }
-    };
-
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
-    final Shell shell = getContainer().getShell();
-    ErrorDialog.openError( shell, "Export Prognose Zeitreihen", "Fehler beim Export der Zeitreihen", status );
+    //          // TODO: put it into an ant task
+    //          final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+    //          final URL context = ResourceUtilities.createURL( calcFolder );
+    //          final CommitPrognoseFeatureVisitor visitor = new CommitPrognoseFeatureVisitor( srv, new UrlResolver(),
+    //              context, resultTsName, prognoseTsName, monitor );
+    //
+    //          monitor.beginTask( "Prognosen werden veröffentlicht", featureList.size() );
+    //          featureList.accept( visitor );
+    //
+    //          return new org.eclipse.core.runtime.MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, visitor.getStati(),
+    //              "Fehler sind während des Exports aufgetaucht.", null );
   }
-
-//  /**
-//   * Performs the timeseries export
-//   */
-//  private IStatus performPrognoseExport( final TSLinkWithName[] resultTss, final TSLinkWithName[] prognoseTss,
-//      final IFolder calcCase, final IProgressMonitor monitor ) throws ServiceException
-//  {
-//    if( resultTss.length != prognoseTss.length )
-//      throw new IllegalArgumentException( "Timeseries links not same length" );
-//
-//    final Logger LOG = Logger.getLogger( getClass().getName() );
-//
-//    monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
-//
-//    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-//        "Fehler sind während des Exports aufgetaucht." );
-//
-//    try
-//    {
-//      final URL context = ResourceUtilities.createURL( calcCase );
-//
-//      final UrlResolver resolver = new UrlResolver();
-//
-//      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-//
-//      for( int i = 0; i < prognoseTss.length; i++ )
-//      {
-//        if( monitor.isCanceled() )
-//          return Status.CANCEL_STATUS;
-//
-//        final TSLinkWithName lnkRS = resultTss[i];
-//        final TSLinkWithName lnkPG = prognoseTss[i];
-//
-//        try
-//        {
-//          final URL urlRS = resolver.resolveURL( context, lnkRS.href );
-//          final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
-//
-//          final String destRef = ZmlURL.insertRequest( lnkPG.href, new ObservationRequest( new Date(), new Date() ) );
-//          final URL urlPG = resolver.resolveURL( context, destRef );
-//          final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
-//
-//          ITuppleModel values = null;
-//          try
-//          {
-//            // copy values from source into dest, expecting full compatibility
-//            values = ObservationUtilities.optimisticValuesCopy( source, dest, null, true );
-//          }
-//          catch( IllegalArgumentException e )
-//          {
-//            // not all axes could be associated between source and dest
-//            LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
-//                + " are defined in " + source );
-//
-//            multiStatus.addMessage( "Zeitreihe konnte nicht auf dem Server hochgeladen werden "
-//                + "weil sie nicht mit der Zielzeitreihe kompatibel ist. " + "Prüfen Sie u.a. die Achsenliste in: "
-//                + source, e );
-//          }
-//
-//          // todo: maybe inform when nothing happened during copy
-//          if( values == null )
-//            LOG.info( "Nothing to copy for " + source.getName() );
-//          else
-//          {
-//            // save observation if it is a server side one
-//            if( ZmlURL.isServerSide( lnkPG.href ) )
-//            {
-//              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href, srv );
-//              LOG.info( "Observation saved on server: " + lnkPG.href );
-//            }
-//            else
-//              LOG.warning( "! Observation not server side: " + lnkPG.href );
-//          }
-//        }
-//        catch( final SensorException e )
-//        {
-//          LOG.warning( e.getLocalizedMessage() );
-//
-//          multiStatus.addMessage( "Fehler mit folgenden Zeitreihen: " + lnkRS.href + " und " + lnkPG.href, e );
-//        }
-//
-//        monitor.worked( 1 );
-//      }
-//
-//      return multiStatus;
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      LOG.warning( e.getLocalizedMessage() );
-//
-//      return KalypsoGisPlugin.createErrorStatus( "Fehler in der Konfiguration", e );
-//    }
-//    finally
-//    {
-//      monitor.done();
-//    }
-//  }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {

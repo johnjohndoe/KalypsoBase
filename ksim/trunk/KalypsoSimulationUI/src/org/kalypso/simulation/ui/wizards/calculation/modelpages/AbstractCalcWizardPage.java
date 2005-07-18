@@ -193,11 +193,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * <li>buttonText: Beschriftung des Knopfs</li>
    * <li>buttonLaunch: Name des Ant-Launchs, welcher im .model/lunach Vrzeichnis liegen muss.</li>
    * <li>buttonTooltip: Tooltip des Knopfs</li>
+   * <li>buttonProperties: Zusätzliche Properties, welche an das Ant-Skript weitergegeben werden. Inhalt muss eine Argumentliste sein.</li>
    * </ul>
    */
   private static final String PROP_BUTTON_TEXT = "buttonText";
   private static final String PROP_BUTTON_LAUNCH = "buttonLaunch";
   private static final String PROP_BUTTON_TOOLTIP = "buttonTooltip";
+  private static final String PROP_BUTTON_PROPERTIES = "buttonProperties";
 
   /**
    * Argument: If set, the argument ins interpetated as an URL file and loaded as a html content. The html will then be
@@ -1049,6 +1051,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String antLaunch = getArguments().getProperty( PROP_BUTTON_LAUNCH, null );
     final String buttonTextOwn = getArguments().getProperty( PROP_BUTTON_TEXT, null );
     final String buttonTooltipOwn = getArguments().getProperty( PROP_BUTTON_TOOLTIP, null );
+    final Arguments buttonProperties = getArguments().getArguments( PROP_BUTTON_PROPERTIES );
     Button button = createButton( panel, buttonTextOwn, buttonTooltipOwn, new SelectionAdapter()
     {
       /**
@@ -1056,7 +1059,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( final SelectionEvent e )
       {
-        launchAnt( antLaunch, buttonTextOwn, buttonTooltipOwn );
+        launchAnt( antLaunch, buttonTextOwn, buttonTooltipOwn, buttonProperties );
       }
     } );
 
@@ -1084,7 +1087,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       panel.layout();
   }
 
-  protected void launchAnt( final String antLaunch, final String title, final String message )
+  protected void launchAnt( final String antLaunch, final String title, final String message, final Properties antProps )
   {
     // TODO: vor der Launch sollten die Daten gespeichert werden
     
@@ -1094,7 +1097,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           InterruptedException
       {
         final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
-        return nature.launchAnt( message, antLaunch, getCalcFolder(), new NullProgressMonitor() );
+        return nature.launchAnt( message, antLaunch, antProps, getCalcFolder(), new NullProgressMonitor() );
       }
     };
 

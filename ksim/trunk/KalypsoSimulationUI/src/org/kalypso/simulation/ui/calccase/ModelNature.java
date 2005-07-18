@@ -320,7 +320,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String progressText, final String launchName, final IFolder folder, final IProgressMonitor monitor )
+  public IStatus launchAnt( final String progressText, final String launchName, final Properties antProps, final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
     monitor.beginTask( progressText, 5000 );
@@ -345,6 +345,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // add user-variables to LaunchConfiguration
       final Map attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap() );
       attribute.putAll( userProperties );
+      if( antProps != null )
+        attribute.putAll( antProps );
       lc.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute );
 
       // add user-variables to variable-manager (so they can also be used within
@@ -472,7 +474,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
-    return launchAnt( message, "createCalcCase", folder, monitor );
+    return launchAnt( message, "createCalcCase", null, folder, monitor );
   }
 
   /**
@@ -491,7 +493,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_UPDTAE, folder, monitor );
 
-    return launchAnt( message, "updateCalcCase", folder, monitor );
+    return launchAnt( message, "updateCalcCase", null, folder, monitor );
   }
 
   /**
@@ -505,7 +507,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, ModelNature.TRANS_TYPE_AFTERCALC, folder, monitor );
 
-    return launchAnt( message, "afterCalc", folder, monitor );
+    return launchAnt( message, "afterCalc", null, folder, monitor );
   }
 
   /**

@@ -48,6 +48,7 @@ import javax.xml.bind.Validator;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -59,8 +60,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.ant.ProgressDialogTask;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.impl.ModeldataTypeImpl;
@@ -71,7 +77,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  * 
  * @author belger
  */
-public class RunCalculationTask extends ProgressDialogTask
+public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
   private String m_calcCasePath;
 
@@ -128,10 +134,7 @@ public class RunCalculationTask extends ProgressDialogTask
     m_modeldata.getClearAfterCalc().add( clearAfterCalc );
   }
 
-  /**
-   * @see org.kalypso.commons.ant.ProgressDialogTask#validateInput()
-   */
-  protected void validateInput()
+  private void validateInput()
   {
     if( m_calcCasePath == null )
       throw new BuildException( "calcCaseFolder is not set" );
@@ -140,6 +143,21 @@ public class RunCalculationTask extends ProgressDialogTask
     m_calcCaseFolder = root.getFolder( new Path( m_calcCasePath ) );
     if( m_calcCaseFolder == null )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
+  }
+  
+  /**
+   * @see org.apache.tools.ant.Task#execute()
+   */
+  public void execute() throws BuildException
+  {
+    // give implementing class a chance to validate its input
+    validateInput();
+
+    // we retrieve the active shel, wathever it is
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = new GetShellFromDisplay( display ).getShell();
+
+    RunnableContextHelper.executeInProgressDialog( shell, this, this );
   }
   
   /**
@@ -178,10 +196,7 @@ public class RunCalculationTask extends ProgressDialogTask
     }
   }
 
-  /**
-   * @see org.kalypso.commons.ant.ProgressDialogTask#handleError(org.eclipse.swt.widgets.Shell, org.eclipse.core.runtime.IStatus)
-   */
-  protected void handleError( final Shell shell, final IStatus status )
+  public void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status );
   }
