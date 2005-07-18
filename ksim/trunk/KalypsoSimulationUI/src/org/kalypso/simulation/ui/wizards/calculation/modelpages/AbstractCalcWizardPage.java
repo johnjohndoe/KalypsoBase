@@ -734,27 +734,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return (TSLinkWithName[])foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
-  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features, final String property,
-      final String filter )
-  {
-    final Collection foundObservations = new ArrayList( features.size() );
-
-    for( final Iterator it = features.iterator(); it.hasNext(); )
-    {
-      final Feature kf = (Feature)it.next();
-
-      final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( property );
-      if( obsLink != null )
-      {
-        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(), obsLink.getHref(), filter,
-            null );
-        foundObservations.add( linkWithName );
-      }
-    }
-
-    return (TSLinkWithName[])foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
-  }
-
   protected int getSelectionID()
   {
     return m_selectionID;
@@ -790,7 +769,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_tsProps;
   }
 
-  protected List getSelectedFeatures()
+  protected FeatureList getSelectedFeatures()
   {
     return getFeatures( true );
   }

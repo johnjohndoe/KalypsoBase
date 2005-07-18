@@ -43,8 +43,6 @@ package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -292,13 +290,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getSelectedFeatures()
    */
-  protected List getSelectedFeatures()
+  protected FeatureList getSelectedFeatures()
   {
-    List result = new ArrayList( 1 );
-    Feature feature = m_templateviewer.getFeature();
+    final FeatureList list = FeatureFactory.createFeatureList( null, null );
+    final Feature feature = m_templateviewer.getFeature();
     if( feature != null )
-      result.add( feature );
-    return result;
+      list.add( feature );
+    return list;
   }
 
   /**

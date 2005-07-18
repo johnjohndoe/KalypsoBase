@@ -93,6 +93,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.runtime.LogStatusWrapper;
@@ -767,8 +768,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IUrlResolver urlResolver = new UrlResolver();
 
-    final IKalypsoUser currentUser = KalypsoAuthPlugin.getDefault().getCurrentUser();
-    final IScenario scenario = currentUser.getScenario();
+    final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
+    final IKalypsoUser currentUser = authPlugin.getCurrentUser();
+    final String scenarioId = currentUser.getScenario();
+    final IScenario scenario = authPlugin.getScenario( scenarioId );
     urlResolver.addReplaceToken( "scenarioId",  scenario.getId() );
     urlResolver.addReplaceToken( "scenarioName",  scenario.getName() );
     urlResolver.addReplaceToken( "scenarioDescription",  scenario.getDescription() );
@@ -914,5 +917,27 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     throw new ServiceException( "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen: "
         + typeID );
+  }
+
+  /**
+   * Returns the scenario for the given calcCase
+   */
+  public IScenario getScenario( final IFolder calcCase ) throws CoreException
+  {
+    // load .calculation
+    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
+    final Feature rootFeature = workspace.getRootFeature();
+
+    final FindPropertyByNameVisitor startsimFinder = new FindPropertyByNameVisitor( "scenarioId" );
+    workspace.accept( startsimFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+
+    final Object result = startsimFinder.getResult();
+    final String scenarioId = result == null ? "" : result.toString();
+    
+    final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
+    if( scenario == null )
+      return Scenario.DEFAULT_SCENARIO;
+    
+    return scenario;
   }
 }

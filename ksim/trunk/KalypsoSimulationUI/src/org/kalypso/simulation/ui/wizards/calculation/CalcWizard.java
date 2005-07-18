@@ -54,6 +54,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -65,14 +67,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
+import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.model.xml.ArgListType;
 import org.kalypso.model.xml.ArgType;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.AddNewCalcCaseChoice;
@@ -88,13 +94,15 @@ import org.xml.sax.InputSource;
 
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 {
+  private static final RGB DEFAULT_TITLE_RGB = new RGB( 255, 255, 255 );
+
   private final IProject m_project;
 
   protected CreateCalcCasePage m_createCalcCasePage;
 
   protected SteuerparameterWizardPage m_controlPage;
 
-  private List m_pages = new ArrayList();
+  private final List m_pages = new ArrayList();
 
   private IWizardContainer m_container;
 
@@ -105,6 +113,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   private boolean m_buttonsLocked;
 
   private CalcwizardType m_calcwizard;
+  
+  /** Scenario of current calcCase */
+  private IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
 
   /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
@@ -360,25 +371,40 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
           try
           {
-            IStatus status = null;
+            final IStatus[] stati = new IStatus[2];
 
             final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+
+            final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
             if( m_controlPage.isUpdate() )
-            {
-              final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
-
-              status = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
-            }
+              stati[0] = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
             else
+            {
               monitor.worked( 1000 );
+              stati[0] = Status.OK_STATUS;
+            }
 
+            // szenario für currentCalcCase holen
+            try
+            {
+              m_scenario = nature.getScenario( currentCalcCase );
+              stati[1] = Status.OK_STATUS;
+            }
+            catch( CoreException ce )
+            {
+              stati[1] = ce.getStatus();
+            }
+            
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
+            // TODO: test: verändern sich denn die Daten?
+            // vermutlich die alten seiten wegschmeissen und neu erzeugen!
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
-            if( status != null && status != org.eclipse.core.runtime.Status.OK_STATUS )
-              throw new CoreException( status );
+            final MultiStatus multiStatus = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati, "", null );
+            if( multiStatus != null && !multiStatus.isOK() )
+              throw new CoreException( multiStatus );
           }
           finally
           {
@@ -531,7 +557,21 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public RGB getTitleBarColor()
   {
-    return null;
+    if( m_container.getCurrentPage() == m_createCalcCasePage )
+      return DEFAULT_TITLE_RGB;
+    
+    try
+    {
+      final String rgb = m_scenario.getProperty( IScenario.PROP_WIZARD_TITLE_RGB, null );
+      if( rgb == null )
+        return DEFAULT_TITLE_RGB;
+
+      return RGBUtilities.parse( rgb, ";" );
+    }
+    catch( final NumberFormatException e )
+    {
+      return DEFAULT_TITLE_RGB;
+    }
   }
 
   /**

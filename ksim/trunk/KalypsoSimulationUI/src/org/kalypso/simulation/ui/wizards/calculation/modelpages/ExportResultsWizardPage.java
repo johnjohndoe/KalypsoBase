@@ -46,15 +46,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.rpc.ServiceException;
@@ -85,12 +81,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -100,17 +94,12 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
@@ -303,11 +292,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     buttonGroup.setText( "Datenablagen" );
     buttonGroup.setLayout( new GridLayout() );
 
-    final Button exportPrognoseTS = new Button( buttonGroup, SWT.PUSH );
-    exportPrognoseTS.setText( "Export Prognosen" );
-    exportPrognoseTS.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
-    exportPrognoseTS.setLayoutData( new GridData() );
-    exportPrognoseTS.addSelectionListener( new SelectionAdapter()
+    final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
+    exportPrognosesButton.setText( "Export Prognosen" );
+    exportPrognosesButton.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
+    exportPrognosesButton.setLayoutData( new GridData() );
+    exportPrognosesButton.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -318,11 +307,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
-    final Button doItButton = new Button( buttonGroup, SWT.PUSH );
-    doItButton.setLayoutData( new GridData() );
-    doItButton.setText( "Bericht(e) ablegen" );
-    doItButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
-    doItButton.addSelectionListener( new SelectionAdapter()
+    final Button berichtsablageButton = new Button( buttonGroup, SWT.PUSH );
+    berichtsablageButton.setLayoutData( new GridData() );
+    berichtsablageButton.setText( "Bericht(e) ablegen" );
+    berichtsablageButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
+    berichtsablageButton.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -333,7 +322,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
-    doItButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
 
     return buttonGroup;
   }
@@ -346,7 +335,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Shell shell = getContainer().getShell();
 
     FeatureList features = getFeatures();
-    List selectedFeatures = getSelectedFeatures();
+    FeatureList selectedFeatures = getSelectedFeatures();
 
     final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
     final URL context;
@@ -501,44 +490,43 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     return (IBerichtExporter[])exporters.toArray( new IBerichtExporter[exporters.size()] );
   }
 
-  private List chooseSelectedFeatures( final IFolder calcCase )
+  private FeatureList chooseSelectedFeatures( final IFolder calcCase )
   {
     // Timeserie-Links holen
-    List features = getFeatures();
-    List selectedFeatures = getSelectedFeatures();
-
-    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
-    final URL context;
     try
     {
-      context = ResourceUtilities.createURL( calcCase );
-      features = filterForValidTimeseriesLinks( features, resultProperty, context );
-      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
+      final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
+      final URL context = ResourceUtilities.createURL( calcCase );
+      final FeatureList features = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
+      final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty,
+          context );
+      // view it!
+      final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
+      final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() ).getFeatureType();
+      final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
+      if( ftp == null )
+      {
+        System.out.println( "No FeatureType for Property: " + nameProperty );
+        return null;
+      }
+
+      final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
+      final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
+          new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
+      dialog.setInitialElementSelections( selectedFeatures );
+      dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
+      if( dialog.open() != Window.OK )
+        return null;
+
+      final Object[] result = dialog.getResult();
+      final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result, new Feature[result.length] );
+      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(), resultFeatures );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
+      e.printStackTrace();
       return null;
     }
-
-    // view it!
-    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-    final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() ).getFeatureType();
-    final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
-    if( ftp == null )
-    {
-      System.out.println( "No FeatureType for Property: " + nameProperty );
-      return null;
-    }
-
-    final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
-    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
-        new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
-    dialog.setInitialElementSelections( selectedFeatures );
-    dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
-    if( dialog.open() != Window.OK )
-      return null;
-
-    return Arrays.asList( dialog.getResult() );
   }
 
   /**
@@ -550,10 +538,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    * @param context
    * @return List of features that have valid timeserieslinks
    */
-  private List filterForValidTimeseriesLinks( List featureList, String propertyNameTimeserieslink, URL context )
+  private FeatureList filterForValidTimeseriesLinks( final FeatureList featureList,
+      final String propertyNameTimeserieslink, final URL context )
   {
+    final FeatureList result = FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList
+        .getParentFeatureTypeProperty() );
+
     // TODO filter auch im berichtsexport benutzen
-    final List result = new ArrayList();
 
     final UrlResolver resolver = new UrlResolver();
     URL resultURL;
@@ -586,152 +577,146 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   protected void exportPrognoseTimeseries()
   {
-    final Shell shell = getContainer().getShell();
-
     final IFolder calcFolder = getCalcFolder();
-    final List featureList = chooseSelectedFeatures( calcFolder );
+    final FeatureList featureList = chooseSelectedFeatures( calcFolder );
     if( featureList == null )
       return;
 
     final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
     final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
 
-    final TSLinkWithName[] resultTss = getTimeseriesForProperty( "", featureList, resultTsName, null );
-    final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "", featureList, prognoseTsName, null );
-
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+          InterruptedException
       {
         try
         {
-          final IStatus status = performPrognoseExport( resultTss, prognoseTss, calcFolder, monitor );
+          // TODO: put it into an ant task
+          final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+          final URL context = ResourceUtilities.createURL( calcFolder );
+          final CommitPrognoseFeatureVisitor visitor = new CommitPrognoseFeatureVisitor( srv, new UrlResolver(),
+              context, resultTsName, prognoseTsName, monitor );
 
-          if( !status.isOK() )
-            throw new CoreException( status );
+          monitor.beginTask( "Prognosen werden veröffentlicht", featureList.size() );
+          featureList.accept( visitor );
+
+          return new org.eclipse.core.runtime.MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, visitor.getStati(),
+              "Fehler sind während des Exports aufgetaucht.", null );
         }
         catch( final ServiceException e )
         {
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Zeitreihen konnten nicht exportiert werden", e ) );
+          throw new InvocationTargetException( e, "Zeitreihendienst" );
+        }
+        catch( final MalformedURLException e )
+        {
+          e.printStackTrace();
+          throw new InvocationTargetException( e );
         }
       }
     };
 
-    try
-    {
-      getContainer().run( false, true, op );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      IStatus status = null;
-      if( e.getTargetException() instanceof CoreException )
-        status = ( (CoreException)e.getTargetException() ).getStatus();
-      ErrorDialog.openError( shell, "Export Prognose Zeitreihen", "Fehler beim Export der Zeitreihen", status );
-    }
-    catch( InterruptedException e )
-    {
-      e.printStackTrace();
-    }
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+    final Shell shell = getContainer().getShell();
+    ErrorDialog.openError( shell, "Export Prognose Zeitreihen", "Fehler beim Export der Zeitreihen", status );
   }
 
-  /**
-   * Performs the timeseries export
-   */
-  protected IStatus performPrognoseExport( final TSLinkWithName[] resultTss, final TSLinkWithName[] prognoseTss,
-      final IFolder calcCase, final IProgressMonitor monitor ) throws ServiceException
-  {
-    if( resultTss.length != prognoseTss.length )
-      throw new IllegalArgumentException( "Timeseries links not same length" );
-
-    final Logger LOG = Logger.getLogger( getClass().getName() );
-
-    monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
-
-    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-        "Fehler sind während der Export aufgetaucht." );
-
-    try
-    {
-      final URL context = ResourceUtilities.createURL( calcCase );
-
-      final UrlResolver resolver = new UrlResolver();
-
-      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-
-      for( int i = 0; i < prognoseTss.length; i++ )
-      {
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        final TSLinkWithName lnkRS = resultTss[i];
-        final TSLinkWithName lnkPG = prognoseTss[i];
-
-        try
-        {
-          final URL urlRS = resolver.resolveURL( context, lnkRS.href );
-          final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
-
-          final String destRef = ZmlURL.insertRequest( lnkPG.href, new ObservationRequest( new Date(), new Date() ) );
-          final URL urlPG = resolver.resolveURL( context, destRef );
-          final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
-
-          ITuppleModel values = null;
-          try
-          {
-            // copy values from source into dest, expecting full compatibility
-            values = ObservationUtilities.optimisticValuesCopy( source, dest, null, true );
-          }
-          catch( IllegalArgumentException e )
-          {
-            // not all axes could be associated between source and dest
-            LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
-                + " are defined in " + source );
-
-            multiStatus.addMessage( "Zeitreihe konnte nicht auf dem Server hochgeladen werden "
-                + "weil sie nicht mit der Zielzeitreihe kompatibel ist. " + "Prüfen Sie u.a. die Achsenliste in: "
-                + source, e );
-          }
-
-          // todo: maybe inform when nothing happened during copy
-          if( values == null )
-            LOG.info( "Nothing to copy for " + source.getName() );
-          else
-          {
-            // save observation if it is a server side one
-            if( ZmlURL.isServerSide( lnkPG.href ) )
-            {
-              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href, srv );
-              LOG.info( "Observation saved on server: " + lnkPG.href );
-            }
-            else
-              LOG.warning( "! Observation not server side: " + lnkPG.href );
-          }
-        }
-        catch( SensorException e )
-        {
-          LOG.warning( e.getLocalizedMessage() );
-
-          multiStatus.addMessage( "Fehler mit folgenden Zeitreihen: " + lnkRS.href + " und " + lnkPG.href, e );
-        }
-
-        monitor.worked( 1 );
-      }
-
-      return multiStatus;
-    }
-    catch( MalformedURLException e )
-    {
-      LOG.warning( e.getLocalizedMessage() );
-
-      return KalypsoGisPlugin.createErrorStatus( "Fehler in der Konfiguration", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
+//  /**
+//   * Performs the timeseries export
+//   */
+//  private IStatus performPrognoseExport( final TSLinkWithName[] resultTss, final TSLinkWithName[] prognoseTss,
+//      final IFolder calcCase, final IProgressMonitor monitor ) throws ServiceException
+//  {
+//    if( resultTss.length != prognoseTss.length )
+//      throw new IllegalArgumentException( "Timeseries links not same length" );
+//
+//    final Logger LOG = Logger.getLogger( getClass().getName() );
+//
+//    monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
+//
+//    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
+//        "Fehler sind während des Exports aufgetaucht." );
+//
+//    try
+//    {
+//      final URL context = ResourceUtilities.createURL( calcCase );
+//
+//      final UrlResolver resolver = new UrlResolver();
+//
+//      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+//
+//      for( int i = 0; i < prognoseTss.length; i++ )
+//      {
+//        if( monitor.isCanceled() )
+//          return Status.CANCEL_STATUS;
+//
+//        final TSLinkWithName lnkRS = resultTss[i];
+//        final TSLinkWithName lnkPG = prognoseTss[i];
+//
+//        try
+//        {
+//          final URL urlRS = resolver.resolveURL( context, lnkRS.href );
+//          final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
+//
+//          final String destRef = ZmlURL.insertRequest( lnkPG.href, new ObservationRequest( new Date(), new Date() ) );
+//          final URL urlPG = resolver.resolveURL( context, destRef );
+//          final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
+//
+//          ITuppleModel values = null;
+//          try
+//          {
+//            // copy values from source into dest, expecting full compatibility
+//            values = ObservationUtilities.optimisticValuesCopy( source, dest, null, true );
+//          }
+//          catch( IllegalArgumentException e )
+//          {
+//            // not all axes could be associated between source and dest
+//            LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
+//                + " are defined in " + source );
+//
+//            multiStatus.addMessage( "Zeitreihe konnte nicht auf dem Server hochgeladen werden "
+//                + "weil sie nicht mit der Zielzeitreihe kompatibel ist. " + "Prüfen Sie u.a. die Achsenliste in: "
+//                + source, e );
+//          }
+//
+//          // todo: maybe inform when nothing happened during copy
+//          if( values == null )
+//            LOG.info( "Nothing to copy for " + source.getName() );
+//          else
+//          {
+//            // save observation if it is a server side one
+//            if( ZmlURL.isServerSide( lnkPG.href ) )
+//            {
+//              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href, srv );
+//              LOG.info( "Observation saved on server: " + lnkPG.href );
+//            }
+//            else
+//              LOG.warning( "! Observation not server side: " + lnkPG.href );
+//          }
+//        }
+//        catch( final SensorException e )
+//        {
+//          LOG.warning( e.getLocalizedMessage() );
+//
+//          multiStatus.addMessage( "Fehler mit folgenden Zeitreihen: " + lnkRS.href + " und " + lnkPG.href, e );
+//        }
+//
+//        monitor.worked( 1 );
+//      }
+//
+//      return multiStatus;
+//    }
+//    catch( MalformedURLException e )
+//    {
+//      LOG.warning( e.getLocalizedMessage() );
+//
+//      return KalypsoGisPlugin.createErrorStatus( "Fehler in der Konfiguration", e );
+//    }
+//    finally
+//    {
+//      monitor.done();
+//    }
+//  }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
