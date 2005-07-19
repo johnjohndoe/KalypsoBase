@@ -862,7 +862,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public IStatus runCaclulation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final ModeldataType modelspec ) throws ServiceException, CoreException
   {
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
+      monitor.beginTask( "Modellrechnung wird durchgeführt", 5500 );
 
     try
     {
@@ -871,14 +871,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             + calcCaseFolder.getName(), null ) );
 
       final String typeID = modelspec.getTypeID();
-      final ICalculationService calcService = findCalulationServiceForType( typeID );
+      final ICalculationService calcService = findCalculationServiceForType( typeID );
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
       if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
         return runStatus;
 
-      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
+      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
       {
@@ -895,7 +895,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * Finds th first Calculation-Service, which can calculate the given type.
    *  
    */
-  private ICalculationService findCalulationServiceForType( final String typeID ) throws ServiceException
+  private ICalculationService findCalculationServiceForType( final String typeID ) throws ServiceException
   {
     final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
     for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )

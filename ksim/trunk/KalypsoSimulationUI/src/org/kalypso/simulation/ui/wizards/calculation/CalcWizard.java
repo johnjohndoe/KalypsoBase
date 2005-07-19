@@ -115,7 +115,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   private CalcwizardType m_calcwizard;
   
   /** Scenario of current calcCase */
-  private IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
+  protected IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
 
   /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
@@ -141,7 +141,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
       m_calcwizard = (CalcwizardType)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       e.printStackTrace();
 
