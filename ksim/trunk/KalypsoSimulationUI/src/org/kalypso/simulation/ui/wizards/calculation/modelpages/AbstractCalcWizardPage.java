@@ -975,7 +975,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), "Modellrechnung", "Modellrechnung fehlgeschlagen", status );
   }

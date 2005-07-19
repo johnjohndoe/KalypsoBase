@@ -356,7 +356,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.worked( 1000 );
 
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
-
+      
       // todo: timeout konfigurierbar machen?
       final int minutes = 3;
       for( int i = 0; i < 60 * minutes; i++ )
@@ -376,7 +376,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           return Status.OK_STATUS;
         }
 
-        wait( 1000 );
+        Thread.sleep( 1000 );
       }
 
       return KalypsoGisPlugin.createErrorStatus( "Operation hat über " + minutes
@@ -423,6 +423,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final Properties attributes = new Properties();
 
+    // TODO: set scenario id
+    
     attributes.setProperty( "calc.dir", folder.getLocation().toString() );
     attributes.setProperty( "project.dir", folder.getProject().getLocation().toString() );
 
