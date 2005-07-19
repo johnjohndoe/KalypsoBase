@@ -202,8 +202,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
           {
             final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
             m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
-
-            m_templateviewer.createControls( parent, SWT.BORDER );
+            parent.getDisplay().asyncExec( new Runnable()
+            {
+              public void run()
+              {
+                m_templateviewer.createControls( parent, SWT.BORDER );
+              }
+            } );
           }
 
           return Status.OK_STATUS;

@@ -193,12 +193,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * <li>buttonText: Beschriftung des Knopfs</li>
    * <li>buttonLaunch: Name des Ant-Launchs, welcher im .model/lunach Vrzeichnis liegen muss.</li>
    * <li>buttonTooltip: Tooltip des Knopfs</li>
-   * <li>buttonProperties: Zusätzliche Properties, welche an das Ant-Skript weitergegeben werden. Inhalt muss eine Argumentliste sein.</li>
+   * <li>buttonProperties: Zusätzliche Properties, welche an das Ant-Skript weitergegeben werden. Inhalt muss eine
+   * Argumentliste sein.</li>
    * </ul>
    */
   private static final String PROP_BUTTON_TEXT = "buttonText";
+
   private static final String PROP_BUTTON_LAUNCH = "buttonLaunch";
+
   private static final String PROP_BUTTON_TOOLTIP = "buttonTooltip";
+
   private static final String PROP_BUTTON_PROPERTIES = "buttonProperties";
 
   /**
@@ -819,7 +823,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     // save observations else changes are lost
     saveDirtyObservations( new NullProgressMonitor() );
-    
+
     refreshDiagram();
     refreshZMLTable();
   }
@@ -1090,21 +1094,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void launchAnt( final String antLaunch, final String title, final String message, final Properties antProps )
   {
     // TODO: vor der Launch sollten die Daten gespeichert werden
-    
+
     final ICoreRunnableWithProgress antRunnable = new ICoreRunnableWithProgress()
     {
       public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
           InterruptedException
-      {
-        final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
-        return nature.launchAnt( message, antLaunch, antProps, getCalcFolder(), new NullProgressMonitor() );
+      {       
+          final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
+          return nature.launchAnt( message, antLaunch, antProps, getCalcFolder(), new NullProgressMonitor() );
       }
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, antRunnable );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, message, status );
-    
+
     // TODO: nach dem Launch sollten die Wizard-Seiten aktualisiert werden
   }
 
