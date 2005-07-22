@@ -53,14 +53,17 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
@@ -87,9 +90,11 @@ import org.kalypso.simulation.ui.wizards.calculation.createchoices.CopyCalcCaseC
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.CopyServerCalcCaseChoice;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener;
+import org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage;
 import org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.xml.sax.InputSource;
 
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
@@ -113,7 +118,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   private boolean m_buttonsLocked;
 
   private CalcwizardType m_calcwizard;
-  
+
   /** Scenario of current calcCase */
   protected IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
 
@@ -395,7 +400,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             {
               stati[1] = ce.getStatus();
             }
-            
+
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
             // TODO: test: verändern sich denn die Daten?
             // vermutlich die alten seiten wegschmeissen und neu erzeugen!
@@ -559,7 +564,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     if( m_container.getCurrentPage() == m_createCalcCasePage )
       return DEFAULT_TITLE_RGB;
-    
+
     try
     {
       final String rgb = m_scenario.getProperty( IScenario.PROP_WIZARD_TITLE_RGB, null );
@@ -629,7 +634,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener#onChoiceChanged(IAddCalcCaseChoice)
    */
   public void onChoiceChanged( final IAddCalcCaseChoice newChoice )
-  {}
+  {
+  // kann weg?
+  }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#hasCancelButton()
@@ -645,5 +652,72 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   public int getInitialBrowserSize()
   {
     return m_calcwizard.getBrowserInitialSize();
+  }
+
+  /**
+   * Calls {@link IModelWizardPage#saveData(IProgressMonitor)}for all pages
+   */
+  public void saveAllPages( final IProgressMonitor monitor )
+  {
+    try
+    {
+      final IWizardPage[] pages = getPages();
+      monitor.beginTask( "Seiten werden gespeichert...", 1 * pages.length );
+
+      for( int i = 0; i < pages.length; i++ )
+      {
+        final IWizardPage page = pages[i];
+        if( page instanceof IModelWizardPage )
+        {
+          final SafeRunnable runnable = new SafeRunnable()
+          {
+            public void run() throws Exception
+            {
+              ( (IModelWizardPage)page ).saveData( new SubProgressMonitor( monitor, 1 ) );
+            }
+          };
+          Platform.run( runnable );
+        }
+        else
+          monitor.worked( 1 );
+      }
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  /**
+   * Calls {@link AbstractCalcWizardPage#onModellChange(ModellEvent)}on all pages.
+   */
+  public void refreshAllPages( IProgressMonitor monitor )
+  {
+    try
+    {
+      final IWizardPage[] pages = getPages();
+      monitor.beginTask( "Seiten werden aktualisiert", pages.length );
+
+      for( int i = 0; i < pages.length; i++ )
+      {
+        final IWizardPage page = pages[i];
+
+        final ISafeRunnable runnable = new SafeRunnable()
+        {
+          public void run() throws Exception
+          {
+            if( page instanceof AbstractCalcWizardPage )
+              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+          }
+        };
+        Platform.run( runnable );
+
+        monitor.worked( 1 );
+      }
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 }

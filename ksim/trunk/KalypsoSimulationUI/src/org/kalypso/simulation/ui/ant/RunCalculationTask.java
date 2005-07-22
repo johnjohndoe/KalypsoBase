@@ -62,6 +62,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
@@ -144,7 +146,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     if( m_calcCaseFolder == null )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
   }
-  
+
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
@@ -153,19 +155,18 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     // give implementing class a chance to validate its input
     validateInput();
 
-    // we retrieve the active shel, wathever it is
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Shell shell = new GetShellFromDisplay( display ).getShell();
+    // we retrieve the active shell, whatever it is
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    final Shell shell = window == null ? null : window.getShell();
 
     RunnableContextHelper.executeInProgressDialog( shell, this, this );
   }
-  
+
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-      InterruptedException
-  {
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException  {
     monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
 
     try
@@ -173,7 +174,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       m_validator.validate( m_modeldata );
 
       monitor.worked( 500 );
-      
+
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
@@ -198,6 +199,12 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
   public void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status );
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run()
+      {
+        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status );
+      }
+    } );
   }
 }

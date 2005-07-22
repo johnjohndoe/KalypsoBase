@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -93,7 +93,6 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -112,6 +111,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizardHelper;
 import org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
@@ -236,6 +236,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
   private final static String PROP_TABLETEMPLATE = "tableTemplate";
 
+  /** Argument: Flag (true or false) if the legend of the diagram is visible */
+  private final static String PROP_DIAG_SHOW_LEGEND = "diagShowLegend";
+  
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
@@ -551,6 +554,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
+      final String showLegendString = getArguments().getProperty( PROP_DIAG_SHOW_LEGEND, "true" );
+      final boolean showLegend = Boolean.valueOf( showLegendString ).booleanValue();
+      
       // actually creates the template
       m_diagView = new DiagView( true );
 
@@ -561,12 +567,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
+      m_diagView.setShowLegend( showLegend );
       m_obsChart = new ObservationChart( m_diagView );
       m_obsChart.setBackgroundPaint( Color.WHITE );
+      
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
       chartPanel.setMouseZoomable( true, false );
-
+      
       m_diagFrame.setVisible( true );
       chartPanel.setVisible( true );
       m_diagFrame.add( chartPanel );
@@ -668,7 +676,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       m_tableTemplate = new TableView();
       if( obsTemplate != null )
-        TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
+      {
+        final IStatus[] stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false );
+        final IStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
+            "Fehler beim Laden der Tabellenvorlage", null );
+        // will be catched and shown below
+        // TODO
+        if( !result.isOK() )
+          throw new CoreException( result );
+      }
       m_table = new ObservationTable( m_tableTemplate );
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
@@ -689,8 +705,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
     catch( Exception e )
     {
-      // todo error handling?
       e.printStackTrace();
+
+      if( e instanceof CoreException )
+      {
+        final IStatus status = ( (CoreException)e ).getStatus();
+        ErrorDialog.openError( parent.getShell(), "Tabellenvorlage laden", "Fehler beim Laden der Tabellenvorlage",
+            status );
+      }
+
       final StringWriter sw = new StringWriter();
       e.printStackTrace( new PrintWriter( sw ) );
 
@@ -933,38 +956,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void runCalculation()
   {
-    final IWizard wizard = getWizard();
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      public void execute( IProgressMonitor monitor ) throws CoreException
+      public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        final IWizardPage[] pages = wizard.getPages();
-
-        monitor.beginTask( "Berechnung wird durchgeführt", 1000 + pages.length * 100 );
+        monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
 
         try
         {
-          for( int i = 0; i < pages.length; i++ )
-          {
-            final IWizardPage page = pages[i];
-            if( page instanceof IModelWizardPage )
-              ( (IModelWizardPage)page ).saveData( new SubProgressMonitor( monitor, 100 ) );
-            else
-              monitor.worked( 100 );
-          }
+          saveAllPages( new SubProgressMonitor( monitor, 500 ) );
 
           final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature( ModelNature.ID );
           final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
-          final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ),
+          final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 2000 ),
               modelspec );
 
-          // alle Modellseiten refreshen
-          for( int i = 0; i < pages.length; i++ )
-          {
-            final IWizardPage page = pages[i];
-            if( page instanceof AbstractCalcWizardPage )
-              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
-          }
+          refreshAllPages( new SubProgressMonitor( monitor, 500 ) );
 
           throw new CoreException( status );
         }
@@ -978,6 +985,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), "Modellrechnung", "Modellrechnung fehlgeschlagen", status );
+  }
+
+  /**
+   * Calls {@link IModelWizardPage#saveData(IProgressMonitor)}for all pages
+   */
+  protected void saveAllPages( final IProgressMonitor monitor )
+  {
+    final IWizard wizard = getWizard();
+    if( wizard instanceof CalcWizard )
+      ((CalcWizard)wizard).saveAllPages( monitor );
   }
 
   protected void postCreateControl()
@@ -1093,23 +1110,28 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void launchAnt( final String antLaunch, final String title, final String message, final Properties antProps )
   {
-    // TODO: vor der Launch sollten die Daten gespeichert werden
 
-    final ICoreRunnableWithProgress antRunnable = new ICoreRunnableWithProgress()
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
-      {       
-          final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
-          return nature.launchAnt( message, antLaunch, antProps, getCalcFolder(), new NullProgressMonitor() );
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        monitor.beginTask( message, 3000 );
+        
+        saveAllPages( new SubProgressMonitor( monitor, 500 ) );
+
+        final ModelNature nature = (ModelNature)getProject().getNature( ModelNature.ID );
+        final IStatus status = nature.launchAnt( message, antLaunch, antProps, getCalcFolder(),
+            new SubProgressMonitor( monitor, 2000 ) );
+
+        refreshAllPages( new SubProgressMonitor( monitor, 500 ) );
+
+        throw new CoreException( status );
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, antRunnable );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, message, status );
-
-    // TODO: nach dem Launch sollten die Wizard-Seiten aktualisiert werden
   }
 
   private Button createButton( final Composite parent, final String text, final String tooltip,
@@ -1173,5 +1195,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public String getName()
   {
     return getArguments().getProperty( PROP_PAGE_ID, super.getName() );
+  }
+
+  /**
+   * Calls {@link AbstractCalcWizardPage#onModellChange(ModellEvent)}on all pages.
+   */
+  protected void refreshAllPages( final IProgressMonitor monitor )
+  {
+      final IWizard wizard = getWizard();
+      if( wizard instanceof CalcWizard )
+        ((CalcWizard)wizard).refreshAllPages( monitor );
   }
 }
