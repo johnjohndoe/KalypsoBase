@@ -228,6 +228,8 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
       choiceGroup.setText( choice.toString() );
 
       choiceGroup.layout( true );
+      
+      choice.setFocus();
     }
   }
 }

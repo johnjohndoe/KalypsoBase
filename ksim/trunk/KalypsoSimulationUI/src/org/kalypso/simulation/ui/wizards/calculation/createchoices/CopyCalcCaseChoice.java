@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
@@ -148,6 +149,8 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
         }
       }
     } );
+    
+    ViewerUtilities.selectFirstElement( viewer );
     m_viewer = viewer;
 
     m_control = panel;
@@ -160,6 +163,14 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     {
       e.printStackTrace();
     }
+  }
+  
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
+   */
+  public void setFocus()
+  {
+    m_viewer.getControl().setFocus();
   }
 
   protected void setName( final String text )

@@ -135,7 +135,15 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       e1.printStackTrace();
     }
   }
-
+  
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
+   */
+  public void setFocus()
+  {
+    m_edit.setFocus();
+  }
+  
   protected void setName( final String text )
   {
     m_name = text;

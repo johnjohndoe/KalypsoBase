@@ -55,6 +55,9 @@ public interface IAddCalcCaseChoice
 
   public Control getControl();
 
+  /** Will be called, when this choice is shown */
+  public void setFocus();
+  
   /**
    * Erzeugt oder wählt eine Rechenvariante und gibt derem Basisverzeichnis zurück
    * 

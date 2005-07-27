@@ -418,21 +418,26 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return variables;
   }
 
-  private Properties createVariablesForAntLaunch( final IFolder folder )
+  private Properties createVariablesForAntLaunch( final IFolder folder ) throws CoreException
   {
     final Properties attributes = new Properties();
+    final IProject project = folder.getProject();
+    final IScenario scenario = getScenario( folder );
 
-    // TODO: set scenario id
+    attributes.setProperty( "kalypso.scenario", scenario.getId() );
     
-    attributes.setProperty( "calc.dir", folder.getLocation().toString() );
-    attributes.setProperty( "project.dir", folder.getProject().getLocation().toString() );
+    attributes.setProperty( "simulation_project_loc", project.getLocation().toOSString() );
+    
+    attributes.setProperty( "calc.dir", folder.getLocation().toOSString() );
+    attributes.setProperty( "project.dir", project.getLocation().toOSString() );
 
-    attributes.setProperty( "calc.path", folder.getFullPath().toString() );
-    attributes.setProperty( "project.path", folder.getProject().getFullPath().toString() );
+    attributes.setProperty( "calc.path", folder.getFullPath().toOSString() );
+    attributes.setProperty( "project.path", project.getFullPath().toOSString() );
+    
     try
     {
       attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() );
-      attributes.setProperty( "project.url", ResourceUtilities.createURL( folder.getProject() ).toString() );
+      attributes.setProperty( "project.url", ResourceUtilities.createURL( project ).toString() );
     }
     catch( final MalformedURLException e )
     {
