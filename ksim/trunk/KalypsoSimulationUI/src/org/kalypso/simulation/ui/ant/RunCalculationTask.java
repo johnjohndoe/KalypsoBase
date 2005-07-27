@@ -62,13 +62,9 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.impl.ModeldataTypeImpl;
@@ -81,6 +77,75 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  */
 public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
+  /**
+   * Gets a display
+   * 
+   * @author thuel2
+   */
+  public class GetDisplay implements Runnable
+  {
+    private final Display m_display;
+
+    private final Display m_newDisplay;
+
+    private Shell m_shell;
+
+    private Shell m_newShell;
+
+    public GetDisplay()
+    {
+      m_display = Display.getCurrent();
+
+      if( m_display == null )
+        m_newDisplay = new Display();
+      else
+        m_newDisplay = null;
+    }
+
+    public Display getDisplay()
+    {
+      if( m_display != null )
+        return m_display;
+
+      return m_newDisplay;
+    }
+
+    public void dispose()
+    {
+      if( m_newShell != null )
+      {
+        m_newShell.dispose();
+        m_newShell = null;
+      }
+
+      if( m_newDisplay != null )
+        m_newDisplay.dispose();
+    }
+
+    public Shell getShell()
+    {
+      if( m_newShell != null )
+        return m_newShell;
+
+      final Display display = getDisplay();
+      display.syncExec( this );
+      if( m_shell != null )
+        return m_shell;
+
+      final Shell[] shells = display.getShells();
+      if( shells != null && shells.length > 0 )
+        return shells[0];
+
+      m_newShell = new Shell( display );
+      return m_newShell;
+    }
+
+    public void run()
+    {
+      m_shell = getDisplay().getActiveShell();
+    }
+  }
+
   private String m_calcCasePath;
 
   private ModeldataType m_modeldata;
@@ -155,18 +220,23 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     // give implementing class a chance to validate its input
     validateInput();
 
-    // we retrieve the active shell, whatever it is
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final Shell shell = window == null ? null : window.getShell();
-
-    RunnableContextHelper.executeInProgressDialog( shell, this, this );
+    final GetDisplay displayGetter = new GetDisplay();
+    try
+    {
+      final Shell shell = displayGetter.getShell();
+      RunnableContextHelper.executeInProgressDialog( shell, this, this );
+    }
+    finally
+    {
+      displayGetter.dispose();
+    }
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException  {
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  {
     monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
 
     try
@@ -180,7 +250,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
       final IProject calcProject = m_calcCaseFolder.getProject();
       final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
-      nature.runCaclulation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
+      nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
       return Status.OK_STATUS;
     }
     catch( final JAXBException e )

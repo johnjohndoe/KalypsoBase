@@ -42,6 +42,7 @@ package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -57,7 +58,6 @@ import java.util.Properties;
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -66,6 +66,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -206,13 +207,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_BUTTON_PROPERTIES = "buttonProperties";
 
   /**
-   * Argument: If set, the argument ins interpetated as an URL file and loaded as a html content. The html will then be
+   * Argument: If set, the argument is interpetated as an file relative to the current project. The file will be shown as html 
    * viewed inside the calculation wizard for nice navigation.
    * <p>
-   * The URL must be project relative
+   * The path must be project relative
    * </p>
+   * <p>Supported protocols are 'http(s)' and 'file'</p>
    */
-  private static final String PROP_HTML_URL = "htmlURL";
+  private static final String PROP_HTML_PATH = "htmlFilePath";
 
   /**
    * Argument: a string indicating, how the Timeseries-Table is filled with timeseries.
@@ -328,7 +330,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private String m_ignoreType;
 
-  private String m_html = null;
+  private URL m_htmlURL = null;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -426,26 +428,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
 
     // load HTML
-    final String htmlURL = arguments.getProperty( PROP_HTML_URL, null );
-    if( htmlURL != null )
+    final String htmlPath = arguments.getProperty( PROP_HTML_PATH, null );
+    if( htmlPath != null )
     {
-      InputStream stream = null;
+      final IFile htmlFile = getProject().getFile( new Path( htmlPath ) );
+      final File htmlLocation = htmlFile.getLocation().toFile();
       try
       {
-        final URL projectURL = ResourceUtilities.createURL( getProject() );
-        // May be better to have the global mechanism for urls?
-        final URL url = new URL( projectURL, htmlURL );
-        stream = url.openStream();
-        m_html = IOUtils.toString( stream );
-        stream.close();
+        m_htmlURL = htmlLocation.toURL();
       }
-      catch( final IOException e )
+      catch( final MalformedURLException e1 )
       {
-        e.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( stream );
+        e1.printStackTrace();
+        // TODO: error handling
+        m_htmlURL = null;
       }
     }
   }
@@ -1047,11 +1043,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage#getHtml()
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage#getHtmlURL()
    */
-  public String getHtml()
+  public URL getHtmlURL()
   {
-    return m_html;
+    return m_htmlURL;
   }
 
   protected void initButtons( final Composite parent, final String buttonText, final String tooltipText,
@@ -1110,7 +1106,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void launchAnt( final String antLaunch, final String title, final String message, final Properties antProps )
   {
-
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
       protected void execute( final IProgressMonitor monitor ) throws CoreException
@@ -1129,7 +1124,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, message, status );
   }

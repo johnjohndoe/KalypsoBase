@@ -78,7 +78,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -376,7 +375,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           return Status.OK_STATUS;
         }
 
-        Thread.sleep( 1000 );
+        Thread.sleep( 500 );
       }
 
       return KalypsoGisPlugin.createErrorStatus( "Operation hat über " + minutes
@@ -853,7 +852,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       final ModeldataType modelspec = getModelspec( modelSpec );
 
-      return runCaclulation( calcCaseFolder, monitor, modelspec );
+      return runCalculation( calcCaseFolder, monitor, modelspec );
     }
     catch( final ServiceException e )
     {
@@ -862,7 +861,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public IStatus runCaclulation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final ModeldataType modelspec ) throws ServiceException, CoreException
+  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final ModeldataType modelspec ) throws ServiceException, CoreException
   {
       monitor.beginTask( "Modellrechnung wird durchgeführt", 5500 );
 
@@ -877,15 +876,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
-      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+//      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
         return runStatus;
 
-      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
+//      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
-      {
-          runStatus,
-          transStatus }, "Berechnung abgeschlossen.", null );
+//      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
+//      {
+//          runStatus,
+//          /*transStatus */}, "Berechnung abgeschlossen.", null );
     }
     finally
     {
