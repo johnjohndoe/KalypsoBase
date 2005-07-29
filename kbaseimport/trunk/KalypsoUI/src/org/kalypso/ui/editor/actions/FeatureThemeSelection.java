@@ -31,6 +31,8 @@ package org.kalypso.ui.editor.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -53,16 +55,16 @@ public class FeatureThemeSelection extends CommandableFeatureSelection implement
   private final IKalypsoFeatureTheme m_theme;
 
   public FeatureThemeSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection,
-      final FeatureTypeProperty ftp, final Feature selectedRow, int selectionID )
+      final FeatureTypeProperty ftp, final Feature selectedRow )
   {
-    super( theme.getWorkspace(), selection, ftp, selectedRow, selectionID );
+    super( theme.getWorkspace(), selection, ftp, selectedRow);
     
     m_theme = theme;
   }
 
   /**
    * 
-   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getKalypsoFeatureTheme()
+   * @see org.kalypso.ogc.gml.selection.IFeatureThemeSelection#getKalypsoFeatureTheme()
    */
   public IKalypsoFeatureTheme getKalypsoFeatureTheme()
   {
