@@ -720,4 +720,5 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       monitor.done();
     }
   }
+  
 }
