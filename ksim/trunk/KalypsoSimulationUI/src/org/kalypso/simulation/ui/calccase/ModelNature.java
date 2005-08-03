@@ -319,8 +319,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String progressText, final String launchName, final Properties antProps, final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  public IStatus launchAnt( final String progressText, final String launchName, final Properties antProps,
+      final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( progressText, 5000 );
 
@@ -329,8 +329,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      // TODO: Problem: ${project_loc} muss im launch benutzt werden, damit der Projektname nicht fets kodiert ist,
-      // aber: ${project_loc} wird anhand der globalen selektion bestimmt, die sich a) während des wizard ändern kann,
+      // TODO: Problem: ${project_loc} muss im launch benutzt werden, damit der Projektname nicht fest kodiert ist,
+      // aber: ${project_loc} wird anhand der globalen selektion bestimmt, die sich
+      // a) während des wizard ändern kann,
       // b) vielleicht grade aus dem aktiven editor kommt und somit gar nicht gesetzt ist
       // 
       // Lösungsidde: eine neue dynamische Variable project_copy_loc definieren und diese dann überall
@@ -355,8 +356,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.worked( 1000 );
 
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
-      
-      // todo: timeout konfigurierbar machen?
+
+      // TODO: timeout konfigurierbar machen?
       final int minutes = 3;
       for( int i = 0; i < 60 * minutes; i++ )
       {
@@ -371,13 +372,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
               return new LogStatusWrapper( logfile ).toStatus();
             }
           }
-
           return Status.OK_STATUS;
         }
-
-        Thread.sleep( 500 );
+        Thread.sleep( 1000 );
       }
-
+      // TODO better ask for termination, but continue task in background
+      launch.terminate();
       return KalypsoGisPlugin.createErrorStatus( "Operation hat über " + minutes
           + " Minuten gedauert und wird deshalb abgebrochen.", null );
     }
@@ -425,15 +425,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IScenario scenario = getScenario( folder );
 
     attributes.setProperty( "kalypso.scenario", scenario.getId() );
-    
+
     attributes.setProperty( "simulation_project_loc", project.getLocation().toOSString() );
-    
+
     attributes.setProperty( "calc.dir", folder.getLocation().toOSString() );
     attributes.setProperty( "project.dir", project.getLocation().toOSString() );
 
     attributes.setProperty( "calc.path", folder.getFullPath().toOSString() );
     attributes.setProperty( "project.path", project.getFullPath().toOSString() );
-    
+
     try
     {
       attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() );
@@ -476,7 +476,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throws CoreException
   {
     final String message = "Rechenvariante wird erzeugt";
-    
+
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
@@ -495,7 +495,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     final String message = "Rechenvariante wird aktualisiert";
-    
+
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_UPDTAE, folder, monitor );
 
@@ -780,10 +780,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IKalypsoUser currentUser = authPlugin.getCurrentUser();
     final String scenarioId = currentUser.getScenario();
     final IScenario scenario = authPlugin.getScenario( scenarioId );
-    urlResolver.addReplaceToken( "scenarioId",  scenario.getId() );
-    urlResolver.addReplaceToken( "scenarioName",  scenario.getName() );
-    urlResolver.addReplaceToken( "scenarioDescription",  scenario.getDescription() );
-    
+    urlResolver.addReplaceToken( "scenarioId", scenario.getId() );
+    urlResolver.addReplaceToken( "scenarioName", scenario.getName() );
+    urlResolver.addReplaceToken( "scenarioDescription", scenario.getDescription() );
+
     final String user = System.getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
     urlResolver.addReplaceToken( "user", user );
 
@@ -866,9 +866,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final ModeldataType modelspec ) throws ServiceException, CoreException
+  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor,
+      final ModeldataType modelspec ) throws ServiceException, CoreException
   {
-      monitor.beginTask( "Modellrechnung wird durchgeführt", 5500 );
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 5500 );
 
     try
     {
@@ -881,15 +882,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
-//      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
-        return runStatus;
+      //      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+      return runStatus;
 
-//      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
+      //      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
-//      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
-//      {
-//          runStatus,
-//          /*transStatus */}, "Berechnung abgeschlossen.", null );
+      //      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
+      //      {
+      //          runStatus,
+      //          /*transStatus */}, "Berechnung abgeschlossen.", null );
     }
     finally
     {
@@ -941,11 +942,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Object result = startsimFinder.getResult();
     final String scenarioId = result == null ? "" : result.toString();
-    
+
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
     if( scenario == null )
       return Scenario.DEFAULT_SCENARIO;
-    
+
     return scenario;
   }
 }
