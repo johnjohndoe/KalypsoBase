@@ -40,14 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.encoders.EncoderUtil;
+import org.jfree.chart.title.TextTitle;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -58,22 +60,21 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ExportableChart implements IExportableObject
 {
-  public final static String EXT_JPEG = ".jpg";
-
-  public final static String EXT_PNG = ".png";
+  public final static String DEFAULT_FORMAT = "png";
+  public final static int DEFAULT_WIDTH = 400;
+  public final static int DEFAULT_HEIGHT = 300;
 
   private final JFreeChart m_chart;
 
-  private final String m_fileExt;
+  private final String m_format;
 
   private final int m_width;
-
   private final int m_height;
 
-  public ExportableChart( final JFreeChart chart, final String fileExt, final int width, final int height )
+  public ExportableChart( final JFreeChart chart, final String format, final int width, final int height )
   {
     m_chart = chart;
-    m_fileExt = fileExt;
+    m_format = format;
     m_width = width;
     m_height = height;
   }
@@ -83,22 +84,32 @@ public class ExportableChart implements IExportableObject
    */
   public String getPreferredDocumentName()
   {
-    return m_chart.getTitle() + m_fileExt;
+    final TextTitle title = m_chart.getTitle();
+    
+    String name = "Diagramm";
+    if( title != null && title.getText().length() > 0 )
+      name = title.getText();
+    
+    return name + "." + m_format;
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
   {
     try
     {
-      if( m_fileExt.equalsIgnoreCase( EXT_JPEG ) )
-        ChartUtilities.writeChartAsJPEG( outs, m_chart, m_width, m_height );
-      else if( m_fileExt.equalsIgnoreCase( EXT_PNG ) )
-        ChartUtilities.writeChartAsPNG( outs, m_chart, m_width, m_height );
-      else
-        return KalypsoGisPlugin.createErrorStatus( "File extension not supported: " + m_fileExt, null );
+      BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
+      EncoderUtil.writeBufferedImage( image, m_format, outs );
+
+      //      if( m_fileExt.equalsIgnoreCase( EXT_JPEG ) )
+      //        ChartUtilities.writeChartAsJPEG( outs, m_chart, m_width, m_height );
+      //      else if( m_fileExt.equalsIgnoreCase( EXT_PNG ) )
+      //        ChartUtilities.writeChartAsPNG( outs, m_chart, m_width, m_height );
+      //      else
+      //        return KalypsoGisPlugin.createErrorStatus( "File extension not supported: " + m_fileExt, null );
     }
     catch( final IOException e )
     {

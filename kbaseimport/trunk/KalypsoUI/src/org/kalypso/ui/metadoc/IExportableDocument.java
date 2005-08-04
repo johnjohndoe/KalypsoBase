@@ -45,6 +45,7 @@ import java.io.OutputStream;
 /**
  * IExportableDocument
  * 
+ * @deprecated remove this class as soon as metadoc stuff is done
  * @author schlienger
  */
 public interface IExportableDocument
