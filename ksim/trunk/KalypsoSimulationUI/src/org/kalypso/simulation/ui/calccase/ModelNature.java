@@ -376,9 +376,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         }
         Thread.sleep( 1000 );
       }
+      
       // TODO better ask for termination, but continue task in background
       launch.terminate();
-      return KalypsoGisPlugin.createErrorStatus( "Operation hat über " + minutes
+
+      return KalypsoGisPlugin.createErrorStatus( "Die Operation hat über " + minutes
           + " Minuten gedauert und wird deshalb abgebrochen.", null );
     }
     catch( final InterruptedException e )
