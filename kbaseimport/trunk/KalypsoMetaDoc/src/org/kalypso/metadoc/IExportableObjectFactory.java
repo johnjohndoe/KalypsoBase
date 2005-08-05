@@ -47,13 +47,16 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
- * Responsible for creating one or more documents
+ * Responsible for creating one or more documents and for creating the wizard pages required to configure the documents
+ * that will be exported.
+ * <p>
+ * The configuration is shared between the wizard pages and the call to <b>createExportableObjects() </b>.
  * 
  * @author schlienger
  */
 public interface IExportableObjectFactory
 {
-  public IExportableObject[] createExportableObjects( final Configuration conf ) throws CoreException;
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
 
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration) throws CoreException;
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
 }
