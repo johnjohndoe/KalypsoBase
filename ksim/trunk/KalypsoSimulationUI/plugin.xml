@@ -32,6 +32,7 @@
       <import plugin="org.kalypso.ui"/>
       <import plugin="org.kalypso.auth"/>
       <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.kalypso.metadoc"/>
    </requires>
 
       <extension

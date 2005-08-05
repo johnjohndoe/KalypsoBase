@@ -40,27 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -87,9 +85,10 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
-import org.kalypso.metadoc.Document;
+import org.kalypso.metadoc.IExportTarget;
+import org.kalypso.metadoc.IExporter;
+import org.kalypso.metadoc.impl.MetadocExtensions;
+import org.kalypso.metadoc.ui.ExportDocumentsWizard;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -98,14 +97,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
-import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
-import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -118,7 +114,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 /**
  * @author Belger
  */
-public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener, IAdaptable
 {
   // Beispiel:
   //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
@@ -159,7 +155,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   /** Argument: */
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
-  
+
   /** Argument: */
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
 
@@ -167,7 +163,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   protected ObsdiagviewType m_obsdiagviewType;
 
-  private IBerichtExporter[] m_berichtExporters;
+  //  private IBerichtExporter[] m_berichtExporters;
 
   public ExportResultsWizardPage()
   {
@@ -216,14 +212,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      {
-          mainWeight,
-          100 - mainWeight } );
+      { mainWeight, 100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      {
-          rightWeight,
-          100 - rightWeight } );
+      { rightWeight, 100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -283,8 +275,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   private Control createDataButtonsPanel( final Composite parent )
   {
-    m_berichtExporters = createExporters();
-
     final Group buttonGroup = new Group( parent, SWT.NONE );
     buttonGroup.setText( "Datenablagen" );
     buttonGroup.setLayout( new GridLayout() );
@@ -319,7 +309,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
-    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    // TODO: show button only if there is any configured exporter 
+//    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
 
     return buttonGroup;
   }
@@ -331,50 +322,51 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     final Shell shell = getContainer().getShell();
 
-    FeatureList features = getFeatures();
-    FeatureList selectedFeatures = getSelectedFeatures();
+//    FeatureList features = getFeatures();
+//    FeatureList selectedFeatures = getSelectedFeatures();
+//
+//    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
+//    final URL context;
+//    try
+//    {
+//      context = ResourceUtilities.createURL( getCalcFolder() );
+//      features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
+//          context ) );
+//      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
+//    }
+//    catch( MalformedURLException e )
+//    {
+//      e.printStackTrace();
+//    }
+//
+//    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
 
-    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
-    final URL context;
     try
     {
-      context = ResourceUtilities.createURL( getCalcFolder() );
-      features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
-          context ) );
-      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-
-    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-
-    MultiDocumentServiceWrapper metadocService = null;
-    try
-    {
-      metadocService = new MultiDocumentServiceWrapper();
-
-      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures, nameProperty,
-          metadocService.getDummyExportableDoc(), metadocService.getDummyDocument(), m_berichtExporters );
-      final WizardDialog dialog = new WizardDialog( getContainer().getShell(), wizard );
+      final IExportTarget target = MetadocExtensions.retrieveTarget( "metadocServiceTarget" );
+      final IExporter[] exporters = createExporters();
+      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
+      
+//      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures, nameProperty,
+//          metadocService.getDummyExportableDoc(), metadocService.getDummyDocument(), m_berichtExporters );
+      final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {
-        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
-        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
-
-        final MultiDocumentServiceWrapper msw = metadocService;
-        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
-        {
-          public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
-          {
-            exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
-            return Status.OK_STATUS;
-          }
-        };
-        final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
-        if( !status.isOK() )
-          ErrorDialog.openError( shell, "Berichtsablage", "Fehler bei der Berichtsablage.", status );
+//        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
+//        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
+//
+//        final MultiDocumentServiceWrapper msw = metadocService;
+//        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+//        {
+//          public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
+//          {
+//            exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
+//            return Status.OK_STATUS;
+//          }
+//        };
+//        final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+//        if( !status.isOK() )
+//          ErrorDialog.openError( shell, "Berichtsablage", "Fehler bei der Berichtsablage.", status );
       }
     }
     catch( final CoreException e )
@@ -389,73 +381,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       e.printStackTrace();
     }
-    finally
-    {
-      metadocService.dispose();
-    }
   }
 
-  protected void exportDocuments( final IProgressMonitor monitor, final MultiDocumentServiceWrapper metadocService,
-      final Feature[] features, final IBerichtExporter[] exporter ) throws CoreException, InterruptedException
-  {
-    monitor.beginTask( "Berichtsablage", exporter.length * features.length );
-
-    final Collection stati = new LinkedList();
-    for( int i = 0; i < exporter.length; i++ )
-    {
-      final IBerichtExporter berichtExporter = exporter[i];
-      final String extension = berichtExporter.getExtension();
-      for( int j = 0; j < features.length; j++ )
-      {
-        monitor.setTaskName( "Berichtsablage - " + berichtExporter.toString() );
-
-        final Document doc = metadocService.getCopyDocument( extension );
-        OutputStream os = null;
-        try
-        {
-          os = new FileOutputStream( doc.getFile() );
-          final IStatus status = berichtExporter.export( features[j], os );
-          if( !status.isOK() )
-            stati.add( status );
-
-          metadocService.commitDocument( doc );
-        }
-        catch( final CoreException ce )
-        {
-          stati.add( ce.getStatus() );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-
-          doc.dispose();
-
-          final String msg = e.getLocalizedMessage();
-          final String message = msg == null ? "Unbekannter Fehler" : msg;
-
-          stati.add( KalypsoGisPlugin.createErrorStatus( message, e ) );
-        }
-        finally
-        {
-          IOUtils.closeQuietly( os );
-        }
-
-        monitor.worked( 1 );
-        if( monitor.isCanceled() )
-          throw new InterruptedException();
-      }
-    }
-
-    if( stati.isEmpty() )
-      return;
-
-    throw new CoreException( new org.eclipse.core.runtime.MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati
-        .toArray( new IStatus[stati.size()] ), "Beim Export ein oder mehrerer Dokumente traten Fehler auf.", null ) );
-  }
-
-  private IBerichtExporter[] createExporters()
+  private IExporter[] createExporters()
   {
     final Collection exporters = new ArrayList();
+
+    final Collection stati = new ArrayList();
 
     final Arguments arguments = getArguments();
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
@@ -466,25 +398,33 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         try
         {
-          // todo: maybe check if argument is ok?
           final Arguments args = (Arguments)entry.getValue();
-          final String classname = args.getProperty( "class" );
-          if( classname != null )
-          {
-            final IBerichtExporter exporter = (IBerichtExporter)ClassUtilities.newInstance( classname,
-                IBerichtExporter.class, this.getClass().getClassLoader() );
-            exporter.init( getContext(), args );
-            exporters.add( exporter );
-          }
+          final String exporterId = args.getProperty( "id" );
+          if( exporterId == null )
+            throw new CoreException( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
+                "Exporter ohne id konfiguriert: " + key, null ) );
+
+          final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
+          exporter.init( this );
+          exporters.add( exporter );
         }
-        catch( final ClassUtilityException e )
+        catch( final CoreException e )
         {
           e.printStackTrace();
+
+          stati.add( e.getStatus() );
         }
       }
     }
 
-    return (IBerichtExporter[])exporters.toArray( new IBerichtExporter[exporters.size()] );
+    if( stati.size() > 0 )
+    {
+      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[])stati
+          .toArray( new IStatus[stati.size()] ), "", null );
+      ErrorDialog.openError( getContainer().getShell(), "", "", status );
+    }
+
+    return (IExporter[])exporters.toArray( new IExporter[exporters.size()] );
   }
 
   private FeatureList chooseSelectedFeatures( final IFolder calcCase )
@@ -531,10 +471,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   /**
    * test for each feature of the given list, if the timeserieslink in the given property is valid
    * 
-   * @param featureList
-   *          list of features
-   * @param propertyNameTimeserieslink
-   * @param context
    * @return List of features that have valid timeserieslinks
    */
   private FeatureList filterForValidTimeseriesLinks( final FeatureList featureList,
@@ -581,8 +517,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     if( featureList == null )
       return;
 
-//    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
-//    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
+    //    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
+    //    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
 
     // put feature-ids in feature-path'es
     final StringBuffer sb = new StringBuffer();
@@ -710,5 +646,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
     return getObservations( onlySelected );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( final Class adapter )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
