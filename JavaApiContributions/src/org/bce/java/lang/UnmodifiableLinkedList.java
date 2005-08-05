@@ -1,6 +1,7 @@
 package org.bce.java.lang;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
 
   public List<E> subList( int fromIndex, int toIndex )
   {
-    return new UnmodifiableLinkedList<E>( (LinkedList<E>) m_list.subList(
+    return Collections.unmodifiableList(  m_list.subList(
         fromIndex, toIndex ) );
   }
 
