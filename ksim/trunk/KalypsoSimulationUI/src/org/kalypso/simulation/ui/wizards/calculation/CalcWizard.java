@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -81,7 +80,6 @@ import org.kalypso.model.xml.ArgListType;
 import org.kalypso.model.xml.ArgType;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.AddNewCalcCaseChoice;
@@ -376,29 +374,21 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
           try
           {
-            final IStatus[] stati = new IStatus[2];
-
             final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
             final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+
+            // szenario für currentCalcCase holen
+            m_scenario = nature.getScenario( currentCalcCase );
+            
+            final IStatus result;
             if( m_controlPage.isUpdate() )
-              stati[0] = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+              result = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
             else
             {
               monitor.worked( 1000 );
-              stati[0] = Status.OK_STATUS;
-            }
-
-            // szenario für currentCalcCase holen
-            try
-            {
-              m_scenario = nature.getScenario( currentCalcCase );
-              stati[1] = Status.OK_STATUS;
-            }
-            catch( CoreException ce )
-            {
-              stati[1] = ce.getStatus();
+              result = Status.OK_STATUS;
             }
 
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
@@ -407,9 +397,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
-            final MultiStatus multiStatus = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati, "", null );
-            if( multiStatus != null && !multiStatus.isOK() )
-              throw new CoreException( multiStatus );
+            if( !result.isOK() )
+              throw new CoreException( result );
           }
           finally
           {

@@ -115,7 +115,6 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 import org.xml.sax.InputSource;
 
 /**
- * 
  * @author belger
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
@@ -154,8 +153,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private static final int TRANS_TYPE_UPDTAE = 0;
 
   private static final int TRANS_TYPE_CREATE = 1;
-
-  private static final int TRANS_TYPE_AFTERCALC = 2;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -351,8 +348,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // add user-variables to variable-manager (so they can also be used within
       // the launch-file
-      userVariables = createValueVariablesFromProperties( userProperties );
-      svm.addVariables( userVariables );
+      userVariables = registerValueVariablesFromProperties( svm, userProperties );
       monitor.worked( 1000 );
 
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
@@ -376,7 +372,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         }
         Thread.sleep( 1000 );
       }
-      
+
       // TODO better ask for termination, but continue task in background
       launch.terminate();
 
@@ -402,7 +398,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  private static final IValueVariable[] createValueVariablesFromProperties( final Properties properties )
+  private static final IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm,
+      final Properties properties )
   {
     final IValueVariable[] variables = new IValueVariable[properties.size()];
     int count = 0;
@@ -412,9 +409,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final String name = (String)entry.getKey();
       final String value = (String)entry.getValue();
 
-      final ValueVariable valueVariable = new ValueVariable( name, value, null );
+      final IValueVariable valueVariable = new ValueVariable( name, value, null );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
+      
+      try
+      {
+        // add each variable separatedly, because it may have allready been registered
+        svm.addVariables( new IValueVariable[] { valueVariable } );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+        // ignore it, its already there -> ?
+      }
     }
 
     return variables;
@@ -505,20 +513,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   }
 
   /**
-   * Führt die Tranformation nach der Berechnung durch
-   * 
-   * @throws CoreException
-   */
-  public IStatus afterCalcTransform( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
-  {
-    final String message = "Rechenvariante wird aktualisiert";
-    if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( message, ModelNature.TRANS_TYPE_AFTERCALC, folder, monitor );
-
-    return launchAnt( message, "afterCalc", null, folder, monitor );
-  }
-
-  /**
    * Führt eine Transformation auf einer Rechenvariante durch
    * 
    * @param taskName
@@ -549,10 +543,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       case TRANS_TYPE_CREATE:
         transList = trans.getCreateTransformations();
-        break;
-
-      case TRANS_TYPE_AFTERCALC:
-        transList = trans.getAfterCalcTransformations();
         break;
 
       default:
@@ -883,16 +873,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ICalculationService calcService = findCalculationServiceForType( typeID );
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-      final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
-      //      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
-      return runStatus;
-
-      //      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
-
-      //      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
-      //      {
-      //          runStatus,
-      //          /*transStatus */}, "Berechnung abgeschlossen.", null );
+      return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
     }
     finally
     {

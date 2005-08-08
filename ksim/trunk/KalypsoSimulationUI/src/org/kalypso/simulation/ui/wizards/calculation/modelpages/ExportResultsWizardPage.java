@@ -102,6 +102,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.util.ant.AbstractFeatureVisitorTask;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -517,9 +518,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     if( featureList == null )
       return;
 
-    //    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
-    //    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
-
     // put feature-ids in feature-path'es
     final StringBuffer sb = new StringBuffer();
     for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
@@ -528,27 +526,15 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final String featurePath = new FeaturePath( f ).toString();
       sb.append( featurePath );
       if( iter.hasNext() )
-        sb.append( ':' );
+        sb.append( AbstractFeatureVisitorTask.FEATURE_PATH_SEPARATOR );
     }
     final Properties antProps = new Properties();
     antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
-    launchAnt( "exportPrognosen", STR_EXPORT_PROGNOSEN, "Prognose-Zeitreihen werden auf den Server gespeichert",
+    launchAnt( "exportVorhersagen", STR_EXPORT_PROGNOSEN, "Vorhersage-Zeitreihen werden auf den Server gespeichert",
         antProps );
-
-    //          // TODO: put it into an ant task
-    //          final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-    //          final URL context = ResourceUtilities.createURL( calcFolder );
-    //          final CommitPrognoseFeatureVisitor visitor = new CommitPrognoseFeatureVisitor( srv, new UrlResolver(),
-    //              context, resultTsName, prognoseTsName, monitor );
-    //
-    //          monitor.beginTask( "Prognosen werden veröffentlicht", featureList.size() );
-    //          featureList.accept( visitor );
-    //
-    //          return new org.eclipse.core.runtime.MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, visitor.getStati(),
-    //              "Fehler sind während des Exports aufgetaucht.", null );
-  }
+  } 
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
