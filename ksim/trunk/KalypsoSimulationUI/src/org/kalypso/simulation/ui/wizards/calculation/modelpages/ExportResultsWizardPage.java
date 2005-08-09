@@ -55,7 +55,6 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -85,6 +84,7 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExportTarget;
 import org.kalypso.metadoc.IExporter;
 import org.kalypso.metadoc.impl.MetadocExtensions;
@@ -112,9 +112,16 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
- * @author Belger
+ * Mostly used as the last page of the calculation wizard. The user can export the
+ * features in different ways:
+ * <ul>
+ * <li>back to the repository
+ * <li>as document within the metadoc infrastructure
+ * </ul>
+ * 
+ * @author belger,schlienger
  */
-public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener, IAdaptable
+public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   // Beispiel:
   //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
@@ -132,15 +139,17 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   //  
 
   private static final String STR_EXPORT_PROGNOSEN = "Export Prognosen";
+
   /**
-   * Argument: Ein oder mehrere Exporter für den den Berichtsexport. Mehrere Exporter werden durch mehrere 'exporter'
-   * Elemente, unterschieden durch eine beliebig angehängte Zeichenkette unterschieden.
+   * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
+   * arguments, they must be followed by some arbitrary string.
    * <p>
-   * Dieses Argumetn kann Unterargumente enthalten, welche an den eigentlichen Berichtsexporter weitergereicht werden.
+   * Each argument can contains sub-arguments which in turn are forwarded to the exporter object. This way, you can
+   * specify exporter specific initialisation.
    * </p>
    * <p>
-   * Minimal muss das Unterargument 'class' definiert sein, welches eine konkrete Klasse beschreibt, welche
-   * {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter}implementiert.
+   * There must be at least the 'id' argument which contains the id of the exporter to use (for a list of valid exporter
+   * ids, see the <code>org.kalypso.metadoc.exporter</code> extension point)
    */
   private static final String PROP_EXPORTER = "exporter";
 
@@ -162,8 +171,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   protected Object[] m_checkedElements;
 
   protected ObsdiagviewType m_obsdiagviewType;
-
-  //  private IBerichtExporter[] m_berichtExporters;
 
   public ExportResultsWizardPage()
   {
@@ -309,8 +316,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
-    // TODO: show button only if there is any configured exporter 
-//    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    // TODO: show button only if there is any configured exporter
+    //    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
 
     return buttonGroup;
   }
@@ -322,51 +329,36 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     final Shell shell = getContainer().getShell();
 
-//    FeatureList features = getFeatures();
-//    FeatureList selectedFeatures = getSelectedFeatures();
-//
-//    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
-//    final URL context;
-//    try
-//    {
-//      context = ResourceUtilities.createURL( getCalcFolder() );
-//      features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
-//          context ) );
-//      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      e.printStackTrace();
-//    }
-//
-//    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
+    //    FeatureList features = getFeatures();
+    //    FeatureList selectedFeatures = getSelectedFeatures();
+    //
+    //    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
+    //    final URL context;
+    //    try
+    //    {
+    //      context = ResourceUtilities.createURL( getCalcFolder() );
+    //      features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
+    //          context ) );
+    //      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
+    //    }
+    //    catch( MalformedURLException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
 
     try
     {
+      // retrieve the potential targets
       final IExportTarget target = MetadocExtensions.retrieveTarget( "metadocServiceTarget" );
+
+      // create and initialise the exporters
       final IExporter[] exporters = createExporters();
+
       final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
-      
-//      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures, nameProperty,
-//          metadocService.getDummyExportableDoc(), metadocService.getDummyDocument(), m_berichtExporters );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {
-//        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
-//        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
-//
-//        final MultiDocumentServiceWrapper msw = metadocService;
-//        final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
-//        {
-//          public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
-//          {
-//            exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
-//            return Status.OK_STATUS;
-//          }
-//        };
-//        final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
-//        if( !status.isOK() )
-//          ErrorDialog.openError( shell, "Berichtsablage", "Fehler bei der Berichtsablage.", status );
+        // TODO?
       }
     }
     catch( final CoreException e )
@@ -375,14 +367,24 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
       ErrorDialog.openError( shell, "Berichtsablage", "Berichtsablagedienst konnte nicht initialisiert werden.", e
           .getStatus() );
-      return;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
+
+      // error handling?
     }
   }
 
+  /**
+   * Creates the exporters using the arguments. Each argument which begins with "exporter" (see PROP_EXPORTER) should
+   * denote an exporter. The exporter is defined by its extension id (the eclipse extension mechanism is used here).
+   * <p>
+   * Each exporter is also initialised (the method init() is called) with this class as adapter for delivering context
+   * dependent information such as the list of selected features.
+   * 
+   * @return newly created list of exporters
+   */
   private IExporter[] createExporters()
   {
     final Collection exporters = new ArrayList();
@@ -405,7 +407,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
                 "Exporter ohne id konfiguriert: " + key, null ) );
 
           final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
-          exporter.init( this );
+          // important: initialise the exporter
+          exporter.init( new ExporterSupplier( args ) );
           exporters.add( exporter );
         }
         catch( final CoreException e )
@@ -498,7 +501,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         // no exception means, result is existing
         result.add( fe );
       }
-      catch( Exception e )
+      catch( final Exception ignored )
       {
         //   nothing, as exception is expected if result is not there
       }
@@ -533,7 +536,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     // call ant - with properties
     launchAnt( "exportVorhersagen", STR_EXPORT_PROGNOSEN, "Vorhersage-Zeitreihen werden auf den Server gespeichert",
         antProps );
-  } 
+  }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
@@ -634,11 +637,40 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   * Handy supplier for being used with exporters
+   * 
+   * @author schlienger
    */
-  public Object getAdapter( final Class adapter )
+  private class ExporterSupplier implements ISupplier
   {
-    // TODO Auto-generated method stub
-    return null;
+    private final Arguments m_args;
+
+    public ExporterSupplier( final Arguments args )
+    {
+      m_args = args;
+    }
+
+    /**
+     * @see org.kalypso.contribs.java.lang.ISupplier#supply(java.lang.Object)
+     */
+    public Object supply( final Object request ) throws InvocationTargetException
+    {
+      if( "features".equals( request ) )
+        return getFeatures();
+      
+      if( "selectedFeatures".equals( request ) )
+        return getSelectedFeatures();
+
+      if( "propertyName".equals( request ) )
+        return getArguments().getProperty( PROP_PEGEL_NAME );
+
+      if( "arguments".equals( request ) )
+        return m_args;
+
+      if( "context".equals( request ) )
+        return getContext();
+
+      return null;
+    }
   }
 }

@@ -224,4 +224,13 @@
             resolver="org.eclipse.debug.internal.ui.stringsubstitution.ProjectResolver">
       </variable>
    </extension>
+   <extension
+         point="org.kalypso.metadoc.exporter">
+      <exporter
+            icon="icons/elcl16/kalypso_odt.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.ObservationDiagramFeatureExporter"
+            description="Exportiert Zeitreihendiagramme anhand von Features"
+            name="Diagramm Exporter"
+            id="diagramExporter"/>
+   </extension>
 </plugin>
