@@ -326,13 +326,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      // TODO: Problem: ${project_loc} muss im launch benutzt werden, damit der Projektname nicht fest kodiert ist,
-      // aber: ${project_loc} wird anhand der globalen selektion bestimmt, die sich
-      // a) während des wizard ändern kann,
-      // b) vielleicht grade aus dem aktiven editor kommt und somit gar nicht gesetzt ist
-      // 
-      // Lösungsidde: eine neue dynamische Variable project_copy_loc definieren und diese dann überall
-      // in den attributen durch project.dir ersetzen
       final Properties userProperties = createVariablesForAntLaunch( folder );
 
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
@@ -772,6 +765,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IKalypsoUser currentUser = authPlugin.getCurrentUser();
     final String scenarioId = currentUser.getScenario();
     final IScenario scenario = authPlugin.getScenario( scenarioId );
+
     urlResolver.addReplaceToken( "scenarioId", scenario.getId() );
     urlResolver.addReplaceToken( "scenarioName", scenario.getName() );
     urlResolver.addReplaceToken( "scenarioDescription", scenario.getDescription() );

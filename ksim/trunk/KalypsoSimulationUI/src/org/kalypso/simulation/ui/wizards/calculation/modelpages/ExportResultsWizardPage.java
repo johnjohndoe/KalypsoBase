@@ -102,7 +102,6 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.util.ant.AbstractFeatureVisitorTask;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -526,7 +525,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final String featurePath = new FeaturePath( f ).toString();
       sb.append( featurePath );
       if( iter.hasNext() )
-        sb.append( AbstractFeatureVisitorTask.FEATURE_PATH_SEPARATOR );
+        sb.append( ';' );
     }
     final Properties antProps = new Properties();
     antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );

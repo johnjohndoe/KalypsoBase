@@ -116,15 +116,17 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     if( m_monitor.isCanceled() )
       return Status.CANCEL_STATUS;
 
+    final String id = f.getId();
+
     final TimeseriesLink sourceLink = (TimeseriesLink)f.getProperty( m_sourceTS );
     final TimeseriesLink targetLink = (TimeseriesLink)f.getProperty( m_targetTS );
     if( sourceLink == null )
       return new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Kein Link für Property " + m_sourceTS
-          + " in Feature ID = ", null );
+          + " in Feature ID = " + id, null );
 
     if( targetLink == null )
       return new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Kein Link für Property " + m_targetTS
-          + " in Feature ID = ", null );
+          + " in Feature ID = " + id, null );
 
     final String sourceHref = sourceLink.getHref();
     final String targetHref = targetLink.getHref();
@@ -136,13 +138,13 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-          "Fehler beim Auflösen eines Zeitreihen-Links", e );
+          "Fehler beim Auflösen eines Zeitreihen-Links für Feature ID = " + id, e );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-          "Fehler beim Zugriff auf den Zeitreihendienst", e );
+          "Fehler beim Zugriff auf den Zeitreihendienst für Feature ID = " + id, e );
     }
   }
 
