@@ -44,7 +44,6 @@ package org.kalypso.simulation.ui.wizards.exporter;
 import java.awt.Color;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -59,6 +58,7 @@ import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -80,17 +80,8 @@ public class ObservationDiagramFeatureExporter extends AbstractFeatureExporter
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final Arguments arguments;
-    final URL m_context;
-    try
-    {
-      arguments = (Arguments)m_supplier.supply( "arguments" );
-      m_context = (URL)m_supplier.supply( "context" );
-    }
-    catch( final InvocationTargetException e )
-    {
-      throw new CoreException( RunnableContextHelper.statusFromThrowable( e ) );
-    }
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final URL m_context = (URL)getFromSupplier( "context" );
 
     final String templateurl = arguments.getProperty( "template", null );
     final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
@@ -152,5 +143,13 @@ public class ObservationDiagramFeatureExporter extends AbstractFeatureExporter
     }
 
     return (IExportableObject[])exports.toArray( new IExportableObject[exports.size()] );
+  }
+
+  /**
+   * @see org.kalypso.simulation.ui.wizards.exporter.AbstractFeatureExporter#contributeWizardPages(java.util.List, org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   */
+  protected void contributeWizardPages( List pages, IPublishingConfiguration configuration ) throws CoreException
+  {
+    // empty
   }
 }

@@ -42,6 +42,8 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -109,9 +111,22 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
               KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
     }
 
-    return new IWizardPage[]
-    { m_page };
+    // create the list of pages
+    final List pages = new ArrayList();
+    
+    // add our feature selection page
+    pages.add( m_page );
+    
+    // let subclasses insert their specific pages
+    contributeWizardPages( pages, configuration );
+    
+    return (IWizardPage[])pages.toArray( new IWizardPage[pages.size()] );
   }
+
+  /**
+   * Must be implemented by subclasses in order to insert their own pages
+   */
+  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration ) throws CoreException;
 
   /**
    * @return selected features
