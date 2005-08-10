@@ -232,4 +232,9 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
       choice.setFocus();
     }
   }
+
+  public IAddCalcCaseChoice getCurrentChoice()
+  {
+    return m_choice;
+  }
 }

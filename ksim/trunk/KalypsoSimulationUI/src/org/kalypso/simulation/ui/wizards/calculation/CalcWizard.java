@@ -73,6 +73,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -172,7 +173,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         m_createCalcCasePage ) );
     m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen", m_project,
         m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandenen Rechenfall kopieren", m_project,
+    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project,
         m_createCalcCasePage ) );
     m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren",
         m_project, m_createCalcCasePage, m_synchronizer ) );
@@ -247,57 +248,27 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean performFinish()
   {
-    // TODO von Marc: die Zeitreihen sollten gespeichert werden wenn der Benutzer
-    // auf finish clickt, damit es Einheitlich ist: alle Daten werden gespeichert.
-    // saveDirtyObservation()...
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
+    {
+      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+          InterruptedException
+      {
+        monitor.beginTask( "Geänderte Daten werden gespeichert", 1000 );
 
-    // TODO: vielleicht nur eine frage, ob archiviert werden soll? und nur, wenns noch nicht geschehen war?
-    //    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), calcCases,
-    //        new ArrayContentProvider(), new WorkbenchLabelProvider(),
-    //        "Wählen Sie die Rechenvarianten,\nwelche auf dem Server archiviert werden sollen:" );
-    //    dialog.setInitialElementSelections( calcCases );
-    //    if( dialog.open() != Window.OK )
-    //      return false;
-    //
-    //    final ModelSynchronizer synchronizer = m_synchronizer;
-    //
-    //    final Object[] saveCases = dialog.getResult();
-    //    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-    //    {
-    //      protected void execute( final IProgressMonitor monitor ) throws CoreException
-    //      {
-    //        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
-    //        for( int i = 0; i < saveCases.length; i++ )
-    //        {
-    //          final IFolder calcCase = (IFolder)saveCases[i];
-    //
-    //          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
-    //        }
-    //
-    //        monitor.done();
-    //      }
-    //    };
-    //
-    //    try
-    //    {
-    //      getContainer().run( false, false, op );
-    //    }
-    //    catch( final InvocationTargetException e )
-    //    {
-    //      e.printStackTrace();
-    //
-    //      final CoreException ce = (CoreException)e.getCause();
-    //      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle archivieren",
-    //          "Rechenfälle konnten nicht arhciviert werden", ce.getStatus() );
-    //
-    //      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
-    //    }
-    //    catch( final InterruptedException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-
-    return true;
+        try
+        {
+          saveAllPages( monitor );
+        }
+        finally
+        {
+          monitor.done();
+        } 
+      }
+    };
+    
+    final IStatus status = RunnableContextHelper.execute(getContainer(), false, false, operation );
+    ErrorDialog.openError( getContainer().getShell(), "Daten speichern", "Fehler beim Speichern der Daten", status );
+    return status.isOK();
   }
 
   /**
@@ -381,7 +352,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
             // szenario für currentCalcCase holen
             m_scenario = nature.getScenario( currentCalcCase );
-            
+
             final IStatus result;
             if( m_controlPage.isUpdate() )
               result = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
@@ -709,5 +680,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       monitor.done();
     }
   }
-  
+
+  public ModelSynchronizer getModelSynchronizer()
+  {
+    return m_synchronizer;
+  }
+
 }

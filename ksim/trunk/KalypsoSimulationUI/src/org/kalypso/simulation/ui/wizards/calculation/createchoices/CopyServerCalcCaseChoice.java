@@ -51,6 +51,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -164,9 +167,20 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
     m_control = panel;
 
-    refresh( new NullProgressMonitor() );
+    // may take a while and blocks the gui, so do it in a job
+    final Job job = new Job( "Archivierte Rechenvarianten werden ermittelt" )
+    {
+      protected IStatus run( IProgressMonitor monitor )
+      {
+        refresh( new NullProgressMonitor() );
+        return Status.OK_STATUS;
+      }
+    };
+
+    job.setUser( true );
+    job.schedule();
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
    */
@@ -193,6 +207,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
   {
     // alle Prognosen finden
     final File[] serverCalcCases = m_serverPrognoseDir.listFiles();
+    final boolean bEnabled = m_serverPrognoseDir.exists() && serverCalcCases != null;
 
     m_serverDirs.clear();
     if( serverCalcCases != null )
@@ -203,6 +218,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
     final File newSelectFinal = ( serverCalcCases == null || serverCalcCases.length == 0 ) ? null : serverCalcCases[0];
     final Viewer viewer = m_viewer;
+    final Control control = m_control;
     if( viewer != null )
     {
       viewer.getControl().getDisplay().syncExec( new Runnable()
@@ -215,6 +231,8 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
             viewer.setSelection( StructuredSelection.EMPTY );
           else
             viewer.setSelection( new StructuredSelection( newSelectFinal ) );
+
+          control.setEnabled( bEnabled );
         }
       } );
     }
@@ -278,11 +296,30 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
    */
   public void validateChoice()
   {
+    // do not do anything if we are not the current choice
+    if( m_page.getCurrentChoice() != this )
+      return;
+
+    if( m_serverDirs.isEmpty() )
+    {
+      m_page.setErrorMessage( null );
+      m_page.setMessage( "Keine archivierten Rechenvarianten vorhanden", IMessageProvider.WARNING );
+      m_page.setPageComplete( false );
+      return;
+    }
+
     if( m_dir == null )
     {
       m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
       m_page.setMessage( null );
       m_page.setPageComplete( false );
+    }
+
+    if( m_name == null || m_name.length() == 0 )
+    {
+      m_page.setMessage( "Geben Sie eine neue Bezeichnung für die Rechenvariante ein", IMessageProvider.INFORMATION );
+      m_page.setPageComplete( false );
+      return;
     }
 
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );

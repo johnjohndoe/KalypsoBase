@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -99,7 +100,9 @@ import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
+import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -219,10 +222,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      { mainWeight, 100 - mainWeight } );
+      {
+          mainWeight,
+          100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight, 100 - rightWeight } );
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -289,7 +296,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
     exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
     exportPrognosesButton.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
-    exportPrognosesButton.setLayoutData( new GridData() );
+    exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     exportPrognosesButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -302,7 +309,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     } );
 
     final Button berichtsablageButton = new Button( buttonGroup, SWT.PUSH );
-    berichtsablageButton.setLayoutData( new GridData() );
+    berichtsablageButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     berichtsablageButton.setText( "Bericht(e) ablegen" );
     berichtsablageButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
     berichtsablageButton.addSelectionListener( new SelectionAdapter()
@@ -315,11 +322,54 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         exportSelectedDocuments();
       }
     } );
-
     // TODO: show button only if there is any configured exporter
-    //    berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    //  berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+
+    // Rechenvariante archivieren
+    final Button archiveButton = new Button( buttonGroup, SWT.PUSH );
+    archiveButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    archiveButton.setText( "Variante archivieren" );
+    archiveButton.setToolTipText( "Archiviert die aktuelle Rechenvariante auf dem Server." );
+    archiveButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        archiveCalcCase();
+      }
+    } );
 
     return buttonGroup;
+  }
+
+  protected void archiveCalcCase()
+  {
+    final CalcWizard wizard = (CalcWizard)getWizard();
+    final ModelSynchronizer synchronizer = wizard.getModelSynchronizer();
+    final IFolder calcFolder = getCalcFolder();
+
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    {
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        monitor.beginTask( "Rechenvariante wird archiviert", 1000 );
+
+        try
+        {
+          synchronizer.commitFolder( calcFolder, monitor );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
+    ErrorDialog.openError( getContainer().getShell(), "Rechenvariante archivieren",
+        "Fehler beim Archivieren der Rechenvariante", status );
   }
 
   /**
@@ -355,6 +405,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final IExporter[] exporters = createExporters();
 
       final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
+
+      //      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures,
+      // nameProperty,
+      //          metadocService.getDummyExportableDoc(), metadocService.getDummyDocument(), m_berichtExporters );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {

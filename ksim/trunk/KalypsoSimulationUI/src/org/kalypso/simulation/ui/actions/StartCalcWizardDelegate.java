@@ -59,6 +59,8 @@ import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
@@ -68,6 +70,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
+import org.kalypso.contribs.eclipse.ui.PartAdapter2;
 import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 
@@ -171,7 +174,9 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
         wizardView.setErrorBackgroundBehaviour( true );
         wizardView.setButtonLabel( IDialogConstants.FINISH_ID, "Be&enden" );
         wizardView.setWizard( wizard );
-        wizardView.addWizardContainerListener( new WizardContainerAdapter()
+
+        // if wizard finishes, close view
+        final WizardContainerAdapter wizardContainerAdapter = new WizardContainerAdapter()
         {
           /**
            * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
@@ -182,12 +187,35 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
             if( reason == IWizardContainerListener.REASON_FINISHED
                 || reason == IWizardContainerListener.REASON_CANCELED )
             {
-              wizardView.removeWizardContainerListener( this );
+              activePage.hideView( wizardView );
+            }
+          }
+        };
+
+        // reset perspective, if wizard-view closes
+        activePage.addPartListener( new PartAdapter2()
+        {
+          /**
+           * @see org.kalypso.contribs.eclipse.ui.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+           */
+          public void partClosed( final IWorkbenchPartReference partRef )
+          {
+            final IWorkbenchPart part = partRef.getPart( false );
+            if( part == wizardView )
+            {
+              activePage.removePartListener( this );
+              wizardView.removeWizardContainerListener( wizardContainerAdapter );
+
+              // TODO: gives null-point exception, if workbench is closing
+              // in 3.1 there is a method to test this 'isClosing'
               activePage.resetPerspective();
               activePage.setPerspective( lastPerspective );
             }
           }
+
         } );
+
+        wizardView.addWizardContainerListener( wizardContainerAdapter );
       }
     }
     catch( final PartInitException e )
