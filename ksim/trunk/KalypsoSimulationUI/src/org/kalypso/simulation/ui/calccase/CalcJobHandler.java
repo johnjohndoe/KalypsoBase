@@ -118,14 +118,14 @@ public class CalcJobHandler
         boolean bStop = false;
         switch( bean.getState() )
         {
-        case ICalcServiceConstants.FINISHED:
-        case ICalcServiceConstants.ERROR:
-        case ICalcServiceConstants.CANCELED:
-          bStop = true;
-          break;
+          case ICalcServiceConstants.FINISHED:
+          case ICalcServiceConstants.ERROR:
+          case ICalcServiceConstants.CANCELED:
+            bStop = true;
+            break;
 
-        default:
-          break;
+          default:
+            break;
         }
 
         if( bStop )
@@ -139,7 +139,7 @@ public class CalcJobHandler
         {
           e1.printStackTrace();
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Kritischer Fehler", e1 ) );
+          throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler" ) );
         }
 
         int progress = bean.getProgress();
@@ -159,57 +159,57 @@ public class CalcJobHandler
       // Abhängig von den Ergebnissen was machen
       switch( jobBean.getState() )
       {
-      case ICalcServiceConstants.FINISHED:
-        // Ergebniss abholen
-        final DataHandler handler = m_calcService.transferCurrentResults( m_jobID );
+        case ICalcServiceConstants.FINISHED:
+          // Ergebniss abholen
+          final DataHandler handler = m_calcService.transferCurrentResults( m_jobID );
 
-        // clear results as defined in modelspec
-        clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
+          // clear results as defined in modelspec
+          clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
-        final IProject project = calcCaseFolder.getProject();
+          final IProject project = calcCaseFolder.getProject();
 
-        //just unzip files
-        InputStream inputStream = null;
-        try
+          //just unzip files
+          InputStream inputStream = null;
+          try
+          {
+            inputStream = new BufferedInputStream( handler.getInputStream() );
+            ZipUtilities.unzip( inputStream, project.getLocation().toFile() );
+            monitor.worked( 1000 );
+          }
+          finally
+          {
+            IOUtils.closeQuietly( inputStream );
+          }
+
+          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+          final String finishText = jobBean.getFinishText();
+          final String message = finishText == null ? "" : finishText;
+          return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0,
+              message, System.getProperty( "line.separator" ), null );
+
+        case ICalcServiceConstants.CANCELED:
+          throw m_cancelException;
+
+        case ICalcServiceConstants.ERROR:
         {
-          inputStream = new BufferedInputStream( handler.getInputStream() );
-          ZipUtilities.unzip( inputStream, project.getLocation().toFile() );
-          monitor.worked( 1000 );
+          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
+              0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          throw new CoreException( status );
         }
-        finally
+
+        default:
         {
-          IOUtils.closeQuietly( inputStream );
+          // darf eigentlich nie vorkommen
+          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
+              0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          throw new CoreException( status );
         }
-
-        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
-        final String finishText = jobBean.getFinishText();
-        final String message = finishText == null ? "" : finishText;
-        return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0,
-            message, System.getProperty( "line.separator" ), null );
-
-      case ICalcServiceConstants.CANCELED:
-        throw m_cancelException;
-
-      case ICalcServiceConstants.ERROR:
-      {
-        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
-            0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
-        throw new CoreException( status );
-      }
-
-      default:
-      {
-        // darf eigentlich nie vorkommen
-        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
-            0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
-        throw new CoreException( status );
-      }
       }
     }
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aufruf des Rechendienstes", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) );
     }
     catch( final CoreException e )
     {
@@ -217,7 +217,7 @@ public class CalcJobHandler
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückladen der Ergebnisse", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Zurückladen der Ergebnisse" ) );
     }
     finally
     {
@@ -284,12 +284,12 @@ public class CalcJobHandler
     }
     catch( final ServerException se )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes.", se ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( se,
+          "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes." ) );
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Eingangsdaten konnten nicht erzeugt werden.", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Eingangsdaten konnten nicht erzeugt werden." ) );
     }
     finally
     {
@@ -340,8 +340,8 @@ public class CalcJobHandler
           if( input.isOptional() )
             continue;
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte Input-Resource nicht finden: "
-              + inputPath + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: "
+              + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
         }
 
         final IPath projectRelativePath = inputResource.getProjectRelativePath();

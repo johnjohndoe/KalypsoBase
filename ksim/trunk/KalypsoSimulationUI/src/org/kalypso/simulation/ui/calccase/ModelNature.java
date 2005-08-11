@@ -97,6 +97,7 @@ import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.ModeldataType;
@@ -369,14 +370,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO better ask for termination, but continue task in background
       launch.terminate();
 
-      return KalypsoGisPlugin.createErrorStatus( "Die Operation hat über " + minutes
-          + " Minuten gedauert und wird deshalb abgebrochen.", null );
+      return StatusUtilities.createErrorStatus( "Die Operation hat über " + minutes
+          + " Minuten gedauert und wird deshalb abgebrochen." );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
       // sollte eigentlich nie auftreten
-      return KalypsoGisPlugin.createErrorStatus( "Operation konnte nicht durchgef[hrt werden.", e );
+      return StatusUtilities.statusFromThrowable( e, "Operation konnte nicht durchgef[hrt werden." );
     }
     finally
     {
@@ -405,11 +406,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final IValueVariable valueVariable = new ValueVariable( name, value, null );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
-      
+
       try
       {
         // add each variable separatedly, because it may have allready been registered
-        svm.addVariables( new IValueVariable[] { valueVariable } );
+        svm.addVariables( new IValueVariable[]
+        { valueVariable } );
       }
       catch( final CoreException e )
       {
@@ -455,8 +457,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IFolder launchFolder = getLaunchFolder();
     if( launchFolder == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Launch Verzeichnis im Modellverzeichnis existiert nicht.", null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Launch Verzeichnis im Modellverzeichnis existiert nicht." ) );
 
     final IFile file = launchFolder.getFile( launchName + ".launch" );
     return file;
@@ -530,17 +532,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       TransformationList transList = null;
       switch( type )
       {
-      case TRANS_TYPE_UPDTAE:
-        transList = trans.getUpdateTransformations();
-        break;
+        case TRANS_TYPE_UPDTAE:
+          transList = trans.getUpdateTransformations();
+          break;
 
-      case TRANS_TYPE_CREATE:
-        transList = trans.getCreateTransformations();
-        break;
+        case TRANS_TYPE_CREATE:
+          transList = trans.getCreateTransformations();
+          break;
 
-      default:
-        transList = null;
-        break;
+        default:
+          transList = null;
+          break;
       }
 
       if( transList == null )
@@ -667,21 +669,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     switch( metadataDelta.getKind() )
     {
-    case IResourceDelta.ADDED:
-    case IResourceDelta.REMOVED:
-    case IResourceDelta.CHANGED:
-    {
-      try
+      case IResourceDelta.ADDED:
+      case IResourceDelta.REMOVED:
+      case IResourceDelta.CHANGED:
       {
-        reloadMetadata();
+        try
+        {
+          reloadMetadata();
+        }
+        catch( final CoreException e )
+        {
+          // todo: error handling? -->> als job absetzen?
+          e.printStackTrace();
+        }
+        break;
       }
-      catch( final CoreException e )
-      {
-        // todo: error handling? -->> als job absetzen?
-        e.printStackTrace();
-      }
-      break;
-    }
     }
   }
 
@@ -719,7 +721,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Modell-Spezifikation", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
     }
   }
 
@@ -794,8 +796,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal,
-            null ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
     }
 
     final Date forecastTime = cal.getTime();
@@ -848,7 +849,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     catch( final ServiceException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechendienst konnte nicht initialisiert werden", e ) );
+      throw new CoreException( StatusUtilities
+          .statusFromThrowable( e, "Rechendienst konnte nicht initialisiert werden" ) );
     }
   }
 
@@ -860,8 +862,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     try
     {
       if( !isCalcCalseFolder( calcCaseFolder ) )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis ist keine Rechenvariante:"
-            + calcCaseFolder.getName(), null ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( "Verzeichnis ist keine Rechenvariante:"
+            + calcCaseFolder.getName() ) );
 
       final String typeID = modelspec.getTypeID();
       final ICalculationService calcService = findCalculationServiceForType( typeID );

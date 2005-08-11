@@ -65,6 +65,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.calccase.CalcDirCollector;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -202,7 +203,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Daten vom Server: ", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Daten vom Server: " ) );
     }
   }
 }

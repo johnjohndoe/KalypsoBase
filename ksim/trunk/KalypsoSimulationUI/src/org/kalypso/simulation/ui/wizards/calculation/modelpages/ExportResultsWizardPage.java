@@ -379,23 +379,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     final Shell shell = getContainer().getShell();
 
-    //    FeatureList features = getFeatures();
-    //    FeatureList selectedFeatures = getSelectedFeatures();
-    //
-    //    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
-    //    final URL context;
-    //    try
-    //    {
-    //      context = ResourceUtilities.createURL( getCalcFolder() );
-    //      features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
-    //          context ) );
-    //      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
-    //    }
-    //    catch( MalformedURLException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-
     try
     {
       // retrieve the potential targets
@@ -405,10 +388,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final IExporter[] exporters = createExporters();
 
       final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
-
-      //      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures,
-      // nameProperty,
-      //          metadocService.getDummyExportableDoc(), metadocService.getDummyDocument(), m_berichtExporters );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {

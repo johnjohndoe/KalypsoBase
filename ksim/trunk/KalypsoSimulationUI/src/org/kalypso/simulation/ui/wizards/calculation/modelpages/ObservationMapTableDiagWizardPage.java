@@ -49,9 +49,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -108,7 +108,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       else
       {
         final String localizedMessage = e.getLocalizedMessage();
-        status = KalypsoGisPlugin.createErrorStatus( localizedMessage == null ? "" : localizedMessage, e );
+        status = StatusUtilities.statusFromThrowable( e, localizedMessage == null ? "" : localizedMessage );
       }
 
       ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
@@ -134,14 +134,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
     sashForm.setWeights( new int[]
-    {
-        mainWeight,
-        100 - mainWeight } );
+    { mainWeight, 100 - mainWeight } );
 
     rightSash.setWeights( new int[]
-    {
-        rightWeight,
-        100 - rightWeight } );
+    { rightWeight, 100 - rightWeight } );
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );

@@ -70,12 +70,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Diese Implementierung erzeugt einen völlig neuen Rechenfall im Prognoseverzeichnis
@@ -249,17 +249,16 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final IFolder folder = nature.getPrognoseFolder();
 
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin
-          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein" ) );
 
     final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name ) );
 
     if( m_dir == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden" ) );
 
     // quellverzeichnis holen
     m_synchronizer.getFolder( m_dir, ModelNature.PROGNOSE_FOLDER + "/" + m_name, monitor );

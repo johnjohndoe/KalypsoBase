@@ -59,11 +59,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Diese Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
@@ -125,11 +125,12 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE
+        | SWT.FULL_SELECTION );
     final GridData viewerData = new GridData( GridData.FILL_BOTH );
     viewerData.horizontalSpan = 2;
     viewer.getControl().setLayoutData( viewerData );
-    
+
     viewer.setInput( m_project.getFolder( ModelNature.PROGNOSE_FOLDER ) );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -149,7 +150,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
         }
       }
     } );
-    
+
     ViewerUtilities.selectFirstElement( viewer );
     m_viewer = viewer;
 
@@ -164,7 +165,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
       e.printStackTrace();
     }
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
    */
@@ -186,7 +187,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
 
     if( m_folder != null )
       m_edit.setText( "Kopie von " + folder.getName() );
-    
+
     validateChoice();
   }
 
@@ -194,7 +195,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
   {
     m_viewer.refresh();
   }
-  
+
   /**
    * @throws CoreException
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#perform(org.eclipse.core.runtime.IProgressMonitor)
@@ -205,17 +206,16 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
 
     final IFolder folder = nature.getPrognoseFolder();
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin
-          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein" ) );
 
     final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eine Vorhersage mit diesem namen existiert bereits: " + m_name, null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Eine Vorhersage mit diesem namen existiert bereits: " + m_name ) );
 
     if( m_folder == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden" ) );
 
     // quellverzeichnis holen
     m_folder.copy( calcCaseFolder.getFullPath(), false, monitor );

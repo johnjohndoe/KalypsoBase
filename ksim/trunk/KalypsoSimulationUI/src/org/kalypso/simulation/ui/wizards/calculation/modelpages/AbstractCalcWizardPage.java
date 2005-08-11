@@ -64,7 +64,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -94,6 +93,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -480,8 +480,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         getArguments().getProperty( PROP_MAPTEMPLATEISCALC, Boolean.TRUE.toString() ) ).booleanValue();
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName,
-          null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName ) );
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
@@ -665,13 +664,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       {
         final String templateFileName = m_arguments.getProperty( PROP_ZMLTABLE_TEMPLATE, null );
         if( templateFileName == null )
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Keine Vorlagendatei definiert. Die Property "
-              + PROP_ZMLTABLE_TEMPLATE + " muss definiert sein.", null ) );
+          throw new CoreException( StatusUtilities.createErrorStatus( "Keine Vorlagendatei definiert. Die Property "
+              + PROP_ZMLTABLE_TEMPLATE + " muss definiert sein." ) );
 
         final IFile templateFile = (IFile)getProject().findMember( templateFileName );
         if( templateFile == null )
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: "
-              + templateFileName, null ) );
+          throw new CoreException( StatusUtilities.createErrorStatus( "Vorlagendatei existiert nicht: "
+              + templateFileName ) );
 
         final InputStream templateStream = templateFile.getContents();
         obsTemplate = TableViewUtils.loadTableTemplateXML( templateStream );
@@ -681,13 +680,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableTemplate = new TableView();
       if( obsTemplate != null )
       {
-        final IStatus[] stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false );
-        final IStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
-            "Fehler beim Laden der Tabellenvorlage", null );
-        // will be catched and shown below
-        // TODO
-        if( !result.isOK() )
-          throw new CoreException( result );
+        final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false );
+        if( !stati.isOK() )
+          throw new CoreException( stati );
       }
       m_table = new ObservationTable( m_tableTemplate );
 
@@ -816,20 +811,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-    case SELECT_FROM_MAPVIEW:
-      final IMapModell mapModell = getMapModell();
-      if( mapModell == null )
-        return FeatureFactory.createFeatureList( null, null );
-      activeTheme = mapModell.getActiveTheme();
-      break;
-    case SELECT_FROM_TABLEVIEW:
-      activeTheme = m_gisTableViewer.getTheme();
-      break;
-    case SELECT_FROM_FEATUREVIEW:
-      activeTheme = null;
-      break;
-    default:
-      activeTheme = null;
+      case SELECT_FROM_MAPVIEW:
+        final IMapModell mapModell = getMapModell();
+        if( mapModell == null )
+          return FeatureFactory.createFeatureList( null, null );
+        activeTheme = mapModell.getActiveTheme();
+        break;
+      case SELECT_FROM_TABLEVIEW:
+        activeTheme = m_gisTableViewer.getTheme();
+        break;
+      case SELECT_FROM_FEATUREVIEW:
+        activeTheme = null;
+        break;
+      default:
+        activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );

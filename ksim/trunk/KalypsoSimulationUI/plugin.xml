@@ -227,10 +227,10 @@
    <extension
          point="org.kalypso.metadoc.exporter">
       <exporter
-            icon="icons/elcl16/kalypso_odt.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.ObservationDiagramFeatureExporter"
-            description="Exportiert Zeitreihendiagramme anhand von Features"
-            name="Diagramm Exporter"
-            id="diagramExporter"/>
+            icon="icons/elcl16/gis_feature.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.ObservationFeatureExporter"
+            description="Exportiert Zeitreihen in Form von Diagrammen und Tabellen"
+            name="Zeitreihen Feature Exporter"
+            id="observationFeatureExporter"/>
    </extension>
 </plugin>

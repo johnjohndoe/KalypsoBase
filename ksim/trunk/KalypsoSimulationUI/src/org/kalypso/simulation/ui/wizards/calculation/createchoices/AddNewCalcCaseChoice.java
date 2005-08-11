@@ -60,9 +60,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.resources.FolderUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Die Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
@@ -177,12 +177,12 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     final IFolder prognoseFolder = nature.getPrognoseFolder();
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin
-          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein" ) );
     final IFolder calcCaseFolder = prognoseFolder.getFolder( m_name );
     if( calcCaseFolder.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus(
+          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name ) );
 
     FolderUtilities.mkdirs( calcCaseFolder );
 

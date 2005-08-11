@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.DeleteObsoleteFilesVisitor;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * @author belger
@@ -101,7 +101,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aktualisieren der Daten", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aktualisieren der Daten" ) );
     }
     finally
     {
@@ -158,8 +158,8 @@ public class ModelSynchronizer
     final File serverDir = new File( m_serverRoot, projectRelativePath );
 
     if( serverDir.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Das Verzeichnis existiert bereits auf dem Server: "
-          + projectRelativePath, null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Das Verzeichnis existiert bereits auf dem Server: "
+          + projectRelativePath ) );
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
     try
@@ -168,7 +168,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückschreiben der Daten", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Zurückschreiben der Daten" ) );
     }
   }
 
@@ -194,8 +194,8 @@ public class ModelSynchronizer
     final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot, dir );
     final IFile file = m_resourceRoot.getFile( localName );
     if( file.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis exisitert lokal bereits: "
-          + relativePath, null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Verzeichnis exisitert lokal bereits: "
+          + relativePath ) );
 
     try
     {
@@ -205,7 +205,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Daten", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Daten" ) );
     }
 
   }
@@ -229,7 +229,7 @@ public class ModelSynchronizer
         e.printStackTrace();
       }
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Lock-Datei existiert für Benutzer: " + user, null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Lock-Datei existiert für Benutzer: " + user ) );
     }
 
     try
@@ -242,7 +242,7 @@ public class ModelSynchronizer
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte lock Datei nicht erzeugen", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Konnte lock Datei nicht erzeugen" ) );
     }
     finally
     {
@@ -260,7 +260,7 @@ public class ModelSynchronizer
     }
     catch( IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Datenvom Server ", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Datenvom Server " ) );
     }
 
   }

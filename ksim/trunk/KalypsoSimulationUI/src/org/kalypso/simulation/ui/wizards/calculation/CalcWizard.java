@@ -73,6 +73,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
@@ -149,8 +150,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,
+          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -216,8 +217,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,
+          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -262,11 +263,11 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         finally
         {
           monitor.done();
-        } 
+        }
       }
     };
-    
-    final IStatus status = RunnableContextHelper.execute(getContainer(), false, false, operation );
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
     ErrorDialog.openError( getContainer().getShell(), "Daten speichern", "Fehler beim Speichern der Daten", status );
     return status.isOK();
   }

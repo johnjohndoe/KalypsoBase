@@ -54,11 +54,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Die Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
@@ -163,8 +163,8 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_folder == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+      throw new CoreException( StatusUtilities.createErrorStatus(
+          "Es muss eine vorhandene Berechnung ausgewählt werden" ) );
 
     return m_folder;
   }
