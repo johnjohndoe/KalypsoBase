@@ -120,6 +120,7 @@ import org.xml.sax.InputSource;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
+  private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
   public static final String MODELLTYP_FOLDER = ".model";
 
   public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/" + "calcCaseConfig.xml";
@@ -406,7 +407,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final IValueVariable valueVariable = new ValueVariable( name, value, null );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
-
+      
       try
       {
         // add each variable separatedly, because it may have allready been registered
@@ -532,17 +533,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       TransformationList transList = null;
       switch( type )
       {
-        case TRANS_TYPE_UPDTAE:
-          transList = trans.getUpdateTransformations();
-          break;
+      case TRANS_TYPE_UPDTAE:
+        transList = trans.getUpdateTransformations();
+        break;
 
-        case TRANS_TYPE_CREATE:
-          transList = trans.getCreateTransformations();
-          break;
+      case TRANS_TYPE_CREATE:
+        transList = trans.getCreateTransformations();
+        break;
 
-        default:
-          transList = null;
-          break;
+      default:
+        transList = null;
+        break;
       }
 
       if( transList == null )
@@ -669,21 +670,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     switch( metadataDelta.getKind() )
     {
-      case IResourceDelta.ADDED:
-      case IResourceDelta.REMOVED:
-      case IResourceDelta.CHANGED:
+    case IResourceDelta.ADDED:
+    case IResourceDelta.REMOVED:
+    case IResourceDelta.CHANGED:
+    {
+      try
       {
-        try
-        {
-          reloadMetadata();
-        }
-        catch( final CoreException e )
-        {
-          // todo: error handling? -->> als job absetzen?
-          e.printStackTrace();
-        }
-        break;
+        reloadMetadata();
       }
+      catch( final CoreException e )
+      {
+        // todo: error handling? -->> als job absetzen?
+        e.printStackTrace();
+      }
+      break;
+    }
     }
   }
 
@@ -712,6 +713,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     try
     {
       final IFile file = getModelFolder().getFile( modelSpec );
+      if( !file.exists() )
+        return null;
 
       final ObjectFactory faktory = new ObjectFactory();
       final Unmarshaller unmarshaller = faktory.createUnmarshaller();
@@ -842,7 +845,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
+      // for backwards compability
+      // new models always should use the ant task
       final ModeldataType modelspec = getModelspec( modelSpec );
+      if( modelspec == null )
+      {
+        // if there is no 'modelspec' file
+        // we try to call the ant task
+        return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor );
+      }
 
       return runCalculation( calcCaseFolder, monitor, modelspec );
     }
@@ -857,7 +868,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor,
       final ModeldataType modelspec ) throws ServiceException, CoreException
   {
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 5500 );
+    monitor.beginTask( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
 
     try
     {
