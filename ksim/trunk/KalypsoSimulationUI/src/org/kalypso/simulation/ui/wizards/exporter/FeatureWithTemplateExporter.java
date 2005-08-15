@@ -41,48 +41,60 @@
 
 package org.kalypso.simulation.ui.wizards.exporter;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * This explorer can handle the export of observations defined in the properties of features using templates
+ * This explorer can handle the export of observations defined in the properties of features using templates. It uses
+ * the {@link org.kalypso.simulation.ui.wizards.exporter.AbstractFeatureExporter}for basic feature selection
+ * functionality. It exports a document for each selected feature and each exporter.
+ * <p>
+ * The typical arguments syntax for this kind of exporter is as follows:
+ * 
+ * <pre>
+ &lt;arg name="exporterSomeName"&gt;
+ &lt;arg name="id" value="featureWithTemplateExporter" /&gt; 
+ &lt;arg name="nameproperty" value="Name" /&gt; 
+ &lt;arg name="width" value="1024" /&gt; 
+ &lt;arg name="height" value="768" /&gt; 
+ &lt;arg name="imageFormat" value="png" /&gt; 
+ &lt;arg name="tokens"&gt;
+ &lt;arg name="title" value="Name" /&gt; 
+ &lt;arg name="href1" value="Wasserstand_gemessen" /&gt; 
+ &lt;arg name="href2" value="Wasserstand_gerechnet" /&gt; 
+ &lt;arg name="href3" value="Wasserstand_vorhersage" /&gt; 
+ &lt;arg name="href4" value="Niederschlag_rechnung" /&gt; 
+ &lt;/arg&gt;
+ &lt;arg name="templateDiagQ"&gt;
+ &lt;arg name="label" value="Abfluﬂgrafik" /&gt; 
+ &lt;arg name="templateFile" value="project:/.templates/calcCase/berichtDiagQ.odt" /&gt; 
+ &lt;/arg&gt;
+ &lt;/arg&gt;
+ * </pre>
+ * 
+ * <p>
+ * This exporter has two wizard pages:
+ * <nl>
+ * <li>the selection of features
+ * <li>the selection of the template to use
+ * </nl>
  * 
  * @author schlienger
  */
-public class ObservationFeatureExporter extends AbstractFeatureExporter
+public class FeatureWithTemplateExporter extends AbstractFeatureExporter
 {
-  /**
-   * Argument: arguments which name begins with 'template' denote a template. The user can select the ones which should
-   * be used when exporting the features.
-   * <p>
-   * Each template-argument is composed of the following sub-arguments:
-   * <ul>
-   * <li>'label'
-   * <li>'templateFile'
-   * </ul>
-   */
-  private final static String PROP_TEMPLATE = "template";
   private ArrayChooserPage m_page;
 
   /**
@@ -92,57 +104,17 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
   protected void contributeWizardPages( final List pages, final IPublishingConfiguration configuration )
       throws CoreException
   {
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final URL context = (URL)getFromSupplier( "context" );
+
     // create the possible template items
-    final TemplateItem[] templateItems = createTemplateItems();
+    final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
 
     // create wizard page for selecting the templates
     m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, "templateSelection",
         "W‰hlen Sie die Exportarten", null );
 
     pages.add( m_page );
-  }
-
-  /**
-   * @return list of template items found in the arguments that we got from the supplier (ex: ExportResultsWizardPage)
-   */
-  private TemplateItem[] createTemplateItems() throws CoreException
-  {
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
-    final URL context = (URL)getFromSupplier( "context" );
-
-    final Collection items = new ArrayList();
-    final Collection stati = new ArrayList();
-
-    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
-    {
-      final Map.Entry entry = (Entry)aIt.next();
-      final String key = (String)entry.getKey();
-      if( key.startsWith( PROP_TEMPLATE ) )
-      {
-        final Arguments args = (Arguments)entry.getValue();
-        final String label = args.getProperty( "label", "<unbekannt>" );
-        final String templateFile = args.getProperty( "templateFile" );
-        if( templateFile == null )
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
-              "Keine Datei-Angabe f¸r das Template: " + key, null ) );
-
-        try
-        {
-          items.add( new TemplateItem( label, UrlResolverSingleton.resolveUrl( context, templateFile ) ) );
-        }
-        catch( final MalformedURLException e )
-        {
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ung¸ltiger Pfad: "
-              + templateFile, e ) );
-        }
-      }
-    }
-
-    if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[])stati
-          .toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
-
-    return (TemplateItem[])items.toArray( new TemplateItem[items.size()] );
   }
 
   /**
@@ -154,7 +126,7 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( configuration, (TemplateItem)templates[i], objects );
+      createExportableObjectsWith( configuration, (UrlArgument)templates[i], objects );
 
     return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
   }
@@ -162,7 +134,7 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private void createExportableObjectsWith( final Configuration configuration, final TemplateItem item,
+  private void createExportableObjectsWith( final Configuration configuration, final UrlArgument item,
       final List objects ) throws CoreException
   {
     // from supplier
@@ -177,6 +149,7 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
     {
       final Feature feature = features[i];
 
+      // the name of the document to export is built using a property of the feature
       final String featurename = arguments.getProperty( "nameproperty", "Name" );
       final Object nameProp = feature.getProperty( featurename );
       final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
@@ -184,9 +157,9 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
       try
       {
         final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
-        final URL templateUrl = item.getTemplateUrl();
+        final URL templateUrl = item.getUrl();
 
-        final IExportableObject exportable = new ExportableObsViewObject( arguments, context, name, templateUrl,
+        final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
             replacetokens );
 
         objects.add( exportable );
@@ -200,38 +173,6 @@ public class ObservationFeatureExporter extends AbstractFeatureExporter
 
         throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
       }
-    }
-  }
-
-  /**
-   * Denotes the items which are displayed in the template selection wizard page
-   * 
-   * @author schlienger
-   */
-  public static class TemplateItem
-  {
-    private final String m_label;
-    private final URL m_templateUrl;
-
-    public TemplateItem( final String label, final URL templateUrl )
-    {
-      m_label = label;
-      m_templateUrl = templateUrl;
-    }
-
-    public String getLabel()
-    {
-      return m_label;
-    }
-
-    public URL getTemplateUrl()
-    {
-      return m_templateUrl;
-    }
-
-    public String toString()
-    {
-      return m_label;
     }
   }
 }

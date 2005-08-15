@@ -227,10 +227,22 @@
    <extension
          point="org.kalypso.metadoc.exporter">
       <exporter
-            icon="icons/elcl16/gis_feature.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.ObservationFeatureExporter"
+            icon="icons/elcl16/export-gis-feature.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporter"
             description="Exportiert Zeitreihen in Form von Diagrammen und Tabellen"
             name="Zeitreihen Feature Exporter"
-            id="observationFeatureExporter"/>
+            id="featureWithTemplateExporter"/>
+      <exporter
+            icon="icons/elcl16/export-simple-template.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.SimpleTemplateExporter"
+            description="Exportiert Dokumente anhand von Vorlagen"
+            name="Vorlagen Exporter"
+            id="simpleTemplateExporter"/>
+      <exporter
+            icon="icons/elcl16/export-sumup-table.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.SumUpTableExporter"
+            description="Exportiert eine tabellarische Zusammengassung der aktuelle Vorhersage"
+            name="Tabellarische Zusammenfassung"
+            id="sumUpTableExporter"/>
    </extension>
 </plugin>

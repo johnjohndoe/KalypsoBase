@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
- * Can be extended by exporters which work on features
+ * Can be extended by exporters which work on features. It provides a feature-selection wizard page.
  * 
  * @author schlienger
  */
