@@ -126,7 +126,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( configuration, (UrlArgument)templates[i], objects );
+      createExportableObjectsWith( (UrlArgument)templates[i], objects );
 
     return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
   }
@@ -134,7 +134,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private void createExportableObjectsWith( final Configuration configuration, final UrlArgument item,
+  private void createExportableObjectsWith( final UrlArgument item,
       final List objects ) throws CoreException
   {
     // from supplier

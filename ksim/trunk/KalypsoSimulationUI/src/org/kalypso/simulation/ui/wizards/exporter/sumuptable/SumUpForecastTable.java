@@ -79,8 +79,8 @@ public class SumUpForecastTable
 {
   private final String m_axisType;
   private final double m_delta;
-  private final int m_timeUnit;
-  private final int m_timeStep;
+  protected final int m_timeUnit;
+  protected final int m_timeStep;
   private final ColumnsHeader m_colHeader = new ColumnsHeader();
   private final Map m_map = new HashMap();
 

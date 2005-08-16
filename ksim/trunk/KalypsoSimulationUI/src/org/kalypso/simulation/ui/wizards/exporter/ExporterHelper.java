@@ -196,7 +196,9 @@ public final class ExporterHelper
       final IStatus status2 = new ExportableChart( chart, format, width, height ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export von " + templateUrl.getFile() );
+      {
+          status,
+          status2 }, "Fehler während der Export von " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
@@ -229,6 +231,11 @@ public final class ExporterHelper
   public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl )
   {
+    if( arguments == null )
+    {
+      // avoid yellow thingies!
+    }
+
     TableView tpl = null;
     ObservationTable table = null;
     try
@@ -242,7 +249,9 @@ public final class ExporterHelper
       final IStatus status2 = new ExportableObservationTable( table ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export von " + templateUrl.getFile() );
+      {
+          status,
+          status2 }, "Fehler während der Export von " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
