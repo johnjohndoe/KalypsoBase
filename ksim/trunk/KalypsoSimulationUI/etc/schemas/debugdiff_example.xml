@@ -3,6 +3,6 @@
 compare.xsd">
 	<resource>
 		<path name=".model/test/blubb.zml" relativeToCalcCase="false"/>
-		<path name="Zeitreihen/Abfluß/blbb.zml" relativeToCalcCase="true">
+		<path name="Zeitreihen/Abfluß/blbb.zml" relativeToCalcCase="true"/>
 	</resource>
 </compare>

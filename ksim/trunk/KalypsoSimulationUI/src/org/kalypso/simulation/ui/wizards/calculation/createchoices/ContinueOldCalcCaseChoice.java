@@ -98,10 +98,19 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
+    final IFolder prognoseFolder = m_project.getFolder( ModelNature.PROGNOSE_FOLDER );
+    if( prognoseFolder == null )
+    {
+      final Label errorLabel = new Label( panel, SWT.NONE );
+      errorLabel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      errorLabel.setText( "Das Verzeichnis der Vorhersagevarianten existiert nicht: " + ModelNature.PROGNOSE_FOLDER );
+      return;
+    }
+
     final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
-    viewer.setInput( m_project.getFolder( ModelNature.PROGNOSE_FOLDER ) );
+    viewer.setInput( prognoseFolder );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

@@ -109,10 +109,10 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
       {
         final IContainer container = (IContainer)element;
         if( container instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)container ) )
-          return null;
+          return new Object[0];
         
         if( !container.exists() )
-          return null;
+          return new Object[0];
         
         final IResource[] members = container.members( 0 );
         final List children = new ArrayList( members.length );
@@ -138,7 +138,7 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
       }
     }
 
-    return null;
+    return new Object[0];
   }
 
   /**
