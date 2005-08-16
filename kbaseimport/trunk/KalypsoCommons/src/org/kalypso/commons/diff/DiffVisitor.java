@@ -29,20 +29,12 @@
  */
 package org.kalypso.commons.diff;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-
-import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
  * 
- * TODO: insert type comment here
  * 
  * @author doemming
  */
@@ -52,16 +44,6 @@ public class DiffVisitor implements IDiffVisitor
   private final IDiffObject m_base;
 
   private Hashtable m_log = new Hashtable();
-
-  public static final Integer DIFF_REMOVED = new Integer( 1 );
-
-  public static final Integer DIFF_UNCOMPAREABLE = new Integer( 2 );
-
-  public static final Integer DIFF_CONTENT = new Integer( 3 );
-
-  public static final Integer DIFF_OK = new Integer( 5 );
-
-  public static final Integer DIFF_ADDED = new Integer( 6 );
 
   /**
    *  
@@ -80,99 +62,29 @@ public class DiffVisitor implements IDiffVisitor
 
   /**
    * 
-   * @see org.kalypso.commons.diff.IDiffVisitor#diff(java.lang.String, org.kalypso.commons.diff.IDiffObject)
+   * @see org.kalypso.commons.diff.IDiffVisitor#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.String,
+   *      org.kalypso.commons.diff.IDiffObject)
    */
-  public boolean diff( final String path, final IDiffObject other ) throws IOException
+  public boolean diff( final IDiffLogger logger, final String path, final IDiffObject other ) throws Exception
   {
     if( !other.exists( path ) )
     {
-      addLog( DIFF_REMOVED, path );
+      logger.log( IDiffComparator.DIFF_REMOVED, path );
       return false;
     }
     // diff Content
-    final Class contentClass = m_base.getContentClass( path );
-    if( !contentClass.equals( other.getContentClass( path ) ) )
+    final IDiffComparator differ = m_base.getDiffComparator( path );
+    final Object content1 = m_base.getContent( path );
+    final Object content2 = other.getContent( path );
+    if( !content1.getClass().equals( content2.getClass() ) )
     {
-      addLog( DIFF_UNCOMPAREABLE, path );
+      logger.log( IDiffComparator.DIFF_UNCOMPAREABLE, path );
       return false;
     }
-    final IDiffComparator differ = getDiffComparator( contentClass );
-    final Integer status = differ.diff( m_base.getContent( path ), other.getContent( path ) );
-    addLog( status, path );
-    return status == DIFF_OK;
-  }
-
-  /**
-   * 
-   * @param contentClass
-   */
-  private IDiffComparator getDiffComparator( Class contentClass )
-  {
-    if( contentClass.equals( File.class ) )
-      return new IDiffComparator()
-      {
-        /**
-         * @see org.kalypso.commons.diff.IDiffComparator#diff(java.lang.Object, java.lang.Object)
-         */
-        public Integer diff( Object content, Object content2 )
-        {
-          return DIFF_OK;
-        }
-      };
-    if( contentClass.equals( InputStream.class ) )
-      return new IDiffComparator()
-      {
-        /**
-         * @throws IOException
-         * @see org.kalypso.commons.diff.IDiffComparator#diff(java.lang.Object, java.lang.Object)
-         */
-        public Integer diff( Object content, Object content2 ) throws IOException
-        {
-          final InputStream c1 = (InputStream)content;
-          final InputStream c2 = (InputStream)content2;
-          if( !StreamUtilities.isEqual( c1, c2 ) )
-            return DIFF_CONTENT;
-          return DIFF_OK;
-        }
-      };
-    return null;
-  }
-
-  /**
-   * 
-   * @see org.kalypso.commons.diff.IDiffVisitor#printLog(java.io.PrintStream, java.lang.String, java.lang.Integer)
-   */
-  public void printLog( PrintStream out, String prefix, Integer status )
-  {
-    if( !m_log.containsKey( status ) )
-      return;
-    final List list = (List)m_log.get( status );
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
-    {
-      String path = (String)iter.next();
-      out.print( prefix );
-      out.println( path );
-    }
-  }
-
-  /**
-   * @see org.kalypso.commons.diff.IDiffVisitor#printLog(java.io.PrintStream)
-   */
-  public void printLog( PrintStream out )
-  {
-    printLog( System.out, "<-> ", DiffVisitor.DIFF_CONTENT );
-    printLog( System.out, "--- ", DiffVisitor.DIFF_REMOVED );
-    printLog( System.out, "<!> ", DiffVisitor.DIFF_UNCOMPAREABLE );
-    //    printLog( System.out, "=== ", DiffVisitor.DIFF_OK );
-    printLog( System.out, "+++ ", DiffVisitor.DIFF_ADDED );
-  }
-
-  /**
-   * @see org.kalypso.commons.diff.IDiffVisitor#hasDiffs()
-   */
-  public boolean hasDiffs()
-  {
-    return m_log.containsKey( DIFF_CONTENT ) || m_log.containsKey( DIFF_ADDED ) || m_log.containsKey( DIFF_REMOVED )
-        || m_log.containsKey( DIFF_UNCOMPAREABLE );
+    logger.block();
+    logger.log( IDiffComparator.DIFF_INFO, path );
+    boolean result = differ.diff( logger, content1, content2 );
+    logger.unblock( result );
+    return result;
   }
 }
