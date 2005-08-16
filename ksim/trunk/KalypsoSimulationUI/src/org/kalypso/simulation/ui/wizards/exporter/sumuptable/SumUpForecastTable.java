@@ -79,8 +79,8 @@ public class SumUpForecastTable
 {
   private final String m_axisType;
   private final double m_delta;
-  protected final int m_timeUnit;
-  protected final int m_timeStep;
+  private final int m_timeUnit;
+  private final int m_timeStep;
   private final ColumnsHeader m_colHeader = new ColumnsHeader();
   private final Map m_map = new HashMap();
 
@@ -96,8 +96,8 @@ public class SumUpForecastTable
   {
     final DateRange range = TimeserieUtils.isForecast( obs );
     if( range == null )
-      return StatusUtilities.createInfoStatus( "Zeitreihe beinhaltet keinen Vorhersagezeitraum: " + obs.getName()
-          + " in Datei " + argument.getUrl().toString() );
+      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName() + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + 
+          argument.getUrl().toString() );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), m_axisType );
@@ -166,6 +166,15 @@ public class SumUpForecastTable
 
   public void writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
   {
+    writer.write( "Max" );
+    writer.write( separator );
+    writer.write( "Eintrittszeit" );
+    writer.write( separator );
+    writer.write( "Überschrittene Alarmstufe" );
+    writer.write( separator );
+    writer.write( "Richtwert" );
+    writer.write( separator );
+
     final Date[] dates = m_colHeader.getDates();
     final String[] distances = m_colHeader.getDistances();
 
@@ -182,6 +191,8 @@ public class SumUpForecastTable
       throws IOException
   {
     final Row row = (Row)m_map.get( key );
+
+    writer.write( sep );
 
     if( row != null )
       writer.write( row.dumpRow( sep, nf, df ) );
