@@ -41,11 +41,9 @@
 
 package org.kalypso.simulation.ui.wizards.exporter;
 
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -55,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -140,8 +139,7 @@ public class ExportableTemplateObject implements IExportableObject
     Reader reader = null;
     try
     {
-      final URLConnection connection = m_templateUrl.openConnection();
-      reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
+      reader = UrlResolverSingleton.getDefault().createReader( m_templateUrl );
 
       // replace-tokens are optional
       if( m_replaceTokens != null )

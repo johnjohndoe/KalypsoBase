@@ -41,6 +41,7 @@
 
 package org.kalypso.simulation.ui.wizards.exporter.sumuptable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -54,14 +55,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
@@ -102,7 +97,7 @@ public final class ExportableSumUpTable implements IExportableObject
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
-    final String charset = m_args.getProperty( "charset", "UTF-8" );
+    final String charset = m_args.getProperty( "charset", new OutputStreamWriter( new ByteArrayOutputStream() ).getEncoding() );
     final String axisType = m_args.getProperty( "axisType" );
     final String timeUnit = m_args.getProperty( "timeUnit" );
     final String timeStep = m_args.getProperty( "timeStep" );
@@ -173,19 +168,11 @@ public final class ExportableSumUpTable implements IExportableObject
 
       table.dispose();
 
-      final IStatus status = StatusUtilities.createStatus( stati,
+      IStatus status = StatusUtilities.createStatus( stati,
           "Fehler beim erzeugen des Übersichtsdokument: eine oder mehrere Zeitreihe konnte nicht hinzugefügt werden" );
 
-      final Display display = Workbench.getInstance().getDisplay();
-      final Shell shell = new GetShellFromDisplay( display ).getShell();
-      display.syncExec( new Runnable()
-      {
-        public void run()
-        {
-          ErrorDialog.openError( shell, "Export", "Export möglicherweise nicht vollständig", status );          
-        }} );
-
-      return Status.OK_STATUS;
+      // wrap as warning because even if some obs is missing, export is still possible
+      return StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
     }
     catch( final Exception e )
     {

@@ -42,6 +42,7 @@
 package org.kalypso.simulation.ui.wizards.exporter.sumuptable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,18 +50,21 @@ import java.util.Map;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.ogc.sensor.IObservation;
 
-public final class ColumnSpec
+public final class ColumnSpec implements Comparable
 {
   private final String m_label;
   private final String m_content;
+  private final int m_position;
 
   public ColumnSpec( final Arguments args )
   {
-    this( args.getProperty( "label" ), args.getProperty( "content" ) );
+    this( Integer.valueOf( args.getProperty( "position" ) ).intValue(), args.getProperty( "label" ), args
+        .getProperty( "content" ) );
   }
 
-  public ColumnSpec( final String label, final String content )
+  public ColumnSpec( final int position, final String label, final String content )
   {
+    m_position = position;
     m_label = label;
     m_content = content;
   }
@@ -75,21 +79,34 @@ public final class ColumnSpec
     return m_content;
   }
 
+  /**
+   * Helper method that handles the resolution of the token-oriented content of the column specification.
+   * <p>
+   * If the content begins with:
+   * <ul>
+   * <li>'arg:', this method will try to translate what follows as an argument-name (within the arguments of the exporter) and will return its value found in the given arguments
+   * <li>'metadata:', this method will try to translate what follows as a metadata-name and will return the value found in the metadata of the given observation
+   * </ul>
+   * in all other cases the content is simply returned.
+   * 
+   * @param args used in the case the content of the column specification begins with 'arg:'
+   * @param obs used in the case the content of the column specification begins with 'metadata:'
+   */
   public String resolveContent( final Arguments args, final IObservation obs )
   {
-    if( m_content.startsWith( "arg:" ) )
+    if( m_content.startsWith( "arg:" ) && args != null )
     {
       final String key = m_content.replaceAll( "arg:", "" );
-      return args.getProperty( key, key );
+      return args.getProperty( key, "" );
     }
 
-    if( m_content.startsWith( "metadata:" ) )
+    if( m_content.startsWith( "metadata:" ) && obs != null )
     {
       final String key = m_content.replaceAll( "metadata:", "" );
-      return obs.getMetadataList().getProperty( key, key );
+      return obs.getMetadataList().getProperty( key, "" );
     }
 
-    return "<unbekannt>";
+    return m_content;
   }
 
   public String toString()
@@ -110,6 +127,19 @@ public final class ColumnSpec
         cols.add( new ColumnSpec( (Arguments)entry.getValue() ) );
     }
 
-    return (ColumnSpec[])cols.toArray( new ColumnSpec[cols.size()] );
+    final ColumnSpec[] columns = (ColumnSpec[])cols.toArray( new ColumnSpec[cols.size()] );
+    Arrays.sort( columns );
+
+    return columns;
+  }
+
+  /**
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  public int compareTo( final Object o )
+  {
+    final ColumnSpec other = (ColumnSpec)o;
+
+    return m_position - other.m_position;
   }
 }
