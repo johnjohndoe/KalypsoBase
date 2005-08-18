@@ -44,9 +44,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
@@ -80,8 +83,17 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
   public void run( final IAction action )
   {
     // selektiertes verzeichnis finden
-    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
-
+    final IWorkbenchPage activePage = m_window.getActivePage();
+    // REMARK: there seems to be a eclipse bug, so we cant use the next line
+    // because the internal selection tracker has no reference to the (existing!)
+    // navigator
+    // final ISelection selection = activePage.getSelection( IPageLayout.ID_RES_NAV );
+    
+    // instead we directly access the navigator and its selection
+    final IViewPart part = activePage.findView( IPageLayout.ID_RES_NAV );
+    // selection may never be null, else we get a NullPointerExceltion in the Wizard-Pages
+    final ISelection selection = part == null ? new StructuredSelection() {} : part.getViewSite().getSelectionProvider().getSelection();
+    
     // NewCalcCaseWizard starten
     final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard();
     wizard.init( m_window.getWorkbench(), (IStructuredSelection)selection );
