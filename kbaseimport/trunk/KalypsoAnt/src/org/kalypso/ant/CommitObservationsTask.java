@@ -80,6 +80,11 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     m_remoteObs = remoteObs;
   }
 
+  public CommitObservationsTask()
+  {
+    super( false );
+  }
+  
   /**
    * @throws InvocationTargetException
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
