@@ -154,7 +154,7 @@ public class SumUpForecastTable
 
       row.addValue( value );
 
-      m_colHeader.checkAndAddColumn( time );
+      m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
 
       cal.add( m_timeUnit, m_timeStep );
     }
@@ -259,7 +259,7 @@ public class SumUpForecastTable
     private final Set m_dates = new TreeSet();
     private final List m_hints = new ArrayList();
 
-    public void checkAndAddColumn( final Date d )
+    public void checkAndAddColumn( final Date d, final int timeStep, final int timeUnit )
     {
       if( m_dates.contains( d ) )
         return;
@@ -269,7 +269,7 @@ public class SumUpForecastTable
       if( size == 0 )
         distance = "Ist";
       else
-        distance = size * m_timeStep + " " + CalendarUtilities.getAbbreviation( m_timeUnit );
+        distance = size * timeStep + " " + CalendarUtilities.getAbbreviation( timeUnit );
 
       m_hints.add( distance );
 
