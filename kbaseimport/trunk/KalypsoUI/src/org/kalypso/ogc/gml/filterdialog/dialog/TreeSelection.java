@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 /**
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection
+public abstract class TreeSelection implements IStructuredSelection, IChangeListener
 {
   private final IStructuredSelection m_selection;
 
@@ -75,10 +75,6 @@ public abstract class TreeSelection implements IStructuredSelection
   {
     return m_selection.toList();
   }
-
-  public abstract void contentChanged();
-
-  public abstract void structureChanged();
   
   public abstract Object getModel();
 }
