@@ -895,6 +895,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private ICalculationService findCalculationServiceForType( final String typeID ) throws ServiceException
   {
     final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
+ //   System.out.println("search for >"+typeID+"<");
     for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
     {
       final ICalculationService proxy = (ICalculationService)iter.next();
@@ -903,6 +904,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String[] jobTypes = proxy.getJobTypes();
         for( int i = 0; i < jobTypes.length; i++ )
         {
+//          System.out.println("jobtypes:>"+jobTypes[i]+"<");
           if( typeID.equals( jobTypes[i] ) )
             return proxy;
         }
