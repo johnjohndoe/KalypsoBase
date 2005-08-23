@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
@@ -686,7 +687,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     /**
      * @see org.kalypso.contribs.java.lang.ISupplier#supply(java.lang.Object)
      */
-    public Object supply( final Object request ) throws InvocationTargetException
+    public Object supply( final Object request )
     {
       if( "features".equals( request ) )
         return getFeatures();
@@ -703,6 +704,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       if( "context".equals( request ) )
         return getContext();
 
+      Logger.getLogger( getClass().getName() ).warning( "Supplier asked for " + request.toString() + " but request could not be satisfied" );
+      
       return null;
     }
   }

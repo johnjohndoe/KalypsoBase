@@ -41,13 +41,10 @@
 
 package org.kalypso.simulation.ui.wizards.exporter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -73,22 +70,10 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
   {
     if( m_page == null )
     {
-      FeatureList features;
-      FeatureList selectedFeatures;
-      String nameProperty;
-
-      try
-      {
-        features = (FeatureList)m_supplier.supply( "features" );
-        selectedFeatures = (FeatureList)m_supplier.supply( "selectedFeatures" );
-        nameProperty = (String)m_supplier.supply( "propertyName" );
-      }
-      catch( final InvocationTargetException e )
-      {
-        e.printStackTrace();
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "", e.getCause() ) );
-      }
-
+      final FeatureList features = (FeatureList)getFromSupplier( "features" );
+      final FeatureList selectedFeatures = (FeatureList)getFromSupplier( "selectedFeatures" );
+      final String nameProperty = (String)getFromSupplier( "propertyName" );
+      
       if( features == null )
         return new IWizardPage[0];
 
@@ -98,10 +83,10 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       for( int count = 0; count < features.size(); count++ )
       {
         final Feature f = (Feature)features.get( count );
-        
+
         final FeatureItem fi = new FeatureItem( f, (String)f.getProperty( nameProperty ) );
         items[count] = fi;
-        
+
         if( selectedFeatures.contains( f ) )
           selItems[selCount++] = fi;
       }
@@ -113,20 +98,21 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
 
     // create the list of pages
     final List pages = new ArrayList();
-    
+
     // add our feature selection page
     pages.add( m_page );
-    
+
     // let subclasses insert their specific pages
     contributeWizardPages( pages, configuration );
-    
+
     return (IWizardPage[])pages.toArray( new IWizardPage[pages.size()] );
   }
 
   /**
    * Must be implemented by subclasses in order to insert their own pages
    */
-  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration ) throws CoreException;
+  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration )
+      throws CoreException;
 
   /**
    * @return selected features
@@ -135,7 +121,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
   {
     if( m_page == null )
       return new Feature[0];
-    
+
     final Object[] objects = m_page.getChoosen();
     final Feature[] features = new Feature[objects.length];
     for( int i = 0; i < features.length; i++ )
