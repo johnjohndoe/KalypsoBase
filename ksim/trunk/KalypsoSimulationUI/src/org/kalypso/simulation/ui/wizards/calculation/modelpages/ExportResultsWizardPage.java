@@ -263,7 +263,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private Control createCalccasesGroup( final Composite parent )
   {
     final Group treeGroup = new Group( parent, SWT.NONE );
-    treeGroup.setText( "Rechenvarianten im Diagram" );
+    treeGroup.setText( "Rechenvarianten im Diagramm" );
     treeGroup.setLayout( new GridLayout() );
 
     final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER
