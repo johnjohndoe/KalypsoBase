@@ -52,12 +52,11 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author schlienger
  */
-public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 {
   /** Argument: Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";

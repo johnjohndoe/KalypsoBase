@@ -51,12 +51,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Belger
  */
-public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class MapAndTableWizardPage extends AbstractCalcWizardPage
 {
   /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   public final static String PROP_MAINSASH = "mainSash";

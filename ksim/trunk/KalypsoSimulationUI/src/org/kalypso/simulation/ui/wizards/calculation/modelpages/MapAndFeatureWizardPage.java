@@ -72,13 +72,12 @@ import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Belger
  */
-public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class MapAndFeatureWizardPage extends AbstractCalcWizardPage 
 {
   /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   private final static String PROP_MAINSASH = "mainSash";

@@ -111,7 +111,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -125,7 +124,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  * 
  * @author belger,schlienger
  */
-public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class ExportResultsWizardPage extends AbstractCalcWizardPage
 {
   // Beispiel:
   //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"

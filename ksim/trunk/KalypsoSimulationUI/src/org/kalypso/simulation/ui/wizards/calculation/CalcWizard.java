@@ -75,6 +75,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -668,7 +669,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           public void run() throws Exception
           {
             if( page instanceof AbstractCalcWizardPage )
-              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+              ( (AbstractCalcWizardPage)page ).selectionChanged( new KalypsoSelectionChangedEvent( ((AbstractCalcWizardPage)page).getSelectionManager(), this, ((AbstractCalcWizardPage)page).getSelectionManager().getSelection() ) );
           }
         };
         Platform.run( runnable );

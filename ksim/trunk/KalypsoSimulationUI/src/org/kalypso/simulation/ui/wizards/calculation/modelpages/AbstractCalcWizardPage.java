@@ -69,6 +69,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -95,6 +97,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -126,7 +129,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -139,7 +141,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Belger
  */
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage, ICommandTarget,
-    ModellEventListener
+    ISelectionChangedListener
+//ModellEventListener
 {
   /**
    * Argument: If this page is asked for the next page and this arugment is set, it will try to find the next-page by
@@ -349,7 +352,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     if( m_mapModell != null )
     {
-      m_mapModell.removeModellListener( this );
+      //ist nicht mehr modellListener nur noch selection changed CK: 25.08.2005
+      //      m_mapModell.removeModellListener( this );
       m_mapModell.dispose();
     }
 
@@ -366,6 +370,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_diagView != null )
       m_diagView.dispose();
+
+    m_selectionManager.removeSelectionChangedListener( this );
   }
 
   public Arguments getArguments()
@@ -489,7 +495,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme theme = m_mapModell.getActiveTheme();
     if( theme instanceof IKalypsoFeatureTheme )
       ( (IKalypsoFeatureTheme)theme ).setSelectionManager( m_selectionManager );
-    m_mapModell.addModellListener( this );
+    //Änderung des selection mechanismus und selection event management (CK: 25.8.2005): Die selektion wird nicht mehr
+    // über
+    // ein ModellEvent gesteurert, sondern nur noch über den FeatureSelectionManager
+    //    m_mapModell.addModellListener( this );
+    m_selectionManager.addSelectionChangedListener( this );
 
     m_mapPanel = new MapPanel( this, crs );
     // TODO
@@ -772,24 +782,26 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_gisTableViewer;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public final void onModellChange( final ModellEvent modellEvent )
-  {
-    if( modellEvent != null && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
-    {
-      refreshDiagram();
-      if( "selected".equalsIgnoreCase( m_showZmlTable ) )
-      {
-        // Save the observations before refreshing else
-        // changes are lost
-        saveDirtyObservations( new NullProgressMonitor() );
-
-        refreshZMLTable();
-      }
-    }
-  }
+  //Änderung des Selection mechanismus: Wenn sich die selection ändert ist es kein ModellEvent mehr!! CK: 25.8.2005
+  //  /**
+  //   * @see
+  // org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+  //   */
+  //  public final void onModellChange( final ModellEvent modellEvent )
+  //  {
+  //    if( modellEvent != null && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
+  //    {
+  //      refreshDiagram();
+  //      if( "selected".equalsIgnoreCase( m_showZmlTable ) )
+  //      {
+  //        // Save the observations before refreshing else
+  //        // changes are lost
+  //        saveDirtyObservations( new NullProgressMonitor() );
+  //
+  //        refreshZMLTable();
+  //      }
+  //    }
+  //  }
 
   public TimeserieFeatureProps[] getTsProps()
   {
@@ -811,20 +823,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-      case SELECT_FROM_MAPVIEW:
-        final IMapModell mapModell = getMapModell();
-        if( mapModell == null )
-          return FeatureFactory.createFeatureList( null, null );
-        activeTheme = mapModell.getActiveTheme();
-        break;
-      case SELECT_FROM_TABLEVIEW:
-        activeTheme = m_gisTableViewer.getTheme();
-        break;
-      case SELECT_FROM_FEATUREVIEW:
-        activeTheme = null;
-        break;
-      default:
-        activeTheme = null;
+    case SELECT_FROM_MAPVIEW:
+      final IMapModell mapModell = getMapModell();
+      if( mapModell == null )
+        return FeatureFactory.createFeatureList( null, null );
+      activeTheme = mapModell.getActiveTheme();
+      break;
+    case SELECT_FROM_TABLEVIEW:
+      activeTheme = m_gisTableViewer.getTheme();
+      break;
+    case SELECT_FROM_FEATUREVIEW:
+      activeTheme = null;
+      break;
+    default:
+      activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
@@ -833,7 +845,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( featureList == null )
       return FeatureFactory.createFeatureList( null, null );
     if( selected )
-      return FeatureFactory.createFeatureList( null, null, kft.getSelectionManager().getSelection() );
+      return FeatureFactory.createFeatureList( null, null, kft.getSelectionManager().getFeatureSelection() );
     return featureList;
   }
 
@@ -1203,5 +1215,25 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IWizard wizard = getWizard();
     if( wizard instanceof CalcWizard )
       ( (CalcWizard)wizard ).refreshAllPages( monitor );
+  }
+
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    if( event instanceof KalypsoSelectionChangedEvent )
+    {
+      refreshDiagram();
+      if( "selected".equalsIgnoreCase( m_showZmlTable ) )
+      {
+        // Save the observations before refreshing else
+        // changes are lost
+        saveDirtyObservations( new NullProgressMonitor() );
+
+        refreshZMLTable();
+      }
+    }
+  }
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return m_selectionManager;
   }
 }
