@@ -31,6 +31,8 @@ package org.kalypsodeegree_impl.model.feature.selection;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -38,7 +40,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author doemming
  */
-public interface IFeatureSelectionManager
+public interface IFeatureSelectionManager extends ISelectionProvider
 {
   public boolean addToSelection( final Feature feature );
 
@@ -46,13 +48,13 @@ public interface IFeatureSelectionManager
 
   public void addToSelection( final Feature[] feature );
 
-  public void setSelection( final Feature[] feature );
+  public void setSelection( final Object eventSource, final Feature[] feature );
 
-  public void setSelection( final List listOfFeatures );
+  public void setSelection( final Object eventSource, final List listOfFeatures );
 
   public boolean removeFromSelection( final Feature feature );
 
-  public Feature[] getSelection();
+  public Feature[] getFeatureSelection();
 
   public void clear();
 
@@ -61,4 +63,11 @@ public interface IFeatureSelectionManager
   public boolean isSelected( final Feature feature );
 
   public List getSelectedIds();
+
+  public boolean hasListeners();
+
+  public ISelectionChangedListener[] getListenerList();
+
+  public void moveListenersTo( IFeatureSelectionManager source );
+
 }
