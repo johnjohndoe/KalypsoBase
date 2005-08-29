@@ -45,7 +45,7 @@
             visible="false"
             id="org.kalypso.simulation.ui.actionSet">
          <menu
-               label="Modell"
+               label="%org.kalypso.simulation.ui.menu.model.label"
                path="additions"
                id="org.kalypso.simulation.ui.menu.model">
             <groupMarker
@@ -59,62 +59,62 @@
             </groupMarker>
          </menu>
          <action
-               label="Vorhersage durchführen"
+               label="%org.kalypso.action.model.startPrognose.label"
                icon="icons/elcl16/startPrognose.gif"
                class="org.kalypso.simulation.ui.actions.StartCalcWizardDelegate"
                menubarPath="org.kalypso.simulation.ui.menu.model/prognoseStart"
                id="org.kalypso.action.model.startPrognose">
          </action>
          <action
-               label="Vorhersagen organisieren"
+               label="%org.kalypso.action.model.manageCalcCases.label"
                class="org.kalypso.simulation.ui.actions.ManagePrognosesAction"
                style="push"
                menubarPath="org.kalypso.simulation.ui.menu.model/prognoseStart"
                id="org.kalypso.action.model.manageCalcCases"/>
          <action
-               label="Berechnung(en) durchführen"
+               label="%org.kalypso.action.model.runCalcCase.label"
                icon="icons/elcl16/startCalulation.gif"
                class="org.kalypso.simulation.ui.actions.StartCalculationActionDelegate"
-               tooltip="Führt die Berechnung der selektierten Rechenvarianten aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               tooltip="%org.kalypso.action.model.runCalcCase.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.runCalcCase">
          </action>
          <action
-               label="Zurückspeichern"
+               label="%org.kalypso.action.model.commit.label"
                icon="icons/elcl16/commitModel.gif"
                class="org.kalypso.simulation.ui.actions.CommitModelDelegate"
-               tooltip="Speichert die Änderungen am Modell auf den Server zurück"
+               tooltip="%org.kalypso.action.model.commit.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
                id="org.kalypso.action.model.commitModel">
          </action>
          <action
-               label="Modell aktualisieren"
+               label="%org.kalypso.action.model.updateModel.label"
                icon="icons/elcl16/updateModel.gif"
                class="org.kalypso.simulation.ui.actions.UpdateModelDelegate"
-               tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
+               tooltip="%org.kalypso.action.model.updateModel.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
                id="org.kalypso.action.model.updateModel">
          </action>
          <action
-               label="Vom Server laden..."
+               label="%org.kalypso.action.model.checkoutModel.label"
                icon="icons/elcl16/updateModel.gif"
                helpContextId="org.kalypso.manual.menu_modell"
-               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
+               tooltip="%org.kalypso.action.model.checkoutModel.tooltip"
                class="org.kalypso.simulation.ui.actions.GetModelDelegate"
                menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel">
          </action>
          <action
-               label="Kopieren..."
+               label="%org.kalypso.action.model.copyModel.label"
                icon="icons/elcl16/copyModel.gif"
                class="org.kalypso.simulation.ui.actions.CopyModelDelegate"
-               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
+               tooltip="%org.kalypso.action.model.copyModel.tooltip"
                retarget="false"
                menubarPath="org.kalypso.simulation.ui.menu.model/modelStart"
                id="org.kalypso.action.model.copyModel">
          </action>
          <menu
-               label="Rechenvariante"
+               label="%org.kalypso.simulation.ui.menu.calcCase.label"
                path="org.kalypso.simulation.ui.menu.model"
                id="org.kalypso.simulation.ui.menu.calcCase">
             <groupMarker
@@ -122,61 +122,61 @@
             </groupMarker>
          </menu>
          <action
-               label="Archivieren"
+               label="%org.kalypso.action.model.commitCalcCase.label"
                icon="icons/elcl16/commitCalcCase.gif"
                class="org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate"
-               tooltip="legt eine Rechenvariante auf dem Server ab"
+               tooltip="%org.kalypso.action.model.commitCalcCase.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.commitCalcCase">
          </action>
          <action
-               label="Vom Server laden..."
+               label="%org.kalypso.action.model.getCalcCase.label"
                icon="icons/elcl16/updateCalcCase.gif"
                class="org.kalypso.simulation.ui.actions.GetCalcCaseDelegate"
-               tooltip="lädt eine vorhandene Rechenvariante vom Server"
+               tooltip="%org.kalypso.action.model.getCalcCase.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.getCalcCase">
          </action>
          <action
-               label="Zeitreihen aktualisieren"
+               label="%org.kalypso.action.model.updateCalcCaseTimeseries.label"
                icon="icons/elcl16/refreshCalcCase.gif"
-               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
+               tooltip="%org.kalypso.action.model.updateCalcCaseTimeseries.tooltip"
                class="org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.updateCalcCaseTimeseries">
          </action>
          <action
-               label="Kopieren..."
+               label="%org.kalypso.action.model.copyCalcCase.label"
                icon="icons/elcl16/copyCalcCase.gif"
                class="org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate"
-               tooltip="legt eine Kopie der selektierten Rechenvariante an"
+               tooltip="%org.kalypso.action.model.copyCalcCase.tooltip"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.copyCalcCase">
          </action>
          <action
-               label="Neu..."
+               label="%org.kalypso.action.model.newCalcCase.label"
                icon="icons/elcl16/createCalcCase.gif"
-               tooltip="Erzeugt eine neue Rechenvariante"
+               tooltip="%org.kalypso.action.model.newCalcCase.tooltip"
                class="org.kalypso.simulation.ui.actions.NewCalcCaseAction"
                menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.newCalcCase">
          </action>
       </actionSet>
       <actionSet
-            label="Kalypso Simulation Debug"
-            description="Aktionen zum Testen der Kalypso Simulation"
+            label="%org.kalypso.simulation.ui.actionSet.label"
+            description="%org.kalypso.simulation.ui.actionSet.description"
             visible="false"
             id="org.kalypso.simulation.ui.actionSet">
          <menu
-               label="Simulation Debug"
+               label="%org.kalypso.simulation.ui.menu.debug.label"
                path="additions"
                id="org.kalypso.simulation.ui.menu.debug">
             <groupMarker name="start"/>
          </menu>
          <action
-               label="Berechnung(en) testen"
+               label="%org.kalypso.action.debug.testCalcCase.label"
                class="org.kalypso.simulation.ui.actions.TestCalculationDelegate"
-               tooltip="Berechnet die selektierte(n) Rechenvariante(n) und vergleicht das Ergebnis mit dem soll-Zustand."
+               tooltip="%org.kalypso.action.debug.testCalcCase.tooltip"
                style="push"
                menubarPath="org.kalypso.simulation.ui.menu.debug/start"
                id="org.kalypso.action.debug.testCalcCase"/>
@@ -186,7 +186,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Hochwasser Vorhersage"
+            name="%org.kalypso.simulation.ui.startscreen.PrognosePerspective.name"
             icon="icons/eview16/startingPersp.gif"
             fixed="true"
             class="org.kalypso.simulation.ui.startscreen.PrognosePerspective"
@@ -229,20 +229,20 @@
       <exporter
             icon="icons/elcl16/export-gis-feature.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporter"
-            description="Exportiert Zeitreihen in Form von Diagrammen und Tabellen"
-            name="Zeitreihen Feature Exporter"
+            description="%featureWithTemplateExporter.description"
+            name="%featureWithTemplateExporter.name"
             id="featureWithTemplateExporter"/>
       <exporter
             icon="icons/elcl16/export-simple-template.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.SimpleTemplateExporter"
-            description="Exportiert Dokumente anhand von Vorlagen"
-            name="Vorlagen Exporter"
+            description="%simpleTemplateExporter.description"
+            name="%simpleTemplateExporter.name"
             id="simpleTemplateExporter"/>
       <exporter
             icon="icons/elcl16/export-sumup-table.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.SumUpTableExporter"
-            description="Exportiert eine tabellarische Zusammengassung der aktuelle Vorhersage"
-            name="Tabellarische Zusammenfassung"
+            description="%sumUpTableExporter.description"
+            name="%sumUpTableExporter.name"
             id="sumUpTableExporter"/>
    </extension>
 </plugin>
