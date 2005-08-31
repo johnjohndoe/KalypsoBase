@@ -1,0 +1,172 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<title>Integrating the Java WSDP Component Technologies with a Web Container</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<h1>Integrating the Java WSDP Component Technologies with a Web Container</h1>
+
+<blockquote>
+<p>This document explains how to run the integration scripts that come with 
+   the Java WSDP.  These scripts allow you to integrate the Java WSDP 
+   technologies with a Web container, if you originally installed the Java WSDP
+   with the "No Web Container" option, or with a Web container that is 
+   different from the one that you selected at installation time.
+</p>   
+   
+<p>This document also describes the steps you need to follow to perform an 
+   integration after performing a "Custom" installation and explains what you
+   must do before you uninstall the Java WSDP.</p>
+</blockquote>
+
+<h3>Integrating the Java WSDP Component Technologies with the Sun Java 
+    System Application Server Platform Edition 8</h3>
+<blockquote>
+<p>Complete the following steps to integrate the Java WSDP 1.4 component 
+   technologies with Sun Java System Application Server Platform Edition 8:
+</p>
+<ol>
+<li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
+    directory.</p>
+</li>
+
+<li><p>Modify the following properties in the <code>sjsas.props</code> file:</p>
+    <ol type="a" start="a">
+    <li><p>Set the USERNAME property to your admin username.</p></li>
+    <li><p>Set the PASSWORD property to your admin password.</p></li>
+    <li><p>Set the SJSAS_PORT property to your http server port.</p></li>
+    </ol>
+</li>
+
+<li><p>If you performed a "Typical" installation (installed all of the Java WSDP
+    1.4 component technologies), run the <code>jwsdponsjsas.sh</code> 
+    (Solaris/Linux) or <code>jwsdponsjsas.bat</code> (Windows) integration 
+    script.</p>
+    
+    <p>If you performed a "Custom" installation (installed a subset of the 
+       Java WSDP 1.4 component technologies), run the integration script 
+       using the following targets:</p>
+       
+       <ol type="a" start="a">
+       <li><p><code>integrate.init</code> to initialize the integration</p></li>
+       <li><p><code>integrate.&lt;<em>component-technology</em>&gt;</code> to
+           integrate the component technology or technologies</p>
+       <p>Look at the <code>setup</code> target to see what target(s) you need 
+          to execute for the component technology or technologies that you 
+          installed.
+        </p></li>
+</ol></li>
+
+<li><p>Run the integration script using the <code>revert.sjsas.changes</code> 
+    target before you uninstall the Java WSDP.</p></li>
+</ol>
+</blockquote>
+ 
+<h3>Integrating with the Sun Java System Web Server 6.1</h3>
+<blockquote>
+<p>Complete the following steps to integrate the Java WSDP 1.4 component 
+   technologies with the Sun Java System Web Server 6.1 Container:
+</p>
+<ol>
+<li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
+    directory.</p>
+</li>
+
+<li><p>Modify the following properties in the <code>sjsws.props</code> file:</p>
+    <ol type="a" start="a">
+    <li><p>Set the SERVER_INSTANCE property to the server instance 
+        directory name (typically with the format 
+        <code>https-&lt;<em>servername</em>&gt;</code>) and the 
+        SERVER_INSTANCE_LIST property to 
+        a comma delimited list of server instances.</p></li> 
+    <li><p>Set the SJSWS_PORT property to the server instance 
+        port number and the SJSWS_PORT_LIST property to 
+        a comma delimited list of server instance port numbers which correspond
+        to the server instances in the SERVER_INSTANCE_LIST property.</p> 
+  </li>
+    </ol>
+</li>
+
+<li><p>If you performed a "Typical" installation (installed all of the Java WSDP
+    1.4 component technologies), run the <code>jwsdponsjws.sh</code> 
+    (Solaris/Linux) or <code>jwsdponsjsws.bat</code> (Windows) integration 
+    script.</p>
+    
+    <p>If you performed a "Custom" installation (installed a subset of the 
+       Java WSDP 1.4 component technologies), run the integration script 
+       using the following targets:
+       
+       <ol type="a" start="a">
+       <li><p><code>integrate.init</code> to initialize the integration</p></li>
+       <li><p><code>integrate.&lt;<em>component-technology</em>&gt;</code> to
+           integrate the component technology or technologies</p>
+       <p>Look at the <code>setup</code> target to see what target(s) you need 
+          to execute for the component technology or technologies that you 
+          installed.
+       </p></li>
+       <li><p><code>stop-sjsws</code> to stop the Web Server</p></li>
+       <li><p><code>start-sjsws</code> to restart the Web Server</p></li>
+       <li><p>If applicable, any of the following targets to deploy the installed sample applications:</p>
+       <ul>
+       <li><code>deploy.wsi-sampleapp.webapps</code> deploys the WS-I Sample application</li>
+       <li><code>deploy.saaj.webapps</code> deploys the SAAJ sample applications</li>
+       <li><code>deploy.registry-server.webapps</code> deploys the Java WSDP Registry Server</li></li>
+</ol></li>
+
+<li><p>Run the integration script using the <code>revert.sjsws.changes</code> 
+    target before you uninstall the Java WSDP.</p></li>
+</ol>
+</blockquote>
+ 
+<h3>Integrating the Java WSDP Component Technologies with the Tomcat 5.0 for 
+    Java WSDP Container</h3>
+<blockquote>
+<p>Complete the following steps to integrate the Java WSDP 1.4 component 
+   technologies with the Tomcat 5.0 for Java WSDP Container:
+</p>
+<ol>
+<li><p>Make sure that your JAVA_HOME and CATALINA_HOME environment variables 
+    have been set.</p>
+</li>
+
+<li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
+    directory.</p>
+</li>
+
+<li><p>If you performed a "Typical" installation (installed all of the Java WSDP
+    1.4 component technologies), run the <code>jwsdpontomcat.sh</code> 
+    (Solaris/Linux) or <code>jwsdpontomcat.bat</code> (Windows) integration 
+    script.</p>
+    
+    <p>If you performed a "Custom" installation (installed a subset of the 
+       Java WSDP 1.4 component technologies), run the integration script 
+       using the following targets:
+       
+       <ol type="a" start="a">
+       <li><p><code>integrate.init</code> to initialize the integration</p></li>
+       <li><p><code>integrate.&lt;<em>component-technology</em>&gt;</code> to
+           integrate the component technology or technologies</p>
+       <p>Look at the <code>setup</code> target to see what target(s) you need 
+          to execute for the component technology or technologies that you 
+          installed.
+        </p></li>
+</ol></li>
+
+<li><p>Run the integration script using the <code>revert.tomcat.changes</code> 
+    target before you uninstall the Java WSDP.</p></li>
+</ol>
+</blockquote>
+ 
+<p> </p>
+<hr>
+<p>Please send feedback on the Java Web Services Developer Pack to 
+   <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>. 
+</p>
+
+<p><a href="Copyright.html"><font size=-1><i>Copyright &#169; 2004 Sun 
+   Microsystems, Inc. All rights reserved.</i></font></a>
+</p>
+
+</body>
+</html>

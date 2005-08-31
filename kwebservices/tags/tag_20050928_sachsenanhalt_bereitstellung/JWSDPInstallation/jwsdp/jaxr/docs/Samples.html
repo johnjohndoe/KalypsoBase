@@ -1,0 +1,187 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <title>JAXR Samples</title>
+</head>
+<body>
+
+<center>
+<h1>
+<font color="#000099">
+Java<sup><font size=-2>TM</font></sup> API for XML Registries (JAXR)<br>
+Sample Applications</font></h1>
+
+<b>Specification Version:</b> 1.0<br>
+<b>Reference Implementation (RI) Version:</b> 1.0.6
+</center>
+
+<h3>jaxr-publish</h3>
+<p>This example, in the directory 
+<tt>&lt;<i>JWSDP_HOME</i>&gt;/jaxr/samples/jaxr-publish</tt>, 
+shows how to use the JAXR APIs to publish information about an organization 
+to a registry, including information about services provided
+by the organization and contact information.</p>
+<p>The example also illustrates how to classify registry entries using
+well-known classification schemes like the North American Industry Classification
+System (NAICS) and standard identifiers like the Dun &amp; Bradstreet DUNS
+identifier.</p>
+
+<h4>Configuration</h4>
+Before running the example, configure it as follows:
+<ol>
+<li>
+By default, the registry publishes information to the Java WSDP 
+Registry Server, the private UDDI V2 registry implementation bundled with the 
+Java WSDP.
+
+<p>You can publish to any registry you wish by setting the following
+properties in the <code>publish.properties</code> file:
+<blockquote>
+<code>query.url</code>: the URL for sending queries to the registry
+<br><code>publish.url</code>: the URL for publishing data to the registry
+</blockquote>
+<b>Note:</b> The URLs for the public registries can be found here: 
+<tt><a href="http://www.uddi.org/find.html">http://www.uddi.org/find.html</a></tt>
+<p>To publish data to any of the public registries, you need to register
+first with the registry provider.
+</li>
+<li>
+If you are running the example from behind a firewall and are using a public 
+registry, add the proxy information by setting the following properties:
+<blockquote>
+<tt>http.proxy.host<br>
+http.proxy.port</tt>
+</blockquote>
+</li>
+<li>
+By default, the <tt>user.name</tt> and <tt>user.password</tt> properties are 
+set to the values used by the Java WSDP Registry Server. If you are using a 
+public registry, provide the username and password you obtained when you 
+registered with the registry provider.
+</li>
+</ol>
+
+<h4>Running the Sample</h4>
+<p>On Windows systems, at the prompt, type <tt>.\BLCM</tt>.</p>
+<p>On UNIX systems, at the prompt, type <tt>./BLCM.sh</tt>.</p>
+
+<h4>Results</h4>
+<p>You should see the following message for a successful run:</p>
+<pre>
+&nbsp;&nbsp;&nbsp; Organization Saved
+</pre>
+<p>You may ignore the warning messages about PostalAddressMappings.</p>
+
+<h3>jaxr-query</h3>
+<p>This example, in the directory 
+<tt>&lt;<i>JWSDP_HOME</i>&gt;/jaxr/samples/jaxr-query</tt>, shows how to use 
+the JAXR APIs to query a registry for data -- specifically, how to query for an 
+organization by name. The example also illustrates how to parse the retrieved 
+information for details about the organization and the services it provides.</p>
+
+<h4>Configuration</h4>
+<p>Before running the example, configure it as follows:</p>
+<ol>
+<li>
+By default, the registry queries for information from the Java WSDP Registry 
+Server. You can query any registry you wish by setting the following 
+properties in the <tt>query.properties</tt> file:
+
+<blockquote><tt>query.url</tt>: the URL for sending queries to the
+registry
+<br><tt>publish.url</tt>: the URL for publishing data to the registry</blockquote>
+<p>The URLs for the public registries can be found here: 
+<tt><a href="">http://www.uddi.org/find.html</a></tt>.</p>
+</li>
+<li>
+If you are running the example from behind a firewall and are querying a public 
+registry, add the proxy information by setting the following properties:
+
+<blockquote><tt>http.proxy.host<br>
+http.proxy.port</tt></blockquote>
+</li>
+
+<li>
+You can edit the pattern being searched for by editing the settings for
+the <code>company</code> variable in the source code. By default, the sample
+uses the search string <code>%USA%</code>, which returns any name containing 
+"usa" or "USA", including the organization published in the 
+<tt>jaxr-publish</tt> sample.</li>
+</ol>
+
+<h4>Running the Sample</h4>
+<p>On Windows systems, at the prompt, type <tt>.\BQM</tt>.</p>
+<p>On UNIX systems, at the prompt, type <tt>./BQM.sh </tt>.</p>
+
+<h4>Results</h4>
+<p>You should see the following message for a successful run, followed by 
+information about the registry entries retrieved:</p>
+<pre>
+&nbsp;&nbsp;&nbsp; Successfully queried the registry for organizations matching ....
+</pre>
+
+<h3>jaxr-browser</h3>
+<p>This is a more sophisticated example showing how to use the JAXR APIs to
+provide a common interface to heterogenous registries. The registry interactions
+using the JAXR APIs are all illustrated in the <tt>JAXRClient</tt> source
+code. The example is in the directory 
+<tt>&lt;<i>JWSDP_HOME</i>&gt;/jaxr/samples/jaxr-browser</tt>.</p>
+
+<h4>Configuration</h4>
+<p>If you will run the browser from behind a firewall, make sure that you have 
+set the <tt>http.proxyPort</tt> and <tt>http.proxyHost</tt> properties in the 
+file <tt>&lt;<i>JWSDP_HOME</i>&gt;/conf/jwsdp.properties</tt>.</p>
+
+<h4>Running the Sample</h4>
+<p>The scripts for starting the browser are located under 
+<tt>&lt;<i>JWSDP_HOME</i>>/jaxr/bin</tt>.</p>
+<ol>
+<li>
+Use the following commands to start the browser:</li>
+
+<blockquote>On Windows systems: <tt>.\jaxr-browser</tt>
+<br>On UNIX systems: <tt>./jaxr-browser.sh</tt></blockquote>
+
+<li>
+To override the values set in 
+<tt>&lt;<i>JWSDP_HOME</i>&gt;/conf/jwsdp.properties</tt>, add the following
+arguments to specify proxy information:
+
+<pre>
+./jaxr-browser.sh <i>http-proxy-host http-proxy-port https-proxy-host https-proxy-port</i>
+</pre>
+
+<p>The entire command should be typed on one line.</p>
+</li>
+</ol>
+
+<h4>Using the JAXR Browser</h4>
+
+<ol>
+<li>
+Select a Registry Location URL. Use inquiry URLs for querying the registry.
+Use publishing URLs for publishing to the registry.
+
+<p>Several of the commonly used URLs are preconfigured in the list,
+but you can also specify your own here.</li>
+<p>
+<li>To query the registry, select the Browse panel, add the information,
+and click Search.
+<p>To publish information to the registry, select the Submissions Panel.
+Make sure you have the publishing URL selected for the Registry Location.
+Fill in the information to publish and click Submit. It brings up
+an authentication dialog. Type in the username and password for your account
+on the registry and click OK to publish the entry to the registry.</p>
+</li>
+</ol>
+<p>For complete details on using the browser, refer to the 
+<a href="http://java.sun.com/webservices/tutorial.html">Java Web Services 
+Tutorial</a>.</p>
+<hr>
+<p><A href="../../docs/Copyright.html"><FONT 
+  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  reserved.</I></FONT></A> </P>
+
+</body>
+</html>

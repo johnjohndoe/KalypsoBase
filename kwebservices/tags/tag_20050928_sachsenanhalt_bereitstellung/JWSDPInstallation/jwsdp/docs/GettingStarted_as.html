@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>Getting Started with Java(tm) Web Services Developer Pack 1.4</TITLE>
+<BODY bgColor=white>
+
+<H1>Getting Started with Java<SUP><FONT size=-2>TM</FONT></SUP> Web Services 
+Developer Pack 1.4 on Sun Java System Application Server Platform Edition 8</H1></CENTER>
+
+<H3>Introduction</H3>
+<BLOCKQUOTE>
+<P>You can use this page to quickly deploy your own Web applications, start 
+  the Sun Java System Application Server, try out tools that come with the 
+  Java WSDP, and see where to get the documentation that more completely 
+  explains how to use the technologies in the Java WSDP. The instructions on 
+  this page assume that you have already performed a "Typical" installation 
+  (installed all of the components). 
+</P>
+</BLOCKQUOTE>
+
+<H3>Deploying Your Own Web Applications</H3>
+<BLOCKQUOTE>
+
+<P>To quickly deploy your own Web applications, copy your Web archive (WAR) 
+  files to the <CODE>&lt;<i>AS_HOME</i>&gt;/domains/domain1/autodeploy</CODE> 
+  directory. When you start the Application Server, these applications will 
+  be deployed. See the "Getting Started with Web Applications" chapter of the 
+  <A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
+  Tutorial</a> for more information about deploying Web applications. 
+</P>
+</BLOCKQUOTE>
+
+<H3>Starting the Application Server</H3>
+<BLOCKQUOTE>
+<P>On a system running the Solaris or Linux operating system, go to the 
+  <CODE>&lt;<i>AS_HOME</i>&gt;/bin</CODE> directory and execute the following command
+  to bring up the Application Server: 
+</P>
+<pre>
+asadmin start-domain domain1
+</pre>
+
+<P>On a system running Microsoft Windows, from the Start menu, select Programs, 
+   Sun Microsystems, J2EE 1.4 SDK, and Start Default Server. Once the server 
+   is up and running, point your browser to 
+   <CODE>http://localhost:8080/JWSDP.html</CODE>. The page that is 
+   displayed contains links to several sample programs. </P></BLOCKQUOTE>
+
+<H3>Administration Tools</H3>
+<BLOCKQUOTE>
+<p>The Application Server comes with a set of tools for managing the server and 
+for packaging, deploying, and running J2EE applications. Many of these tools are 
+listed in <a href="#table1">Table 1</a>. Most of the commands that invoke these 
+tools are in the <code>&lt;<i>AS_HOME</i>&gt;/bin</code> 
+directory. For more information, see the files 
+<code>&lt;<i>AS_HOME</i>&gt;/docs/about.html</code> and 
+<code>&lt;<i>AS_HOME</i>&gt;/docs/QuickStart.html</code>, the 
+<A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
+Tutorial</a>, and the <a href="http://docs.sun.com/db/doc/817-6088">Sun Java 
+System Application Server Platform Edition 8 Administration Guide</a>.</p>
+
+<table BORDER CELLPADDING="5" summary="Application Server Tool Commands">
+<caption><a NAME="table2"></a><i>Table 1. Application Server Tool 
+Commands</i></caption>
+
+<tr>
+<th>Command</th>
+
+<th>Description</th>
+</tr>
+
+<tr>
+<td><code>asadmin</code></td>
+<td>Runs the application server administration utility, used to start and stop 
+the Application Server and manage users, resources, and applications. 
+<p>Type <code>asadmin help</code> to get a list of the many <code>asadmin</code> 
+subcommands.</p>
+<p>The <code>asadmin</code> command has a corresponding tool, the Admin Console, 
+which allows you to perform administrative tasks using a Graphical User 
+Interface. To use the Admin Console, open the URL 
+<code>http://localhost:4848/asadmin/</code> in a browser after starting the 
+server.</p>
+</td>
+</tr>
+
+<tr>
+<td><code>asant</code></td>
+
+<td>Runs a portable command line build tool that is an extension of the Ant tool 
+developed by the Apache Software Foundation (see <a 
+href="http://ant.apache.org/" target="blank">http://ant.apache.org/</a>). 
+<code>asant</code> provides additional tasks that interact with the Application 
+Server administration utility.</td>
+</tr>
+
+<tr>
+<td><code>deploytool</code></td>
+
+<td>Runs the Application Server deployment tool, a standalone GUI tool to 
+package applications, generate deployment descriptors, and deploy applications 
+on the application server.</td>
+</tr>
+
+<tr>
+<td><code>startserver</code></td>
+
+<td>Applications that use entity beans normally access the PointBase 
+database management server, which is included in the Application Server. To 
+start PointBase on a Solaris or Linux system, use the 
+<code>pointbase/tools/serveroption/startserver.sh</code> command. On a Windows 
+system, the command is <code>startserver.bat</code>. To stop PointBase, enter 
+<code>q</code> or <code>x</code> in the window in which PointBase is running.</td>
+</tr>
+
+<tr>
+<td><code>appclient</code></td>
+
+<td>Runs a J2EE application client by launching the application client container 
+and invoking the client application packaged in the application client JAR 
+file.</td>
+</tr>
+
+<tr>
+<td><code>wscompile</code></td>
+
+<td>Generates stubs, ties, serializers, and WSDL files used in JAX-RPC clients 
+and services. </td>
+</tr>
+
+<tr>
+<td><code>wsdeploy</code></td>
+
+<td>Generates implementation-specific, ready-to-deploy WAR files for Web service 
+applications that use JAX-RPC.</td>
+</tr>
+
+</table>
+   
+<H3>Accessing the Java WSDP Documentation</H3>
+<BLOCKQUOTE>
+  
+<P>See the index page at 
+   <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/docs/index.html</CODE> for links to the 
+   API documentation, release notes, and reference documentation for the 
+   Java WSDP technologies. 
+</P>
+
+<P><A href="http://java.sun.com/webservices/tutorial.html">Click here</A> to 
+  download the version of the Java Web Services Tutorial that provides 
+  information about technologies specific to this version of the Java Web 
+  Services Developer Pack. See the 
+  <A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
+  Tutorial</a> for information about the other Web services technologies.
+</P>
+
+<P>Visit <A HREF="http://java.sun.com/webservices/docs/1.4/news/">this 
+   website</A> for news about soon to be released technologies, such as 
+   WebRowSet, that you can use with Java WSDP v1.4.
+</P>
+
+</BLOCKQUOTE>
+
+<p> </p>
+<hr>
+<p>Please send feedback on the Java Web Services Developer Pack to 
+   <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>. 
+</p>
+</BODY>
+</HTML>

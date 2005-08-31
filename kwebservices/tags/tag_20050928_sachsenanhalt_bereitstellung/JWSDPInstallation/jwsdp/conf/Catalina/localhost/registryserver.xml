@@ -1,0 +1,22 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<!--
+
+    Context configuration file for the Registry Server Web App
+
+    $Id$
+
+-->
+
+
+<Context path="/RegistryServer" docBase="../registry-server/webapps/RegistryServer.war"
+        debug="0">
+
+  <Logger className="org.apache.catalina.logger.FileLogger"
+             prefix="registry-server." suffix=".txt"
+          timestamp="true"/>
+
+</Context>

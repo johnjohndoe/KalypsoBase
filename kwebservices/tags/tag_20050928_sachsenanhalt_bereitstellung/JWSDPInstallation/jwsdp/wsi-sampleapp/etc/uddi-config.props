@@ -1,0 +1,5 @@
+ibm.query.manager=http://uddi.ibm.com/ubr/inquiryapi
+ibm.lifecycle.manager=https://uddi.ibm.com/ubr/publishapi
+query.manager=http://uddi.microsoft.com/inquire
+lifecycle.manager=https://uddi.microsoft.com/publish
+
