@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright (c) 2003 Sun Microsystems, Inc.
+ All rights reserved. 
+-->
+
+<orders xmlns="http://java.sun.com/xml/ns/jax-rpc/wsi/order/config">
+	<order description="No availability for any products">
+		<part>
+			<productNumber>605001</productNumber>
+			<quantity>250</quantity>
+		</part>
+	</order>
+	<order description="Simple partial order">
+		<part>
+			<productNumber>605001</productNumber>
+			<quantity>250</quantity>
+		</part>
+		<part>
+			<productNumber>605002</productNumber>
+			<quantity>1</quantity>
+		</part>
+	</order>
+	<order description="complex order with 2 product runs">
+		<part>
+			<productNumber>605003</productNumber>
+			<quantity>8</quantity>
+		</part>
+		<part>
+			<productNumber>605004</productNumber>
+			<quantity>61</quantity>
+		</part>
+		<part>
+			<productNumber>605008</productNumber>
+			<quantity>40</quantity>
+		</part>
+	</order>
+	<order description="Order rejected - InvalidProductCode">
+		<part>
+			<productNumber>605009</productNumber>
+			<quantity>1</quantity>
+		</part>
+		<part>
+			<productNumber>605010</productNumber>
+			<quantity>1</quantity>
+		</part>
+	</order>
+	<order description="no partial shipment for single product">
+		<part>
+			<productNumber>605001</productNumber>
+			<quantity>20</quantity>
+		</part>
+	</order>
+	<order description="partial shipment with single brand order">
+		<part>
+			<productNumber>605001</productNumber>
+			<quantity>41</quantity>
+		</part>
+		<part>
+			<productNumber>605002</productNumber>
+			<quantity>21</quantity>
+		</part>
+		<part>
+			<productNumber>605004</productNumber>
+			<quantity>46</quantity>
+		</part>
+		<part>
+			<productNumber>605007</productNumber>
+			<quantity>41</quantity>
+		</part>
+	</order>
+</orders>
+

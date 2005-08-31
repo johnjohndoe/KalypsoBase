@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="GenDetached" default="main" basedir=".">
+
+  <property file="build.properties"/>
+
+  <property name="debug" value="on"/>
+
+  <path id="project-classpath">
+    <pathelement location="."/>
+    <pathelement location="${jwsdp.home}/xmldsig/lib/xmldsig.jar"/>
+    <pathelement location="${jwsdp.home}/jaxp/lib/jaxp-api.jar"/>
+    <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/dom.jar"/>
+    <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/xercesImpl.jar"/>
+    <pathelement location="${jwsdp.home}/xws-security/lib/xmlsec.jar"/>
+    <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/xalan.jar"/>
+    <pathelement location="${jwsdp.home}/jwsdp-shared/lib/commons-logging.jar"/>
+  </path>
+
+  <!-- Compile the example program -->
+  <target name="compile">
+    <javac debug="${debug}" srcdir=".">
+      <classpath refid="project-classpath"/>
+    </javac>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="." includes="*.class"/>
+    </delete>
+  </target>
+
+  <!-- Run the example program. To override the location of the
+       output file, run as follows:
+         ant -Dsample.args="doc.xml" run 	-->
+  <target name="run" depends="compile">
+    <property name="sample.args" value="detachedSignature.xml"/>
+    <echo>java GenDetached ${sample.args}</echo>
+    <java classname="GenDetached" fork="true">
+      <jvmarg value="-Djava.endorsed.dirs=${jwsdp.home}/jaxp/lib/endorsed"/>
+      <sysproperty key="proxySet" value="${proxySet}"/>
+      <sysproperty key="proxyHost" value="${proxyHost}"/>
+      <sysproperty key="proxyPort" value="${proxyPort}"/>
+      <sysproperty key="jsr105Provider" value="${jsr105Provider}"/>
+      <arg value="${sample.args}"/>
+      <classpath refid="project-classpath"/>
+    </java>
+  </target>
+
+  <target name="main" depends="compile,run"/>
+
+</project>

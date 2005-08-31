@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="HelloWorldService" targetNamespace="http://hello.org/wsdl" xmlns:tns="http://hello.org/wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://hello.org/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <schema targetNamespace="http://hello.org/types" xmlns:tns="http://hello.org/types" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+      <complexType name="ValueType">
+        <sequence>
+          <element name="boolProperty" type="boolean"/>
+          <element name="integerProperty" type="soap11-enc:int"/>
+          <element name="stringProperty" type="string"/></sequence></complexType></schema></types>
+  <message name="HelloIF_echoValueType">
+    <part name="ValueType_1" type="ns2:ValueType"/></message>
+  <message name="HelloIF_echoValueTypeResponse">
+    <part name="result" type="ns2:ValueType"/></message>
+  <message name="HelloIF_sayHelloBack">
+    <part name="String_1" type="xsd:string"/></message>
+  <message name="HelloIF_sayHelloBackResponse">
+    <part name="result" type="xsd:string"/></message>
+  <portType name="HelloIF">
+    <operation name="echoValueType" parameterOrder="ValueType_1">
+      <input message="tns:HelloIF_echoValueType"/>
+      <output message="tns:HelloIF_echoValueTypeResponse"/></operation>
+    <operation name="sayHelloBack" parameterOrder="String_1">
+      <input message="tns:HelloIF_sayHelloBack"/>
+      <output message="tns:HelloIF_sayHelloBackResponse"/></operation></portType>
+  <binding name="HelloIFBinding" type="tns:HelloIF">
+    <operation name="echoValueType">
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="encoded" namespace="http://hello.org/wsdl"/></input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="encoded" namespace="http://hello.org/wsdl"/></output>
+      <soap:operation soapAction=""/></operation>
+    <operation name="sayHelloBack">
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="encoded" namespace="http://hello.org/wsdl"/></input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="encoded" namespace="http://hello.org/wsdl"/></output>
+      <soap:operation soapAction=""/></operation>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/></binding>
+  <service name="HelloWorldService">
+    <port name="HelloIFPort" binding="tns:HelloIFBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/></port></service></definitions>

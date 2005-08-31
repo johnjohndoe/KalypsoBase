@@ -1,0 +1,11 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
+                            dumpMessages="true">
+    <xwss:Sign senderCertificateAlias="s1as"/>
+</xwss:SecurityConfiguration>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://java.sun.com/xml/ns/jax-rpc/wsi/vendor/config"
+	xmlns="http://java.sun.com/xml/ns/jax-rpc/wsi/vendor/config"	
+	targetNamespace="http://java.sun.com/xml/ns/jax-rpc/wsi/vendor/config"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	version="1.0">
+
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the schema for test configuration files
+			for WS-I sample app interop testing.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:element name="configurations">
+		<xsd:annotation>
+			<xsd:documentation>
+				configurations must have atleast one configuration element
+			</xsd:documentation>
+		</xsd:annotation>
+		
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="configuration" type="tns:configuration" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:complexType name="configuration">
+		<xsd:annotation>
+			<xsd:documentation>
+				configuration stores the endpoints for the sample app services
+				configuration must have 8 serviceURL elements.
+        		each serviceURL element must have a name attribute.
+            </xsd:documentation>
+       	</xsd:annotation>
+
+		<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+			<xsd:element name="serviceURL" type="tns:serviceURL" />
+		</xsd:sequence>
+		<xsd:attribute name="vendor" type="xsd:string" use="required"/>
+		<xsd:attribute name="enabled" type="xsd:boolean" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="serviceURL">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="name" type="xsd:string" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+</xsd:schema>
+

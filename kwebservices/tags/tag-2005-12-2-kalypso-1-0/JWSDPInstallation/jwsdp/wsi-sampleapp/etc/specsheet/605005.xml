@@ -1,0 +1,13 @@
+<Specsheet
+	xmlns="http://www.ws-i.org/SampleApplications/SupplyChainManagement/2003-10/Specsheet.xsd">
+	<Color>Black</Color>
+	<VCRSpecs>
+		<Tuner>PAL</Tuner>
+		<Power>Asia-Pacific and Europe</Power>
+		<EnergyStarCompliant>true</EnergyStarCompliant>
+		<CompositeVideoIn>true</CompositeVideoIn>
+		<CompositeVideoOut>true</CompositeVideoOut>
+		<ChildLock>true</ChildLock>
+		<MultiLingualDisplay>false</MultiLingualDisplay>
+	</VCRSpecs>
+</Specsheet>
