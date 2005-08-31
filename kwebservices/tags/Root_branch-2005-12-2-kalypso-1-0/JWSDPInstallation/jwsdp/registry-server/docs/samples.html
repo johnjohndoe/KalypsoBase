@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Registry Server 1.0_06 Sample Applications</title>
+</head>
+<body>
+
+<center>
+<h1>
+<font color="#000099">Java<sup><font size="-2">TM</font></sup> Web Services 
+Developer Pack (Java WSDP) Registry Server 1.0_06<br>
+Sample Applications</font>
+</h1>
+</center>
+
+<hr>		 		 		
+<p>The preferred method of accessing the functionality of the Java WSDP Registry
+Server is to use the Java<sup><font size="-2">TM</font></sup> API for XML 
+Registries (JAXR).
+</p>
+
+<p>Please refer to the <a href="../../jaxr/docs/index.html">JAXR
+documentation</a> for APIs, samples, and usage notes on using JAXR to
+access the Registry Server.</p>
+
+<hr>
+<h2>User Management</h2>
+	
+<p>The UDDI specification does not define how user information is
+managed, so this functionality is implementation-specific. The
+Registry Server implements user management as follows, using files in the
+<code>&lt;<i>JWSDP_HOME</i>&gt;/registry-server/samples</code> directory.</p>
+
+<h3>Adding a New User to the Registry</h3>
+
+<p>To add a new user to the Registry Server database, you use the file
+<code>UserInfo.xml</code> in the <code>xml</code> subdirectory.
+Perform the following steps:
+</p>
+<ol>
+<li>Open the file <code>xml/UserInfo.xml</code> in an editor.</li>
+<li>Change the values in the <code>&lt;fname&gt;</code>, 
+<code>&lt;lname&gt;</code>, and <code>&lt;uid&gt;</code> tags to the first 
+name, last name, and unique user ID (UID) of the new user. The 
+<code>&lt;uid&gt;</code> tag is commonly the user's login name. It must be 
+unique.</li>
+<li>Change the value in the <code>&lt;passwd&gt;</code> tag to a password of
+your choice. This is the password for the new user. Do not modify
+the <code>&lt;tokenExpiration&gt;</code> or <code>&lt;authInfo&gt;</code> tag.
+</li>
+<li>Save and close the <code>UserInfo.xml</code> file.</li>
+<li>Type the following command (all on one line):
+<p></p>
+<dl>
+<dt>Windows:</dt>
+<dd><code>registry-server-test run-cli-request -Drequest=xml\UserInfo.xml</code></dd>
+<dt>UNIX:</dt>
+<dd><code>registry-server-test.sh run-cli-request -Drequest=xml/UserInfo.xml</code></dd>
+</dl>
+</li>
+</ol>
+
+<h3>Deleting a User from the Registry</h3>
+
+<p>To delete a user from the registry, you use the file 
+<code>UserDelete.xml</code> in the <code>xml</code> subdirectory.</p>
+
+<p>Before you run the script this time, edit this file by modifying the
+values in the <code>&lt;fname&gt;</code>, <code>&lt;lname&gt;</code>, 
+<code>&lt;uid&gt;</code>, and <code>&lt;passwd&gt;</code> tags.</p>
+
+<p>To delete the user, use the following command:</p>
+
+<dl>
+<dt>Windows:</dt>
+<dd><code>registry-server-test run-cli-request -Drequest=xml\UserDelete.xml</code></dd>
+<dt>UNIX:</dt>
+<dd><code>registry-server-test.sh run-cli-request -Drequest=xml/UserDelete.xml</code></dd>
+</dl>
+<hr>
+<p><A href="../../docs/Copyright.html"><FONT 
+  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  reserved.</I></FONT></A> </P>
+</body>
+</html>

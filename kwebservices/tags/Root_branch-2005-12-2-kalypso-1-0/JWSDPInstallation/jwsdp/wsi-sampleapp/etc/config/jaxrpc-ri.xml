@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2003 Sun Microsystems, Inc.
+ All rights reserved. 
+-->
+
+<webServices
+	xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/dd"
+	version="1.0"
+	targetNamespaceBase="http://java.sun.com/xml/ns/jax-rpc/wsi/wsdl"
+	typeNamespaceBase="http://java.sun.com/xml/ns/jax-rpc/wsi/types"
+	urlPatternBase="/ws">
+
+	<endpoint
+       		name="retailer"
+      		displayName="Supply Chain Management (Retailer)"
+        	description="WS-I Sample Application Retailer endpoint"
+        	interface="com.sun.wsi.scm.retailer.RetailerPortType"
+        	implementation="com.sun.wsi.scm.retailer.RetailerPortTypeImpl"
+			model="/WEB-INF/retailer.xml.gz"
+			wsdl="/WEB-INF/RetailerImpl.wsdl"/>
+
+	<endpoint
+       		name="logging"
+      		displayName="Supply Chain Management (LoggingFacility)"
+        	description="WS-I Sample Application LoggingFacility endpoint"
+        	interface="com.sun.wsi.scm.logging.LoggingFacilityLogPortType"
+        	implementation="com.sun.wsi.scm.logging.LoggingFacilityLogPortTypeImpl"
+			model="/WEB-INF/logging.xml.gz"
+			wsdl="/WEB-INF/LoggingFacilityImpl.wsdl"/>
+
+	<endpoint
+       		name="warehousea"
+      		displayName="Supply Chain Management (WarehouseA)"
+        	description="WS-I Sample Application WarehouseA endpoint"
+        	interface="com.sun.wsi.scm.warehouse.WarehouseShipmentsPortType"
+        	implementation="com.sun.wsi.scm.warehouse.WarehouseAPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-08/Warehouse.wsdl}WarehouseAPort"
+			model="/WEB-INF/warehouse.xml.gz"
+			wsdl="/WEB-INF/WarehouseImpl.wsdl"/>
+
+	<endpoint
+       		name="warehouseb"
+      		displayName="Supply Chain Management (WarehouseB)"
+        	description="WS-I Sample Application WarehouseB endpoint"
+        	interface="com.sun.wsi.scm.warehouse.WarehouseShipmentsPortType"
+        	implementation="com.sun.wsi.scm.warehouse.WarehouseBPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-08/Warehouse.wsdl}WarehouseBPort"
+			model="/WEB-INF/warehouse.xml.gz"
+			wsdl="/WEB-INF/WarehouseImpl.wsdl"/>
+
+	<endpoint
+       		name="warehousec"
+      		displayName="Supply Chain Management (WarehouseC)"
+        	description="WS-I Sample Application WarehouseC endpoint"
+        	interface="com.sun.wsi.scm.warehouse.WarehouseShipmentsPortType"
+        	implementation="com.sun.wsi.scm.warehouse.WarehouseCPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-08/Warehouse.wsdl}WarehouseCPort"
+			model="/WEB-INF/warehouse.xml.gz"
+			wsdl="/WEB-INF/WarehouseImpl.wsdl"/>
+
+	<endpoint
+       		name="warehouse_callback"
+      		displayName="Supply Chain Management (Warehouse Callback)"
+        	description="WS-I Sample Application Warehouse Callback endpoint"
+        	interface="com.sun.wsi.scm.manufacturer.WarehouseCallbackPortType"
+        	implementation="com.sun.wsi.scm.manufacturer.WarehouseCallbackPortTypeImpl"
+			model="/WEB-INF/manufacturer.xml.gz"
+			wsdl="/WEB-INF/ManufacturerImpl.wsdl"/>
+
+	<endpoint
+       		name="manufacturera"
+      		displayName="Supply Chain Management (ManufacturerA)"
+        	description="WS-I Sample Application ManufacturerA endpoint"
+        	interface="com.sun.wsi.scm.manufacturer.ManufacturerPortType"
+        	implementation="com.sun.wsi.scm.manufacturer.ManufacturerAPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-10/Manufacturer.wsdl}ManufacturerAPort"
+			model="/WEB-INF/manufacturer.xml.gz"
+			wsdl="/WEB-INF/ManufacturerImpl.wsdl"/>
+
+	<endpoint
+       		name="manufacturerb"
+      		displayName="Supply Chain Management (ManufacturerB)"
+        	description="WS-I Sample Application ManufacturerB endpoint"
+        	interface="com.sun.wsi.scm.manufacturer.ManufacturerPortType"
+        	implementation="com.sun.wsi.scm.manufacturer.ManufacturerBPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-10/Manufacturer.wsdl}ManufacturerBPort"
+			model="/WEB-INF/manufacturer.xml.gz"
+			wsdl="/WEB-INF/ManufacturerImpl.wsdl"/>
+
+	<endpoint
+       		name="manufacturerc"
+      		displayName="Supply Chain Management (ManufacturerC)"
+        	description="WS-I Sample Application ManufacturerC endpoint"
+        	interface="com.sun.wsi.scm.manufacturer.ManufacturerPortType"
+        	implementation="com.sun.wsi.scm.manufacturer.ManufacturerCPortTypeImpl"
+			port="{http://www.ws-i.org/SampleApplications/SupplyChainManagement/2002-10/Manufacturer.wsdl}ManufacturerCPort"
+			model="/WEB-INF/manufacturer.xml.gz"
+			wsdl="/WEB-INF/ManufacturerImpl.wsdl"/>
+
+	<endpoint
+       		name="configurator"
+      		displayName="Supply Chain Management (Configurator)"
+        	description="WS-I Sample Application Configurator endpoint"
+        	interface="com.sun.wsi.scm.configurator.ConfiguratorPortType"
+        	implementation="com.sun.wsi.scm.configurator.ConfiguratorPortTypeImpl"
+			model="/WEB-INF/configurator.xml.gz"
+			wsdl="/WEB-INF/ConfiguratorImpl.wsdl"/>
+
+	<endpoint
+       		name="catalog"
+      		displayName="Supply Chain Management w/ Attachments (Catalog)"
+        	description="WS-I Sample Application w/ Attachments 1.0 Catalog endpoint"
+        	interface="com.sun.wsi.scm.catalog.CatalogPortType"
+        	implementation="com.sun.wsi.scm.catalog.CatalogPortTypeImpl"
+			model="/WEB-INF/catalog.xml.gz"
+			wsdl="/WEB-INF/CatalogImpl.wsdl"/>
+
+	<endpointMapping
+        endpointName="retailer"
+        urlPattern="/scm/retailer"/>
+
+    <endpointMapping
+        endpointName="logging"
+        urlPattern="/scm/logging"/>
+
+    <endpointMapping
+        endpointName="warehousea"
+        urlPattern="/scm/warehousea"/>
+
+    <endpointMapping
+        endpointName="warehouseb"
+        urlPattern="/scm/warehouseb"/>
+
+    <endpointMapping
+        endpointName="warehousec"
+        urlPattern="/scm/warehousec"/>
+
+    <endpointMapping
+        endpointName="warehouse_callback"
+        urlPattern="/scm/warehouse/callback"/>
+
+    <endpointMapping
+        endpointName="manufacturera"
+        urlPattern="/scm/manufacturera"/>
+
+    <endpointMapping
+        endpointName="manufacturerb"
+        urlPattern="/scm/manufacturerb"/>
+
+    <endpointMapping
+        endpointName="manufacturerc"
+        urlPattern="/scm/manufacturerc"/>
+
+    <endpointMapping
+        endpointName="configurator"
+        urlPattern="/scm/configurator"/>
+
+    <endpointMapping
+        endpointName="catalog"
+        urlPattern="/scm/catalog"/>
+</webServices>
+

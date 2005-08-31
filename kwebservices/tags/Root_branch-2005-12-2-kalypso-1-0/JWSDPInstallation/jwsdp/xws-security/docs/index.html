@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>XML and Web Services Security EA3</title>
+  <link rel="stylesheet" type="text/css" href="style/default.css">
+</head>
+<body>
+<p>
+<a href="ReleaseNotes.html"><font size="-1">XWS-Security Release Notes</font></a><br>
+<a href="samples.html"><font size="-1">XWS-Security Samples</font></a><br>
+<a href="http://java.sun.com/webservices/docs/1.4/tutorial/doc/index.html"><font size="-1">JWSDP
+Tutorial</font></a></p>
+<h1>
+XML and Web Services Security</h1>
+<center>
+<p><br>
+<b>Implementation Version: </b>EA3</p>
+</center>
+<p> This XML and Web Services Security Early Access implementation,
+included as part of the Java<font size="-2"><sup>TM</sup></font> Web
+Services Developer Pack 1.4, provides a framework within which a
+JAX-RPC application developer will be able to secure applications.  
+This implementation is based on the oasis WSS specification, which can
+be viewed at <a href=
+"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">
+http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf</a>.</p>
+
+<p>Applications can be secured in
+the following ways: </p>
+<ul>
+  <li>Sign and/or verify parts of the SOAP messages.
+    <p>This implementation of XML and Web Services Security uses
+Apache's XML-DSig (XML Digital Signature) implementation, which is
+based on the <a href="http://www.w3.org/Signature/"> XML-Signature
+Syntax and Processing</a> W3C standard. </p>
+
+<p><a href="samples.html">Samples</a> containing
+code for signing and/or verifying parts of the SOAP message are
+included with this release.</p>
+  </li>
+  <li>Encrypt and/or decrypt part of the SOAP message.
+    <p>This implementation of XML and Web Services Security uses
+Apache's XML-Enc (XML Encryption) implementation, which is based on the
+    <a href="http://www.w3.org/TR/xmlenc-core/"> XML Encryption</a> W3C
+standard. </p>
+<p><a href="samples.html">Samples</a> containing
+code for encrypting and/or decrypting parts of the SOAP message are
+included with this release.</p>
+  </li>
+  <li>Send UserName tokens and  X509 certificate tokens along with
+the message.</p>
+
+<p>Sending these tokens with a message binds the identity of the 
+tokens (and any other claims occurring in the security token) to the message.</p>
+
+ 
+    <p>This implementation of XML and Web Services Security provides
+support for Username Token Profile, which is based on <a
+ href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0.pdf">OASIS
+WSS Username Token Profile 1.0</a>,  and X509 Certificate Token
+Profile, which is based on  <a
+ href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0.pdf">OASIS
+WSS X509 Certificate Token Profile 1.0</a>. </p>
+
+<p><a href="samples.html">Samples</a> containing
+code for sending user name and X509 certificate tokens along with 
+the SOAP message are
+included with this release.</p> </li>
+    </p>
+ 
+  <li>
+  Implement Interoperable Web Services Security applications.
+  </li>
+ 
+    <p>This implementation of XML and Web Services Security fully
+supports the  implementation of Web Services Security (WSS) Interop scenarios. The
+following are some of the interoperability scenarios documents that are
+supported by this implementation:
+    </p>
+    <ul>
+      <li><a
+ href="http://lists.oasis-open.org/archives/wss/200306/msg00002.html">
+Draft Spec for Interop1 (draft 5)</a></li>
+      <li><a
+ href="http://lists.oasis-open.org/archives/wss/200310/msg00003.html">
+Final Spec for Interop2 (draft 6)</a></li>
+    </ul>
+<p> A <a href="samples.html">sample</a> containing
+implementations of all the WSS Interop Scenarios is included in this
+release.</p>
+  </li>
+</ul>
+
+
+
+<p>Since the Java standards for some of these security technologies are
+undergoing definition under the <a
+ href="http://www.jcp.org/en/home/index">Java Community Process</a>,
+the security solution that is provided in the Java Web Services
+Developer Pack 1.4 is based on <i>nonstandard</i> APIs, which are
+subject to change with new revisions of the technology. As standards
+are defined in the Web Services Security space, we will be moving
+toward using the appropriate standard APIs instead of these nonstandard
+APIs. </p>
+<p> This distribution includes samples that show how a JAX-RPC
+application developer can use the XML and Web Services Security
+technology. <!-- The nonstandard APIs that can be used by the JAX-RPC
+application developer are documented in <a href="./api/index.html">API
+documentation</a>.--> As previously noted, these <i>nonstandard</i> APIs
+are subject to change and will be replaced with appropriate
+standards-based APIs as those APIs are defined. <a name="jsr"></a>
+</p>
+<h2>How XWS-Security and JSRs 105 and 106 are related</h2>
+<p>XWS-Security APIs are used for securing Web services based
+on JAX-RPC or SAAJ. This release of XWS-Security is based on
+non-standard XML Digital Signature and XML Encryption APIs.</p>
+<p><a href="http://www.jcp.org/en/jsr/detail?id=105">JSR-105</a> (XML
+Digital Signature APIs) are included in this release of the JWSDP as
+well. JSR 105 is a standard API (in progress, almost at Proposed Final
+Draft)
+for generating and validating XML Signatures as specified by the W3C
+recommendation. It is an API that should be used by Java applications
+and
+middleware that need to create and/or process XML Signatures. It can be
+used by Web Services Security (which is the goal for a future release)
+and
+by non-Web Services technologies, for example, documents
+stored or transferred in XML. Both JSR 105 and <a
+ href="http://www.jcp.org/en/jsr/detail?id=106">JSR 106</a> (XML
+Digital Encryption APIs)
+are core-XML security components. </p>
+<p>XWS-Security does not use the JSR 105 or JSR 106 APIs. XWS-Security
+uses the Apache libraries for DSig and XML-Enc. In future releases,
+the goal of XWS-Security is to move toward using JSR 105 and JSR 106
+APIs.</p>
+
+<a name="commandtools"></a>
+<h2>Command-line tools</h2>
+<p>In this release, the following command-line tools that provide specialized
+utilities for keystore management are included:
+   <ul>
+        <li><code>pkcs12import</code>
+        <p>This tool helps with importing the contents (key/certificate pair)
+        of a PKCS-12 file into a keystore.</p></li>
+        <li><code>keyexport</code>
+        <p>This tool can be used to export the private key corresponding
+        to a specified entry of a keystore into a file.</p></li>
+   </ul>
+<p>In this release, you can use the <code>wscompile</code> utility with the <code>-security</code>
+option to specify a security configuration to use for an application.
+
+
+<a name="documentation"></a>
+<h2>Documentation</h2>
+<p> The documentation for this release consists of the following:
+</p>
+<ul>
+  <li><a href="../../docs/index.html">Java Web Services Developer Pack
+1.4 Documentation</a></li>
+  <li><a href="./ReleaseNotes.html">Release Notes</a></li>
+  <!-- <li><a href="./api/index.html"><i>Nonstandard</i> XML and Web
+Services Security API documentation</a></li>-->
+  <li>
+    <a href="samples.html">Sample Applications</a></li>
+  <li><a href="http://java.sun.com/webservices/faq.html">Web Services
+FAQ on java.sun.com</a></li>
+</ul>
+<a name="feedback"></a>
+<h2>Questions, Feedback, Bug Reports</h2>
+<p> Please send questions, comments, and feedback to <a
+ href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>.
+</p>
+<p> <i>Due to the high volume of e-mail received on these aliases, you
+may not receive an immediate response to your inquiry.</i>
+</p>
+</body>
+</html>
