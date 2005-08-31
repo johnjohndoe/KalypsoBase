@@ -1,0 +1,593 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<!--<?xml version="1.0" encoding="UTF-8"?>v --><!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> --><!-- $Id$ -->
+  <title>JAXP 1.2.6 Release Notes</title>
+<!-- <link rel="stylesheet" type="text/css" href="../dist/docs/style/default.css" /> -->
+</head>
+<body bgcolor="#ffffff">
+<center>
+<h2><font color="#000099">Java<sup><font size="-2">TM</font></sup> API
+for XML Processing Release Notes</font></h2>
+</center>
+<center> <b>Specification Version:</b> 1.2<br>
+<b>Reference Implementation (RI) Version:</b> 1.2.6
+</center>
+<p>This document contains installation instructions and other notes
+that may help you use this software library more effectively. See also
+the <a href="http://java.sun.com/xml/jaxp/faq.html">JAXP FAQ</a> for
+more information.</p>
+<blockquote>
+  <p><b>Note:</b><br>
+If you are reading this page online, this is the most current version
+of the release notes. If this page was downloaded as part of the
+release bundle, please see the <a
+ href="http://java.sun.com/xml/jaxp/docs.html">JAXP Documentation</a>
+page for the most current version of the release notes. </p>
+</blockquote>
+<h4>Contents</h4>
+<ul>
+  <li><a href="#running">Running Applications with the JAXP JAR files
+included in the Java WSDP 1.4 on the Sun Java System Application Server
+Platform Edition 8</a><br>
+  </li>
+  <li><a href="#versions">Component Versions</a></li>
+  <li><a href="#identifying">Identifying the JAR Files</a></li>
+  <li><a href="#parsing">XML Parsing</a>
+    <ul>
+      <li><a href="#schema-limitations">Known Schema Processing
+Limitations</a></li>
+      <li><a href="#migration">Known Migration Issues from JAXP 1.1</a></li>
+      <li><a href="#JAXP_security">Security Issue</a></li>
+    </ul>
+  </li>
+  <li><a href="#xslt">XSLT Processing</a>
+    <ul>
+      <li><a href="#classic">The Interpreting XSLT Processor (Xalan)</a></li>
+      <li><a href="#xsltc">The Compiling XSLT Processor (XSLTC)</a></li>
+      <li><a href="#loader">Custom Class Loader Issue</a></li>
+      <li><a href="#manual">Manually Specifying which XSLT
+Implementation to Use</a></li>
+      <li><a href="#auto">Automatically Choosing Implementations with
+the Smart Transformer Switch</a></li>
+    </ul>
+  </li>
+  <li><a href="#security">JWSDP Security Considerations</a></li>
+  <li><a href="#changes">Changes in JAXP RI Versions</a></li>
+</ul>
+<br>
+<h2><a name="running"></a>Running Applications with the JAXP JAR files
+included in the Java WSDP 1.4 on the Sun Java System Application Server
+Platform Edition 8<br>
+</h2>
+<br>
+The JAXP libraries included with the Application Server are in the
+<br>
+<span style="font-family: monospace;">&lt;J2EE_HOME&gt;/lib/endorsed</span>
+directory.&nbsp; These libraries are
+older than the
+<br>
+JAXP libraries included with the Java WSDP 1.4.
+<br>
+<br>
+When you install the Java WSDP 1.4 and specify the Application Server
+as your Web
+<br>
+container, the installer copies the JAR files containing the JAXP libraries included with JWSDP
+1.4 to
+<br>
+the <span style="font-family: monospace;">&lt;J2EE_HOME&gt;/lib/jaxp-renamed</span>
+directory.&nbsp; These libraries are<br>
+named differently than those included in the Application Server.&nbsp;
+The JAR files containing the libraries are available in the
+server-classpath so that
+<br>
+the renamed libraries are used when you run applications that use
+the&nbsp; JAXP implementation classes.
+<br>
+<br>
+If you intend to use the JAXP JAR files included with the JWSDP 1.4
+rather than the JAXP JAR files included with the Application Server
+in a standalone application then you need to add the paths to those JAR
+files to the front of your system
+CLASSPATH. <br>
+You also need to make sure that there are no <span
+ style="font-family: monospace;">xercesImpl.jar</span> and <span
+ style="font-family: monospace;">xalan.jar</span> files in your <span
+ style="font-family: monospace;">&lt;JAVA_HOME&gt;/lib/endorsed</span>
+directory . Finally, you need to ensure that the <code>java.endorsed.dirs</code>
+property is not set to a directory that has the old <span
+ style="font-family: monospace;">xercesImpl.jar</span> and&nbsp; <span
+ style="font-family: monospace;">xalan.jar</span> files.<br>
+<br>
+<h2><a name="versions"></a>Component Versions</h2>
+These versions of the relevant technologies have been incorporated into
+the reference implementation.
+<ul>
+  <li><b>Xerces version 2.6.2+ </b>(Xerces version 2.6.2 with
+controlled bug fixes)</li>
+  <li><b>Xalan version 2.6.0+</b> (Xalan version 2.6.0 with controlled
+bug fixes)</li>
+  <li><b>XSLTC version 2.6.0+</b> (XSLTC version 2.6.0, with controlled
+bug fixes)</li>
+</ul>
+<h4></h4>
+<h2><a name="identifying" id="identifying">Identifying the JAR Files</a></h2>
+<p>This release is contained in six JAR files:</p>
+<dl>
+  <dt><b>jaxp-api.jar</b></dt>
+  <dd>The javax.xml.parsers and javax.xml.transform components of JAXP.
+These packages contain the APIs that give applications a consistent way
+to obtain instances of XML processing implementations. </dd>
+  <dt><b>sax.jar</b></dt>
+  <dd>The APIs and helper classes for the Simple API for XML (SAX),
+used for serial access to XML data.</dd>
+  <dt><b>dom.jar</b></dt>
+  <dd>The APIs and helper classes for the Document Object Model (DOM),
+used to create an in-memory tree structure from the XML data.</dd>
+  <dt><b>xercesImpl.jar</b></dt>
+  <dd>The implementation classes for the SAX and DOM parsers, as well
+as Xerces-specific implementations of the JAXP APIs. The jar file
+contain the package renamed classes.</dd>
+  <dt><b>xalan.jar</b></dt>
+  <dd>This jar contains both "compiling" XSLT processor and the
+"classic" (interpreting) XSLT processor. The jar file contain package
+renamed classes. <br>
+(Note: In JAXP 1.2.4 compiling XSLT processor was packaged as the
+separate <b>xsltc.jar</b> )</dd>
+</dl>
+<h2><a name="parsing" id="parsing">XML Parsing</a></h2>
+<p>The information in this section pertains to the Xerces technology:</p>
+<ul>
+  <li>There are two factory classes for making parsers pluggable. If
+you limit your application to the JAXP API in the <a
+ href="http://java.sun.com/webservices/docs/1.0/api/javax/xml/parsers/package-summary.html"><code>javax.xml.parsers</code></a>,
+    <a
+ href="http://java.sun.com/webservices/docs/1.0/api/org/xml/sax/package-summary.html"><code>org.xml.sax</code></a>,
+and <a
+ href="http://java.sun.com/webservices/docs/1.0/api/org/w3c/dom/package-summary.html"><code>org.w3c.dom</code></a>
+DOM Level 2 Core packages, you can use the library in a manner
+independent of the underlying implementing parser.<br>
+&nbsp; </li>
+  <li>To be notified of validation errors in an XML document, these
+items must be true:
+    <ol>
+      <li>The document must be associated with a schema.<br>
+&nbsp; </li>
+      <li> Validation must be turned on. See the <code>setValidating</code>
+methods of <a
+ href="http://java.sun.com/webservices/docs/1.0/api/javax/xml/parsers/DocumentBuilderFactory.html#setValidating%28boolean%29"><code>javax.xml.parsers.DocumentBuilderFactory</code></a>
+or <a
+ href="http://java.sun.com/webservices/docs/1.0/api/javax/xml/parsers/SAXParserFactory.html#setValidating%28boolean%29"><code>javax.xml.parsers.SAXParserFactory</code></a>.
+        <br>
+        <br>
+To validate with a W3C XML Schema, you must also set a SAX property or
+DOM attribute. For details see, the Schema Examples section of
+samples.html, or consult the JAXP tutorial when for details on using
+XML Schema to validate with <a
+ href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JAXPSAX13.html#90294">SAX</a>
+or <a
+ href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JAXPDOM9.html#76446">DOM</a>.<br>
+&nbsp; </li>
+      <li>An application-defined <code>ErrorHandler</code> must be
+set. See the <code>setErrorHandler</code> methods of <a
+ href="http://java.sun.com/webservices/docs/1.0/api/javax/xml/parsers/DocumentBuilder.html#setErrorHandler%28org.xml.sax.ErrorHandler%29"><code>javax.xml.parsers.DocumentBuilder</code></a>
+or <a
+ href="http://java.sun.com/webservices/docs/1.0/api/org/xml/sax/XMLReader.html#setErrorHandler%28org.xml.sax.ErrorHandler%29"><code>org.xml.sax.XMLReader</code></a>.
+      </li>
+    </ol>
+  </li>
+</ul>
+<p>More information on known bugs and recent fixes can be found at the <a
+ href="http://xml.apache.org/xerces2-j/">Apache Xerces site</a> (The
+release notes for the latest Xerces version are at <a
+ href="http://xml.apache.org/xerces2-j/releases.html">http://xml.apache.org/xerces2-j/releases.html</a>.)<br>
+More information on the limitations of Xerces technology can be found
+at <a href="http://xml.apache.org/xerces2-j/limitations.html">http://xml.apache.org/xerces2-j/limitations.html</a>.<br>
+</p>
+<h3><a name="schema-limitations"></a>Known Schema Processing Limitations</h3>
+<p>This section discusses known schema processing bugs, limitations,
+and implementation-dependent operations.</p>
+<h4>Limitations</h4>
+These limitations specify known upper bounds on values.
+<ul>
+  <li>Length, minLength, and maxLength facets are limited to the value
+2147483647. <br>
+Items larger than this limit will not be validated correctly.<br>
+&nbsp; </li>
+  <li>Year and seconds values in date/time datatypes are limited to the
+value 2147483647. <br>
+Items larger than this limit will not be validated correctly.</li>
+</ul>
+<h4>Problem Areas / Known Bugs</h4>
+The following problems are known to exist:
+<ul>
+  <li><b> Values of <tt>maxOccurs</tt></b><br>
+For larger values of <tt>maxOccurs</tt>, a <tt>StackOverflowError</tt>
+may occur.</li>
+  <br>
+The workaround for this problem, if your application permits it, is to
+change the <tt>maxOccurs</tt> value to <tt>unbounded</tt>.
+  <p><b>Note:</b> <br>
+The exact value at which <tt>maxOccurs</tt> poses a problem depends on
+the machine and the <br>
+amount of memory allocated to the Java Virtual Machine.</p>
+</ul>
+<h4>Implementation-Dependent Operations</h4>
+This implementation-dependent operation is not fully clarified by the
+W3C XML Schema specification (<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>).
+As a result, differing implementations exist.
+<ul>
+  <li>The JAXP 1.2 reference implementation parser (Xerces 2.0.1), <tt>&lt;keyref&gt;</tt>
+Identity Constraints refers to <tt>&lt;key&gt;</tt> or <tt>&lt;unique&gt;</tt>
+identity constraints within the scope of the elements to which the <tt>&lt;keyref&gt;</tt>
+is attached, as defined in the XML Schema Part 1: Structures. (The
+introductory section of XML Schema, on the other hand, (XML Schema Part
+0: Primer) contains an example with a <tt>&lt;keyref&gt;</tt> declared
+on an element used inside the element of its corresponding <tt>&lt;key&gt;</tt>.
+The discrepancy is noted here in an effort to avoid confusion.)</li>
+</ul>
+<p></p>
+<h3><a name="migration"></a>Known Migration Issues from JAXP 1.1</h3>
+<p>JAXP 1.1 is built into J2EE 1.3 and J2SE 1.4. Since JAXP 1.2
+contains a different parser, there are some differences in
+functionality that is not specified by the standard. This section
+highlights the major differences.</p>
+<blockquote>
+  <p><b>Note:</b><br>
+JAXP is intended as an implementation-independent API layer. However,
+it is still possible to make use of parser-specific features, either
+intentionally or unintentionally. Portable applications (those that do
+not rely on parser-specific features) will not be affected by these
+differences.</p>
+</blockquote>
+<h4>Use of Java Encoding Names</h4>
+<blockquote>
+  <p> The JAXP 1.1 parser recognizes Java encoding names in an XML
+header. For example, in this header:</p>
+  <blockquote>
+    <pre>&lt;?xml version="1.0" encoding="UTF8"?&gt;<br></pre>
+  </blockquote>
+  <p>the JAXP 1.1 parser recognizes the Java encoding name <tt>UTF8</tt>
+as valid. However, in XML the standard encoding name uses a hyphen, as
+in <tt>UTF-8</tt>.</p>
+  <p>Since XML documents are intended for maximum portability, the JAXP
+1.2 parser diagnoses the use of <tt>UTF8</tt> as an error.</p>
+  <p><b>Note:</b><br>
+The Java encoding name is still <tt>UTF8</tt>, so you continue to use
+that value when invoking APIs in the <tt>java.io</tt> and <tt>java.lang</tt>
+packages -- as, for example, when writing:</p>
+  <blockquote>
+    <pre>out = new OutputStreamWriter(System.out, "UTF8");</pre>
+  </blockquote>
+</blockquote>
+<blockquote>
+  <p>On the other hand, the java.nio package more properly recognizes <tt>UTF-8</tt>.
+(And all of Java's core packages recognize <tt>UTF-16</tt>.)</p>
+</blockquote>
+<h3><a name="JAXP_security" id="xslt"></a>Security Issue</h3>
+<p>While XML does not allow recursive entity definitions, it does
+permit nested entity definitions, which produces the potential for
+Denial of Service attacks on a server which accepts XML data from
+external sources. For example, a SOAP document like the following that
+has extremely deeply nested entity definitions can consume 100% of CPU
+time and a lot of memory in entity expansions.</p>
+<blockquote>
+  <pre>&lt;?xml version="1.0" encoding ="UTF-8"?&gt;<br> &lt;!DOCTYPE foobar[<br> &lt;!ENTITY x100 "foobar"&gt;<br> &lt;!ENTITY  x99 "&amp;x100;&amp;x100;"&gt;<br> &lt;!ENTITY  x98 "&amp;x99;&amp;x99;"&gt;<br> ...<br> &lt;!ENTITY   x2 "&amp;x3;&amp;x3;"&gt;<br> &lt;!ENTITY   x1 "&amp;x2;&amp;x2;"&gt;<br> ]&gt;<br>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=...&gt;<br>&lt;SOAP-ENV:Body&gt;<br>&lt;ns1:aaa xmlns:ns1="urn:aaa" SOAP-ENV:encodingStyle="..."&gt;<br>&lt;foobar xsi:type="xsd:string"&gt;&amp;x1;&lt;/foobar&gt;<br>&lt;/ns1:aaa&gt;<br>&lt;/SOAP-ENV:Body&gt;<br>&lt;/SOAP-ENV:Envelope&gt; </pre>
+</blockquote>
+<p>A system that doesn't take in external XML data need not be
+concerned with issue, but one that does can utilize one of the
+following safeguards to prevent the problem:</p>
+<dl>
+  <dl>
+    <dt>&nbsp;</dt>
+    <dt><b>Limiting entity expansion</b></dt>
+    <dd>
+    You can limit the number of entity expansions by either setting the system
+    property <code>entityExpansionLimit</code> or by setting the parser property <a
+ class="moz-txt-link-freetext"
+ href="http://apache.org/xml/properties/entity-expansion-limit">http://apache.org/xml/properties/entity-expansion-limit</a>.
+Both properties accept a <code>java.lang.Integer</code>. The
+parser throws a fatal error once it has reached the entity expansion
+limit. By default, 
+<code>entityExpansionLimit</code> is set to 64,000. The limit set using <a
+ class="moz-txt-link-freetext"
+ href="http://apache.org/xml/properties/entity-expansion-limit">http://apache.org/xml/properties/entity-expansion-limit</a>
+overrides the limit set with the system property.
+<p>
+You can set the entity expansion limit or element attribute limit by using code similar to the following:
+<br>
+<pre>
+DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
+&nbsp;&nbsp;&nbsp; dfactory.setAttribute( <a
+ class="moz-txt-link-rfc2396E"
+ href="http://apache.org/xml/properties/entity-expansion-limit">"http://apache.org/xml/properties/entity-expansion-limit"</a>,
+ new Integer("100000"));
+dfactory.setAttribute(<a class="moz-txt-link-rfc2396E"
+ href="http://apache.org/xml/properties/elementAttributeLimit">"http://apache.org/xml/properties/elementAttributeLimit"</a>,new
+Integer(20));
+DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+</pre>
+</dd>
+</dl>
+<dl>
+    <dt><b>New parser property to disallow DTDs</b></dt>
+    <dd>The application can also set the <tt>http://apache.org/xml/features/disallow-doctype-decl</tt>
+parser property to true. A fatal error is then thrown if the incoming
+XML document contains a DOCTYPE declaration. (The default value for
+this property is false.) This property is typically useful for SOAP
+based applications where a SOAP message must not contain a Document
+Type Declaration.<br>
+      <br>
+    </dd>
+</dl>
+<dl>
+    <dt><b>New properties for limiting the number of attributes&nbsp;
+in an element</b></dt>
+    <dd>
+You can limit number of attributes in an element by either setting the
+system property <code>elementAttributeLimit</code> or by setting the
+<a href="http://apache.org/xml/properties/elementAttributeLimit">
+http://apache.org/xml/properties/elementAttributeLimit</a> property on the
+parser. Both properties accept Integer values. By default
+<code>elementAttributeLimit</code> is set to 10,000. When the parser property,
+<span style="text-decoration: underline;"> </span>http://apache.org/xml/properties/elementAttributeLimit
+is set, it overrides the system property.  The parser throws a fatal error if the number
+of attributes in a element exceeds the limit.
+</dd>
+
+  </dl>
+</dl>
+<h2><a name="xslt" id="xslt">XSLT Processing </a></h2>
+<p>The JAXP RI contains 2 XSLT engines that are part of the Xalan
+implementation. This section of the Release Notes describes:</p>
+<ul>
+  <li>The Interpreting XSLT Processor (Xalan)</li>
+  <li>The Compiling XSLT Processor (XSLTC) </li>
+  <li>Manually Specifying which XSLT Implementation to Use</li>
+  <li>Automatically Choosing Implementations with the Smart Transformer
+Switch</li>
+</ul>
+<blockquote>
+  <p><b>Note:</b><br>
+XSLT is supported by the JAXP transform package. See <a
+ href="http://java.sun.com/webservices/docs/1.0/api/javax/xml/transform/package-summary.html"><code>javax.xml.transform</code></a>
+for details on accessing basic XSLT functionality in an
+implementation-independent manner. </p>
+</blockquote>
+<h3><a name="classic"></a>The Interpreting XSLT Processor (Xalan)</h3>
+<p>Xalan is the default XSLT parsing engine that is used when you use
+the JAXP transform package. More information on can be found at the <a
+ href="http://xml.apache.org/xalan-j/">Apache Xalan site</a>.</p>
+<p>For the latest information on other known bugs and recent fixes, see
+the Xalan "Read Me" at <a
+ href="http://xml.apache.org/xalan-j/readme.html">http://xml.apache.org/xalan-j/readme.html</a>.</p>
+<h4>Known Limitations</h4>
+<dl>
+  <dl>
+    <dt><b>Using <tt>-URIRESOLVER</tt> with Java 1.4</b></dt>
+    <dd>When using the <tt>-URIRESOLVER</tt> command line option to
+specify a custom resolver, the jar file that contains the URIResolver
+implementation class must be included in the <tt>endorsed</tt>
+directory, along with the JAXP jar files. Otherwise, a <i>class not
+found</i> error occurs.</dd>
+  </dl>
+</dl>
+<h3><a name="xsltc"></a>The Compiling XSLT Processor (XSLTC)</h3>
+<p>The XSLTC transformer generates a transformation engine, or <em>translet,</em>
+from an XSL stylesheet. This approach separates the interpretation of
+stylesheet instructions from their runtime application to XML data. </p>
+<p>XSLTC works by compiling a stylesheet into Java byte code
+(translets), which can then be used to perform XSLT transformations.
+This approach greatly improves the performance of XSLT transformations
+where a given stylesheet is compiled once and used many times. It also
+generates an extremely lightweight translet, because only the XSLT
+instructions that are actually used by the stylesheet are included.</p>
+<h4>Known Limitations in XSLTC</h4>
+<p>The known bugs and limitations are:</p>
+<ul>
+  <li> The strip space element does not work with copy-of. For example,
+with &lt;xsl:strip-space elements="*"/&gt;, if you do an identity
+transform by matching on the root node (/) and then do a copy-of
+select=".", the whitespace-only nodes are not stripped out.
+xsl:strip-space works when you do not do a copy-of.<br>
+&nbsp; </li>
+  <li> XSLTC tries to determine the order in which global variables are
+initialized by tracking the dependencies between them. In some cases,
+the value of a variable may depend on a template, e.g., if
+xsl:call-template is used to initialized a variable whose type is RTF.
+If this happens, a NPE may be thrown at runtime when the translet
+attempts to access a variable that has not been properly initialized.
+In most cases, this problem can be avoided by reordering the variable
+declarations.</li>
+</ul>
+<p>To check on the open bugs in the current Apache xml-xalan/java
+repository, follow the instructions below:</p>
+<ol>
+  <li> Go to <a
+ href="http://nagoya.apache.org/jira/secure/Dashboard.jspa">http://nagoya.apache.org/jira/secure/Dashboard.jspa</a>.</li>
+  <li>Select <b><tt>Query Existing Bug Reports</tt></b>.</li>
+  <li>Choose:<br>
+    <tt>Program: <b>XalanJ2</b><br>
+Component: <b>com.sun.org.apache.xalan.xsltc</b></tt> (and) <b><tt>Xalan-Xsltc</tt></b></li>
+  <li>Submit the query.</li>
+</ol>
+<h3><a name="loader"></a>Custom Class Loader Issue</h3>
+<p>In both Xalan and XSLTC, a problem can occur when using a custom
+class loader with a transformation factory.</p>
+<p>Transformation factories in JAXP always prefer the use of the
+"context class loader" to the use of the "system class loader". Thus,
+if an application uses a custom class loader, it may need to set the
+custom class loader as the context class loader for transformation
+factory to use it. Setting a custom class loader on the current thread
+can be done as follows:</p>
+<blockquote>
+  <pre>try {<br>  Thread currentThread = Thread.currentThread();<br>  currentThread.setContextClassLoader(customClassLoader);<br>}<br>catch (SecurityException e) {<br>  // ...<br>}</pre>
+</blockquote>
+<p>If the application is multi-threaded, the custom class loader may
+need to be set in all threads (every time a new thread is created). A
+security exception is thrown if an application does not have permission
+to set the context class loader.</p>
+<p>This issue applies to both Xalan and XSLTC.</p>
+<h3><a name="manual"></a>Manually Specifying which XSLT Implementation
+to Use</h3>
+<p>By default, JAXP transformations use the Xalan XSLT engine. To
+direct the application to use the XSLT engine in XSLTC, one way is to
+set the <tt>TransformerFactory</tt> property as follows:</p>
+<blockquote>
+  <p> <tt>javax.xml.transform.TransformerFactory=<br>
+&nbsp;&nbsp;&nbsp;
+com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl </tt></p>
+</blockquote>
+<p>This mechanism lets you determine which transformer you use when you
+start the app. However, changing this property in a servlet container,
+for example, affects every other servlet in the container, so it may be
+unwise to use that option. (To prevent the problems that can attend
+such global overrides, future implementations of Tomcat in the Java Web
+Services Developer Pack may well preclude such property settings.)</p>
+<p>When you can't use a system property to select the transformation
+engine, you can either instantiate the factory in your program
+directly, with code like this:</p>
+<blockquote>
+  <p><tt>new
+com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl</tt>(..)</p>
+</blockquote>
+<p>Or, to get back runtime control, you can pass the name of the
+factory as an argument to the application, and use the ClassLoader to
+create a new instance of it.</p>
+<p>Similarly, you can ensure you are using the Xalan implementation
+with this setting (or else direct the application to instantiate the
+factory class, as above): </p>
+<blockquote>
+  <p><tt>javax.xml.transform.TransformerFactory=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+com.sun.org.apache.xalan.internal.processor.TransformerFactoryImpl </tt>
+  </p>
+</blockquote>
+<h3><a name="auto"></a>Automatically Choosing Implementations with the
+"Smart Transformer"</h3>
+<p>The JAXP transformation API includes a "Smart Transformer" which
+automatically switches between Xalan and XSLTC processors within your
+application. It uses Xalan to create your Transformer objects, and
+XSLTC to create your Templates objects.</p>
+<p>To use the switch, you use this setting for the factory system
+property:</p>
+<blockquote>
+  <pre>javax.xml.transform.TransformerFactory=<br>     com.sun.org.apache.xalan.internal.xsltc.trax.SmartTransformerImpl</pre>
+</blockquote>
+<p>For one-time transformations or transformations that require
+extensions supported by Xalan, and not XSLTC, you would use Transformer
+objects. For a repeated transformation where performance is critical,
+you would use Templates objects.</p>
+<blockquote>
+  <p><b>Note:</b><br>
+Again, it may or may not be wise (or possible) to control the factory
+setting with a system property. See the previous section for ideas on
+directing the application to instantiate a specific factory class.</p>
+</blockquote>
+<hr>
+<h2><a name="security" id="changes"></a>JWSDP Security Considerations</h2>
+<p>When an application is running on a web server, such as the Java Web
+Services Developer Pack (JWSDP), with security enabled, the following
+permissions must be set:</p>
+<blockquote>
+  <pre>permission java.io.FilePermission<br><br>    "/${webserver.home}/common/endorsed/xercesImpl.jar", "read";<br>permission java.io.FilePermission<br>    "/${webserver.home}/common/endorsed/xalan.jar", "read";<br><br>permission java.util.PropertyPermission<br>    "javax.xml.parser.SAXParserFactory", "read, write";<br>permission java.util.PropertyPermission<br>    "javax.xml.transform.TransformerFactory", "read, write";<br><br>permission java.util.PropertyPermission "user.dir",        "read";<br>permission java.util.PropertyPermission "file.separator",  "read";<br>permission java.util.PropertyPermission "line.separator",  "read";<br>permission java.util.PropertyPermission "JavaClass.debug", "read";<br><br>permission java.lang.RuntimePermission "createClassLoader";<br>permission java.lang.RuntimePermission "accessDeclaredMembers";<br></pre>
+  <p><b>Note:</b><br>
+If read permission is not set for <tt>xercesImpl.jar</tt>, a
+potentially misleading error message is reported. A<tt>
+FactoryConfigurationError</tt> is thrown that says <br>
+&nbsp;&nbsp;&nbsp;"Provider org.apache.<i>crimson</i>.jaxp.SAXParserFactoryImpl
+not found",<br>
+instead of <br>
+&nbsp;&nbsp;&nbsp;"Provider org.apache.<i>xerces</i>.jaxp.SAXParserFactoryImpl
+not found".</p>
+</blockquote>
+<hr>
+<h2><a name="changes" id="changes">Changes in JAXP RI Versions</a></h2>
+<h3><a name="1.2.6" id="1.2.6"></a>Changes in JAXP RI version 1.2.6</h3>
+<ul>
+  <li>Transformer ( Xalan) version is upgraded from 2.5.2 to 2.6.0 (
++controller bugfixes). This version includes many bug fixes. Also&nbsp;
+the packages contained in <b>xalan.jar</b> have been renamed.&nbsp;
+For example, the <code>org.apache.xalan.*</code> package is now called
+    <code>com.sun.org.apache.xalan.internal.*</code> .<br>
+  </li>
+  <li>Xerces ( parser ) implementation version changed from 2.3.0 to
+2.6.2 ( + controlled bugfixes). This version include many bugfixes and
+performance improvements. Also the packages contained in <b>xercesImpl.jar</b>
+have been renamed.&nbsp; For example,<br>
+the <code>org.apache.xerces.*</code> package is now called <code>com.sun.org.apache.xerces.internal.*</code>
+.<br>
+  </li>
+</ul>
+<h3><a name="1.2.5" id="1.2.5"></a>Changes in JAXP RI version 1.2.5</h3>
+<ul>
+  <li>Transformer ( Xalan) version is upgraded from 2.4.1 to 2.5.2 (
++controller bugfixes). This version includes many bug fixes and both
+XSLTC and interpretive Xalan are using same basic infrastucture ( e.g.
+Serializers )</li>
+  <li>XSLTC is made as the default Transformer.</li>
+</ul>
+<h3><a name="1.2.4" id="1.2.4"></a>Changes in JAXP RI version 1.2.4</h3>
+<ul>
+  <li>Fix for a J2SE 1.4.2 compilation bug in Xerces.</li>
+</ul>
+<h3><a name="1.2.3"></a>Changes in JAXP RI version 1.2.3</h3>
+<ul>
+  <li>Xerces version changed from 2.2.1 to 2.3.0 ( + controlled bug
+fixes ). This version Includes many bug fixes.</li>
+  <li>All Decimal value that should be invalid according to the Schema
+specification are now found by the parser (removing a 1.2.2 limitation).</li>
+  <li> Solved the problem of Xerces compilation under JDK 1.4.1. </li>
+  <li>XML Schema loading performance improved dramatically (virtually
+cut in half).</li>
+</ul>
+<h3><a name="1.2.2"></a>Changes in JAXP RI version 1.2.2</h3>
+<ul>
+  <li> New properties were implemented for increased security, as
+described in the <a href="#JAXP_security">Security Issue</a> section.</li>
+  <li> Parser implementation changed from Xerces 2.0.1_04 to Xerces
+2.2.1 with controlled bug fixes.</li>
+  <li> XSLT processor imlpementation changed from Xalan 2.3.1_01 to
+Xalan 2.4.1 with controlled bug fixes..</li>
+  <li> XSLTC is included in this release.</li>
+</ul>
+<h3><a name="1.2.1"></a>Changes in JAXP Ri version 1.2.1</h3>
+<p>Performance of Xerces parser improved significantly. </p>
+<p>XSLTC was not included as part of this release, which was destined
+solely for the J2EE platform.&nbsp; </p>
+<h3> <a name="fcs0"></a>Changes in JAXP RI version 1.2.0-FCS</h3>
+The parser implementation changed from Xerces 2.0.0_01 to Xerces-J
+2.0.1_01 <br>
+(Xerces 2.0.1 final with controlled bug fixes). The Xalan XSLT
+processor <br>
+implementation was updated to xalan-j 2.3.1_01 (Xalan version 2.3.1
+with <br>
+controlled bug fixes).
+<p>Finally, this release fully supports the proposed 1.2 JAXP
+specification, <br>
+which implements document validation using W3C XML Schema. </p>
+<h3> <a name="ea2"></a>Changes In JAXP RI version 1.2.0-EA2</h3>
+The parser implementation changed from Xerces 2.0.0 beta3 to Xerces-J
+2.0.0_01 (Xerces 2.0.0 final with controlled bug fixes). The Xalan XSLT
+processor implementation was updated to xalan-j 2.3.0_01 (Xalan version
+2.3.0 with controlled bug fixes).
+<p>The Xalan XSLTC processor was also added in this release. (It is
+used to compile a stylesheet into a transformation engine (translet)
+that is ready to run.) </p>
+<p>This release fully supports the proposed 1.2 JAXP specification,
+which implements document validation using W3C XML Schema. </p>
+<h3> <a name="ea1"></a>Changes in JAXP RI version 1.2.0-EA1</h3>
+The parser implementation changed from Apache Crimson to Xerces 2
+version 2.0.0 beta3. The XSLT processor implementation was updated to
+Xalan classic version 2.2.D14.
+<p>The parser supports W3C XML Schema but does not support all aspects
+of the proposed JAXP 1.2 specification. In particular, the ability to
+enforce that an instance document conforms to a particular schema has
+not been implemented. However, the validation portions of the
+specification can be used along with schema hints in the instance
+document. </p>
+<p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<!--
+
+    Context configuration file for the jstl-examples  Web App
+
+    $Id$
+
+-->
+
+
+<Context path="/jstl-examples" docBase="../jstl/samples/jstl-examples.war"
+        debug="0">
+
+  <Logger className="org.apache.catalina.logger.FileLogger"
+             prefix="jwsdp_log." suffix=".txt"
+          timestamp="true"/>
+
+</Context>

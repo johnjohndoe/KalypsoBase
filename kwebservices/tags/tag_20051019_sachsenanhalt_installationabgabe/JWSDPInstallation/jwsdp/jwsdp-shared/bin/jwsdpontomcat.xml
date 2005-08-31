@@ -1,0 +1,902 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<project name="JWSDP component integration with Tomcat" default="full-setup" basedir=".">
+
+    <!-- ========== Version numbers for JWSDP components ================= -->
+
+  <property name="ant.home" value="${basedir}/../../apache-ant"/>
+
+
+  <target name="check.catalina.home" unless="CATALINA_HOME">
+    <echo>
+      The catalina.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the JWSDP Tomcat is installed and rerun ant with
+      the following usage: 
+          ant -Djwsdp.home=xxx -Dcatalina.home=yyy target
+    </echo>
+    <fail message="catalina.home property is not set correctly"/>
+  </target>
+
+  <target name="check.jwsdp.home" unless="JWSDP_HOME">
+    <echo>
+      The jwsdp.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Java(TM) Web Services Developer Pack 1.4 is
+      installed and rerun ant with the following usage:
+           ant -Djwsdp.home=xxx -Dcatalina.home=yyy target
+    </echo>
+    <fail message="jwsdp.home property is not set correctly"/>
+  </target>
+
+  <target name="init">
+    <tstamp/>
+    <available property="JWSDP_HOME" value="${jwsdp.home}"
+      file="${jwsdp.home}/jwsdp-shared/bin/commons-launcher.jar" />
+
+    <antcall target="check.jwsdp.home"/>
+
+    <available property="CATALINA_HOME" value="${catalina.home}"
+      file="${catalina.home}/server/lib/catalina.jar" />
+
+    <antcall target="check.catalina.home"/>
+
+    <available property="jdbc-rowset.integrated" value="true"
+      file="${jwsdp.home}/jdbc-rowset/lib/rowset.jar" />
+
+
+    <condition property="isNotWindows">
+      <not>
+        <os family="windows" />
+      </not>
+    </condition>
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <echo message="Os is ${os.name}" />
+
+    <!-- Loading Tomcat properties -->
+    <property file="${JWSDP_HOME}/conf/jwsdp.properties" />
+
+    <property name="MYTEMPDIR" value="${JWSDP_HOME}/temp/fortomcat"/>
+
+    <property name="TOMCAT_DEPLOY" value="${CATALINA_HOME}/bin/catalina"/>
+
+<!--
+    <property name="USERNAME" value="${USERNAME}" />
+    <property name="PASSWORD" value="${PASSWORD}" />
+-->
+    <property name="http.proxyHost" value="${http.proxyHost}" />
+    <property name="http.proxyPort" value="${http.proxyPort}" />
+
+
+    <echo message="Creating temporary directory under JWSDP_HOME/temp for creating war files and other items" />
+    <mkdir dir="${MYTEMPDIR}" />
+
+    <property name="JWSDP_BACKUPDIR" value="${CATALINA_HOME}/.jwsdp.backup" />
+  </target>
+
+  
+  <target name="start-tomcat" depends="init"
+    description="Start Tomcat server">
+
+    <antcall target="start-tomcat.sh" />
+    <antcall target="start-tomcat.bat" />
+  </target>
+
+  <target name="start-tomcat.sh" depends="init" if="isNotWindows"  >
+    <exec executable="${CATALINA_HOME}/bin/catalina.sh">
+      <arg line="start" />
+    </exec>
+  </target>
+
+  <target name="start-tomcat.bat" depends="init"  if="isWindows" >
+    <exec executable="${CATALINA_HOME}/bin/catalina.bat">
+      <arg line="start" />
+    </exec>
+  </target>
+
+  <target name="stop-tomcat" depends="init"
+    description="Stop Tomcat server">
+
+    <antcall target="stop-tomcat.sh" />
+    <antcall target="stop-tomcat.bat" />
+ </target>
+
+  <target name="stop-tomcat.sh" depends="init"  if="isNotWindows" >
+    <exec executable="${CATALINA_HOME}/bin/catalina.sh">
+      <arg line="stop" />
+    </exec>
+ </target>
+
+  <target name="stop-tomcat.bat" depends="init" if="isWindows" >
+    <exec executable="${CATALINA_HOME}/bin/catalina.bat">
+      <arg line="stop" />
+    </exec>
+ </target>
+ 
+  <target name="integrate.init" depends="init"
+    description="Initialize integration for Tomcat">
+    <echo message="Creating Backup directory for the integration" />
+    <mkdir dir="${JWSDP_BACKUPDIR}" />
+
+    <echo message="Copying over general jwsdp specific files" />
+
+    <copy file="${CATALINA_HOME}/bin/catalina.sh" todir="${JWSDP_BACKUPDIR}" overwrite="true" failonerror="false" />
+
+    <copy file="${basedir}/catalina.sh" todir="${CATALINA_HOME}/bin" overwrite="true" failonerror="false" />
+
+    <copy file="${CATALINA_HOME}/bin/catalina.bat" todir="${JWSDP_BACKUPDIR}" overwrite="true" failonerror="false" />
+
+    <copy file="${basedir}/catalina.bat" todir="${CATALINA_HOME}/bin" overwrite="true" failonerror="false" />
+
+    <!-- make sure catalina.sh is executeable -->
+    <chmod perm="+x" file="${CATALINA_HOME}/bin/catalina.sh" />
+
+    <!-- copy over docs dir-->
+    <copy todir="${CATALINA_HOME}/docs" overwrite="true">
+      <fileset dir="${JWSDP_HOME}/docs">
+      </fileset>
+    </copy>
+
+    <!-- copy over ant dir-->
+    <copy todir="${CATALINA_HOME}/apache-ant" overwrite="true">
+      <fileset dir="${JWSDP_HOME}/apache-ant">
+      </fileset>
+    </copy>
+    <!-- Granting execute permissions to ant shell scripts/bat files " -->
+    <chmod perm="+x" dir="${CATALINA_HOME}/apache-ant/bin"
+        includes="ant,antRun, *.bat" />
+
+    <!-- integrate jwsdp-shared -->
+    <antcall target="integrate.common-jars" />
+
+    <!-- copy over temp dir-->
+    <!-- copy over relevant tomcat files -->
+    <copy file="${CATALINA_HOME}/conf/server.xml" 
+	todir="${JWSDP_BACKUPDIR}/conf" overwrite="false" />
+
+    <copy file="${CATALINA_HOME}/conf/tomcat-users.xml" 
+	todir="${JWSDP_BACKUPDIR}/conf" overwrite="false" />
+
+
+    <!-- copy over jwsdp conf files -->
+    <copy todir="${CATALINA_HOME}/conf" overwrite="true">
+      <fileset dir="${JWSDP_HOME}/conf">
+        <include name="tomcat-users.xml"/>
+        <include name="jwsdp.properties"/>
+        <include name="Catalina/localhost/jwsdp-*"/>
+        <exclude name="Catalina/localhost/jwsdp-catalog.xml"/>
+      </fileset>
+    </copy>
+
+    <echo message="Adding jwsdp.home Env entry to server.xml" />
+    <!-- Adding Env entry for jwsdp.home in  Tomcat server.xml  -->
+    <replace file="${CATALINA_HOME}/conf/server.xml">
+     <replacevalue><![CDATA[<!--  Global JNDI resources  -->
+<GlobalNamingResources>
+    <Environment name="jwsdp.home"
+       description="Absolute Pathname of the JWSDP Installation on Tomcat"
+              type="java.lang.String"
+             value="@jwsdp.home@"/>
+]]></replacevalue>
+
+      <replacetoken><![CDATA[<!-- Global JNDI resources -->
+  <GlobalNamingResources>]]></replacetoken>
+    </replace>
+
+    <replace file="${CATALINA_HOME}/conf/server.xml"
+     value='${CATALINA_HOME}'>
+      <replacetoken><![CDATA[@jwsdp.home@]]></replacetoken>
+    </replace>
+
+
+    <!-- copy over jwsdp server files 
+    <copy todir="${CATALINA_HOME}/server/webapps/jwsdp-catalog" overwrite="true">
+      <fileset dir="${JWSDP_HOME}/server/webapps/jwsdp-catalog">
+      </fileset>
+    </copy>
+
+    -->
+
+    <!-- Updating setenv -->
+    <antcall target="update-setenv" />
+
+  </target>
+
+
+  <target name="update-setenv" depends="init" >
+    <antcall target="update-setenv.sh" />
+    <antcall target="update-setenv.bat" />
+  </target>
+ 
+  <target name="update-setenv.sh" depends="init"  if="isNotWindows" >
+
+    <!-- Updating setenv.sh for Unix platforms --> 
+
+    <replace file="${CATALINA_HOME}/jwsdp-shared/bin/setenv.sh">
+     <replacevalue><![CDATA[@TEMPSTRING@
+JWSDP_HOME=]]></replacevalue>
+      <replacetoken><![CDATA[JWSDP_HOME=]]></replacetoken>
+    </replace>
+    
+    <!-- PENDING : Look at quoting to take care of directories with space in 
+        their name -->   
+    <replace file="${CATALINA_HOME}/jwsdp-shared/bin/setenv.sh"
+     value='CATALINA_HOME=${CATALINA_HOME}'>
+      <replacetoken><![CDATA[@TEMPSTRING@]]></replacetoken>
+    </replace>
+
+ </target>
+
+ <target name="update-setenv.bat" depends="init"  if="isWindows" >
+    <!-- Updating setenv.bat for Windows platforms --> 
+
+    <replace file="${CATALINA_HOME}/jwsdp-shared/bin/setenv.bat">
+     <replacevalue><![CDATA[@TEMPSTRING@
+set JWSDP_HOME=]]></replacevalue>
+      <replacetoken><![CDATA[set JWSDP_HOME=]]></replacetoken>
+    </replace>
+
+    <!-- PENDING : Look at quoting to take care of directories with space in 
+        their name -->   
+
+    <replace file="${CATALINA_HOME}/jwsdp-shared/bin/setenv.bat"
+     value='set CATALINA_HOME=${CATALINA_HOME}'>
+      <replacetoken><![CDATA[@TEMPSTRING@]]></replacetoken>
+    </replace>
+ </target>
+
+  <target name="setup" depends="init"
+    description="Setup environment needed  for integrating JWSDP into Tomcat">
+
+    <echo message="Initializing integration" />
+    <antcall target="integrate.init" />
+
+    <echo message="Integrating JAXP" />
+    <antcall target="integrate.jaxp" />
+
+    <echo message="Integrating SAAJ" />
+    <antcall target="integrate.saaj" />
+
+    <echo message="Integrating JAXB" />
+    <antcall target="integrate.jaxb" />
+
+    <echo message="Integrating JAXR" />
+    <antcall target="integrate.jaxr" />
+
+    <echo message="Integrating JAX-RPC" />
+    <antcall target="integrate.jaxrpc" />
+
+    <echo message="Integrating JSTL" />
+    <antcall target="integrate.jstl" />
+
+    <echo message="Integrating Registry Server" />
+    <antcall target="integrate.registry-server" />
+
+    <echo message="Integrating WS-I Sample Application" />
+    <antcall target="integrate.wsi-sampleapp" />
+
+    <echo message="Integrating XML and Web Services Security" />
+    <antcall target="integrate.xws-security" />
+
+    <echo message="Integrating XML Digital Signatures" />
+    <antcall target="integrate.xmldsig" />
+
+  </target>
+
+
+
+  <target name="integrate.jaxp" depends="init"
+    description="Integrate JAXP into Tomcat">
+
+    <echo message="Copying JAXP jar files to ${CATALINA_HOME}/jaxp" />
+    <copy todir="${CATALINA_HOME}/jaxp">
+      <fileset dir="${JWSDP_HOME}/jaxp">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jaxp-*"/>
+        </fileset>
+    </copy>
+
+
+    <!-- potentially remove/change what's in the common/lib, common/endorsed for jaxp
+    <copy file="${CATALINA_HOME}/common/endorsed/xercesImpl.jar"
+        todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+ 
+    -->
+
+ </target>
+
+
+  <target name="integrate.saaj" depends="init"
+    description="Integrate SAAJ into Tomcat">
+
+    <echo message="Copying SAAJ jar files to ${CATALINA_HOME}/saaj" />
+
+    <copy todir="${CATALINA_HOME}/saaj">
+      <fileset dir="${JWSDP_HOME}/saaj">
+      </fileset>
+    </copy>
+
+    <!-- Integrate saaj webapps -->
+    <antcall target="deploy.saaj.webapps" />
+
+  </target>
+
+  <target name="deploy.saaj.webapps" depends="init"
+    description="Deploying SAAJ into Tomcat">
+
+    <echo message="Integrating SAAJ samples" />
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="saaj-*"/>
+        </fileset>
+    </copy>
+  </target>
+
+  <target name="integrate.common-jars" depends="init">
+    <echo message="Copying jwsdp-shared jar files to ${CATALINA_HOME}/jwsdp-shared" />
+
+    <copy todir="${CATALINA_HOME}/jwsdp-shared">
+      <fileset dir="${JWSDP_HOME}/jwsdp-shared">
+          <exclude name="index.html" />
+          <exclude name="index_sjs.html" />
+          <exclude name="*.gif" />
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/webapps/ROOT" file="${JWSDP_HOME}/jwsdp-shared/index.html" />
+    <copy todir="${CATALINA_HOME}/webapps/ROOT" file="${JWSDP_HOME}/jwsdp-shared/javaxml.gif" />
+    <copy todir="${CATALINA_HOME}/webapps/ROOT" file="${JWSDP_HOME}/jwsdp-shared/Components.js" />
+
+  </target>
+
+  <target name="integrate.jaxb" depends="init"
+    description="Integrating JAXB into Tomcat">
+
+    <echo message="Copying JAXB jar files to ${CATALINA_HOME}/jaxb" />
+
+    <copy todir="${CATALINA_HOME}/jaxb">
+      <fileset dir="${JWSDP_HOME}/jaxb">
+      </fileset>
+    </copy>
+
+    <chmod perm="+x" file="${CATALINA_HOME}/jaxb/bin/xjc.sh" />
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jaxb-*"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+
+  <target name="integrate.jaxrpc" depends="init"
+    description="Integrating JAX-RPC into Tomcat">
+
+    <echo message="Copying JAXRPC jar files to ${CATALINA_HOME}/jaxrpc" />
+
+    <copy todir="${CATALINA_HOME}/jaxrpc">
+      <fileset dir="${JWSDP_HOME}/jaxrpc">
+      </fileset>
+    </copy>
+
+    <chmod perm="+x" file="${CATALINA_HOME}/jaxrpc/bin/wscompile.sh" />
+    <chmod perm="+x" file="${CATALINA_HOME}/jaxrpc/bin/wsdeploy.sh" />
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jaxrpc-*"/>
+        </fileset>
+    </copy>
+  </target>
+
+
+  <target name="integrate.jaxr" depends="init"
+    description="Integrate JAXR into Tomcat">
+    <echo message="Copying JAXR jar files to ${CATALINA_HOME}/jaxr" />
+
+    <copy todir="${CATALINA_HOME}/jaxr">
+      <fileset dir="${JWSDP_HOME}/jaxr">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jaxr-*"/>
+        </fileset>
+    </copy>
+  </target>
+
+
+
+  <target name="integrate.xws-security" depends="init"
+    description="Integrate XML and Web Services Security into Tomcat">
+
+    <echo message="Copying xws-security jar files to ${CATALINA_HOME}/xws-security" />
+
+    <copy todir="${CATALINA_HOME}/xws-security">
+      <fileset dir="${JWSDP_HOME}/xws-security">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="xws-security-*"/>
+        </fileset>
+    </copy>
+
+   </target>
+
+
+  <target name="integrate.jsf" depends="init"
+    description="Integrate JSF into Tomcat">
+
+    <echo message="Copying jsf jar files to ${CATALINA_HOME}/jsf" />
+
+    <copy todir="${CATALINA_HOME}/jsf">
+      <fileset dir="${JWSDP_HOME}/jsf">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jsf-*"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+  <target name="integrate.wsi-sampleapp" depends="init"
+    description="Integrate WS-I Sample Application into Tomcat">
+
+    <antcall target="deploy.wsi-sampleapp.webapps" />
+  </target>
+
+  <target name="deploy.wsi-sampleapp.webapps" depends="init"
+    description="Deploy WS-I Sample Application into Tomcat">
+
+    <echo message="Copying wsi-sampleapp jar files to ${CATALINA_HOME}/wsi-sampleapp" />
+
+    <copy todir="${CATALINA_HOME}/wsi-sampleapp">
+      <fileset dir="${JWSDP_HOME}/wsi-sampleapp">
+      </fileset>
+    </copy>
+
+    <!-- make sure *.sh and *.bat are executeable -->
+    <chmod perm="+x" >
+        <fileset dir="${CATALINA_HOME}/bin" >
+            <include name="*.sh"  />
+            <include name="*.bat"  />
+        </fileset>
+    </chmod>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="wsi-*"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+
+  <target name="integrate.jstl" depends="init"
+    description="Integrate JSTL into Tomcat">
+
+    <echo message="Copying jstl jar files to ${CATALINA_HOME}/jstl" />
+
+    <copy todir="${CATALINA_HOME}/jstl">
+      <fileset dir="${JWSDP_HOME}/jstl">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="jstl-*"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+  <target name="integrate.registry-server" depends="init"
+    description="Integrate Registry Server into Tomcat">
+
+    <antcall target="deploy.registry-server.webapps" />
+
+  </target>
+
+  <target name="deploy.registry-server.webapps" depends="init"
+    description="Deploy Registry Server into Tomcat">
+
+    <echo message="Copying registry-server war files to ${CATALINA_HOME}/registry-server" />
+
+    <copy todir="${CATALINA_HOME}/registry-server">
+      <fileset dir="${JWSDP_HOME}/registry-server">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="registry*"/>
+          <include name="xindice.xml"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+  <target name="integrate.xmldsig" depends="init"
+    description="Integrate JSR 105 into Tomcat">
+
+    <echo message="Copying xmldsig jar files to ${CATALINA_HOME}/xmldsig" />
+
+    <copy todir="${CATALINA_HOME}/xmldsig">
+      <fileset dir="${JWSDP_HOME}/xmldsig">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="xmldsig-*"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+
+
+  <target name="full-setup">
+    <antcall target="setup" />
+  </target>
+
+
+  <target name="revert.jaxp.changes" depends="revert.init"
+    description="Revert JAXP from Tomcat">
+
+
+    <delete  dir="${CATALINA_HOME}/jaxp"  quiet="true" />
+
+<!--
+    <copy file="${JWSDP_BACKUPDIR}/xercesImpl.jar" failonerror="false" 
+	todir="${CATALINA_HOME}/common/endorsed"  overwrite="true" />
+-->
+ 
+  </target>
+
+<!--
+  <target name="deployAll" depends="init"
+    description="Deploy all web applications onto Tomcat">
+
+  </target>
+
+  <target name="undeployAll" depends="init"
+    description="Undeploy all web applications from Tomcat">
+
+  </target>
+-->
+
+
+  <target name="revert.saaj.changes" depends="revert.init"
+    description="Revert SAAJ changes from Tomcat">
+    <delete  dir="${CATALINA_HOME}/saaj"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="saaj-*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="saaj-*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="saaj-*/**"/>
+        </fileset>
+    </delete>
+  </target>
+
+  <target name="revert.common-jars.changes">
+    <delete  dir="${CATALINA_HOME}/jwsdp-shared"  quiet="true" />
+
+    <!-- Deleting JWSDP specific index and gif files -->
+    <delete file="${CATALINA_HOME}/webapps/ROOT/index.html" quiet="true" />
+    <delete file="${CATALINA_HOME}/webapps/ROOT/javaxml.gif" quiet="true" />
+    <delete file="${CATALINA_HOME}/webapps/ROOT/Components.js" quiet="true" />
+  </target>
+
+  <target name="revert.jaxrpc.changes" depends="revert.init"
+    description="Revert JAX-RPC changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jaxrpc"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jaxrpc-*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="jaxrpc-*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="jaxrpc-*/**"/>
+        </fileset>
+    </delete>
+  </target>
+
+  <target name="revert.jaxr.changes" depends="revert.init"
+    description="Revert JAXR changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jaxr"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jaxr-*"/>
+        </fileset>
+    </delete>
+  </target>
+
+
+  <target name="revert.jaxb.changes" depends="revert.init"
+    description="Revert JAXB changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jaxb"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jaxb-*"/>
+        </fileset>
+    </delete>
+  </target>
+
+
+  <target name="revert.xws-security.changes" depends="revert.init"
+    description="Revert XML and Web Services Security changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/xws-security"  quiet="true" />
+  </target>
+
+  <target name="revert.xmldsig.changes" depends="revert.init"
+    description="Revert JSR 105 changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/xmldsig"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="xmldsig-*"/>
+        </fileset>
+    </delete>
+  </target>
+
+
+  <target name="revert.jsf.changes" depends="revert.init"
+    description="Revert JSF changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jsf"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jsf-*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="jsf-*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="jsf-*/**"/>
+        </fileset>
+    </delete>
+
+    <!-- remove optimization, otherwise tomcat won't start up -->
+    <delete quiet="true">
+        <fileset dir="${CATALINA_HOME}/work/Catalina/localhost/">
+          <include name="**/tldCache.ser"/>
+        </fileset>
+    </delete>
+
+  </target>
+
+
+  <target name="revert.wsi-sampleapp.changes" depends="revert.init"
+    description="Revert WS-I Sample Application changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/wsi-sampleapp"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="wsi-*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="wsi-*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="wsi-*/**"/>
+        </fileset>
+    </delete>
+  </target>
+
+
+  <target name="revert.jstl.changes" depends="revert.init"
+    description="Revert JSTL changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jstl"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jstl-*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="jstl-*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="jstl-*/**"/>
+        </fileset>
+    </delete>
+  </target>
+
+
+  <target name="revert.registry-server.changes" depends="revert.init"
+    description="Revert Registry Server changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/registry-server"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="registry*"/>
+          <include name="xindice.xml"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="RegistryServer/**"/>
+          <include name="Xindice/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="RegistryServer/**"/>
+          <include name="Xindice/**"/>
+        </fileset>
+    </delete>
+
+  </target>
+
+
+
+  <target name="revert.init" depends="init"
+    description="Revert initialization changes changes from Tomcat">
+
+    <copy todir="${CATALINA_HOME}/bin" file="${JWSDP_BACKUPDIR}/catalina.sh" overwrite="true" failonerror="false" />
+    <copy todir="${CATALINA_HOME}/bin" file="${JWSDP_BACKUPDIR}/catalina.bat" overwrite="true" failonerror="false" />
+
+    <!-- make sure catalina.sh is executeable -->
+    <chmod perm="+x" file="${CATALINA_HOME}/bin/catalina.sh" />
+
+    <delete dir="${CATALINA_HOME}/docs" quiet="true" />
+    <delete dir="${CATALINA_HOME}/apache-ant" quiet="true" />
+
+    <!-- revert jwsdp-shared -->
+    <antcall target="revert.common-jars.changes" />
+
+    <copy file="${JWSDP_BACKUPDIR}/conf/server.xml" 
+	todir="${CATALINA_HOME}/conf" overwrite="true" failonerror="false" />
+
+    <delete  file="${CATALINA_HOME}/conf/jwsdp.properties"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jwsdp-*"/>
+        </fileset>
+    </delete>
+
+    <delete dir="${CATALINA_HOME}/server/webapps/jwsdp-catalog" quiet="true"/>
+
+  </target>
+
+  <target name="clean" depends="init"
+    description="Clean up temporary directories for Tomcat">
+
+    <delete dir="${JWSDP_BACKUPDIR}" quiet="true" />
+    <delete dir="${MYTEMPDIR}" quiet="true" />
+
+  </target>
+
+
+  <target name="revert.tomcat.changes" depends="revert.init"
+    description="Backing out Java WSDP 1.4 changes from Tomcat">
+
+
+    <echo message="Backing out the changes made during Java WSDP 1.4 integration into Tomcat" />
+
+    <echo message="Reverting JAXP changes" />
+    <antcall target="revert.jaxp.changes" />
+
+    <echo message="Reverting SAAJ changes" />
+    <antcall target="revert.saaj.changes" />
+
+    <echo message="Reverting JAX-RPC changes" />
+    <antcall target="revert.jaxrpc.changes" />
+
+    <echo message="Reverting JAXR changes" />
+    <antcall target="revert.jaxr.changes" />
+
+    <echo message="Reverting JAXB changes" />
+    <antcall target="revert.jaxb.changes" />
+
+    <echo message="Reverting  JSTL" />
+    <antcall target="revert.jstl.changes" />
+
+    <echo message="Reverting  Registry Server" />
+    <antcall target="revert.registry-server.changes" />
+
+    <echo message="Reverting  WS-I Sample Application" />
+    <antcall target="revert.wsi-sampleapp.changes" />
+
+    <echo message="Reverting  XML and Web Services Security" />
+    <antcall target="revert.xws-security.changes" />
+
+    <echo message="Reverting  XML Digital Signatures" />
+    <antcall target="revert.xmldsig.changes" />
+
+    <echo message="Reverting  Tomcat specific  changes" />
+
+    <antcall target="clean" />
+  </target>
+
+  <!-- Target for integrating jdbc-rowset into Tomcat 5 -->
+  <target name="integrate.jdbc-rowset" depends="init" if="jdbc-rowset.integrated"
+    description="Integrating JDBC RowSet into Tomcat">
+
+    <echo message="Copying JDBC RowSet jar files to ${CATALINA_HOME}/jdbc-rowset" />
+
+    <copy todir="${CATALINA_HOME}/jdbc-rowset" failonerror="false">
+      <fileset dir="${JWSDP_HOME}/jdbc-rowset">
+      </fileset>
+    </copy>
+
+  </target>
+
+</project>
+
+
