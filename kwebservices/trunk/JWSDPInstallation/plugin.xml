@@ -3,7 +3,7 @@
    id="org.kalypso.jwsdp"
    name="JWSDPInstallation for Kalypso"
    version="1.4"
-   provider-name="org.kalypso">
+   provider-name="kalypso.org">
    <runtime>
       <library name="kalypsoJWSDP.jar">
          <export name="*"/>
