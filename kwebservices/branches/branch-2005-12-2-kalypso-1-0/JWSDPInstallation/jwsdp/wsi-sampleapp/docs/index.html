@@ -1,0 +1,1091 @@
+<html>
+
+<head>
+
+<title>WS-I Supply Chain Management Sample Application 1.0</title>
+
+</head>
+
+<body>
+
+
+
+<h1 align="center">WS-I Attachments Sample Application 1.0<img border="0" src="WS-I_MemberSig_Color.gif" alt="WS-I Member Logo" align="right" width="138" height="71">
+EA</h1>
+
+<p align="left">The latest updates to this document are in the <a href="http://java.sun.com/webservices/docs/1.4/wsi-sampleapp/index.html"> online
+
+documentation</a> posted on our web site.</p>
+
+<p align="left">1.0 <a href="#1.0">Introduction</a><br>
+
+2.0 <a href="#2.0">Directory Structure<br>
+
+</a>3.0 <a href="#3.0">Pre-Requisites</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.1 <a href="#3.1">Container</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.2 <a href="#3.2">Database</a><br>
+
+4.0 <a href="#4.0">Invoking the service</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.1 <a href="#4.1">Retailer</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.2 <a href="#4.2">Configurator</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.3 <a href="#4.3">Catalog</a><br>
+
+5.0 <a href="#5.0">Building from the source<br>
+
+</a>6.0 <a href="#6.0">Configuring Logging</a><br>
+
+7.0 <a href="#7.0">Troubleshooting<br>
+
+</a>8.0 <a href="#8.0">References</a></p>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="1.0">1.0</a> Introduction</h2>
+
+<p align="left">The Web Services Interoperability Organization (WS-I) <a href="#Ref1">[1]</a>
+
+is an organization committed to promoting interoperability among Web Services based on common, industry-accepted definitions and related XML standards support.
+
+Towards this end, the WS-I organization is producing a set of deliverables that
+
+is intended to assist developers in creating and deploying interoperable Web Services.<font FACE="TrebuchetMS" SIZE="2">&nbsp;</font> WS-I Sample
+
+Application, one of the deliverables from WS-I, demonstrates the reality of
+
+practical application of Web Services technologies to solve real business needs.</p>
+
+<p align="left">WS-I Sample Application is defined as a sample Supply Chain Management application. The use case design of this
+
+sample application is defined in Supply Chain Management Use Case Model <a href="#Ref2">[2]</a>
+and Use Cases for Attachments Sample Applications 1.0 <a href="#Ref3">[3]</a> .
+
+Technical design and implementation details of this sample application are
+
+documented in Supply Chain Management Architecture document <a href="#Ref3">[4]</a>
+and Technical Architecture for Attachments Sample Applications 1.0 <a href="#Ref5">[5]</a>.</p>
+
+<p align="center"><img border="0" src="wsi_sa.jpg" width="851" height="480"></p>
+
+<p align="left">The application being modeled is that of a Retailer offering
+
+consumer electronic goods to Consumers; a typical B2C model. To fulfill orders, the Retailer has to manage stock levels in Warehouses. When an item in stock falls below a certain threshold, the
+Retailer must restock the item from the relevant Manufacturer's inventory;
+
+a typical B2B model. In order to fulfill a Retailer's request, a Manufacturer may have to execute a production run to build the finished goods.
+Each use case includes a logging call to a
+
+logging facility in order to monitor the activities of the services.</p>
+
+<p align="left">Retailer can also out-source the cataloging capabilities
+to a Catalog service that provides operations to access the catalog of products.
+The Catalog enables a consumer to browse it's contents and retrieve additional
+information about individual items. The consumer can then order the products
+from the Catalog which can then be packaged into an order and sent to a
+Retailer.</p>
+
+<p align="left">Optionally, there is a Configurator Web Service that lists all of
+
+the implementations registered in the UDDI registry for each of the Web Services
+
+in the sample application.</p>
+
+<p align="left">The 1 Retailer, 1 Logging Facility, 3 Warehouses, 3 Manufacturers,
+and 1
+Configurator Web Service are designed and implemented as part of WS-I Supply
+Chain Management Sample Applications 1.0 FCS. 1 Catalog Web Service is designed
+and implemented as part of WS-I Attachments Sample Applications 1.0. It
+demonstrates application of Basic Profile 1.1 <a href="#Ref6">[6]</a>, Simple
+SOAP Binding Profile 1.0 <a href="#Ref7">[7]</a>, and Attachments Profile 1.0 <a href="#Ref8">[8]</a>
+to a real-life scenario.</p>
+
+<p align="left">This document explains the Sun's implementation of
+
+WS-I Sample Supply Chain Management Application 1.0 FCS and WS-I Attachments Sample
+Applications 1.0 EA.</p>
+
+<h2 align="left"><a name="2.0">2.0</a> Directory Structure</h2>
+
+<p align="left">This section explains the directory structure</p>
+
+<blockquote>
+
+  <table border="0" width="80%">
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">bin&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">Scripts to invoke the retailer, configurator and catalog clients</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">docs&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">index.html, this file</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">etc/config&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">Configuration files required by the JAX-RPC tools</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">etc/wsdl&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">WSDL descriptions for the Web Services</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">lib&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">Client jar file</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="22" width="25">
+
+  <p align="left">src&nbsp;</p>
+
+      </td>
+
+      <td height="22" width="75%">
+
+  <p align="left">Source code</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="23" width="25">
+
+  <p align="left">wsi-server.war</p>
+
+      </td>
+
+      <td height="23" width="75%">
+
+  <p align="left"> WAR file with all the Web Service endpoints</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td height="23" width="25">
+
+  <p align="left">logs</p>
+
+      </td>
+
+      <td height="23" width="75%">
+
+  Generated results and SOAP request and response message files
+
+      </td>
+
+    </tr>
+
+  </table>
+
+</blockquote>
+
+
+
+<h2><a name="3.0">3.0</a> Pre-Requisites</h2>
+
+
+
+<p>Before any of the sample app Web Services can be invoked, you need to
+configure the container and database of your choice as described below.</p>
+
+
+
+<h3><a name="3.1">3.1</a> Container Configuration</h3>
+
+
+
+<h4>3.1.1 Sun Java System Application Server 8.0 Platform Edition (recommended)</h4>
+
+
+
+<p>Start the Application Server. Configure the <code> http.proxyHost</code> and <code> http.proxyPort</code> properties
+for the container by giving the following command:</p>
+<p><code>asadmin create-jvm-options --user &lt;admin user&gt; --password
+&lt;admin password&gt; -Dhttp.proxyHost=&lt;your-proxy-host&gt;:-Dhttp.proxyPort=&lt;your-proxy-port&gt;</code></p>
+
+
+
+<p>If the Application Server is not running on the standard host and port, then
+you need to specify <code>--host</code> and <code>--port</code> options.&nbsp;</p>
+
+
+
+<h4>3.1.2 Sun Java System Web Server 6.1</h4>
+
+
+
+<p>Configure the <code>http.proxyHost</code> and <code> http.proxyPort</code> properties
+for the container</p>
+<ol>
+  <li>On the administration page for the virtual server, click on the
+    &quot;Java&quot; tab.</li>
+  <li>Select the &quot;JVM Options&quot; from the left panel.</li>
+  <li>Specify <code>-Dhttp.proxyHost=&lt;your-proxy-host&gt;</code> in the first
+    empty text box next to &quot;Add&quot; and click on OK.</li>
+  <li>Specify <code>-Dhttp.proxyPort=&lt;your-proxy-port&gt;</code> in the first
+    empty text box next to &quot;Add&quot; and click on OK.</li>
+  <li>Specify <code>-Djava.awt.headless=true</code> in the first empty box next
+    to &quot;Add&quot; and click on OK. This will enable the headless operation
+    for AWT images involved in the Catalog Web Service.</li>
+  <li>Click on &quot;Apply&quot; on the top-right corner of the administration
+    page for the changes to take effect.</li>
+</ol>
+
+
+
+<h4>3.1.3 Tomcat</h4>
+
+<ol>
+
+  <li>If Tomcat container is running, stop it.</li>
+
+  <li>In your <code>conf/server.xml</code>, set the <code> unpackWARs</code> attribute to
+    <code>true</code> in the <code> Engine</code> element     with the <code> Host</code> element whose host attribute is
+    <code>localhost</code>.
+    <ol>
+
+      <li>This is a container-wide setting and will impact other applications
+
+        deployed in this container as well. Enabling this setting explodes the
+
+        content of the war file in <code>TOMCAT_HOME/webapps</code> directory by the war file
+
+        name. To redeploy an app, the exploded directory needs to be removed
+
+        from <code>TOMCAT_HOME/webapps</code> directory before starting the Tomcat
+
+        container.&nbsp;</li>
+
+    </ol>
+
+  </li>
+
+  <li>If HTTP proxy host and port are not configured during Tomcat installation,
+    configure the <code> http.proxyHost</code> and <code> http.proxyPort</code> properties
+    for the container
+    <ol>
+      <li>Add <code>http.proxyHost=&lt;your-proxy-host&gt;</code> on a new line
+        to <code>TOMCAT_HOME/conf/jwsdp.properties</code>.</li>
+      <li>Add <code>http.proxyPort=&lt;your-proxy-port&gt;</code> on a new line
+        to <code>TOMCAT_HOME/conf/jwsdp.properties</code>.</li>
+    </ol>
+  </li>
+
+</ol>
+
+
+
+<h3><a name="3.2">3.2</a> Database configuration</h3>
+
+
+
+<p>Pointbase database is recommended when Sun Java System Application Server 8.0
+Platform Edition is the chosen container. MySQL database is recommended when Sun Java System Web Server 6.1 or Tomcat
+is the chosen container. The <code>JWSDP_HOME/wsi-sampleapp/wsi-server.war</code>
+is configured to be used with the Pointbase database server. The steps to
+reconfigure the WAR file for MySQL database are given in section 3.2.2 below.</p>
+
+
+
+<h4>3.2.1 Pointbase database</h4>
+
+
+
+<ol>
+
+  <li>A functional version of pointbase is available in <code>AS_HOME/pointbase</code>
+    directory, where <code>AS_HOME</code> is the installation directory of Sun
+    Java System Application Server 8.0 Platform Edition (SJSAS 8.0PE). This
+    version of pointbase can be used under the licensing terms of SJSAS 8.0 PE.</li>
+
+  <li>Start the Pointbase database server
+    <ol>
+      <li>Go to <code>AS_HOME/pointbase/tools/serveroption</code>
+        directory and invoke the <code>startserver.</code>[<code>sh</code> | <code>bat</code>]
+    script.</li>
+      <li>Make sure that the database server is listening on port 9092. The port
+        number is displayed when the script is invoked. Otherwise you can change
+        the port number by modifying the script to add <code>/port:9092</code> after <code>com.pointbase.net.netServer</code>.</li>
+    </ol>
+  </li>
+
+  <li>Create a database
+    <ol>
+      <li>Go to <code>AS_HOME/pointbase/tools/serveroption</code>  directory and
+        invoke the <code>startconsole.</code>[<code>sh</code> | <code>bat</code>]
+
+script.</li>
+      <li> If
+    &quot;Connect to Database&quot; window opens up, select &quot;Create New
+        Database&quot;. If &quot;Connect to Database&quot; window does not open
+        up, then select <code>DBA</code> menu item from the main menu, then
+        select <code>Create</code> and then select <code>New Database</code>.
+        <ol>
+          <li>Take the defaults for Driver, User and Password options.</li>
+          <li>Change the URL to <code>jdbc:pointbase:server://localhost/wsi</code>.</li>
+          <li>Hit OK.</li>
+        </ol>
+      </li>
+      <li>Click on File - Exit to leave the database connection window.</li>
+    </ol>
+  </li>
+
+  <li>Copy the jar file containing the JDBC driver in the container
+    <ul>
+      <li>For Sun Java System Application Server container: Copy <code>AS_HOME/pointbase/lib/pbclient.jar</code>
+    to <code>AS_HOME/domains1/domain1/lib/ext</code> directory.</li>
+    </ul>
+    <ul>
+      <li>For Sun Java System Web Server 6.1 container
+        <ol>
+          <li>Edit the <code>server.xml</code> for the instance chosen during
+            Java WSDP installation. Typically this file will be in <code>https-&lt;your-server-name&gt;/config</code>
+            directory where <code> &lt;your-server-name&gt;</code> is the name of your server
+            on which Sun Java System Web Server 6.1 is installed.</li>
+          <li>Search for <code>classpathsuffix</code> attribute.</li>
+          <li>Add the absolute path of the jar file at the end of the value of <code>classpathsuffix</code>
+            attribute.</li>
+        </ol>
+      </li>
+      <li>For Tomcat container: Copy the jar file in <code>TOMCAT_HOME/common/lib</code>.</li>
+    </ul>
+  </li>
+
+  <li>If the app has been configured for the MySQL database earlier and now
+    needs to be configured with the Pointbase database, then go to <code>JWSDP_HOME/wsi-sampleapp/src</code>
+    directory and invoke the <code>repackage-war</code> target. Invoke the <code>deploy.wsi-sampleapp.webapps</code> target on the integration script
+    for your container. This script is available in
+    <ul>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsas.</code>[<code>sh</code>
+        | <code>bat</code>] for Sun Java System Application Server</li>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsws.</code>[<code>sh</code>
+        | <code>bat</code>] for Sun Java System Web Server</li>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdpontomcat.</code>[<code>sh</code>
+        | <code>bat</code>] for Tomcat</li>
+    </ul>
+    <p>For instance for Sun Java System Application Server installed in <code>/opt/SUNWappserver</code>
+    directory, this script is invoked as:<br>
+    <code><br>
+    JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsas.sh /opt/SUNWappserver deploy.wsi-sampleapp.webapps</code>
+  </li>
+
+</ol>
+
+<h4> 3.2.2 MySQL database</h4>
+
+
+
+<p> MySQL database is recommended when Sun Java System Web Server 6.1 or Tomcat
+is the chosen container.</p>
+
+
+
+<ol>
+  <li>MySQL can be downloaded from <a href="http://www.mysql.com/downloads/index.html">www.mysql.com/downloads</a>.
+    A standard MySQL installation using the binary distribution is recommended.</li>
+  <li>Start the MySQL database server
+    <ul>
+      <li>On a Unix-like platform
+        <ol>
+          <li>Go to <code>MYSQL_HOME</code> directory and invoke the <code>/bin/mysqld_safe
+            </code>script,
+    where <code>MYSQL_HOME</code> is the installation directory of MySQL
+    database. As per MySQL documentation, <code> mysqld_safe</code> is the recommended way to
+    start a <code> mysqld</code> server on Unix and NetWare. Refer to <a href="http://www.mysql.com/documentation/mysql/bychapter/manual_MySQL_Database_Administration.html#mysqld_safe">The mysqld_safe Server Startup Script</a> 
+            for more details.
+            <ul>
+              <li>This script needs to be invoked from <code>MYSQL_HOME</code> and
+        specifying the path as <code>./bin/mysqld_safe.</code></li>
+            </ul>
+          </li>
+          <li>Make sure that the database server is listening on port 3306. The port
+        number can be found by invoking the <code>./bin/mysqladmin variables</code>
+        command from <code>MYSQL_HOME</code> directory and looking for the value of
+        <code>port</code> variable. Otherwise you can change the port number by
+        invoking the script as&nbsp; <code>./bin/mysqld_safe --port=3306</code>.</li>
+        </ol>
+      </li>
+      <li>On a windows platform
+        <ol>
+          <li>Go to <code>MYSQL_HOME/bin</code> directory and invoke the command
+            <code>mysqld</code> <code>--console</code>. Refer to <a href="http://dev.mysql.com/doc/mysql/en/Windows_installation.html">Installing
+            MYSQL on Windows</a> for more details.</li>
+          <li>Make sure that the database server is listening on port 3306. The port
+        number can be found by invoking the <code>mysqladmin variables</code>
+            command from <code>MYSQL_HOME/bin</code> directory and looking for the value of
+        <code>port</code> variable. Otherwise you can change the port number by
+            specifying <code>port=3306</code> on a new line in <code>%WINDIR%/my.ini</code>.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Create a database
+    <ul>
+      <li>On a Unix-line platform
+        <ol>
+          <li>Go to <code>MYSQL_HOME</code>  directory and invoke the <code>./bin/mysql</code>
+            script.</li>
+          <li>This script needs to be invoked from <code>MYSQL_HOME</code> and
+        specifying the a user name with database creation privilege as <code>./bin/mysql
+        --user=root</code>. root is a default user, you may choose an alternate
+        user which has the permissions to create a database. This gives a <code>mysql</code>
+            prompt.</li>
+        </ol>
+      </li>
+      <li>On a Windows platform
+        <ol>
+          <li>Go to <code>MYSQL_HOME/bin</code>  directory and invoke <code>mysql</code> 
+            script. The default MySQL user in windows seems to have permission
+            to create a database. You my choose an alternate
+        user which has the permissions to create a database. If you happen to
+            choose an alternate user, you need to modify <code>JWSDP_HOME/wsi-sampleapp/etc/mysql.db.props</code>
+            file with the correct values for <code>user</code> and <code>password</code>
+            fields. This gives a <code>mysql</code>
+            prompt.</li>
+        </ol>
+      </li>
+      <li>At the <code>mysql</code> prompt, enter <code>create database wsi;</code>
+        command and hit Enter.</li>
+      <li>Type <code>quit;</code> on the <code> mysql</code> prompt to quit the
+        script.</li>
+    </ul>
+  </li>
+  <li>Download the JDBC driver (Connector/J) for MySQL from <a href="http://www.mysql.com/downloads/api-jdbc.html">www.mysql.com/downloads/api-jdbc.html</a>.
+    The JDBC driver jar file is named after the pattern <code>mysql-connector-java-&lt;version&gt;-&lt;release&gt;-bin.jar</code>
+    where <code>&lt;version&gt;</code> is the version number of the Connector/J
+    and <code>&lt;release&gt;</code> indicates whether it's a stable, alpha or
+    old release.
+    <ul>
+      <li>For Sun Java Systems Application Server 8.0 container: Copy the jar
+        file in <code>SJSAS_HOME/domains/domain1/lib/ext</code>  directory, if <code>domain1</code>
+        is the chosen domain.
+      </li>
+      <li>For Sun Java System Web Server 6.1 container
+        <ol>
+          <li>Edit the <code>server.xml</code> for the instance chosen during
+            Java WSDP installation. Typically this file will be in <code>https-&lt;your-server-name&gt;/config</code>
+            directory where <code> &lt;your-server-name&gt;</code> is the name of your server
+            on which Sun Java System Web Server 6.1 is installed.</li>
+          <li>Search for <code>classpathsuffix</code> attribute.</li>
+          <li>Add the absolute path of the jar file at the end of the value of <code>classpathsuffix</code>
+            attribute.</li>
+        </ol>
+      </li>
+      <li>For Tomcat container: Copy the jar file in <code>TOMCAT_HOME/common/lib</code>.</li>
+    </ul>
+  </li>
+  <li>Go to the <code>JWSDP_HOME/wsi-sampleapp/src</code> directory and invoke
+    the <code>repackage-war</code>
+    target as follows<br>
+    <br>
+    <code>ant repackage-war -Ddatabase=mysql</code></li>
+  <li>Invoke the <code>deploy.wsi-sampleapp.webapps</code> target on the integration script
+    for your container. This script is available in
+    <ul>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsas.</code>[<code>sh</code>
+        | <code>bat</code>] for Sun Java System Application Server</li>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsws.</code>[<code>sh</code>
+        | <code>bat</code>] for Sun Java System Web Server</li>
+      <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdpontomcat.</code>[<code>sh</code>
+        | <code>bat</code>] for Tomcat</li>
+    </ul>
+  </li>
+</ol>
+
+
+
+<h2><a name="4.0">4.0</a> Invoking the service</h2>
+
+<p>Make sure that the container and the database server configured above are
+running before invoking any of the
+
+services. The chosen database server will be running if you have performed step
+2 in section 3.2.1 or 3.2.2.</p>
+
+<h3><a name="4.1">4.1</a> Invoking the Retailer client</h3>
+
+Retailer client acts as a consumer of the electronics good and places
+
+pre-defined orders (defined in <code>etc/retailer-config.xml</code>) to the Retailer Web Service. Retailer
+
+Web Service then
+
+invokes the warehouse and manufacturer Web Service to fulfill the supply chain
+
+model defined in section 1.0 above. The orders are defined such that the various
+
+combinations of retailer, warehouse and manufacturer are being invoked. The set
+
+of endpoints is defined in <code> etc/endpoints.props</code> and the combination
+
+of endpoints is defined in <code>etc/vendor-config.xml</code>.
+<ol>
+
+      <li>Make sure <code> etc/endpoints.props</code> has the correct host and port
+
+        information.</li>
+
+      <li>Invoke <code>JWSDP_HOME/wsi-sampleapp/bin/run-retailer.</code>[<code>sh</code> | <code>bat</code>] to invoke the client. This will invoke
+
+        the <code> getCatalog</code> function from the RetailerService and&nbsp;places the
+
+        various pre-defined orders to the Retailer Web Service.</li>
+
+</ol>
+
+<h3><a name="4.2">4.2</a> Invoking the Configurator client</h3>
+
+Configurator client queries a public UDDI Business Registry for the WS-I sample app
+
+endpoints implemented by all the vendors which have a peer-to-peer relationship with
+
+WS-I business entity and displays them.
+<ol>
+
+  <li>You need to set <code> http.proxyHost</code> and <code> http.proxyPort</code> properties
+    for your container to
+    allow the container to be able to talk to UDDI Business
+
+    Registry outside the firewall. Refer to <a href="#3.1"> section 3.1</a> for container specific
+    configuration.</li>
+
+  <li>Invoke <code>JWSDP_HOME/wsi-sampleapp/bin/run-query.</code>[<code>sh</code> | <code>bat</code>] to invoke the client.</li>
+
+  <li>Default behavior of <code>run-query.</code>[<code>sh</code> | <code>bat</code>]
+
+    is to contact UDDI business registry and generate the endpoints information
+
+    dynamically. However Configurator Web Service also maintains all endpoints
+
+    information in a local cache accessible by specifying the following
+
+    argument when invoking the script<br>
+
+    <br>
+
+    <code>
+
+    -Dconfigurator.refresh=false</code>&nbsp;<br>
+
+    <br>
+
+    Specifying this option will not invoke the public UDDI business registry and
+
+    instead provide you with endpoints information from local cache. This cache
+
+    is also updated every time UDDI registry is contacted for getting the list
+
+    of endpoints
+
+  </li>
+
+  <li><code>run-query.</code>[<code>sh</code> | <code>bat</code>] uses the default Configurator
+
+    Web Service bundled
+
+    with Java WSDP. If you need to use another Configurator Web Service, you need to
+
+    specify the following argument when invoking the script<br>
+
+    <br>
+
+    <code>
+
+    -Dconfigurator.endpoint=&lt;ANOTHER_CONFIGURATOR_ENDPOINT&gt;</code><br>
+
+    <br>
+
+    To obtain other configurator endpoints, configure server-side logging
+
+    to CONFIG logging level and set <code>configurator.refresh</code> to <code>true</code>
+    as described in the previous step. Search server-side logs for &quot;Configurator&quot;
+
+    keyword and the endpoint address is available in the corresponding CONFIG log entry.
+    Refer to <a href="#6.0">section 6.0</a> for details on how to configure
+    logging.</li>
+
+  <li>If both <code> -Dconfigurator.endpoint</code> and <code> -Dconfigurator.refresh</code> options are
+
+    specified, then endpoints information is retrieved in the following manner:<br>
+
+    <table border="1" width="80%">
+
+      <tr>
+
+        <td width="20%" bgcolor="#DCD887"><font size="4">configurator.refresh</font></td>
+
+        <td width="20%" bgcolor="#DCD887"><font size="4">configurator.endpoint</font></td>
+
+        <td width="60%" bgcolor="#DCD887"><font size="4">How endpoints are generated&nbsp;</font></td>
+
+      </tr>
+
+      <tr>
+
+        <td width="20%">true</td>
+
+        <td width="20%">Not specified</td>
+
+        <td width="60%">Configurator Web Service talks to the UDDI
+
+          registry</td>
+
+      </tr>
+
+      <tr>
+
+        <td width="20%">false</td>
+
+        <td width="20%">Not specified</td>
+
+        <td width="60%">Local cache from the Configurator Web Service</td>
+
+      </tr>
+
+      <tr>
+
+        <td width="20%">true</td>
+
+        <td width="20%">Specified</td>
+
+        <td width="60%">Remote endpoint talks to the UDDI registry</td>
+
+      </tr>
+
+      <tr>
+
+        <td width="20%">false</td>
+
+        <td width="20%">Specified</td>
+
+        <td width="60%">Local cache from the remote endpoint</td>
+
+      </tr>
+
+    </table>
+
+  </li>
+
+</ol>
+
+<h3><a name="4.3">4.3</a> Invoking the Catalog client</h3>
+
+<p>Catalog client queries the Catalog Web Service which simulates an out-sourced
+cataloging capability that is used by the Retailer Web Service. It provides
+operations to access the catalog of products. The Catalog enables a consumer to
+browse its contents and retrieve additional information about individual items.
+In a larger context, the products that the consumer orders from the Catalog can
+be packaged into an order and sent to a Retailer.</p>
+
+ The set
+
+of Catalog endpoints is defined in <code>etc/endpoints.props</code>.
+<ol>
+
+      <li>Make sure <code> etc/endpoints.props</code> has the correct host and port
+
+        information.</li>
+
+      <li>Invoke <code>JWSDP_HOME/wsi-sampleapp/bin/run-catalog.</code>[<code>sh</code> | <code>bat</code>] to invoke the client. This will invoke
+
+        the <code>getCatalogWithImages</code> and <code>getProductDetails</code>
+        function from the Catalog Web Service. <code>getCatalogWithImages</code>
+        return attachment references of thumbnail images for each product in the
+        catalog. <code>getProductDetails</code> provides additional details
+        about each product, a larger product image, and a product spec sheet.
+        The spec sheet and picture are conveyed as SOAP attachments.</li>
+
+      <li>Default behavior of <code>run-catalog.</code>[<code>sh</code> | <code>bat</code>]
+        is to invoke <code>getCatalogWithImages</code> and <code>getProductDetails</code>
+        for each product in the Catalog. If you need to invoke only <code>getCatalogWithImages</code>,
+        you need to specify the following argument when invoking the script<br>
+        <br>
+        <code>
+        -Dcatalog.level=thumbnail</code><br>
+        <br>
+        If you need to invoke only <code>getProductDetails</code>, you need to
+        specify the following argument when invoking the script<br>
+        <br>
+        <code>
+        -Dcatalog.level=details</code></li>
+
+      <li><code>run-catalog.</code>[<code>sh</code> | <code>bat</code>] uses the default
+        Catalog Web Service bundled
+
+    with JWSDP. If you need to use another Catalog Web Service, you need to add
+        the endpoint in <code>etc/endpoints.props</code> in the form<br>
+        <br>
+        <code>
+        vendor.catalog=ENDPOINT_ADDRESS</code><br>
+        <br>
+        where ENDPOINT_ADDRESS specifies the location of the new Catalog Web
+        Service and &quot;vendor&quot; can be replaced by the name of the Web
+        Service provider. Then the new Catalog Web Service can be used by
+        specifying the following argument when invoking the script<br>
+        <br>
+        <code>
+        -Dcatalog.endpoint=vendor</code><br>
+        <br>
+        where <code>vendor</code> needs to match the &quot;vendor&quot; string specified in
+        <code>JWSDP_HOME/wsi-sampleapp/etc/endpoints.props</code>.</li>
+
+</ol>
+
+<h2><a name="5.0">5.0</a> Building from the source</h2>
+
+If HTTP proxy host and port are not configured during JWSDP installation,
+configure the <code> http.proxyHost</code> and <code> http.proxyPort</code> properties in <code> JWSDP_HOME/conf/jwsdp.properties</code>
+
+before building from the source.
+
+    <ul>
+
+      <li>Client
+        <ol>
+
+  <li>Go to <code> src</code> directory and invoke <code>ant client</code> command. This will
+
+    overwrite the existing <code> wsi-client.jar</code> in <code> JWSDP_HOME/wsi-sampleapp/lib</code> directory.</li>
+
+  <li>Follow the instructions in 4.0 to run the client.</li>
+
+        </ol>
+
+      </li>
+
+      <li>Server
+        <ol>
+
+          <li>Go to <code> src</code> directory and invoke <code>ant
+
+    server</code> command. This will overwrite the existing <code> wsi-server.war</code> in
+            <code> JWSDP_HOME/wsi-sampleapp</code>
+
+            directory.
+            <ul>
+              <li>By default, the Pointbase database configuration file is
+                bundled in the WAR file. If MySQL database configuration file
+                needs to be bundled instead, add <code>-Ddatabase=mysql</code>
+                property when invoking the ant target.</li>
+            </ul>
+          </li>
+
+          <li>Invoke <code>deploy.wsi-sampleapp.webapps</code> target on the integration script
+for your container. This script is available in
+            <ul>
+              <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsas.</code>[<code>sh</code>
+                | <code>bat</code>] for Sun Java System Application Server</li>
+              <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdponsjsws.</code>[<code>sh</code>
+                | <code>bat</code>] for Sun Java System Web Server</li>
+              <li><code>JWSDP_HOME/jwsdp-shared/bin/jwsdpontomcat.</code>[<code>sh</code>
+                | <code>bat</code>] for Tomcat</li>
+            </ul>
+          </li>
+
+        </ol>
+
+      </li>
+
+    </ul>
+
+<p>&nbsp;</p>
+
+<h2><a name="6.0">6.0</a> Configuring Logging</h2>
+
+ The Java WSDP supports the Java Logging API <a href="#Ref9">[9]</a>.
+
+    By default, the sample app in the Java WSDP has it's&nbsp; logging level set
+
+    to &quot;INFO&quot;. The following levels are available, in ascending order
+
+    of granularity and are used in the application as shown below.<br>
+
+<div align="center">
+
+  <center>
+
+<table border="1" width="50%">
+
+  <tr>
+
+    <td width="30%"><b>Logging Level</b></td>
+
+    <td width="70%"> <b>Usage</b></td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">SEVERE</td>
+
+    <td width="70%"> Server-side or client-side exception</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">WARNING</td>
+
+    <td width="70%">Non-blocking error conditions</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">INFO (default)</td>
+
+    <td width="70%">Basic flow of application</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">CONFIG</td>
+
+    <td width="70%"> Logging entries from the LoggingFacility</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">FINE</td>
+
+    <td width="70%"> SOAP request and response messages</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">FINER</td>
+
+    <td width="70%"> Entry and exit points of primary methods</td>
+
+  </tr>
+
+  <tr>
+
+    <td width="30%">FINEST</td>
+
+    <td width="70%"> Display intermediate steps from the primary methods, if any</td>
+
+  </tr>
+
+</table>
+
+  </center>
+
+</div>
+
+&nbsp;
+<p> To change the default logging level (INFO) on server-side and client-side to
+
+    a different level:</p>
+
+<ol>
+
+  <li>Edit <code>JAVA_HOME/jre/lib/logging.properties</code> file.
+
+  </li>
+
+  <li>Add the following on a new line<br>
+    <br>
+    <code>com.sun.wsi.scm.level=LEVEL</code><br>
+    <br>
+    where <code>LEVEL</code> is one of the seven logging levels mentioned above.
+
+  </li>
+
+  <li>Restart the container and re-run the client.
+
+  </li>
+
+</ol>
+
+<h2><a name="7.0">7.0</a> Troubleshooting</h2>
+
+<ol>
+
+  <li>Check that all the container- and database-specific pre-requisites are
+    met.&nbsp;&nbsp;</li>
+
+  <li>All the endpoints are configured in <code> etc/endpoints.props</code> file. The
+
+    default endpoints are configured for host &quot;localhost&quot; and port
+
+    &quot;8080&quot;. If your application is deployed at a different port, then ensure that these are reflected correctly in
+    the <code>etc/endpoints.props</code> file.</li>
+
+  <li>Make sure the database server is started before <code>run-retailer</code>
+
+    script is invoked. If database is started after the script is invoked, you
+
+    need to restart the container.</li>
+
+  <li>Make sure the database is running on the correct host and port and the appropriate
+
+    database has already been created. Refer to section 3.2 for more
+
+    details.</li>
+
+  <li>Database related properties are stored in <code>JWSDP_HOME/wsi-sampleapp/etc/</code>[<code>mysql</code>
+    | <code>pointbase</code>]<code>.props</code>. If you need to modify any of
+    the database configuration properties, edit the .props file specific to your
+    database and invoke <code>ant repackage-war -Ddatabase=</code>[<code>pointbase
+    </code>|<code> mysql</code>] target from the <code>JWSDP_HOME/wsi-sampleapp/src</code>
+    directory.&nbsp; And then invoke the <code>deploy.wsi-sampleapp.webapps</code>
+    target on the integration script
+    for your container.</li>
+
+  <li>If any of the sample app endpoints is outside firewall, you need to specify
+    <code>
+
+    http.proxyHost</code> and <code> http.proxyPort</code> properties in <code> JWSDP_HOME/conf/jwsdp.properties</code>
+
+    so that they specify the system on your network through which you access the Internet.</li>
+
+  <li>You can
+
+    specify sample app endpoints from other vendors in the <code>etc/endpoints.props</code>
+    file and
+
+    create different configurations, comprising of endpoints from different
+
+    vendors, in <code>etc/vendor-config.xml</code>.&nbsp; Each of
+
+    these configurations will be used to place the orders specified in <code>etc/retailer-config.xml</code>. However if your endpoints are
+
+    deployed inside firewall, then only Retailer Web Service hosted within the
+
+    firewall can be mixed with the other endpoints installed outside firewall.</li>
+
+  <li>To view the SOAP request and response messages, turn the logging level to
+    FINE and restart the container. Refer to <a href="#6.0"> section 6.0</a> on how to configure logging. SOAP request and
+
+    response messages are available for Retailer, Logging and Configurator
+
+    clients as given below:
+
+    <ul>
+
+      <li>Retailer client
+
+    SOAP request and response messages are available in the <code>logs/retailer-soap-messages.txt.</code></li>
+
+      <li>Logging client SOAP request and response messages are available in the
+        <code>logs/logging-soap-messages.txt</code>.</li>
+
+      <li>Configurator client SOAP request and response messages are available
+
+        in the <code>logs/configurator-soap-messages.txt</code>.</li>
+
+    </ul>
+
+    <p>Server-side log messages are available in the corresponding logs
+    directory of your container.</li>
+
+</ol>
+
+<h2><a name="8.0">8.0</a> References</h2>
+
+<ol>
+
+  <li><a href="http://www.ws-i.org/" name="Ref1">WS-I</a></li>
+
+  <li><a href="http://www.ws-i.org/SampleApplications/SupplyChainManagement/2003-04/SCMUseCases1.0-BdAD.pdf" name="Ref2">Supply
+
+    Chain Management Sample Application 1.0 Use Case Model Board Approval Draft</a></li>
+
+  <li><a name="Ref3">Use Cases for Attachments Sample Applications 1.0</a> 
+    (Editor's Draft - not publicly
+    available yet)</li>
+
+  <li><a href="http://www.ws-i.org/SampleApplications/SupplyChainManagement/2003-04/SCMArchitecture1.0-BdAD.pdf" name="Ref4">Supply
+
+    Chain Management Sample Application 1.0 Architecture Board Approval Draft</a></li>
+
+  <li><a name="Ref5">Technical Architecture for Attachments Sample Applications
+    1.0</a>  (Editor's Draft - not publicly available yet)</li>
+
+  <li><a href="http://www.ws-i.org/Profiles/Basic/2003-12/BasicProfile-1.1.pdf" name="Ref6">Basic
+    Profile 1.1 Working Group Draft</a></li>
+
+  <li><a href="http://www.ws-i.org/Profiles/Basic/2003-08/SimpleSoapBindingProfile-1.0.pdf" name="Ref7">Simple
+    SOAP Binding Profile 1.0 Working Group Draft&nbsp;</a></li>
+
+  <li><a href="http://www.ws-i.org/Profiles/Basic/2003-08/AttachmentsProfile-1.0.pdf" name="Ref8">Attachments
+    Profile 1.0 Working Group Draft</a></li>
+
+  <li><a href="http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/index.html" name="Ref9">Java
+
+    Logging APIs</a></li>
+
+</ol>
+
+</body>
+
+</html>
+

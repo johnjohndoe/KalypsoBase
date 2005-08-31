@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <title>
+        Sample Applications
+    </title>
+    <link rel="stylesheet" type="text/css" href="style/default.css"/>
+  </head>
+
+  <body>
+  <p>
+<a href="index.html"><font size="-1">XWS-Security Home</font></a><br>
+<a href="ReleaseNotes.html"><font size="-1">XWS-Security Release Notes</font></a></p>
+    <h1>XML and Web Services Security<br>
+        Sample Applications</h1>
+    <center><b>Implementation Version:</b> EA3<br />
+    </center>
+
+
+
+        <h3>Building and Running the Sample Applications With ASant</h3>
+    You can build and run the XML and Web Services Security sample applications 
+        using the supplied <code>asant</code> and/or <code>ant</code>
+   build files.  This document assumes the user is deploying
+    the sample applications to the Sun Java Systems Application Server, and thus
+    <code>asant</code> is used for demonstration purposes.  If you are deploying
+    to a different application server, use the <code>ant</code> tool instead.
+    
+    To build, package, deploy, and run the sample applications, follow the correct
+    steps for your platform:
+
+    <blockquote>
+      <p>For <strong>Solaris/Linux</strong>, follow these steps.  On some shells, you would
+      use <code>setenv</code> in place of <code>export</code>.  When using <code>setenv</code>,
+      replace the <code>=</code> with a space.</p>
+      <blockquote>
+        <ol>
+          <li><code>% export JAVA_HOME=&lt;<i>your J2SE installation directory</i>&gt;</code></li>
+          <li><code>% export JWSDP_HOME=&lt;<i>your JWSDP  1.4 installation directory</i>&gt;</code></li>
+          <li><code>% export SJSAS_HOME=&lt;<i>your Application Server installation directory</i>&gt;</code>
+  (or use <code>SJSWS_HOME</code> or <code>TOMCAT_HOME</code>) as applicable)</li>
+          <li><code>% export ANT_HOME=$SJSAS_HOME/bin</code> (or the location of your
+Ant installation)</li>
+          <li><code>% export PATH=$JWSDP_HOME/jwsdp-shared/bin;$SJSAS_HOME/bin:$PATH</code></li>
+          <li><code>% cd $JWSDP_HOME/xws-security/samples/<i>&lt;sample-name&gt;</i></code></li>
+          <li><code>% cp build.properties.sample build.properties</code></li>
+          <li>Edit <code>build.properties</code> as shown in <a href="#Editing build.properties">Editing the build.properties file</a>.</li>
+          <li>To display usage information for the sample,<br>
+            <code>% $ANT_HOME/bin/asant&nbsp;</code></li>
+            <li>Follow the instructions provided in             <code>%JWSDP_HOME%/xws-security/samples/<i>&lt;sample-name&gt;</i>/README.txt</code> 
+            for setting up and running the example on each of the 
+           three possible containers.</li>
+        </ol>
+      </blockquote>
+
+      <p>For <strong>Windows NT/2000/XP</strong>:</p>
+      <blockquote>
+        <ol>
+          <li><code>&gt; set JAVA_HOME=&lt;<i>your J2SE installation directory</i>&gt;</code></li>
+          <li><code>&gt; set JWSDP_HOME=&lt;<i>your JWSDP 1.4 installation directory</i>&gt;</code></li>
+          <li><code>&gt; set SJSAS_HOME=&lt;<i>your Application Server installation directory</i>&gt;</code>  (or use <code>SJSWS_HOME</code> or <code>TOMCAT_HOME</code>) as applicable)</li>
+          <li><code>&gt; set ANT_HOME=%SJSAS_HOME%\bin</code> (or the location of your
+Ant installation)</li>
+          <li><code>&gt; set PATH=%JWSDP_HOME%\jwsdp-shared\bin;%SJSAS_HOME%\bin;%PATH%</code></li>
+          <li><code>&gt; cd %JWSDP_HOME%\xws-security\samples\<i>&lt;sample-name&gt;</i></code></li>
+          <li><code>&gt; copy build.properties.sample build.properties</code></li>
+          <li>Edit <code>build.properties</code> as shown in <a href="#Editing build.properties">Editing the build.properties file</a>.</li>
+          <li>To display usage information for the sample,<br>
+            <code>&gt; %ANT_HOME%\bin\asant</code></li>
+           <li>Follow the instructions provided in 
+       <code>%JWSDP_HOME%\xws-security\samples\<i>&lt;sample-name&gt;</i>\README.txt</code> 
+           for setting up and running the example on each of the 
+           three possible containers.</li>
+        </ol>
+      </blockquote>
+
+     
+
+    </blockquote>
+
+
+    <h3><a name="Editing build.properties">Editing the build.properties file</a></h3>
+    <blockquote>
+        The following is a list of the configurable properties file with a
+        description of what needs to be modified:
+        <ol>
+          <li><i>javahome</i>: Set this to the location of your Java 2 SDK installation directory</li>
+                  <li>Uncomment one of the container homes by removing the <code>#</code>  
+                  sign beside the container.  Only one container home should be uncommented
+                  at a time.  Uncomment the container upon which you want to test the 
+                  sample application, either the Tomcat, Application Server, or
+                  Web Server containers.</li>
+                  <li><i>username</i>: Replace this with the user name a person assigned to
+                  the role of <code>admin</code> 
+             for your Application Server or other container installation.</li>
+          <li><i>password</i>: Replace this with the password for the above
+            user.</li>
+                        <li><i>endpoint.host</i>, <i>endpoint.port</i>: Verify the host and port 
+                  information, as
+            appropriate for your Application Server or other container installation.</li>
+                        <li><i>VS.DIR</i>: Enter the name of the virtual server.  Applicable only
+                        is you are deploying to Web Server.
+                        </li>
+                        <li><i>jwsdp.home</i>: Set this to the location of your JWSDP 1.4 installation directory.</li>
+                        <li><i>jaxrpc.tool.verbose</i>: Set this to true to produce verbose
+            output from the JAX-RPC tools (such as <code>wscompile</code>).</li>
+          <li><i>http.proxyhost</i>, <i>http.proxyport</i>: Set these to the
+                  correct values for your proxy host and proxy port if you are using an
+                  example with remote endpoints.</li>
+          <li><i>example</i>: The name of the sample (leave this as is)</li>
+        </ol>
+    </blockquote>
+
+
+    <h3>List of Sample Applications</h3>
+        
+            <blockquote>
+      <dl>
+        <dt><b>samples/simple</b></dt>
+        <dd>This sample application lets you plug in different
+                client and server-side configurations describing security settings.  This example 
+                has support for digital signatures, XML encryption/decryption, and username 
+                token verification.  This example allows and demonstrates combinations of these
+                basic security mechanisms through configuration files. See the application's <a href="../samples/simple/README.txt">README.txt</a> file for more
+                information on running this example. </dd>
+        <dd>&nbsp;</dd>
+
+        <dt><b>samples/interop</b></dt>
+        <dd>This sample application is an implementation of the WSS
+                scenario documents. See the application's <a href="../samples/interop/README.txt">README.txt</a> file for more
+                information on running this example.</dd>
+        <dd>&nbsp;</dd>
+
+      
+      </dl>
+    </blockquote>
+  </body>
+</html>

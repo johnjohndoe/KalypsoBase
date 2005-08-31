@@ -1,0 +1,8 @@
+com.sun.xml.rpc.security
+com.sun.xml.wss
+com.sun.xml.wss.configuration
+com.sun.xml.wss.filter
+com.sun.xml.wss.helpers
+com.sun.xml.wss.impl
+com.sun.xml.wss.keyinfo
+com.sun.xml.wss.reference

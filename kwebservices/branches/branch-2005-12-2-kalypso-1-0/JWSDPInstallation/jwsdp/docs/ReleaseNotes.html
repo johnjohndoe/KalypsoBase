@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>Java(TM) Web Services Developer Pack 1.4 Release Notes</TITLE>
+
+<BODY bgColor=#ffffff><!-- specifies whether the components exist -->
+
+<SCRIPT language=JavaScript1.1 src="ReleaseNotes_files/Components.js" 
+type=text/javascript></SCRIPT>
+
+<P><A href="./index.html">Java Web Services Developer Pack 1.4</A> 
+
+<H1>Java<SUP><FONT size=-2>TM</FONT></SUP> Web Services Developer Pack 1.4 
+Release Notes</H1>
+<H3>Contents</H3>
+<BLOCKQUOTE>
+<P><A href="./ReleaseNotes.html#platforms">Supported Platforms</A> 
+<BR><A href="./ReleaseNotes.html#new">What's New in Java WSDP 1.4?</A> 
+<BR><A href="./ReleaseNotes.html#RedistributableComponents">Redistributable 
+    Components</A> 
+<BR><A href="./ReleaseNotes.html#NonredistributableComponents">Nonredistributable 
+    Components</A> 
+<BR><A href="./ReleaseNotes.html#ev">Environment Variables</A> 
+<BR><A href="./ReleaseNotes.html#AntOnLinux">Using Ant That Comes with Java WSDP on Linux</A> 
+<BR><A href="./ReleaseNotes.html#uninstalling">Uninstalling Java WSDP 1.4</A> 
+<BR><A href="./ReleaseNotes.html#KnownIssues">Known Issues</A> 
+</P>
+
+<p>The Java<SUP><SMALL>TM</SMALL></SUP> Web Services Developer Pack (Java WSDP) 
+   is an all-in-one download containing key technologies to simplify building 
+   of Web services using the Java 2 Platform. For release notes for these 
+   technologies see: 
+<UL>
+<SCRIPT language=JavaScript1.1 type=text/javascript>
+      document.open();
+      
+      if (xmldsig == true) {
+          document.write('<li><a href="../xmldsig/docs/index.html">XML Digital Signature 1.0 EA Release Notes</a></li>');
+      }
+
+      if (xws_sec == true) {
+          document.write('<li><a href="../xws-security/docs/ReleaseNotes.html">XML and Web Services Security 1.0 EA3 Release Notes</a></li>');
+      }
+
+      if (wsi == true) {
+          document.write('<li><a href="../wsi-sampleapp/docs/index.html">WS-I Attachment Sample Application 1.0 EA Release Notes</a></li>');
+      }
+
+      if (jaxb == true) {
+          document.write('<li><a href="../jaxb/docs/ReleaseNotes.html">JAXB 1.0.3 FCS Release Notes</a></li>');
+      }
+
+      if (jaxp == true) {
+          document.write('<li><a href="../jaxp/docs/ReleaseNotes.html">JAXP 1.2.6 FCS Release Notes</a></li>');
+      }
+
+      if (jaxr == true) {
+          document.write('<li><a href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.6 FCS Release Notes</a></li>');
+      }
+
+      if (jaxrpc == true) {
+          document.write('<li><a href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.2 FCS Release Notes</a></li>');
+      }
+
+      if (saaj == true) {
+          document.write('<li><a href="../saaj/docs/ReleaseNotes.html">SAAJ 1.2.1 FCS Release Notes</a></li>');
+      }
+
+      if (jstl == true) {
+          document.write('<li><a href="../jstl/docs/ReleaseNotes.html">JSTL 1.1 FCS Release Notes</a></li>');
+      }
+
+      if (registry == true) {
+          document.write('<li><a href="../registry-server/docs/ReleaseNotes.html">Registry Server 1.0_06 FCS Release Notes</a></li>');
+      }
+
+      if (tomcat == true) {
+          document.write('<li><a href="http://jakarta.apache.org/tomcat/tomcat-5.0-doc/RELEASE-NOTES.txt">Apache Tomcat 5 Release Notes</a></li>');
+      }
+
+      document.close();
+</SCRIPT>
+    
+<NOSCRIPT>
+<LI><A href="../xmldsig/docs/index.html">XML Digital Signature 1.0 EA Release 
+    Notes</A></LI> 
+<LI><A href="../xws-security/docs/ReleaseNotes.html">XML and Web Services 
+    Security 1.0 EA3</A></LI> 
+<LI><A href="../wsi-sampleapp/docs/index.html">WS-I Attachment Sample Application 1.0 EA 
+    Release Notes</A></LI> 
+<LI><A href="../jaxb/docs/ReleaseNotes.html">JAXB 1.0.3 FCS Release Notes</A></LI> 
+<LI><A href="../jaxp/docs/ReleaseNotes.html">JAXP 1.2.6 FCS Release Notes</A></LI> 
+<LI><A href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.6 FCS Release Notes</A></LI>
+<LI><A href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.2 FCS Release 
+    Notes</A></LI> 
+<LI><A href="../saaj/docs/ReleaseNotes.html">SAAJ 1.2.1 FCS Release Notes</A></LI> 
+<LI><A href="../jstl/docs/ReleaseNotes.html">JSTL 1.1 EA Release Notes</A></LI> 
+<LI><A href="../registry-server/docs/ReleaseNotes.html">Registry Server 1.0_06 
+    EA Release Notes</A></LI>
+</NOSCRIPT>
+</UL>
+  <P>Updated, online versions of the release notes are available <A 
+  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html">here</A>. 
+  </P></BLOCKQUOTE>
+  
+<A name=platforms></A>
+<H3>Supported Platforms</H3>
+<BLOCKQUOTE>
+
+<P>This release of the Java WSDP has been tested in various configurations 
+  with J2SE SDK version 1.4.2_<EM>xx</EM> on the following platforms: 
+
+<UL>
+<LI>Solaris<SUP><FONT size=-2>TM</FONT></SUP> 9 Operating System 
+<LI>Windows 2003 Server Professional Edition 
+<LI>Windows XP Professional Edition 
+<LI>RedHat Linux 9.0 </LI>
+</UL>
+</BLOCKQUOTE>
+
+<A name=new> </A>
+<H3>What's New in Java WSDP 1.4?</H3>
+<BLOCKQUOTE>
+
+<UL>
+<LI>JSR-105, XML Digital Signature API</LI>
+
+<LI>Support for multiple Web containers (Sun Java System Application Server 
+    Platform Edition 8, Sun Java System Web Server 6.1, Tomcat 5.0 for Java 
+    WSDP Container) or no Web container</LI>
+
+<LI>Support for the following profiles, based on draft versions dated April 19, 
+    2004:
+    <UL>
+    <LI>WS-I Basic Profile 1.1</LI>
+    <LI>WS-I Attachment Profile 1.0</LI>
+    <LI>WS-I Simple SOAP Binding Profile 1.0</LI>
+    </UL</LI>
+
+<LI>XML and Web Services Security EA3, which implements "Web Services Security:
+    SOAP Message Security" 1.0 from OASIS</LI>
+
+<LI>Renamed JAXP Packages (from org.apache to com.sun.org.apache)</LI>
+</UL>
+</BLOCKQUOTE>
+
+<A name=RedistributableComponents> </A>
+<H3>Redistributable Components</H3>
+<BLOCKQUOTE>
+  <P>Redistribution of the entire Java WSDP is subject to this <A 
+  href="../LICENSE">license</A>. 
+  <P>The following Java WSDP components are individually redistributable. 
+  Redistribution of a component entails the redistribution of all files 
+  comprising the component and any dependent components. 
+  <P>
+  <TABLE cellPadding=5 summary="" border=1>
+    <TBODY>
+    <TR>
+      <TH align=left>Redistributable Component</TH>
+      <TH align=left>Files</TH></TR>
+    <TR>
+      <TD>JAXP</TD>
+      <TD><CODE>jaxp-api.jar</CODE>, <CODE>dom.jar</CODE>, 
+        <CODE>sax.jar</CODE>, <CODE>xalan.jar</CODE>, 
+        <CODE>xercesImpl.jar</CODE>, <CODE>xsltc.jar</CODE></TD></TR>
+    <TR>
+      <TD>JAXB <SUP><B>*</B></SUP></TD>
+      <TD>JAXB JAR files (<CODE>jaxb-api.jar</CODE>, 
+        <CODE>jaxb-impl.jar</CODE>, <CODE>jaxb-libs.jar</CODE>, 
+        <CODE>jaxb-xjc.jar</CODE>), JAXP 1.1 or higher JAR files 
+        (<CODE>jaxp-api.jar</CODE>, <CODE>sax.jar</CODE>, <CODE>dom.jar</CODE>, 
+        <CODE>xalan.jar</CODE>), JWSDP Shared JAR files 
+        (<CODE>jax-qname.jar</CODE>, <CODE>namespace.jar</CODE>, 
+        <CODE>xsdlib.jar</CODE>, <CODE>relaxngDataype.jar</CODE>) </TD></TR>
+    <TR>
+      <TD>JAX-RPC</TD>
+      <TD><CODE>jaxrpc-api.jar</CODE>, <CODE>jaxrpc-impl.jar</CODE>, 
+        <CODE>jaxrpc-spi.jar</CODE>, <CODE>relaxngDatatype.jar</CODE>, 
+        <CODE>xsdlib.jar</CODE>, JAXP, SAAJ, <CODE>jcert.jar</CODE>, 
+        <CODE>jnet.jar</CODE>, <CODE>jsse.jar</CODE> </TD></TR>
+    <TR>
+      <TD>SAAJ</TD>
+      <TD><CODE>saaj-api.jar</CODE>, <CODE>saaj-impl.jar</CODE>, 
+        <CODE>jaxp-api.jar</CODE>, <CODE>dom.jar</CODE>, <CODE>sax.jar</CODE>, 
+        <CODE>xalan.jar</CODE>, <CODE>xercesImpl.jar</CODE>, 
+        <CODE>activation.jar</CODE>, <CODE>mail.jar</CODE>, 
+        <CODE>servlet.jar</CODE></TD></TD></TR>
+    <TR>
+      <TD>JAXR</TD>
+      <TD><CODE>jaxr-api.jar</CODE>, <CODE>jaxr-impl.jar</CODE>, 
+        <CODE>jaxb-api.jar</CODE>, <CODE>jaxb-impl.jar</CODE>, 
+        <CODE>jaxb-libs.jar</CODE>, <CODE>saaj-api.jar</CODE>, 
+        <CODE>saaj-impl.jar</CODE>, <CODE>jaxp-api.jar</CODE>, 
+        <CODE>dom.jar</CODE>, <CODE>sax.jar</CODE>, <CODE>xercesImpl.jar</CODE>, 
+        <CODE>activation.jar</CODE>, <CODE>jaas.jar</CODE>, 
+        <CODE>mail.jar</CODE>, <CODE>namespace.jar</CODE>, 
+        <CODE>relaxngDatatype.jar</CODE>, <CODE>xsdlib.jar</CODE></TD></TD></TR>
+    <TR>
+      <TD colSpan=2><SUP><B>*</B></SUP>&nbsp;&nbsp;<FONT size=-1>If the 
+        application will not be doing any compilation at runtime, the 
+        <CODE>jaxb-xjc.jar</CODE> file does not need to be redistributed with 
+        the application.</FONT></TD></TR></TBODY></TABLE>
+  <P>Click <A 
+  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html#RedistributableComponents">here</A> 
+  to check for any changes. </P></BLOCKQUOTE><A name=NonredistributableComponents>
+<H3>Nonredistributable Components</H3>
+<BLOCKQUOTE>
+  <P>The following Java WSDP components are <EM>not</EM> redistributable. These 
+  components can be used for designing, developing, and testing purposes only. 
+  <P>
+  <TABLE cellPadding=5 summary="" border=1>
+    <TBODY>
+    <TR>
+      <TH align=left>Nonredistributable Component</TH>
+      <TH align=left>Files</TH></TR>
+    <TR>
+      <TD>Registry Server</TD>
+      <TD><CODE>registry-server.war</CODE>, <CODE>xindice.jar</CODE></TD></TR>
+    <TR>
+      <TD>Java XML &amp; Web Services Security</TD>
+      <TD>all</TD></TR>
+    <TR>
+      <TD>XML Digital Signature</TD>
+      <TD>all</TD></TR>
+    <TR>
+      <TD>JSTL</TD>
+      <TD>all</TD></TR>
+    <TR>
+      <TD>WS-I Sample Application</TD>
+      <TD>all</TD></TR>
+</TBODY></TABLE>
+
+<P>Click <A 
+  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html#NonredistributableComponents">here</A> 
+  to check for any changes. </P></BLOCKQUOTE>
+  
+<a name=AntOnLinux> </a>
+<h3>Using Ant That Comes with Java WSDP on Linux</h3>
+<blockquote>
+<p>On Linux systems, even if you set your ANT_HOME and PATH environment 
+   variables to point to the version of Ant that is installed with the Java 
+   WSDP 1.4, when you run the Java WSDP's Ant scripts, your system will look in 
+   the <code>/etc/ant.conf</code> configuration file and execute the version of 
+   Ant that is configured there.  In this case, the default entry is 
+   <code>/usr/share/ant</code>.  If you want to use the version of ANT that is 
+   shipped with Java WSDP, comment out the line that configures Ant in the 
+   <code>/etc/ant.conf</code> configuration file and your ANT_HOME and PATH 
+   environment variable settings will be used.
+</p>
+</blockquote>
+
+
+<A name=ev>
+</a>
+<H3>Environment Variables</H3>
+<BLOCKQUOTE>
+  <P>The <CODE>JAVA_HOME</CODE> environment variable is set to point to the 
+  version of the J2SE SDK you specify during installation. If you change your 
+  J2SE SDK installation, you will need to edit your 
+  <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;\jwsdp-shared\bin\setenv.bat</CODE> batch 
+  file or <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/jwsdp-shared/bin/setenv.sh</CODE> 
+  and reset the <CODE>JAVA_HOME</CODE> environment variable. 
+  <P>All other custom system properties can be set in the file 
+  <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/conf/jwsdp.properties</CODE> as follows: <PRE>http.proxyHost=webcache 
+http.proxyPort=8080
+</PRE>
+  <P>You can override any of the properties in your file 
+  <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/conf/jwsdp.properties</CODE> by using the 
+  <CODE>-D...</CODE> argument to any of the start scripts. For example, 
+  <P><B>Unix</B>: <CODE>catalina.sh -Dhttp.proxyHost=webcache 
+  -Dhttp.proxyPort=8080</CODE> 
+  <P><B>Microsoft Windows</B>: <CODE>catalina -Dhttp.proxyHost=webcache 
+  -Dhttp.proxyPort=8080</CODE> </P></BLOCKQUOTE>
+  
+<A name=uninstalling> </a>
+<H3>Uninstalling Java WSDP 1.4</H3>
+<BLOCKQUOTE>
+  <P>At some point, you may need to uninstall Java WSDP 1.4: </P>
+  <UL>
+    <LI>On Microsoft Windows, select Start --&gt; Programs --&gt; Java(TM) Web 
+    Services Developer Pack 1.4 --&gt; Uninstall. 
+    <LI>On Solaris and Linux, run the 
+    <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/uninstall.sh</CODE> script. </LI>
+</UL>
+
+<p>If you ran one of the integration scripts after you installed the Java WSDP,
+   you must rerun the script using the 
+   <code>revert.&lt;<em>container</em>&gt;.changes</code> target before you 
+   uninstall the Java WSDP.</p>
+</BLOCKQUOTE>
+
+<A name=KnownIssues>
+  <H3>Known Issues</H3>
+  <BLOCKQUOTE>
+    <P>Click <A 
+    href="http://java.sun.com/webservices/1.4/ReleaseNotes.html#KnownIssues">here</A> 
+    to display an up-to-date list of known problems with the Java WSDP 1.4 
+    release.</P></BLOCKQUOTE>
+  <P>&nbsp;</P>
+
+<p> </p>
+<hr>
+<p>Please send feedback on the Java Web Services Developer Pack to 
+   <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>. 
+</p>
+
+<P><A href="./Copyright.html"><FONT 
+  size=-1><I>Copyright © 2004 Sun Microsystems, Inc. All rights 
+  reserved.</I></FONT></A> </P></BLOCKQUOTE></BODY></HTML>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright (c) 2003 Sun Microsystems, Inc.
+ All rights reserved. 
+-->
+
+<tns:configurations
+	xmlns:tns="http://java.sun.com/xml/ns/jax-rpc/wsi/vendor/config"
+	targetNamespace="http://java.sun.com/xml/ns/jax-rpc/wsi/vendor/config">
+	<tns:configuration vendor="Local" enabled="true">
+		<tns:serviceURL name="LoggingFacility">local.logging</tns:serviceURL>
+		<tns:serviceURL name="Retailer">local.retailer</tns:serviceURL>
+		<tns:serviceURL name="WarehouseA">local.warehousea</tns:serviceURL>
+		<tns:serviceURL name="WarehouseB">local.warehouseb</tns:serviceURL>
+		<tns:serviceURL name="WarehouseC">local.warehousec</tns:serviceURL>
+		<tns:serviceURL name="ManufacturerA">local.manufacturera</tns:serviceURL>
+		<tns:serviceURL name="ManufacturerB">local.manufacturerb</tns:serviceURL>
+		<tns:serviceURL name="ManufacturerC">local.manufacturerc</tns:serviceURL>
+	</tns:configuration>
+</tns:configurations>
+

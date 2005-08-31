@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2003 Sun Microsystems, Inc.
+# All rights reserved. 
+#
+
+local.logging=http://localhost:8080/wsi-server/scm/logging
+local.retailer=http://localhost:8080/wsi-server/scm/retailer
+local.warehousea=http://localhost:8080/wsi-server/scm/warehousea
+local.warehouseb=http://localhost:8080/wsi-server/scm/warehouseb
+local.warehousec=http://localhost:8080/wsi-server/scm/warehousec
+local.manufacturera=http://localhost:8080/wsi-server/scm/manufacturera
+local.manufacturerb=http://localhost:8080/wsi-server/scm/manufacturerb
+local.manufacturerc=http://localhost:8080/wsi-server/scm/manufacturerc
+local.catalog=http://localhost:8080/wsi-server/scm/catalog
