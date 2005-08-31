@@ -45,6 +45,9 @@ import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
@@ -54,6 +57,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
@@ -63,6 +67,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -74,6 +79,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -94,6 +101,9 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.metaproject.ImageProvider;
 import org.kalypso.metaproject.MetaProjectPlugin;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 
 /**
  * This is the dependency-view of the projects available in the current workspace.
@@ -117,6 +127,7 @@ public class ProjectsView extends ViewPart
   private Text m_text;
 
   private ProjectsTreeContentProvider m_projectTCP;
+  private Action m_actionFullDepends;
 
   /**
    * This is a callback that will allow us to create the viewer and initialize it.
@@ -225,6 +236,7 @@ public class ProjectsView extends ViewPart
     manager.add( m_actionDump );
     manager.add( new Separator() );
     manager.add( m_actionAnt );
+    manager.add( m_actionFullDepends );
   }
 
   private void fillContextMenu( IMenuManager manager )
@@ -299,14 +311,10 @@ public class ProjectsView extends ViewPart
 
         if( m_cmpDesc.isVisible() )
           m_sashForm.setWeights( new int[]
-          {
-              1,
-              1 } );
+          { 1, 1 } );
         else
           m_sashForm.setWeights( new int[]
-          {
-              1,
-              0 } );
+          { 1, 0 } );
 
         updateText();
       }
@@ -363,7 +371,7 @@ public class ProjectsView extends ViewPart
           for( int i = 0; i < projects.length; i++ )
             bf.append( "<fileset dir=\"${workspace}/" ).append( projects[i].getName() ).append(
                 "/build/deploy\" includes=\"**/*.jar\" />\n" );
-          
+
           final StringSelection stsel = new StringSelection( bf.toString() );
           Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
         }
@@ -375,6 +383,64 @@ public class ProjectsView extends ViewPart
     };
     m_actionAnt.setToolTipText( "Generate the ant script snippet that contains the dependencies of this project" );
     m_actionAnt.setImageDescriptor( ImageProvider.IMAGE_ANT );
+
+    m_actionFullDepends = new Action( "Compute Full Dependencies " )
+    {
+      public void run()
+      {
+        final InputDialog dlg = new InputDialog( m_viewer.getControl().getShell(), "Compute dependencies",
+            "Enter the list of plugin-ids (semicolon separated)", "", null );
+        if( dlg.open() == Window.OK )
+        {
+          final String[] ids = dlg.getValue().split( ";" );
+
+          try
+          {
+            // fetch all dependencies in a set to avoid duplicates
+            final Set depends = new TreeSet();
+            for( int i = 0; i < ids.length; i++ )
+              fullDepends( depends, ids[i] );
+
+            // write dependencies into string
+            final StringBuffer writer = new StringBuffer();
+            for( final Iterator it = depends.iterator(); it.hasNext(); )
+            {
+              final String id = (String)it.next();
+              writer.append( id ).append( "\n" );
+            }
+
+            // export to clipboard
+            final StringSelection stsel = new StringSelection( writer.toString() );
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      private void fullDepends( Set depends, String id ) throws BundleException
+      {
+        final Bundle bundle = Platform.getBundle( id );
+        final String requires = (String)bundle.getHeaders().get( Constants.REQUIRE_BUNDLE );
+        final ManifestElement[] elements = ManifestElement.parseHeader( Constants.REQUIRE_BUNDLE, requires );
+        if( elements != null )
+        {
+          for( int j = 0; j < elements.length; j++ )
+          {
+            final ManifestElement element = elements[j];
+            final String depId = element.getValue();
+            if( !depends.contains( depId ) )
+            {
+              depends.add( depId );
+              fullDepends( depends, depId );
+            }
+          }
+        }
+      }
+    };
+    m_actionFullDepends.setToolTipText( "Computes the full-dependencies of a given list of plugins" );
 
     doubleClickAction = new Action()
     {
