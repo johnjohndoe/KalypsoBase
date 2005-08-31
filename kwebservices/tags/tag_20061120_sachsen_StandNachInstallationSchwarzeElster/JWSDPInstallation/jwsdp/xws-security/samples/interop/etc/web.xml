@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+  <display-name>Interop Ping Application</display-name>
+  <description>An wss interop webapp containing a jws-security enabled JAX-RPC endpoint</description>
+  <context-param>
+      <param-name>keystore.url</param-name>
+      <param-value>WEB-INF/server-keystore.jks</param-value>
+      <description> path relative to war </description>
+  </context-param>
+  <context-param>
+      <param-name>keystore.password</param-name>
+      <param-value>changeit</param-value>
+  </context-param>
+  <context-param>
+      <param-name>sessionkey.url</param-name>
+      <param-value>WEB-INF/sessionkey</param-value>
+      <description> path relative to war </description>
+  </context-param>
+  <context-param>
+      <param-name>key.aliases</param-name>
+      <param-value>s1as</param-value>
+      <description> , separated list of aliases ex. a,b,c </description>
+  </context-param>
+  <context-param>
+      <param-name>key.passwords</param-name>
+      <param-value>changeit</param-value>
+      <description> , separated list of passwords ex. a,b,c </description>
+  </context-param>
+  <context-param>
+      <param-name>truststore.url</param-name>
+      <param-value>WEB-INF/server-truststore.jks</param-value>
+      <description> path relative to war </description>
+  </context-param>
+  <context-param>
+      <param-name>truststore.password</param-name>
+      <param-value>changeit</param-value>
+  </context-param>
+  <context-param>
+      <param-name>trust.aliases</param-name>
+      <param-value>xws-security-client</param-value>
+      <description> , separated list of aliases ex. a,b,c </description>
+  </context-param>
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
+</web-app>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2002 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<userDelete>
+    <fname>firstName</fname>
+    <lname>lastName</lname>
+    <uid>userID</uid>
+    <passwd>passwordValue</passwd>
+</userDelete>
+

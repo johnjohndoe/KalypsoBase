@@ -1,0 +1,1160 @@
+<project name="JWSDP component integration with Sun Java System Web Server 6.1" default="full-setup" basedir=".">
+
+    <!-- ========== Version numbers for JWSDP components ================= -->
+
+  <property name="ant.home" value="${basedir}/../../apache-ant"/>
+
+
+  <target name="check.sjsws.home" unless="SJSWS_HOME">
+    <echo>
+      The sjsws.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Sun Java System Web Server 6.1 is
+      installed and rerun ant with the following usage: 
+          ant -Djwsdp.home=xxx -Dsjsws.home=yyy -Dserver.instance=https-hostname.domainname target
+    </echo>
+    <fail message="sjsws.home property is not set correctly"/>
+  </target>
+
+  <target name="check.jwsdp.home" unless="JWSDP_HOME">
+    <echo>
+      The jwsdp.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Java(TM) Web Services Developer Pack 1.4 is
+      installed and rerun ant with the following usage:
+           ant -Djwsdp.home=xxx -Dsjsws.home=yyy -Dserver.instance=https-hostname.domainname target
+    </echo>
+    <fail message="jwsdp.home property is not set correctly"/>
+  </target>
+
+  <target name="check.server.instance" unless="SERVER_INSTANCE">
+    <echo>
+      The server.instance property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Java(TM) Web Services Developer Pack 1.4 is
+      installed and rerun ant with the following usage:
+           ant -Djwsdp.home=xxx -Dsjsws.home=yyy -Dserver.instance=https-hostname.domainname target
+    </echo>
+    <fail message="server.instance property is not set correctly"/>
+  </target>
+
+  <target name="init">
+    <tstamp/>
+    <!-- Loading Sun Java System Web Server properties -->
+    <property file="${basedir}/sjsws.props" />
+
+    <available property="JWSDP_HOME" value="${jwsdp.home}"
+      file="${jwsdp.home}/jwsdp-shared/bin/commons-launcher.jar" />
+
+    <antcall target="check.jwsdp.home"/>
+
+    <available property="SJSWS_HOME" value="${sjsws.home}"
+      file="${sjsws.home}/bin/https/jar/webserv-rt.jar" />
+
+    <antcall target="check.sjsws.home"/>
+
+    <available property="SERVER_INSTANCE" value="${server.instance}"
+      file="${sjsws.home}/${server.instance}/config/server.xml" />
+    <antcall target="check.server.instance"/>
+
+    <available property="jdbc-rowset.integrated" value="true"
+      file="${jwsdp.home}/jdbc-rowset/lib/rowset.jar" />
+
+    <!-- Creating directories in which webservices jars are stored -->
+    <mkdir dir="${SJSWS_HOME}/bin/https/ws-jars" />
+    <mkdir dir="${SJSWS_HOME}/bin/https/ws-jars/endorsed" />
+
+    <condition property="isNotWindows">
+      <not>
+        <os family="windows" />
+      </not>
+    </condition>
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <echo message="Os is ${os.name}" />
+
+
+    <property name="SJSWS_DEPLOY" value="${SJSWS_HOME}/bin/https/httpadmin/bin/wdeploy"/>
+    <property name="MYTEMPDIR" value="${JWSDP_HOME}/work/forwebserver"/>
+
+
+
+    <property name="USERNAME" value="${USERNAME}" />
+    <property name="PASSWORD" value="${PASSWORD}" />
+    <property name="SJSWS_HOST" value="${SJSWS_HOST}" />
+    <property name="ADMIN_PORT" value="${ADMIN_PORT}" />
+<!--    <property name="VS.DIR" value="${VS_DIR}" /> -->
+    <property name="SERVER_DIR" value="${SERVER_INSTANCE}" />
+    <property name="http.proxyHost" value="${http.proxyHost}" />
+    <property name="http.proxyPort" value="${http.proxyPort}" />
+
+    <property name="JWSDP_BACKUPDIR" value="${SJSWS_HOME}/.jwsdp.backup.${SERVER_INSTANCE}" />
+    <echo message="Creating temporary directory under JWSDP_HOME/work for storing war files and others" />
+    <mkdir dir="${MYTEMPDIR}" />
+
+  </target>
+
+  <target name="start-sjsws" depends="init"
+    description="Start server">
+
+    <antcall target="start-sjsws.sh" />
+    <antcall target="start-sjsws.bat" />
+  </target>
+
+  <target name="start-sjsws.sh" depends="init" if="isNotWindows"  >
+    <!-- Starting SJS WS -->
+    <exec executable="${SJSWS_HOME}/${SERVER_DIR}/start" /> 
+  </target>
+
+  <target name="start-sjsws.bat" depends="init"  if="isWindows" >
+    <!-- Starting SJS WS -->
+    <exec executable="${SJSWS_HOME}/${SERVER_DIR}/startsvr.bat" /> 
+
+  </target>
+
+  <target name="stop-sjsws" depends="init"
+    description="Stop server">
+
+    <antcall target="stop-sjsws.sh" />
+    <antcall target="stop-sjsws.bat" />
+ </target>
+
+  <target name="stop-sjsws.sh" depends="init"  if="isNotWindows" >
+    <exec executable="${SJSWS_HOME}/${SERVER_DIR}/stop" /> 
+ </target>
+
+  <target name="stop-sjsws.bat" depends="init" if="isWindows" >
+    <exec executable="${SJSWS_HOME}/${SERVER_DIR}/stopsvr.bat" /> 
+ </target>
+ 
+  <target name="integrate.init" depends="init"
+    description="Initialize integration for Sun Java System Web Server 6.1">
+
+       <echo message="Creating Backup directory for the integration" />
+    <mkdir dir="${JWSDP_BACKUPDIR}" />
+
+    <copy file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+        tofile="${JWSDP_BACKUPDIR}/server.xml" overwrite="false" />
+
+    <echo message="Copying JWSDP Splash page" />
+    <copy file="${JWSDP_HOME}/jwsdp-shared/index_sjs.html" 
+	tofile="${SJSWS_HOME}/docs/JWSDP.html" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/javaxml.gif"
+        todir="${SJSWS_HOME}/docs" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/Components.js"
+        todir="${SJSWS_HOME}/docs" />
+
+    <echo message="Setting proxy host and port properties on webserver" />
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+     value='&lt;JVMOPTIONS>-Dhttp.proxyHost=${http.proxyHost}&lt;/JVMOPTIONS> &lt;JVMOPTIONS>-Dhttp.proxyPort=${http.proxyPort}&lt;/JVMOPTIONS> &lt;JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter&lt;/JVMOPTIONS>'>
+      <replacetoken><![CDATA[<JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter</JVMOPTIONS>]]></replacetoken>
+    </replace>
+
+
+  </target>
+
+
+  <target name="setup" depends="init"
+    description="Setup environment needed  for integrating JWSDP into Sun Java System Web Server 6.1">
+
+    
+    <echo message="Initializing integration" />
+    <antcall target="integrate.init" />
+
+    <echo message="Integrating JAXP" />
+    <antcall target="integrate.jaxp" />
+
+    <echo message="Integrating SAAJ" />
+    <antcall target="integrate.saaj" />
+
+    <echo message="Integrating JAXB" />
+    <antcall target="integrate.jaxb" />
+
+    <echo message="Integrating JAX-RPC" />
+    <antcall target="integrate.jaxrpc" />
+
+    <echo message="Integrating JAXR" />
+    <antcall target="integrate.jaxr" />
+
+    <echo message="Integrating JSTL" />
+    <antcall target="integrate.jstl" />
+
+    <echo message="Integrating Registry Server" />
+    <antcall target="integrate.registry-server" />
+
+    <echo message="Integrating WS-I Sample Application" />
+    <antcall target="integrate.wsi-sampleapp" />
+
+    <echo message="Integrating XML and Web Services Security" />
+    <antcall target="integrate.xws-security" />
+
+    <echo message="Integrating XML Digital Signatures" />
+    <antcall target="integrate.xmldsig" />
+
+    <echo message="Stop the server" />
+    <antcall target="stop-sjsws" />
+
+    <echo message="Start the server" />
+    <antcall target="start-sjsws" />
+
+    <echo message="Deploying Web Applications" />
+    <antcall target="deployAll" />
+
+  </target>
+
+
+
+  <target name="integrate.jaxp" depends="init"
+    description="Integrate JAXP into Sun Java System Web Server 6.1">
+
+    <echo message="Copying JAXP jar files to ${SJSWS_HOME}/bin/https/ws-jars/endorsed" />
+
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/dom.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/endorsed" overwrite="yes"/>
+
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/sax.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/endorsed" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/xalan.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/endorsed" overwrite="yes"/>
+
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/xercesImpl.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/endorsed" overwrite="yes"/>
+
+        
+    <antcall target="update-classpath-for-jaxp.sh" />
+    <antcall target="update-classpath-for-jaxp.bat" />
+
+ </target>
+
+
+  <target name="integrate.saaj" depends="init"
+    description="Integrate SAAJ into Sun Java System Web Server 6.1">
+
+    <echo message="Copying SAAJ jar files to ${SJSWS_HOME}/bin/https/ws-jars" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/activation.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/mail.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+
+    <copy file="${JWSDP_HOME}/saaj/lib/saaj-api.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <echo message="Copying saaj-impl.jar to ${SJSWS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/saaj/lib/saaj-impl.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <antcall target="update-classpath-for-saaj.sh" />
+    <antcall target="update-classpath-for-saaj.bat" />
+
+
+  </target>
+
+  <target name="integrate.xmldsig" depends="init"
+    description="Integrate JSR 105 into Sun Java System Web Server 6.1">
+
+    <echo message="Copying JSR 105 jar files to ${SJSWS_HOME}/bin/https/ws-jars" />
+
+    <copy todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes" >
+	<fileset dir="${JWSDP_HOME}/xmldsig/lib">  
+          <include name="*.jar"/>
+        </fileset>
+    </copy>
+
+     <echo message="Adding XMl Dsig jars to classpathsuffix" />
+   <antcall target="update-classpath-for-xmldsig.sh" />
+   <antcall target="update-classpath-for-xmldsig.bat" />
+
+  </target>
+
+  <target name="integrate.common-jars" depends="init">
+    <echo message="Copying jwsdp-shared jar files to ${SJSWS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/namespace.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/jax-qname.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/relaxngDatatype.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/xsdlib.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+  </target>
+
+  <target name="integrate.jaxb" depends="init"
+    description="Integrate JAXB into Sun Java System Web Server 6.1">
+
+    <echo message="Copying JAXB jar files to ${SJSWS_HOME}/bin/https/ws-jars" />
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-api.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-impl.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-libs.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-xjc.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <antcall target="integrate.common-jars" />
+
+    <!-- Now add jaxb jar files to CLASSPATH of Web Server -->
+    <echo message="Adding jaxb jar files to CLASSPATH of Web Server" />
+
+    <antcall target="change-classpath-for-jaxb.sh" />
+    <antcall target="change-classpath-for-jaxb.bat" />
+
+   <!-- We need to add xjc.sh and xjc.bat for WebServer ( without launcher) -->
+
+    <antcall target="integrate.jaxb-scripts.sh" />
+    <antcall target="integrate.jaxb-scripts.bat" />
+    
+
+  </target>
+
+
+
+  <target name="integrate.jaxrpc" depends="init"
+    description="Integrating JAX-RPC into Sun Java System Web Server 6.1">
+
+    <echo message="Copying JAXRPC jar files to ${SJSWS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-api.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-impl.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-spi.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <antcall target="integrate.common-jars" />
+
+    <antcall target="update-classpath-for-jaxrpc.sh" />
+    <antcall target="update-classpath-for-jaxrpc.bat" />
+
+  <!--  Copying JAXRPC scripts for WebServer environment   -->
+    <antcall target="integrate.jaxrpc-scripts.sh" />
+    <antcall target="integrate.jaxrpc-scripts.bat" />
+   
+
+  </target>
+
+  <target name="integrate.jaxr" depends="init"
+    description="Integrate JAXR into Sun Java System Web Server 6.1">
+
+    <copy file="${JWSDP_HOME}/jaxr/lib/jaxr-api.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxr/lib/jaxr-impl.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <antcall target="update-classpath-for-jaxr.sh" />
+    <antcall target="update-classpath-for-jaxr.bat" />
+
+  </target>
+
+
+
+  <target name="integrate.xws-security" depends="init"
+    description="Integrating XML and Web Services Security into Sun Java System Web Server 6.1">
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/jaxrpc-sec.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/xmlsec.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+     <!-- PENDING: The following jar files copied for now.
+         Track the final dependency -->
+    <copy file="${JWSDP_HOME}/xws-security/lib/soapprocessor.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/security-plugin.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/commons-logging.jar"
+	todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+ 
+     <!-- Copying keystore files of xws-security -->
+    <mkdir dir="${SJSWS_HOME}/xws-security/etc" />
+    <copy todir="${SJSWS_HOME}/xws-security/etc" overwrite="yes" failonerror="false">
+        <fileset dir="${JWSDP_HOME}/xws-security/etc" />
+    </copy>
+
+    <!-- Changing CLASSPATH and env property to support xws-security component -->
+
+    <antcall target="change-env-for-xws-security.sh" />
+    <antcall target="change-env-for-xws-security.bat" />
+
+     <echo message="Setting jwsdp.container.type property to webserver" />
+     <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml">
+   <replacevalue><![CDATA[<JVMOPTIONS>-Djwsdp.container.type=webserver</JVMOPTIONS>
+<JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter</JVMOPTIONS>]]></replacevalue>
+      <replacetoken><![CDATA[<JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter</JVMOPTIONS>]]></replacetoken>
+    </replace>
+
+  </target>
+
+  <target name="integrate.jsf" depends="init"
+    description="Integrate JSF into Sun Java System Web Server 6.1">
+
+
+    <echo message="Copying jsf jar files to ${SJSWS_HOME}/lib" />
+    <copy todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes">
+        <fileset dir="${JWSDP_HOME}/jsf/lib" />
+    </copy>
+
+    <antcall target="update-classpath-for-jsf.sh" />
+    <antcall target="update-classpath-for-jsf.bat" />
+
+  </target>
+
+  <target name="integrate.wsi-sampleapp" depends="init"
+    description="Integrate WS-I Sample Application into Sun Java System Web Server 6.1">
+
+    <!-- no files to integrate for WS-I Sample... only need to deploy -->
+  </target>
+
+  <target name="integrate.jstl" depends="init"
+    description="Integrate JSTL into Sun Java System Web Server 6.1">
+
+<!--
+    XXX Not integrating JSTL 1.1 into the webserver as it needs JSP 2.0
+-->
+  </target>
+
+  <target name="integrate.registry-server" depends="init"
+    description="Integrate Registry Server into Sun Java System Web Server 6.1">
+
+    <!-- no files to integrate for Registry Server... only need to deploy -->
+  </target>
+
+  <target name="deploy.registry-server.webapps" depends="init"
+    description="Deploy Registry Server into Sun Java System Web Server 6.1">
+
+    <!-- Deploying Xindice and RegistryServer -->
+
+    <antcall target="deploy.Xindice" />
+    <antcall target="deploy.RegistryServer" />
+   
+  </target>
+
+   <target name="update-classpath-for-jaxr.sh" if="isNotWindows" depends="init" >
+
+    <echo message="Updating classpath for JAXR" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxr-api.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxr-impl.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+    </target>
+
+   <target name="update-classpath-for-jaxr.bat" if="isWindows" depends="init" >
+
+    <echo message="Updating classpath for JAXR" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxr-api.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxr-impl.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+    </target>
+
+   <target name="update-classpath-for-jaxrpc.sh" if="isNotWindows" depends="init" >
+
+    <echo message="Updating classpath for JAXRPC" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-api.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-impl.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-spi.jar:${SJSWS_HOME}/bin/https/ws-jars/jax-qname.jar:${SJSWS_HOME}/bin/https/ws-jars/namespace.jar:${SJSWS_HOME}/bin/https/ws-jars/relaxngDatatype.jar:${SJSWS_HOME}/bin/https/ws-jars/xsdlib.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+    </target>
+
+   <target name="update-classpath-for-jaxrpc.bat" if="isWindows" depends="init" >
+
+    <echo message="Updating classpath for JAXRPC" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-api.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-impl.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-spi.jar;${SJSWS_HOME}/bin/https/ws-jars/jax-qname.jar;${SJSWS_HOME}/bin/https/ws-jars/namespace.jar;${SJSWS_HOME}/bin/https/ws-jars/relaxngDatatype.jar;${SJSWS_HOME}/bin/https/ws-jars/xsdlib.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+    </target>
+
+   <target name="update-classpath-for-jaxp.sh" if="isNotWindows" depends="init" >
+
+     <echo message="Adding JAXP jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/endorsed/xercesImpl.jar:${SJSWS_HOME}/bin/https/ws-jars/endorsed/xalan.jar:${SJSWS_HOME}/bin/https/ws-jars/endorsed/dom.jar:${SJSWS_HOME}/bin/https/ws-jars/endorsed/sax.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="update-classpath-for-jaxp.bat" if="isWindows" depends="init" >
+
+     <echo message="Adding JAXP jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/endorsed/xercesImpl.jar;${SJSWS_HOME}/bin/https/ws-jars/endorsed/xalan.jar;${SJSWS_HOME}/bin/https/ws-jars/endorsed/dom.jar;${SJSWS_HOME}/bin/https/ws-jars/endorsed/sax.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="update-classpath-for-xmldsig.sh" if="isNotWindows" depends="init" >
+
+     <echo message="Adding SAAJ jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/xmldsig.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+  <target name="update-classpath-for-xmldsig.bat" if="isWindows" depends="init" >
+
+     <echo message="Adding SAAJ jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/xmldsig.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="update-classpath-for-jsf.sh" if="isNotWindows" depends="init" >
+
+     <echo message="Adding JSF jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jsf-api.jar:${SJSWS_HOME}/bin/https/ws-jars/jsf-impl.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+  <target name="update-classpath-for-jsf.bat" if="isWindows" depends="init" >
+
+     <echo message="Adding SAAJ jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jsf-api.jar;${SJSWS_HOME}/bin/https/ws-jars/jsf-impl.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="update-classpath-for-saaj.sh" if="isNotWindows" depends="init" >
+
+     <echo message="Adding SAAJ jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/activation.jar:${SJSWS_HOME}/bin/https/ws-jars/mail.jar:${SJSWS_HOME}/bin/https/ws-jars/saaj-api.jar:${SJSWS_HOME}/bin/https/ws-jars/saaj-impl.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="update-classpath-for-saaj.bat" if="isWindows" depends="init" >
+
+     <echo message="Adding SAAJ jars to classpathsuffix" />
+      <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/activation.jar;${SJSWS_HOME}/bin/https/ws-jars/mail.jar;${SJSWS_HOME}/bin/https/ws-jars/saaj-api.jar;${SJSWS_HOME}/bin/https/ws-jars/saaj-impl.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+   <target name="change-env-for-xws-security.sh" if="isNotWindows" depends="init" >
+
+    <echo message="Updating server.xml with xws-security properties" />
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-sec.jar:${SJSWS_HOME}/bin/https/ws-jars/xmlsec.jar:${SJSWS_HOME}/bin/https/ws-jars/soapprocessor.jar:${SJSWS_HOME}/bin/https/ws-jars/security-plugin.jar:${SJSWS_HOME}/bin/https/ws-jars/commons-logging.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+
+  </target>
+
+
+   <target name="change-env-for-xws-security.bat" if="isWindows" depends="init" >
+
+    <echo message="Updating server.xml with xws-security properties" />
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxrpc-sec.jar;${SJSWS_HOME}/bin/https/ws-jars/xmlsec.jar;${SJSWS_HOME}/bin/https/ws-jars/soapprocessor.jar;${SJSWS_HOME}/bin/https/ws-jars/security-plugin.jar;${SJSWS_HOME}/bin/https/ws-jars/commons-logging.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+
+
+   <target name="change-classpath-for-jaxb.sh" if="isNotWindows" depends="init" >
+
+    <echo message="changing ${SJSWS_HOME}/${SERVER_DIR}/config/server.xml for unix platforms" />
+
+    <!-- Adding JAXB jar files to classpathsuffix   --> 
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxb-api.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxb-impl.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxb-libs.jar:${SJSWS_HOME}/bin/https/ws-jars/jaxb-xjc.jar:${SJSWS_HOME}/bin/https/ws-jars/jax-qname.jar:${SJSWS_HOME}/bin/https/ws-jars/namespace.jar:${SJSWS_HOME}/bin/https/ws-jars/relaxngDatatype.jar:${SJSWS_HOME}/bin/https/ws-jars/xsdlib.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+
+   <target name="change-classpath-for-jaxb.bat" if="isWindows" depends="init" >
+
+    <echo message="Changing ${SJSWS_HOME}/${SERVER_DIR}/config/server.xml for windows platforms" />
+
+    <!-- Adding JAXB jar files to classpathsuffix   --> 
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/jaxb-api.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxb-impl.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxb-libs.jar;${SJSWS_HOME}/bin/https/ws-jars/jaxb-xjc.jar;${SJSWS_HOME}/bin/https/ws-jars/jax-qname.jar;${SJSWS_HOME}/bin/https/ws-jars/namespace.jar;${SJSWS_HOME}/bin/https/ws-jars/relaxngDatatype.jar;${SJSWS_HOME}/bin/https/ws-jars/xsdlib.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+  <target name="deploy.Xindice" depends="init"
+    description="Deploying Xindice onto the Sun Java System Web Server 6.1">
+
+    <echo message="deploying Xindice" />
+
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/Xindice" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${basedir}/../../registry-server/webapps/Xindice.war" />
+    </exec>
+
+  </target>
+
+  <target name="add-registry-server-env"  >
+    <echo message="Updating server.xml with registry server properties" />
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+     value='&lt;JVMOPTIONS>-Dorg.apache.xindice.root-collection=${sjsws.home}/${SERVER_DIR}/webapps/${SERVER_DIR}/RegistryServer/Xindice&lt;/JVMOPTIONS> &lt;JVMOPTIONS>-Dxindice.db.home=${sjsws.home}/${SERVER_DIR}/webapps/${SERVER_DIR}/RegistryServer/Xindice&lt;/JVMOPTIONS> &lt;JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter&lt;/JVMOPTIONS>'>
+      <replacetoken><![CDATA[<JVMOPTIONS>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter</JVMOPTIONS>]]></replacetoken>
+    </replace>
+  </target>
+
+  <target name="update-security-permissions" >
+    <echo message="Updating security permissions in server.policy" />
+    <copy file="${SJSWS_HOME}/${SERVER_DIR}/config/server.policy"
+        todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.policy">
+      <replacetoken><![CDATA[// Basic set of required permissions granted to all application code
+grant {]]></replacetoken>
+      <replacevalue><![CDATA[// These permissions apply to the privileged registry-server webapp
+grant codeBase "file:${com.sun.web.instanceRoot}/webapps/<<SERVER_INSTANCE_DIR>>/RegistryServer/WEB-INF/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to wsi-server ( WSI Sample App ) webapp
+grant codeBase "file:${com.sun.web.instanceRoot}/webapps/<<SERVER_INSTANCE_DIR>>/wsi-server/WEB-INF/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to the Xindice servlet
+grant codeBase "file:${com.sun.web.instanceRoot}/webapps/<<SERVER_INSTANCE_DIR>/Xindice/WEB-INF/-" {
+         permission java.util.PropertyPermission "org.xmldb.common.xml.queries.XPathQueryFactory", "write";
+};
+
+// These permissions apply to saaj-translator webapp
+grant codeBase "file:${com.sun.web.instanceRoot}/webapps/<<SERVER_INSTANCE_DIR>>/saaj-translator/WEB-INF/-" {
+        permission java.util.PropertyPermission "*", "read,write";
+};
+
+//  Basic set of required permissions granted to all application code
+
+grant {]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.policy" value="${SERVER_DIR}" >
+      <replacetoken><![CDATA[<<SERVER_INSTANCE_DIR>>]]></replacetoken>
+    </replace>
+
+  </target>
+
+
+  <target name="deploy.RegistryServer" depends="init"
+    description="Deploying Registry Server onto the Sun Java System Web Server 6.1">
+
+
+     <echo message="registry-server preparation ...." />
+    <mkdir dir="${MYTEMPDIR}/registry-server" />
+    <unjar src="${JWSDP_HOME}/registry-server/webapps/RegistryServer.war"
+      dest="${MYTEMPDIR}/registry-server" overwrite="yes"/>
+    <replace file="${MYTEMPDIR}/registry-server/WEB-INF/web.xml"
+           value="${SJSWS_PORT}" >
+      <replacetoken><![CDATA[8080]]></replacetoken>
+    </replace>
+    <jar destfile="${MYTEMPDIR}/RegistryServer.war" basedir="${MYTEMPDIR}/registry-server" />
+
+    <echo message="deploying RegistryServer" />
+
+
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/RegistryServer" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${MYTEMPDIR}/RegistryServer.war" />
+    </exec>
+
+    <antcall target="add-registry-server-env" />
+    <antcall target="update-security-permissions" />
+
+
+  </target>
+
+  <target name="deploy.wsi-sampleapp.webapps" depends="init"
+    description="Deploying WS-I Sample Application onto the Sun Java System Web Server 6.1">
+
+    <echo message="deploying WSI Sample Application server part ( wsi-server)" />
+
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/wsi-server" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${basedir}/../../wsi-sampleapp/wsi-server.war" />
+    </exec>
+
+  </target>
+
+  <target name="deploy.saaj.webapps" depends="init"
+    description="Deploying SAAJ web application onto the Sun Java System Web Server 6.1">
+
+
+    <echo message="deploying saaj-simple sample" />
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/saaj-simple" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${basedir}/../../saaj/webapps/simple.war" />
+    </exec>
+
+    <echo message="deploying saaj-book sample" />
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/saaj-book" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${basedir}/../../saaj/webapps/book.war" />
+    </exec>
+
+    <echo message="deploying saaj-translator sample" />
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/saaj-translator" />
+      <arg value="-i" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="-v" />
+      <arg value="${SERVER_DIR}" />
+      <arg value="${basedir}/../../saaj/webapps/translator.war" />
+    </exec>
+
+  </target>
+
+  <!-- Template for deploying a webapp in SJSWS 6.1 
+       You have to replace @yourwar@ with the actual war name,
+       @yourwar-logicalname@ to the logicalname which you want to use
+       to refer to this webapp instance  and 
+       directory-where-war-exist to the actual directory of war 
+       location
+  -->
+  <target name="deploy.yourwar" depends="init">
+    <echo message="deploying @yourwar@" />
+
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="@uri_path for the context@" />
+      <arg value="-i" />
+      <arg value="@instance@" />
+      <arg value="-v" />
+      <arg value="@vs_id@" />
+      <arg value="directory-where-war-exist/@yourwar@.war" />
+    </exec>
+
+  </target>
+
+  <!-- Template for undeploying a webapp in SJSWS 6.1 
+       You have to replace @yourwar-logicalname@ with the actual
+       logical name which you used while deploying
+  -->
+  <target name="undeploy.yourwar" depends="init">
+    <echo message="undeploying @yourwar-logicalname@" />
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+        <arg value="delete" />
+        <arg value="-u" />
+        <arg value="@uri_path for the context@" />
+        <arg value="-i" />
+        <arg value="@instance@" />
+        <arg value="-v" />
+        <arg value="@vs_id@" />
+        <arg value="hard" />
+     </exec>
+
+  </target>
+
+
+
+  <target name="full-setup">
+    <antcall target="setup" />
+  </target>
+
+  <target name="revert.jaxp.changes" depends="revert.init"
+    description="Revert JAXP changes from Sun Java System Web Server 6.1">
+
+
+  <delete dir="${SJSWS_HOME}/bin/https/jdk/jre/lib/endorsed"/>
+ 
+  </target>
+
+  <target name="deployAll" depends="init"
+    description="Deploy all web applications onto Sun Java System Web Server 6.1">
+
+    <antcall target="deploy.registry-server.webapps" />
+    <antcall target="deploy.saaj.webapps" />
+    <antcall target="deploy.wsi-sampleapp.webapps" />
+
+  </target>
+
+  <target name="undeployAll" depends="init"
+    description="Undeploy all web applications from Sun Java System Web Server 6.1">
+
+<!--    <antcall target="undeploy.registry-server.webapps" /> -->
+	
+  </target>
+
+
+  <target name="revert.saaj.changes" depends="revert.init"
+    description="Revert SAAJ changes from Sun Java System Web Server 6.1">
+
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/activation.jar" failonerror="false" />
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/mail.jar" failonerror="false"/>
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/saaj-api.jar" failonerror="false"/>
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/saaj-impl.jar" failonerror="false"/>
+
+  </target>
+
+  <target name="revert.common-jars.changes" depends="revert.init">
+
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/namespace.jar"  quiet="true" />
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jax-qname.jar" failonerror="false" />
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/relaxngDatatype.jar" failonerror="false" />
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/xsdlib.jar" failonerror="false"/>
+
+  </target>
+
+  <target name="revert.jaxrpc.changes" depends="revert.init"
+    description="Revert JAX-RPC changes from Sun Java System Web Server 6.1">
+
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxrpc-api.jar" failonerror="false" />
+
+    <delete file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxrpc-impl.jar" failonerror="false" />
+
+    <antcall target="revert.common-jars.changes" />
+
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxrpc-spi.jar"  quiet="true" />
+
+  </target>
+
+  <target name="revert.jaxr.changes" depends="revert.init"
+    description="Revert JAXR changes from Sun Java System Web Server 6.1">
+
+<!--
+   XXX Not integrating JAXR
+-->
+  </target>
+
+  <target name="revert.jaxb.changes" depends="revert.init"
+    description="Revert JAXB changes from Sun Java System Web Server 6.1">
+
+
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxb-libs.jar"  quiet="true" />
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxb-xjc.jar"  quiet="true" />
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxb-api.jar"  quiet="true" />
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxb-impl.jar"  quiet="true" />
+
+    <antcall target="revert.common-jars.changes" />
+
+    <!-- One of the below would succeed --> 
+    <delete  file="${SJSWS_HOME}/bin/xjc.sh"  quiet="true" />
+    <delete  file="${SJSWS_HOME}/bin/xjc.bat"  quiet="true" />
+
+  </target>
+
+  <target name="revert.xws-security.changes" depends="revert.init"
+    description="Revert XML and Web Services Security changes from Sun Java System Web Server 6.1">
+
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/jaxrpc-sec.jar"  quiet="true" />
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/xmlsec.jar"  quiet="true" />
+
+  </target>
+
+  <target name="revert.jsf.changes" depends="revert.init"
+    description="Revert JSF changes from Sun Java System Web Server 6.1">
+
+  </target>
+
+  <target name="revert.wsi-sampleapp.changes" depends="revert.init"
+    description="Revert WS-I Sample Application changes from Sun Java System Web Server 6.1">
+
+  </target>
+
+  <target name="revert.jstl.changes" depends="revert.init"
+    description="Revert JSTL changes from Sun Java System Web Server 6.1">
+
+  </target>
+
+  <target name="revert.registry-server.changes" depends="revert.init"
+    description="Revert Registry Server changes from Sun Java System Web Server 6.1">
+
+<!--
+    <copy file="${JWSDP_BACKUPDIR}/server.policy" failonerror="false" 
+	todir="${SJSWS_HOME}/domains/domain1/config" overwrite="true" />
+
+-->
+  </target>
+
+  <target name="revert.xmldsig.changes" depends="revert.init"
+    description="Revert JSR 105 changes from Sun Java System Web Server 6.1">
+
+    <delete  file="${SJSWS_HOME}/bin/https/jdk/jre/lib/xmldsig.jar"  quiet="true" />
+  </target>
+
+
+  <target name="revert.init" depends="init"
+    description="Revert initialization changes from Sun Java System Web Server 6.1">
+
+    <copy file="${JWSDP_BACKUPDIR}/domain.xml" failonerror="false" 
+	todir="${SJSWS_HOME}/domains/domain1/config" overwrite="true" />
+
+    <delete file="${SJSWS_HOME}/docs/JWSDP.html"  quiet="true" />
+    <delete file="${SJSWS_HOME}/docs/javaxml.gif"  quiet="true" />
+    <delete file="${SJSWS_HOME}/docs/Components.js"  quiet="true" />
+
+  </target>
+
+  <target name="clean"
+    description="Clean up temporary directories for the Sun Java System Web Server 6.1">
+
+    <delete dir="${JWSDP_BACKUPDIR}" quiet="true" />
+    <delete dir="${MYTEMPDIR}" quiet="true" />
+  </target>
+
+
+  <target name="revert.sjsws.changes" depends="revert.init"
+    description="Backing out Java WSDP 1.4 changes from the Sun Java System Web Server 6.1">
+
+
+    <echo message="Backing out the changes made during Java WSDP 1.4 integration into Sun Java System Web Server 6.1" />
+
+    <delete dir="${SJSWS_HOME}/bin/https/ws-jars/" quiet="true" />
+    <delete dir="${SJSWS_HOME}/xws-security/" quiet="true" />
+    <copy todir="${SJSWS_HOME}/${SERVER_DIR}/config"
+        file="${JWSDP_BACKUPDIR}/server.xml" overwrite="true" failonerror="false" />
+    <copy todir="${SJSWS_HOME}/${SERVER_DIR}/config"
+        file="${JWSDP_BACKUPDIR}/server.policy" overwrite="true" failonerror="false" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/xjc.sh" quiet="true" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/xjc.bat" quiet="true" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/wscompile" quiet="true" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/wscompile.bat" quiet="true" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/wsdeploy" quiet="true" />
+    <delete file="${SJSWS_HOME}/bin/https/bin/wsdeploy.bat" quiet="true" />
+ 
+    <antcall target="clean" />
+  </target>
+
+  <target name="integrate.jaxb-scripts.sh" depends="init"  if="isNotWindows" >
+
+    <copy file="${SJSWS_HOME}/bin/https/bin/jspc" tofile="${SJSWS_HOME}/bin/https/bin/xjc.sh"
+	overwrite="true" />
+    <replace file="${SJSWS_HOME}/bin/https/bin/xjc.sh">
+      <replacetoken><![CDATA[${WS_INSTALLROOT}/bin/https/jar/webserv-ext.jar:${WS_INSTALLROOT}/bin/https/jar/webserv-rt.jar:${WS_JAVA}/lib/tools.jar]]></replacetoken>
+      <replacevalue><![CDATA[${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/dom.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/sax.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/xalan.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/xercesImpl.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jax-qname.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxb-impl.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxb-libs.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxb-xjc.jar:${WS_INSTALLROOT}/bin/https/ws-jars/namespace.jar:${WS_INSTALLROOT}/bin/https/ws-jars/xsdlib.jar]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/xjc.sh">
+      <replacetoken><![CDATA[org.apache.jasper.JspC]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.tools.xjc.Driver]]></replacevalue>
+    </replace>
+
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/xjc.sh" />
+
+  </target>
+
+  <target name="integrate.jaxb-scripts.bat" depends="init" if="isWindows" >
+
+    <copy file="${SJSWS_HOME}/bin/https/bin/jspc.bat" tofile="${SJSWS_HOME}/bin/https/bin/xjc.bat"
+	overwrite="true" />
+    <replace file="${SJSWS_HOME}/bin/https/bin/xjc.bat">
+      <replacetoken><![CDATA[%WS_INSTALLROOT%\bin\https\jar\webserv-ext.jar;%WS_INSTALLROOT%\bin\https\jar\webserv-rt.jar;%WS_JAVA%\lib\tools.jar]]></replacetoken>
+      <replacevalue><![CDATA[%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\dom.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\sax.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\xalan.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\xercesImpl.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jax-qname.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxb-impl.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxb-libs.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxb-xjc.jar;%WS_INSTALLROOT%\bin\https\ws-jars\namespace.jar;%WS_INSTALLROOT%\bin\https\ws-jars\xsdlib.jar]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/xjc.bat">
+      <replacetoken><![CDATA[org.apache.jasper.JspC]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.tools.xjc.Driver]]></replacevalue>
+    </replace>
+
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/xjc.bat" />
+
+  </target>
+
+  <target name="integrate.jaxrpc-scripts.sh" depends="init"  if="isNotWindows" >
+
+    <echo message="generating wscompile script " />
+    <copy file="${SJSWS_HOME}/bin/https/bin/jspc" tofile="${SJSWS_HOME}/bin/https/bin/wscompile"
+	overwrite="true" />
+    <replace file="${SJSWS_HOME}/bin/https/bin/wscompile">
+      <replacetoken><![CDATA[${WS_JAVA}/lib/tools.jar]]></replacetoken>
+      <replacevalue><![CDATA[${WS_JAVA}/lib/tools.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxrpc-impl.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxrpc-api.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jaxrpc-spi.jar:${WS_INSTALLROOT}/bin/https/ws-jars/activation.jar:${WS_INSTALLROOT}/bin/https/ws-jars/saaj-api.jar:${WS_INSTALLROOT}/bin/https/ws-jars/saaj-impl.jar:${WS_INSTALLROOT}/bin/https/ws-jars/mail.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/dom.jar:${WS_INSTALLROOT}/bin/https/ws-jars/jax-qname.jar:${WS_INSTALLROOT}/bin/https/ws-jars/relaxngDatatype.jar:${WS_INSTALLROOT}/bin/https/ws-jars/xsdlib.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/xercesImpl.jar:${WS_INSTALLROOT}/bin/https/ws-jars/endorsed/xalan.jar]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/wscompile">
+      <replacetoken><![CDATA[org.apache.jasper.JspC]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacevalue>
+    </replace>
+
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/wscompile" />
+
+    <echo message="generating wsdeploy script " />
+    <copy file="${SJSWS_HOME}/bin/https/bin/wscompile" tofile="${SJSWS_HOME}/bin/https/bin/wsdeploy"
+	overwrite="true" />
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/wsdeploy">
+      <replacetoken><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.xml.rpc.tools.wsdeploy.Main]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/wsdeploy" />
+
+  </target>
+
+  <target name="integrate.jaxrpc-scripts.bat" depends="init"  if="isWindows" >
+
+    <echo message="generating wscompile script " />
+    <copy file="${SJSWS_HOME}/bin/https/bin/jspc.bat" tofile="${SJSWS_HOME}/bin/https/bin/wscompile.bat"
+	overwrite="true" />
+    <replace file="${SJSWS_HOME}/bin/https/bin/wscompile.bat">
+      <replacetoken><![CDATA[%WS_JAVA%\lib\tools.jar]]></replacetoken>
+      <replacevalue><![CDATA[%WS_JAVA%\lib\tools.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxrpc-impl.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxrpc-api.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jaxrpc-spi.jar;%WS_INSTALLROOT%\bin\https\ws-jars\activation.jar;%WS_INSTALLROOT%\bin\https\ws-jars\saaj-api.jar;%WS_INSTALLROOT%\bin\https\ws-jars\saaj-impl.jar;%WS_INSTALLROOT%\bin\https\ws-jars\mail.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\dom.jar;%WS_INSTALLROOT%\bin\https\ws-jars\jax-qname.jar;%WS_INSTALLROOT%\bin\https\ws-jars\relaxngDatatype.jar;%WS_INSTALLROOT%\bin\https\ws-jars\xsdlib.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\xercesImpl.jar;%WS_INSTALLROOT%\bin\https\ws-jars\endorsed\xalan.jar]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/wscompile.bat">
+      <replacetoken><![CDATA[org.apache.jasper.JspC]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacevalue>
+    </replace>
+
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/wscompile.bat" />
+
+    <echo message="generating wsdeploy script " />
+    <copy file="${SJSWS_HOME}/bin/https/bin/wscompile.bat" tofile="${SJSWS_HOME}/bin/https/bin/wsdeploy.bat"
+	overwrite="true" />
+
+    <replace file="${SJSWS_HOME}/bin/https/bin/wsdeploy.bat">
+      <replacetoken><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.xml.rpc.tools.wsdeploy.Main]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSWS_HOME}/bin/https/bin/wsdeploy.bat" />
+
+
+
+
+
+  </target>
+ 
+
+   <target name="update-classpath-for-jdbc-rowset.sh" if="isNotWindows" depends="init" >
+
+    <echo message="Updating classpath for JDBC RowSet" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/rowset.jar:' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+
+    </target>
+
+   <target name="update-classpath-for-jdbc-rowset.bat" if="isWindows" depends="init" >
+
+    <echo message="Updating classpath for JDBC RowSet" />
+
+    <replace file="${SJSWS_HOME}/${SERVER_DIR}/config/server.xml"
+   value='classpathsuffix="${SJSWS_HOME}/bin/https/ws-jars/rowset.jar;' >
+      <replacetoken><![CDATA[classpathsuffix="]]></replacetoken>
+    </replace>
+  </target>
+
+  <!-- Target for integrating jdbc-rowset into WebServer 6.1 PE -->
+  <target name="integrate.jdbc-rowset" depends="init" if="jdbc-rowset.integrated"
+    description="Integrating JDBC RowSet into Sun One Java System WebServer 6.1">
+
+    <echo message="Copying JDBC RowSet jar file to ${SJSWS_HOME}/lib" />
+
+   <!-- As we are keeping jar file in lib dir of SJSWS_HOME we don't
+        need to update CLASSPATH -->
+   <copy file="${JWSDP_HOME}/jdbc-rowset/lib/rowset.jar"
+        todir="${SJSWS_HOME}/bin/https/ws-jars/" overwrite="yes"/>
+
+   <!-- Updating CLASSPATH for JDBC RowSet -->
+   <antcall target="update-classpath-for-jdbc-rowset.sh" />
+   <antcall target="update-classpath-for-jdbc-rowset.bat" />
+
+  </target>
+
+
+</project>
+
+
