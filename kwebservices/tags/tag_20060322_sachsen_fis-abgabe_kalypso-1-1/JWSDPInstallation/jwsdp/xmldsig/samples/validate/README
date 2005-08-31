@@ -1,0 +1,20 @@
+This is a simple example of validating an XML Signature using the
+JSR 105 API. The example assumes the validating key is contained
+in a KeyValue KeyInfo element in the XML Signature.
+
+Command Line Usage:
+
+  Modify the build.properties file if you are behind a firewall and use
+  an HTTP proxy server.
+
+  $ ant
+
+  This will validate the signature in the file envelopedSignature.xml in 
+  the current working directory. 
+
+  To validate a different signature, run as follows:
+
+  $ ant -Dsample.args="signature.xml" 
+
+    where "signature.xml" is the pathname of the file.
+

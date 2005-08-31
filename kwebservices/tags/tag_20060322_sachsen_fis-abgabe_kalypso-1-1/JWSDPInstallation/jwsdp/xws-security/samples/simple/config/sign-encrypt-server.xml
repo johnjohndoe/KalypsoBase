@@ -1,0 +1,14 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
+                            useTimestamps="true"
+                            dumpMessages="true">
+    <xwss:Sign/>
+    <xwss:Encrypt keyReferenceType="Identifier" 
+    	          receiverCertificateAlias="xws-security-client"/>
+</xwss:SecurityConfiguration>

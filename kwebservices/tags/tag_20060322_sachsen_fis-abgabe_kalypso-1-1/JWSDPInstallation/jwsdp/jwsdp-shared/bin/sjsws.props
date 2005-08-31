@@ -1,0 +1,7 @@
+#Mon Jan 10 13:37:36 CET 2005
+SJSWS_PORT_LIST=<Substitute List of ports of server instances in which webservices support need to be enabled, separated by ,>
+SERVER_INSTANCE=<Substitute Directory of server instance in which webservices support need to be enabled>
+http.proxyPort=
+SJSWS_PORT=8080
+http.proxyHost=
+SERVER_INSTANCE_LIST=<Substitute List of directories of server instance in which webservices support need to be enabled, separated by ,>

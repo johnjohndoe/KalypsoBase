@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-libs.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/jax-qname.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/namespace.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/relaxngDatatype.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/xsdlib.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/saaj/lib/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/saaj/lib/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/sax.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xalan.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xercesImpl.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>
