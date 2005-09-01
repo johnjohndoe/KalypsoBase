@@ -412,6 +412,8 @@ public class ProjectsView extends ViewPart
             // export to clipboard
             final StringSelection stsel = new StringSelection( writer.toString() );
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
+            
+            MessageDialog.openInformation( m_viewer.getControl().getShell(), "Full Dependencies", writer.toString() );
           }
           catch( final Exception e )
           {
@@ -422,6 +424,8 @@ public class ProjectsView extends ViewPart
 
       private void fullDepends( Set depends, String id ) throws BundleException
       {
+        depends.add( id );
+        
         final Bundle bundle = Platform.getBundle( id );
         final String requires = (String)bundle.getHeaders().get( Constants.REQUIRE_BUNDLE );
         final ManifestElement[] elements = ManifestElement.parseHeader( Constants.REQUIRE_BUNDLE, requires );
@@ -432,10 +436,7 @@ public class ProjectsView extends ViewPart
             final ManifestElement element = elements[j];
             final String depId = element.getValue();
             if( !depends.contains( depId ) )
-            {
-              depends.add( depId );
               fullDepends( depends, depId );
-            }
           }
         }
       }
