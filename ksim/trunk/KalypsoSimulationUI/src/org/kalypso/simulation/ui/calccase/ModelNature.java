@@ -63,6 +63,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.internal.variables.ValueVariable;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -155,6 +156,33 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private static final int TRANS_TYPE_UPDTAE = 0;
 
   private static final int TRANS_TYPE_CREATE = 1;
+
+  /**
+   * 2005-09-01 - Schlienger - added this constant in order to get a static dependency to the org.eclipse.ant.ui plugin
+   * (else it is only a runtime-dependency), thus the dependency is checked by the manifest editor and the plugin is
+   * kept in the dependency list. Not doing this results in problems at runtime if the org.eclipse.ant.ui plugin is
+   * missing.
+   * <p>
+   * This is the id to use in your own launch files.
+   * <p>
+   * Example of an launch-file:
+   * 
+   * <pre>
+   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+   &lt;launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType"&gt;
+   &lt;stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/&gt;
+   &lt;booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/&gt;
+   &lt;stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-q -e -logfile ${calc.dir}/afterCalc.log"/&gt;
+   &lt;booleanAttribute key="org.eclipse.ui.externaltools.ATTR_CAPTURE_OUTPUT" value="false"/&gt;
+   &lt;stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${project_loc}/.model/launch/build.xml"/&gt;
+   &lt;booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/&gt;
+   &lt;stringAttribute key="org.eclipse.ant.ui.ATTR_BUILD_SCOPE" value="${none}"/&gt;
+   &lt;stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/&gt;
+   &lt;stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="afterCalc,"/&gt;
+   &lt;/launchConfiguration&gt;
+   * <pre>
+   */
+  public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -331,6 +359,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final Properties userProperties = createVariablesForAntLaunch( folder );
 
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+
       final IFile launchFile = getLaunchFile( launchName );
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
@@ -407,7 +436,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final IValueVariable valueVariable = new ValueVariable( name, value, null );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
-      
+
       try
       {
         // add each variable separatedly, because it may have allready been registered
@@ -533,17 +562,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       TransformationList transList = null;
       switch( type )
       {
-      case TRANS_TYPE_UPDTAE:
-        transList = trans.getUpdateTransformations();
-        break;
+        case TRANS_TYPE_UPDTAE:
+          transList = trans.getUpdateTransformations();
+          break;
 
-      case TRANS_TYPE_CREATE:
-        transList = trans.getCreateTransformations();
-        break;
+        case TRANS_TYPE_CREATE:
+          transList = trans.getCreateTransformations();
+          break;
 
-      default:
-        transList = null;
-        break;
+        default:
+          transList = null;
+          break;
       }
 
       if( transList == null )
@@ -670,21 +699,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     switch( metadataDelta.getKind() )
     {
-    case IResourceDelta.ADDED:
-    case IResourceDelta.REMOVED:
-    case IResourceDelta.CHANGED:
-    {
-      try
+      case IResourceDelta.ADDED:
+      case IResourceDelta.REMOVED:
+      case IResourceDelta.CHANGED:
       {
-        reloadMetadata();
+        try
+        {
+          reloadMetadata();
+        }
+        catch( final CoreException e )
+        {
+          // todo: error handling? -->> als job absetzen?
+          e.printStackTrace();
+        }
+        break;
       }
-      catch( final CoreException e )
-      {
-        // todo: error handling? -->> als job absetzen?
-        e.printStackTrace();
-      }
-      break;
-    }
     }
   }
 
@@ -895,7 +924,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private ICalculationService findCalculationServiceForType( final String typeID ) throws ServiceException
   {
     final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
- //   System.out.println("search for >"+typeID+"<");
+    //   System.out.println("search for >"+typeID+"<");
     for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
     {
       final ICalculationService proxy = (ICalculationService)iter.next();
@@ -904,7 +933,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String[] jobTypes = proxy.getJobTypes();
         for( int i = 0; i < jobTypes.length; i++ )
         {
-//          System.out.println("jobtypes:>"+jobTypes[i]+"<");
+          //          System.out.println("jobtypes:>"+jobTypes[i]+"<");
           if( typeID.equals( jobTypes[i] ) )
             return proxy;
         }
