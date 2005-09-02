@@ -63,6 +63,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
@@ -95,7 +96,6 @@ import org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWiza
 import org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.xml.sax.InputSource;
 
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
@@ -651,7 +651,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   }
 
   /**
-   * Calls {@link AbstractCalcWizardPage#onModellChange(ModellEvent)}on all pages.
+   * Calls {@link AbstractCalcWizardPage#selectionChanged(SelectionChangedEvent)}on all pages.
    */
   public void refreshAllPages( IProgressMonitor monitor )
   {

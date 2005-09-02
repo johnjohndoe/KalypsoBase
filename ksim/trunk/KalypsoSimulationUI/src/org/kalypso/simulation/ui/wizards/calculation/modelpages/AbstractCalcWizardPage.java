@@ -1207,9 +1207,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return getArguments().getProperty( PROP_PAGE_ID, super.getName() );
   }
 
-  /**
-   * Calls {@link AbstractCalcWizardPage#onModellChange(ModellEvent)}on all pages.
-   */
   protected void refreshAllPages( final IProgressMonitor monitor )
   {
     final IWizard wizard = getWizard();
