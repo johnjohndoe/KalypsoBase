@@ -255,9 +255,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public final static String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase";
 
-  //  /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
-  //  private final static String PROP_SELECTIONID = "selectionID";
-
   /**
    * Argument: Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Karte geladen wurde. Ansonsten das
    * erste Feature
@@ -286,8 +283,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public static final int SELECT_FROM_TABLEVIEW = 1;
 
   public static final int SELECT_FROM_FEATUREVIEW = 2;
-
-  //  private int m_selectionID = 0x1;
 
   final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
