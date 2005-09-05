@@ -208,8 +208,10 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     final IFolder[] calcCases = (IFolder[])selection.toList().toArray( new IFolder[selection.size()] );
     final CommitCalcCaseJob job = new CommitCalcCaseDelegate.CommitCalcCaseJob( m_prognoseFolder.getProject(),
         calcCases );
+    
+    // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getParentShell(), VORHERSAGEN_ORGANISIEREN,
-        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_ ) );
+        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
     job.setUser( true );
     job.schedule();
   }

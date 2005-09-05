@@ -89,8 +89,10 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     {
       final IFolder folder = calcCasesToCalc[i];
       final Job calcJob = new CalcCaseJob( folder );
+
+      //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
       calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Berechnung durchführen: "
-          + folder.getName(), "Berechnung beendet: " ) );
+          + folder.getName(), "Berechnung beendet: ", false ) );
       calcJob.schedule();
     }
   }

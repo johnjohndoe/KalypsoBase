@@ -41,7 +41,6 @@
 
 package org.kalypso.simulation.ui.wizards.exporter.sumuptable;
 
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -57,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
@@ -97,7 +97,7 @@ public final class ExportableSumUpTable implements IExportableObject
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
-    final String charset = m_args.getProperty( "charset", new OutputStreamWriter( new ByteArrayOutputStream() ).getEncoding() );
+    final String charset = m_args.getProperty( "charset", CharsetUtilities.getDefaultCharset() );
     final String axisType = m_args.getProperty( "axisType" );
     final String timeUnit = m_args.getProperty( "timeUnit" );
     final String timeStep = m_args.getProperty( "timeStep" );

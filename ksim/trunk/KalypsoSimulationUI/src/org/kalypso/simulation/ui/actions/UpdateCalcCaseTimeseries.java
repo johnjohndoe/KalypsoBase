@@ -44,13 +44,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
@@ -111,7 +111,9 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
           {
             final ModelNature nature = (ModelNature)calcCase.getProject().getNature( ModelNature.ID );
 
-            nature.updateCalcCase( calcCase, monitor );
+            final IStatus status = nature.updateCalcCase( calcCase, monitor );
+
+            return status;
           }
           catch( final CoreException e )
           {
@@ -119,10 +121,12 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
 
             return e.getStatus();
           }
-
-          return Status.OK_STATUS;
         }
       };
+
+      //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren",
+          "Siehe Details:", false ) );
       job.setUser( true );
       job.setRule( mutexRule );
       job.schedule();

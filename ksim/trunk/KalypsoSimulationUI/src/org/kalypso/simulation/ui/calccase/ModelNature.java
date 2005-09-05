@@ -42,6 +42,7 @@ package org.kalypso.simulation.ui.calccase;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -99,6 +100,7 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.ModeldataType;
@@ -389,7 +391,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
             {
               final String logfile = arguments[j + 1];
-              return new LogStatusWrapper( logfile ).toStatus();
+              return new LogStatusWrapper( new File( logfile ), CharsetUtilities.getDefaultCharset() ).toStatus();
             }
           }
           return Status.OK_STATUS;
@@ -501,11 +503,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Erzeugt eine neue Rechenvariante im angegebenen Ordner
-   * 
-   * @param folder
-   * @param monitor
-   * @return status
-   * @throws CoreException
    */
   public IStatus createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
@@ -520,12 +517,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Aktualisiert eine vorhandene Rechenvariante
-   * 
-   * @param folder
-   * @param monitor
-   * @return status
-   * 
-   * @throws CoreException
    */
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
@@ -540,12 +531,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * Führt eine Transformation auf einer Rechenvariante durch
    * 
-   * @param taskName
-   * @param type
-   * @param folder
-   * @param monitor
-   * 
-   * @throws CoreException
+   * @deprecated use ant launch framework instead. Leave here until all models have been ported to the new system.
    */
   private IStatus doCalcTransformation( final String taskName, final int type, final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
@@ -578,10 +564,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( transList == null )
         return Status.OK_STATUS;
 
-      final LogStatusWrapper res = TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
+      return TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
           monitor, 1000 ) );
-
-      return res.toStatus();
     }
     catch( final CoreException e )
     {
@@ -705,7 +689,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       {
         try
         {
-          reloadMetadata();
+          // always test for existence before reloading data
+          // since project might have been deleted by the user
+          if( getMetadataFile().exists() )
+            reloadMetadata();
         }
         catch( final CoreException e )
         {
