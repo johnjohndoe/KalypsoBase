@@ -255,7 +255,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
         int max = 10;
         while( true )
         {
-          System.out.println( "wait for feature" + max );
+          System.out.println( "wait for feature" + max ); // TODO debug?
           if( m_templateviewer.getFeature() != null )
           {
             refreshDiagram();

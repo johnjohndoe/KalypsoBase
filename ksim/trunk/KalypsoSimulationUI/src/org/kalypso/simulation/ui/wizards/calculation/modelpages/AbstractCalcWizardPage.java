@@ -1040,6 +1040,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             //              feature.select( selectionID );
           }
         }
+        
         refreshDiagram();
         refreshZMLTable();
         maximizeMap();
@@ -1224,6 +1225,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     }
   }
+  
   public IFeatureSelectionManager getSelectionManager()
   {
     return m_selectionManager;
