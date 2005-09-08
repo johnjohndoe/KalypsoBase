@@ -813,7 +813,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return getFeatures( false );
   }
 
-  private FeatureList getFeatures( boolean selected )
+  private FeatureList getFeatures( final boolean selected )
   {
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
@@ -835,11 +835,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
+    
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-    final FeatureList featureList = kft.getFeatureList();
+    final FeatureList featureList = kft.getFeatureListVisible( null );
     if( featureList == null )
       return FeatureFactory.createFeatureList( null, null );
     if( selected )
+      // TODO: this gives all selected features of the workspace, not only the ones in the active theme
       return FeatureFactory.createFeatureList( null, null, kft.getSelectionManager().getFeatureSelection() );
     return featureList;
   }
@@ -1040,7 +1042,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             //              feature.select( selectionID );
           }
         }
-        
+
         refreshDiagram();
         refreshZMLTable();
         maximizeMap();
@@ -1225,7 +1227,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     }
   }
-  
+
   public IFeatureSelectionManager getSelectionManager()
   {
     return m_selectionManager;
