@@ -53,7 +53,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -76,7 +75,6 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -655,32 +653,33 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public void refreshAllPages( IProgressMonitor monitor )
   {
-    try
-    {
-      final IWizardPage[] pages = getPages();
-      monitor.beginTask( "Seiten werden aktualisiert", pages.length );
-
-      for( int i = 0; i < pages.length; i++ )
-      {
-        final IWizardPage page = pages[i];
-
-        final ISafeRunnable runnable = new SafeRunnable()
-        {
-          public void run() throws Exception
-          {
-            if( page instanceof AbstractCalcWizardPage )
-              ( (AbstractCalcWizardPage)page ).selectionChanged( new KalypsoSelectionChangedEvent( ((AbstractCalcWizardPage)page).getSelectionManager(), this, ((AbstractCalcWizardPage)page).getSelectionManager().getSelection() ) );
-          }
-        };
-        Platform.run( runnable );
-
-        monitor.worked( 1 );
-      }
-    }
-    finally
-    {
-      monitor.done();
-    }
+    // TODO: what to do?
+//    try
+//    {
+//      final IWizardPage[] pages = getPages();
+//      monitor.beginTask( "Seiten werden aktualisiert", pages.length );
+//
+//      for( int i = 0; i < pages.length; i++ )
+//      {
+//        final IWizardPage page = pages[i];
+//
+//        final ISafeRunnable runnable = new SafeRunnable()
+//        {
+//          public void run() throws Exception
+//          {
+//            if( page instanceof AbstractCalcWizardPage )
+//              ( (AbstractCalcWizardPage)page ).selectionChanged( new KalypsoSelectionChangedEvent( ((AbstractCalcWizardPage)page).getSelectionManager(), this, ((AbstractCalcWizardPage)page).getSelectionManager().getSelection() ) );
+//          }
+//        };
+//        Platform.run( runnable );
+//
+//        monitor.worked( 1 );
+//      }
+//    }
+//    finally
+//    {
+//      monitor.done();
+//    }
   }
 
   public ModelSynchronizer getModelSynchronizer()

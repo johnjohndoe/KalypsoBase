@@ -70,6 +70,7 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
@@ -84,7 +85,7 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new URL[] {} );
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
   
   private final Collection m_changes = new ArrayList();
 
