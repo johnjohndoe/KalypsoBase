@@ -16,7 +16,7 @@
               <ogc:Literal>true</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
+          <MinScaleDenominator>0.0</MinScaleDenominator>
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
           <PointSymbolizer>
             <Geometry>
