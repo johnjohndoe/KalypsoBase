@@ -272,7 +272,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId";
 
   /**
-   * Argument: select first feature of acitve layer by default ?<br>
+   * Argument: select first feature of active layer by default ?<br>
    * default is "true" <br>
    * valid values are "true" or "false"
    */
@@ -409,15 +409,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_tsProps = CalcWizardHelper.parseTimeserieFeatureProps( arguments );
 
     m_calcFolder = calcFolder;
-
-    //    try
-    //    {
-    //      m_selectionID = Integer.parseInt( m_arguments.getProperty( PROP_SELECTIONID, "1" ) );
-    //    }
-    //    catch( final NumberFormatException nfe )
-    //    {
-    //      nfe.printStackTrace();
-    //    }
 
     try
     {
