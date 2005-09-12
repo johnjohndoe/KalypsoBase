@@ -14,7 +14,7 @@
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<PointSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>location</ogc:PropertyName>
 						</Geometry>
 						<Graphic>
 							<Mark>
@@ -32,7 +32,7 @@
 					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>location</ogc:PropertyName>
 						</Geometry>
 						<Label>
 							<ogc:PropertyName>Name</ogc:PropertyName>
@@ -81,7 +81,7 @@
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<PointSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>location</ogc:PropertyName>
 						</Geometry>
 						<Graphic>
 							<Mark>
@@ -99,7 +99,7 @@
 					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>location</ogc:PropertyName>
 						</Geometry>
 						<Label>
 							<ogc:PropertyName>Name</ogc:PropertyName>
