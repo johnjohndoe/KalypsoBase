@@ -237,7 +237,7 @@
           <pegel:Reserve10>Kaulsdorf-Eichicht</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4460810.0,5607510.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -583,7 +583,7 @@
           <pegel:Reserve10>Schwarzburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4442860.0,5612760.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -759,7 +759,7 @@
           <pegel:Reserve10>Rudolstadt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4453055.0,5620340.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1287,7 +1287,7 @@
           <pegel:Reserve10>Niedertrebra</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4470620.0,5659720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1651,7 +1651,7 @@
           <pegel:Reserve10>Nägelstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4409860.0,5664280.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1991,7 +1991,7 @@
           <pegel:Reserve10>Wasserthaleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4422720.0,5680826.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2161,7 +2161,7 @@
           <pegel:Reserve10>Hachelbich</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4428510.0,5690810.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2337,7 +2337,7 @@
           <pegel:Reserve10>Oldisleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4442840.0,5685400.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2513,7 +2513,7 @@
           <pegel:Reserve10>Ilfeld</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4415980.0,5718835.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2683,7 +2683,7 @@
           <pegel:Reserve10>Nordhausen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4415680.0,5708740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2859,7 +2859,7 @@
           <pegel:Reserve10>Sundhausen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417390.0,5704330.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3897,7 +3897,7 @@
           <pegel:Reserve10>Gera-Langenberg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4503255.0,5641790.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4243,7 +4243,7 @@
           <pegel:Reserve10>Böhlen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4527130.0,5675330.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6653,7 +6653,7 @@
           <pegel:Reserve10>Wegeleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4444290.0,5750710.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7175,7 +7175,7 @@
           <pegel:Reserve10>Stassfurt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4471760.0,5746740.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4471764.0,5746742.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7515,7 +7515,7 @@
           <pegel:Reserve10>Bad Liebenwerda</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4596940.0,5710280.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7691,7 +7691,7 @@
           <pegel:Reserve10>Löben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4574810.0,5737740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7867,7 +7867,7 @@
           <pegel:Reserve10>Kaulsdorf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4460560.0,5608840.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8007,7 +8007,7 @@
           <pegel:Reserve10>Straußfurt Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4429120.0,5669080.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8287,7 +8287,7 @@
           <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4433480.0,5701500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8777,7 +8777,7 @@
           <pegel:Reserve10>Königsh./HWR - Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4413680.0,5735760.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4414550.0,5735350.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9127,7 +9127,7 @@
           <pegel:Reserve10>Hirtenstieg/ÜL-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4417500.0,5734180.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417750.0,5734220.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
