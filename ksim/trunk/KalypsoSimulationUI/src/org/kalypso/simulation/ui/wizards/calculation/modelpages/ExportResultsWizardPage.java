@@ -141,7 +141,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   //    </page>
   //  
 
-  private static final String STR_EXPORT_PROGNOSEN = "Export Prognosen";
+  private static final String STR_EXPORT_PROGNOSEN = "Prognosen exportieren";
 
   /**
    * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
