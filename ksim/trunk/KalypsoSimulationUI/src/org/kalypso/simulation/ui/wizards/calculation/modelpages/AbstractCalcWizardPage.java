@@ -332,6 +332,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private URL m_htmlURL = null;
 
+  /** the one and only one selection manager for this page */
   private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager2();
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
@@ -430,11 +431,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       {
         m_htmlURL = htmlLocation.toURL();
       }
-      catch( final MalformedURLException e1 )
+      catch( final MalformedURLException e )
       {
-        e1.printStackTrace();
-        // TODO: error handling
         m_htmlURL = null;
+
+        e.printStackTrace();
+
+        final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Siehe Details", e );
+        ErrorDialog.openError( getShell(), "title", "msg", status );
       }
     }
   }
@@ -797,20 +801,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-    case SELECT_FROM_MAPVIEW:
-      final IMapModell mapModell = getMapModell();
-      if( mapModell == null )
-        return FeatureFactory.createFeatureList( null, null );
-      activeTheme = mapModell.getActiveTheme();
-      break;
-    case SELECT_FROM_TABLEVIEW:
-      activeTheme = m_gisTableViewer.getTheme();
-      break;
-    case SELECT_FROM_FEATUREVIEW:
-      activeTheme = null;
-      break;
-    default:
-      activeTheme = null;
+      case SELECT_FROM_MAPVIEW:
+        final IMapModell mapModell = getMapModell();
+        if( mapModell == null )
+          return FeatureFactory.createFeatureList( null, null );
+        activeTheme = mapModell.getActiveTheme();
+        break;
+      case SELECT_FROM_TABLEVIEW:
+        activeTheme = m_gisTableViewer.getTheme();
+        break;
+      case SELECT_FROM_FEATUREVIEW:
+        activeTheme = null;
+        break;
+      default:
+        activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
@@ -823,6 +827,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( selected )
       // TODO: this gives all selected features of the workspace, not only the ones in the active theme
       return FeatureFactory.createFeatureList( null, null, m_selectionManager.toList() );
+
     return featureList;
   }
 
@@ -842,9 +847,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void performHelp()
   {
-  // TODO
-  // get helpid
-  // show help
+  // TODO get helpid, show help
   }
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
@@ -940,6 +943,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
+  /**
+   * @deprecated use ant-stuff instead
+   */
   protected void runCalculation()
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
@@ -1098,6 +1104,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void launchAnt( final String antLaunch, final String title, final String message, final Properties antProps )
   {
+    // clear the selection manager before launching an ant-script: GML might
+    // change and thus the current selection is no longer valid
+    // TODO: find a way to reselect the previous selected features
+    m_selectionManager.clear();
+
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
       protected void execute( final IProgressMonitor monitor ) throws CoreException
