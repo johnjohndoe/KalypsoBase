@@ -77,7 +77,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 /**
  * @author Belger
  */
-public class MapAndFeatureWizardPage extends AbstractCalcWizardPage 
+public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 {
   /** Argument: Position des Haupt-Sash: Integer von 0 bis 100 */
   private final static String PROP_MAINSASH = "mainSash";
@@ -87,6 +87,12 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
   /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
+
+  /**
+   * Argument: falls true, wird der festeingebaute Berechnungsknopf nicht gezeigt. Nur aus Gründen der
+   * Rückwärtskompabilität. Eigentlich sollten alle Modell (z.B. WeisseElster) lieber Ant-Knöpfe benutzen.
+   */
+  private static final String PROP_HIDE_CALC_BUTTON = "hideCalcButton";
 
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jede Kurventyp.
@@ -140,13 +146,18 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     createFeaturePanel( rightSash );
     initDiagram( rightSash );
-    initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
-    {
-      public void widgetSelected( final SelectionEvent e )
+
+    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) ).booleanValue();
+    if( hideCalcButton )
+      initButtons( rightPanel, null, null, null );
+    else
+      initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
       {
-        runCalculation();
-      }
-    } );
+        public void widgetSelected( final SelectionEvent e )
+        {
+          runCalculation();
+        }
+      } );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
