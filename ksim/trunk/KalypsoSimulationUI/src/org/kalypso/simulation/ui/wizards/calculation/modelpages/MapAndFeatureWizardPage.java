@@ -70,6 +70,7 @@ import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -88,6 +89,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
 
+  /** Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} */
+  private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle";
+
   /**
    * Argument: falls true, wird der festeingebaute Berechnungsknopf nicht gezeigt. Nur aus Gründen der
    * Rückwärtskompabilität. Eigentlich sollten alle Modell (z.B. WeisseElster) lieber Ant-Knöpfe benutzen.
@@ -101,6 +105,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
   protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget(
       null, null ) );
+
 
   public MapAndFeatureWizardPage()
   {
@@ -147,7 +152,8 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     createFeaturePanel( rightSash );
     initDiagram( rightSash );
 
-    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) ).booleanValue();
+    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) )
+        .booleanValue();
     if( hideCalcButton )
       initButtons( rightPanel, null, null, null );
     else
@@ -199,6 +205,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   private void createFeaturePanel( final Composite parent )
   {
     final String featureTemplateArgument = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
+    final String featureViewStyle = getArguments().getProperty( PROP_FEATURE_VIEW_STYLE, "SWT.BORDER" );
+    final int viewStyle = SWTUtilities.createStyleFromString( featureViewStyle );
+
     final Properties featureTemplateProps = PropertiesHelper.parseFromString( featureTemplateArgument, '#' );
     final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
@@ -216,7 +225,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
             {
               public void run()
               {
-                m_templateviewer.createControls( parent, SWT.BORDER );
+                m_templateviewer.createControls( parent, viewStyle );
               }
             } );
           }

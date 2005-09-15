@@ -64,7 +64,14 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Argument: Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jeden Kurventyp.
+   * Argument: falls true, wird der festeingebaute Berechnungsknopf nicht gezeigt. Nur aus Gründen der
+   * Rückwärtskompabilität. Eigentlich sollten alle Modell (z.B. WeisseElster) lieber Ant-Knöpfe benutzen.
+   */
+  private static final String PROP_HIDE_CALC_BUTTON = "hideCalcButton";
+
+  /**
+   * Argument: Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jeden
+   * Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
@@ -106,13 +113,19 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     final Control featureTableControl = initFeatureTable( rightSash );
     final Control diagramControl = initDiagram( rightSash );
-    initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
-        {
-      public void widgetSelected( final SelectionEvent e )
+
+    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) )
+        .booleanValue();
+    if( hideCalcButton )
+      initButtons( rightPanel, null, null, null );
+    else
+      initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
       {
-        runCalculation();
-      }
-    } );
+        public void widgetSelected( final SelectionEvent e )
+        {
+          runCalculation();
+        }
+      } );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -129,7 +142,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
 
     if( featureTableControl == null )
       rightSash.setMaximizedControl( diagramControl );
-    
+
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
   }
