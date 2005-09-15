@@ -250,8 +250,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
       final IProject calcProject = m_calcCaseFolder.getProject();
       final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
-      nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
-      return Status.OK_STATUS;
+      return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
     }
     catch( final JAXBException e )
     {
@@ -273,7 +272,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     {
       public void run()
       {
-        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status );
+        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
       }
     } );
   }
