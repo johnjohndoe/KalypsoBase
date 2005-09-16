@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -681,6 +682,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
+      m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
       final JScrollPane pane = new JScrollPane( m_table );
 
