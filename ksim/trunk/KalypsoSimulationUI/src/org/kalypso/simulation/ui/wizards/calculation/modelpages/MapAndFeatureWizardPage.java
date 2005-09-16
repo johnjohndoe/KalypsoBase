@@ -104,8 +104,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
   protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget(
-      null, null ) );
-
+      null, null ), 0, 0 );
 
   public MapAndFeatureWizardPage()
   {
@@ -144,6 +143,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
     final GridLayout gridLayout = new GridLayout();
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    
     rightPanel.setLayout( gridLayout );
     rightPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
