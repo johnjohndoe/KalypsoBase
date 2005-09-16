@@ -84,6 +84,7 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.ISupplier;
@@ -115,8 +116,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
- * Mostly used as the last page of the calculation wizard. The user can export the
- * features in different ways:
+ * Mostly used as the last page of the calculation wizard. The user can export the features in different ways:
  * <ul>
  * <li>back to the repository
  * <li>as document within the metadoc infrastructure
@@ -222,14 +222,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      {
-          mainWeight,
-          100 - mainWeight } );
+      { mainWeight, 100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      {
-          rightWeight,
-          100 - rightWeight } );
+      { rightWeight, 100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -322,8 +318,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         exportSelectedDocuments();
       }
     } );
-    // TODO: show button only if there is any configured exporter
-    //  berichtsablageButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    
+    // show button only if there is any configured exporter
+    final IExporter[] exporters = createExporters();
+    berichtsablageButton.setEnabled( !( exporters == null || exporters.length == 0 ) );
 
     // Rechenvariante archivieren
     final Button archiveButton = new Button( buttonGroup, SWT.PUSH );
@@ -389,10 +387,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
       final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
-      if( dialog.open() == Window.OK )
-      {
-        // TODO?
-      }
+      
+      // just open the dialog, business is done in the dialog
+      dialog.open();
     }
     catch( final CoreException e )
     {
@@ -405,7 +402,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     {
       e.printStackTrace();
 
-      // error handling?
+      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus( IStatus.ERROR, "Siehe Details", e ) );
     }
   }
 
@@ -415,6 +412,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * <p>
    * Each exporter is also initialised (the method init() is called) with this class as adapter for delivering context
    * dependent information such as the list of selected features.
+   * <p>
+   * Additionally to the required "id" argument, you can provide an optional "name" argument which, if present, replaces
+   * the value of the name property defined in the extension.
    * 
    * @return newly created list of exporters
    */
@@ -442,12 +442,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
           final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
           // important: initialise the exporter
           exporter.init( new ExporterSupplier( args ) );
-          
+
           // if name provided, override name of exporter
           final String name = args.getProperty( "name" );
           if( name != null )
             exporter.setName( name );
-          
+
           exporters.add( exporter );
         }
         catch( final CoreException e )
@@ -520,8 +520,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   {
     final FeatureList result = FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList
         .getParentFeatureTypeProperty() );
-
-    // TODO filter auch im berichtsexport benutzen
 
     final UrlResolver resolver = new UrlResolver();
     URL resultURL;
@@ -637,20 +635,15 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    */
   public void refreshDiagram()
   {
-    // TODO: sollte nicht diese methode überschreiben sondern besser die methode
-    // getObservationsToShow!
-
-    // erstmal leer, damit das Diagramm gelöscht wird
-    refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
+    m_diagView.removeAllItems();
 
     if( m_checkedElements == null || m_checkedElements.length == 0 )
       return;
 
     // Ist ein Hack, der davon ausgeht, dass das modell sich nie
-    // ändern wird
-    // es werden einfach die links vom aktuellen Modell gegen alle
+    // ändern wird es werden einfach die links vom aktuellen Modell gegen alle
     // selektierten Rechenfälle aufgelöst
-    final TSLinkWithName[] obs = getObservationsToShow( true );
+    final TSLinkWithName[] obs = getObservations( true );
 
     for( int i = 0; i < m_checkedElements.length; i++ )
     {
@@ -665,14 +658,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         e.printStackTrace();
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
-   */
-  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
-  {
-    return getObservations( onlySelected );
   }
 
   /**
@@ -695,8 +680,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     public Object supply( final Object request )
     {
       if( "features".equals( request ) )
-        return getFeatures();
-      
+      {
+        final FeatureList features = getFeatures();
+        final String property = getArguments().getProperty( PROP_PEGEL_NAME );
+        final URL context = getContext();
+        
+        return filterForValidTimeseriesLinks( features, property, context );
+      }
+
       if( "selectedFeatures".equals( request ) )
         return getSelectedFeatures();
 
@@ -709,8 +700,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       if( "context".equals( request ) )
         return getContext();
 
-      Logger.getLogger( getClass().getName() ).warning( "Supplier asked for " + request.toString() + " but request could not be satisfied" );
-      
+      Logger.getLogger( getClass().getName() ).warning(
+          "Supplier asked for " + request.toString() + " but request could not be satisfied" );
+
       return null;
     }
   }

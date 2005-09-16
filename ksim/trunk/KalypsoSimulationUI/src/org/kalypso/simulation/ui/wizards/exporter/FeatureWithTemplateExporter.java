@@ -66,6 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <pre>
  &lt;arg name="exporterSomeName"&gt;
  &lt;arg name="id" value="featureWithTemplateExporter" /&gt; 
+ &lt;arg name="name" value="Vorhersage Export" /&gt;
  &lt;arg name="nameproperty" value="Name" /&gt; 
  &lt;arg name="width" value="1024" /&gt; 
  &lt;arg name="height" value="768" /&gt; 

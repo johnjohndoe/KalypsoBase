@@ -302,16 +302,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   }
 
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
-   */
-  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
-  {
-    // TODO: not needed?
-    // TODO: return Feature from FeatureView
-    return getObservations( false );
-  }
-
-  /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getSelectedFeatures()
    */
   protected FeatureList getSelectedFeatures()

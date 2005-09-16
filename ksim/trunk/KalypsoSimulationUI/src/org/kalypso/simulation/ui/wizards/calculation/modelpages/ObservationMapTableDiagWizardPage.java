@@ -157,12 +157,4 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     mapControl.setLayoutData( gridData );
   }
-
-  /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
-   */
-  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
-  {
-    return getObservations( onlySelected );
-  }
 }

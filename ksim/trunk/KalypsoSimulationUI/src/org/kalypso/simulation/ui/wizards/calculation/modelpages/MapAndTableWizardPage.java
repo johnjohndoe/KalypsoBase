@@ -156,13 +156,4 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
     final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
-
-  /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
-   */
-  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
-  {
-    return getObservations( onlySelected );
-  }
-
 }

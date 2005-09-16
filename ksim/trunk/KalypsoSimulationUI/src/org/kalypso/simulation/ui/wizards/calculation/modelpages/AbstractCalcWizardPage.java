@@ -597,7 +597,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public void refreshDiagram()
   {
-    final TSLinkWithName[] obs = getObservationsToShow( true );
+    final TSLinkWithName[] obs = getObservations( true );
     refreshDiagramForContext( obs, getContext() );
   }
 
@@ -606,23 +606,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( "template".equals( m_showZmlTable ) )
       return;
 
-    final TSLinkWithName[] obs = getObservationsToShow( "selected".equalsIgnoreCase( m_showZmlTable ) );
-    refreshZmlTableForContext( obs, getContext() );
+    final TSLinkWithName[] links = getObservations( "selected".equalsIgnoreCase( m_showZmlTable ) );
+    refreshZmlTableForContext( links, getContext() );
   }
 
-  protected void refreshDiagramForContext( final TSLinkWithName[] obs, final URL context )
+  protected void refreshDiagramForContext( final TSLinkWithName[] links, final URL context )
   {
     if( m_diagView != null )
-      CalcWizardHelper.updateZMLView( m_diagView, obs, context, true, m_ignoreType );
+      CalcWizardHelper.updateZMLView( m_diagView, links, context, true, m_ignoreType );
   }
 
-  protected void refreshZmlTableForContext( final TSLinkWithName[] obs, final URL context )
+  protected void refreshZmlTableForContext( final TSLinkWithName[] links, final URL context )
   {
     if( m_tableTemplate != null )
-      CalcWizardHelper.updateZMLView( m_tableTemplate, obs, context, true, m_ignoreType );
+      CalcWizardHelper.updateZMLView( m_tableTemplate, links, context, true, m_ignoreType );
   }
-
-  protected abstract TSLinkWithName[] getObservationsToShow( final boolean onlySelected );
 
   protected Control initFeatureTable( final Composite parent )
   {
@@ -759,42 +757,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
 
     return (TSLinkWithName[])foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
-  }
-
-  //  protected int getSelectionID()
-  //  {
-  //    return m_selectionID;
-  //  }
-
-  protected LayerTableViewer getLayerTable()
-  {
-    return m_gisTableViewer;
-  }
-
-  //Änderung des Selection mechanismus: Wenn sich die selection ändert ist es kein ModellEvent mehr!! CK: 25.8.2005
-  //  /**
-  //   * @see
-  // org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-  //   */
-  //  public final void onModellChange( final ModellEvent modellEvent )
-  //  {
-  //    if( modellEvent != null && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
-  //    {
-  //      refreshDiagram();
-  //      if( "selected".equalsIgnoreCase( m_showZmlTable ) )
-  //      {
-  //        // Save the observations before refreshing else
-  //        // changes are lost
-  //        saveDirtyObservations( new NullProgressMonitor() );
-  //
-  //        refreshZMLTable();
-  //      }
-  //    }
-  //  }
-
-  public TimeserieFeatureProps[] getTsProps()
-  {
-    return m_tsProps;
   }
 
   protected FeatureList getSelectedFeatures()
@@ -1218,8 +1180,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     refreshDiagram();
     if( "selected".equalsIgnoreCase( m_showZmlTable ) )
     {
-      // Save the observations before refreshing else
-      // changes are lost
+      // Save the observations before refreshing else changes are lost
       saveDirtyObservations( new NullProgressMonitor() );
 
       refreshZMLTable();
