@@ -41,4 +41,8 @@
             id="org.kalypso.debug.editor.gmlconvert"
             extensions="gmc"/>
    </extension>
+   <extension
+         point="org.kalypso.core.requestObsToMerge">
+      <obsProvider class="org.kalypso.debug.zmlrequest.DefaultRequestObservation"/>
+   </extension>
 </plugin>

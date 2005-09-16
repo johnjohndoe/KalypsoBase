@@ -72,29 +72,31 @@ public class DefaultRequestObservation implements IMergeObservationProvider
     final InputStream stream = getClass().getResourceAsStream( "/org/kalypso/debug/zmlrequest/wqtable.xml" );
     try
     {
-      final WQTableSet tableSet = WQTableFactory.parse( new InputSource() );
+      final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
       stream.close();
-      
+
       final String mdWQ = WQTableFactory.createXMLString( tableSet );
       obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, mdWQ );
     }
     catch( final Exception e )
     {
-     Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
+      Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
     }
     finally
     {
       IOUtils.closeQuietly( stream );
     }
-    
+
     return obs;
   }
 
   /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+      throws CoreException
   {
-    // empty
+  // empty
   }
 }
