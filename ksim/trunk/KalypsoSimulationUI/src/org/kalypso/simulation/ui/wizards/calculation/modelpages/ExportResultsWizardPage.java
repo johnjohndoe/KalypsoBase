@@ -442,6 +442,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
           final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
           // important: initialise the exporter
           exporter.init( new ExporterSupplier( args ) );
+          
+          // if name provided, override name of exporter
+          final String name = args.getProperty( "name" );
+          if( name != null )
+            exporter.setName( name );
+          
           exporters.add( exporter );
         }
         catch( final CoreException e )

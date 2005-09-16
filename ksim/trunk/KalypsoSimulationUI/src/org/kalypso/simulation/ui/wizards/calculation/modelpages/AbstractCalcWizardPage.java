@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -240,6 +239,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * Argument: applies only, if {@link #PROP_ZMLTABLE_SHOW}is set to 'template'
    */
   private final static String PROP_ZMLTABLE_TEMPLATE = "zmlTableTemplate";
+
+  /**
+   * Argument: (optional) an integer which indicates an amount of columns up from which the table does not resize
+   * automatically. This can be used for instance when the amount of columns is important and you
+   * want a horizontal scrollbar.
+   */
+  private final static String PROP_ZMLTABLE_THRESHOLD_RESIZEOFF = "zmlTableThresholdResizeOff";
 
   /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
   private final static String PROP_TABLETEMPLATE = "tableTemplate";
@@ -675,6 +681,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
       m_table = new ObservationTable( m_tableTemplate );
 
+      final String threshold = m_arguments.getProperty( PROP_ZMLTABLE_THRESHOLD_RESIZEOFF, null );
+      if( threshold != null )
+        m_table.setThresholdColumnsAutoResizeModeOff( Integer.valueOf( threshold ).intValue() );
+      
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
 
@@ -682,7 +692,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
-      m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
       final JScrollPane pane = new JScrollPane( m_table );
 
