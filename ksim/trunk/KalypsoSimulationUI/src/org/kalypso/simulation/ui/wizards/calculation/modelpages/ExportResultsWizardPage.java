@@ -94,7 +94,6 @@ import org.kalypso.metadoc.impl.MetadocExtensions;
 import org.kalypso.metadoc.ui.ExportDocumentsWizard;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -191,7 +190,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( final Composite parent )
+public void createControl( final Composite parent )
   {
     try
     {
@@ -232,7 +231,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
       setControl( sashForm );
 
-      postCreateControl();
+      selectFeatureInMap( getFeatureToSelect() );
 
       // Load Template for Grafix.exe
       final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
@@ -254,7 +253,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       e.printStackTrace();
     }
   }
-
   private Control createCalccasesGroup( final Composite parent )
   {
     final Group treeGroup = new Group( parent, SWT.NONE );
@@ -318,7 +316,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         exportSelectedDocuments();
       }
     } );
-    
+
     // show button only if there is any configured exporter
     final IExporter[] exporters = createExporters();
     berichtsablageButton.setEnabled( !( exporters == null || exporters.length == 0 ) );
@@ -387,7 +385,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
       final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
-      
+
       // just open the dialog, business is done in the dialog
       dialog.open();
     }
@@ -402,7 +400,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus( IStatus.ERROR, "Siehe Details", e ) );
+      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus(
+          IStatus.ERROR, "Siehe Details", e ) );
     }
   }
 
@@ -580,7 +579,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SINGLE_SELECT );
+    final Control mapControl = initMap( mapPanel );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
@@ -684,7 +683,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         final FeatureList features = getFeatures();
         final String property = getArguments().getProperty( PROP_PEGEL_NAME );
         final URL context = getContext();
-        
+
         return filterForValidTimeseriesLinks( features, property, context );
       }
 

@@ -207,7 +207,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
               wizardView.removeWizardContainerListener( wizardContainerAdapter );
 
               // TODO: gives null-point exception, if workbench is closing
-              // in 3.1 there is a method to test this 'isClosing'
+              // in 3.1 there will be a method to check this 'isClosing'
               activePage.resetPerspective();
               activePage.setPerspective( lastPerspective );
             }

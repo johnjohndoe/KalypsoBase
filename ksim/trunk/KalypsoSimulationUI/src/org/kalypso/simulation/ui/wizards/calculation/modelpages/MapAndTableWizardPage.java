@@ -49,8 +49,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 
 /**
  * @author Belger
@@ -93,7 +91,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
 
       setControl( sashForm );
 
-      postCreateControl();
+      selectFeatureInMap( getFeatureToSelect() );
     }
     catch( final Exception e )
     {
@@ -153,7 +151,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT );
+    final Control mapControl = initMap( composite );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 }

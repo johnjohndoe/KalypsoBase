@@ -242,8 +242,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Argument: (optional) an integer which indicates an amount of columns up from which the table does not resize
-   * automatically. This can be used for instance when the amount of columns is important and you
-   * want a horizontal scrollbar.
+   * automatically. This can be used for instance when the amount of columns is important and you want a horizontal
+   * scrollbar.
    */
   private final static String PROP_ZMLTABLE_THRESHOLD_RESIZEOFF = "zmlTableThresholdResizeOff";
 
@@ -256,6 +256,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
+  /** Argument: ID of the map-widget to use. Default is: {@link org.kalypso.ogc.gml.map.MapPanel#WIDGET_SINGLE_SELECT} */
+  private static final String PROP_MAP_WIDGETID = "mapWidgetID";
+  
   /**
    * Argument: Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonsten wie üblich auf die
    * .gtt Datei.
@@ -303,7 +306,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private IMapModell m_mapModell = null;
 
-  MapPanel m_mapPanel;
+  private MapPanel m_mapPanel;
 
   private GM_Envelope m_wishBoundingBox;
 
@@ -341,6 +344,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /** the one and only one selection manager for this page */
   private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager2();
+
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -472,7 +476,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * Erzeugt die Karte und alle Daten die dranhängen und gibt die enthaltende Control zurück
    */
-  protected Control initMap( final Composite parent, final String widgetID ) throws IOException, JAXBException,
+  protected Control initMap( final Composite parent ) throws IOException, JAXBException,
       CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
@@ -519,8 +523,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.setMapModell( m_mapModell );
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
-    // TODO: use widgetID from Konfiguration
-
+    final String widgetID = getArguments().getProperty( PROP_MAP_WIDGETID, MapPanel.WIDGET_SINGLE_SELECT );
     m_mapPanel.getWidgetManager().setActualWidget( WidgetHelper.createWidget( widgetID ) );
 
     m_mapPanel.setBoundingBox( m_wishBoundingBox );
@@ -962,7 +965,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       ( (CalcWizard)wizard ).saveAllPages( monitor );
   }
 
-  protected void postCreateControl()
+  protected void selectFeatureInMap( final String fid )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
     new GisTemplateLoadedThread( getMapModell(), new Runnable()
@@ -981,7 +984,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           {
             selectionManager.clear();
 
-            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
             final Feature feature;
             if( fid != null )
             {
@@ -1006,6 +1008,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         maximizeMap();
       }
     } ).start();
+  }
+
+  protected String getFeatureToSelect()
+  {
+    return getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
   }
 
   protected boolean selectFirstFeatureByDefault()

@@ -52,6 +52,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -66,8 +68,10 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
@@ -131,7 +135,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
       setControl( sashForm );
 
-      postCreateControl();
+      showFeatureInFeatureView();
     }
     catch( final Exception e )
     {
@@ -145,7 +149,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
-    
+
     rightPanel.setLayout( gridLayout );
     rightPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -259,13 +263,21 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    // TODO: anderes select übergeben
-    final Control mapControl = initMap( mapPanel, "null" );
+    final Control mapControl = initMap( mapPanel );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void postCreateControl()
+  protected void showFeatureInFeatureView()
   {
+    // if the featureToSelect property is set, we use the map!
+    final String fid = getFeatureToSelect();
+    if( fid != null )
+    {
+      selectFeatureInMap( fid );
+      return;
+    }
+
+    // else we show the feature defined in the feature-template
     final Thread waitForFeature = new Thread()
     {
       /**
@@ -277,7 +289,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
         int max = 10;
         while( true )
         {
-          System.out.println( "wait for feature" + max ); // TODO debug?
           if( m_templateviewer.getFeature() != null )
           {
             refreshDiagram();
@@ -287,7 +298,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
           {
             sleep( 500 );
           }
-          catch( InterruptedException e )
+          catch( final InterruptedException e )
           {
             e.printStackTrace();
           }
@@ -320,11 +331,38 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    */
   protected FeatureList getFeatures()
   {
-    FeatureList result = FeatureFactory.createFeatureList( null, null );
-    Feature feature = m_templateviewer.getFeature();
+    final FeatureList result = FeatureFactory.createFeatureList( null, null );
+    final Feature feature = m_templateviewer.getFeature();
     if( feature != null )
       result.add( feature );
     return result;
+  }
+
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    super.selectionChanged( event );
+
+    // refresh featureview
+    final ISelection selection = event.getSelection();
+    if( selection instanceof IFeatureSelection )
+    {
+      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+      final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+
+      final Control control = m_templateviewer.getControl();
+      if( control != null && !control.isDisposed() )
+        control.getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            m_templateviewer.setFeature( workspace, feature );
+          }
+        } );
+    }
   }
 
 }
