@@ -231,7 +231,7 @@ public void createControl( final Composite parent )
 
       setControl( sashForm );
 
-      selectFeatureInMap( getFeatureToSelect() );
+      selectFeaturesInMap( getFeaturesToSelect() );
 
       // Load Template for Grafix.exe
       final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
@@ -570,7 +570,7 @@ public void createControl( final Composite parent )
     antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
-    launchAnt( "exportVorhersagen", STR_EXPORT_PROGNOSEN, "Vorhersage-Zeitreihen werden auf den Server gespeichert",
+    launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN, "Fehler bemi Speichern der Vorhersage-Zeotreihen",
         antProps );
   }
 
@@ -681,7 +681,7 @@ public void createControl( final Composite parent )
       if( "features".equals( request ) )
       {
         final FeatureList features = getFeatures();
-        final String property = getArguments().getProperty( PROP_PEGEL_NAME );
+        final String property = getArguments().getProperty( PROP_RESULT_TS_NAME );
         final URL context = getContext();
 
         return filterForValidTimeseriesLinks( features, property, context );

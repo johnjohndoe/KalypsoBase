@@ -615,7 +615,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   }
 
   /**
-   * Calls {@link IModelWizardPage#saveData(IProgressMonitor)}for all pages
+   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
    */
   public void saveAllPages( final IProgressMonitor monitor )
   {
@@ -633,7 +633,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           {
             public void run() throws Exception
             {
-              ( (IModelWizardPage)page ).saveData( new SubProgressMonitor( monitor, 1 ) );
+              ( (IModelWizardPage)page ).saveState( new SubProgressMonitor( monitor, 1 ) );
             }
           };
           Platform.run( runnable );
@@ -651,35 +651,26 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * Calls {@link AbstractCalcWizardPage#selectionChanged(SelectionChangedEvent)}on all pages.
    */
-  public void refreshAllPages( IProgressMonitor monitor )
+  public void refreshAllPages(  )
   {
-    // TODO: what to do?
-//    try
-//    {
-//      final IWizardPage[] pages = getPages();
-//      monitor.beginTask( "Seiten werden aktualisiert", pages.length );
-//
-//      for( int i = 0; i < pages.length; i++ )
-//      {
-//        final IWizardPage page = pages[i];
-//
-//        final ISafeRunnable runnable = new SafeRunnable()
-//        {
-//          public void run() throws Exception
-//          {
-//            if( page instanceof AbstractCalcWizardPage )
-//              ( (AbstractCalcWizardPage)page ).selectionChanged( new KalypsoSelectionChangedEvent( ((AbstractCalcWizardPage)page).getSelectionManager(), this, ((AbstractCalcWizardPage)page).getSelectionManager().getSelection() ) );
-//          }
-//        };
-//        Platform.run( runnable );
-//
-//        monitor.worked( 1 );
-//      }
-//    }
-//    finally
-//    {
-//      monitor.done();
-//    }
+    final IWizardPage[] pages = getPages();
+
+    for( int i = 0; i < pages.length; i++ )
+    {
+      final IWizardPage page = pages[i];
+      if( page instanceof IModelWizardPage )
+      {
+        final SafeRunnable runnable = new SafeRunnable()
+        {
+          public void run() throws Exception
+          {
+            ( (IModelWizardPage)page ).restoreState( );
+          }
+        };
+        Platform.run( runnable );
+      }
+    }
+
   }
 
   public ModelSynchronizer getModelSynchronizer()

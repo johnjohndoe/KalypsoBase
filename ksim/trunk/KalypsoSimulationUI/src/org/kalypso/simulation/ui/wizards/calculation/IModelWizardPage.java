@@ -56,5 +56,9 @@ public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage
   public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc,
       final Arguments arguments, final IFolder calcFolder );
 
-  public void saveData( final IProgressMonitor monitor ) throws CoreException;
+  /** Save all data of the pages and remember the state for the next call to refreshData */
+  public void saveState( final IProgressMonitor monitor ) throws CoreException;
+
+  /** Restore state to the last call of saveData */
+  public void restoreState(  );
 }

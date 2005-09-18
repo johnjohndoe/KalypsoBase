@@ -91,7 +91,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
 
       setControl( sashForm );
 
-      selectFeatureInMap( getFeatureToSelect() );
+      selectFeaturesInMap( getFeaturesToSelect() );
     }
     catch( final Exception e )
     {

@@ -93,7 +93,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
       setControl( m_sashForm );
 
-      selectFeatureInMap( getFeatureToSelect() );
+      selectFeaturesInMap( getFeaturesToSelect() );
     }
     catch( final Throwable e )
     {

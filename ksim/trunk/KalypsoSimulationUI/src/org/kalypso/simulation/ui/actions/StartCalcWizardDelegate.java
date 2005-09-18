@@ -51,6 +51,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.IPageLayout;
@@ -174,6 +175,9 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
         wizardView.setErrorBackgroundBehaviour( true );
         wizardView.setButtonLabel( IDialogConstants.FINISH_ID, "Be&enden" );
         wizardView.setWizard( wizard );
+        
+        final ImageDescriptor imageDescriptor = wizardPerspective.getImageDescriptor();
+        wizardView.setTitleImage( imageDescriptor );
 
         // if wizard finishes, close view
         final WizardContainerAdapter wizardContainerAdapter = new WizardContainerAdapter()

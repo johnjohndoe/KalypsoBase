@@ -195,13 +195,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   }
 
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveData(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveState(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void saveData( final IProgressMonitor monitor ) throws CoreException
+  public void saveState( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Daten speichern", 2 );
 
-    super.saveData( new SubProgressMonitor( monitor, 1 ) );
+    super.saveState( new SubProgressMonitor( monitor, 1 ) );
 
     final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
     if( !status.isOK() )
@@ -270,10 +270,10 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   protected void showFeatureInFeatureView()
   {
     // if the featureToSelect property is set, we use the map!
-    final String fid = getFeatureToSelect();
-    if( fid != null )
+    final String[] fid = getFeaturesToSelect();
+    if( fid.length > 0 )
     {
-      selectFeatureInMap( fid );
+      selectFeaturesInMap( fid );
       return;
     }
 
