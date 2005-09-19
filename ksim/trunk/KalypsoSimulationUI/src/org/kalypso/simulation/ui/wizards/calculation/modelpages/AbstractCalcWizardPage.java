@@ -50,6 +50,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -118,7 +119,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
@@ -900,8 +900,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( m_table == null )
       return;
 
-    final ObservationTableModel model = (ObservationTableModel)m_table.getModel();
-    model.saveDirtyObservations( monitor );
+    TableViewUtils.saveDirtyObservations( Arrays.asList( m_tableTemplate.getItems() ), monitor );
   }
 
   /**
