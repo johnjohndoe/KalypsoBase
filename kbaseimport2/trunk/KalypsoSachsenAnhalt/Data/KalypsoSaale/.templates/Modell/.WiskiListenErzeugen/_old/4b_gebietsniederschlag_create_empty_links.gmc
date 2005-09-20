@@ -5,7 +5,11 @@
 		<gmlsource xlink:href="../wiskiimport_gebietsniederschlag.gml"/>
 		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
 			<argument name="link" value="wiski_vergangenheit"/>
-			<argument name="href" value="kalypso-ocs:wiski://"/>
+			<argument name="href" value="kalypso-ocs://LEER"/>
+		</visitor>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_simulation_vergangenheit"/>
+			<argument name="href" value="kalypso-ocs://LEER"/>
 		</visitor>
 	</changesource>
 </gmlconvert>
