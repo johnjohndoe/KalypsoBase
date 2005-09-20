@@ -924,7 +924,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       for( int i = 0; i < allFeatures.length; i++ )
       {
         final String id = allFeatures[i].getFeature().getId();
-        System.out.println( "Save id for state: " + id );
+        //System.out.println( "Save id for state: " + id );
         m_oldSelectionState[i] = id;
       }
 
