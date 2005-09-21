@@ -96,8 +96,8 @@ public class SumUpForecastTable
   {
     final DateRange range = TimeserieUtils.isForecast( obs );
     if( range == null )
-      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName() + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + 
-          argument.getUrl().toString() );
+      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName()
+          + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + argument.getUrl().toString() );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), m_axisType );
@@ -131,11 +131,25 @@ public class SumUpForecastTable
     String strAlarm = "-";
     double alarm = 0;
     for( int i = 1; i <= alarms.length; i++ )
+    {
       if( alarms[i - 1].doubleValue() != -1 && alarms[i - 1].doubleValue() >= maxValue.doubleValue() )
       {
         strAlarm = "AS " + i;
-        alarm = alarms[i - 1].doubleValue();
+
+        try
+        {
+          // value is automatically converted if we use another axis than
+          // the alarm-level default axis
+          final Double value = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
+
+          alarm = value.doubleValue();
+        }
+        catch( final Exception ignored ) // generic for simplicity
+        {
+          // empty
+        }
       }
+    }
 
     // fetch values at specific time-positions
     final Calendar cal = Calendar.getInstance();
@@ -166,13 +180,15 @@ public class SumUpForecastTable
 
   public void writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
   {
-    writer.write( "Max" );
+    final String unit = "[" + TimeserieUtils.getUnit( m_axisType ) + "]";
+    
+    writer.write( "Max " + unit );
     writer.write( separator );
     writer.write( "Eintrittszeit" );
     writer.write( separator );
     writer.write( "Überschrittene Alarmstufe" );
     writer.write( separator );
-    writer.write( "Richtwert" );
+    writer.write( "Richtwert " + unit );
     writer.write( separator );
 
     final Date[] dates = m_colHeader.getDates();
