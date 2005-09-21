@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -100,12 +101,24 @@ public class SumUpForecastTable
           + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + argument.getUrl().toString() );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), TimeserieConstants.TYPE_DATE );
-    final IAxis valueAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), m_axisType );
+    final IAxis valueAxis;
+    try
+    {
+      valueAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), m_axisType );
+    }
+    catch( final NoSuchElementException e )
+    {
+      return StatusUtilities.createWarningStatus( "Zeitreihe kann nicht berücksichtigt werden: "
+          + e.getLocalizedMessage() + ". Siehe URL: " + argument.getUrl() );
+    }
 
     final ITuppleModel values = obs.getValues( null );
 
+    if( values.getCount() == 0 )
+      throw new SensorException( "Keine Daten vorhanden in: " + argument.getUrl() );
+
     final DoubleComparator dc = new DoubleComparator( m_delta );
-    Number maxValue = new Double( Double.MIN_VALUE );
+    Number maxValue = new Double( -Double.MAX_VALUE );
     int maxPos = -1;
 
     // seek for max value
@@ -124,9 +137,11 @@ public class SumUpForecastTable
     // seek for alarm level
     final MetadataList md = obs.getMetadataList();
     final Double[] alarms = new Double[]
-    { Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ), Double.valueOf( md.getProperty(
-        TimeserieConstants.MD_ALARM_2, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double
-        .valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
+    {
+        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ),
+        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) ),
+        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ),
+        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
 
     String strAlarm = "-";
     double alarm = 0;

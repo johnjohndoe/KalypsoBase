@@ -60,6 +60,7 @@ import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper;
@@ -123,10 +124,17 @@ public final class ExportableSumUpTable implements IExportableObject
       final IObservation[] obses = new IObservation[items.length];
       for( int i = 0; i < items.length; i++ )
       {
-        obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
+        try
+        {
+          obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
 
-        final IStatus status = table.addObservation( items[i], obses[i] );
-        stati.add( status );
+          final IStatus status = table.addObservation( items[i], obses[i] );
+          stati.add( status );
+        }
+        catch( final SensorException e )
+        {
+          stati.add( StatusUtilities.createStatus( IStatus.WARNING , "Zeitreihe existiert nicht oder ist fehlerhaft: " + items[i].getUrl(), e) );
+        }
       }
 
       // fetch flexible columns specifications
