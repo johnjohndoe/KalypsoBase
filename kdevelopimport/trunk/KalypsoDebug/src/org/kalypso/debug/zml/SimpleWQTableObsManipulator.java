@@ -39,7 +39,7 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.debug.zmlrequest;
+package org.kalypso.debug.zml;
 
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -47,9 +47,11 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.request.IMergeObservationProvider;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
@@ -60,36 +62,8 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class DefaultRequestObservation implements IMergeObservationProvider
+public class SimpleWQTableObsManipulator implements IObservationManipulator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.request.IMergeObservationProvider#getObservationToMerge()
-   */
-  public IObservation getObservationToMerge()
-  {
-    final SimpleObservation obs = new SimpleObservation();
-
-    final InputStream stream = getClass().getResourceAsStream( "/org/kalypso/debug/zmlrequest/wqtable.xml" );
-    try
-    {
-      final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
-      stream.close();
-
-      final String mdWQ = WQTableFactory.createXMLString( tableSet );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, mdWQ );
-    }
-    catch( final Exception e )
-    {
-      Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( stream );
-    }
-
-    return obs;
-  }
-
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
@@ -98,5 +72,42 @@ public class DefaultRequestObservation implements IMergeObservationProvider
       throws CoreException
   {
   // empty
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.manipulator.IObservationManipulator#manipulate(org.kalypso.ogc.sensor.IObservation,
+   *      java.lang.Object)
+   */
+  public void manipulate( final IObservation obs, final Object data ) throws SensorException
+  {
+    // do not overwrite existing table
+    if( obs.getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )
+      return;
+    
+    final IAxis[] axes = obs.getAxisList();
+
+    // only do this for W/Q/V timeseries
+    if( ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL )
+        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME )
+        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF ) )
+    {
+      final InputStream stream = getClass().getResourceAsStream( "/org/kalypso/debug/zml/wqtable.xml" );
+      try
+      {
+        final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
+        stream.close();
+
+        final String mdWQ = WQTableFactory.createXMLString( tableSet );
+        obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, mdWQ );
+      }
+      catch( final Exception e )
+      {
+        Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( stream );
+      }
+    }
   }
 }

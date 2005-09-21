@@ -42,7 +42,7 @@
             extensions="gmc"/>
    </extension>
    <extension
-         point="org.kalypso.core.requestObsToMerge">
-      <obsProvider class="org.kalypso.debug.zmlrequest.DefaultRequestObservation"/>
+         point="org.kalypso.core.obsManipulator">
+      <obsManipulator class="org.kalypso.debug.zml.SimpleWQTableObsManipulator"/>
    </extension>
 </plugin>
