@@ -73,13 +73,12 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       final FeatureList features = (FeatureList)getFromSupplier( "features" );
       final FeatureList selectedFeatures = (FeatureList)getFromSupplier( "selectedFeatures" );
       final String nameProperty = (String)getFromSupplier( "propertyName" );
-      
+
       if( features == null )
         return new IWizardPage[0];
 
       final FeatureItem[] items = new FeatureItem[features.size()];
-      final FeatureItem[] selItems = new FeatureItem[selectedFeatures.size()];
-      int selCount = 0;
+      final List selItems = new ArrayList( selectedFeatures.size() );
       for( int count = 0; count < features.size(); count++ )
       {
         final Feature f = (Feature)features.get( count );
@@ -88,10 +87,11 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
         items[count] = fi;
 
         if( selectedFeatures.contains( f ) )
-          selItems[selCount++] = fi;
+          selItems.add( fi );
       }
 
-      m_page = new ArrayChooserPage( items, selItems, selItems, "chooseFeatures",
+      final Object[] array = selItems.toArray();
+      m_page = new ArrayChooserPage( items, array, array, "chooseFeatures",
           "Für diese Vorhersagepegel werden die Berichte erzeugt:", AbstractUIPlugin.imageDescriptorFromPlugin(
               KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
     }
