@@ -137,11 +137,9 @@ public class SumUpForecastTable
     // seek for alarm level
     final MetadataList md = obs.getMetadataList();
     final Double[] alarms = new Double[]
-    {
-        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ),
-        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) ),
-        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ),
-        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
+    { Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ), Double.valueOf( md.getProperty(
+        TimeserieConstants.MD_ALARM_2, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double
+        .valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
 
     String strAlarm = "-";
     double alarm = 0;
@@ -176,14 +174,12 @@ public class SumUpForecastTable
     {
       final Date time = cal.getTime();
       final int pos = values.indexOf( time, dateAxis );
-      if( pos == -1 )
-        break;
-
-      final Number value = (Number)values.getElement( pos, valueAxis );
-
-      row.addValue( value );
-
-      m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
+      if( pos != -1 )
+      {
+        final Number value = (Number)values.getElement( pos, valueAxis );
+        row.addValue( value );
+        m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
+      }
 
       cal.add( m_timeUnit, m_timeStep );
     }
@@ -196,7 +192,7 @@ public class SumUpForecastTable
   public void writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
   {
     final String unit = "[" + TimeserieUtils.getUnit( m_axisType ) + "]";
-    
+
     writer.write( "Max " + unit );
     writer.write( separator );
     writer.write( "Eintrittszeit" );
