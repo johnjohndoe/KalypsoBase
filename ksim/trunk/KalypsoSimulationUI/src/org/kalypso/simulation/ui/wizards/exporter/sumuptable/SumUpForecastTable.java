@@ -309,7 +309,7 @@ public class SumUpForecastTable
       final int size = m_dates.size();
       String distance = "";
       if( size == 0 )
-        distance = " Begin";
+        distance = " Beginn";
       else
         distance = size * timeStep + " " + CalendarUtilities.getAbbreviation( timeUnit );
 
