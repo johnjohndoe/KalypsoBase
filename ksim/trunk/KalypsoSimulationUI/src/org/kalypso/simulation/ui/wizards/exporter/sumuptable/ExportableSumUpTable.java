@@ -49,6 +49,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -150,7 +151,7 @@ public final class ExportableSumUpTable implements IExportableObject
       }
 
       // output header (fix columns)
-      table.writeHeader( writer, sep, df );
+      final Date[] dates = table.writeHeader( writer, sep, df );
 
       writer.write( "\n" );
 
@@ -169,7 +170,7 @@ public final class ExportableSumUpTable implements IExportableObject
         }
 
         // for model
-        table.writeRow( items[i], writer, sep, df, nf );
+        table.writeRow( items[i], writer, sep, df, nf, dates );
 
         writer.write( "\n" );
       }

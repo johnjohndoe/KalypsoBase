@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -170,15 +169,18 @@ public class SumUpForecastTable
 
     final Row row = new Row( maxValue, maxTime, strAlarm, alarm );
 
+    // TODO BUGGY Werte um eine Spalte verschoben!!!
+
     while( cal.getTime().compareTo( range.getTo() ) <= 0 )
     {
       final Date time = cal.getTime();
       final int pos = values.indexOf( time, dateAxis );
       if( pos != -1 )
       {
-        final Number value = (Number)values.getElement( pos, valueAxis );
-        row.addValue( value );
         m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
+
+        final Number value = (Number)values.getElement( pos, valueAxis );
+        row.addValue( time, value );
       }
 
       cal.add( m_timeUnit, m_timeStep );
@@ -189,7 +191,7 @@ public class SumUpForecastTable
     return Status.OK_STATUS;
   }
 
-  public void writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
+  public Date[] writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
   {
     final String unit = "[" + TimeserieUtils.getUnit( m_axisType ) + "]";
 
@@ -212,17 +214,19 @@ public class SumUpForecastTable
       if( i < dates.length - 1 )
         writer.write( separator );
     }
+
+    return dates;
   }
 
-  public void writeRow( final Object key, Writer writer, String sep, DateFormat df, NumberFormat nf )
-      throws IOException
+  public void writeRow( final Object key, final Writer writer, final String sep, final DateFormat df,
+      final NumberFormat nf, final Date[] dates ) throws IOException
   {
     final Row row = (Row)m_map.get( key );
 
     writer.write( sep );
 
     if( row != null )
-      writer.write( row.dumpRow( sep, nf, df ) );
+      writer.write( row.dumpRow( sep, nf, df, dates ) );
     else
       writer.write( "<keine Daten vorhanden, Zeitreihe möglicherweise ungültig>" );
   }
@@ -244,7 +248,7 @@ public class SumUpForecastTable
     private final Date m_maxTime;
     private final String m_strAlarm;
     private final double m_alarm;
-    private final List m_values = new ArrayList();
+    private final Map m_values = new HashMap();
 
     public Row( final Number maxValue, final Date maxTime, final String strAlarm, final double alarm )
     {
@@ -254,12 +258,12 @@ public class SumUpForecastTable
       m_alarm = alarm;
     }
 
-    public void addValue( final Number value )
+    public void addValue( final Date time, final Number value )
     {
-      m_values.add( value );
+      m_values.put( time, value );
     }
 
-    public String dumpRow( final String separator, final NumberFormat nf, final DateFormat df )
+    public String dumpRow( final String separator, final NumberFormat nf, final DateFormat df, final Date[] dates )
     {
       final StringBuffer bf = new StringBuffer();
       bf.append( nf.format( m_maxValue ) ).append( separator ).append( df.format( m_maxTime ) ).append( separator )
@@ -270,10 +274,14 @@ public class SumUpForecastTable
 
       bf.append( separator );
 
-      for( final Iterator it = m_values.iterator(); it.hasNext(); )
+      for( int i = 0; i < dates.length; i++ )
       {
-        bf.append( nf.format( it.next() ) );
-        if( it.hasNext() )
+        final Number value = (Number)m_values.get( dates[i] );
+
+        if( value != null )
+          bf.append( nf.format( value ) );
+
+        if( i < dates.length - 1 )
           bf.append( separator );
       }
 
