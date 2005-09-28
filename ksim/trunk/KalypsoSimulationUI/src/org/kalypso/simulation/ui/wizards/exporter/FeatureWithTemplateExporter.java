@@ -48,11 +48,13 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -113,7 +115,8 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
 
     // create wizard page for selecting the templates
     m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, "templateSelection",
-        "Wählen Sie die Exportarten", null );
+        "Wählen Sie die Exportarten", AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(),
+            "icons/wizban/bericht_wiz.gif" ) );
 
     pages.add( m_page );
   }
@@ -135,8 +138,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private void createExportableObjectsWith( final UrlArgument item,
-      final List objects ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );

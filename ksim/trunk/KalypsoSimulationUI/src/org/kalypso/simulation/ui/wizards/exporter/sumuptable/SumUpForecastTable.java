@@ -171,6 +171,8 @@ public class SumUpForecastTable
 
     // TODO BUGGY Werte um eine Spalte verschoben!!!
 
+    boolean notFoundYet = true;
+    
     while( cal.getTime().compareTo( range.getTo() ) <= 0 )
     {
       final Date time = cal.getTime();
@@ -181,9 +183,14 @@ public class SumUpForecastTable
 
         final Number value = (Number)values.getElement( pos, valueAxis );
         row.addValue( time, value );
+        
+        notFoundYet = false;
       }
 
-      cal.add( m_timeUnit, m_timeStep );
+      if( notFoundYet )
+        cal.add( m_timeUnit, 1 );
+      else
+        cal.add( m_timeUnit, m_timeStep );
     }
 
     m_map.put( argument, row );
@@ -302,7 +309,7 @@ public class SumUpForecastTable
       final int size = m_dates.size();
       String distance = "";
       if( size == 0 )
-        distance = "Ist";
+        distance = " Begin";
       else
         distance = size * timeStep + " " + CalendarUtilities.getAbbreviation( timeUnit );
 

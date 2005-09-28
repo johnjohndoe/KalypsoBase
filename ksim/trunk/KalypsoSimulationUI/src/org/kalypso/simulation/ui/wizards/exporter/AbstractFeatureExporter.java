@@ -91,9 +91,24 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       }
 
       final Object[] array = selItems.toArray();
-      m_page = new ArrayChooserPage( items, array, array, "chooseFeatures",
-          "Für diese Vorhersagepegel werden die Berichte erzeugt:", AbstractUIPlugin.imageDescriptorFromPlugin(
-              KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
+
+      if( features.size() == 0 )
+      {
+        m_page = new ArrayChooserPage(
+            items,
+            array,
+            array,
+            "chooseFeatures",
+            "Warnung: es konnte keine Vorhersagepegel gefunden werden.\nPrüfen Sie ob Berechnungen richtig durchgeführt wurden.",
+            AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(),
+                "icons/wizban/bericht_wiz.gif" ) );
+      }
+      else
+      {
+        m_page = new ArrayChooserPage( items, array, array, "chooseFeatures",
+            "Für diese Vorhersagepegel werden die Berichte erzeugt:", AbstractUIPlugin.imageDescriptorFromPlugin(
+                KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
+      }
     }
 
     // create the list of pages

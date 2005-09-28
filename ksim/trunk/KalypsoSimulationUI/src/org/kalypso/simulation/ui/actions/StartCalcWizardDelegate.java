@@ -212,8 +212,15 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
 
               // TODO: gives null-point exception, if workbench is closing
               // in 3.1 there will be a method to check this 'isClosing'
-              activePage.resetPerspective();
-              activePage.setPerspective( lastPerspective );
+              try
+              {
+                activePage.resetPerspective();
+                activePage.setPerspective( lastPerspective );
+              }
+              catch( final NullPointerException ignored )
+              {
+                // TODO: remove this exception once the problem with 'is closing' is solved
+              }
             }
           }
 
