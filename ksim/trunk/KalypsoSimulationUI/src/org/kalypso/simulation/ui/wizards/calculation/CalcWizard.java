@@ -61,7 +61,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -74,6 +73,7 @@ import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StoreExceptionSafeRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
@@ -257,7 +257,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
         try
         {
-          saveAllPages( monitor );
+          final IStatus status = saveAllPages( monitor );
+          if( !status.isOK() )
+            throw new CoreException( status );
         }
         finally
         {
@@ -617,19 +619,22 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
    */
-  public void saveAllPages( final IProgressMonitor monitor )
+  public IStatus saveAllPages( final IProgressMonitor monitor )
   {
+    final IWizardPage[] pages = getPages();
+    final int pageCount = pages.length;
+
+    monitor.beginTask( "Seiten werden gespeichert...", 1 * pageCount );
+
+    final List statusList = new ArrayList( pageCount );
     try
     {
-      final IWizardPage[] pages = getPages();
-      monitor.beginTask( "Seiten werden gespeichert...", 1 * pages.length );
-
-      for( int i = 0; i < pages.length; i++ )
+      for( int i = 0; i < pageCount; i++ )
       {
         final IWizardPage page = pages[i];
         if( page instanceof IModelWizardPage )
         {
-          final SafeRunnable runnable = new SafeRunnable()
+          final StoreExceptionSafeRunnable runnable = new StoreExceptionSafeRunnable()
           {
             public void run() throws Exception
             {
@@ -637,6 +642,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             }
           };
           Platform.run( runnable );
+
+          final Throwable exception = runnable.getException();
+          if( exception != null )
+            statusList.add( StatusUtilities.statusFromThrowable( exception ) );
         }
         else
           monitor.worked( 1 );
@@ -646,31 +655,44 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       monitor.done();
     }
+
+    return StatusUtilities.createStatus( statusList, "Fehler beim Speichern des Seitenzustands" );
   }
 
   /**
    * Calls {@link AbstractCalcWizardPage#selectionChanged(SelectionChangedEvent)}on all pages.
+   * 
+   * @param monitor
    */
-  public void refreshAllPages(  )
+  public IStatus refreshAllPages( final IProgressMonitor monitor )
   {
     final IWizardPage[] pages = getPages();
+    final int pageCount = pages.length;
 
-    for( int i = 0; i < pages.length; i++ )
+    monitor.beginTask( "Seiten werden wiederhergestellt", pageCount );
+
+    final List statusList = new ArrayList( pageCount );
+    for( int i = 0; i < pageCount; i++ )
     {
       final IWizardPage page = pages[i];
       if( page instanceof IModelWizardPage )
       {
-        final SafeRunnable runnable = new SafeRunnable()
+        final StoreExceptionSafeRunnable runnable = new StoreExceptionSafeRunnable()
         {
           public void run() throws Exception
           {
-            ( (IModelWizardPage)page ).restoreState( );
+            ( (IModelWizardPage)page ).restoreState();
           }
         };
         Platform.run( runnable );
+
+        final Throwable exception = runnable.getException();
+        if( exception != null )
+          statusList.add( StatusUtilities.statusFromThrowable( exception ) );
       }
     }
 
+    return StatusUtilities.createStatus( statusList, "Wiederherstellen der Wizard-Seiten" );
   }
 
   public ModelSynchronizer getModelSynchronizer()

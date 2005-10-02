@@ -68,6 +68,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -97,19 +98,23 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.RestoreSelectionListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -331,6 +336,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private final ControlAdapter m_controlAdapter = new ControlAdapter()
   {
+    // WARNING: this adapter causes the map to bee painted twice, each time it is resized
+    // the reason ist, that the map-panel itself is also a resize-listener
+    // moreover, the order in which the two resize events are called is random!
     public void controlResized( final ControlEvent e )
     {
       maximizeMap();
@@ -348,7 +356,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** the one and only one selection manager for this page */
   private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager2();
 
-  private String[] m_oldSelectionState = null;
+  private RestoreSelectionListener m_selectionRestorer = null;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -361,14 +369,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void dispose()
   {
+    if( m_selectionRestorer != null )
+    {
+      m_selectionRestorer.dispose();
+      m_selectionRestorer = null;
+    }
+    
     if( m_mapModell != null )
       m_mapModell.dispose();
-
+    
     if( m_gisTableViewer != null )
       m_gisTableViewer.dispose();
 
     if( m_table != null )
       m_table.dispose();
+    
     if( m_tableTemplate != null )
       m_tableTemplate.dispose();
 
@@ -497,13 +512,19 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     m_mapPanel.addSelectionChangedListener( this );
 
-    m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
-    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
-    if( panToFid != null )
+    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+    if( kft instanceof GisTemplateFeatureTheme )
     {
-      final IMapModell mapModell = getMapModell();
-      IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-      final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+      final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)kft;
+      m_selectionRestorer = new RestoreSelectionListener( gtft.getLayerKey(), m_selectionManager );
+    }
+
+    m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
+
+    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
+    if( kft != null && panToFid != null )
+    {
       final GMLWorkspace workspace = kft.getWorkspace();
       final Feature feature = workspace.getFeature( panToFid );
       if( feature != null )
@@ -548,7 +569,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       if( fullExtentBoundingBox != null )
       {
         final double buffer = Math.max( fullExtentBoundingBox.getWidth(), fullExtentBoundingBox.getHeight() ) * 0.025;
-        m_mapPanel.setBoundingBox( fullExtentBoundingBox.getBuffer( buffer ) );
+
+        final GM_Envelope bufferedExtent = fullExtentBoundingBox.getBuffer( buffer );
+        m_mapPanel.setBoundingBox( bufferedExtent );
       }
     }
     else
@@ -829,7 +852,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void performHelp()
   {
-  // TODO get helpid, show help
+  // todo get helpid, show help
   }
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
@@ -912,23 +935,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
-      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
-      if( m_gisTableViewer != null )
-        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-      else
-        monitor.worked( 1000 );
-
-      // remeber selected feature ids
-      final EasyFeatureWrapper[] allFeatures = m_selectionManager.getAllFeatures();
-      m_oldSelectionState = new String[allFeatures.length];
-      for( int i = 0; i < allFeatures.length; i++ )
-      {
-        final String id = allFeatures[i].getFeature().getId();
-        //System.out.println( "Save id for state: " + id );
-        m_oldSelectionState[i] = id;
-      }
-
-      m_selectionManager.clear();
+      //      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
+      //      if( m_gisTableViewer != null )
+      //        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+      //      else
+      //        monitor.worked( 1000 );
+      //
+      //      // remeber selected feature ids
+      //      final EasyFeatureWrapper[] allFeatures = m_selectionManager.getAllFeatures();
+      //      m_oldSelectionState = new String[allFeatures.length];
+      //      for( int i = 0; i < allFeatures.length; i++ )
+      //      {
+      //        final Feature feature = allFeatures[i].getFeature();
+      //        System.out.println( "Found this feature in manager: " + feature );
+      //        final String id = feature.getId();
+      //        m_oldSelectionState[i] = id;
+      //      }
+      //
+      //      System.out.println( "SavedState set to: " + ArrayUtils.toString( m_oldSelectionState ) );
     }
     finally
     {
@@ -939,11 +963,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState()
    */
-  public void restoreState(  )
+  public void restoreState()
   {
-    if( m_oldSelectionState != null )
-      selectFeaturesInMap( m_oldSelectionState );
-    m_oldSelectionState = null;
+    if( m_selectionRestorer != null )
+      m_selectionRestorer.restoreSelection();
+    
+  //    if( m_oldSelectionState != null )
+  //      selectFeaturesInMap( m_oldSelectionState );
+  //    m_oldSelectionState = null;
   }
 
   /**
@@ -976,6 +1003,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void runSomething( final ICoreExceptionRunnable runnable, final String taskName, final String title,
       final String errorMessage )
   {
+    final IWizard wizard = getWizard();
+    if( !( wizard instanceof CalcWizard ) )
+      return;
+
+    final CalcWizard calcWizard = (CalcWizard)wizard;
+
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
@@ -984,7 +1017,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
         try
         {
-          saveAllPages( new SubProgressMonitor( monitor, 500 ) );
+          final IStatus saveStatus = calcWizard.saveAllPages( monitor );
+          if( !saveStatus.isOK() )
+            throw new CoreException( saveStatus );
 
           final IStatus status = runnable.run( monitor );
 
@@ -998,31 +1033,49 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
-    
-    refreshAllPages(  );
-    
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, errorMessage, status );
-  }
 
-  /**
-   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
-   */
-  protected void saveAllPages( final IProgressMonitor monitor )
-  {
-    final IWizard wizard = getWizard();
-    if( wizard instanceof CalcWizard )
-      ( (CalcWizard)wizard ).saveAllPages( monitor );
+//    final WorkspaceModifyOperation op2 = new WorkspaceModifyOperation() {
+//
+//      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+//      {
+//        final IStatus result = calcWizard.refreshAllPages( monitor );
+//        if( !result.isOK() )
+//          throw new CoreException( result );
+//        
+//      }};
+//      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, true, op2 );
+//      if( !status2.isOK() )
+//        ErrorDialog.openError( getShell(), title, errorMessage, status2 );
+    
+    final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
+    {
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        return calcWizard.refreshAllPages( monitor );
+      }
+    };
+    job.addJobChangeListener( new HandleDoneJobChangeAdapter( getShell(), "Seiten Wiederherstellen",
+        "Fehler beim Wiederherstellen der Seiten", true, StatusUtilities.ALL_STATUS_MASK ) );
+    // TRICKY: this should only happen, if the workspaces are realy reloaded.
+    // This HACK just gives one second to do this. Is this always enough?
+    // Better would be some code, which is called, after all Worspace-Modification events of
+    // operastion 1 are handled. Is this possible?
+    job.schedule( 1000 );
   }
 
   protected void selectFeaturesInMap( final String[] fids )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
     final IMapModell mapModell = getMapModell();
+
     // this may happen, if the page was never created
     if( mapModell == null )
       return;
-    
+
+    final String showZmlTable = m_showZmlTable;
+
     new GisTemplateLoadedThread( mapModell, new Runnable()
     {
       public void run()
@@ -1057,10 +1110,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             else
               easyArray = (EasyFeatureWrapper[])easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
-            selectionManager.clear();
-            selectionManager.changeSelection( new Feature[0], easyArray );
+            final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+            selectionManager.changeSelection( featuresToRemove, easyArray );
 
-            // only refresh diagram explizitely, if we dont send an selection event
+            // only refresh diagram explicitly, if we dont send an selection event
             refreshDiagramHack = false;
           }
         }
@@ -1069,7 +1122,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( refreshDiagramHack )
           refreshDiagram();
 
-        if( !"selected".equalsIgnoreCase( m_showZmlTable ) || refreshDiagramHack )
+        if( !"selected".equalsIgnoreCase( showZmlTable ) || refreshDiagramHack )
           refreshZMLTable();
 
         maximizeMap();
@@ -1226,13 +1279,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public String getName()
   {
     return getArguments().getProperty( PROP_PAGE_ID, super.getName() );
-  }
-
-  protected void refreshAllPages(  )
-  {
-    final IWizard wizard = getWizard();
-    if( wizard instanceof CalcWizard )
-      ( (CalcWizard)wizard ).refreshAllPages(  );
   }
 
   public void selectionChanged( final SelectionChangedEvent event )
