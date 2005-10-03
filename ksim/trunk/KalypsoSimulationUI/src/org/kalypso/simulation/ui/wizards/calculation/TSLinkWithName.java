@@ -40,7 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
+
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author belger
@@ -55,8 +59,10 @@ public class TSLinkWithName
 
   public final Color color;
 
+  public final Stroke stroke;
+
   public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter,
-      final String scolor )
+      final String scolor, final String swidth, final String sdashing )
   {
     this.name = sname;
     this.linktype = slinktype;
@@ -67,5 +73,18 @@ public class TSLinkWithName
       this.href = shref;
 
     color = scolor == null ? null : Color.decode( scolor );
+
+    final float width = swidth == null ? 1f : (float)NumberUtils.parseQuietDouble( swidth );
+    final float[] dash;
+    if( sdashing == null )
+      dash = null;
+    else
+    {
+      final float dashWidth = (float)NumberUtils.parseQuietDouble( sdashing );
+      dash = new float[]
+      { dashWidth, dashWidth };
+    }
+
+    stroke = new BasicStroke( width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, dash, 1f );
   }
 }

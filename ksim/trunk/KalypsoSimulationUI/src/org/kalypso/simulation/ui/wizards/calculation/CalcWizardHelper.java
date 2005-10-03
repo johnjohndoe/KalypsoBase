@@ -102,7 +102,7 @@ public class CalcWizardHelper
     {
       final TSLinkWithName link = links[i];
       view.loadObservation( context, link.href, ignoreExceptions, ignoreTypes, link.name, new ObsView.ItemData( true,
-          link.color ) );
+          link.color, link.stroke ) );
     }
   }
 }

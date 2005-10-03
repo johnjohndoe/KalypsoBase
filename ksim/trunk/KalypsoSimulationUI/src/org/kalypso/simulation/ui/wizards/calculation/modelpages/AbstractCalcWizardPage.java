@@ -769,7 +769,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(), obsLink.getHref(),
-              tsprop.getFilter(), tsprop.getColor() );
+              tsprop.getFilter(), tsprop.getColor(), tsprop.getLineWidth(), tsprop.getLineDash() );
           foundObservations.add( linkWithName );
         }
       }
