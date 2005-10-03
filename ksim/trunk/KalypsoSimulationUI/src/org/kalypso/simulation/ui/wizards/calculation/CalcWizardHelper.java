@@ -96,10 +96,12 @@ public class CalcWizardHelper
   {
     view.removeAllItems();
 
+    final String[] ignoreTypes = ignoreType == null ? new String[0] : ignoreType.split( ";" );
+    
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      view.loadObservation( context, link.href, ignoreExceptions, ignoreType, link.name, new ObsView.ItemData( true,
+      view.loadObservation( context, link.href, ignoreExceptions, ignoreTypes, link.name, new ObsView.ItemData( true,
           link.color ) );
     }
   }

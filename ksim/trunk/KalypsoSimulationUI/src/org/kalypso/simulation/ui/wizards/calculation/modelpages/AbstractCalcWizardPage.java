@@ -108,7 +108,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.RestoreSelectionListener;
+import org.kalypso.ogc.gml.RestoreSelectionHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -180,7 +180,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * stellt in Wirklichkeit eineen Filter dar, mit dem bestimmte Datentypen im diagramm unterdrückt werden. Damit kann
    * zum Beispiel eine Umschaltung zwischen W und Q bei W/Q-Zeitreihen erreicht werden.
    * <ul>
-   * <li>ignoreType1: Unterdrückter Typ des ersten Knopfs, einer der Konstanten aus
+   * <li>ignoreType1: Unterdrückter Typ des ersten Knopfs, eine oder mehrere (;-getrennt) der Konstanten aus
    * {@link org.kalypso.ogc.sensor.timeseries.TimeserieConstants}</li>
    * <li>ignoreType2: Unterdrückter Typ des zweiten Knopfs</li>
    * <li>ignoreLabel1: Label des ersten Knopfes</li>
@@ -356,7 +356,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** the one and only one selection manager for this page */
   private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager2();
 
-  private RestoreSelectionListener m_selectionRestorer = null;
+  private RestoreSelectionHelper m_selectionRestorer = null;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -369,21 +369,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void dispose()
   {
-    if( m_selectionRestorer != null )
-    {
-      m_selectionRestorer.dispose();
-      m_selectionRestorer = null;
-    }
-    
     if( m_mapModell != null )
       m_mapModell.dispose();
-    
+
     if( m_gisTableViewer != null )
       m_gisTableViewer.dispose();
 
     if( m_table != null )
       m_table.dispose();
-    
+
     if( m_tableTemplate != null )
       m_tableTemplate.dispose();
 
@@ -514,11 +508,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-    if( kft instanceof GisTemplateFeatureTheme )
-    {
-      final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)kft;
-      m_selectionRestorer = new RestoreSelectionListener( gtft.getLayerKey(), m_selectionManager );
-    }
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
 
@@ -935,24 +924,23 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
-      //      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
-      //      if( m_gisTableViewer != null )
-      //        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-      //      else
-      //        monitor.worked( 1000 );
-      //
-      //      // remeber selected feature ids
-      //      final EasyFeatureWrapper[] allFeatures = m_selectionManager.getAllFeatures();
-      //      m_oldSelectionState = new String[allFeatures.length];
-      //      for( int i = 0; i < allFeatures.length; i++ )
-      //      {
-      //        final Feature feature = allFeatures[i].getFeature();
-      //        System.out.println( "Found this feature in manager: " + feature );
-      //        final String id = feature.getId();
-      //        m_oldSelectionState[i] = id;
-      //      }
-      //
-      //      System.out.println( "SavedState set to: " + ArrayUtils.toString( m_oldSelectionState ) );
+      if( m_mapModell != null )
+      {
+        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+        if( kft instanceof GisTemplateFeatureTheme )
+        {
+          final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)kft;
+          m_selectionRestorer = new RestoreSelectionHelper( gtft.getLayerKey(), m_selectionManager );
+        }
+      }
+
+      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
+
+      if( m_gisTableViewer != null )
+        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+      else
+        monitor.worked( 1000 );
     }
     finally
     {
@@ -961,16 +949,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
+   * @throws CoreException
    * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState()
    */
-  public void restoreState()
+  public void restoreState() throws CoreException
   {
     if( m_selectionRestorer != null )
+    {
       m_selectionRestorer.restoreSelection();
-    
-  //    if( m_oldSelectionState != null )
-  //      selectFeaturesInMap( m_oldSelectionState );
-  //    m_oldSelectionState = null;
+      m_selectionRestorer = null;
+    }
   }
 
   /**
@@ -1036,19 +1024,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( !status.isOK() )
       ErrorDialog.openError( getShell(), title, errorMessage, status );
 
-//    final WorkspaceModifyOperation op2 = new WorkspaceModifyOperation() {
-//
-//      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
-//      {
-//        final IStatus result = calcWizard.refreshAllPages( monitor );
-//        if( !result.isOK() )
-//          throw new CoreException( result );
-//        
-//      }};
-//      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, true, op2 );
-//      if( !status2.isOK() )
-//        ErrorDialog.openError( getShell(), title, errorMessage, status2 );
-    
+    //    final WorkspaceModifyOperation op2 = new WorkspaceModifyOperation() {
+    //
+    //      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+    // InterruptedException
+    //      {
+    //        final IStatus result = calcWizard.refreshAllPages( monitor );
+    //        if( !result.isOK() )
+    //          throw new CoreException( result );
+    //        
+    //      }};
+    //      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, true, op2 );
+    //      if( !status2.isOK() )
+    //        ErrorDialog.openError( getShell(), title, errorMessage, status2 );
+
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
       protected IStatus run( final IProgressMonitor monitor )

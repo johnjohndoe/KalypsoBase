@@ -514,7 +514,7 @@ public void createControl( final Composite parent )
    * 
    * @return List of features that have valid timeserieslinks
    */
-  private FeatureList filterForValidTimeseriesLinks( final FeatureList featureList,
+  protected FeatureList filterForValidTimeseriesLinks( final FeatureList featureList,
       final String propertyNameTimeserieslink, final URL context )
   {
     final FeatureList result = FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList

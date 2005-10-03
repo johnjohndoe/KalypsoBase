@@ -452,6 +452,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     if( index == 0 || index == -1 )
       // first page or page not found
       return null;
+    
+    // do not go back to first page -> the first page changes the current calcCase
+    // but the already created model-wizard-pages do not know this and still show/edit
+    // the old calc-case
+    if( page == m_controlPage )
+      return null;
 
     return (IWizardPage)m_pages.get( index - 1 );
   }
