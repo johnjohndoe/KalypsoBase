@@ -316,7 +316,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private MapPanel m_mapPanel;
 
-  private GM_Envelope m_wishBoundingBox;
+  GM_Envelope m_wishBoundingBox;
 
   private Frame m_diagFrame = null;
 
@@ -514,14 +514,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
     if( kft != null && panToFid != null )
     {
-      final GMLWorkspace workspace = kft.getWorkspace();
-      final Feature feature = workspace.getFeature( panToFid );
-      if( feature != null )
+      new GisTemplateLoadedThread( m_mapModell, new Runnable()
       {
-        GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
-        GM_Point centroid = defaultGeometryProperty.getCentroid();
-        m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
-      }
+        public void run()
+        {
+          final GMLWorkspace workspace = kft.getWorkspace();
+          final Feature feature = workspace.getFeature( panToFid );
+          if( feature != null )
+          {
+            GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+            GM_Point centroid = defaultGeometryProperty.getCentroid();
+            m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
+          }
+        }
+      } ).start();
+
     }
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
       m_wishBoundingBox = null;
