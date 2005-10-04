@@ -271,6 +271,7 @@ public class CalcJobHandler
 
       // write files to zip
       final File zipFile = File.createTempFile( "CalcJobData_", ".zip" );
+      zipFile.deleteOnExit();
 
       final CalcJobClientBean[] input = zipData( calcCaseFolder, monitor, inputList, zipFile );
       final CalcJobClientBean[] output = createOutputBeans( calcCaseFolder );
