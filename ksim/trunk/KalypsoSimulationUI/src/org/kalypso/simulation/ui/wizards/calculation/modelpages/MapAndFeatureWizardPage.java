@@ -207,6 +207,17 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     if( !status.isOK() )
       throw new CoreException( status );
   }
+  
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState()
+   */
+  public void restoreState() throws CoreException
+  {
+    super.restoreState();
+    
+    // zusätzlich das Diagramm aktualisieren, sonst passiert es evtl. nicht
+    refreshDiagram();
+  }
 
   private void createFeaturePanel( final Composite parent )
   {
