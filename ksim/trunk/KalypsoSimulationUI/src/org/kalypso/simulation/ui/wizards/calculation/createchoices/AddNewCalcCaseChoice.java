@@ -241,7 +241,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     int count = 0;
     while( true )
     {
-      final String newName = count == 0 ? dateString : ( dateString + "_#" + count );
+      final String newName = count == 0 ? dateString : ( dateString + "_NR" + count );
 
       boolean bFound = false;
       for( int i = 0; i < resources.length; i++ )
