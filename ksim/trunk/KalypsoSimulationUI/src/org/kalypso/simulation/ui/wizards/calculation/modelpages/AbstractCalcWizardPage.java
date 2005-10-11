@@ -705,7 +705,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableTemplate = new TableView();
       if( obsTemplate != null )
       {
-        final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false );
+        final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
         if( !stati.isOK() )
           throw new CoreException( stati );
       }

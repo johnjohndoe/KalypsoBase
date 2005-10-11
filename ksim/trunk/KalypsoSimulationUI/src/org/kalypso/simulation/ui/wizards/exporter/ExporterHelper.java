@@ -115,7 +115,7 @@ public final class ExporterHelper
       else if( property != null )
         replace = property.toString();
       else if( property == null )
-        replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
+          replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
 
       if( replace != null )
         replacetokens.setProperty( tokenname, replace );
@@ -175,8 +175,8 @@ public final class ExporterHelper
         final String label = args.getProperty( "label", "<unbekannt>" );
         final String strFile = args.getProperty( "href" );
         if( strFile == null )
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
-              "Keine Datei-Angabe für: " + key, null ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: "
+              + key, null ) );
 
         try
         {
@@ -184,8 +184,8 @@ public final class ExporterHelper
         }
         catch( final MalformedURLException e )
         {
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: "
-              + strFile, e ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile,
+              e ) );
         }
       }
     }
@@ -284,7 +284,7 @@ public final class ExporterHelper
       table = new ObservationTable( tpl, true, false );
       final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader );
 
-      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true );
+      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
