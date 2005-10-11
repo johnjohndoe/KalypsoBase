@@ -49,6 +49,7 @@ import java.util.Map;
 
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.template.NameUtils;
 
 public final class ColumnSpec implements Comparable
 {
@@ -90,23 +91,25 @@ public final class ColumnSpec implements Comparable
    * in all other cases the content is simply returned.
    * 
    * @param args used in the case the content of the column specification begins with 'arg:'
-   * @param obs used in the case the content of the column specification begins with 'metadata:'
+   * @param obs used in the case the content of the column specification begins with 'metadata:' or when token-replacement should take place (ex. %obsname% is given)
    */
   public String resolveContent( final Arguments args, final IObservation obs )
   {
-    if( m_content.startsWith( "arg:" ) && args != null )
+    String content = m_content;
+    
+    if( content.startsWith( "arg:" ) && args != null )
     {
-      final String key = m_content.replaceAll( "arg:", "" );
-      return args.getProperty( key, "" );
+      final String key = content.replaceAll( "arg:", "" );
+      content = args.getProperty( key, "" );
     }
 
-    if( m_content.startsWith( "metadata:" ) && obs != null )
+    if( content.startsWith( "metadata:" ) && obs != null )
     {
-      final String key = m_content.replaceAll( "metadata:", "" );
-      return obs.getMetadataList().getProperty( key, "" );
+      final String key = content.replaceAll( "metadata:", "" );
+      content = obs.getMetadataList().getProperty( key, "" );
     }
 
-    return m_content;
+    return NameUtils.replaceTokens( content, obs, null );
   }
 
   public String toString()

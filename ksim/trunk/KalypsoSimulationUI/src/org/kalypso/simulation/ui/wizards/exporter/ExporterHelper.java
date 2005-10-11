@@ -173,19 +173,19 @@ public final class ExporterHelper
       {
         final Arguments args = (Arguments)entry.getValue();
         final String label = args.getProperty( "label", "<unbekannt>" );
-        final String templateFile = args.getProperty( "href" );
-        if( templateFile == null )
+        final String strFile = args.getProperty( "href" );
+        if( strFile == null )
           stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
-              "Keine Datei-Angabe für das Template: " + key, null ) );
+              "Keine Datei-Angabe für: " + key, null ) );
 
         try
         {
-          items.add( new UrlArgument( label, UrlResolverSingleton.resolveUrl( context, templateFile ), args ) );
+          items.add( new UrlArgument( label, UrlResolverSingleton.resolveUrl( context, strFile ), args ) );
         }
         catch( final MalformedURLException e )
         {
           stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: "
-              + templateFile, e ) );
+              + strFile, e ) );
         }
       }
     }
@@ -313,7 +313,7 @@ public final class ExporterHelper
    */
   public static class UrlArgument
   {
-    private final String m_label;
+    private String m_label;
     private final URL m_templateUrl;
     private final Arguments m_args;
 
@@ -352,6 +352,11 @@ public final class ExporterHelper
     public Arguments getArguments()
     {
       return m_args;
+    }
+
+    public void setLabel( final String name )
+    {
+      m_label = name;
     }
   }
 }

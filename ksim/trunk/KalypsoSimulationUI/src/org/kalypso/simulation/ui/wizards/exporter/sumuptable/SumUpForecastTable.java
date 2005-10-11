@@ -72,6 +72,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 
 /**
+ * Used for creating an hydrological summary table for a list of timeseries with forecast information
  * 
  * @author schlienger
  */
@@ -83,6 +84,7 @@ public class SumUpForecastTable
   private final int m_timeStep;
   private final ColumnsHeader m_colHeader = new ColumnsHeader();
   private final Map m_map = new HashMap();
+  private Date m_firstDate;
 
   public SumUpForecastTable( final String axisType, final int timeUnit, final int timeStep, final double delta )
   {
@@ -90,6 +92,9 @@ public class SumUpForecastTable
     m_timeUnit = timeUnit;
     m_timeStep = timeStep;
     m_delta = delta;
+    
+    // initialise firstDate with null, used as a marker when adding observations
+    m_firstDate = null;
   }
 
   public IStatus addObservation( final UrlArgument argument, final IObservation obs ) throws SensorException
@@ -144,17 +149,19 @@ public class SumUpForecastTable
     double alarm = 0;
     for( int i = 1; i <= alarms.length; i++ )
     {
-      if( alarms[i - 1].doubleValue() != -1 && alarms[i - 1].doubleValue() >= maxValue.doubleValue() )
+      if( alarms[i - 1].doubleValue() != -1 )
       {
-        strAlarm = "AS " + i;
-
         try
         {
           // value is automatically converted if we use another axis than
           // the alarm-level default axis
-          final Double value = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
-
-          alarm = value.doubleValue();
+          final Double alarmValue = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
+          
+          if( maxValue.doubleValue() >= alarmValue.doubleValue() )
+          {
+            strAlarm = "AS " + i;
+            alarm = alarmValue.doubleValue();
+          }
         }
         catch( final Exception ignored ) // generic for simplicity
         {
@@ -165,25 +172,33 @@ public class SumUpForecastTable
 
     // fetch values at specific time-positions
     final Calendar cal = Calendar.getInstance();
-    cal.setTime( range.getFrom() );
+    
+    // we use firstDate as a marker, as soon as an observation has been added,
+    // its first date that was found is then used for all other subsequent
+    // observations that are added
+    if( m_firstDate != null && range.getFrom().before( m_firstDate ) )
+      cal.setTime( m_firstDate );
+    else
+      cal.setTime( range.getFrom() );
 
     final Row row = new Row( maxValue, maxTime, strAlarm, alarm );
 
-    // TODO BUGGY Werte um eine Spalte verschoben!!!
-
     boolean notFoundYet = true;
-    
+
     while( cal.getTime().compareTo( range.getTo() ) <= 0 )
     {
       final Date time = cal.getTime();
       final int pos = values.indexOf( time, dateAxis );
       if( pos != -1 )
       {
+        if( m_firstDate == null )
+          m_firstDate = time;
+        
         m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
 
         final Number value = (Number)values.getElement( pos, valueAxis );
         row.addValue( time, value );
-        
+
         notFoundYet = false;
       }
 
