@@ -96,10 +96,14 @@ public class ExportableTemplateObject implements IExportableObject
   }
 
   /**
-   * constructor
+   * constructor with pattern-replacement. Before the template file is parsed, the given tokens are replaced with their
+   * corresponding values found in the properties.
    * 
    * @param templateUrl
    *          can denote an odt or an ott template file
+   * @param replaceTokens
+   *          tokens used to replace elements of the template file that relate to values of specific gml-feature
+   *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
       final URL templateUrl, final Properties replaceTokens )
@@ -152,8 +156,8 @@ public class ExportableTemplateObject implements IExportableObject
               monitor, 1 ), m_templateUrl );
 
         case EXPORT_TYPE_TABLE:
-          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output,
-              new SubProgressMonitor( monitor, 1 ), m_templateUrl );
+          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
+              monitor, 1 ), m_templateUrl );
       }
 
       // should never come here
