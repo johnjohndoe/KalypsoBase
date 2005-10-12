@@ -377,6 +377,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       userVariables = registerValueVariablesFromProperties( svm, userProperties );
       monitor.worked( 1000 );
 
+      // TODO prüfen ob der launch überhaupt asynchron laufen kann?
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
 
       // TODO: timeout konfigurierbar machen?
