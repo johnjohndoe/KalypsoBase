@@ -256,11 +256,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private final static String PROP_ZMLTABLE_THRESHOLD_RESIZEOFF = "zmlTableThresholdResizeOff";
 
   /**
-   * Argument: (optional) a boolean which indicates whether the table should be sorted according to the 
-   * alphabetical order of the columns' name or not.
+   * Argument: (optional) a boolean which indicates whether the table should be sorted according to the alphabetical
+   * order of the columns' name or not.
    */
-  private final static String PROP_ZMLTABLE_ALPHA_SORT = "zmlZableAlphaSort";
-  
+  private final static String PROP_ZMLTABLE_ALPHA_SORT = "zmlTableAlphaSort";
+
   /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
   private final static String PROP_TABLETEMPLATE = "tableTemplate";
 
@@ -658,14 +658,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
-
-      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
-
       m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), m_selectionManager );
-      m_gisTableViewer.applyTableTemplate( template, getContext() );
+
+      final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
+      if( templateFileName != null )
+      {
+        final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+        final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
+        m_gisTableViewer.applyTableTemplate( template, getContext() );
+      }
 
       return m_gisTableViewer.getControl();
     }
@@ -718,7 +720,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final String alphaSort = m_arguments.getProperty( PROP_ZMLTABLE_ALPHA_SORT, null );
       if( alphaSort != null )
         m_table.setAlphaSortActivated( Boolean.valueOf( alphaSort ).booleanValue() );
-      
+
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
 
@@ -810,20 +812,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-    case SELECT_FROM_MAPVIEW:
-      final IMapModell mapModell = getMapModell();
-      if( mapModell == null )
-        return FeatureFactory.createFeatureList( null, null );
-      activeTheme = mapModell.getActiveTheme();
-      break;
-    case SELECT_FROM_TABLEVIEW:
-      activeTheme = m_gisTableViewer.getTheme();
-      break;
-    case SELECT_FROM_FEATUREVIEW:
-      activeTheme = null;
-      break;
-    default:
-      activeTheme = null;
+      case SELECT_FROM_MAPVIEW:
+        final IMapModell mapModell = getMapModell();
+        if( mapModell == null )
+          return FeatureFactory.createFeatureList( null, null );
+        activeTheme = mapModell.getActiveTheme();
+        break;
+      case SELECT_FROM_TABLEVIEW:
+        activeTheme = m_gisTableViewer.getTheme();
+        break;
+      case SELECT_FROM_FEATUREVIEW:
+        activeTheme = null;
+        break;
+      default:
+        activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
