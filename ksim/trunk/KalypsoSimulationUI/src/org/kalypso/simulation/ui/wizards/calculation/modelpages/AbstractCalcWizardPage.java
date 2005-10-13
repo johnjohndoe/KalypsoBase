@@ -710,6 +710,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
         if( !stati.isOK() )
           throw new CoreException( stati );
+        
+        // set alphasort flag according to template (NOTE: might be overriden by
+        // argument value of the calcwizard)
+        m_table.setAlphaSortActivated( m_tableTemplate.isAlphaSort() );
       }
       m_table = new ObservationTable( m_tableTemplate );
 
@@ -717,6 +721,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       if( threshold != null )
         m_table.setThresholdColumnsAutoResizeModeOff( Integer.valueOf( threshold ).intValue() );
 
+      // set alphasort flag according to arguments (NOTE: might override setting of the template)
       final String alphaSort = m_arguments.getProperty( PROP_ZMLTABLE_ALPHA_SORT, null );
       if( alphaSort != null )
         m_table.setAlphaSortActivated( Boolean.valueOf( alphaSort ).booleanValue() );
