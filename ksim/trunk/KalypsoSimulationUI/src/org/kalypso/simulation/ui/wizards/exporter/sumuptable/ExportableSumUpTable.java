@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -61,6 +62,7 @@ import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -76,11 +78,13 @@ public final class ExportableSumUpTable implements IExportableObject
 {
   private final Arguments m_args;
   private final URL m_context;
+  private final Configuration m_metadataExtensions;
 
-  public ExportableSumUpTable( final Arguments args, final URL context )
+  public ExportableSumUpTable( final Arguments args, final URL context, final Configuration metadataExtensions )
   {
     m_args = args;
     m_context = context;
+    m_metadataExtensions = metadataExtensions;
   }
 
   /**
@@ -129,6 +133,9 @@ public final class ExportableSumUpTable implements IExportableObject
         {
           obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
 
+          // tricky: let the metadata be extended by the information we have
+          MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, obses[i]);
+          
           final IStatus status = table.addObservation( items[i], obses[i] );
           stati.add( status );
         }

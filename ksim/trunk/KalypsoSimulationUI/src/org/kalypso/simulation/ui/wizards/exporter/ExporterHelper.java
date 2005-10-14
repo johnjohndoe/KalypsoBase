@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,6 +63,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
+import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -115,7 +117,7 @@ public final class ExporterHelper
       else if( property != null )
         replace = property.toString();
       else if( property == null )
-          replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
+        replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
 
       if( replace != null )
         replacetokens.setProperty( tokenname, replace );
@@ -212,9 +214,12 @@ public final class ExporterHelper
    *          handles user feedback
    * @param templateUrl
    *          url of the template being used
+   * @param metadataExtensions
+   *          can be update from this export with information from observations
    */
   public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
-      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl )
+      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
+      final Configuration metadataExtensions )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -231,11 +236,14 @@ public final class ExporterHelper
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
+      // tricky: let the metadata be extended by the information we have
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
+      
       final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height ).exportObject( output, monitor );
+      final IStatus status2 = new ExportableChart( chart, format, width, height, metadataExtensions ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[]
       { status, status2 }, "Fehler während der Export der Diagrammvorlage: " + templateUrl.getFile() );
@@ -267,9 +275,12 @@ public final class ExporterHelper
    *          handles user feedback
    * @param templateUrl
    *          url of the template being used
+   * @param metadataExtensions
+   *          can be update from this export with information from observations
    */
   public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
-      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl )
+      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
+      final Configuration metadataExtensions )
   {
     if( arguments == null )
     {
@@ -285,11 +296,14 @@ public final class ExporterHelper
       final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader );
 
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
-
+      
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
+      
+      // tricky: let the metadata be extended by the information we have
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
 
-      final IStatus status2 = new ExportableObservationTable( table ).exportObject( output, monitor );
+      final IStatus status2 = new ExportableObservationTable( table, metadataExtensions ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[]
       { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );

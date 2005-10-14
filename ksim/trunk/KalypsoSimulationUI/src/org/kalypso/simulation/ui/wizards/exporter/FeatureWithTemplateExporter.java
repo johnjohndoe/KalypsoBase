@@ -122,15 +122,15 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration, org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException
   {
     final List objects = new ArrayList();
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( (UrlArgument)templates[i], objects );
+      createExportableObjectsWith( (UrlArgument)templates[i], objects, metadataExtensions );
 
     return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
   }
@@ -138,7 +138,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List objects, final Configuration metadataExtensions ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
@@ -163,7 +163,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
         final URL templateUrl = item.getUrl();
 
         final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-            replacetokens );
+            replacetokens, metadataExtensions );
 
         objects.add( exportable );
       }

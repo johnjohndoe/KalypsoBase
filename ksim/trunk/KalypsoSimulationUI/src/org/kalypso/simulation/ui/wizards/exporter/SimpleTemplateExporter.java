@@ -87,26 +87,26 @@ public class SimpleTemplateExporter extends AbstractExporter
   private ArrayChooserPage m_page;
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration,
+      final Configuration metadataExtensions ) throws CoreException
   {
     final List objects = new ArrayList();
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( (UrlArgument)templates[i], objects );
+      createExportableObjectsWith( (UrlArgument)templates[i], objects, metadataExtensions );
 
     return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
   }
 
   /**
    * Loads the corresponding template and makes an exportable object out of it.
-   * 
-   * @throws CoreException
    */
-  private void createExportableObjectsWith( final UrlArgument item,
-      final List objects ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List objects,
+      final Configuration metadataExtensions ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
@@ -119,7 +119,8 @@ public class SimpleTemplateExporter extends AbstractExporter
       // the name of the document to create is specified in the arguments
       final String name = item.getProperty( "documentName" );
 
-      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl );
+      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
+          metadataExtensions );
 
       objects.add( exportable );
     }

@@ -46,6 +46,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -84,15 +85,16 @@ public class ExportableTemplateObject implements IExportableObject
   private final Properties m_replaceTokens;
 
   private final int m_exportType;
+  private final Configuration m_metadataExtensions;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl )
+      final URL templateUrl, final Configuration metadataExtensions )
   {
-    this( arguments, context, documentName, templateUrl, null );
+    this( arguments, context, documentName, templateUrl, null, metadataExtensions );
   }
 
   /**
@@ -106,13 +108,14 @@ public class ExportableTemplateObject implements IExportableObject
    *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Properties replaceTokens )
+      final URL templateUrl, final Properties replaceTokens, final Configuration metadataExtensions )
   {
     m_arguments = arguments;
     m_context = context;
     m_templateUrl = templateUrl;
     m_documentName = documentName;
     m_replaceTokens = replaceTokens;
+    m_metadataExtensions = metadataExtensions;
 
     final String strUrl = m_templateUrl.toExternalForm();
     if( strUrl.endsWith( "odt" ) )
@@ -153,11 +156,11 @@ public class ExportableTemplateObject implements IExportableObject
       {
         case EXPORT_TYPE_DIAGRAM:
           return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl );
+              monitor, 1 ), m_templateUrl, m_metadataExtensions );
 
         case EXPORT_TYPE_TABLE:
           return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl );
+              monitor, 1 ), m_templateUrl, m_metadataExtensions );
       }
 
       // should never come here

@@ -139,16 +139,18 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
 public class SumUpTableExporter extends AbstractExporter
 {
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration,
+      final Configuration metadataExtensions ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
     final URL context = (URL)getFromSupplier( "context" );
 
     return new IExportableObject[]
-    { new ExportableSumUpTable( arguments, context ) };
+    { new ExportableSumUpTable( arguments, context, metadataExtensions ) };
   }
 
   /**
