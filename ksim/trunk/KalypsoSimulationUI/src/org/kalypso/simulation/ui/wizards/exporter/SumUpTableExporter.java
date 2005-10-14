@@ -45,6 +45,7 @@ import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.metadoc.IExportableObject;
@@ -154,9 +155,9 @@ public class SumUpTableExporter extends AbstractExporter
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     return new IWizardPage[0];
   }

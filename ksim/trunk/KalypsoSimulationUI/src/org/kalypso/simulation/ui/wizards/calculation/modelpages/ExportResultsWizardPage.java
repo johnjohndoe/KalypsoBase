@@ -46,9 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -91,6 +89,8 @@ import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExportTarget;
 import org.kalypso.metadoc.IExporter;
 import org.kalypso.metadoc.impl.MetadocExtensions;
+import org.kalypso.metadoc.impl.MultiExporter;
+import org.kalypso.metadoc.impl.MultiExporter.ISupplierCreator;
 import org.kalypso.metadoc.ui.ExportDocumentsWizard;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
@@ -146,12 +146,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
    * arguments, they must be followed by some arbitrary string.
    * <p>
-   * Each argument can contains sub-arguments which in turn are forwarded to the exporter object. This way, you can
-   * specify exporter specific initialisation.
+   * For the sustained arguments, @see MultiExporter
    * </p>
-   * <p>
-   * There must be at least the 'id' argument which contains the id of the exporter to use (for a list of valid exporter
-   * ids, see the <code>org.kalypso.metadoc.exporter</code> extension point)
    */
   private static final String PROP_EXPORTER = "exporter";
 
@@ -190,7 +186,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-public void createControl( final Composite parent )
+  public void createControl( final Composite parent )
   {
     try
     {
@@ -221,10 +217,14 @@ public void createControl( final Composite parent )
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      { mainWeight, 100 - mainWeight } );
+      {
+          mainWeight,
+          100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight, 100 - rightWeight } );
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -253,6 +253,7 @@ public void createControl( final Composite parent )
       e.printStackTrace();
     }
   }
+
   private Control createCalccasesGroup( final Composite parent )
   {
     final Group treeGroup = new Group( parent, SWT.NONE );
@@ -419,44 +420,19 @@ public void createControl( final Composite parent )
    */
   private IExporter[] createExporters()
   {
-    final Collection exporters = new ArrayList();
-
     final Collection stati = new ArrayList();
 
     final Arguments arguments = getArguments();
-    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
+    final ISupplierCreator creator = new ISupplierCreator()
     {
-      final Map.Entry entry = (Entry)aIt.next();
-      final String key = (String)entry.getKey();
-      if( key.startsWith( PROP_EXPORTER ) )
+
+      public ISupplier createSupplier( final Arguments args )
       {
-        try
-        {
-          final Arguments args = (Arguments)entry.getValue();
-          final String exporterId = args.getProperty( "id" );
-          if( exporterId == null )
-            throw new CoreException( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
-                "Exporter ohne id konfiguriert: " + key, null ) );
-
-          final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
-          // important: initialise the exporter
-          exporter.init( new ExporterSupplier( args ) );
-
-          // if name provided, override name of exporter
-          final String name = args.getProperty( "name" );
-          if( name != null )
-            exporter.setName( name );
-
-          exporters.add( exporter );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-
-          stati.add( e.getStatus() );
-        }
+        return new ExporterSupplier( args );
       }
-    }
+    };
+    
+    final Collection exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
 
     if( stati.size() > 0 )
     {
@@ -570,8 +546,8 @@ public void createControl( final Composite parent )
     antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
-    launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN, "Fehler bemi Speichern der Vorhersage-Zeotreihen",
-        antProps );
+    launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN,
+        "Fehler bemi Speichern der Vorhersage-Zeotreihen", antProps );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -699,6 +675,11 @@ public void createControl( final Composite parent )
       if( "context".equals( request ) )
         return getContext();
 
+      // Tricky clone-hack to produce new supplier on a subset of the arguments.
+      // This is used by the MultiExporter.
+      if( request instanceof Arguments )
+        return new ExporterSupplier( (Arguments)request );
+      
       Logger.getLogger( getClass().getName() ).warning(
           "Supplier asked for " + request.toString() + " but request could not be satisfied" );
 

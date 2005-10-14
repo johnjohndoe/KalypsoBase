@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -64,9 +65,9 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
   private ArrayChooserPage m_page = null;
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     if( m_page == null )
     {
