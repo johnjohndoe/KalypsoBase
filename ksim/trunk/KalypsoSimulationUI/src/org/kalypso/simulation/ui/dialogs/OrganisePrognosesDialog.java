@@ -138,7 +138,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
     getShell().setText( VORHERSAGEN_ORGANISIEREN );
     setTitle( VORHERSAGEN_ORGANISIEREN );
-    setMessage( "Wählen Sie eine Vorhersage aus und löschen oder archivieren diese." );
+    setMessage( "Wählen Sie eine Vorhersage aus und löschen oder archivieren Sie diese." );
 
     // toolbar
     final ToolBarManager manager = new ToolBarManager( SWT.FLAT );
