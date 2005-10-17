@@ -75,7 +75,7 @@ import org.kalypso.ui.ImageProvider;
  */
 public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelectionChangedListener
 {
-  private static final String VORHERSAGEN_ORGANISIEREN = "Vorhersagen organisieren";
+  private static final String VORHERSAGEN_ORGANISIEREN = "Vorhersagen verwalten";
 
 
   private Image m_titleImage;

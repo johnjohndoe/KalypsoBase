@@ -238,7 +238,7 @@ public class PrognosePanel
     organizeButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     organizeButton.setFont( buttonfont );
     organizeButton.setText( "Vorhersagen verwalten" );
-    organizeButton.setToolTipText( "Hochwasser-Vorhersage verwalten" );
+    organizeButton.setToolTipText( "Hochwasser-Vorhersagen verwalten" );
     organizeButton.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )
