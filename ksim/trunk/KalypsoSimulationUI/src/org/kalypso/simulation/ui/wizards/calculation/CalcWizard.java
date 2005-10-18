@@ -452,7 +452,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     if( index == 0 || index == -1 )
       // first page or page not found
       return null;
-    
+
     // do not go back to first page -> the first page changes the current calcCase
     // but the already created model-wizard-pages do not know this and still show/edit
     // the old calc-case
@@ -560,7 +560,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean isHelpAvailable()
   {
-    return false;
+    System.out.println( "isHelpAvailable called" );
+    return getHelpHref() != null;
   }
 
   /**
@@ -706,4 +707,30 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     return m_synchronizer;
   }
 
+  /**
+   * Return the help href to display, if the help button is pressed.
+   * <p>
+   * If the page has a help href, return it
+   * </p>
+   * <p>
+   * Else, return the help href of the calcWizard.xml.
+   * </p>.
+   * 
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#getHelpHref()
+   */
+  public String getHelpHref()
+  {
+    final IWizardPage currentPage = getContainer().getCurrentPage();
+
+    final String pageHelpHref;
+    if( currentPage instanceof ICalcWizardPage )
+      pageHelpHref = ( (ICalcWizardPage)currentPage ).getHelpHref();
+    else
+      pageHelpHref = null;
+
+    if( pageHelpHref != null )
+      return pageHelpHref;
+
+    return m_calcwizard == null ? null : m_calcwizard.getHelpHref();
+  }
 }

@@ -233,4 +233,13 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     return m_choice;
   }
+  
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#getHelpHref()
+   */
+  public String getHelpHref()
+  {
+    // TODO: give a href to the common description
+    return null;
+  }
 }

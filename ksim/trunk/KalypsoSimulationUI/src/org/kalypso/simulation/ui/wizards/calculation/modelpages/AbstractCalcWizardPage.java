@@ -230,6 +230,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_HTML_PATH = "htmlFilePath";
 
   /**
+   * Argument: If set, pressing the help-buttons results in a jump to this href of the eclipse help-system.
+   * <p>
+   * The 'helpHref' argument of the wizard itself must be non null, in order to show the help button.
+   * </p>
+   */
+  private static final String PROP_HELP_HREF = "helpHref";
+
+  /**
    * Argument: a string indicating, how the Timeseries-Table is filled with timeseries.
    * 
    * <ul>
@@ -710,7 +718,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
         if( !stati.isOK() )
           throw new CoreException( stati );
-        
+
         // set alphasort flag according to template (NOTE: might be overriden by
         // argument value of the calcwizard)
         m_table.setAlphaSortActivated( m_tableTemplate.isAlphaSort() );
@@ -817,20 +825,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-      case SELECT_FROM_MAPVIEW:
-        final IMapModell mapModell = getMapModell();
-        if( mapModell == null )
-          return FeatureFactory.createFeatureList( null, null );
-        activeTheme = mapModell.getActiveTheme();
-        break;
-      case SELECT_FROM_TABLEVIEW:
-        activeTheme = m_gisTableViewer.getTheme();
-        break;
-      case SELECT_FROM_FEATUREVIEW:
-        activeTheme = null;
-        break;
-      default:
-        activeTheme = null;
+    case SELECT_FROM_MAPVIEW:
+      final IMapModell mapModell = getMapModell();
+      if( mapModell == null )
+        return FeatureFactory.createFeatureList( null, null );
+      activeTheme = mapModell.getActiveTheme();
+      break;
+    case SELECT_FROM_TABLEVIEW:
+      activeTheme = m_gisTableViewer.getTheme();
+      break;
+    case SELECT_FROM_FEATUREVIEW:
+      activeTheme = null;
+      break;
+    default:
+      activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
@@ -1304,5 +1312,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       refreshZMLTable();
     }
+  }
+
+  /**
+   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#getHelpHref()
+   */
+  public String getHelpHref()
+  {
+    return getArguments().getProperty( PROP_HELP_HREF, null );
   }
 }

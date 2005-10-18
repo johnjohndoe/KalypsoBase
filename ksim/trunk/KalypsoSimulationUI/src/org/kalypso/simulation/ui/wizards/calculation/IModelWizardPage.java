@@ -59,7 +59,10 @@ public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage
   /** Save all data of the pages and remember the state for the next call to refreshData */
   public void saveState( final IProgressMonitor monitor ) throws CoreException;
 
-  /** Restore state to the last call of saveData 
-   * @throws CoreException*/
-  public void restoreState(  ) throws CoreException;
+  /**
+   * Restore state to the last call of saveData
+   * 
+   * @throws CoreException
+   */
+  public void restoreState() throws CoreException;
 }

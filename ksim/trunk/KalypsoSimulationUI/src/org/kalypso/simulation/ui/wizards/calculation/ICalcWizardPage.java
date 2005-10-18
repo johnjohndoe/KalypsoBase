@@ -47,5 +47,14 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface ICalcWizardPage extends IWizardPage
 {
-  // only a makrer interface
+  /**
+   * Gets the help href to show, whenn the help button is presse.
+   * <p>
+   * Must be of form /plugin-id/path-to-html-file-in-the-doc.zip
+   * </p>
+   * <p>
+   * If null, the default helpHref of the wizard will be taken.
+   * </p>
+   */
+  public String getHelpHref();
 }
