@@ -287,7 +287,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
    */
   public boolean shouldUpdate()
   {
-    return true;
+    return false;
   }
 
   /**
@@ -312,13 +312,6 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
       m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
       m_page.setMessage( null );
       m_page.setPageComplete( false );
-    }
-
-    if( m_name == null || m_name.length() == 0 )
-    {
-      m_page.setMessage( "Geben Sie eine neue Bezeichnung für die Rechenvariante ein", IMessageProvider.INFORMATION );
-      m_page.setPageComplete( false );
-      return;
     }
 
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );

@@ -560,7 +560,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean isHelpAvailable()
   {
-    System.out.println( "isHelpAvailable called" );
     return getHelpHref() != null;
   }
 

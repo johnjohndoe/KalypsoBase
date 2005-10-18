@@ -366,4 +366,9 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
       }
     }
   }
+  
+  public boolean isEmpty()
+  {
+    return ((CalcCaseTreeContentProvider)getContentProvider()).getElements( getInput() ).length == 0;
+  }
 }

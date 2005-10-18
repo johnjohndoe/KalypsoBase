@@ -348,7 +348,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String progressText, final String launchName, final Properties antProps,
+  public IStatus launchAnt( final String progressText, final String launchName, final Map antProps,
       final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( progressText, 5000 );

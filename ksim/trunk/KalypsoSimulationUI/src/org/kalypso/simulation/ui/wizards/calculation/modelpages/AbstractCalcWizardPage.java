@@ -54,6 +54,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JScrollPane;
@@ -520,30 +521,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     m_mapPanel.addSelectionChangedListener( this );
 
-    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
 
-    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
-    if( kft != null && panToFid != null )
-    {
-      new GisTemplateLoadedThread( m_mapModell, new Runnable()
-      {
-        public void run()
-        {
-          final GMLWorkspace workspace = kft.getWorkspace();
-          final Feature feature = workspace.getFeature( panToFid );
-          if( feature != null )
-          {
-            GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
-            GM_Point centroid = defaultGeometryProperty.getCentroid();
-            m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
-          }
-        }
-      } ).start();
-
-    }
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
       m_wishBoundingBox = null;
 
@@ -1101,6 +1080,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       public void run()
       {
+        //        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+        //        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+
         boolean refreshDiagramHack = true;
 
         // erstes feature des aktiven themas selektieren
@@ -1108,6 +1090,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+
+          final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
+          if( kft != null && panToFid != null )
+          {
+            final GMLWorkspace workspace = kft.getWorkspace();
+            final Feature feature = workspace.getFeature( panToFid );
+            if( feature != null )
+            {
+              GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+              GM_Point centroid = defaultGeometryProperty.getCentroid();
+              m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
+            }
+          }
+
           final CommandableWorkspace workspace = kft.getWorkspace();
 
           final FeatureList featureList = kft.getFeatureListVisible( null );
@@ -1226,7 +1222,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   protected void launchAnt( final String antLaunch, final String taskName, final String title,
-      final String errorMessage, final Properties antProps )
+      final String errorMessage, final Map antProps )
   {
     runSomething( new ICoreExceptionRunnable()
     {

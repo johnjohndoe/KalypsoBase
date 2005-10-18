@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -207,6 +208,14 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
    */
   public void validateChoice()
   {
+    if( m_viewer != null && m_viewer.isEmpty() )
+    {
+      m_page.setErrorMessage( null );
+      m_page.setMessage( "Keine Rechenvarianten vorhanden", IMessageProvider.WARNING );
+      m_page.setPageComplete( false );
+      return;
+    }
+
     if( m_folder == null )
     {
       m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
