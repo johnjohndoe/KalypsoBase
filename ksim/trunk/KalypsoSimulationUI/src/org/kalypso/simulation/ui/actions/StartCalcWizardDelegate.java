@@ -112,7 +112,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
 
     if( projects == null || projects.length != 1 )
     {
-      MessageDialog.openInformation( m_window.getShell(), "Hochwasser Vorhersage durchführen",
+      MessageDialog.openInformation( m_window.getShell(), "Hochwasser-Vorhersage durchführen",
           "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }

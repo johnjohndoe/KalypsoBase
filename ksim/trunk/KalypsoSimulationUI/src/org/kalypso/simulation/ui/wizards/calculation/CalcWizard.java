@@ -163,7 +163,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public void addPages()
   {
-    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage erzeugen",
+    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage starten",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     m_createCalcCasePage.addChoiceListener( this );
 

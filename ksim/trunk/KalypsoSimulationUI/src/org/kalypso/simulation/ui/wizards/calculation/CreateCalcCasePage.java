@@ -62,7 +62,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener;
 
@@ -108,9 +107,6 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
-
-    final Label chooserLabel = new Label( panel, SWT.NONE );
-    chooserLabel.setText( "Bitte wählen Sie aus, was Sie tun möchten:" );
 
     final Composite radioPanel = new Composite( panel, SWT.NONE );
     radioPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );

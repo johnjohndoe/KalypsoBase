@@ -43,7 +43,6 @@ package org.kalypso.simulation.ui.startscreen;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -323,8 +322,7 @@ public class PrognosePanel
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
 
