@@ -791,9 +791,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     urlResolver.addReplaceToken( "scenarioId", scenario.getId() );
     urlResolver.addReplaceToken( "scenarioName", scenario.getName() );
     urlResolver.addReplaceToken( "scenarioDescription", scenario.getDescription() );
-
-    final String user = System.getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
-    urlResolver.addReplaceToken( "user", user );
+    urlResolver.addReplaceToken( "user", currentUser.getUserName() );
 
     final Date now = new Date();
     urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now ) );
