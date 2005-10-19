@@ -112,6 +112,8 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
     m_prognoseFolder = modelProject.getFolder( ModelNature.PROGNOSE_FOLDER );
     m_titleImage = ImageProvider.IMAGE_KALYPSO_ICON_BIG.createImage();
+    m_archiveAction.setToolTipText("Archivieren");
+    m_removeAction.setToolTipText("Löschen");
 
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
