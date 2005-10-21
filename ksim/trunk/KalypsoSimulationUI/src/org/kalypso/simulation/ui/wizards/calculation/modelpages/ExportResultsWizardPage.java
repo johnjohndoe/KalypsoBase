@@ -140,7 +140,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   //    </page>
   //  
 
-  private static final String STR_EXPORT_PROGNOSEN = "Prognosen exportieren";
+  private static final String STR_EXPORT_PROGNOSEN = "Vorhersagen exportieren";
 
   /**
    * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
@@ -290,7 +290,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
     exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
-    exportPrognosesButton.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
+    exportPrognosesButton.setToolTipText( "Exportiert die Vorhersagen der aktuellen Rechenvariante" );
     exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     exportPrognosesButton.addSelectionListener( new SelectionAdapter()
     {
