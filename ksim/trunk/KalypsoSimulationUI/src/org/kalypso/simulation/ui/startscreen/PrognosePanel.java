@@ -64,6 +64,8 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -72,6 +74,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -81,10 +84,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
-import org.kalypso.model.xml.Modellist;
-import org.kalypso.model.xml.ModellistType;
-import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.ModellistType.ModelType;
+import org.kalypso.contribs.java.lang.DisposeHelper;
+import org.kalypso.simulation.modellist.ImageLabelType;
+import org.kalypso.simulation.modellist.Modellist;
+import org.kalypso.simulation.modellist.ModellistType;
+import org.kalypso.simulation.modellist.ObjectFactory;
+import org.kalypso.simulation.modellist.ModellistType.ModelType;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
@@ -106,6 +111,8 @@ public class PrognosePanel
   private final ModelLabelProvider m_labelProvider = new ModelLabelProvider();
 
   private final FontUtilities m_fontUtils = new FontUtilities();
+
+  private final DisposeHelper m_disposeHelper = new DisposeHelper();
 
   private final URL m_location;
 
@@ -136,6 +143,7 @@ public class PrognosePanel
   {
     m_labelProvider.dispose();
     m_fontUtils.dispose();
+    m_disposeHelper.dispose();
   }
 
   public Composite createControl( final Composite parent, final IWorkbenchWindow window )
@@ -160,30 +168,13 @@ public class PrognosePanel
       return m_control;
     }
 
-    final Label mainImageLabel = new Label( m_control, SWT.NONE );
     final GridData mainLabelgridData = new GridData();
     mainLabelgridData.horizontalSpan = 2;
     mainLabelgridData.horizontalAlignment = GridData.CENTER;
     mainLabelgridData.grabExcessHorizontalSpace = true;
     mainLabelgridData.verticalSpan = 1;
     mainLabelgridData.verticalAlignment = GridData.FILL;
-    mainImageLabel.setLayoutData( mainLabelgridData );
-
-    try
-    {
-      final String mainImageName = m_modellist.getMainImage();
-      final URL mainImageURL = new URL( m_location, mainImageName );
-      final Image mainImage = new Image( display, mainImageURL.openStream() );
-      mainImageLabel.setImage( mainImage );
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
+    createImageLabel( m_modellist.getMainImage(), m_control, SWT.NONE, mainLabelgridData, display );
 
     final Label headingLabel = new Label( m_control, SWT.SINGLE );
     final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false, 2, 2 );
@@ -256,6 +247,25 @@ public class PrognosePanel
     imageGridData.verticalSpan = 2;
     m_imageLabel.setLayoutData( imageGridData );
 
+    //////////////
+    // BCE-LOGO //
+    //////////////
+    final GridData fillGridData = new GridData( GridData.FILL_BOTH );
+    fillGridData.horizontalSpan = 2;
+    fillGridData.grabExcessVerticalSpace = true;
+    fillGridData.verticalAlignment = SWT.FILL;
+    final Label fillLabel = new Label( m_control, SWT.NONE );
+    fillLabel.setLayoutData( fillGridData );
+    fillLabel.setBackground( background );
+    
+    final GridData logoGridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    logoGridData.horizontalSpan = 2;
+    logoGridData.grabExcessVerticalSpace = true;
+    createImageLabel( m_modellist.getLogoImage(), m_control, SWT.NONE, logoGridData, display );
+
+    //////////////////////////
+    // Liste initialisieren //
+    //////////////////////////
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -272,6 +282,59 @@ public class PrognosePanel
     viewer.setSelection( new StructuredSelection( m_modellist.getModel().get( 0 ) ) );
 
     return m_control;
+  }
+
+  private Label createImageLabel( final ImageLabelType imageType, final Composite parent, final int style,
+      final Object layoutData, final Display display )
+  {
+    final Label label = new Label( parent, style );
+    label.setLayoutData( layoutData );
+
+    final Image mainImage = imageFromUrl( display, imageType.getImageUrl() );
+    label.setImage( mainImage );
+
+    final String linkUrl = imageType.getLinkUrl();
+    if( linkUrl == null )
+      return label;
+
+    label.addMouseListener( new MouseAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+       */
+      public void mouseUp( final MouseEvent e )
+      {
+        Program.launch( linkUrl );
+      }
+    } );
+
+    label.setCursor( display.getSystemCursor( SWT.CURSOR_HAND ) );
+
+    return label;
+  }
+
+  /**
+   * Loads an image from an url relative to m_location.
+   */
+  private Image imageFromUrl( final Display display, final String url )
+  {
+    try
+    {
+      final URL mainImageURL = new URL( m_location, url );
+      final Image image = new Image( display, mainImageURL.openStream() );
+      m_disposeHelper.addDisposeCandidate( image );
+      return image;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   protected void setModel( final ModellistType.ModelType model )
@@ -339,11 +402,12 @@ public class PrognosePanel
         synchronizer.updateLocal( monitor );
       }
     };
-    
+
     final IStatus status = RunnableContextHelper.execute( window, false, true, operation );
     if( !status.isOK() )
     {
-      ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
+      ErrorDialog
+          .openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
       return null;
     }
 

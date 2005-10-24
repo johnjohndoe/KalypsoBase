@@ -41,8 +41,8 @@
 package org.kalypso.simulation.ui.startscreen;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.xml.ModellistType;
-import org.kalypso.model.xml.ModellistType.ModelType;
+import org.kalypso.simulation.modellist.ModellistType;
+import org.kalypso.simulation.modellist.ModellistType.ModelType;
 
 /**
  * @author Belger

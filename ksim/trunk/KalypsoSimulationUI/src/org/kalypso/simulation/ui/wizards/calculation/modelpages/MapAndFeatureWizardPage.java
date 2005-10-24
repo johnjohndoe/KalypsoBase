@@ -207,14 +207,14 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     if( !status.isOK() )
       throw new CoreException( status );
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState()
    */
   public void restoreState() throws CoreException
   {
     super.restoreState();
-    
+
     // zusätzlich das Diagramm aktualisieren, sonst passiert es evtl. nicht
     refreshDiagram();
   }
@@ -362,17 +362,20 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     {
       final IFeatureSelection featureSelection = (IFeatureSelection)selection;
       final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
-      final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+      if( feature != null )
+      {
+        final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
 
-      final Control control = m_templateviewer.getControl();
-      if( control != null && !control.isDisposed() )
-        control.getDisplay().asyncExec( new Runnable()
-        {
-          public void run()
+        final Control control = m_templateviewer.getControl();
+        if( control != null && !control.isDisposed() )
+          control.getDisplay().asyncExec( new Runnable()
           {
-            m_templateviewer.setFeature( workspace, feature );
-          }
-        } );
+            public void run()
+            {
+              m_templateviewer.setFeature( workspace, feature );
+            }
+          } );
+      }
     }
   }
 

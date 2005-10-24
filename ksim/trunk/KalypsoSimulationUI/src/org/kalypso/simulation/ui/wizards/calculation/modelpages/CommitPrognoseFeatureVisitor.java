@@ -51,6 +51,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -137,14 +138,14 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-          "Fehler beim Auflösen eines Zeitreihen-Links für Feature ID = " + id, e );
+      return StatusUtilities.statusFromThrowable( e, "Fehler beim Auflösen eines Zeitreihen-Links für Feature ID = "
+          + id );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-          "Fehler beim Zugriff auf den Zeitreihendienst für Feature ID = " + id, e );
+      return StatusUtilities.statusFromThrowable( e, "Fehler beim Zugriff auf den Zeitreihendienst für Feature ID = "
+          + id );
     }
   }
 

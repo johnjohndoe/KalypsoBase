@@ -378,13 +378,19 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     try
     {
+      final IFolder currentCalcCase = getCalcFolder();
+      final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+      final String scenarioId = nature.getScenario( currentCalcCase ).getId();
+      final Properties exportProperties = new Properties();
+      exportProperties.setProperty( "currentScenarioId", scenarioId );
+      
       // retrieve the potential targets
       final IExportTarget target = MetadocExtensions.retrieveTarget( "metadocServiceTarget" );
 
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
-      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
+      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target, exportProperties );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
 
       // just open the dialog, business is done in the dialog
