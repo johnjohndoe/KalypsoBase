@@ -47,17 +47,19 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
+import org.kalypso.template.types.LayerTypeUtilities;
 
 /**
  * @author belger
@@ -84,22 +86,17 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
   }
 
   /**
+   * @throws CoreException
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
-  public IEditorInput createInput( final IFile file )
+  public IEditorInput createInput( final IFile file ) throws CoreException
   {
     try
     {
-      final IPath projectRelativePath = file.getProjectRelativePath();
-
       // ein default template erzeugen
       final ObjectFactory factory = new ObjectFactory();
-
       final LayerType layer = factory.createFeaturetemplateTypeLayerType();
-      layer.setId( file.toString() );
-      layer.setHref( "project:/" + projectRelativePath );
-      layer.setLinktype( "gml" );
-      layer.setFeaturePath( "" ); // immer das root-feature
+      LayerTypeUtilities.initLayerType( layer, file );
 
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
@@ -111,24 +108,21 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       marshaller.marshal( featuretemplate, w );
       w.close();
 
-      final String string = w.toString();
+      final String templateXml = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( string, file.getFullPath() ) );
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbanannt>.gft", templateXml, file
+          .getFullPath() ) );
 
       return input;
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
-      e.printStackTrace();
-
-      return null;
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
-      e.printStackTrace();
-
-      return null;
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
