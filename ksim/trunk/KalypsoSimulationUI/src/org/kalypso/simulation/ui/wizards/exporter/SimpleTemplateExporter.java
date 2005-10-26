@@ -149,7 +149,7 @@ public class SimpleTemplateExporter extends AbstractExporter
 
     // create wizard page for selecting the templates
     m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, "templateSelection",
-        "Wählen Sie die Exportarten", null );
+        "Wählen Sie die Exportarten", defaultImage );
 
     return new IWizardPage[]
     { m_page };
