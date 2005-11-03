@@ -154,6 +154,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   {
     final URL urlRS = m_resolver.resolveURL( m_context, sourceHref );
     final IObservation source = ZmlFactory.parseXML( urlRS, sourceHref );
+//    final String destRef = targetHref;  
 
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
     final URL urlPG = m_resolver.resolveURL( m_context, destRef );
