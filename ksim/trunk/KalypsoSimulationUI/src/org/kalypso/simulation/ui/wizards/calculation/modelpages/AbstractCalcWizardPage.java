@@ -93,6 +93,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.help.WorkbenchHelp;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -231,12 +232,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_HTML_PATH = "htmlFilePath";
 
   /**
-   * Argument: If set, pressing the help-buttons results in a jump to this href of the eclipse help-system.
+   * Argument: If set, pressing the help-buttons results in a jump to this context of the eclipse help-system.
    * <p>
-   * The 'helpHref' argument of the wizard itself must be non null, in order to show the help button.
+   * The 'helpId' argument of the wizard itself must be non null, in order to show the help button.
    * </p>
    */
-  private static final String PROP_HELP_HREF = "helpHref";
+  private static final String PROP_HELP_ID = "helpId";
 
   /**
    * Argument: a string indicating, how the Timeseries-Table is filled with timeseries.
@@ -836,6 +837,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return featureList;
   }
 
+  /**
+   * We override setControl to set the help context-id on the control. It is the 
+   * best place since we know here which context-id to use, and subclasses
+   * must call this method with their own controls.
+   * 
+   * @see org.eclipse.jface.dialogs.DialogPage#setControl(org.eclipse.swt.widgets.Control)
+   */
+  protected void setControl( final Control newControl )
+  {
+    final String helpId = getHelpId();
+
+    // this is where we hook the help id with the given control
+    if( helpId != null )
+      WorkbenchHelp.setHelp( newControl, helpId );
+    
+    super.setControl( newControl );
+  }
+  
   protected void setObsIgnoreType( final String ignoreType )
   {
     m_ignoreType = ignoreType;
@@ -1311,10 +1330,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#getHelpHref()
+   * @see org.kalypso.simulation.ui.wizards.calculation.ICalcWizardPage#getHelpId()
    */
-  public String getHelpHref()
+  public String getHelpId()
   {
-    return getArguments().getProperty( PROP_HELP_HREF, null );
+    return getArguments().getProperty( PROP_HELP_ID, null );
   }
 }

@@ -107,7 +107,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
-
+ 
     final Composite radioPanel = new Composite( panel, SWT.NONE );
     radioPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     radioPanel.setLayout( new GridLayout() );
@@ -235,11 +235,11 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   }
   
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#getHelpHref()
+   * @see org.kalypso.simulation.ui.wizards.calculation.ICalcWizardPage#getHelpId()
    */
-  public String getHelpHref()
+  public String getHelpId()
   {
-    // TODO: give a href to the common description
+    // use default from main wizard
     return null;
   }
 }

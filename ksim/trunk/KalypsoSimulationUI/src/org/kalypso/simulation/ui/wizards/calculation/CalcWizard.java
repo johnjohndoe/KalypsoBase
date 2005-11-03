@@ -560,7 +560,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean isHelpAvailable()
   {
-    return getHelpHref() != null;
+    return getHelpId() != null;
   }
 
   /**
@@ -707,29 +707,27 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   }
 
   /**
-   * Return the help href to display, if the help button is pressed.
+   * Return the help context id to display, if the help button is pressed.
    * <p>
-   * If the page has a help href, return it
+   * If the page has a context id, return it
    * </p>
    * <p>
-   * Else, return the help href of the calcWizard.xml.
-   * </p>.
-   * 
-   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#getHelpHref()
+   * Else, return the one of the calcWizard.xml
+   * </p>
    */
-  public String getHelpHref()
+  public String getHelpId()
   {
     final IWizardPage currentPage = getContainer().getCurrentPage();
 
-    final String pageHelpHref;
+    final String pageHelpId;
     if( currentPage instanceof ICalcWizardPage )
-      pageHelpHref = ( (ICalcWizardPage)currentPage ).getHelpHref();
+      pageHelpId = ( (ICalcWizardPage)currentPage ).getHelpId();
     else
-      pageHelpHref = null;
+      pageHelpId = null;
 
-    if( pageHelpHref != null )
-      return pageHelpHref;
+    if( pageHelpId != null )
+      return pageHelpId;
 
-    return m_calcwizard == null ? null : m_calcwizard.getHelpHref();
+    return m_calcwizard == null ? null : m_calcwizard.getHelpId();
   }
 }

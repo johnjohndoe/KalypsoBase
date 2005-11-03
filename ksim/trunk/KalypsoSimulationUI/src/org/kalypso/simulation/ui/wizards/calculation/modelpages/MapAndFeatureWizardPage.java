@@ -130,6 +130,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     try
     {
       final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
+      
       createMapPanel( sashForm );
       createRightPanel( sashForm );
 
