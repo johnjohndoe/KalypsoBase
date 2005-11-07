@@ -51,6 +51,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -378,19 +379,24 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     try
     {
-      final IFolder currentCalcCase = getCalcFolder();
-      final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
-      final String scenarioId = nature.getScenario( currentCalcCase ).getId();
-      final Properties exportProperties = new Properties();
-      exportProperties.setProperty( "currentScenarioId", scenarioId );
-      
       // retrieve the potential targets
       final IExportTarget target = MetadocExtensions.retrieveTarget( "metadocServiceTarget" );
 
+      // init target with common properties
+      final Configuration mde = target.getMetadataExtensions();
+      
+      final IFolder currentCalcCase = getCalcFolder();
+      final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+      final String scenarioId = nature.getScenario( currentCalcCase ).getId();
+      mde.setProperty( "currentScenarioId", scenarioId );
+      mde.setProperty( "calcCaseName", currentCalcCase.getName() );
+      mde.setProperty( "calcCaseDescription", nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
+      mde.setProperty( "projectName", currentCalcCase.getProject().getName() );
+      
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
-      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target, exportProperties );
+      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
 
       // just open the dialog, business is done in the dialog
@@ -431,7 +437,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     final Arguments arguments = getArguments();
     final ISupplierCreator creator = new ISupplierCreator()
     {
-
       public ISupplier createSupplier( final Arguments args )
       {
         return new ExporterSupplier( args );

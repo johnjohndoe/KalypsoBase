@@ -940,14 +940,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IScenario getScenario( final IFolder calcCase ) throws CoreException
   {
-    // load .calculation
-    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
-    final Feature rootFeature = workspace.getRootFeature();
-
-    final FindPropertyByNameVisitor startsimFinder = new FindPropertyByNameVisitor( "scenarioId" );
-    workspace.accept( startsimFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
-
-    final Object result = startsimFinder.getResult();
+    final Object result = loadCalculationAndReadProperty( calcCase, "scenarioId" );
     final String scenarioId = result == null ? "" : result.toString();
 
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
@@ -955,5 +948,25 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       return Scenario.DEFAULT_SCENARIO;
 
     return scenario;
+  }
+
+  /**
+   * Load the calculation and read the value for the given property
+   * 
+   * @param calcCase
+   * @param propertyName name of the property to read value for
+   * @return value of the property to read
+   */
+  public Object loadCalculationAndReadProperty( final IFolder calcCase, final String propertyName ) throws CoreException
+  {
+    // load .calculation
+    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
+    final Feature rootFeature = workspace.getRootFeature();
+
+    final FindPropertyByNameVisitor vis = new FindPropertyByNameVisitor( propertyName );
+    workspace.accept( vis, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+
+    final Object result = vis.getResult();
+    return result;
   }
 }
