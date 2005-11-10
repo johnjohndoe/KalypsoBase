@@ -127,6 +127,7 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizardHelper;
@@ -630,10 +631,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // each time, we apply the template, so we can switch between ignore types
       m_tableView.setIgnoreTypes( getIgnoreTypes() );
 
-      /* final IStatus stati = */TableViewUtils.applyXMLTemplate( m_tableView, m_tableTemplate, getContext(), false,
+      final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableView, m_tableTemplate, getContext(), false,
           null );
-      //        if( !stati.isOK() )
-      //          throw new CoreException( stati );
+      if( !stati.isOK() )
+        KalypsoSimulationUIPlugin.getDefault().getLog().log( stati );
 
       // set alphasort flag according to template (NOTE: might be overriden by
       // argument value of the calcwizard)
