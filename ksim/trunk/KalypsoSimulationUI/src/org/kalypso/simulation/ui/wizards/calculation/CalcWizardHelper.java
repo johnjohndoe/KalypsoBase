@@ -92,17 +92,17 @@ public class CalcWizardHelper
    * Updates the diagram template for the given TimeserieFeatureProps and features
    */
   public static void updateZMLView( final ObsView view, final TSLinkWithName[] links, final URL context,
-      final boolean ignoreExceptions, final String ignoreType )
+      final boolean ignoreExceptions, final String[] ignoreTypes )
   {
     view.removeAllItems();
 
-    final String[] ignoreTypes = ignoreType == null ? new String[0] : ignoreType.split( ";" );
-    
+    view.setIgnoreTypes( ignoreTypes );
+
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      view.loadObservation( context, link.href, ignoreExceptions, ignoreTypes, link.name, new ObsView.ItemData( true,
-          link.color, link.stroke ) );
+      view.loadObservation( context, link.href, ignoreExceptions, link.name, new ObsView.ItemData( true, link.color,
+          link.stroke ) );
     }
   }
 }

@@ -342,7 +342,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private Frame m_tableFrame = null;
 
-  private TableView m_tableTemplate = null;
+  private TableView m_tableView = null;
+
+  private ObstableviewType m_tableTemplate = null;
 
   private ObservationTable m_table = null;
 
@@ -394,8 +396,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( m_table != null )
       m_table.dispose();
 
-    if( m_tableTemplate != null )
-      m_tableTemplate.dispose();
+    if( m_tableView != null )
+      m_tableView.dispose();
 
     if( m_obsChart != null )
       m_obsChart.dispose();
@@ -623,8 +625,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public void refreshZMLTable()
   {
-    if( "template".equals( m_showZmlTable ) )
+    if( "template".equals( m_showZmlTable ) && m_tableTemplate != null )
+    {
+      // each time, we apply the template, so we can switch between ignore types
+      m_tableView.setIgnoreTypes( getIgnoreTypes() );
+
+      /* final IStatus stati = */TableViewUtils.applyXMLTemplate( m_tableView, m_tableTemplate, getContext(), false,
+          null );
+      //        if( !stati.isOK() )
+      //          throw new CoreException( stati );
+
+      // set alphasort flag according to template (NOTE: might be overriden by
+      // argument value of the calcwizard)
+      m_table.setAlphaSortActivated( m_tableView.isAlphaSort() );
+
       return;
+    }
 
     final TSLinkWithName[] links = getObservations( "selected".equalsIgnoreCase( m_showZmlTable ) );
     refreshZmlTableForContext( links, getContext() );
@@ -633,13 +649,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void refreshDiagramForContext( final TSLinkWithName[] links, final URL context )
   {
     if( m_diagView != null )
-      CalcWizardHelper.updateZMLView( m_diagView, links, context, true, m_ignoreType );
+      CalcWizardHelper.updateZMLView( m_diagView, links, context, true, getIgnoreTypes() );
   }
 
   protected void refreshZmlTableForContext( final TSLinkWithName[] links, final URL context )
   {
-    if( m_tableTemplate != null )
-      CalcWizardHelper.updateZMLView( m_tableTemplate, links, context, true, m_ignoreType );
+    if( m_tableView != null )
+      CalcWizardHelper.updateZMLView( m_tableView, links, context, true, getIgnoreTypes() );
   }
 
   protected Control initFeatureTable( final Composite parent )
@@ -674,7 +690,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       m_showZmlTable = m_arguments.getProperty( PROP_ZMLTABLE_SHOW, "selected" );
-      ObstableviewType obsTemplate = null;
+
       if( "template".equalsIgnoreCase( m_showZmlTable ) )
       {
         final String templateFileName = m_arguments.getProperty( PROP_ZMLTABLE_TEMPLATE, null );
@@ -688,22 +704,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               + templateFileName ) );
 
         final InputStream templateStream = templateFile.getContents();
-        obsTemplate = TableViewUtils.loadTableTemplateXML( templateStream );
+        m_tableTemplate = TableViewUtils.loadTableTemplateXML( templateStream );
         templateStream.close();
       }
 
-      m_tableTemplate = new TableView();
-      if( obsTemplate != null )
-      {
-        final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableTemplate, obsTemplate, getContext(), false, null );
-        if( !stati.isOK() )
-          throw new CoreException( stati );
+      m_tableView = new TableView();
 
-        // set alphasort flag according to template (NOTE: might be overriden by
-        // argument value of the calcwizard)
-        m_table.setAlphaSortActivated( m_tableTemplate.isAlphaSort() );
-      }
-      m_table = new ObservationTable( m_tableTemplate );
+      m_table = new ObservationTable( m_tableView );
 
       final String threshold = m_arguments.getProperty( PROP_ZMLTABLE_THRESHOLD_RESIZEOFF, null );
       if( threshold != null )
@@ -838,9 +845,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * We override setControl to set the help context-id on the control. It is the 
-   * best place since we know here which context-id to use, and subclasses
-   * must call this method with their own controls.
+   * We override setControl to set the help context-id on the control. It is the best place since we know here which
+   * context-id to use, and subclasses must call this method with their own controls.
    * 
    * @see org.eclipse.jface.dialogs.DialogPage#setControl(org.eclipse.swt.widgets.Control)
    */
@@ -851,10 +857,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // this is where we hook the help id with the given control
     if( helpId != null )
       WorkbenchHelp.setHelp( newControl, helpId );
-    
+
     super.setControl( newControl );
   }
-  
+
   protected void setObsIgnoreType( final String ignoreType )
   {
     m_ignoreType = ignoreType;
@@ -942,7 +948,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( m_table == null )
       return;
 
-    TableViewUtils.saveDirtyObservations( Arrays.asList( m_tableTemplate.getItems() ), monitor );
+    TableViewUtils.saveDirtyObservations( Arrays.asList( m_tableView.getItems() ), monitor );
   }
 
   /**
@@ -1335,5 +1341,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public String getHelpId()
   {
     return getArguments().getProperty( PROP_HELP_ID, null );
+  }
+
+  private final String[] getIgnoreTypes()
+  {
+    return m_ignoreType == null ? new String[0] : m_ignoreType.split( ";" );
   }
 }
