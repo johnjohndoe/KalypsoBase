@@ -49,7 +49,7 @@ import java.util.Map;
 
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 
 public final class ColumnSpec implements Comparable
 {
@@ -109,7 +109,7 @@ public final class ColumnSpec implements Comparable
       content = obs.getMetadataList().getProperty( key, "" );
     }
 
-    return NameUtils.replaceTokens( content, obs, null );
+    return ObsViewUtils.replaceTokens( content, obs, null );
   }
 
   public String toString()
