@@ -88,17 +88,15 @@ public class SimpleTemplateExporter extends AbstractExporter
   private ArrayChooserPage m_page;
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
-   *      org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration,
-      final Configuration metadataExtensions ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     final List objects = new ArrayList();
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( (UrlArgument)templates[i], objects, metadataExtensions );
+      createExportableObjectsWith( (UrlArgument)templates[i], objects );
 
     return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
   }
@@ -106,8 +104,7 @@ public class SimpleTemplateExporter extends AbstractExporter
   /**
    * Loads the corresponding template and makes an exportable object out of it.
    */
-  private void createExportableObjectsWith( final UrlArgument item, final List objects,
-      final Configuration metadataExtensions ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
@@ -120,8 +117,10 @@ public class SimpleTemplateExporter extends AbstractExporter
       // the name of the document to create is specified in the arguments
       final String name = item.getProperty( "documentName" );
 
+      final String idPrefix = getClass().getName() + templateUrl.getFile();
+
       final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-          metadataExtensions );
+          idPrefix );
 
       objects.add( exportable );
     }
@@ -137,9 +136,11 @@ public class SimpleTemplateExporter extends AbstractExporter
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+      throws CoreException
   {
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
     final URL context = (URL)getFromSupplier( "context" );

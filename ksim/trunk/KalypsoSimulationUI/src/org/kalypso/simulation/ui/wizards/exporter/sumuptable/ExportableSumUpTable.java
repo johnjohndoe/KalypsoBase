@@ -78,13 +78,13 @@ public final class ExportableSumUpTable implements IExportableObject
 {
   private final Arguments m_args;
   private final URL m_context;
-  private final Configuration m_metadataExtensions;
+  private final String m_identifierPrefix;
 
-  public ExportableSumUpTable( final Arguments args, final URL context, final Configuration metadataExtensions )
+  public ExportableSumUpTable( final Arguments args, final URL context, final String identifierPrefix )
   {
     m_args = args;
     m_context = context;
-    m_metadataExtensions = metadataExtensions;
+    m_identifierPrefix = identifierPrefix;
   }
 
   /**
@@ -96,10 +96,9 @@ public final class ExportableSumUpTable implements IExportableObject
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream, org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
@@ -134,7 +133,7 @@ public final class ExportableSumUpTable implements IExportableObject
           obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
 
           // tricky: let the metadata be extended by the information we have
-          MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, obses[i]);
+          MetadataExtenderWithObservation.extendMetadata( metadataExtensions, obses[i]);
           
           final IStatus status = table.addObservation( items[i], obses[i] );
           stati.add( status );
@@ -200,5 +199,13 @@ public final class ExportableSumUpTable implements IExportableObject
     {
       IOUtils.closeQuietly( writer );
     }
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_identifierPrefix + getPreferredDocumentName();
   }
 }

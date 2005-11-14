@@ -51,7 +51,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -383,15 +382,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final IExportTarget target = MetadocExtensions.retrieveTarget( "metadocServiceTarget" );
 
       // init target with common properties
-      final Configuration mde = target.getMetadataExtensions();
-      
       final IFolder currentCalcCase = getCalcFolder();
       final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
       final String scenarioId = nature.getScenario( currentCalcCase ).getId();
-      mde.setProperty( "currentScenarioId", scenarioId );
-      mde.setProperty( "calcCaseName", currentCalcCase.getName() );
-      mde.setProperty( "calcCaseDescription", nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
-      mde.setProperty( "projectName", currentCalcCase.getProject().getName() );
+      target.setProperty( "currentScenarioId", scenarioId );
+      target.setProperty( "calcCaseName", currentCalcCase.getName() );
+      target.setProperty( "calcCaseDescription", (String)nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
+      target.setProperty( "projectName", currentCalcCase.getProject().getName() );
       
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();

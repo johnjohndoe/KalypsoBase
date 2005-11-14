@@ -216,10 +216,12 @@ public final class ExporterHelper
    *          url of the template being used
    * @param metadataExtensions
    *          can be update from this export with information from observations
+   * @param identifierPrefix
+   *          prefix of the identifier of the exportable object
    */
   public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions )
+      final Configuration metadataExtensions, final String identifierPrefix )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -238,12 +240,13 @@ public final class ExporterHelper
 
       // tricky: let the metadata be extended by the information we have
       MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
-      
+
       final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height, metadataExtensions ).exportObject( output, monitor );
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix )
+          .exportObject( output, monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
       { status, status2 }, "Fehler während der Export der Diagrammvorlage: " + templateUrl.getFile() );
@@ -277,10 +280,12 @@ public final class ExporterHelper
    *          url of the template being used
    * @param metadataExtensions
    *          can be update from this export with information from observations
+   * @param identifierPrefix
+   *          prefix of the identifier of the exportable object
    */
   public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions )
+      final Configuration metadataExtensions, final String identifierPrefix )
   {
     if( arguments == null )
     {
@@ -296,14 +301,15 @@ public final class ExporterHelper
       final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader );
 
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
-      
+
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
-      
+
       // tricky: let the metadata be extended by the information we have
       MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
 
-      final IStatus status2 = new ExportableObservationTable( table, metadataExtensions ).exportObject( output, monitor );
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix )
+          .exportObject( output, monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
       { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );

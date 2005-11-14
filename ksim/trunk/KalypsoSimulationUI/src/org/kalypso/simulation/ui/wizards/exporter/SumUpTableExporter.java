@@ -70,7 +70,9 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
  * <p>
  * Arguments (minimal) specification:
  * <ul>
- * <li>documentName [optional, default is 'übersicht.cvs'] the name of the created document
+ * <li>documentName [optional, default is 'übersicht.cvs'] the name of the created document. If more than one
+ * SumpUpTableexporter is configured, then documentName should be provided. It is required to give another documentName
+ * for each configured SumUpTableExporter.
  * <li>separator [optional, default is semicolon] the separator to use for output
  * <li>charset [optional, uses the system default charset when no specified] the charset used for the created document
  * <li>axisType the axis type (as found in TimeserieConstants for instance) of the axis to export
@@ -140,24 +142,24 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
 public class SumUpTableExporter extends AbstractExporter
 {
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
-   *      org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration,
-      final Configuration metadataExtensions ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
     final URL context = (URL)getFromSupplier( "context" );
 
     return new IExportableObject[]
-    { new ExportableSumUpTable( arguments, context, metadataExtensions ) };
+    { new ExportableSumUpTable( arguments, context, getClass().getName() ) };
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      org.eclipse.jface.resource.ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration,
+      final ImageDescriptor defaultImage ) throws CoreException
   {
     return new IWizardPage[0];
   }

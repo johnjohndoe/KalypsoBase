@@ -85,16 +85,16 @@ public class ExportableTemplateObject implements IExportableObject
   private final Properties m_replaceTokens;
 
   private final int m_exportType;
-  private final Configuration m_metadataExtensions;
+  private final String m_identifierPrefix;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Configuration metadataExtensions )
+      final URL templateUrl, final String identifierPrefix )
   {
-    this( arguments, context, documentName, templateUrl, null, metadataExtensions );
+    this( arguments, context, documentName, templateUrl, null, identifierPrefix );
   }
 
   /**
@@ -108,14 +108,14 @@ public class ExportableTemplateObject implements IExportableObject
    *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Properties replaceTokens, final Configuration metadataExtensions )
+      final URL templateUrl, final Properties replaceTokens, final String identifierPrefix )
   {
     m_arguments = arguments;
     m_context = context;
     m_templateUrl = templateUrl;
     m_documentName = documentName;
     m_replaceTokens = replaceTokens;
-    m_metadataExtensions = metadataExtensions;
+    m_identifierPrefix = identifierPrefix;
 
     final String strUrl = m_templateUrl.toExternalForm();
     if( strUrl.endsWith( "odt" ) )
@@ -141,7 +141,7 @@ public class ExportableTemplateObject implements IExportableObject
     }
   }
 
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     Reader reader = null;
     try
@@ -156,11 +156,11 @@ public class ExportableTemplateObject implements IExportableObject
       {
         case EXPORT_TYPE_DIAGRAM:
           return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, m_metadataExtensions );
+              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier() );
 
         case EXPORT_TYPE_TABLE:
           return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, m_metadataExtensions );
+              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier() );
       }
 
       // should never come here
@@ -176,5 +176,13 @@ public class ExportableTemplateObject implements IExportableObject
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_identifierPrefix + getPreferredDocumentName();
   }
 }
