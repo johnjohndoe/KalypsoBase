@@ -167,7 +167,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     {
       final StringBuffer selection = new StringBuffer();
 
-      final List<Object> checked = m_checkedElements == null ? new ArrayList() : Arrays
+      final List<Object> checked = m_checkedElements == null ? new ArrayList<Object>() : Arrays
           .asList( m_checkedElements );
 
       for( final Object element : m_content )
