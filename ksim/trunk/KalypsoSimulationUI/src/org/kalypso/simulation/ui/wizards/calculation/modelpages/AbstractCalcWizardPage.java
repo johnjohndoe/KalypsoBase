@@ -94,7 +94,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
@@ -122,6 +121,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
@@ -578,31 +578,25 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final String showLegendString = getArguments().getProperty( PROP_DIAG_SHOW_LEGEND, "true" );
       final boolean showLegend = Boolean.valueOf( showLegendString ).booleanValue();
 
-      // actually creates the template
-      m_diagView = new DiagView( true );
-
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
-
-      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
-      m_diagFrame = SWT_AWT.new_Frame( composite );
-      m_diagFrame.setVisible( true );
-
+      
+      // actually creates the template
+      m_diagView = new DiagView( true );
       m_diagView.setShowLegend( showLegend );
+
       m_obsChart = new ObservationChart( m_diagView );
       m_obsChart.setBackgroundPaint( Color.WHITE );
 
-      // chart panel without any popup menu
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
-      chartPanel.setMouseZoomable( true, false );
-
+      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+      m_diagFrame = SWT_AWT.new_Frame( composite );
+      
+      m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
       m_diagFrame.setVisible( true );
-      chartPanel.setVisible( true );
-      m_diagFrame.add( chartPanel );
 
       return composite;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
