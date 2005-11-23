@@ -73,8 +73,7 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 
 /**
- * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2
- * Sekunden aktualisiert.
+ * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
  * 
  * @author belger
  */
@@ -173,8 +172,20 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
           final IPoolListener[] listeners = info.getListeners();
 
+          LabelProvider labelProvider = new LabelProvider()
+          {
+            /**
+             * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+             */
+            public String getText( Object element )
+            {
+              if( element != null )
+                return super.getText( element ) + " (" + element.getClass().getName() + ")";
+              return super.getText( element );
+            }
+          };
           final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(),
-              listeners, new ArrayContentProvider(), new LabelProvider(), "Listeners for KeyInfo: " + info );
+              listeners, new ArrayContentProvider(), labelProvider, "Listeners for KeyInfo: " + info );
           dialog.open();
         }
       }
