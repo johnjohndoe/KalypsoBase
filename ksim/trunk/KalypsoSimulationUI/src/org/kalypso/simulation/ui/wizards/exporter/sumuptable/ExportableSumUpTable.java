@@ -96,9 +96,11 @@ public final class ExportableSumUpTable implements IExportableObject
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream, org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
@@ -113,7 +115,7 @@ public final class ExportableSumUpTable implements IExportableObject
     final NumberFormat nf = TimeserieUtils.getNumberFormatFor( axisType );
 
     Writer writer = null;
-    
+
     try
     {
       // create model
@@ -133,14 +135,15 @@ public final class ExportableSumUpTable implements IExportableObject
           obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
 
           // tricky: let the metadata be extended by the information we have
-          MetadataExtenderWithObservation.extendMetadata( metadataExtensions, obses[i]);
-          
+          MetadataExtenderWithObservation.extendMetadata( metadataExtensions, obses[i] );
+
           final IStatus status = table.addObservation( items[i], obses[i] );
           stati.add( status );
         }
         catch( final SensorException e )
         {
-          stati.add( StatusUtilities.createStatus( IStatus.WARNING , "Zeitreihe existiert nicht oder ist fehlerhaft: " + items[i].getUrl(), e) );
+          stati.add( StatusUtilities.createStatus( IStatus.WARNING, "Zeitreihe existiert nicht oder ist fehlerhaft: "
+              + items[i].getUrl(), e ) );
         }
       }
 
@@ -207,5 +210,20 @@ public final class ExportableSumUpTable implements IExportableObject
   public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
+  }
+
+  /**
+   * The category can be specified in the arguments. The argument named "category" is used, but is optional. If it is
+   * not provided, the value of the argument "name" is used. If no value could be found, "unbekannt" is returned.
+   * 
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    String category = m_args.getProperty( "category" );
+    if( category == null )
+      category = m_args.getProperty( "name", "unbekannt" );
+
+    return category;
   }
 }

@@ -218,10 +218,12 @@ public final class ExporterHelper
    *          can be update from this export with information from observations
    * @param identifierPrefix
    *          prefix of the identifier of the exportable object
+   * @param category
+   *          the category of the exportable object
    */
   public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix )
+      final Configuration metadataExtensions, final String identifierPrefix, final String category )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -245,7 +247,7 @@ public final class ExporterHelper
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix )
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category )
           .exportObject( output, monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
@@ -282,10 +284,12 @@ public final class ExporterHelper
    *          can be update from this export with information from observations
    * @param identifierPrefix
    *          prefix of the identifier of the exportable object
+   * @param category
+   *          the category of the exportable object
    */
   public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix )
+      final Configuration metadataExtensions, final String identifierPrefix, final String category )
   {
     if( arguments == null )
     {
@@ -308,8 +312,8 @@ public final class ExporterHelper
       // tricky: let the metadata be extended by the information we have
       MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
 
-      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix )
-          .exportObject( output, monitor, metadataExtensions );
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output,
+          monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
       { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );

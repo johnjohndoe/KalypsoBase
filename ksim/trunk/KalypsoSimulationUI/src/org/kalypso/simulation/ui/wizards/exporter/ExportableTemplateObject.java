@@ -141,7 +141,8 @@ public class ExportableTemplateObject implements IExportableObject
     }
   }
 
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     Reader reader = null;
     try
@@ -156,11 +157,11 @@ public class ExportableTemplateObject implements IExportableObject
       {
         case EXPORT_TYPE_DIAGRAM:
           return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier() );
+              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
 
         case EXPORT_TYPE_TABLE:
           return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier() );
+              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
       }
 
       // should never come here
@@ -184,5 +185,21 @@ public class ExportableTemplateObject implements IExportableObject
   public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
+  }
+
+  /**
+   * The category of an ExportableTemplateObject can be specified in the arguments of its configuration. The argument
+   * named "category" is used, but is optional. If it is not provided, the value of the argument "label" is used. If no
+   * value could be found, "unbekannt" is returned.
+   * 
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    String category = m_arguments.getProperty( "category" );
+    if( category == null )
+      category = m_arguments.getProperty( "label", "unbekannt" );
+
+    return category;
   }
 }

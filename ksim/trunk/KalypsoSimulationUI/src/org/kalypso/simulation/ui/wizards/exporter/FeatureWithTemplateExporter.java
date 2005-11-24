@@ -82,10 +82,17 @@ import org.kalypsodeegree.model.feature.Feature;
  &lt;/arg&gt;
  &lt;arg name="templateDiagQ"&gt;
  &lt;arg name="label" value="Abfluﬂgrafik" /&gt; 
+ &lt;arg name="category" value="Abfluﬂgrafik" /&gt;
  &lt;arg name="templateFile" value="project:/.templates/calcCase/berichtDiagQ.odt" /&gt; 
  &lt;/arg&gt;
  &lt;/arg&gt;
  * </pre>
+ * 
+ * <p>
+ * The argument "category" is optional and can be defined for each template. It defines the category of the
+ * ExportableObject that can be created based on the given template. If it is not specified, then the category defaults
+ * to the value of the "label" argument.
+ * </p>
  * 
  * <p>
  * This exporter has two wizard pages:
