@@ -67,7 +67,7 @@ public class Scenario implements IScenario
    */
   public String getName()
   {
-    return getProperty( IScenario.PROP_NAME, "" );
+    return getProperty( IScenario.PROP_NAME, "-unbekannt-" );
   }
 
   /**
