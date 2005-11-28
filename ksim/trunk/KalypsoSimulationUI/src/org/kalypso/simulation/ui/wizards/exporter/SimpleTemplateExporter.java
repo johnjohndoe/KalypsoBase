@@ -110,6 +110,11 @@ public class SimpleTemplateExporter extends AbstractExporter
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
     final URL context = (URL)getFromSupplier( "context" );
 
+    // category is specified in the sub-arguments of the exporter, actually the ones in item
+    String category = item.getProperty( "category" );
+    if( category == null )
+      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
+  
     try
     {
       final URL templateUrl = item.getUrl();
@@ -120,7 +125,7 @@ public class SimpleTemplateExporter extends AbstractExporter
       final String idPrefix = getClass().getName() + templateUrl.getFile();
 
       final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-          idPrefix );
+          idPrefix, category );
 
       objects.add( exportable );
     }

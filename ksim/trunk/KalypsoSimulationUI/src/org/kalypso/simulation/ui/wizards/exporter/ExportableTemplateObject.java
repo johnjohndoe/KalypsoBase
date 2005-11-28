@@ -86,15 +86,16 @@ public class ExportableTemplateObject implements IExportableObject
 
   private final int m_exportType;
   private final String m_identifierPrefix;
+  private final String m_category;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final String identifierPrefix )
+      final URL templateUrl, final String identifierPrefix, final String category )
   {
-    this( arguments, context, documentName, templateUrl, null, identifierPrefix );
+    this( arguments, context, documentName, templateUrl, null, identifierPrefix, category );
   }
 
   /**
@@ -106,9 +107,10 @@ public class ExportableTemplateObject implements IExportableObject
    * @param replaceTokens
    *          tokens used to replace elements of the template file that relate to values of specific gml-feature
    *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
+   * @param category the category of the document resulting from the export of this object
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Properties replaceTokens, final String identifierPrefix )
+      final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
   {
     m_arguments = arguments;
     m_context = context;
@@ -116,6 +118,7 @@ public class ExportableTemplateObject implements IExportableObject
     m_documentName = documentName;
     m_replaceTokens = replaceTokens;
     m_identifierPrefix = identifierPrefix;
+    m_category = category;
 
     final String strUrl = m_templateUrl.toExternalForm();
     if( strUrl.endsWith( "odt" ) )
@@ -196,10 +199,6 @@ public class ExportableTemplateObject implements IExportableObject
    */
   public String getCategory()
   {
-    String category = m_arguments.getProperty( "category" );
-    if( category == null )
-      category = m_arguments.getProperty( "label", "unbekannt" );
-
-    return category;
+    return m_category;
   }
 }

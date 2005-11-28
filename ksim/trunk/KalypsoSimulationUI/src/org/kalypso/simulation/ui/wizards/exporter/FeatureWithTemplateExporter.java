@@ -154,6 +154,11 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
     // from arguments
     final Arguments tokens = arguments.getArguments( "tokens" );
 
+    // category is specified in the sub-arguments of the exporter, actually the ones in item
+    String category = item.getProperty( "category" );
+    if( category == null )
+      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
+    
     final Feature[] features = getSelectedFeatures();
     for( int i = 0; i < features.length; i++ )
     {
@@ -172,7 +177,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
         final String id = getClass().getName() + templateUrl.getFile();
 
         final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-            replacetokens, id );
+            replacetokens, id, category );
 
         objects.add( exportable );
       }

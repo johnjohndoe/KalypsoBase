@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -389,6 +390,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       target.setProperty( "calcCaseName", currentCalcCase.getName() );
       target.setProperty( "calcCaseDescription", (String)nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
       target.setProperty( "projectName", currentCalcCase.getProject().getName() );
+      target.setProperty( "autor", KalypsoAuthPlugin.getDefault().getCurrentUser().getUserName() );
       
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();

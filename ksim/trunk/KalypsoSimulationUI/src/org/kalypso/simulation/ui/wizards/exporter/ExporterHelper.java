@@ -63,7 +63,6 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
-import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -240,9 +239,6 @@ public final class ExporterHelper
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      // tricky: let the metadata be extended by the information we have
-      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
-
       final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
@@ -308,9 +304,6 @@ public final class ExporterHelper
 
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
-
-      // tricky: let the metadata be extended by the information we have
-      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, tpl.getItems() );
 
       final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output,
           monitor, metadataExtensions );

@@ -62,7 +62,6 @@ import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -133,9 +132,6 @@ public final class ExportableSumUpTable implements IExportableObject
         try
         {
           obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
-
-          // tricky: let the metadata be extended by the information we have
-          MetadataExtenderWithObservation.extendMetadata( metadataExtensions, obses[i] );
 
           final IStatus status = table.addObservation( items[i], obses[i] );
           stati.add( status );
