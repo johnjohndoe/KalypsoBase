@@ -41,9 +41,9 @@
 
 package org.kalypso.simulation.ui.wizards.exporter.sumuptable;
 
+import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -113,7 +113,7 @@ public final class ExportableSumUpTable implements IExportableObject
     final DateFormat df = new SimpleDateFormat( dateFormat );
     final NumberFormat nf = TimeserieUtils.getNumberFormatFor( axisType );
 
-    Writer writer = null;
+    BufferedWriter writer = null;
 
     try
     {
@@ -146,7 +146,7 @@ public final class ExportableSumUpTable implements IExportableObject
       // fetch flexible columns specifications
       final ColumnSpec[] cols = ColumnSpec.getColumns( m_args );
 
-      writer = new OutputStreamWriter( output, charset );
+      writer = new BufferedWriter( new OutputStreamWriter( output, charset ) );
 
       // output header (flexible columns)
       for( int i = 0; i < cols.length; i++ )
@@ -158,7 +158,7 @@ public final class ExportableSumUpTable implements IExportableObject
       // output header (fix columns)
       final Date[] dates = table.writeHeader( writer, sep, df );
 
-      writer.write( "\n" );
+      writer.newLine();
 
       // output rows
       for( int i = 0; i < items.length; i++ )
@@ -177,7 +177,7 @@ public final class ExportableSumUpTable implements IExportableObject
         // for model
         table.writeRow( items[i], writer, sep, df, nf, dates );
 
-        writer.write( "\n" );
+        writer.newLine();
       }
 
       table.dispose();
