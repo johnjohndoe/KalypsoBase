@@ -110,6 +110,8 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.RestoreSelectionHelper;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -141,6 +143,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -580,7 +583,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
-      
+
       // actually creates the template
       m_diagView = new DiagView( true );
       m_diagView.setShowLegend( showLegend );
@@ -590,7 +593,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
-      
+
       m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
       m_diagFrame.setVisible( true );
 
@@ -625,8 +628,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // each time, we apply the template, so we can switch between ignore types
       m_tableView.setIgnoreTypes( getIgnoreTypes() );
 
-      final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableView, m_tableTemplate, getContext(), false,
-          null );
+      final IStatus stati = TableViewUtils.applyXMLTemplate( m_tableView, m_tableTemplate, getContext(), false, null );
       if( !stati.isOK() )
         KalypsoSimulationUIPlugin.getDefault().getLog().log( stati );
 
@@ -657,8 +659,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
+      final IFeatureChangeListener fcl = new IFeatureChangeListener()
+      {
+        public void featureChanged( final FeatureChange change )
+        {
+        // do nothing in wizard modus
+        }
+
+        public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+        {
+        // do nothing in wizard modus
+        }
+      };
       m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), m_selectionManager );
+          .createFeatureTypeCellEditorFactory(), m_selectionManager, fcl );
 
       final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
       if( templateFileName != null )

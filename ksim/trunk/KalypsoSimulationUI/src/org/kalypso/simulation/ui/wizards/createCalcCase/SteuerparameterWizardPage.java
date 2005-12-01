@@ -74,6 +74,7 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -107,14 +108,14 @@ public class SteuerparameterWizardPage extends WizardPage
     m_canGoBack = canGoBack;
 
     final Collection changes = m_changes;
-    m_featureComposite.addChangeListener(new IFeatureChangeListener() {
+    m_featureComposite.addChangeListener( new IFeatureChangeListener() {
 
       public void featureChanged( final FeatureChange change )
       {
         changes.add( change );
       }
 
-      public void openFeatureRequested( Feature feature )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
         // TODO:
       }});
