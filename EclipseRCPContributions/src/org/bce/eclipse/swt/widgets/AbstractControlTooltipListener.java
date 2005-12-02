@@ -68,11 +68,14 @@ public abstract class AbstractControlTooltipListener implements Listener
 
   protected final Shell m_shell;
 
+  private final boolean m_isAlwaysVisible;
+
   protected String m_orgTooltip = null;
 
-  public AbstractControlTooltipListener( final Shell shell )
+  protected AbstractControlTooltipListener( final Shell shell, final boolean alwaysVisible )
   {
     m_shell = shell;
+    m_isAlwaysVisible = alwaysVisible;
 
     m_controlListener = new Listener()
     {
@@ -80,24 +83,15 @@ public abstract class AbstractControlTooltipListener implements Listener
       {
         switch( event.type )
         {
-          // case SWT.MouseDown:
-          // final Event e = new Event();
-          // e.item = (TableItem)label.getData( "_TABLEITEM" );
-          //
-          // // Assuming table is single select, set the selection as if
-          // // the mouse down event went through to the table
-          // table.setSelection( new TableItem[]
-          // { (TableItem)e.item } );
-          // table.notifyListeners( SWT.Selection, e );
-
-          // fall through
           case SWT.MouseExit:
+          // fall through
           case SWT.MouseMove:
             if( event.widget instanceof Control )
             {
               final Control control = (Control)event.widget;
-              control.removeListener( event.type, this );
-              (control).setToolTipText( m_orgTooltip );
+              control.removeListener( SWT.MouseMove, this );
+              control.removeListener( SWT.MouseExit, this );
+              control.setToolTipText( m_orgTooltip );
             }
             break;
         }
@@ -117,18 +111,32 @@ public abstract class AbstractControlTooltipListener implements Listener
       {
         case SWT.Dispose:
         case SWT.KeyDown:
-        case SWT.MouseMove:
           break;
-          
+
+        case SWT.MouseMove:
+          if( !m_isAlwaysVisible )
+            break;
+
         case SWT.MouseHover:
         {
           final String tooltip = getTooltipForEvent( event );
+          final String toolTipText = control.getToolTipText();
+
           if( tooltip != null )
           {
-            m_orgTooltip = control.getToolTipText();
-            control.setToolTipText( tooltip );
+            if( !tooltip.equals( toolTipText ) )
+            {
+              control.setToolTipText( tooltip );
+              m_orgTooltip = control.getToolTipText();
+            }
+
             control.addListener( SWT.MouseMove, m_controlListener );
             control.addListener( SWT.MouseExit, m_controlListener );
+          }
+          else
+          {
+            control.setToolTipText( m_orgTooltip );
+            m_orgTooltip = null;
           }
         }
       }

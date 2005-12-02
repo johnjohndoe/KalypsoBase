@@ -10,18 +10,19 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class TableViewerTooltipListener extends AbstractControlTooltipListener
 {
-  /** Creates the listener and hooks it to the table. */
-  public final static void hookControl( final TableViewer viewer )
+  /** Creates the listener and hooks it to the table. 
+   * @param alwaysVisible */
+  public final static void hookViewer( final TableViewer viewer, final boolean alwaysVisible )
   {
-    final AbstractControlTooltipListener tableListener = new TableViewerTooltipListener( viewer );
+    final AbstractControlTooltipListener tableListener = new TableViewerTooltipListener( viewer, alwaysVisible );
     hookListener( viewer.getControl(), tableListener );
   }
 
   private final TableViewer m_viewer;
 
-  public TableViewerTooltipListener( final TableViewer viewer )
+  private TableViewerTooltipListener( final TableViewer viewer, final boolean alwaysVisible )
   {
-    super( viewer.getControl().getShell() );
+    super( viewer.getControl().getShell(), alwaysVisible );
     m_viewer = viewer;
   }
 
