@@ -821,20 +821,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-    case SELECT_FROM_MAPVIEW:
-      final IMapModell mapModell = getMapModell();
-      if( mapModell == null )
-        return FeatureFactory.createFeatureList( null, null );
-      activeTheme = mapModell.getActiveTheme();
-      break;
-    case SELECT_FROM_TABLEVIEW:
-      activeTheme = m_gisTableViewer.getTheme();
-      break;
-    case SELECT_FROM_FEATUREVIEW:
-      activeTheme = null;
-      break;
-    default:
-      activeTheme = null;
+      case SELECT_FROM_MAPVIEW:
+        final IMapModell mapModell = getMapModell();
+        if( mapModell == null )
+          return FeatureFactory.createFeatureList( null, null );
+        activeTheme = mapModell.getActiveTheme();
+        break;
+      case SELECT_FROM_TABLEVIEW:
+        activeTheme = m_gisTableViewer.getTheme();
+        break;
+      case SELECT_FROM_FEATUREVIEW:
+        activeTheme = null;
+        break;
+      default:
+        activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
@@ -1173,6 +1173,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( refreshDiagramHack )
           refreshDiagram();
 
+        // timing problem: manschmal wird die Tabelle doch nicht aktualisiert
         if( !"selected".equalsIgnoreCase( showZmlTable ) || refreshDiagramHack )
           refreshZMLTable();
 
