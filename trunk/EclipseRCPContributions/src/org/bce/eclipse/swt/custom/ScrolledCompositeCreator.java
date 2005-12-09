@@ -90,13 +90,23 @@ public abstract class ScrolledCompositeCreator
     final Rectangle clientArea = m_scrolledComposite.getClientArea();
     final int psizex = clientArea.width;
     final int psizey = clientArea.height;
-//    Logger.getLogger( getClass().getName() ).info( "clientArea: x= " + psizex + " y=" + psizey );
     if( ignoreZeroClientSize && (psizex == 0 || psizey == 0) )
       return;
 
     final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y,
         psizey ) );
-    m_contentControl.setSize( newSize );
+
+    // call this async because this leads to another call to this method
+    // causing ugly behaviour regarding the scroll bars
+    final Control contentControl = m_contentControl;
+    m_scrolledComposite.getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        if( contentControl != null && !contentControl.isDisposed() )
+            contentControl.setSize( newSize );
+      }
+    } );
   }
 
   public Control getContentControl( )
