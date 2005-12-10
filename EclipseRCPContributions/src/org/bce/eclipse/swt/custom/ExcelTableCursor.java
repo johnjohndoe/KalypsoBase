@@ -253,7 +253,7 @@ public class ExcelTableCursor extends TableCursor
       /**
        * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( DEBUG )
           System.out.println( "widgetSelected" );
