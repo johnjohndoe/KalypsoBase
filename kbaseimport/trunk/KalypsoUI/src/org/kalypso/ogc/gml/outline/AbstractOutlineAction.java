@@ -86,7 +86,7 @@ public abstract class AbstractOutlineAction extends FullAction implements ISelec
     return m_listManipulator;
   }
 
-  protected GisMapOutlineViewer getOutlineviewer()
+  public GisMapOutlineViewer getOutlineviewer()
   {
     return m_outlineViewer;
   }
