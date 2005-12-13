@@ -4,7 +4,6 @@ import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class DeviderMove implements IProfilChange
@@ -32,20 +31,6 @@ public class DeviderMove implements IProfilChange
     return new DeviderMove( m_devider, oldPosition );
   }
 
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedPoint()
-   */
-  public IProfilPoint getChangedPoint( )
-  {
-    return m_newPosition;
-  }
-
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedProperty()
-   */
-  public POINT_PROPERTY getChangedProperty( )
-  {
-    return null;
-  }
+  
 
  }
