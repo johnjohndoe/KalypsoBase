@@ -45,8 +45,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDelegate
@@ -57,10 +55,9 @@ public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDeleg
   /**
    *  
    */
-
   public CreatePolygonWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE + "." + GEOM_TYPE ) );
+    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON) );
   }
 
   public void selectionChanged( IAction action, ISelection selection )
