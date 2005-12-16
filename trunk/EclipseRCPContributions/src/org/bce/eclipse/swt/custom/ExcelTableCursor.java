@@ -206,7 +206,7 @@ public class ExcelTableCursor extends TableCursor
    */
   private final KeyListener m_tableKeyListener = new KeyAdapter()
   {
-    public void keyReleased( KeyEvent e )
+    public void keyReleased( final KeyEvent e )
     {
       if( e.keyCode == SWT.CONTROL && (e.stateMask & SWT.SHIFT) != 0 )
         return;
