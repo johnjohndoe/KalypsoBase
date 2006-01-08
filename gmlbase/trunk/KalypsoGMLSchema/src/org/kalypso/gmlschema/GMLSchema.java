@@ -1,0 +1,376 @@
+/*
+ * --------------- Kalypso-Header --------------------------------------------------------------------
+ * 
+ * This file is part of kalypso. Copyright (C) 2004, 2005 by:
+ * 
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
+ * 
+ * and
+ * 
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * Contact:
+ * 
+ * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
+ * 
+ * ---------------------------------------------------------------------------------------------------
+ */
+package org.kalypso.gmlschema;
+
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.logging.Logger;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.commons.java.net.UrlResolver;
+
+/**
+ * 
+ * TODO: insert type comment here
+ * 
+ * @author doemming
+ */
+public class GMLSchema
+{
+
+  private final Schema m_schema;
+
+  private final Logger m_logger;
+
+  private final Hashtable m_refHash = new Hashtable();
+
+  private final URL m_context;
+
+  private final UrlResolver m_urlResolver;
+
+  private final Hashtable m_importedSchemasHash = new Hashtable();
+
+  private final Hashtable m_buildedObjectHash = new Hashtable();
+
+  private final Hashtable m_featureTypes = new Hashtable();
+
+  private final Hashtable m_propertyTypes = new Hashtable();
+
+  private final Hashtable m_featureContentTypes = new Hashtable();
+
+  private final Hashtable m_propertyContentTypes = new Hashtable();
+
+  public GMLSchema( final Schema schema, final Logger logger, final URL context )
+  {
+    m_schema = schema;
+    m_logger = logger;
+    m_context = context;
+    m_urlResolver = new UrlResolver();
+  }
+
+  public GMLSchema()
+  {
+    m_schema = null;
+    m_logger = null;
+    m_context = null;
+    m_urlResolver = new UrlResolver();
+  }
+
+  /**
+   * initialize gmlschema, create all featuretypes, featurepropertytypes, parse all included and imported schemas
+   * 
+   * @throws Exception
+   *  
+   */
+  protected void init() throws Exception
+  {
+    final TopLevelComplexType[] complexTypeArray = m_schema.getComplexTypeArray();
+    for( int i = 0; i < complexTypeArray.length; i++ )
+    {
+      final TopLevelComplexType complexType = complexTypeArray[i];
+
+      final QName key = new QName( getTargetNamespace(), complexType.getName() );
+      final ComplexTypeReference ref = new ComplexTypeReference( this, complexType );
+      m_refHash.put( key, ref );
+    }
+    // simple types
+    final TopLevelSimpleType[] simpleTypeArray = m_schema.getSimpleTypeArray();
+    for( int i = 0; i < simpleTypeArray.length; i++ )
+    {
+      final TopLevelSimpleType simpleType = simpleTypeArray[i];
+
+      final QName key = new QName( getTargetNamespace(), simpleType.getName() );
+      final SimpleTypeReference reference = new SimpleTypeReference( this, simpleType );
+      m_refHash.put( key, reference );
+    }
+
+    // elements
+    final TopLevelElement[] elementArray = m_schema.getElementArray();
+    for( int i = 0; i < elementArray.length; i++ )
+    {
+      final TopLevelElement element = elementArray[i];
+      final QName key = new QName( getTargetNamespace(), element.getName() );
+      final ElementReference reference = new ElementReference( this, element );
+      m_refHash.put( key, reference );
+    }
+    // import
+    final Import[] importArray = m_schema.getImportArray();
+    for( int i = 0; i < importArray.length; i++ )
+    {
+      final ImportDocument.Import import_ = importArray[i];
+      m_logger.info( "\nIMPORT: \n" + toString() + "\n imports " + import_.getSchemaLocation() );
+      final URL url = m_urlResolver.resolveURL( m_context, import_.getSchemaLocation() );
+      final GMLSchema gmlSchema = GMLSchemaBuilder.generateGMLSchema( import_.getNamespace(), url );
+      m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+    }
+
+    // include
+    //     TODO merge arrays with the ones from m_schema
+    //    final Include[] includeArray = m_schema.getIncludeArray();
+    //    final GMLSchema[] includedSchemas = new GMLSchema[includeArray.length];
+    //   
+    //    for( int i = 0; i < includeArray.length; i++ )
+    //    {
+    //      final IncludeDocument.Include include = includeArray[i];
+    //      final URL includeURL = m_urlResolver.resolveURL( m_context, include.getSchemaLocation() );
+    //      m_logger.info( "\nINCLUDE: \n" + toString() + "\n includes " + includeURL );
+    //      includedSchemas[i] = GMLSchemaBuilder.generateGMLSchema( getTargetNamespace(), includeURL );
+    //    }
+    // generate elements
+
+  }
+
+  /**
+   * 
+   * @param qName
+   */
+  Reference resolveReference( final QName qName )
+  {
+    final String namespaceURI = qName.getNamespaceURI();
+    if( getTargetNamespace().equals( namespaceURI ) )
+      return (Reference)m_refHash.get( qName );
+    final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
+    return gmlschema.resolveReference( qName );
+  }
+
+  /**
+   * @param namespaceURI
+   * @return gmlschema
+   */
+  public GMLSchema getGMLSchemaForNamespaceURI( String namespaceURI )
+  {
+    // TODO make a nice visitor
+    // first level ?
+    if( namespaceURI.equals( getTargetNamespace() ) )
+      return this;
+    if( m_importedSchemasHash.containsKey( namespaceURI ) )
+      return (GMLSchema)m_importedSchemasHash.get( namespaceURI );
+    // other level....
+
+    final Collection collection = m_importedSchemasHash.values();
+    for( Iterator iter = collection.iterator(); iter.hasNext(); )
+    {
+      final GMLSchema gmlSchema = (GMLSchema)iter.next();
+      final GMLSchema schemaForNamespaceURI = gmlSchema.getGMLSchemaForNamespaceURI( namespaceURI );
+      if( schemaForNamespaceURI != null )
+        return schemaForNamespaceURI;
+    }
+    m_logger.warning( "imported schema not found for namespaceURI: " + namespaceURI );
+    return null;
+  }
+
+  public String getTargetNamespace()
+  {
+    return m_schema.getTargetNamespace();
+  }
+
+  public Schema getSchema()
+  {
+    return m_schema;
+  }
+
+  /**
+   * @param buildedObject
+   */
+  public void register( final Object xmlObject, final Object buildedObject )
+  {
+    if( buildedObject == null )
+      throw new UnsupportedOperationException( "can not register null-object" );
+    m_buildedObjectHash.put( xmlObject, buildedObject );
+
+    if( buildedObject instanceof FeatureType )
+    {
+      final FeatureType ft = (FeatureType)buildedObject;
+      final QName qName = ft.getQName();
+      m_featureTypes.put( qName, ft );
+    }
+    else if( buildedObject instanceof PropertyType )
+    {
+      final PropertyType pt = (PropertyType)buildedObject;
+      final QName qName = pt.getQName();
+      m_propertyTypes.put( qName, pt );
+    }
+    else if( buildedObject instanceof FeatureContentType )
+    {
+      final FeatureContentType fct = (FeatureContentType)buildedObject;
+      final ComplexType complexType = fct.getComplexType();
+      m_featureContentTypes.put( complexType, fct );
+    }
+    else if( buildedObject instanceof PropertyContentType )
+    {
+      final PropertyContentType pct = (PropertyContentType)buildedObject;
+      final SimpleType simpleType = pct.getSimpleType();
+      m_propertyContentTypes.put( simpleType, pct );
+    }
+  }
+
+  public String toString()
+  {
+    final StringBuffer result = new StringBuffer( "GMLSchema " );
+    result.append( m_context );
+    result.append( " " );
+    return result.toString();
+  }
+
+  /**
+   * @param element
+   */
+  public boolean hasBuildedObjectFor( Object element )
+  {
+    return m_buildedObjectHash.containsKey( element );
+  }
+
+  /**
+   * @param element
+   */
+  public Object getBuildedObjectFor( Element element )
+  {
+    return m_buildedObjectHash.get( element );
+  }
+
+  /**
+   * @param simpleType
+   */
+  public Object getBuildedObjectFor( SimpleType simpleType )
+  {
+    return m_buildedObjectHash.get( simpleType );
+  }
+
+  /**
+   * @param complexType
+   */
+  public Object getBuildedObjectFor( ComplexType complexType )
+  {
+    return m_buildedObjectHash.get( complexType );
+  }
+
+  /**
+   * 
+   * @param indent
+   */
+  public void toStringTree( final StringWriter writer, final int indent )
+  {
+    writer.write( StringUtils.repeat( " ", indent ) );
+    writer.write( "SCHEMA: " + m_context + "\n" );
+    writer.write( StringUtils.repeat( " ", indent ) );
+    writer.write( "    NS: " + getTargetNamespace() + "\n" );
+    FeatureType[] featureTypes = getAllFeatureTypes();
+    for( int i = 0; i < featureTypes.length; i++ )
+    {
+      featureTypes[i].toStringTree( writer, indent );
+    }
+  }
+
+  public FeatureContentType getFeatureContentTypeFor( final ComplexType complexType )
+  {
+    return (FeatureContentType)m_featureContentTypes.get( complexType );
+  }
+
+  /**
+   * @param simpleType
+   */
+  public PropertyContentType getFeaturePropertyContentTypeFor( SimpleType simpleType )
+  {
+    return (PropertyContentType)m_propertyContentTypes.get( simpleType );
+  }
+
+  /**
+   *  
+   */
+  public void rInit()
+  {
+    final FeatureContentType[] featureContentTypes = getAllFeatureContentTypes();
+    for( int i = 0; i < featureContentTypes.length; i++ )
+      featureContentTypes[i].init();
+
+    final FeatureType[] featureTypes = getAllFeatureTypes();
+    for( int i = 0; i < featureTypes.length; i++ )
+      featureTypes[i].init();
+
+    final PropertyType[] propertyTypes = getAllPropertyTypes();
+    for( int i = 0; i < propertyTypes.length; i++ )
+      propertyTypes[i].init();
+
+    final PropertyContentType[] propertyContentTypes = getAllPropertyContentTypes();
+    for( int i = 0; i < propertyContentTypes.length; i++ )
+      propertyContentTypes[i].init();
+  }
+
+  /**
+   *  
+   */
+  private FeatureType[] getAllFeatureTypes()
+  {
+    final Collection collection = m_featureTypes.values();
+    return (FeatureType[])collection.toArray( new FeatureType[collection.size()] );
+  }
+
+  /**
+   *  
+   */
+  private PropertyType[] getAllPropertyTypes()
+  {
+    final Collection collection = m_propertyTypes.values();
+    return (PropertyType[])collection.toArray( new PropertyType[collection.size()] );
+  }
+
+  /**
+   *  
+   */
+  public FeatureContentType[] getAllFeatureContentTypes()
+  {
+    final Collection collection = m_featureContentTypes.values();
+    return (FeatureContentType[])collection.toArray( new FeatureContentType[collection.size()] );
+  }
+
+  /**
+   *  
+   */
+  private PropertyContentType[] getAllPropertyContentTypes()
+  {
+    final Collection collection = m_propertyContentTypes.values();
+    return (PropertyContentType[])collection.toArray( new PropertyContentType[collection.size()] );
+  }
+
+}

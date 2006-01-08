@@ -1,0 +1,16 @@
+GML-Applikationschema-Parser
+Anforderungen:
+- einfach erweiterbar
+- brauchbar für GML2 und GML3 evt. Konzept für Versionierung
+- evt. brauchbar für Schema-Editor
+- type-hierarchie transparent extension restriction ... usw....
+Umsetzung:
+Feature-Type-Objekt sind Fasaden auf die Schema-Elemente
+
+
+FeatureModell
+Anforderungen:
+- komplex
+- gutes Konzept für Relationen (auch dokument-übergreifend !)
+
+
