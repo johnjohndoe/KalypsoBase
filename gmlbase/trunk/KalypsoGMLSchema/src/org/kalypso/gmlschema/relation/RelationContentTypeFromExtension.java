@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.relation;
 
 import java.io.StringWriter;
 
@@ -37,18 +37,23 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.FeatureContentType;
+import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
+ * representation of a feature content definition from xml schema that is defined by extension.
  * 
  * @author doemming
  */
-public class FeatureContentTypeFromExtension extends FeatureContentType
+public class RelationContentTypeFromExtension extends RelationContentType
 {
   private final ExtensionType m_extension;
 
-  private FeatureContentType m_extensionBase = null;
+  private RelationContentType m_extensionBase = null;
 
-  public FeatureContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
+  public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
   {
     super( schema, complexType );
     m_extension = extension;
@@ -56,7 +61,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
 
   /**
    * 
-   * @see org.kalypso.gmlschema.FeatureContentType#getSequence()
+   * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   public ExplicitGroup getSequence()
   {
@@ -64,7 +69,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.FeatureType#init()
+   * @see org.kalypso.gmlschema.feature.FeatureType#init()
    */
   public void init()
   {
@@ -72,7 +77,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
     final ComplexTypeReference reference = (ComplexTypeReference)getGMLSchema().resolveReference( base );
     final GMLSchema schema = reference.getGMLSchema();
     final ComplexType complexType = reference.getComplexType();
-    m_extensionBase = schema.getFeatureContentTypeFor( complexType );
+    m_extensionBase = schema.getRelationContentTypeFor( complexType );
     super.init();
   }
 
@@ -90,7 +95,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.FeatureContentType#toStringTree(java.io.StringWriter, int)
+   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
    */
   public void toStringTree( StringWriter writer, int indent )
   {

@@ -27,13 +27,22 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
+
+import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.FeatureContentType;
+import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
+import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
+import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
 
 /**
  * 
@@ -78,5 +87,25 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     }
     return new Object[0];
 
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
+   */
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  {
+    if( !( object instanceof ComplexType ) )
+      return false;
+    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType)object );
+    if( baseType == null )
+      return false;
+    final String namespaceURI = baseType.getNamespaceURI();
+    final String localPart = baseType.getLocalPart();
+
+    // GML
+    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+      return false;
+    return "AbstractFeatureType".equals( localPart );
   }
 }

@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.relation;
 
 import java.io.StringWriter;
 
@@ -36,56 +36,37 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
-public class FeatureType
+public class RelationType implements BuildedFromSchema
 {
 
   private final GMLSchema m_gmlSchema;
 
   private final Element m_element;
 
-  private FeatureContentType m_featureContentType = null;
-
   private final QName m_qName;
 
-  public FeatureType( final GMLSchema gmlSchema, final Element element )
+  private RelationContentType m_relationContentType;
+
+  public RelationType( final GMLSchema gmlSchema, final Element element )
   {
     m_gmlSchema = gmlSchema;
     m_element = element;
-    final String targetNamespace = gmlSchema.getTargetNamespace();
     final String name = m_element.getName();
+    final String targetNamespace = gmlSchema.getTargetNamespace();
     m_qName = new QName( targetNamespace, name );
   }
 
-  public void init()
-  {
-    final ComplexTypeReference complexTypeReference = getComplexTypeReference();
-    final ComplexType complexType = complexTypeReference.getComplexType();
-    final GMLSchema schema = complexTypeReference.getGMLSchema();
-    m_featureContentType = (FeatureContentType)schema.getBuildedObjectFor( complexType );
-  }
-
-  public ComplexTypeReference getComplexTypeReference()
-  {
-    final QName type = m_element.getType();
-    if( type != null )
-      return (ComplexTypeReference)m_gmlSchema.resolveReference( type );
-    final ComplexType complexType = m_element.getComplexType();
-    return new ComplexTypeReference( m_gmlSchema, complexType );
-  }
-
-  public FeatureContentType getFeatureContentType()
-  {
-    return m_featureContentType;
-  }
-
   /**
+   *  
    */
   public QName getQName()
   {
@@ -93,14 +74,37 @@ public class FeatureType
   }
 
   /**
-   * @param writer
-   * @param indent
+   * @return
+   *  
+   */
+  public Element getElement()
+  {
+    return m_element;
+  }
+
+  /**
+   *  
+   */
+  public void init()
+  {
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema,
+        m_element );
+    final ComplexType complexType = complexTypeReference.getComplexType();
+    final GMLSchema schema = complexTypeReference.getGMLSchema();
+    m_relationContentType = (RelationContentType)schema.getBuildedObjectFor( complexType );
+    if(m_relationContentType==null)
+      throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.BuildedFromSchema#toStringTree(java.io.StringWriter, int)
    */
   public void toStringTree( StringWriter writer, int indent )
   {
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "FeatureType : " + getQName());
+    writer.write( "RelationType : " + getQName() );
     indent++;
-    m_featureContentType.toStringTree( writer, indent );
+    m_relationContentType.toStringTree( writer, indent );
   }
+
 }

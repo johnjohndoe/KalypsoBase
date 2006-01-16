@@ -27,10 +27,9 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import java.io.StringWriter;
 
 /**
  * 
@@ -38,20 +37,25 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
  * 
  * @author doemming
  */
-public class FeatureContentTypeFromSequence extends FeatureContentType
+public interface BuildedFromSchema
 {
+  /**
+   * initialize builded object. <br>
+   * This methode is intended to be called only from org.kalypso.gmlschema.GMLSchemaBuilder. Implement here the linking
+   * of the objects and other initialization stuff that can not be done in the contructor(e.g. because other objects
+   * from the schema may not be builded at construction time). <br>
+   * Assume that all objects are builded from the schema, but they may not be initialized are linked with each other.
+   * This is intended to be done here.
+   */
+  public void init();
 
-  private final ExplicitGroup m_sequence;
-
-  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
-  {
-    super( gmlSchema, complexType );
-    m_sequence = sequence;
-  }
-
-  public ExplicitGroup getSequence()
-  {
-    return m_sequence;
-  }
-
+  /**
+   * adds a string representation of this object to the writer. This is intended to be used by junit-test methodes, that
+   * compare the resulting string representation of the schema with previous builded strings from the same schema in
+   * order to easy identify changes.
+   * 
+   * @param writer
+   * @param indent
+   */
+  public void toStringTree( final StringWriter writer, final int indent );
 }

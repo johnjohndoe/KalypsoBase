@@ -29,27 +29,26 @@
  */
 package org.kalypso.gmlschema;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-
 /**
  * 
  * TODO: insert type comment here
  * 
  * @author doemming
  */
-public class ComplexTypeReference extends Reference
+public class GMLSchemaException extends Exception
 {
-
-  private final ComplexType m_complexType;
-
-  public ComplexTypeReference( final GMLSchema gmlSchema, final ComplexType complexType )
+  public GMLSchemaException( final String message )
   {
-    super( gmlSchema );
-    m_complexType = complexType;
+    super( message );
   }
 
-  public ComplexType getComplexType()
+  public GMLSchemaException( final Throwable throwable )
   {
-    return m_complexType;
+    super( throwable );
+  }
+
+  public GMLSchemaException( final String message, final Throwable throwable )
+  {
+    super( message, throwable );
   }
 }

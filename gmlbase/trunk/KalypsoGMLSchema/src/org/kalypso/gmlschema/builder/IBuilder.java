@@ -27,10 +27,9 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
@@ -38,18 +37,29 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
  * 
  * @author doemming
  */
-public class PropertyType2SimpleTypeBuilder implements IBuilder
+public interface IBuilder
 {
+  /**
+   * build GML-Schema java object types and register them to the gmlSchema
+   * 
+   * @param gmlSchema
+   * @param typeObject
+   * @return array of objects that will be build in next turn if neccessary
+   */
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject );
 
   /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in
+   * this build run named <code>namedPass</code>
+   * 
+   * @param gmlSchema
+   *          current schema
+   * @param object
+   *          object to build something for
+   * @param namedPass
+   *          name of the current build run
+   * @return true if builder can build something for this object
    */
-  public Object[] build( GMLSchema gmlSchema, Object typeObject )
-  {
-    final PropertyType propertyType = (PropertyType)typeObject;
-    final Element element = propertyType.getElement();
-    final SimpleType simpleType = element.getSimpleType();
-    return new Object[]
-    { simpleType };
-  }
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass );
+
 }

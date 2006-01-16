@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
@@ -43,11 +44,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
  * 
  * @author doemming
  */
-public class GMLSchemaBuilder2 implements IBuilder
+public class GMLSchema2SchemaBasicsBuilder implements IBuilder
 {
 
   /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
   public Object[] build( GMLSchema gmlSchema, Object schemaObject )
   {
@@ -75,5 +76,13 @@ public class GMLSchemaBuilder2 implements IBuilder
       result.add( element );
     }
     return result.toArray();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object, java.lang.String)
+   */
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  {
+    return object instanceof GMLSchema ;
   }
 }

@@ -27,22 +27,27 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.xml;
+
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
- * TODO: insert type comment here
+ * representation of a reference to a xml schema fragment
  * 
  * @author doemming
  */
-public interface IBuilder
+public abstract class Reference
 {
-  /**
-   * build GML-Schema java object types and register them to the gmlSchema
-   * 
-   * @param gmlSchema
-   * @param typeObject
-   * @return array of objects that will be build in next turn if neccessary
-   */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject );
+
+  private final GMLSchema m_gmlSchema;
+
+  public Reference( GMLSchema gmlSchema )
+  {
+    m_gmlSchema = gmlSchema;
+  }
+
+  public GMLSchema getGMLSchema()
+  {
+    return m_gmlSchema;
+  }
 }

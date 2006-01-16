@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.property;
 
 import java.io.StringWriter;
 
@@ -36,14 +36,18 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation a the property definition from xml schema
  * 
  * @author doemming
  */
-public class PropertyType
+public class PropertyType implements BuildedFromSchema
 {
 
   private final GMLSchema m_gmlSchema;

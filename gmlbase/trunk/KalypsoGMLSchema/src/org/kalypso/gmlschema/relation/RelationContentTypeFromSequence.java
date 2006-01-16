@@ -27,30 +27,32 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.relation;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a feature content definition from a xml schema sequence fragment.
  * 
  * @author doemming
  */
-public class FeatureType2ComplexTypeBuilder implements IBuilder
+public class RelationContentTypeFromSequence extends RelationContentType
 {
 
-  /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
-   */
-  public Object[] build( GMLSchema gmlSchema, Object featureTypeObject )
+  private final ExplicitGroup m_sequence;
+
+  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
   {
-    final FeatureType ft = (FeatureType)featureTypeObject;
-    final ComplexTypeReference complexTypeReference = ft.getComplexTypeReference();
-    final ComplexType complexType = complexTypeReference.getComplexType();
-    gmlSchema.register( ft, complexType );
-    return new Object[]
-    { complexType };
+    super( gmlSchema, complexType );
+    m_sequence = sequence;
+  }
+
+  public ExplicitGroup getSequence()
+  {
+    return m_sequence;
   }
 
 }

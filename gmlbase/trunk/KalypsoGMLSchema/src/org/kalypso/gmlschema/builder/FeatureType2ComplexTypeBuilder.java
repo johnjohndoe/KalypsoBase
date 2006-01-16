@@ -27,11 +27,14 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
 
-import javax.xml.namespace.QName;
-
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * 
@@ -39,34 +42,31 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
  * 
  * @author doemming
  */
-public class Element2FeatureTypeBuilder implements IBuilder
+public class FeatureType2ComplexTypeBuilder implements IBuilder
 {
 
   /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object elementObject )
+  public Object[] build( GMLSchema gmlSchema, Object featureTypeObject )
   {
-    final Element element = (Element)elementObject;
-    final QName ref = element.getRef();
-    if( ref != null )
-    {
-      final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
-      return build( reference );
-    }
-    final FeatureType result = new FeatureType( gmlSchema, element );
-    gmlSchema.register( element, result );
-    return new Object[] {result};
+    final FeatureType ft = (FeatureType)featureTypeObject;
+    final Element element = ft.getElement();
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities
+        .getComplexTypeReferenceFor( gmlSchema, element );
+    final ComplexType complexType = complexTypeReference.getComplexType();
+    gmlSchema.register( ft, complexType );
+    return new Object[]
+    { complexType };
   }
 
   /**
-   * @param reference
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
    */
-  private Object[] build( ElementReference reference )
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    final GMLSchema schema = reference.getGMLSchema();
-    final Element element = reference.getElement();
-    return build( schema, element );
+    return object instanceof FeatureType;
   }
 
 }

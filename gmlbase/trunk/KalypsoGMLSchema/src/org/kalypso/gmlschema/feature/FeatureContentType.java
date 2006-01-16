@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.feature;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -39,20 +39,28 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a feature content definition from xml schema
  * 
  * @author doemming
  */
-public abstract class FeatureContentType
+public abstract class FeatureContentType implements BuildedFromSchema
 {
-  private PropertyType[] m_pt = null;
 
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
+
+  private PropertyType[] m_pt = null;
+
+  private RelationType[] m_rt = null;
 
   public FeatureContentType( final GMLSchema gmlSchema, ComplexType complexType )
   {
@@ -78,7 +86,8 @@ public abstract class FeatureContentType
   public void init()
   {
     final ExplicitGroup sequence = getSequence();
-    final List result = new ArrayList();
+    final List propertyTypes = new ArrayList();
+    final List relationTypes = new ArrayList();
     if( sequence != null )
     {
       final Element[] elementArray = sequence.getElementArray();
@@ -100,10 +109,13 @@ public abstract class FeatureContentType
         }
         final Object buildedObject = schema.getBuildedObjectFor( element );
         if( buildedObject instanceof PropertyType )
-          result.add( buildedObject );
+          propertyTypes.add( buildedObject );
+        if( buildedObject instanceof RelationType )
+          relationTypes.add( buildedObject );
       }
     }
-    m_pt = (PropertyType[])result.toArray( new PropertyType[result.size()] );
+    m_pt = (PropertyType[])propertyTypes.toArray( new PropertyType[propertyTypes.size()] );
+    m_rt = (RelationType[])relationTypes.toArray( new RelationType[relationTypes.size()] );
   }
 
   /**
@@ -121,6 +133,11 @@ public abstract class FeatureContentType
     for( int i = 0; i < pts.length; i++ )
     {
       pts[i].toStringTree( writer, indent );
+    }
+    final RelationType[] rts = m_rt;
+    for( int i = 0; i < rts.length; i++ )
+    {
+      rts[i].toStringTree( writer, indent );
     }
   }
 

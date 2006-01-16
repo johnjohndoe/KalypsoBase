@@ -27,72 +27,31 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.xml;
 
-import java.io.StringWriter;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a simpletype reference to a xml schema simpletype
  * 
  * @author doemming
  */
-public class PropertyContentType
+public class SimpleTypeReference extends Reference
 {
 
-  private final GMLSchema m_gmlSchema;
+  private final TopLevelSimpleType m_simpleType;
 
-  private final SimpleType m_simpleType;
-
-  private QName m_valueQName = null;
-
-  public PropertyContentType( final GMLSchema gmlSchema, final SimpleType simpleType )
+  public SimpleTypeReference( GMLSchema gmlSchema, TopLevelSimpleType simpleType )
   {
-    m_gmlSchema = gmlSchema;
+    super( gmlSchema );
     m_simpleType = simpleType;
   }
 
   public SimpleType getSimpleType()
   {
     return m_simpleType;
-  }
-
-  public void init()
-  {
-    final String name = m_simpleType.getName();
-    final String targetNamespace = m_gmlSchema.getTargetNamespace();
-    m_valueQName = new QName( targetNamespace, name );
-  }
-
-  public GMLSchema getGMLSchema()
-  {
-    return m_gmlSchema;
-  }
-
-  public String toString()
-  {
-    return m_simpleType.getName();
-  }
-
-  /**
-   */
-  public QName getValueQName()
-  {
-    return m_valueQName;
-  }
-
-  /**
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "PropertyContentType "+m_valueQName );
   }
 }

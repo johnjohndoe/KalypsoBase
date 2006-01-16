@@ -30,6 +30,7 @@
 package org.kalypso.gmlschema;
 
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -49,6 +50,17 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
+import org.kalypso.gmlschema.feature.FeatureContentType;
+import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.property.PropertyContentType;
+import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.relation.RelationContentType;
+import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
+import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.Reference;
+import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
  * 
@@ -81,29 +93,26 @@ public class GMLSchema
 
   private final Hashtable m_propertyContentTypes = new Hashtable();
 
-  public GMLSchema( final Schema schema, final Logger logger, final URL context )
+  private final Hashtable m_relationTypes = new Hashtable();
+
+  private final Hashtable m_relationContentTypes = new Hashtable();
+
+  public GMLSchema( final Schema schema, final Logger logger, final URL context ) throws GMLSchemaException
   {
     m_schema = schema;
     m_logger = logger;
     m_context = context;
     m_urlResolver = new UrlResolver();
-  }
-
-  public GMLSchema()
-  {
-    m_schema = null;
-    m_logger = null;
-    m_context = null;
-    m_urlResolver = new UrlResolver();
+    init();
   }
 
   /**
    * initialize gmlschema, create all featuretypes, featurepropertytypes, parse all included and imported schemas
    * 
-   * @throws Exception
+   * @throws GMLSchemaException
    *  
    */
-  protected void init() throws Exception
+  private void init() throws GMLSchemaException
   {
     final TopLevelComplexType[] complexTypeArray = m_schema.getComplexTypeArray();
     for( int i = 0; i < complexTypeArray.length; i++ )
@@ -139,9 +148,20 @@ public class GMLSchema
     for( int i = 0; i < importArray.length; i++ )
     {
       final ImportDocument.Import import_ = importArray[i];
-      m_logger.info( "\nIMPORT: \n" + toString() + "\n imports " + import_.getSchemaLocation() );
-      final URL url = m_urlResolver.resolveURL( m_context, import_.getSchemaLocation() );
-      final GMLSchema gmlSchema = GMLSchemaBuilder.generateGMLSchema( import_.getNamespace(), url );
+      String schemaLocation = import_.getSchemaLocation();
+      m_logger.info( "\nIMPORT: \n" + toString() + "\n imports " + schemaLocation );
+      final URL url;
+      try
+      {
+        url = m_urlResolver.resolveURL( m_context, schemaLocation );
+      }
+      catch( MalformedURLException e )
+      {
+        if( schemaLocation != null )
+          throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
+        throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
+      }
+      final GMLSchema gmlSchema = GMLSchemaBuilder.getInstance().generateGMLSchema( import_.getNamespace(), url );
       m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
     }
 
@@ -165,7 +185,7 @@ public class GMLSchema
    * 
    * @param qName
    */
-  Reference resolveReference( final QName qName )
+  public Reference resolveReference( final QName qName )
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
@@ -219,11 +239,18 @@ public class GMLSchema
       throw new UnsupportedOperationException( "can not register null-object" );
     m_buildedObjectHash.put( xmlObject, buildedObject );
 
+    // use QName as key:
     if( buildedObject instanceof FeatureType )
     {
       final FeatureType ft = (FeatureType)buildedObject;
       final QName qName = ft.getQName();
       m_featureTypes.put( qName, ft );
+    }
+    else if( buildedObject instanceof RelationType )
+    {
+      final RelationType rt = (RelationType)buildedObject;
+      final QName qName = rt.getQName();
+      m_relationTypes.put( qName, rt );
     }
     else if( buildedObject instanceof PropertyType )
     {
@@ -231,11 +258,18 @@ public class GMLSchema
       final QName qName = pt.getQName();
       m_propertyTypes.put( qName, pt );
     }
+    // use type as key
     else if( buildedObject instanceof FeatureContentType )
     {
       final FeatureContentType fct = (FeatureContentType)buildedObject;
       final ComplexType complexType = fct.getComplexType();
       m_featureContentTypes.put( complexType, fct );
+    }
+    else if( buildedObject instanceof RelationContentType )
+    {
+      final RelationContentType rct = (RelationContentType)buildedObject;
+      final ComplexType complexType = rct.getComplexType();
+      m_relationContentTypes.put( complexType, rct );
     }
     else if( buildedObject instanceof PropertyContentType )
     {
@@ -308,6 +342,14 @@ public class GMLSchema
   }
 
   /**
+   * @param complexType
+   */
+  public RelationContentType getRelationContentTypeFor( ComplexType complexType )
+  {
+    return (RelationContentType)m_relationContentTypes.get( complexType );
+  }
+
+  /**
    * @param simpleType
    */
   public PropertyContentType getFeaturePropertyContentTypeFor( SimpleType simpleType )
@@ -318,29 +360,7 @@ public class GMLSchema
   /**
    *  
    */
-  public void rInit()
-  {
-    final FeatureContentType[] featureContentTypes = getAllFeatureContentTypes();
-    for( int i = 0; i < featureContentTypes.length; i++ )
-      featureContentTypes[i].init();
-
-    final FeatureType[] featureTypes = getAllFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-      featureTypes[i].init();
-
-    final PropertyType[] propertyTypes = getAllPropertyTypes();
-    for( int i = 0; i < propertyTypes.length; i++ )
-      propertyTypes[i].init();
-
-    final PropertyContentType[] propertyContentTypes = getAllPropertyContentTypes();
-    for( int i = 0; i < propertyContentTypes.length; i++ )
-      propertyContentTypes[i].init();
-  }
-
-  /**
-   *  
-   */
-  private FeatureType[] getAllFeatureTypes()
+  public FeatureType[] getAllFeatureTypes()
   {
     final Collection collection = m_featureTypes.values();
     return (FeatureType[])collection.toArray( new FeatureType[collection.size()] );
@@ -349,7 +369,7 @@ public class GMLSchema
   /**
    *  
    */
-  private PropertyType[] getAllPropertyTypes()
+  public PropertyType[] getAllPropertyTypes()
   {
     final Collection collection = m_propertyTypes.values();
     return (PropertyType[])collection.toArray( new PropertyType[collection.size()] );
@@ -367,10 +387,27 @@ public class GMLSchema
   /**
    *  
    */
-  private PropertyContentType[] getAllPropertyContentTypes()
+  public PropertyContentType[] getAllPropertyContentTypes()
   {
     final Collection collection = m_propertyContentTypes.values();
     return (PropertyContentType[])collection.toArray( new PropertyContentType[collection.size()] );
+  }
+
+  /**
+   */
+  public RelationContentType[] getAllRelationContentTypes()
+  {
+    final Collection collection = m_relationContentTypes.values();
+    return (RelationContentType[])collection.toArray( new RelationContentType[collection.size()] );
+  }
+
+  /**
+   *  
+   */
+  public RelationType[] getAllRelationTypes()
+  {
+    final Collection collection = m_relationTypes.values();
+    return (RelationType[])collection.toArray( new RelationType[collection.size()] );
   }
 
 }

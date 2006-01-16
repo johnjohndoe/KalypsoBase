@@ -27,47 +27,32 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.feature;
 
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a feature content definition from a xml schema sequence fragment.
  * 
  * @author doemming
  */
-public class PropertyContentTypeFromRestriction extends PropertyContentType
+public class FeatureContentTypeFromSequence extends FeatureContentType
 {
 
-  private final Restriction m_restriction;
+  private final ExplicitGroup m_sequence;
 
-  private PropertyContentType m_restrictionBase = null;
-
-  public PropertyContentTypeFromRestriction( final GMLSchema gmlSchema, final SimpleType simpleType,
-      final Restriction restriction )
+  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
   {
-    super( gmlSchema, simpleType );
-    m_restriction = restriction;
+    super( gmlSchema, complexType );
+    m_sequence = sequence;
   }
 
-  public void init()
+  public ExplicitGroup getSequence()
   {
-    super.init();
-    final QName base = m_restriction.getBase();
-    if( base.getNamespaceURI().equals( GMLSchemaConstants.NS_XMLSCHEMA ) )
-    {
-      
-    }
-    else
-    {
-      final Reference reference = getGMLSchema().resolveReference( base );
-      final GMLSchema schema = reference.getGMLSchema();
-      final SimpleTypeReference simpleTypeReference = (SimpleTypeReference)reference;
-      m_restrictionBase = schema.getFeaturePropertyContentTypeFor( simpleTypeReference.getSimpleType() );
-    }
+    return m_sequence;
   }
+
 }

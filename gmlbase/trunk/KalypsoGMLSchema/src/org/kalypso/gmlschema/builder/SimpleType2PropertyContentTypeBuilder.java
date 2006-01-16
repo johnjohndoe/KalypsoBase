@@ -27,10 +27,17 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
+
+import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.property.PropertyContentType;
+import org.kalypso.gmlschema.property.PropertyContentTypeFromRestriction;
 
 /**
  * 
@@ -42,8 +49,8 @@ public class SimpleType2PropertyContentTypeBuilder implements IBuilder
 {
 
   /**
-   * @see org.kalypso.gmlschema.GMLElementBuilder#build(org.kalypso.gmlschema.GMLSchema,
-   *      org.apache.xmlbeans.impl.xb.xsdschema.Element)
+   * 
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
   public Object[] build( final GMLSchema gmlSchema, final Object simpleTypeObject )
   {
@@ -60,5 +67,27 @@ public class SimpleType2PropertyContentTypeBuilder implements IBuilder
     //    final Union union = simpleType.getUnion();
     //    if( union != null )
     //      ;//TODO return ...
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
+   */
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  {
+    if( !( object instanceof SimpleType ) )
+      return false;
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType)object );
+    if( baseType == null )
+      return false;
+    final String namespaceURI = baseType.getNamespaceURI();
+    final String localPart = baseType.getLocalPart();
+
+    // XML-SCHEMA
+    if( !GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
+      return false;
+    if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
+      return false; // TODO implement builder for "anyType" ?
+    return true;
   }
 }

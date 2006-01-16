@@ -27,47 +27,31 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
-
-import javax.xml.namespace.QName;
+package org.kalypso.gmlschema.xml;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a element reference to a xml schema element
  * 
  * @author doemming
  */
-public class Element2PropertyTypeBuilder implements IBuilder
+public class ElementReference extends Reference
 {
 
-  /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
-   */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject )
+  private final TopLevelElement m_element;
+
+  public ElementReference( final GMLSchema schema, final TopLevelElement element )
   {
-    final Element element = (Element)elementObject;
-    final QName ref = element.getRef();
-    if( ref != null )
-    {
-      final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
-      return build( reference );
-    }
-    final PropertyType pt = new PropertyType( gmlSchema, element );
-    gmlSchema.register( element, pt );
-    return new Object[]
-    { pt };
+    super( schema );
+    m_element = element;
   }
 
-  /**
-   * @param reference
-   */
-  private Object[] build( ElementReference reference )
+  public Element getElement()
   {
-    final GMLSchema gmlSchema = reference.getGMLSchema();
-    final Element element = reference.getElement();
-    return build( gmlSchema, element );
+    return m_element;
   }
-
 }

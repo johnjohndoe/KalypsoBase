@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 
+import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
+
 import junit.framework.TestCase;
 
 /**
@@ -62,18 +64,22 @@ public class GMLSchemaTest extends TestCase
   {
     try
     {
+      final GMLSchemaBuilder schemaBuilder = GMLSchemaBuilder.getInstance();
       //      final URL schemaLocationURL = getClass().getResource( "resources/feature.xsd" );
       //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( NS_GML2, schemaLocationURL );
+
       //      final URL schemaLocationURL = getClass().getResource( "resources/namodell.xsd" );
-      //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
+      //      GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
+
       final URL schemaLocationURL = getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" );
-      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( "http://www.xplanung.de/bplangml", schemaLocationURL );
+      final GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.xplanung.de/bplangml", schemaLocationURL );
+
       //      final URL schemaLocationURL = getClass().getResource( "resources/XMLSchema.xsd" );
       //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( GMLSchemaConstants.NS_XMLSCHEMA, schemaLocationURL );
-      if( schema2 != null )
+      if( schema != null )
       {
         final StringWriter writer = new StringWriter();
-        schema2.toStringTree( writer, 0 );
+        schema.toStringTree( writer, 0 );
         System.out.println( writer.toString() );
         System.out.println( "super" );
       }

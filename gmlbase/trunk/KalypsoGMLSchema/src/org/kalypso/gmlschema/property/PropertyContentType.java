@@ -27,26 +27,74 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.property;
+
+import java.io.StringWriter;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.builder.BuildedFromSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a property content definition from xml schema
  * 
  * @author doemming
  */
-public abstract class Reference
+public class PropertyContentType implements BuildedFromSchema
 {
 
   private final GMLSchema m_gmlSchema;
 
-  public Reference( GMLSchema gmlSchema )
+  private final SimpleType m_simpleType;
+
+  private QName m_valueQName = null;
+
+  public PropertyContentType( final GMLSchema gmlSchema, final SimpleType simpleType )
   {
     m_gmlSchema = gmlSchema;
+    m_simpleType = simpleType;
+  }
+
+  public SimpleType getSimpleType()
+  {
+    return m_simpleType;
+  }
+
+  public void init()
+  {
+    final String name = m_simpleType.getName();
+    final String targetNamespace = m_gmlSchema.getTargetNamespace();
+    m_valueQName = new QName( targetNamespace, name );
   }
 
   public GMLSchema getGMLSchema()
   {
     return m_gmlSchema;
+  }
+
+  public String toString()
+  {
+    return m_simpleType.getName();
+  }
+
+  /**
+   */
+  public QName getValueQName()
+  {
+    return m_valueQName;
+  }
+
+  /**
+   * @param writer
+   * @param indent
+   */
+  public void toStringTree( StringWriter writer, int indent )
+  {
+    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
+    writer.write( "PropertyContentType " + m_valueQName );
   }
 }

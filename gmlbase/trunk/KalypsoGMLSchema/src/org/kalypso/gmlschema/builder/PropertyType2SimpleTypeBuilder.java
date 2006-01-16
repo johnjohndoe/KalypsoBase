@@ -27,9 +27,12 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.builder;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.property.PropertyType;
 
 /**
  * 
@@ -37,7 +40,27 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
  * 
  * @author doemming
  */
-public interface GMLElementBuilder
+public class PropertyType2SimpleTypeBuilder implements IBuilder
 {
-  public Object build( final GMLSchema gmlSchema, final Element element );
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   */
+  public Object[] build( GMLSchema gmlSchema, Object typeObject )
+  {
+    final PropertyType propertyType = (PropertyType)typeObject;
+    final Element element = propertyType.getElement();
+    final SimpleType simpleType = element.getSimpleType();
+    return new Object[]
+    { simpleType };
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
+   */
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  {
+    return object instanceof PropertyType;
+  }
 }

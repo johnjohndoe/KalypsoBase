@@ -29,37 +29,25 @@
  */
 package org.kalypso.gmlschema;
 
-import java.io.File;
+import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.tool.SchemaResourceManager;
-import org.apache.xmlbeans.impl.tool.SchemaImportResolver.SchemaResource;
-import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
-
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 
 /**
  * 
- * TODO: insert type comment here
+ * UniqueName
  * 
  * @author doemming
  */
-public class Test
+public class UName
 {
-  public Test()
+  private final Object m_uniqueObject;
+
+  private final QName m_name;
+
+  public UName( LocalElement element, QName qName )
   {
-    final File schemaResourceDir=new File("C:\\TMP\\schemaResourceDir");
-    schemaResourceDir.mkdirs();
-    final SchemaResourceManager manager = new SchemaResourceManager(schemaResourceDir);
-
-    SchemaResource resource = manager.lookupResource(null, null);
-    final String namespace = resource.getNamespace();
-    final String schemaLocation = resource.getSchemaLocation();
-    final Schema schema = resource.getSchema();
-
-    //    schema.
-    //   SchemaDocument doc=null;
-    //    SchemaType type = doc.schemaType();
-    //    SchemaAnnotation annotation = type.getAnnotation();
-    //     XmlObject[] applicationInformation = annotation.getApplicationInformation();
-    //     EnumerationDocument
+    m_uniqueObject = element;
+    m_name = qName;
   }
 }

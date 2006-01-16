@@ -27,31 +27,30 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.xml;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a complex type reference to a xml schema complex type
  * 
  * @author doemming
  */
-public class FeatureContentType2ElementBuilder implements IBuilder
+public class ComplexTypeReference extends Reference
 {
 
-  /**
-   * @see org.kalypso.gmlschema.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
-   */
-  public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject )
+  private final ComplexType m_complexType;
+
+  public ComplexTypeReference( final GMLSchema gmlSchema, final ComplexType complexType )
   {
-    final FeatureContentType fct = (FeatureContentType)featureContentTypeObject;
-    final ExplicitGroup sequence = fct.getSequence();
-    if( sequence == null )
-      return new Object[0];
-    final Element[] elementArray = sequence.getElementArray();
-    return elementArray;
+    super( gmlSchema );
+    m_complexType = complexType;
   }
 
+  public ComplexType getComplexType()
+  {
+    return m_complexType;
+  }
 }

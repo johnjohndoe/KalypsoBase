@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema;
+package org.kalypso.gmlschema.relation;
 
 import java.io.StringWriter;
 
@@ -37,21 +37,23 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a feature content definition from xml schema that is defined by restriction.
  * 
  * @author doemming
  */
-public class FeatureContentTypeFromRestriction extends FeatureContentType
+public class RelationContentTypeFromRestriction extends RelationContentType
 {
 
   private final ComplexRestrictionType m_restriction;
 
-  private FeatureContentType m_restrictionBase = null;
+  private RelationContentType m_restrictionBase = null;
 
-  public FeatureContentTypeFromRestriction( GMLSchema schema, ComplexType complexType,
+  public RelationContentTypeFromRestriction( GMLSchema schema, ComplexType complexType,
       ComplexRestrictionType restriction )
   {
     super( schema, complexType );
@@ -60,7 +62,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
 
   /**
    * 
-   * @see org.kalypso.gmlschema.FeatureContentType#getSequence()
+   * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   public ExplicitGroup getSequence()
   {
@@ -68,7 +70,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.FeatureType#init()
+   * @see org.kalypso.gmlschema.feature.FeatureType#init()
    */
   public void init()
   {
@@ -76,7 +78,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
     final ComplexTypeReference reference = (ComplexTypeReference)getGMLSchema().resolveReference( base );
     final GMLSchema schema = reference.getGMLSchema();
     final ComplexType complexType = reference.getComplexType();
-    m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
+    m_restrictionBase = schema.getRelationContentTypeFor( complexType );
     super.init();
   }
 
@@ -92,9 +94,9 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
       result.append( " restricted from unknown (not initiated" );
     return result.append( "\n" ).toString();
   }
-  
+
   /**
-   * @see org.kalypso.gmlschema.FeatureContentType#toStringTree(java.io.StringWriter, int)
+   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
    */
   public void toStringTree( StringWriter writer, int indent )
   {

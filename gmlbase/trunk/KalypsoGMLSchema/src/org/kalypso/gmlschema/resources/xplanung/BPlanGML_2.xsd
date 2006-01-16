@@ -263,6 +263,7 @@ sdvsdsdvsvvvsvyxvy
 					<xs:element name="realisierung" type="xs:string" minOccurs="0"/>
 					<xs:element name="verfahrensstand" type="xs:string" minOccurs="0"/>
 					<xs:element name="hoehenbezug" type="xs:string" minOccurs="0"/>
+<!-- doemming -->
 					<xs:element name="textlicheFestsetzungen" minOccurs="0" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
@@ -432,6 +433,8 @@ Basisklasse für alle flächenhaften Objekte, die andere Flächen überlagern.
 			<xs:enumeration value="..."/>
 		</xs:restriction>
 	</xs:simpleType>
+<!-- doemming warum ist das nicht von AbstractFeatureType abgeleitet
+-->
 	<xs:complexType name="TextlicheFestsetzungType">
 		<xs:annotation>
 			<xs:documentation>
