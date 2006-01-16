@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.bce.eclipse.platform.contrib"
+   id="org.kalypso.contribs.eclipse.platform.contrib"
    name="EclipsePlatformContributions Plug-in"
    version="1.0.0"
    provider-name="bce.org"
@@ -18,7 +18,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.bce.eclipse.rcp.contrib"/>
+      <import plugin="org.kalypso.contribs.eclipsercp"/>
    </requires>
 
 </plugin>

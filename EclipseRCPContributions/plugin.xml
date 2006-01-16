@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.bce.eclipse.rcp.contrib"
+   id="org.kalypso.contribs.eclipsercp"
    name="EclipseRCPContribution Plug-in"
    version="1.0.0"
-   provider-name="bce.org">
+   provider-name="kalypso.org"
+   class="org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin">
 
    <runtime>
       <library name="EclipseRCPContribution.jar">
@@ -15,6 +16,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.junit"/>
    </requires>
 
 </plugin>
