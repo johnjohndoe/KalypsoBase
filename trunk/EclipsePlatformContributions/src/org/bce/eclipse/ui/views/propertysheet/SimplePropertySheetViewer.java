@@ -40,12 +40,12 @@
 ------------------------------------------------------------------------------------ */
 package org.bce.eclipse.ui.views.propertysheet;
 
-import org.bce.eclipse.jface.viewers.DefaultTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 
 /**
  * SimplePropertySheetViewer

@@ -1,4 +1,4 @@
-#Thu Jun 09 11:36:04 CEST 2005
+#Sun Jan 15 23:23:14 CET 2006
 comment_clear_blank_lines=true
 comment_format_comments=true
 comment_format_header=false
@@ -14,3 +14,4 @@ formatter_settings_version=8
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.keywordthis=false
+org.eclipse.jdt.ui.overrideannotation=true
