@@ -28,7 +28,7 @@ types of relations:
 - restricted to aggregation -> "linked"
 - restricted to composition -> "inline"
 
-relations can be string-typed by
+relations can be strong-typed by
 - by XML-Schema-mechanisms: restrict the FeatureAssociation and use of substritutionsgroups
 - by adv strong-typing <adv:referenziertesElement>...
 
@@ -52,3 +52,8 @@ relations:
 
 additional appinfo information in schema:
 - heavy relationships
+- format-strings
+- root-element-tags
+- topology-themes
+- linked-relation
+- inline-relation

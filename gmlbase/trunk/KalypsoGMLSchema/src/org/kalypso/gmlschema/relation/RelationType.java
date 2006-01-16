@@ -43,9 +43,8 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  * 
  * @author doemming
  */
-public class RelationType extends BuildedFromElement
+public class RelationType extends BuildedFromElement implements IRelationType
 {
-
   private RelationContentType m_relationContentType;
 
   public RelationType( final GMLSchema gmlSchema, final Element element )
@@ -78,5 +77,4 @@ public class RelationType extends BuildedFromElement
     indent++;
     m_relationContentType.toStringTree( writer, indent );
   }
-
 }

@@ -619,6 +619,8 @@ Fläche gemäß §9 Abs. 1 Nr. 9 BauGB.
 			<xs:element name="dachform" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+<!-- doemming, warum nicht von AbstractFeatureType abgeleitet ?-->
+
 	<xs:complexType name="FestsetzungenBaugebietType">
 		<xs:annotation>
 			<xs:documentation>
