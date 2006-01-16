@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,47 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
-package org.bce.eclipse.core.resources;
+package org.kalypso.contribs.eclipse.core.resources;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IProject;
 
 /**
- * Collects all visited IFiles and deletes duplicates.
- * 
  * @author belger
  */
-public class CollectFilesVisitor implements IResourceVisitor
+public interface IProjectProvider
 {
-  private Set<IFile> m_files = new HashSet<IFile>();
-
-  /**
-   * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
-   */
-  public boolean visit( final IResource resource )
-  {
-    if( resource.getType() == IResource.FILE )
-      m_files.add( (IFile)resource );
-
-    return true;
-  }
-
-  /**
-   * Clears collected files, so visitor can be used again.
-   */
-  public void reset()
-  {
-    m_files.clear();
-  }
-
-  public IFile[] getFiles()
-  {
-    return m_files.toArray( new IFile[m_files.size()] );
-  }
+  public IProject getProject();
 }

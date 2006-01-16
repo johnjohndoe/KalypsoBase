@@ -36,9 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
------------------------------------------------------------------------------------- */
-package org.bce.eclipse.ui.views.propertysheet;
+ 
+ ------------------------------------------------------------------------------------ */
+package org.kalypso.contribs.eclipse.ui.views.propertysheet;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -56,14 +56,16 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 public class SimplePropertySheetViewer extends Viewer
 {
   private DefaultTableViewer m_viewer;
+
   private final int m_propColSize;
+
   private final int m_valueColSize;
 
   public SimplePropertySheetViewer( final Composite parent )
   {
     this( parent, 100, 300 );
   }
-  
+
   public SimplePropertySheetViewer( final Composite parent, final int propColSize, final int valueColSize )
   {
     m_propColSize = propColSize;
@@ -77,7 +79,7 @@ public class SimplePropertySheetViewer extends Viewer
     m_viewer.addColumn( "property", "Eigenschaft", m_propColSize, false );
     m_viewer.addColumn( "value", "Wert", m_valueColSize, false );
     m_viewer.refreshColumnProperties();
-    
+
     m_viewer.setLabelProvider( new PropertySheetTableLabelProvider( null ) );
     m_viewer.setContentProvider( new PropertySheetTableContentProvider() );
   }
@@ -85,7 +87,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
-  public Control getControl()
+  public Control getControl( )
   {
     return m_viewer.getControl();
   }
@@ -93,7 +95,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getInput()
    */
-  public Object getInput()
+  public Object getInput( )
   {
     return m_viewer.getInput();
   }
@@ -101,7 +103,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return m_viewer.getSelection();
   }
@@ -109,7 +111,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#refresh()
    */
-  public void refresh()
+  public void refresh( )
   {
     m_viewer.refresh();
   }

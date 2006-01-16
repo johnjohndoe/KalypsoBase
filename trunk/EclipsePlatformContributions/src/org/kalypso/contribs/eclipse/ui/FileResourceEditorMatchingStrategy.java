@@ -1,4 +1,4 @@
-package org.bce.eclipse.ui;
+package org.kalypso.contribs.eclipse.ui;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IEditorInput;

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.bce.eclipse.jface.wizard;
+package org.kalypso.contribs.eclipse.jface.wizard;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -278,7 +278,7 @@ public class SaveFileWizardPage extends WizardPage
       setDestinationValue( destinationValue.substring( 0, index ) + "." + ext );
   }
 
-   void handleDestinationBrowseButtonPressed()
+  void handleDestinationBrowseButtonPressed()
   {
     final FileDialog dialog = new FileDialog( getContainer().getShell(), SWT.SAVE );
 

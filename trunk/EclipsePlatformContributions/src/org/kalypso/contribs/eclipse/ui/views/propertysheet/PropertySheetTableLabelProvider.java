@@ -31,7 +31,7 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.bce.eclipse.ui.views.propertysheet;
+package org.kalypso.contribs.eclipse.ui.views.propertysheet;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -58,10 +58,9 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
   {
     m_psource = psource;
   }
-  
+
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
@@ -69,21 +68,20 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( Object element, int columnIndex )
   {
-    final PropertyDescriptor pd = (PropertyDescriptor)element;
-    
+    final PropertyDescriptor pd = (PropertyDescriptor) element;
+
     switch( columnIndex )
     {
-    case 0:
-      return pd.getDisplayName();
-    case 1:
-      return m_psource.getPropertyValue( pd.getDisplayName() ).toString();
-    default:
-      return "";
+      case 0:
+        return pd.getDisplayName();
+      case 1:
+        return m_psource.getPropertyValue( pd.getDisplayName() ).toString();
+      default:
+        return "";
     }
   }
 
@@ -98,14 +96,13 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     // empty
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {
