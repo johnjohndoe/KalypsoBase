@@ -59,4 +59,6 @@ public abstract class GMLSchemaConstants
 
   public static final int TYPE_PROP_LINK = 3;
 
+  public static final int OCCURS_UNOUNDED = -1;
+
 }

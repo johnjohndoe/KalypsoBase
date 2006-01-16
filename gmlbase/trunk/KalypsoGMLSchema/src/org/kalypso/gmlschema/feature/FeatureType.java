@@ -30,6 +30,8 @@
 package org.kalypso.gmlschema.feature;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -38,8 +40,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.BuildedFromSchema;
+import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * 
@@ -54,9 +58,13 @@ public class FeatureType implements BuildedFromSchema
 
   private final Element m_element;
 
+  private final QName m_qName;
+
+  // will initilized in init()
   private FeatureContentType m_featureContentType = null;
 
-  private final QName m_qName;
+  // will initilized in init()
+  private FeatureType m_substituteFT = null;
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
@@ -69,10 +77,24 @@ public class FeatureType implements BuildedFromSchema
 
   public void init()
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor(m_gmlSchema,m_element);
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema,
+        m_element );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
     m_featureContentType = (FeatureContentType)schema.getBuildedObjectFor( complexType );
+
+    // initialize substitution group
+    final QName substitutionGroup = m_element.getSubstitutionGroup();
+    if( substitutionGroup != null )
+    {
+      final ElementReference substitutesReference = (ElementReference)m_gmlSchema.resolveReference( substitutionGroup );
+      final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
+      final Element substitutesElement = substitutesReference.getElement();
+      final FeatureType ft = (FeatureType)substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
+      m_substituteFT = ft;
+    }
+    else
+      m_substituteFT = null;
   }
 
   public FeatureContentType getFeatureContentType()
@@ -81,10 +103,40 @@ public class FeatureType implements BuildedFromSchema
   }
 
   /**
+   * <b>do not use QName as key, it is qualified, but not unique ! </b>
    */
   public QName getQName()
   {
     return m_qName;
+  }
+
+  public FeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract,
+      final boolean inclusiveThis )
+  {
+    if( m_substituteFT == null ) // no substitutiongroup
+    {
+      if( inclusiveThis ) // return this ?
+      {
+        if( !includeAbstract && isAbstract() ) // abstract-behaviour ?
+          return new FeatureType[0];
+        return new FeatureType[]
+        { this };
+      }
+      return new FeatureType[0];
+    }
+    // query for it
+    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( contextSchema, this,
+        includeAbstract, inclusiveThis );
+    contextSchema.accept( visitor );
+    return visitor.getSubstitutes();
+  }
+
+  /**
+   * @return
+   */
+  public boolean isAbstract()
+  {
+    return m_element.isSetAbstract();
   }
 
   /**
@@ -95,15 +147,28 @@ public class FeatureType implements BuildedFromSchema
   {
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
     writer.write( "FeatureType : " + getQName() );
+    if( m_substituteFT != null )
+    {
+      writer.write( "\n" + StringUtils.repeat( " ", indent ) );
+      writer.write( " substitutes: " + m_substituteFT.getQName() );
+    }
     indent++;
     m_featureContentType.toStringTree( writer, indent );
   }
 
   /**
-   * 
+   *  
    */
   public Element getElement()
   {
     return m_element;
+  }
+
+  /**
+   * @return
+   */
+  public FeatureType getSubstitutionGroupFT()
+  {
+    return m_substituteFT;
   }
 }

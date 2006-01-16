@@ -40,7 +40,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.BuildedFromSchema;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 

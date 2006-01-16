@@ -32,9 +32,11 @@ package org.kalypso.gmlschema;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -57,6 +59,8 @@ import org.kalypso.gmlschema.property.PropertyContentType;
 import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.relation.RelationContentType;
 import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
+import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.Reference;
@@ -85,15 +89,15 @@ public class GMLSchema
 
   private final Hashtable m_buildedObjectHash = new Hashtable();
 
-  private final Hashtable m_featureTypes = new Hashtable();
+  private final List m_featureTypesList = new ArrayList();
 
-  private final Hashtable m_propertyTypes = new Hashtable();
+  private final List m_propertyTypeList = new ArrayList();
+
+  private final List m_relationTypeList = new ArrayList();
 
   private final Hashtable m_featureContentTypes = new Hashtable();
 
   private final Hashtable m_propertyContentTypes = new Hashtable();
-
-  private final Hashtable m_relationTypes = new Hashtable();
 
   private final Hashtable m_relationContentTypes = new Hashtable();
 
@@ -243,20 +247,17 @@ public class GMLSchema
     if( buildedObject instanceof FeatureType )
     {
       final FeatureType ft = (FeatureType)buildedObject;
-      final QName qName = ft.getQName();
-      m_featureTypes.put( qName, ft );
+      m_featureTypesList.add( ft );
     }
     else if( buildedObject instanceof RelationType )
     {
       final RelationType rt = (RelationType)buildedObject;
-      final QName qName = rt.getQName();
-      m_relationTypes.put( qName, rt );
+      m_relationTypeList.add( rt );
     }
     else if( buildedObject instanceof PropertyType )
     {
       final PropertyType pt = (PropertyType)buildedObject;
-      final QName qName = pt.getQName();
-      m_propertyTypes.put( qName, pt );
+      m_propertyTypeList.add( pt );
     }
     // use type as key
     else if( buildedObject instanceof FeatureContentType )
@@ -362,8 +363,8 @@ public class GMLSchema
    */
   public FeatureType[] getAllFeatureTypes()
   {
-    final Collection collection = m_featureTypes.values();
-    return (FeatureType[])collection.toArray( new FeatureType[collection.size()] );
+
+    return (FeatureType[])m_featureTypesList.toArray( new FeatureType[m_featureTypesList.size()] );
   }
 
   /**
@@ -371,8 +372,7 @@ public class GMLSchema
    */
   public PropertyType[] getAllPropertyTypes()
   {
-    final Collection collection = m_propertyTypes.values();
-    return (PropertyType[])collection.toArray( new PropertyType[collection.size()] );
+    return (PropertyType[])m_propertyTypeList.toArray( new PropertyType[m_propertyTypeList.size()] );
   }
 
   /**
@@ -406,8 +406,33 @@ public class GMLSchema
    */
   public RelationType[] getAllRelationTypes()
   {
-    final Collection collection = m_relationTypes.values();
-    return (RelationType[])collection.toArray( new RelationType[collection.size()] );
+    return (RelationType[])m_relationTypeList.toArray( new RelationType[m_relationTypeList.size()] );
+  }
+
+  /**
+   * @param visitor
+   */
+  public void accept( final IGMLSchemaVisitor visitor )
+  {
+    if( visitor.visit( this ) )
+    {
+      final GMLSchema[] imports = getImports();
+      for( int i = 0; i < imports.length; i++ )
+      {
+        final GMLSchema schema = imports[i];
+        schema.accept( visitor );
+      }
+    }
+  }
+
+  /**
+   * @return
+   *  
+   */
+  private GMLSchema[] getImports()
+  {
+    final Collection collection = m_importedSchemasHash.values();
+    return (GMLSchema[])collection.toArray( new GMLSchema[collection.size()] );
   }
 
 }

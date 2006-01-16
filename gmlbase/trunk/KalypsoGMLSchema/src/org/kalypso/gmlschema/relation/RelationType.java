@@ -31,55 +31,26 @@ package org.kalypso.gmlschema.relation;
 
 import java.io.StringWriter;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.BuildedFromElement;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * 
  * @author doemming
  */
-public class RelationType implements BuildedFromSchema
+public class RelationType extends BuildedFromElement
 {
-
-  private final GMLSchema m_gmlSchema;
-
-  private final Element m_element;
-
-  private final QName m_qName;
 
   private RelationContentType m_relationContentType;
 
   public RelationType( final GMLSchema gmlSchema, final Element element )
   {
-    m_gmlSchema = gmlSchema;
-    m_element = element;
-    final String name = m_element.getName();
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    m_qName = new QName( targetNamespace, name );
-  }
-
-  /**
-   *  
-   */
-  public QName getQName()
-  {
-    return m_qName;
-  }
-
-  /**
-   * @return
-   *  
-   */
-  public Element getElement()
-  {
-    return m_element;
+    super( gmlSchema, element );
   }
 
   /**
@@ -92,17 +63,18 @@ public class RelationType implements BuildedFromSchema
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
     m_relationContentType = (RelationContentType)schema.getBuildedObjectFor( complexType );
-    if(m_relationContentType==null)
+    if( m_relationContentType == null )
       throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypso.gmlschema.builder.BuildedFromSchema#toStringTree(java.io.StringWriter, int)
+   * @see org.kalypso.gmlschema.basics.BuildedFromSchema#toStringTree(java.io.StringWriter, int)
    */
   public void toStringTree( StringWriter writer, int indent )
   {
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
     writer.write( "RelationType : " + getQName() );
+    super.toStringTree(writer, indent);
     indent++;
     m_relationContentType.toStringTree( writer, indent );
   }

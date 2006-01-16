@@ -1,0 +1,112 @@
+/*
+ * --------------- Kalypso-Header --------------------------------------------------------------------
+ * 
+ * This file is part of kalypso. Copyright (C) 2004, 2005 by:
+ * 
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
+ * 
+ * and
+ * 
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * Contact:
+ * 
+ * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
+ * 
+ * ---------------------------------------------------------------------------------------------------
+ */
+package org.kalypso.gmlschema.basics;
+
+import java.io.StringWriter;
+import java.math.BigInteger;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaConstants;
+
+/**
+ * 
+ * TODO: insert type comment here
+ * 
+ * @author doemming
+ */
+public abstract class BuildedFromElement implements BuildedFromSchema
+{
+  protected final GMLSchema m_gmlSchema;
+
+  protected final Element m_element;
+
+  private QName m_qName;
+
+  public BuildedFromElement( GMLSchema gmlSchema, Element element )
+  {
+    m_gmlSchema = gmlSchema;
+    m_element = element;
+    final String targetNamespace = gmlSchema.getTargetNamespace();
+    final String name = m_element.getName();
+    m_qName = new QName( targetNamespace, name );
+  }
+
+  /**
+   */
+  public final QName getQName()
+  {
+    return m_qName;
+  }
+
+  /**
+   *  
+   */
+  public final Element getElement()
+  {
+    return m_element;
+  }
+
+  public final int getMinOccurs()
+  {
+    if( !m_element.isSetMinOccurs() )
+      return 1;
+    final BigInteger minOccurs = m_element.getMinOccurs();
+    return minOccurs.intValue();
+  }
+
+  public final int getMaxOccurs()
+  {
+    if( !m_element.isSetMaxOccurs() )
+      return 1;
+    final Object maxOccurs = m_element.getMaxOccurs();
+    if( maxOccurs instanceof Number )
+      return ( (Number)maxOccurs ).intValue();
+    if( "unbounded".equals( maxOccurs ) )
+      return GMLSchemaConstants.OCCURS_UNOUNDED;
+    throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
+  }
+
+  public void toStringTree( StringWriter writer, int indent )
+  {
+    final int maxOccurs = getMaxOccurs();
+    final int minOccurs = getMinOccurs();
+    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
+    writer.write( " [" + minOccurs + "-" );
+    if( maxOccurs == GMLSchemaConstants.OCCURS_UNOUNDED )
+      writer.write( "unbounded" );
+    else
+      writer.write( Integer.toString( maxOccurs ) );
+    writer.write( "]" );
+  }
+}

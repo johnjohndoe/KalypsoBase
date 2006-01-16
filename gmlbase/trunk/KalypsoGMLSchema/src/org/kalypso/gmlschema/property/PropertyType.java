@@ -38,7 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
-import org.kalypso.gmlschema.builder.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.BuildedFromElement;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
@@ -47,32 +47,18 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
  * 
  * @author doemming
  */
-public class PropertyType implements BuildedFromSchema
+public class PropertyType extends BuildedFromElement
 {
 
-  private final GMLSchema m_gmlSchema;
-
-  private final Element m_element;
-
   private PropertyContentType m_propertyContentType = null;
-
-  private final QName m_qName;
 
   // null if not a XML-Schematype // TODO
   private QName m_valueQName = null;
 
   public PropertyType( GMLSchema gmlSchema, Element element )
   {
-    m_gmlSchema = gmlSchema;
-    m_element = element;
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    final String name = m_element.getName();
-    m_qName = new QName( targetNamespace, name );
-  }
+    super( gmlSchema, element );
 
-  public Element getElement()
-  {
-    return m_element;
   }
 
   public void init()
@@ -104,13 +90,6 @@ public class PropertyType implements BuildedFromSchema
 
   /**
    */
-  public QName getQName()
-  {
-    return m_qName;
-  }
-
-  /**
-   */
   public QName getValueQName()
   {
     if( m_valueQName != null )
@@ -125,7 +104,10 @@ public class PropertyType implements BuildedFromSchema
   public void toStringTree( StringWriter writer, int indent )
   {
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "PropertyType " + m_qName );
+    writer.write( "PropertyType " + getQName() );
+
+    
+    super.toStringTree( writer, indent );
     if( m_propertyContentType != null )
     {
       indent++;
