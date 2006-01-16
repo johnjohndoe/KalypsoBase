@@ -1,4 +1,4 @@
-package org.bce.eclipse.platform;
+package org.kalypso.contribs.eclipse;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -17,10 +17,12 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  /**
-   * The constructor.
-   */
-  public EclipsePlatformContributionsPlugin( )
+  public static String getID()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+  
+  public EclipsePlatformContributionsPlugin()
   {
     super();
     plugin = this;
@@ -47,22 +49,20 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the shared instance.
    */
-  public static EclipsePlatformContributionsPlugin getDefault( )
+  public static EclipsePlatformContributionsPlugin getDefault()
   {
     return plugin;
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString( String key )
   {
-    ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault()
-        .getResourceBundle();
+    ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return ( bundle != null ) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -73,7 +73,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle( )
+  public ResourceBundle getResourceBundle()
   {
     try
     {

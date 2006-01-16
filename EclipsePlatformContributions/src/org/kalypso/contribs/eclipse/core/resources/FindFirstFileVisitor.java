@@ -1,4 +1,4 @@
-package org.bce.eclipse.core.resources;
+package org.kalypso.contribs.eclipse.core.resources;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;

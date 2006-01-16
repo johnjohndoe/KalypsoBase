@@ -36,9 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
------------------------------------------------------------------------------------- */
-package org.bce.eclipse.ui.views.propertysheet;
+ 
+ ------------------------------------------------------------------------------------ */
+package org.kalypso.contribs.eclipse.ui.views.propertysheet;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -57,17 +57,18 @@ public class PropertySheetTableContentProvider implements IStructuredContentProv
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     // empty
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    ( (PropertySheetTableLabelProvider)( (TableViewer)viewer).getLabelProvider() ).setPropertySource( (IPropertySource)newInput );
+    ((PropertySheetTableLabelProvider) ((TableViewer) viewer).getLabelProvider()).setPropertySource( (IPropertySource) newInput );
   }
 
   /**
@@ -77,11 +78,11 @@ public class PropertySheetTableContentProvider implements IStructuredContentProv
   {
     if( inputElement instanceof IPropertySource )
     {
-      final IPropertyDescriptor[] descs = ( (IPropertySource)inputElement ).getPropertyDescriptors();
-      
+      final IPropertyDescriptor[] descs = ((IPropertySource) inputElement).getPropertyDescriptors();
+
       return descs;
     }
-    
+
     return null;
   }
 }
