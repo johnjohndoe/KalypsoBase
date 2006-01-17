@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property.relation;
 
 import java.io.StringWriter;
 
@@ -38,8 +38,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.FeatureContentType;
-import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**

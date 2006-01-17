@@ -36,6 +36,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyContentType;
 import org.kalypso.gmlschema.property.PropertyContentTypeFromRestriction;
 
@@ -54,7 +55,7 @@ public class SimpleType2PropertyContentTypeBuilder implements IBuilder
    */
   public Object[] build( final GMLSchema gmlSchema, final Object simpleTypeObject )
   {
-    final PropertyContentType pct;
+    final IPropertyContentType pct;
     final SimpleType simpleType = (SimpleType)simpleTypeObject;
     final Restriction restriction = simpleType.getRestriction();
     if( restriction != null )

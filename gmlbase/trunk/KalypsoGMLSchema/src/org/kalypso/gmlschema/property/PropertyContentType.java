@@ -36,7 +36,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.basics.BuildedFromSchema;
 
 /**
  * 
@@ -44,7 +43,7 @@ import org.kalypso.gmlschema.basics.BuildedFromSchema;
  * 
  * @author doemming
  */
-public class PropertyContentType implements BuildedFromSchema
+public class PropertyContentType implements IPropertyContentType
 {
 
   private final GMLSchema m_gmlSchema;

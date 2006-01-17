@@ -27,86 +27,81 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.basics;
+package org.kalypso.gmlschema.property;
 
 import java.io.StringWriter;
-import java.math.BigInteger;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 
 /**
  * 
- * TODO: insert type comment here
+ * representation of a property content definition from xml schema
  * 
  * @author doemming
  */
-public abstract class BuildedFromElement implements BuildedFromSchema
+public class GeometryPropertyContentType implements IPropertyContentType
 {
-  protected final GMLSchema m_gmlSchema;
 
-  protected final Element m_element;
+  private final GMLSchema m_gmlSchema;
+
+  //  private QName m_valueQName = null;
+
+  private final ComplexType m_complexType;
 
   private QName m_qName;
 
-  public BuildedFromElement( GMLSchema gmlSchema, Element element )
+  public GeometryPropertyContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
-    m_element = element;
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    final String name = m_element.getName();
-    m_qName = new QName( targetNamespace, name );
+    m_complexType = complexType;
+    final String name = m_complexType.getName();
+    m_qName = new QName( GMLSchemaConstants.NS_GML2, name );
+  }
+
+  public void init()
+  {
+  //    final String name = m_simpleType.getName();
+  //    final String targetNamespace = m_gmlSchema.getTargetNamespace();
+  //    m_valueQName = new QName( targetNamespace, name );
+  }
+
+  public GMLSchema getGMLSchema()
+  {
+    return m_gmlSchema;
+  }
+
+  public String toString()
+  {
+    return m_qName.toString();
   }
 
   /**
    */
-  public final QName getQName()
+  public QName getValueQName()
   {
     return m_qName;
   }
 
   /**
-   *  
+   * @param writer
+   * @param indent
    */
-  public final Element getElement()
-  {
-    return m_element;
-  }
-
-  public final int getMinOccurs()
-  {
-    if( !m_element.isSetMinOccurs() )
-      return 1;
-    final BigInteger minOccurs = m_element.getMinOccurs();
-    return minOccurs.intValue();
-  }
-
-  public final int getMaxOccurs()
-  {
-    if( !m_element.isSetMaxOccurs() )
-      return 1;
-    final Object maxOccurs = m_element.getMaxOccurs();
-    if( maxOccurs instanceof Number )
-      return ( (Number)maxOccurs ).intValue();
-    if( "unbounded".equals( maxOccurs ) )
-      return GMLSchemaConstants.OCCURS_UNOUNDED;
-    throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
-  }
-
   public void toStringTree( StringWriter writer, int indent )
   {
-    final int maxOccurs = getMaxOccurs();
-    final int minOccurs = getMinOccurs();
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( " [" + minOccurs + "-" );
-    if( maxOccurs == GMLSchemaConstants.OCCURS_UNOUNDED )
-      writer.write( "unbounded" );
-    else
-      writer.write( Integer.toString( maxOccurs ) );
-    writer.write( "]" );
+    writer.write( "          PropertyContentType " + getValueQName() );
+  }
+
+  /**
+   * @return
+   */
+  public ComplexType getComplexType()
+  {
+    return m_complexType;
   }
 }

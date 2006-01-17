@@ -44,10 +44,10 @@ import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
-import org.kalypso.gmlschema.property.PropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.relation.RelationContentType;
-import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.RelationContentType;
 
 /**
  * 
@@ -80,10 +80,13 @@ public class GMLSchemaBuilder
       m_instance.registerBuilder( new PropertyType2SimpleTypeBuilder() );
       // simple type...
       m_instance.registerBuilder( new SimpleType2PropertyContentTypeBuilder() );
-      // test
-      m_instance.registerBuilder( new Element2RelationTypeBuilder() );
+      // relations
+      //      m_instance.registerBuilder( new Element2RelationTypeBuilder() );
       m_instance.registerBuilder( new RelationType2ComplexTypeBuilder() );
       m_instance.registerBuilder( new ComplexType2RelationContentTypeBuilder() );
+      // test
+      m_instance.registerBuilder( new ComplexType2GeometryPropertyContentTypeBuilder() );
+      m_instance.registerBuilder( new AdvElement2RelationTypeBuilder() );
     }
     return m_instance;
   }
@@ -152,15 +155,15 @@ public class GMLSchemaBuilder
     for( int i = 0; i < propertyTypes.length; i++ )
       propertyTypes[i].init();
 
-    final PropertyContentType[] propertyContentTypes = gmlSchema.getAllPropertyContentTypes();
+    final IPropertyContentType[] propertyContentTypes = gmlSchema.getAllPropertyContentTypes();
     for( int i = 0; i < propertyContentTypes.length; i++ )
       propertyContentTypes[i].init();
 
     final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
     for( int i = 0; i < relationContentTypes.length; i++ )
       relationContentTypes[i].init();
-     
-    final RelationType[] relationTypes = gmlSchema.getAllRelationTypes();
+
+    final IRelationType[] relationTypes = gmlSchema.getAllRelationTypes();
     for( int i = 0; i < relationTypes.length; i++ )
       relationTypes[i].init();
   }

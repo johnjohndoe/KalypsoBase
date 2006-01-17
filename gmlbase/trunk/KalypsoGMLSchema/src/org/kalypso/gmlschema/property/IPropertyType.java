@@ -38,7 +38,11 @@
  v.doemming@tuhh.de
   
 --------------------------------------------------------------------------------------------------- */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
  *
@@ -46,7 +50,9 @@ package org.kalypso.gmlschema.relation;
  *
  * @author doemming
  */
-public interface IRelationType extends IPropertyType
+public interface IPropertyType extends IInitialize
 {
-
+  public int getMinOccurs();
+  public int getMaxOccurs();
+  public QName getQName();
 }

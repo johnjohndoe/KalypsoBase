@@ -34,11 +34,13 @@ import java.io.StringWriter;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
-import org.kalypso.gmlschema.basics.BuildedFromElement;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
+import org.kalypso.gmlschema.xml.Reference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
@@ -47,10 +49,10 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
  * 
  * @author doemming
  */
-public class PropertyType extends BuildedFromElement
+public class PropertyType extends AbstractPropertyTypeFromElement
 {
 
-  private PropertyContentType m_propertyContentType = null;
+  private IPropertyContentType m_propertyContentType = null;
 
   // null if not a XML-Schematype // TODO
   private QName m_valueQName = null;
@@ -70,10 +72,18 @@ public class PropertyType extends BuildedFromElement
         m_valueQName = type;
       else
       {
-        final SimpleTypeReference reference = (SimpleTypeReference)m_gmlSchema.resolveReference( type );
+        final Reference reference = m_gmlSchema.resolveReference( type );
         final GMLSchema schema = reference.getGMLSchema();
-        final SimpleType simpleType = reference.getSimpleType();
-        m_propertyContentType = (PropertyContentType)schema.getBuildedObjectFor( simpleType );
+        if( reference instanceof SimpleTypeReference )
+        {
+          final SimpleType simpleType = ( (SimpleTypeReference)reference ).getSimpleType();
+          m_propertyContentType = (PropertyContentType)schema.getBuildedObjectFor( simpleType );
+        }
+        else if( reference instanceof ComplexTypeReference )
+        {
+          final ComplexType complexType = ( (ComplexTypeReference)reference ).getComplexType();
+          m_propertyContentType = (IPropertyContentType)schema.getBuildedObjectFor( complexType );
+        }
       }
     }
     else
@@ -83,7 +93,7 @@ public class PropertyType extends BuildedFromElement
     }
   }
 
-  public PropertyContentType getPropertyContentType()
+  public IPropertyContentType getPropertyContentType()
   {
     return m_propertyContentType;
   }
@@ -103,11 +113,9 @@ public class PropertyType extends BuildedFromElement
    */
   public void toStringTree( StringWriter writer, int indent )
   {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "PropertyType " + getQName() );
-
-    
     super.toStringTree( writer, indent );
+//    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
+    writer.write( " PropertyType " + getQName() );
     if( m_propertyContentType != null )
     {
       indent++;
@@ -116,7 +124,7 @@ public class PropertyType extends BuildedFromElement
     else
     {
       writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-      writer.write( "  valueType: " + m_valueQName );
+      writer.write( "          valueType: " + m_valueQName );
     }
   }
 }

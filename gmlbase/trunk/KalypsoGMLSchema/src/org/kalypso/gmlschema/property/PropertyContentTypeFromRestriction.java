@@ -49,7 +49,7 @@ public class PropertyContentTypeFromRestriction extends PropertyContentType
 
   private final Restriction m_restriction;
 
-  private PropertyContentType m_restrictionBase = null;
+  private IPropertyContentType m_restrictionBase = null;
 
   public PropertyContentTypeFromRestriction( final GMLSchema gmlSchema, final SimpleType simpleType,
       final Restriction restriction )

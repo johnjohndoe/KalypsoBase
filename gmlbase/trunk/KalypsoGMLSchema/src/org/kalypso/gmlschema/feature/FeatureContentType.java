@@ -40,9 +40,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.basics.BuildedFromSchema;
 import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
@@ -51,7 +50,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
  * 
  * @author doemming
  */
-public abstract class FeatureContentType implements BuildedFromSchema
+public abstract class FeatureContentType
 {
 
   private final GMLSchema m_gmlSchema;
@@ -60,7 +59,7 @@ public abstract class FeatureContentType implements BuildedFromSchema
 
   private PropertyType[] m_pt = null;
 
-  private RelationType[] m_rt = null;
+  private IRelationType[] m_rt = null;
 
   public FeatureContentType( final GMLSchema gmlSchema, ComplexType complexType )
   {
@@ -110,12 +109,12 @@ public abstract class FeatureContentType implements BuildedFromSchema
         final Object buildedObject = schema.getBuildedObjectFor( element );
         if( buildedObject instanceof PropertyType )
           propertyTypes.add( buildedObject );
-        if( buildedObject instanceof RelationType )
+        if( buildedObject instanceof IRelationType )
           relationTypes.add( buildedObject );
       }
     }
     m_pt = (PropertyType[])propertyTypes.toArray( new PropertyType[propertyTypes.size()] );
-    m_rt = (RelationType[])relationTypes.toArray( new RelationType[relationTypes.size()] );
+    m_rt = (IRelationType[])relationTypes.toArray( new IRelationType[relationTypes.size()] );
   }
 
   /**
@@ -134,7 +133,7 @@ public abstract class FeatureContentType implements BuildedFromSchema
     {
       pts[i].toStringTree( writer, indent );
     }
-    final RelationType[] rts = m_rt;
+    final IRelationType[] rts = m_rt;
     for( int i = 0; i < rts.length; i++ )
     {
       rts[i].toStringTree( writer, indent );

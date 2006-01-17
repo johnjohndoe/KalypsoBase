@@ -27,54 +27,61 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.basics.BuildedFromElement;
-import org.kalypso.gmlschema.xml.ComplexTypeReference;
+import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
  * 
+ * TODO: insert type comment here
+ * 
  * @author doemming
  */
-public class RelationType extends BuildedFromElement implements IRelationType
+public abstract class AbstractPropertyTypeFromElement extends QualifiedElement
 {
-  private RelationContentType m_relationContentType;
 
-  public RelationType( final GMLSchema gmlSchema, final Element element )
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element )
   {
     super( gmlSchema, element );
   }
 
-  /**
-   *  
-   */
-  public void init()
+  public final int getMinOccurs()
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema,
-        m_element );
-    final ComplexType complexType = complexTypeReference.getComplexType();
-    final GMLSchema schema = complexTypeReference.getGMLSchema();
-    m_relationContentType = (RelationContentType)schema.getBuildedObjectFor( complexType );
-    if( m_relationContentType == null )
-      throw new UnsupportedOperationException();
+    if( !m_element.isSetMinOccurs() )
+      return 1;
+    final BigInteger minOccurs = m_element.getMinOccurs();
+    return minOccurs.intValue();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.basics.BuildedFromSchema#toStringTree(java.io.StringWriter, int)
-   */
+  public final int getMaxOccurs()
+  {
+    if( !m_element.isSetMaxOccurs() )
+      return 1;
+    final Object maxOccurs = m_element.getMaxOccurs();
+    if( maxOccurs instanceof Number )
+      return ( (Number)maxOccurs ).intValue();
+    if( "unbounded".equals( maxOccurs ) )
+      return GMLSchemaConstants.OCCURS_UNOUNDED;
+    throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
+  }
+
   public void toStringTree( StringWriter writer, int indent )
   {
+    final int maxOccurs = getMaxOccurs();
+    final int minOccurs = getMinOccurs();
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "RelationType : " + getQName() );
-    super.toStringTree(writer, indent);
-    indent++;
-    m_relationContentType.toStringTree( writer, indent );
+    writer.write( " [" + minOccurs + "-" );
+    if( maxOccurs == GMLSchemaConstants.OCCURS_UNOUNDED )
+      writer.write( "unbounded" );
+    else
+      writer.write( Integer.toString( maxOccurs ) );
+    writer.write( "]" );
   }
 }

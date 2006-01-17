@@ -27,9 +27,11 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.basics;
+package org.kalypso.gmlschema.property.relation;
 
 import java.io.StringWriter;
+
+import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
  * 
@@ -37,25 +39,8 @@ import java.io.StringWriter;
  * 
  * @author doemming
  */
-public interface BuildedFromSchema
+public interface IRelationContentType extends IInitialize
 {
-  /**
-   * initialize builded object. <br>
-   * This methode is intended to be called only from org.kalypso.gmlschema.GMLSchemaBuilder. Implement here the linking
-   * of the objects and other initialization stuff that can not be done in the contructor(e.g. because other objects
-   * from the schema may not be builded at construction time). <br>
-   * Assume that all objects are builded from the schema, but they may not be initialized are linked with each other.
-   * This is intended to be done here.
-   */
-  public void init();
+  public void toStringTree( StringWriter writer, int indent );
 
-  /**
-   * adds a string representation of this object to the writer. This is intended to be used by junit-test methodes, that
-   * compare the resulting string representation of the schema with previous builded strings from the same schema in
-   * order to easy identify changes.
-   * 
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( final StringWriter writer, final int indent );
 }

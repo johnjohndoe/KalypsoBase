@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property.relation;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.basics.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -50,7 +50,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
  * 
  * @author doemming
  */
-public abstract class RelationContentType implements BuildedFromSchema
+public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
 
   private final GMLSchema m_gmlSchema;
@@ -59,15 +59,10 @@ public abstract class RelationContentType implements BuildedFromSchema
 
   private FeatureType m_ftRelationTarget = null;
 
-  private final QName m_qName;
-
   public RelationContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
     m_complexType = complexType;
-    final String namespace = gmlSchema.getTargetNamespace();
-    final String name = complexType.getName();
-    m_qName = new QName( namespace, name );
   }
 
   public GMLSchema getGMLSchema()
@@ -128,14 +123,6 @@ public abstract class RelationContentType implements BuildedFromSchema
     //    super.toStringTree( writer, indent );
     indent++;
     //    m_ftRelationTarget.toStringTree( writer, indent );
-  }
-
-  /**
-   * s
-   */
-  public QName getQName()
-  {
-    return m_qName;
   }
 
   /**

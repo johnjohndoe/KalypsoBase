@@ -27,32 +27,23 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property.relation;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
-import org.kalypso.gmlschema.GMLSchema;
+import java.io.StringWriter;
+
+import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
  * 
- * representation of a feature content definition from a xml schema sequence fragment.
+ * TODO: insert type comment here
  * 
  * @author doemming
  */
-public class RelationContentTypeFromSequence extends RelationContentType
+public interface IRelationType extends IPropertyType
 {
+  public boolean isInlineAble();
 
-  private final ExplicitGroup m_sequence;
+  public boolean isLinkAble();
 
-  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
-  {
-    super( gmlSchema, complexType );
-    m_sequence = sequence;
-  }
-
-  public ExplicitGroup getSequence()
-  {
-    return m_sequence;
-  }
-
+  public void toStringTree( StringWriter writer, int indent );
 }

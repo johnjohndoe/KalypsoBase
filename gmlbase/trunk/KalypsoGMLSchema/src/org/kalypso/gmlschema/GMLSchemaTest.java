@@ -70,14 +70,14 @@ public class GMLSchemaTest extends TestCase
       //      final URL schemaLocationURL = getClass().getResource( "resources/feature.xsd" );
       //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( NS_GML2, schemaLocationURL );
 
-      //            final URL schemaLocationURL = getClass().getResource( "resources/namodell.xsd" );
-      //            GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
+      //      final URL schemaLocationURL = getClass().getResource( "resources/namodell.xsd" );
+      //      final GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
 
       final URL schemaLocationURL = getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" );
       final GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.xplanung.de/bplangml", schemaLocationURL );
 
-      //      final URL schemaLocationURL = getClass().getResource( "resources/XMLSchema.xsd" );
-      //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( GMLSchemaConstants.NS_XMLSCHEMA, schemaLocationURL );
+      //            final URL schemaLocationURL = getClass().getResource( "resources/XMLSchema.xsd" );
+      //            GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( GMLSchemaConstants.NS_XMLSCHEMA, schemaLocationURL );
       if( schema != null )
       {
         final StringWriter writer = new StringWriter();

@@ -34,7 +34,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.FeatureType;
-import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
@@ -67,6 +68,6 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    return object instanceof RelationType;
+    return object instanceof IRelationType;
   }
 }

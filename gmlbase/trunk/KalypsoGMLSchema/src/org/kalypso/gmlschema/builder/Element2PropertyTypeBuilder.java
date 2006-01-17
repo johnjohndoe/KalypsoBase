@@ -88,11 +88,18 @@ public class Element2PropertyTypeBuilder implements IBuilder
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
     final String localPart = baseType.getLocalPart();
-    if( !GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
-      return false;
-    if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
-      return false; // TODO implement builder for "anyType" ?
-    return true;
+    if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
+    {
+      if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
+        return false; // TODO implement builder for "anyType" ?
+      return true;
+    }
+    if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    {
+      if("GeometryAssociationType".equals(localPart))
+        return true;
+    }
+    return false;
   }
 
 }

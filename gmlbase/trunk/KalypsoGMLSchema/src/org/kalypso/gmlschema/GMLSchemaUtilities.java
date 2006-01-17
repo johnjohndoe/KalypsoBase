@@ -72,19 +72,22 @@ public class GMLSchemaUtilities
     final ComplexContent complexContent = complexType.getComplexContent();
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
-    if( name != null && complexContent == null )
+    //    if( name != null && complexContent == null )
+    if( name != null )
     {
       final QName typeQName = new QName( gmlSchema.getTargetNamespace(), name );
       if( isKnownType( typeQName ) )
         return getKnownTypeFor( typeQName );
-      System.out.println( "TODO, implement it" );
-      return null;
+      //      System.out.println( "TODO, implement it" );
+      //      return null;
     }
     if( sequence != null )
     {
       System.out.println( "TODO, implement it" );
       return null;
     }
+    if( complexContent == null )
+      return null;
     final ExtensionType extension = complexContent.getExtension();
     final ComplexRestrictionType restriction = complexContent.getRestriction();
     final QName base;
@@ -229,6 +232,8 @@ public class GMLSchemaUtilities
       else if( "AbstractFeatureType".equals( localPart ) )
         return result;
       else if( "FeatureAssociationType".equals( localPart ) )
+        return result;
+      else if( "AbstractGeometryType".equals( localPart ) )
         return result;
       else if( "PointType".equals( localPart ) )
         return result;

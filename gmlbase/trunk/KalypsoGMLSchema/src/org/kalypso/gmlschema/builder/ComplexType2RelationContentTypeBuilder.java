@@ -39,10 +39,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexConte
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.relation.RelationContentType;
-import org.kalypso.gmlschema.relation.RelationContentTypeFromExtension;
-import org.kalypso.gmlschema.relation.RelationContentTypeFromRestriction;
-import org.kalypso.gmlschema.relation.RelationContentTypeFromSequence;
+import org.kalypso.gmlschema.property.relation.RelationContentType;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
 
 /**
  * 

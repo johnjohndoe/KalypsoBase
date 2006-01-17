@@ -35,7 +35,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.relation.RelationType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
@@ -59,7 +60,7 @@ public class Element2RelationTypeBuilder implements IBuilder
       final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
       return build( reference );
     }
-    final RelationType result = new RelationType( gmlSchema, element );
+    final IRelationType result = new RelationType( gmlSchema, element );
     gmlSchema.register( element, result );
     return new Object[]
     { result };

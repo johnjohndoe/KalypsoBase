@@ -55,11 +55,13 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.property.GeometryPropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyContentType;
 import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.relation.RelationContentType;
-import org.kalypso.gmlschema.relation.RelationType;
-import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.RelationContentType;
+import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -249,9 +251,9 @@ public class GMLSchema
       final FeatureType ft = (FeatureType)buildedObject;
       m_featureTypesList.add( ft );
     }
-    else if( buildedObject instanceof RelationType )
+    else if( buildedObject instanceof IRelationType )
     {
-      final RelationType rt = (RelationType)buildedObject;
+      final IRelationType rt = (IRelationType)buildedObject;
       m_relationTypeList.add( rt );
     }
     else if( buildedObject instanceof PropertyType )
@@ -277,6 +279,12 @@ public class GMLSchema
       final PropertyContentType pct = (PropertyContentType)buildedObject;
       final SimpleType simpleType = pct.getSimpleType();
       m_propertyContentTypes.put( simpleType, pct );
+    }
+    else if( buildedObject instanceof GeometryPropertyContentType )
+    {
+      final GeometryPropertyContentType pct = (GeometryPropertyContentType)buildedObject;
+      final ComplexType complexType = pct.getComplexType();
+      m_propertyContentTypes.put( complexType, pct );
     }
   }
 
@@ -353,9 +361,9 @@ public class GMLSchema
   /**
    * @param simpleType
    */
-  public PropertyContentType getFeaturePropertyContentTypeFor( SimpleType simpleType )
+  public IPropertyContentType getFeaturePropertyContentTypeFor( SimpleType simpleType )
   {
-    return (PropertyContentType)m_propertyContentTypes.get( simpleType );
+    return (IPropertyContentType)m_propertyContentTypes.get( simpleType );
   }
 
   /**
@@ -387,10 +395,10 @@ public class GMLSchema
   /**
    *  
    */
-  public PropertyContentType[] getAllPropertyContentTypes()
+  public IPropertyContentType[] getAllPropertyContentTypes()
   {
     final Collection collection = m_propertyContentTypes.values();
-    return (PropertyContentType[])collection.toArray( new PropertyContentType[collection.size()] );
+    return (IPropertyContentType[])collection.toArray( new IPropertyContentType[collection.size()] );
   }
 
   /**
@@ -404,9 +412,9 @@ public class GMLSchema
   /**
    *  
    */
-  public RelationType[] getAllRelationTypes()
+  public IRelationType[] getAllRelationTypes()
   {
-    return (RelationType[])m_relationTypeList.toArray( new RelationType[m_relationTypeList.size()] );
+    return (IRelationType[])m_relationTypeList.toArray( new IRelationType[m_relationTypeList.size()] );
   }
 
   /**

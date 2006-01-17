@@ -30,8 +30,6 @@
 package org.kalypso.gmlschema.feature;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -40,7 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.basics.BuildedFromSchema;
+import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -51,14 +49,8 @@ import org.kalypso.gmlschema.xml.ElementReference;
  * 
  * @author doemming
  */
-public class FeatureType implements BuildedFromSchema
+public class FeatureType extends QualifiedElement 
 {
-
-  private final GMLSchema m_gmlSchema;
-
-  private final Element m_element;
-
-  private final QName m_qName;
 
   // will initilized in init()
   private FeatureContentType m_featureContentType = null;
@@ -68,11 +60,7 @@ public class FeatureType implements BuildedFromSchema
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
-    m_gmlSchema = gmlSchema;
-    m_element = element;
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    final String name = m_element.getName();
-    m_qName = new QName( targetNamespace, name );
+    super(gmlSchema, element);
   }
 
   public void init()
@@ -100,14 +88,6 @@ public class FeatureType implements BuildedFromSchema
   public FeatureContentType getFeatureContentType()
   {
     return m_featureContentType;
-  }
-
-  /**
-   * <b>do not use QName as key, it is qualified, but not unique ! </b>
-   */
-  public QName getQName()
-  {
-    return m_qName;
   }
 
   public FeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract,
@@ -145,7 +125,7 @@ public class FeatureType implements BuildedFromSchema
    */
   public void toStringTree( StringWriter writer, int indent )
   {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
+    writer.write( "\n\n" + StringUtils.repeat( " ", indent ) );
     writer.write( "FeatureType : " + getQName() );
     if( m_substituteFT != null )
     {
@@ -154,14 +134,6 @@ public class FeatureType implements BuildedFromSchema
     }
     indent++;
     m_featureContentType.toStringTree( writer, indent );
-  }
-
-  /**
-   *  
-   */
-  public Element getElement()
-  {
-    return m_element;
   }
 
   /**

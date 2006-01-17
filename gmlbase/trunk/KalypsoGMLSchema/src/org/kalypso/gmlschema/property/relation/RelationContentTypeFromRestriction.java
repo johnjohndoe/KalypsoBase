@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.gmlschema.relation;
+package org.kalypso.gmlschema.property.relation;
 
 import java.io.StringWriter;
 
