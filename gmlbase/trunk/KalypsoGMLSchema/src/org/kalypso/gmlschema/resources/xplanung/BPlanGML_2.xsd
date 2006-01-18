@@ -3,16 +3,12 @@
 <!-- 
 	Anwendungsschema: BPlanGML
 	Erzeugt von NAS Schema Generator
-	Erstellt: 27.04.2005 13:10:27
+	Erstellt: 02.11.2005 09:12:40
 -->
-<xs:schema targetNamespace="http://www.xplanung.de/bplangml"
- xmlns:adv="http://www.adv-online.de"
- xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:ogc="http://www.opengis.net/ogc" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:xplan="http://www.xplanung.de/bplangml" elementFormDefault="qualified" version="1.5">
-	<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="gml/2.1.2/feature.xsd"/-->
+<xs:schema targetNamespace="http://www.xplanung.de/bplangml" xmlns:bplan="http://www.xplanung.de/bplangml" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="2.1">
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	<!-- Paket Praesentationsobjekte -->
-	<xs:element name="BPlanPPO" type="xplan:BPlanPPOType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
+	<xs:element name="BPlanPPO" type="bplan:BPlanPPOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
 	<xs:complexType name="BPlanPPOType">
 		<xs:annotation>
 			<xs:documentation>
@@ -20,7 +16,7 @@ Punktförmiges Präsentationsobjekt
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
+			<xs:extension base="bplan:BPlanPraesentationsobjektType">
 				<xs:sequence>
 					<xs:element name="position" type="gml:PointPropertyType"/>
 					<xs:element name="drehwinkel" type="xs:double" default="0" minOccurs="0"/>
@@ -29,7 +25,7 @@ Punktförmiges Präsentationsobjekt
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanLPO" type="xplan:BPlanLPOType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
+	<xs:element name="BPlanLPO" type="bplan:BPlanLPOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
 	<xs:complexType name="BPlanLPOType">
 		<xs:annotation>
 			<xs:documentation>
@@ -37,14 +33,14 @@ Linienförmiges Präsentationsobjekt
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
+			<xs:extension base="bplan:BPlanPraesentationsobjektType">
 				<xs:sequence>
-					<xs:element name="position" type="gml:LineStringType"/>
+					<xs:element name="position" type="gml:MultiLineStringPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanFPO" type="xplan:BPlanFPOType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
+	<xs:element name="BPlanFPO" type="bplan:BPlanFPOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
 	<xs:complexType name="BPlanFPOType">
 		<xs:annotation>
 			<xs:documentation>
@@ -52,14 +48,14 @@ Flächenförmiges Präsentationsobjekt
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
+			<xs:extension base="bplan:BPlanPraesentationsobjektType">
 				<xs:sequence>
 					<xs:element name="position" type="gml:PolygonPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanPraesentationsobjekt" type="xplan:BPlanPraesentationsobjektType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<xs:element name="BPlanPraesentationsobjekt" type="bplan:BPlanPraesentationsobjektType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="BPlanPraesentationsobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -72,13 +68,6 @@ Generisches Präsentationsobjekt
 					<xs:element name="signaturnummer" type="xs:string"/>
 					<xs:element name="darstellungsprioritaetLinie" type="xs:integer" minOccurs="0"/>
 					<xs:element name="darstellungsprioritaetFlaeche" type="xs:integer" minOccurs="0"/>
-					<xs:element name="dientZurDarstellungVon" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanObjekt</adv:referenziertesElement>
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -86,7 +75,7 @@ Generisches Präsentationsobjekt
 	<xs:simpleType name="FontNeigungType">
 		<xs:annotation>
 			<xs:documentation>
-Enumeration der definierten Fontneigungen. Für linkskursiv geneigte Schriften (z.B. Gewässernamen) sind speziell dafür geschaffene Fonts zu verwenden.
+Enumeration der definierten Fontneigungen.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -97,7 +86,7 @@ Enumeration der definierten Fontneigungen. Für linkskursiv geneigte Schriften (
 	<xs:simpleType name="HorizontaleAusrichtungType">
 		<xs:annotation>
 			<xs:documentation>
-Enumeration der definierten Fontausrichtungen
+Enumeration der definierten horizontalen Fontausrichtungen
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -106,7 +95,7 @@ Enumeration der definierten Fontausrichtungen
 			<xs:enumeration value="zentrisch"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="BPlanPTO" type="xplan:BPlanPTOType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
+	<xs:element name="BPlanPTO" type="bplan:BPlanPTOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
 	<xs:complexType name="BPlanPTOType">
 		<xs:annotation>
 			<xs:documentation>
@@ -114,22 +103,22 @@ Textförmiges Präsentationsobjekt mit punktförmiger Textgeometrie.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
+			<xs:extension base="bplan:BPlanPraesentationsobjektType">
 				<xs:sequence>
 					<xs:element name="schriftinhalt" type="xs:string" minOccurs="0"/>
 					<xs:element name="fontName" type="xs:string" minOccurs="0"/>
 					<xs:element name="fontSperrung" type="xs:double" default="0" minOccurs="0"/>
 					<xs:element name="fontGroesse" type="xs:double" minOccurs="0"/>
 					<xs:element name="skalierung" type="xs:double" default="1" minOccurs="0"/>
-					<xs:element name="fontFarbe" type="xplan:FarbeType" minOccurs="0"/>
-					<xs:element name="fontNeigung" type="xplan:FontNeigungType" default="senkrecht" minOccurs="0"/>
-					<xs:element name="horizontaleAusrichtung" type="xplan:HorizontaleAusrichtungType" default="linksbündig" minOccurs="0"/>
-					<xs:element name="vertikaleAusrichtung" type="xplan:VertikaleAusrichtungType" default="Basis" minOccurs="0"/>
+					<xs:element name="fontFarbe" type="xs:string" minOccurs="0"/>
+					<xs:element name="fontNeigung" type="bplan:FontNeigungType" default="senkrecht" minOccurs="0"/>
+					<xs:element name="horizontaleAusrichtung" type="bplan:HorizontaleAusrichtungType" default="linksbündig" minOccurs="0"/>
+					<xs:element name="vertikaleAusrichtung" type="bplan:VertikaleAusrichtungType" default="Basis" minOccurs="0"/>
 					<xs:element name="art" type="xs:string" minOccurs="0"/>
 					<xs:element name="hat" type="gml:FeatureAssociationType" minOccurs="0">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanLPO</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanLPO</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -139,7 +128,7 @@ Textförmiges Präsentationsobjekt mit punktförmiger Textgeometrie.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanLTO" type="xplan:BPlanLTOType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
+	<xs:element name="BPlanLTO" type="bplan:BPlanLTOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
 	<xs:complexType name="BPlanLTOType">
 		<xs:annotation>
 			<xs:documentation>
@@ -147,22 +136,22 @@ Textförmiges Präsentationsobjekt mit linienförmiger Textgeometrie.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
+			<xs:extension base="bplan:BPlanPraesentationsobjektType">
 				<xs:sequence>
 					<xs:element name="schriftinhalt" type="xs:string" minOccurs="0"/>
 					<xs:element name="fontName" type="xs:string" minOccurs="0"/>
 					<xs:element name="fontSperrung" type="xs:double" default="0" minOccurs="0"/>
 					<xs:element name="fontGroesse" type="xs:double" minOccurs="0"/>
 					<xs:element name="skalierung" type="xs:double" default="1" minOccurs="0"/>
-					<xs:element name="fontFarbe" type="xplan:FarbeType" minOccurs="0"/>
-					<xs:element name="fontNeigung" type="xplan:FontNeigungType" default="senkrecht" minOccurs="0"/>
-					<xs:element name="horizontaleAusrichtung" type="xplan:HorizontaleAusrichtungType" default="linksbündig" minOccurs="0"/>
-					<xs:element name="vertikaleAusrichtung" type="xplan:VertikaleAusrichtungType" default="Basis" minOccurs="0"/>
+					<xs:element name="fontFarbe" type="xs:string" minOccurs="0"/>
+					<xs:element name="fontNeigung" type="bplan:FontNeigungType" default="senkrecht" minOccurs="0"/>
+					<xs:element name="horizontaleAusrichtung" type="bplan:HorizontaleAusrichtungType" default="linksbündig" minOccurs="0"/>
+					<xs:element name="vertikaleAusrichtung" type="bplan:VertikaleAusrichtungType" default="Basis" minOccurs="0"/>
 					<xs:element name="art" type="xs:string" minOccurs="0"/>
 					<xs:element name="hat" type="gml:FeatureAssociationType" minOccurs="0">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanLPO</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanLPO</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -174,7 +163,7 @@ Textförmiges Präsentationsobjekt mit linienförmiger Textgeometrie.
 	<xs:simpleType name="VertikaleAusrichtungType">
 		<xs:annotation>
 			<xs:documentation>
-
+Enumeration der definierten vertikalen Fontausrichtungen
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -183,34 +172,12 @@ Textförmiges Präsentationsobjekt mit linienförmiger Textgeometrie.
 			<xs:enumeration value="oben"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="FarbeType">
-		<xs:annotation>
-			<xs:documentation>
-Die externe Codelist AP_Farbe enthält die Namen und die Farbanteile der definierten Farben. Die Namen setzen sich zusammen aus einem Farbnamen und einer Angabe von 4 Farbanteilen, die die jeweiligen CMYK-Werte wiederspiegeln,
-z.B. gelb-0-0-100-0 = 1000. Für Bildschirmdarstellungen sind diese Farbanteile i.d.R. in RGB-Werte umzurechnen.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string"/>
-	</xs:simpleType>
-	<xs:element name="BPlanNutzungsschablone" type="xplan:BPlanNutzungsschabloneType" substitutionGroup="xplan:BPlanPraesentationsobjekt"/>
-	<xs:complexType name="BPlanNutzungsschabloneType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPraesentationsobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<!-- Paket Basisobjekte -->
-	<xs:element name="BPlanEbene" type="xplan:BPlanEbeneType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="BPlanEbene" type="bplan:BPlanEbeneType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="BPlanEbeneType">
 		<xs:annotation>
 			<xs:documentation>
-
+Diese Klasse modelliert alle Festsetzungen einer bestimmten vertikalen Ebene eines BPlans.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -221,21 +188,21 @@ z.B. gelb-0-0-100-0 = 1000. Für Bildschirmdarstellungen sind diese Farbanteile 
 					<xs:element name="gehoertZuBPlan" type="gml:FeatureAssociationType">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlan</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlan</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="fachobjekt" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanObjekt</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanObjekt</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="praesentationsobjekt" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanPraesentationsobjekt</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanPraesentationsobjekt</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -243,11 +210,11 @@ z.B. gelb-0-0-100-0 = 1000. Für Bildschirmdarstellungen sind diese Farbanteile 
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlan" type="xplan:BPlanType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="BPlan" type="bplan:BPlanType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="BPlanType">
 		<xs:annotation>
 			<xs:documentation>
-sdvsdsdvsvvvsvyxvy
+Diese Klasse modelliert einen vollständigen BPlan, der aus ein oder mehreren vertikalen Ebenen zusammengesetzt sein kann.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -261,45 +228,43 @@ sdvsdsdvsvvvsvyxvy
 					<xs:element name="begruendung" type="xs:string" minOccurs="0"/>
 					<xs:element name="umweltbericht" type="xs:string" minOccurs="0"/>
 					<xs:element name="realisierung" type="xs:string" minOccurs="0"/>
-					<xs:element name="verfahrensstand" type="xs:string" minOccurs="0"/>
+					<xs:element name="verfahrensstand" type="bplan:VerfahrensstandType" minOccurs="0"/>
 					<xs:element name="hoehenbezug" type="xs:string" minOccurs="0"/>
-<!-- doemming -->
-					<xs:element name="textlicheFestsetzungen" minOccurs="0" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="TextlicheFestsetzung" type="xplan:TextlicheFestsetzungType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="datum" type="xs:date" minOccurs="0"/>
-					<xs:element name="verfahrensMerkmale" minOccurs="0" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="VerfahrensMerkmal" type="xplan:VerfahrensMerkmalType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="ebene" type="gml:FeatureAssociationType" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanEbene</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanEbene</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="umring" type="gml:PolygonPropertyType" minOccurs="0"/>
+					<xs:element name="textlicheFestsetzungen" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:appinfo>
+								<adv:referenziertesElement>bplan:TextlicheFestsetzung</adv:referenziertesElement>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="verfahrensMerkmale" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:appinfo>
+								<adv:referenziertesElement>bplan:VerfahrensMerkmal</adv:referenziertesElement>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanFlaechenobjekt" type="xplan:BPlanFlaechenobjektType" abstract="true" substitutionGroup="xplan:BPlanObjekt"/>
+	<xs:element name="BPlanFlaechenobjekt" type="bplan:BPlanFlaechenobjektType" abstract="true" substitutionGroup="bplan:BPlanObjekt"/>
 	<xs:complexType name="BPlanFlaechenobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse für alle flächenhaften Objekte, die zum Flächenschluss beitragen oder andere Flächen überlagern.
+Basisklasse für alle flächenhaften BPlanGML-Fachobjekte, die zum Flächenschluss beitragen oder andere Flächen überlagern. Die einzelnen zum Flächenschluss beitragenen Objekte überlappen sich nicht, sondern berühren sich allenfalls am Aussenrand. Die Vereinigung aller Flächenschluss-Objekte überdeckt den Geltungsbereich des BPlan (Klasse RaeumlicherGeltungsbereich) vollständig.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanObjektType">
+			<xs:extension base="bplan:BPlanObjektType">
 				<xs:sequence>
 					<xs:element name="position" type="gml:PolygonPropertyType"/>
 					<xs:element name="flaechenschluss" type="xs:boolean"/>
@@ -307,39 +272,39 @@ Basisklasse für alle flächenhaften Objekte, die zum Flächenschluss beitragen 
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanFlaechenschlussobjekt" type="xplan:BPlanFlaechenschlussobjektType" abstract="true" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="BPlanFlaechenschlussobjekt" type="bplan:BPlanFlaechenschlussobjektType" abstract="true" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="BPlanFlaechenschlussobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse für alle flächenhaften Objekte, die zusammen mit anderen Flächenschluss-Objekten das Planungsgebiet überschneidungsfrei überdecken.
+Basisklasse für alle flächenhaften Objekte, die zusammen mit anderen Flächenschluss-Objekten das Planungsgebiet überschneidungsfrei überdecken (Flächenschluss-Objekte). Das Attribut 'flaechenschluss' der Basisklasse hat in dieser Klasse immer den Wert 'true'.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanLinienobjekt" type="xplan:BPlanLinienobjektType" abstract="true" substitutionGroup="xplan:BPlanObjekt"/>
+	<xs:element name="BPlanLinienobjekt" type="bplan:BPlanLinienobjektType" abstract="true" substitutionGroup="bplan:BPlanObjekt"/>
 	<xs:complexType name="BPlanLinienobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse für alle linienförmigen Objekte.
+Basisklasse für alle linienförmigen BPlanGML Fachobjekte.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanObjektType">
+			<xs:extension base="bplan:BPlanObjektType">
 				<xs:sequence>
 					<xs:element name="position" type="gml:LineStringPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanObjekt" type="xplan:BPlanObjektType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<xs:element name="BPlanObjekt" type="bplan:BPlanObjektType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="BPlanObjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse aller Bebauungsplanobjekte.
+Basisklasse für alle BPlanGML-Fachobjekte. Die Attribute dieser Basisklasse werden über den Vererbungs-Mechanismus an alle Fachobjekte weitergegeben. Sie modellieren damit Eigenschaften, die potentiell in jeder Festsetzung eines BPlans vorkommen können.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -349,6 +314,7 @@ Basisklasse aller Bebauungsplanobjekte.
 					<xs:element name="nachrichtUebernahme" type="xs:boolean" default="false" minOccurs="0"/>
 					<xs:element name="hinweis" type="xs:boolean" default="false" minOccurs="0"/>
 					<xs:element name="aufnahmeAlsFestsetzung" type="xs:boolean" default="true" minOccurs="0"/>
+					<xs:element name="vermerk" type="xs:boolean" default="false" minOccurs="0"/>
 					<xs:element name="gesetzlicheGrundlage" type="xs:string" minOccurs="0"/>
 					<xs:element name="bedienungStart" type="xs:string" minOccurs="0"/>
 					<xs:element name="bedienungEnde" type="xs:string" minOccurs="0"/>
@@ -359,10 +325,17 @@ Basisklasse aller Bebauungsplanobjekte.
 					<xs:element name="hMin" type="xs:double" minOccurs="0"/>
 					<xs:element name="hMax" type="xs:double" minOccurs="0"/>
 					<xs:element name="hZwingend" type="xs:double" minOccurs="0"/>
+					<xs:element name="benutzt" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:appinfo>
+								<adv:referenziertesElement>bplan:BPlanPraesentationsobjekt</adv:referenziertesElement>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="gehoertZuBPlanEbene" type="gml:FeatureAssociationType" minOccurs="0">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BPlanEbene</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BPlanEbene</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -370,97 +343,83 @@ Basisklasse aller Bebauungsplanobjekte.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanPunktobjekt" type="xplan:BPlanPunktobjektType" abstract="true" substitutionGroup="xplan:BPlanObjekt"/>
+	<xs:element name="BPlanPunktobjekt" type="bplan:BPlanPunktobjektType" abstract="true" substitutionGroup="bplan:BPlanObjekt"/>
 	<xs:complexType name="BPlanPunktobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse für alle punktförmigen Objekte.
+Basisklasse für alle punktförmigen BPlanGML-Fachobjekte.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanObjektType">
+			<xs:extension base="bplan:BPlanObjektType">
 				<xs:sequence>
 					<xs:element name="position" type="gml:PointPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BPlanUeberlagerungsobjekt" type="xplan:BPlanUeberlagerungsobjektType" abstract="true" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="BPlanUeberlagerungsobjekt" type="bplan:BPlanUeberlagerungsobjektType" abstract="true" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="BPlanUeberlagerungsobjektType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-Basisklasse für alle flächenhaften Objekte, die andere Flächen überlagern.
+Basisklasse für alle flächenhaften Objekte, die andere Flächen überlagern.  Das Attribut 'flaechenschluss' der Basisklasse hat in dieser Klasse immer den Wert 'false'.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:simpleType name="BundeslaenderType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="SH"/>
-			<xs:enumeration value="NI"/>
-			<xs:enumeration value="HB"/>
-			<xs:enumeration value="HH"/>
-			<xs:enumeration value="NW"/>
-			<xs:enumeration value="HE"/>
-			<xs:enumeration value="RP"/>
-			<xs:enumeration value="SL"/>
-			<xs:enumeration value="BW"/>
-			<xs:enumeration value="BY"/>
-			<xs:enumeration value="TH"/>
-			<xs:enumeration value="SN"/>
-			<xs:enumeration value="SA"/>
-			<xs:enumeration value="MV"/>
-			<xs:enumeration value="BB"/>
-			<xs:enumeration value="BE"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="XPLANType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="..."/>
-		</xs:restriction>
-	</xs:simpleType>
-<!-- doemming warum ist das nicht von AbstractFeatureType abgeleitet
--->
+	<xs:element name="TextlicheFestsetzung" type="bplan:TextlicheFestsetzungType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="TextlicheFestsetzungType">
 		<xs:annotation>
 			<xs:documentation>
-
+Ein Abschnitt der textlichen Festsetzungen des BPlans.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="schluessel" type="xs:string"/>
-			<xs:element name="text" type="xs:string"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="schluessel" type="xs:string"/>
+					<xs:element name="text" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
+	<xs:element name="VerfahrensMerkmal" type="bplan:VerfahrensMerkmalType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="VerfahrensMerkmalType">
 		<xs:annotation>
 			<xs:documentation>
-Angaben zum Stand des Verfahrens
+Vermerk eines am Aufstellungsverfahrens beteiligten Akteurs.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="vermerk" type="xs:string"/>
-			<xs:element name="datum" type="xs:date"/>
-			<xs:element name="signatur" type="xs:string"/>
-			<xs:element name="signiert" type="xs:boolean"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="vermerk" type="xs:string"/>
+					<xs:element name="datum" type="xs:date"/>
+					<xs:element name="signatur" type="xs:string"/>
+					<xs:element name="signiert" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="VerfahrensstandType">
+		<xs:annotation>
+			<xs:documentation>
+Aufzählung der möglichen Verfahrensstände im BPlan-Verfahren
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Aufstellungsbeschluss"/>
+			<xs:enumeration value="Entwurf"/>
+			<xs:enumeration value="Satzung"/>
+			<xs:enumeration value="Rechtskraft"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<!-- Paket Baugebiet, Baugebietsteil -->
-	<xs:element name="BaugebietsFlaechenTeil" type="xplan:BaugebietsFlaechenTeilType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="BaugebietsFlaechenTeil" type="bplan:BaugebietsFlaechenTeilType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="BaugebietsFlaechenTeilType">
 		<xs:annotation>
 			<xs:documentation>
@@ -468,29 +427,32 @@ Teil eines Baugebiets mit einheitlicher Art und Maß der baulichen Nutzung.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="artDerBaulichenNutzung" type="xplan:ArtDerBaulichenNutzungType"/>
-					<xs:element name="rechtlicheHerkunft" type="xplan:RechtlicheHerkunftType" minOccurs="0"/>
-					<xs:element name="bauweise" type="xplan:BauweiseType" minOccurs="0"/>
-					<xs:element name="bebauungsArt" type="xplan:BebauungsArtType" minOccurs="0"/>
-					<xs:element name="bebauungVordereGrenze" type="xplan:GrenzBebauungType" minOccurs="0"/>
-					<xs:element name="bebauungRueckwaertigeGrenze" type="xplan:GrenzBebauungType" minOccurs="0"/>
-					<xs:element name="bebauungSeitlicheGrenze" type="xplan:GrenzBebauungType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="gestaltung" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="GestaltungBaugebiet" type="xplan:GestaltungBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="DNmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="DNmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="FR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="dachform" type="xs:string" minOccurs="0"/>
+					<xs:element name="artDerBaulichenNutzung" type="bplan:ArtDerBaulichenNutzungType"/>
+					<xs:element name="rechtlicheHerkunft" type="bplan:RechtlicheHerkunftType" minOccurs="0"/>
+					<xs:element name="bauweise" type="bplan:BauweiseType" minOccurs="0"/>
+					<xs:element name="bebauungsArt" type="bplan:BebauungsArtType" minOccurs="0"/>
+					<xs:element name="bebauungVordereGrenze" type="bplan:GrenzBebauungType" minOccurs="0"/>
+					<xs:element name="bebauungRueckwaertigeGrenze" type="bplan:GrenzBebauungType" minOccurs="0"/>
+					<xs:element name="bebauungSeitlicheGrenze" type="bplan:GrenzBebauungType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -541,35 +503,38 @@ Teil eines Baugebiets mit einheitlicher Art und Maß der baulichen Nutzung.
 			<xs:enumeration value="NachrichtlUebernahme"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="Baugebiet" type="xplan:BaugebietType" substitutionGroup="xplan:BPlanObjekt"/>
+	<xs:element name="Baugebiet" type="bplan:BaugebietType" substitutionGroup="bplan:BPlanObjekt"/>
 	<xs:complexType name="BaugebietType">
 		<xs:annotation>
 			<xs:documentation>
-Für die Bebauung vorgesehene Fläche.
+Festsetzung einer für die Bebauung vorgesehene Fläche. Innerhalb dieser Fläche können Art und Mass der baulichen  Nutzung sowie Gestaltungs-Festsetzungen variieren. Bei einer entsprechenden Änderung ist ein neues Objekt BaugebietFlaechenTeil zu bilden.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanObjektType">
+			<xs:extension base="bplan:BPlanObjektType">
 				<xs:sequence>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="DNmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="DNmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="FR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="dachform" type="xs:string" minOccurs="0"/>
 					<xs:element name="versionBauNVO" type="xs:string" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="gestaltung" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="GestaltungBaugebiet" type="xplan:GestaltungBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="flaechenteil" type="gml:FeatureAssociationType" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:BaugebietsFlaechenTeil</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:BaugebietsFlaechenTeil</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -577,31 +542,34 @@ Für die Bebauung vorgesehene Fläche.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FlaecheMitBesonderemNutzungszweck" type="xplan:FlaecheMitBesonderemNutzungszweckType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="FlaecheMitBesonderemNutzungszweck" type="bplan:FlaecheMitBesonderemNutzungszweckType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="FlaecheMitBesonderemNutzungszweckType">
 		<xs:annotation>
 			<xs:documentation>
-Fläche gemäß §9 Abs. 1 Nr. 9 BauGB.
+Festsetzung einer Fläche mit besonderem Nutzungszweck, der durch besondere städtebauliche Gründe erfordert wird (§9 Abs. 1 Nr. 9 BauGB.)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
+					<xs:element name="DNmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="DNmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="FR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="dachform" type="xs:string" minOccurs="0"/>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
 					<xs:element name="zweckbestimmung" type="xs:string" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="gestaltung" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="GestaltungBaugebiet" type="xplan:GestaltungBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -609,7 +577,7 @@ Fläche gemäß §9 Abs. 1 Nr. 9 BauGB.
 	<xs:complexType name="GestaltungBaugebietType">
 		<xs:annotation>
 			<xs:documentation>
-
+Parameter zur Festsetzung von Gestaltungs-Merkmalen
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -619,12 +587,10 @@ Fläche gemäß §9 Abs. 1 Nr. 9 BauGB.
 			<xs:element name="dachform" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-<!-- doemming, warum nicht von AbstractFeatureType abgeleitet ?-->
-
 	<xs:complexType name="FestsetzungenBaugebietType">
 		<xs:annotation>
 			<xs:documentation>
-
+Parameter zur Festsetzung des Masses der baulichen Nutzung.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -643,58 +609,58 @@ Fläche gemäß §9 Abs. 1 Nr. 9 BauGB.
 			<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="Baugrenze" type="xplan:BaugrenzeType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="Baugrenze" type="bplan:BaugrenzeType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="BaugrenzeType">
 		<xs:annotation>
 			<xs:documentation>
-Baugrenze (§9 Abs. 1 Nr. 2 BauGB, §22 und 23 BauNVO)
+Festsetzung einer Baugrenze (§9 Abs. 1 Nr. 2 BauGB, §22 und 23 BauNVO).
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence>
 					<xs:element name="bautiefe" type="xs:double" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Baulinie" type="xplan:BaulinieType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="Baulinie" type="bplan:BaulinieType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="BaulinieType">
 		<xs:annotation>
 			<xs:documentation>
-Baulinie (§9 Abs. 1 Nr. 2 BauGB, §22 und 23 BauNVO)
+Festsetzung einer Baulinie (§9 Abs. 1 Nr. 2 BauGB, §22 und 23 BauNVO)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="UeberbaubareGrundstuecksflaeche" type="xplan:UeberbaubareGrundstuecksflaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
+	<xs:element name="UeberbaubareGrundstuecksflaeche" type="bplan:UeberbaubareGrundstuecksflaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
 	<xs:complexType name="UeberbaubareGrundstuecksflaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzung der überbaubaren Grundstücksfläche (§9, Abs. 1, Nr. 2 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence>
-					<xs:element name="zMin" type="xs:double" minOccurs="0"/>
-					<xs:element name="zMax" type="xs:double" minOccurs="0"/>
-					<xs:element name="zZwingend" type="xs:double" minOccurs="0"/>
-					<xs:element name="baugrenze" type="gml:GeometryAssociationType" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="Zmin" type="xs:double" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:double" minOccurs="0"/>
+					<xs:element name="Zzwingend" type="xs:double" minOccurs="0"/>
+					<xs:element name="baugrenze" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:Baugrenze</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:Baugrenze</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="baulinie" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:Baulinie</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:Baulinie</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -702,15 +668,15 @@ Baulinie (§9 Abs. 1 Nr. 2 BauGB, §22 und 23 BauNVO)
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FirstRichtung" type="xplan:FirstRichtungType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="FirstRichtung" type="bplan:FirstRichtungType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="FirstRichtungType">
 		<xs:annotation>
 			<xs:documentation>
-Gestaltungs-Festsetzung beruhend auf Landesrecht, gemäß §9 Abs. 4 BauGB
+Gestaltungs-Festsetzung der Firstrichtung, beruhend auf Landesrecht, gemäß §9 Abs. 4 BauGB
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
@@ -742,41 +708,135 @@ Gestaltungs-Festsetzung beruhend auf Landesrecht, gemäß §9 Abs. 4 BauGB
 			<xs:enumeration value="Erzwungen"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<!-- Paket Gemeinbedarf, Spiel- und Sportanlagen -->
-	<xs:element name="GemeinbedarfsFlaeche" type="xplan:GemeinbedarfsFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
-	<xs:complexType name="GemeinbedarfsFlaecheType">
+	<xs:element name="FoerderungsFlaeche" type="bplan:FoerderungsFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="FoerderungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Einrichtungen und Anlagen zur Versorgung mit Gütern und Dienstleistungen des öffentlichen und privaten Bereichs, hier Flächen für den Gemeindebedarf (§9 Abs. 1 Nr. 12, 14 und Abs. 6 BauGB)
+Fläche, auf der ganz oder teilweise nur Wohngebäude, die mit Mitteln der sozialen Wohnraumförderung gefördert werden könnten, errichtet werden dürfen (§9, Abs. 1, Nr. 7 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="PersGruppenBestimmteFlaeche" type="bplan:PersGruppenBestimmteFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="PersGruppenBestimmteFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Fläche, auf denen ganz oder teilweise nur Wohngebäude errichtet werden dürfen, die für Personengruppen mit besonderem Wohnbedarf bestimmt sind (§9, Abs. 1, Nr. 8 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="NebenanlagenFlaeche" type="bplan:NebenanlagenFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="NebenanlagenFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Fläche für Nebenanlagen, die auf Grund anderer Vorschriften für die Nutzung von Grundstücken erforderlich sind, wie Spiel-, Freizeit- und Erholungsflächen sowie die Fläche für Stellplätze und Garagen mit ihren Einfahrten (§9 Abs. 4 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungGemeindebedarfType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungNebenanlagenType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
+					<xs:element name="unterirdisch" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="z" type="xs:integer" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GemeinschaftsanlagenFlaeche" type="bplan:GemeinschaftsanlagenFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="GemeinschaftsanlagenFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Fläche für Gemeinschaftsanlagen für bestimmte räumliche Bereiche wie    Kinderspielplätze, Freizeiteinrichtungen, Stellplätze und Garagen (§9 Abs. 22 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungGemeinschaftsanlagenType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
+					<xs:element name="unterirdisch" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="z" type="xs:integer" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ZweckbestimmungGemeinschaftsanlagenType">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Gemeinschaftsstellplaetze"/>
+			<xs:enumeration value="Gemeinschaftsgaragen"/>
+			<xs:enumeration value="Spielplatz"/>
+			<xs:enumeration value="Sonstiges"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZweckbestimmungNebenanlagenType">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Stellplaetze"/>
+			<xs:enumeration value="Garagen"/>
+			<xs:enumeration value="Spielplatz"/>
+			<xs:enumeration value="Sonstiges"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Paket Gemeinbedarf, Spiel- und Sportanlagen -->
+	<xs:element name="GemeinbedarfsFlaeche" type="bplan:GemeinbedarfsFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
+	<xs:complexType name="GemeinbedarfsFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Einrichtungen und Anlagen zur Versorgung mit Gütern und Dienstleistungen des öffentlichen und privaten Bereichs, hier Flächen für den Gemeindebedarf (§9, Abs. 1, Nr.5 und Abs. 6 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
+				<xs:sequence>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungGemeindebedarfType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="SpielSportanlagenFlaeche" type="xplan:SpielSportanlagenFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="SpielSportanlagenFlaeche" type="bplan:SpielSportanlagenFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="SpielSportanlagenFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Einrichtungen und Anlagen zur Versorgung mit Gütern und Dienstleistungen des öffentlichen und privaten Bereichs, hier Flächen für Sport- und Spielanlagen (§9 Abs. 1 Nr. 12, 14 und Abs. 6 BauGB)
+Einrichtungen und Anlagen zur Versorgung mit Gütern und Dienstleistungen des öffentlichen und privaten Bereichs, hier Flächen für Sport- und Spielanlagen (§9, Abs. 1, Nr. 5 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungSpielSportanlageType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungSpielSportanlageType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -814,7 +874,7 @@ Einrichtungen und Anlagen zur Versorgung mit Gütern und Dienstleistungen des ö
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- Paket Ver- und Entsorgung -->
-	<xs:element name="VerEntsorgungsFlaeche" type="xplan:VerEntsorgungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="VerEntsorgungsFlaeche" type="bplan:VerEntsorgungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="VerEntsorgungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -822,16 +882,22 @@ Flächen für Versorgungsanlagen, für die Abfallentsorgung und Abwasserbeseitig
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungVerEntsorgungType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungVerEntsorgungType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -854,15 +920,15 @@ Flächen für Versorgungsanlagen, für die Abfallentsorgung und Abwasserbeseitig
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="VerEntsorgungsleitung" type="xplan:VerEntsorgungsleitungType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="VerEntsorgungsleitung" type="bplan:VerEntsorgungsleitungType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="VerEntsorgungsleitungType">
 		<xs:annotation>
 			<xs:documentation>
-Hauptversorgungs- und Hauptabwasserleitungen (§9 Abs. 1, Nr. 13 und Abs. 6 BauGB)
+Die Führung von oberirdischen oder unterirdischen Versorgungsanlagen und    -leitungen (§9 Abs. 1, Nr. 13 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence>
 					<xs:element name="unterirdisch" type="xs:boolean" minOccurs="0"/>
 				</xs:sequence>
@@ -870,28 +936,34 @@ Hauptversorgungs- und Hauptabwasserleitungen (§9 Abs. 1, Nr. 13 und Abs. 6 BauG
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- Paket Verkehr -->
-	<xs:element name="VerkehrsFlaeche" type="xplan:VerkehrsFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="VerkehrsFlaeche" type="bplan:VerkehrsFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="VerkehrsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
+Strassenverkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="nutzungsform" type="xplan:NutzungsformType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="nutzungsform" type="bplan:NutzungsformType" minOccurs="0"/>
 					<xs:element name="begrenzungslinie" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:Strassenbegrenzungslinie</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:Strassenbegrenzungslinie</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -899,30 +971,36 @@ Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="VerkehrsflaecheBesondererZweckbestimmung" type="xplan:VerkehrsflaecheBesondererZweckbestimmungType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="VerkehrsflaecheBesondererZweckbestimmung" type="bplan:VerkehrsflaecheBesondererZweckbestimmungType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="VerkehrsflaecheBesondererZweckbestimmungType">
 		<xs:annotation>
 			<xs:documentation>
-Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
+Verkehrsfläche besonderer Zweckbestimmung (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungVerkehrsflaecheType" minOccurs="0"/>
-					<xs:element name="nutzungsform" type="xplan:NutzungsformType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungVerkehrsflaecheType" minOccurs="0"/>
+					<xs:element name="nutzungsform" type="bplan:NutzungsformType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 					<xs:element name="begrenzungslinie" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:Strassenbegrenzungslinie</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:Strassenbegrenzungslinie</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -933,7 +1011,7 @@ Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 	<xs:simpleType name="NutzungsformType">
 		<xs:annotation>
 			<xs:documentation>
-
+Aufzählung möglicher Nutzungsformen einer Fläche
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -944,7 +1022,7 @@ Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 	<xs:simpleType name="ZweckbestimmungVerkehrsflaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Aufzählung der möglichen besonderen Zweckbestimmungen einer Verfekrsfläche
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -960,7 +1038,7 @@ Verkehrsfläche (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="Strassenbegrenzungslinie" type="xplan:StrassenbegrenzungslinieType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="Strassenbegrenzungslinie" type="bplan:StrassenbegrenzungslinieType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="StrassenbegrenzungslinieType">
 		<xs:annotation>
 			<xs:documentation>
@@ -968,12 +1046,12 @@ Straßenbegrenzungslinie (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BereichOhneEinAusfahrt" type="xplan:BereichOhneEinAusfahrtType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="BereichOhneEinAusfahrt" type="bplan:BereichOhneEinAusfahrtType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="BereichOhneEinAusfahrtType">
 		<xs:annotation>
 			<xs:documentation>
@@ -981,12 +1059,12 @@ Bereich ohne Ein- und Ausfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Einfahrtsbereich" type="xplan:EinfahrtsbereichType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="Einfahrtsbereich" type="bplan:EinfahrtsbereichType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="EinfahrtsbereichType">
 		<xs:annotation>
 			<xs:documentation>
@@ -994,12 +1072,12 @@ Einfahrtsbereich (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Einfahrt" type="xplan:EinfahrtType" substitutionGroup="xplan:BPlanPunktobjekt"/>
+	<xs:element name="Einfahrt" type="bplan:EinfahrtType" substitutionGroup="bplan:BPlanPunktobjekt"/>
 	<xs:complexType name="EinfahrtType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1007,15 +1085,17 @@ Einfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
-				<xs:sequence/>
+			<xs:extension base="bplan:BPlanPunktobjektType">
+				<xs:sequence>
+					<xs:element name="richtung" type="xs:double"/>
+				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:simpleType name="ZweckbestimmungLuftverkehrFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Aufzählung der möglichen Zweckbestimmungen einer Luftverkehrs-Fläche.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1029,7 +1109,7 @@ Einfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 	<xs:simpleType name="ZweckbestimmungBahnflaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Aufzählung der Zweckbestimmungen einer BAHNFLÄCHE
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1037,49 +1117,49 @@ Einfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="LuftverkehrFlaeche" type="xplan:LuftverkehrFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="LuftverkehrFlaeche" type="bplan:LuftverkehrFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="LuftverkehrFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Flächen für den Luftverkehr (§9, Abs. 1, Nr. 11 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungLuftverkehrFlaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungLuftverkehrFlaecheType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BahnFlaeche" type="xplan:BahnFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="BahnFlaeche" type="bplan:BahnFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="BahnFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Rläche für den Bahnverkehr (§9, Abs. 1, Nr. 11 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungBahnflaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungBahnflaecheType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BahnLinie" type="xplan:BahnLinieType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="BahnLinie" type="bplan:BahnLinieType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="BahnLinieType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzung der Führung einer Bahnlinie (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungBahnLinieType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungBahnLinieType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1088,7 +1168,7 @@ Einfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 	<xs:simpleType name="ZweckbestimmungBahnLinieType">
 		<xs:annotation>
 			<xs:documentation>
-
+Aufzählung der möglichen Zweckbestimmungen einer Bahnlinie
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1097,8 +1177,50 @@ Einfahrt (§9 Abs. 1 Nr. 11 und Abs. 6 BauGB)
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:element name="Strassenkoerper" type="bplan:StrassenkoerperType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="StrassenkoerperType">
+		<xs:annotation>
+			<xs:documentation>
+Flächen für Aufschüttungen, Abgrabungen und Stützmauern, soweit sie zur Herstellung des Straßenkörpers erforderlich sind (§9, Abs. 1, Nr. 26 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence>
+					<xs:element name="typ" type="bplan:StrassenkoerperHerstellungType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="StrassenkoerperLinie" type="bplan:StrassenkoerperLinieType" substitutionGroup="bplan:BPlanLinienobjekt"/>
+	<xs:complexType name="StrassenkoerperLinieType">
+		<xs:annotation>
+			<xs:documentation>
+Linienhafte Festsetzung für Aufschüttungen, Abgrabungen und Stützmauern, soweit sie zur Herstellung des Straßenkörpers erforderlich ist (§ 9 Abs. 1 Nr. 26 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanLinienobjektType">
+				<xs:sequence>
+					<xs:element name="typ" type="bplan:StrassenkoerperHerstellungType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="StrassenkoerperHerstellungType">
+		<xs:annotation>
+			<xs:documentation>
+Aufzählung der möglichen Maßnahmen zur Herstellung des Straßenkörpers
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Aufschuettung"/>
+			<xs:enumeration value="Abgrabung"/>
+			<xs:enumeration value="Stuetzmauer"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<!-- Paket Wasser -->
-	<xs:element name="WasserFlaeche" type="xplan:WasserFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="WasserFlaeche" type="bplan:WasserFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="WasserFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1106,9 +1228,9 @@ Wasserfläche (§9 Abs. 1 Nr. 16 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungWasserflaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungWasserflaecheType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1125,23 +1247,23 @@ Wasserfläche (§9 Abs. 1 Nr. 16 und Abs. 6 BauGB)
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="WasserwirtschaftsFlaeche" type="xplan:WasserwirtschaftsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="WasserwirtschaftsFlaeche" type="bplan:WasserwirtschaftsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="WasserwirtschaftsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Flächen für die Wasserwirtschaft, den Hochwasserschutz  und die Regelungen des Wasserabflusses (§9 Abs. 1 Nr. 16 und Abs. 6 BauGB)
+Flächen für die Wasserwirtschaft, den Hochwasserschutz  und die Regelungen des Wasserabflusses (§9 Abs. 1 Nr. 16 und Abs. 6a BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungWasserwirtschaftsflaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungWasserwirtschaftsflaecheType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="WasserrechtlicheFestsetzungsFlaeche" type="xplan:WasserrechtlicheFestsetzungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="WasserrechtlicheFestsetzungsFlaeche" type="bplan:WasserrechtlicheFestsetzungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="WasserrechtlicheFestsetzungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1149,9 +1271,9 @@ Flächen mit wasserrechtlichen Festsetzungen (§9 Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungWasserrechtlicheFestsetzungType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungWasserrechtlicheFestsetzungType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1165,9 +1287,7 @@ Flächen mit wasserrechtlichen Festsetzungen (§9 Abs. 6 BauGB)
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="HochwasserRueckhaltebecken"/>
-			<xs:enumeration value="FestgesetztesUeberschwemmgebiet"/>
-			<xs:enumeration value="NochNichtFestgesetztesUeberschwemmgebiet"/>
-			<xs:enumeration value="UeberschwemmGefaehrdetesGebiet"/>
+			<xs:enumeration value="Ueberschwemmgebiet"/>
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1183,42 +1303,74 @@ Flächen mit wasserrechtlichen Festsetzungen (§9 Abs. 6 BauGB)
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<!-- Paket Naturschutz -->
-	<xs:element name="SchutzPflegeEntwicklungsFlaeche" type="xplan:SchutzPflegeEntwicklungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
-	<xs:complexType name="SchutzPflegeEntwicklungsFlaecheType">
+	<xs:element name="VorbHochwSchutzFlaeche" type="bplan:VorbHochwSchutzFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
+	<xs:complexType name="VorbHochwSchutzFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Umgrenzung von Flächen für Maßnahmen zum Schutz, zur Pflege und zur Entwicklung von Natur und Landschaft (%9 Abs. 1 Nr. 20 und Abs. 6 BauGB)
+Festgesetztes Überschwemmungsgebiet im Sinne des § 31b Abs. 2 Satz 3 und 4 des Wasserhaushaltsgesetzes (§9, Abs. 6a BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
+				<xs:sequence>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungVorbHochwSchutzFlaecheType" minOccurs="0"/>
+					<xs:element name="sonstigeZweckbestimmung" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ZweckbestimmungVorbHochwSchutzFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FestgesetztesUeberschwemmgebiet"/>
+			<xs:enumeration value="NochNichtFestgesetztesUeberschwemmgebiet"/>
+			<xs:enumeration value="UeberschwemmGefaehrdetesGebiet"/>
+			<xs:enumeration value="Sonstiges"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Paket Naturschutz, Landschaftsbild, Naturhaushalt -->
+	<xs:element name="SchutzPflegeEntwicklungsFlaeche" type="bplan:SchutzPflegeEntwicklungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
+	<xs:complexType name="SchutzPflegeEntwicklungsFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Umgrenzung von Flächen für Maßnahmen zum Schutz, zur Pflege und zur Entwicklung von Natur und Landschaft (§9 Abs. 1 Nr. 20 und Abs. 6 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="AnpflanzungsFlaeche" type="xplan:AnpflanzungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
-	<xs:complexType name="AnpflanzungsFlaecheType">
+	<xs:element name="AnpflanzungBindungErhaltungsFlaeche" type="bplan:AnpflanzungBindungErhaltungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
+	<xs:complexType name="AnpflanzungBindungErhaltungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Umgrenzung von Flächen zum Anpflanzen von Bäumen, Sträuchern und sonstigen Bepflanzungen (%9 Abs. 1 Nr. 25 Buchstabe a und Abs. 6 BauGB)
+Für einzelne Flächen oder für ein Bebauungsplangebiet oder Teile davon sowie für Teile baulicher Anlagen mit Ausnahme der für landwirtschaftliche Nutzungen oder Wald festgesetzten Flächen:
+a) Festsetzung des Anpflanzens von Bäumen, Sträuchern und sonstigen Bepflanzungen;
+b) Festsetzung von Bindungen für Bepflanzungen und für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern;  (§9 Abs. 1 Nr. 25 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="pflanzen" type="xplan:PflanzenTypType" minOccurs="0"/>
-					<xs:element name="pflanzenReihe" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="massnahme" type="bplan:MassnahmeType"/>
+					<xs:element name="gegenstand" type="bplan:AnpflanzungBindungErhaltungsGegenstandType" minOccurs="0"/>
+					<xs:element name="objektReihe" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:PflanzungLinienfoermig</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:AnpflanzungBindungErhaltungsLinie</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="pflanze" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="einzelObjekt" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:appinfo>
-								<adv:referenziertesElement>xplan:PflanzungPunktfoermig</adv:referenziertesElement>
+								<adv:referenziertesElement>bplan:AnpflanzungBindungErhaltungsMassnahme</adv:referenziertesElement>
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
@@ -1226,36 +1378,7 @@ Umgrenzung von Flächen zum Anpflanzen von Bäumen, Sträuchern und sonstigen Be
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ErhaltungsFlaeche" type="xplan:ErhaltungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
-	<xs:complexType name="ErhaltungsFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Umgrenzung von Flächen mit Bindungen für Bepflanzungen und für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern ($9 Abs. 1 Nr. 25 Buchstabe b) und Abs. 6 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
-				<xs:sequence>
-					<xs:element name="pflanzen" type="xplan:PflanzenTypType" minOccurs="0"/>
-					<xs:element name="pflanzenReihe" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:appinfo>
-								<adv:referenziertesElement>xplan:PflanzungLinienfoermig</adv:referenziertesElement>
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="pflanze" type="gml:FeatureAssociationType" minOccurs="0" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:appinfo>
-								<adv:referenziertesElement>xplan:PflanzungPunktfoermig</adv:referenziertesElement>
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="SchutzgebietFlaeche" type="xplan:SchutzgebietFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="SchutzgebietFlaeche" type="bplan:SchutzgebietFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="SchutzgebietFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1263,23 +1386,25 @@ Umgrenzung von Schutzgebieten und Schutzobjekten im Sinne des Naturschutzrechts 
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungSchutzgebietType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungSchutzgebietType" minOccurs="0"/>
+					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:simpleType name="PflanzenTypType">
+	<xs:simpleType name="AnpflanzungBindungErhaltungsGegenstandType">
 		<xs:annotation>
 			<xs:documentation>
-
+Gegenstand der nach §9, Abs. 1, Nr. 25 festgesetzten Maßnahme
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Baeume"/>
 			<xs:enumeration value="Straeucher"/>
 			<xs:enumeration value="SonstBepflanzung"/>
+			<xs:enumeration value="Gewaesser"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ZweckbestimmungSchutzgebietType">
@@ -1298,87 +1423,103 @@ Umgrenzung von Schutzgebieten und Schutzobjekten im Sinne des Naturschutzrechts 
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="PflanzungPunktfoermig" type="xplan:PflanzungPunktfoermigType" substitutionGroup="xplan:BPlanPunktobjekt"/>
-	<xs:complexType name="PflanzungPunktfoermigType">
+	<xs:element name="AnpflanzungBindungErhaltungsMassnahme" type="bplan:AnpflanzungBindungErhaltungsMassnahmeType" substitutionGroup="bplan:BPlanPunktobjekt"/>
+	<xs:complexType name="AnpflanzungBindungErhaltungsMassnahmeType">
 		<xs:annotation>
 			<xs:documentation>
-Einzelposition zum Anpflanzen von Bäumen, Sträuchern und sonstigen Bepflanzungen, sowie Bindungen für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern (§9 Abs. 1 Nr. 25 und Bbs. 6 BauGB)
+a) Punktförmige Festsetzung des Anpflanzens von Bäumen, Sträuchern und sonstigen Bepflanzungen;
+b) Punktförmige Festsetzung von Bindungen für Bepflanzungen und für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern;  (§9 Abs. 1 Nr. 25 und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
+			<xs:extension base="bplan:BPlanPunktobjektType">
 				<xs:sequence>
-					<xs:element name="art" type="xplan:ArtAnpflanzungType"/>
-					<xs:element name="pflanzen" type="xplan:PflanzenTypType" minOccurs="0"/>
+					<xs:element name="massnahme" type="bplan:MassnahmeType"/>
+					<xs:element name="gegenstand" type="bplan:AnpflanzungBindungErhaltungsGegenstandType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="PflanzungLinienfoermig" type="xplan:PflanzungLinienfoermigType" substitutionGroup="xplan:BPlanLinienobjekt"/>
-	<xs:complexType name="PflanzungLinienfoermigType">
+	<xs:element name="AnpflanzungBindungErhaltungsLinie" type="bplan:AnpflanzungBindungErhaltungsLinieType" substitutionGroup="bplan:BPlanLinienobjekt"/>
+	<xs:complexType name="AnpflanzungBindungErhaltungsLinieType">
 		<xs:annotation>
 			<xs:documentation>
-Linie zum Anpflanzen von Bäumen, Sträuchern und sonstigen Bepflanzungen, sowie Bindungen für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern (§9 Abs. 1 Nr. 25 und Bbs. 6 BauGB)
+a) Linienhafte Festsetzung des Anpflanzens von Bäumen, Sträuchern und sonstigen Bepflanzungen;
+b) Linienhafte Festsetzung von Bindungen für Bepflanzungen und für die Erhaltung von Bäumen, Sträuchern und sonstigen Bepflanzungen sowie von Gewässern;  (§9 Abs. 1 Nr. 25a und Abs. 6 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence>
-					<xs:element name="art" type="xplan:ArtAnpflanzungType"/>
-					<xs:element name="pflanzen" type="xplan:PflanzenTypType" minOccurs="0"/>
+					<xs:element name="massnahme" type="bplan:MassnahmeType"/>
+					<xs:element name="gegenstand" type="bplan:AnpflanzungBindungErhaltungsGegenstandType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:simpleType name="ArtAnpflanzungType">
+	<xs:simpleType name="MassnahmeType">
 		<xs:annotation>
 			<xs:documentation>
-
+Liste der nach §9, Abs.1, Nr. 25 möglichen Maßnahmen
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Erhaltung"/>
 			<xs:enumeration value="Anpflanzung"/>
+			<xs:enumeration value="Bindung"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="NebenanlagenStellplaetzeGarabenflaechen" type="xplan:NebenanlagenStellplaetzeGarabenflaechenType" substitutionGroup="gml:_Feature"/>
-	<xs:complexType name="NebenanlagenStellplaetzeGarabenflaechenType">
+	<xs:element name="AusgleichsFlaeche" type="bplan:AusgleichsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
+	<xs:complexType name="AusgleichsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzung einer Fläche zum Ausgleich im Sinne des § 1a Abs.3 und §9 Abs. 1a BauGB.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AusgleichsMassnahme" type="bplan:AusgleichsMassnahmeType" substitutionGroup="bplan:BPlanPunktobjekt"/>
+	<xs:complexType name="AusgleichsMassnahmeType">
+		<xs:annotation>
+			<xs:documentation>
+Festsetzung einer Maßnahme zum Ausgleich im Sinne des § 1a Abs.3 und §9 Abs. 1a BauGB.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanPunktobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- Paket Landwirtschaft, Wald- und Grünflächen -->
-	<xs:element name="LandwirtschaftsFlaeche" type="xplan:LandwirtschaftsFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="LandwirtschaftsFlaeche" type="bplan:LandwirtschaftsFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="LandwirtschaftsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Flächen für Landwirtschaft und Wald (hier: Landwirtschaft) (§9 Abs. 1 Nr. 18 und Abs. 6 BauGB)
+Festsetzungen von Flächen für die Landwirtschaft  (§9, Abs. 1, Nr. 18a BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="WaldFlaeche" type="xplan:WaldFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="WaldFlaeche" type="bplan:WaldFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="WaldFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzung von Waldflächen  (§9, Abs. 1, Nr. 18b BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungWaldflaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungWaldflaecheType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1395,25 +1536,31 @@ Flächen für Landwirtschaft und Wald (hier: Landwirtschaft) (§9 Abs. 1 Nr. 18 
 			<xs:enumeration value="Sonstiges"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="GruenFlaeche" type="xplan:GruenFlaecheType" substitutionGroup="xplan:BPlanFlaechenschlussobjekt"/>
+	<xs:element name="GruenFlaeche" type="bplan:GruenFlaecheType" substitutionGroup="bplan:BPlanFlaechenschlussobjekt"/>
 	<xs:complexType name="GruenFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzungen von öffentlichen und privaten Grünflächen(§9, Abs. 1, Nr. 15 BauGB)  und von Flächen für die Kleintierhaltung (§9, Abs. 1, Nr. 19 BauGB) ,
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenschlussobjektType">
+			<xs:extension base="bplan:BPlanFlaechenschlussobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungGruenflaecheType" minOccurs="0"/>
-					<xs:element name="nutzungsForm" type="xplan:NutzungsformType" minOccurs="0"/>
-					<xs:element name="festsetzungen" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FestsetzungenBaugebiet" type="xplan:FestsetzungenBaugebietType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="maxZahlWohnungen" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmin" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Fmax" type="xs:integer" minOccurs="0"/>
+					<xs:element name="GFZmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFZmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GFmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BMZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="BM" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GRZ" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="GR" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmin" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="Zmax" type="xs:decimal" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungGruenflaecheType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="nutzungsForm" type="bplan:NutzungsformType" minOccurs="0"/>
 					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1438,7 +1585,7 @@ Flächen für Landwirtschaft und Wald (hier: Landwirtschaft) (§9 Abs. 1 Nr. 18 
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- Paket Sonstige Festsetzungen -->
-	<xs:element name="RaeumlicherGeltungsbereich" type="xplan:RaeumlicherGeltungsbereichType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
+	<xs:element name="RaeumlicherGeltungsbereich" type="bplan:RaeumlicherGeltungsbereichType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
 	<xs:complexType name="RaeumlicherGeltungsbereichType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1446,7 +1593,7 @@ Grenze des räumlichen Geltungsbereichs des Bebauungsplans (§9 Abs. 7 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence>
 					<xs:element name="aufstellungsbeschluss" type="xs:date" minOccurs="0"/>
 					<xs:element name="veraenderungssperre" type="xs:date" minOccurs="0"/>
@@ -1457,20 +1604,7 @@ Grenze des räumlichen Geltungsbereichs des Bebauungsplans (§9 Abs. 7 BauGB)
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="AusgleichsFlaeche" type="xplan:AusgleichsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
-	<xs:complexType name="AusgleichsFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Flächen zum Ausgleich im Sinne des § 1a Abs.3 (§9 Abs. 1a BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="KennzeichnungFlaeche" type="xplan:KennzeichnungFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="KennzeichnungFlaeche" type="bplan:KennzeichnungFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="KennzeichnungFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1478,9 +1612,9 @@ Flächen für Kennzeichnungen gemäß §9 Abs. 5 BauGB
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungKennzeichnungFlaecheType" minOccurs="0"/>
+					<xs:element name="zweckbestimmung" type="bplan:ZweckbestimmungKennzeichnungFlaecheType" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1492,20 +1626,20 @@ Flächen für Kennzeichnungen gemäß §9 Abs. 5 BauGB
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Altlasten"/>
+			<xs:enumeration value="UmweltgefaehrdendeStoffe"/>
 			<xs:enumeration value="Naturgewalten"/>
-			<xs:enumeration value="Abbauflaeche"/>
+			<xs:enumeration value="Bergbau"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="WegerechteBelasteteteFlaeche" type="xplan:WegerechteBelasteteteFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="WegerechteBelasteteteFlaecheType">
+	<xs:element name="WegerechteBelasteteFlaeche" type="bplan:WegerechteBelasteteFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="WegerechteBelasteteFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Mit Geh-, Fahr- und Leitungsrechten zu belastende Flächen (§ 9 Abs. 1 Nr. 21 und Abs. 6 BauGB)
+Festsetzung von Flächen, die mit Geh-, Fahr-, und Leitungsrechten zugunsten der Allgemeinheit, eines Erschließungsträgers, oder eines beschränkten Personenkreises belastet sind  (§ 9 Abs. 1 Nr. 21 und Abs. 6 BauGB).
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence>
 					<xs:element name="zugunstenVon" type="xs:string" minOccurs="0"/>
 					<xs:element name="thema" type="xs:string" minOccurs="0"/>
@@ -1513,180 +1647,67 @@ Mit Geh-, Fahr- und Leitungsrechten zu belastende Flächen (§ 9 Abs. 1 Nr. 21 u
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ImmissionsschutzFlaeche" type="xplan:ImmissionsschutzFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="ImmissionsschutzFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Umgrenzungen der Flächen für besondere Anlagen und Vorkehrungen zum Schutz vor schädlichen Umwelteinwirkungen im Sinne des Bundes-
-Immissionsschutzgesetzes (§ 9 Abs. 1 Nr. 23 und Abs. 6 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="LuftreinhalteFlaeche" type="xplan:LuftreinhalteFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="LuftreinhalteFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Umgrenzung der Gebiete, in denen bestimmte, die Luft erheblich verunreinigende Stoffe nicht oder nur beschränkt verwendet werden dürfen (§ 9 Abs. 1 Nr. 23 und Abs. 6 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="Stuetzmauer" type="xplan:StuetzmauerType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="StuetzmauerType">
-		<xs:annotation>
-			<xs:documentation>
-Fläche für Aufschüttungen, Abgrabungen und Stützmauern, soweit sie    zur Herstellung des Straßenkörpers erforderlich sind (§ 9 Abs. 1 Nr. 26 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="FreiFlaeche" type="xplan:FreiFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
+	<xs:element name="FreiFlaeche" type="bplan:FreiFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
 	<xs:complexType name="FreiFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
-Umgrenzung der Flächen, die von der Bebauung freizuhalten sind.  (§ 9 Abs. 1 Nr. 10 und Abs. 6 BauGB)
+Umgrenzung der Flächen, die von der Bebauung freizuhalten sind, und ihre Nutzung (§ 9 Abs. 1 Nr. 10 und Nr. 24 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence/>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence>
+					<xs:element name="nutzung" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FlaecheAllgemein" type="xplan:FlaecheAllgemeinType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
+	<xs:element name="FlaecheAllgemein" type="bplan:FlaecheAllgemeinType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
 	<xs:complexType name="FlaecheAllgemeinType">
 		<xs:annotation>
 			<xs:documentation>
-Aufnahme von flächenfaften Festsetzungen aus dem Landesrecht in 
-einen Bebaaungsplan gemäß §9 Abs. 4 BauGB, sowie nachrichtliche Übernahme nach anderen gesetzlichen Vorschriften gemäß §9 Abs.6 BauGB
+Aufnahme von flächenfaften Festsetzungen aus dem Landesrecht in einen Bebaaungsplan gemäß §9 Abs. 4 BauGB, sowie nachrichtliche Übernahme nach anderen gesetzlichen Vorschriften gemäß §9 Abs.6 BauGB
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence>
 					<xs:element name="zweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="AusgleichsMassnahme" type="xplan:AusgleichsMassnahmeType" substitutionGroup="xplan:BPlanPunktobjekt"/>
-	<xs:complexType name="AusgleichsMassnahmeType">
-		<xs:annotation>
-			<xs:documentation>
-Maßnahme zum Ausgleich im Sinne des § 1a Abs.3 (§9 Abs. 1a BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="HoehenObjekt" type="xplan:HoehenObjektType" substitutionGroup="xplan:BPlanPunktobjekt"/>
+	<xs:element name="HoehenObjekt" type="bplan:HoehenObjektType" substitutionGroup="bplan:BPlanPunktobjekt"/>
 	<xs:complexType name="HoehenObjektType">
 		<xs:annotation>
 			<xs:documentation>
-Festsetzungen nach Absatz 1 für übereinanderliegende Geschosse und Ebenen und sonstige Teile baulicher Anlagen (§9 Abs.3 BauGB)
+Festsetzungen nach §6 Abs. 1 BauGB für übereinanderliegende Geschosse und Ebenen und sonstige Teile baulicher Anlagen (§9 Abs.3 BauGB).
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
+			<xs:extension base="bplan:BPlanPunktobjektType">
 				<xs:sequence>
 					<xs:element name="hoehe" type="xs:decimal"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="NebenanlagenFlaeche" type="xplan:NebenanlagenFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="NebenanlagenFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Fläche für Nebenanlagen, die auf Grund anderer Vorschriften für die Nutzung von Grundstücken erforderlich sind, wie Spiel-, Freizeit- und Erholungsflächen sowie die Fläche für Stellplätze und Garagen mit ihren Einfahrten (§9 Abs. 4 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungNebenanlagenType" minOccurs="0"/>
-					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
-					<xs:element name="unterirdisch" type="xs:boolean" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="GemeinschaftsanlagenFlaeche" type="xplan:GemeinschaftsanlagenFlaecheType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="GemeinschaftsanlagenFlaecheType">
-		<xs:annotation>
-			<xs:documentation>
-Fläche für Gemeinschaftsanlagen für bestimmte räumliche Bereiche wie    Kinderspielplätze, Freizeiteinrichtungen, Stellplätze und Garagen (§9 Abs. 22 BauGB)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
-				<xs:sequence>
-					<xs:element name="zweckbestimmung" type="xplan:ZweckbestimmungGemeinschaftsanlagenType" minOccurs="0"/>
-					<xs:element name="sonstigeZweckbestimmung" type="xs:string" minOccurs="0"/>
-					<xs:element name="unterirdisch" type="xs:boolean" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:simpleType name="ZweckbestimmungNebenanlagenType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Stellplaetze"/>
-			<xs:enumeration value="Garagen"/>
-			<xs:enumeration value="Spielplatz"/>
-			<xs:enumeration value="Sonstiges"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="ZweckbestimmungGemeinschaftsanlagenType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Gemeinschaftsstellplaetze"/>
-			<xs:enumeration value="Gemeinschaftsgaragen"/>
-			<xs:enumeration value="Spielplatz"/>
-			<xs:enumeration value="Sonstiges"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:element name="LinieAllgemein" type="xplan:LinieAllgemeinType" substitutionGroup="xplan:BPlanLinienobjekt"/>
+	<xs:element name="LinieAllgemein" type="bplan:LinieAllgemeinType" substitutionGroup="bplan:BPlanLinienobjekt"/>
 	<xs:complexType name="LinieAllgemeinType">
 		<xs:annotation>
 			<xs:documentation>
-Aufnahme von linienhaften Festsetzungen aus dem Landesrecht in 
-einen Bebaaungsplan gemäß §9 Abs. 4 BauGB, sowie nachrichtliche Übernahme nach anderen gesetzlichen Vorschriften gemäß §9 Abs.6 BauGB
+Aufnahme von linienhaften Festsetzungen aus dem Landesrecht in einen Bebaaungsplan gemäß §9 Abs. 4 BauGB, sowie nachrichtliche Übernahme nach anderen gesetzlichen Vorschriften gemäß §9 Abs.6 BauGB
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
+			<xs:extension base="bplan:BPlanLinienobjektType">
 				<xs:sequence>
 					<xs:element name="zweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="PunktAllgemein" type="xplan:PunktAllgemeinType" substitutionGroup="xplan:BPlanPunktobjekt"/>
+	<xs:element name="PunktAllgemein" type="bplan:PunktAllgemeinType" substitutionGroup="bplan:BPlanPunktobjekt"/>
 	<xs:complexType name="PunktAllgemeinType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1694,28 +1715,15 @@ einen Bebaaungsplan gemäß §9 Abs. 4 BauGB, sowie nachrichtliche Übernahme na
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
+			<xs:extension base="bplan:BPlanPunktobjektType">
 				<xs:sequence>
 					<xs:element name="zweckbestimmung" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="StuetzmauerLinie" type="xplan:StuetzmauerLinieType" substitutionGroup="xplan:BPlanLinienobjekt"/>
-	<xs:complexType name="StuetzmauerLinieType">
-		<xs:annotation>
-			<xs:documentation>
-
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xplan:BPlanLinienobjektType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<!-- Paket Aufschüttung, Abgrabung, Bodenschätze -->
-	<xs:element name="AufschuettungsFlaeche" type="xplan:AufschuettungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="AufschuettungsFlaeche" type="bplan:AufschuettungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="AufschuettungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1723,12 +1731,10 @@ Flächen auf Aufschüttungen, Abgrabungen oder für die Gewinnung von Bodenschä
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
-				<xs:sequence/>
-			</xs:extension>
+			<xs:extension base="bplan:BPlanFlaechenobjektType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="AbgrabungsFlaeche" type="xplan:AbgrabungsFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="AbgrabungsFlaeche" type="bplan:AbgrabungsFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="AbgrabungsFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1736,12 +1742,12 @@ Flächen auf Aufschüttungen, Abgrabungen oder für die Gewinnung von Bodenschä
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="BodenschaetzeFlaeche" type="xplan:BodenschaetzeFlaecheType" substitutionGroup="xplan:BPlanFlaechenobjekt"/>
+	<xs:element name="BodenschaetzeFlaeche" type="bplan:BodenschaetzeFlaecheType" substitutionGroup="bplan:BPlanFlaechenobjekt"/>
 	<xs:complexType name="BodenschaetzeFlaecheType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1749,47 +1755,116 @@ Flächen auf Aufschüttungen, Abgrabungen oder für die Gewinnung von Bodenschä
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanFlaechenobjektType">
+			<xs:extension base="bplan:BPlanFlaechenobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- Paket Stadterhaltung und Denkmalschutz -->
-	<xs:element name="DenkmalschutzErhaltungsbereich" type="xplan:DenkmalschutzErhaltungsbereichType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
-	<xs:complexType name="DenkmalschutzErhaltungsbereichType">
+	<!-- Paket Erhaltungssatzung und Denkmalschutz -->
+	<xs:element name="DenkmalschutzBereich" type="bplan:DenkmalschutzBereichType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="DenkmalschutzBereichType">
 		<xs:annotation>
 			<xs:documentation>
-
+Festsetzung einer Fläche zur Erhaltung baulicher Anlagen und der Eigenart von Gebieten (§172 BauGB)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="DenkmalschutzEnsemble" type="xplan:DenkmalschutzEnsembleType" substitutionGroup="xplan:BPlanUeberlagerungsobjekt"/>
+	<xs:element name="DenkmalschutzEnsemble" type="bplan:DenkmalschutzEnsembleType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
 	<xs:complexType name="DenkmalschutzEnsembleType">
 		<xs:annotation>
 			<xs:documentation>
-
+Umgrenzung eines Denkmalgeschützten Ensembles
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanUeberlagerungsobjektType">
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="DenkmalschutzEinzelanlage" type="xplan:DenkmalschutzEinzelanlageType" substitutionGroup="xplan:BPlanPunktobjekt"/>
+	<xs:element name="DenkmalschutzEinzelanlage" type="bplan:DenkmalschutzEinzelanlageType" substitutionGroup="bplan:BPlanPunktobjekt"/>
 	<xs:complexType name="DenkmalschutzEinzelanlageType">
 		<xs:annotation>
 			<xs:documentation>
-
+Punktförmige denkmalgeschützte Einzelanlage
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="xplan:BPlanPunktobjektType">
+			<xs:extension base="bplan:BPlanPunktobjektType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ErhaltungsBereich" type="bplan:ErhaltungsBereichType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="ErhaltungsBereichType">
+		<xs:annotation>
+			<xs:documentation>
+Fläche, auf denen der Rückbau, die Änderung oder die Nutzungsänderung baulichen Anlagen der Genehmigung durch die Gemeinde bedarf (§172 BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence>
+					<xs:element name="grund" type="bplan:ErhaltungsGrundType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ErhaltungsGrundType">
+		<xs:annotation>
+			<xs:documentation>
+Aufzählung der Gründe für eine Erhaltungssatzung
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="StaedtebaulicheGestalt"/>
+			<xs:enumeration value="Wohnbevoelkerung"/>
+			<xs:enumeration value="Umstrukturierung"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Paket Umweltbezogene Festsetzungen -->
+	<xs:element name="ImmissionsschutzFlaeche" type="bplan:ImmissionsschutzFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="ImmissionsschutzFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Festsetzung einer von der Bebauung freizuhaltenden Schutzfläche und ihre Nutzung, sowie einer Fläche für besondere Anlagen und Vorkehrungen zum Schutz vor schädlichen Umwelteinwirkungen und sonstigen Gefahren im Sinne des Bundes-Immissionsschutzgesetzes sowie die zum Schutz vor solchen Einwirkungen oder zur  Vermeidung oder Minderung solcher Einwirkungen zu treffenden baulichen und sonstigen technischen Vorkehrungen (§9, Abs. 1, Nr. 24 BauGB).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence>
+					<xs:element name="nutzung" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="LuftreinhalteFlaeche" type="bplan:LuftreinhalteFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="LuftreinhalteFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Festsetzung von Gebieten, in denen zum Schutz vor schädlichen Umwelteinwirkungen im Sinne des        Bundes-Immissionsschutzgesetzes bestimmte Luft verunreinigende Stoffe nicht oder nur beschränkt verwendet werden dürfen (§9, Abs. 1, Nr. 23a BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="TechnikBestimmteFlaeche" type="bplan:TechnikBestimmteFlaecheType" substitutionGroup="bplan:BPlanUeberlagerungsobjekt"/>
+	<xs:complexType name="TechnikBestimmteFlaecheType">
+		<xs:annotation>
+			<xs:documentation>
+Gebiet, in dem bei der Errichtung von Gebäuden bestimmte bauliche Maßnahmen für den Einsatz erneuerbarer Energien wie insbesondere Solarenergie getroffen werden müssen (§9, Abs. 1, Nr. 23b BauGB)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bplan:BPlanUeberlagerungsobjektType">
 				<xs:sequence/>
 			</xs:extension>
 		</xs:complexContent>

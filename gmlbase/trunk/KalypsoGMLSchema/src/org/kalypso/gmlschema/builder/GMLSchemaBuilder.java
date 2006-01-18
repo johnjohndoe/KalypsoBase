@@ -125,7 +125,13 @@ public class GMLSchemaBuilder
     final Schema schema = resource.getSchema();
     if( schema == null )
     {
-      throw new GMLSchemaException( "Error bei schema... unthrown exception from apache :-(, find cause with debug... " );
+      // this is crap, apache catches the exception and keeps it :-(
+      // TODO send bugreport/featurerequest to apache
+      // documentation of errors:
+      // - namespace not set (e.g. xmlns:adv="...")
+      // TODO use a schema-validator to report
+      throw new GMLSchemaException(
+          "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
     final GMLSchema gmlSchema = new GMLSchema( schema, Logger.global, schemaLocationURL );
     // I Step build the objects
