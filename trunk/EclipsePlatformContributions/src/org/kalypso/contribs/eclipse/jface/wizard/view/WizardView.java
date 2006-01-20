@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -265,6 +264,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
+  @Override
   public void dispose()
   {
     setWizard( null );
@@ -277,6 +277,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     // initialize the dialog units
@@ -323,6 +324,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       /**
        * @see org.eclipse.swt.browser.LocationAdapter#changed(org.eclipse.swt.browser.LocationEvent)
        */
+      @Override
       public void changed( final LocationEvent event )
       {
         changeLocation( event.location );
@@ -478,6 +480,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent event )
       {
         buttonPressed( handlerMethod );
@@ -585,6 +588,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
+  @Override
   public void setFocus()
   {
     if( m_pageContainer == null && !m_workArea.isDisposed() )
@@ -644,6 +648,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
     final CatchRunnable runnable = new CatchRunnable()
     {
+      @Override
       protected void runIntern() throws Throwable
       {
         updateForPage( page );
@@ -706,7 +711,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   protected Button getButton( int id )
   {
-    return (Button)m_buttons.get( new Integer( id ) );
+    return m_buttons.get( new Integer( id ) );
   }
 
   protected void changeLocation( final String location )
@@ -869,7 +874,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected final void fireWizardChanged( final IWizard newwizard, final int reason )
   {
-    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners
+    final IWizardContainerListener[] listeners = m_listeners
         .toArray( new IWizardContainerListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
@@ -886,7 +891,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected final void firePageChanged( final IWizardPage newpage )
   {
-    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners
+    final IWizardContainerListener[] listeners = m_listeners
         .toArray( new IWizardContainerListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
@@ -1172,6 +1177,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * @return Composite
    * @deprecated
    */
+  @Deprecated
   protected Composite getTitleArea()
   {
     return getShell();

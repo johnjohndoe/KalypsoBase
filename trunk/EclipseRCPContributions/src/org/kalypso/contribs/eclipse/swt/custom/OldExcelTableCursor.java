@@ -25,18 +25,21 @@ public class OldExcelTableCursor extends TableCursor
 {
   public static enum ADVANCE_MODE {
     DOWN {
+      @Override
       public String toString( )
       {
         return "nach &unten setzen";
       }
     },
     RIGHT {
+      @Override
       public String toString( )
       {
         return "nach &rechts setzen";
       }
     },
     NONE {
+      @Override
       public String toString( )
       {
         return "&nicht verändern";
@@ -61,6 +64,7 @@ public class OldExcelTableCursor extends TableCursor
     {
       // when the TableEditor is over a cell, select the 
       // corresponding row in the table
+      @Override
       public void widgetSelected( final SelectionEvent se )
       {
         table.setSelection( new TableItem[] { getRow() } );
@@ -68,6 +72,7 @@ public class OldExcelTableCursor extends TableCursor
 
       // when the user hits "ENTER" in the TableCursor, pop up a
       // text editor so that they can change the text of the cell
+      @Override
       public void widgetDefaultSelected( final SelectionEvent se )
       {
         startEditing( null );
@@ -78,6 +83,7 @@ public class OldExcelTableCursor extends TableCursor
     // This alows the user to select multiple items in the table.
     addKeyListener( new KeyAdapter()
     {
+      @Override
       public void keyPressed( final KeyEvent e )
       {
         if( Character.getType( e.character ) == Character.DECIMAL_DIGIT_NUMBER )
@@ -94,6 +100,7 @@ public class OldExcelTableCursor extends TableCursor
     // This signals the end of the multiple selection task.
     table.addKeyListener( new KeyAdapter()
     {
+      @Override
       public void keyReleased( KeyEvent e )
       {
         if( e.keyCode == SWT.MOD1 && (e.stateMask & SWT.MOD2) != 0 )

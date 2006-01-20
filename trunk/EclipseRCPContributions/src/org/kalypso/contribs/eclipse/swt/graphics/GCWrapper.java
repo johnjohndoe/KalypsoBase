@@ -134,6 +134,7 @@ public class GCWrapper
     m_gc.drawText( string, x, y, flags );
   }
 
+  @Override
   public boolean equals( Object obj )
   {
     return m_gc.equals( obj );
@@ -252,6 +253,7 @@ public class GCWrapper
     return m_gc.getXORMode();
   }
 
+  @Override
   public int hashCode( )
   {
     return m_gc.hashCode();
@@ -337,6 +339,7 @@ public class GCWrapper
     return m_gc.textExtent( string, flags );
   }
 
+  @Override
   public String toString( )
   {
     return m_gc.toString();

@@ -38,6 +38,7 @@ public class ExcelTableCursor3_1 extends TableCursor
   {
     DOWN
     {
+      @Override
       public String toString( )
       {
         return "nach &unten setzen";
@@ -45,6 +46,7 @@ public class ExcelTableCursor3_1 extends TableCursor
     },
     RIGHT
     {
+      @Override
       public String toString( )
       {
         return "nach &rechts setzen";
@@ -52,6 +54,7 @@ public class ExcelTableCursor3_1 extends TableCursor
     },
     NONE
     {
+      @Override
       public String toString( )
       {
         return "&nicht verändern";
@@ -67,6 +70,7 @@ public class ExcelTableCursor3_1 extends TableCursor
     /**
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
      */
+    @Override
     public void mouseDown( final MouseEvent e )
     {
       // force default selection (e.g. checkbox gets toggled)
@@ -106,6 +110,7 @@ public class ExcelTableCursor3_1 extends TableCursor
    */
   final KeyListener m_keyListenerOnCell = new KeyAdapter()
   {
+    @Override
     public void keyPressed( KeyEvent e )
     {
       // handle cursor moving
@@ -176,6 +181,7 @@ public class ExcelTableCursor3_1 extends TableCursor
    */
   final KeyListener m_keyListenerOnTableCursor = new KeyAdapter()
   {
+    @Override
     public void keyPressed( final KeyEvent e )
     {
       if( e.keyCode == SWT.CTRL || (e.stateMask & SWT.CONTROL) != 0 )
@@ -208,6 +214,7 @@ public class ExcelTableCursor3_1 extends TableCursor
    */
   private final KeyListener m_tableKeyListener = new KeyAdapter()
   {
+    @Override
     public void keyReleased( final KeyEvent e )
     {
       if( e.keyCode == SWT.CONTROL && (e.stateMask & SWT.SHIFT) != 0 )

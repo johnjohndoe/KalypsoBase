@@ -68,7 +68,7 @@ public class FileFilterVisitor implements IResourceVisitor
 
   public IFile[] getFiles()
   {
-    return (IFile[])m_foundFiles.toArray( new IFile[m_foundFiles.size()] );
+    return m_foundFiles.toArray( new IFile[m_foundFiles.size()] );
   }
 
   /**

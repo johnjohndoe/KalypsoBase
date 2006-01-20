@@ -53,7 +53,7 @@ import java.util.Set;
  */
 public class MultiUrlCatalog implements IUrlCatalog
 {
-  private final Map m_catalog = new HashMap();
+  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
 
   public MultiUrlCatalog( final IUrlCatalog[] catalogs )
   {
@@ -71,7 +71,7 @@ public class MultiUrlCatalog implements IUrlCatalog
    */
   public URL getURL( final String namespace )
   {
-    return (URL)m_catalog.get( namespace );
+    return m_catalog.get( namespace );
   }
 
   /**
@@ -82,6 +82,7 @@ public class MultiUrlCatalog implements IUrlCatalog
     return m_catalog;
   }
 
+  @Override
   public String toString()
   {
     final StringBuffer result = new StringBuffer();

@@ -99,10 +99,10 @@ public class FortranFormatHelper
    */
   public static HashMap scanf( String formatLine, String line ) throws Exception
   {
-    final HashMap result = new HashMap();
+    final HashMap<String, String> result = new HashMap<String, String>();
     line = line + "                                                ";
     line = line.replaceAll( "\\t", " " );
-    List nameCollector = new ArrayList();
+    final List<String> nameCollector = new ArrayList<String>();
     StringBuffer pattern = new StringBuffer( "^" );
     String[] formats = patternBrackets.split( formatLine );
     for( int i = 0; i < formats.length; i++ )
@@ -122,7 +122,7 @@ public class FortranFormatHelper
 
     for( int i = 0; i < m.groupCount(); i++ )
     {
-      String name = (String)nameCollector.get( i );
+      String name = nameCollector.get( i );
       String value = m.group( i + 1 ).trim();
       result.put( name, value );
       //      propCollector.put( name, FeatureFactory.createFeatureProperty( name,
@@ -131,7 +131,7 @@ public class FortranFormatHelper
     return result;
   }
 
-  private static String getRegExp( String string, List nameCollector )
+  private static String getRegExp( String string, List<String> nameCollector )
   {
     Matcher m = pPairFormat.matcher( string );
     if( m.matches() )
@@ -144,7 +144,7 @@ public class FortranFormatHelper
     throw new UnsupportedOperationException();
   }
 
-  private static String getPairRegExp( String fPair, List nameCollector )
+  private static String getPairRegExp( String fPair, List<String> nameCollector )
   {
     if( "".equals( fPair ) )
       return "";

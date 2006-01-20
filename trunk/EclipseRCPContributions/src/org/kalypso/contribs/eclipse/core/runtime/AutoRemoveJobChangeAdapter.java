@@ -68,6 +68,7 @@ public class AutoRemoveJobChangeAdapter extends JobChangeAdapter
   /**
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
+  @Override
   public void done( IJobChangeEvent event )
   {
     if( m_autoRemoveListenerOnceDone )

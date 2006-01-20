@@ -87,6 +87,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getShell()
    */
+  @Override
   public Shell getShell( )
   {
     return null;

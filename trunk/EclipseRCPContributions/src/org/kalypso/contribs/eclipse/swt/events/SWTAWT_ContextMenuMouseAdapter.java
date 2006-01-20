@@ -89,16 +89,19 @@ public class SWTAWT_ContextMenuMouseAdapter extends MouseAdapter
     }
   }
 
+  @Override
   public void mouseClicked( MouseEvent e )
   {
     contextMenuAboutToShow( e );
   }
 
+  @Override
   public void mousePressed( MouseEvent e )
   {
     contextMenuAboutToShow( e );
   }
 
+  @Override
   public void mouseReleased( final MouseEvent e )
   {
     contextMenuAboutToShow( e );

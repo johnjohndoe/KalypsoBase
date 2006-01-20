@@ -298,6 +298,7 @@ public final class StatusUtilities
     {
       newStatus = new MultiStatus( status.getPlugin(), status.getCode(), ((MultiStatus) status).getChildren(), status.getMessage(), status.getException() )
       {
+        @Override
         public int getSeverity( )
         {
           return severity;
@@ -308,6 +309,7 @@ public final class StatusUtilities
     {
       newStatus = new Status( severity, status.getPlugin(), status.getCode(), status.getMessage(), status.getException() )
       {
+        @Override
         public int getSeverity( )
         {
           return severity;

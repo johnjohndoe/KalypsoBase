@@ -97,6 +97,7 @@ public class ExcelLikeTableCursor extends TableCursor
      * 
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
      */
+    @Override
     public void mouseDown( final MouseEvent e )
     {
       // force default selection (e.g. checkbox gets toggled)
@@ -166,6 +167,7 @@ public class ExcelLikeTableCursor extends TableCursor
    */
   final KeyListener m_keyListenerOnCell = new KeyAdapter()
   {
+    @Override
     public void keyPressed( KeyEvent e )
     {
       // handle cursor moving
@@ -221,6 +223,7 @@ public class ExcelLikeTableCursor extends TableCursor
   final KeyListener m_keyListenerOnTableCursor = new KeyAdapter()
   {
 
+    @Override
     public void keyPressed( final KeyEvent e )
     {
       if( e.keyCode == SWT.CTRL || ( e.stateMask & SWT.CONTROL ) != 0 )
@@ -257,6 +260,7 @@ public class ExcelLikeTableCursor extends TableCursor
    */
   private final KeyListener m_tableKeyListener = new KeyAdapter()
   {
+    @Override
     public void keyReleased( KeyEvent e )
     {
       if( isDisposed() )

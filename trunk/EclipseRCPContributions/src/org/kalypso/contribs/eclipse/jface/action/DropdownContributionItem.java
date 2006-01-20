@@ -36,6 +36,7 @@ public class DropdownContributionItem<T> extends ControlContribution
     setItems ( items );
   }
 
+  @Override
   public void dispose( )
   {
     m_listeners.clear();
@@ -44,6 +45,7 @@ public class DropdownContributionItem<T> extends ControlContribution
   /**
    * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected Control createControl( final Composite parent )
   {
     m_combo = new Combo( parent, SWT.DROP_DOWN | SWT.READ_ONLY );

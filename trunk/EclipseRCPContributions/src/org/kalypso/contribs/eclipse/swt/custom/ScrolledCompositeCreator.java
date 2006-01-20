@@ -79,6 +79,7 @@ public abstract class ScrolledCompositeCreator
       /**
        * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
        */
+      @Override
       public void controlResized( final ControlEvent e )
       {
         updateControlSize( true );

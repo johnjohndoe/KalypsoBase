@@ -83,6 +83,7 @@ public class FileSelectWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_ffe != null )

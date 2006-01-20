@@ -99,6 +99,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     int lastMatch = descriptorsSize - 1;
 
+    @Override
     public void run()
     {
       Display display = resourceNames.getDisplay();
@@ -255,6 +256,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     boolean refilter = false;
 
+    @Override
     public void run()
     {
       Display display = resourceNames.getDisplay();
@@ -453,6 +455,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
    */
+  @Override
   protected void cancelPressed()
   {
     setResult( null );
@@ -462,6 +465,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   /**
    * @see org.eclipse.jface.window.Window#close()
    */
+  @Override
   public boolean close()
   {
     boolean result = super.close();
@@ -472,6 +476,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   /**
    * @see org.eclipse.jface.window.Window#create()
    */
+  @Override
   public void create()
   {
     super.create();
@@ -486,6 +491,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * @param parent
    *          parent to create the dialog widgets in
    */
+  @Override
   protected Control createDialogArea( Composite parent )
   {
     Composite dialogArea2 = (Composite)super.createDialogArea( parent );
@@ -540,6 +546,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     pattern.addKeyListener( new KeyAdapter()
     {
+      @Override
       public void keyReleased( KeyEvent e )
       {
         if( e.keyCode == SWT.ARROW_DOWN )
@@ -557,11 +564,13 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     resourceNames.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         updateFolders( (ResourceDescriptor)e.item.getData() );
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         okPressed();
@@ -570,6 +579,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     folderNames.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         okPressed();
@@ -696,7 +706,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       }
     }
 
-    final ArrayList resources = new ArrayList();
+    final ArrayList<IResource> resources = new ArrayList<IResource>();
     BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
     {
       public void run()
@@ -901,6 +911,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   /**
    * The user has selected a resource and the dialog is closing. Set the selected resource as the dialog result.
    */
+  @Override
   protected void okPressed()
   {
     TableItem items[] = folderNames.getSelection();

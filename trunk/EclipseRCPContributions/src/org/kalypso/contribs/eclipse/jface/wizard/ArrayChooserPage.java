@@ -100,6 +100,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_viewer != null )
@@ -157,6 +158,7 @@ public class ArrayChooserPage extends WizardPage
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         viewer.setAllChecked( select );

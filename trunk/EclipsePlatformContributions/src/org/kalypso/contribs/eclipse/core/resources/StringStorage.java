@@ -146,7 +146,7 @@ public class StringStorage implements IEncodedStorage
    */
   public String getCharset()
   {
-    // allways Unicode, because wie
+    // allways Unicode
     return "UTF-8";
   }
 }

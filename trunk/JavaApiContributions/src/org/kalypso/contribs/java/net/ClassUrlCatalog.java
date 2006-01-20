@@ -102,7 +102,7 @@ public class ClassUrlCatalog implements IUrlCatalog
   {
     try
     {
-      final String[] classNames = (String[])props.values().toArray( new String[0] );
+      final String[] classNames = props.values().toArray( new String[0] );
       final IUrlCatalog[] catalogs = new IUrlCatalog[classNames.length];
       for( int i = 0; i < classNames.length; i++ )
       {

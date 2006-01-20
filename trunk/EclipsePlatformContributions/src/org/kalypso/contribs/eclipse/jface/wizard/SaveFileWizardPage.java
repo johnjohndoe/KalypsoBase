@@ -238,6 +238,7 @@ public class SaveFileWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleDestinationBrowseButtonPressed();
@@ -256,6 +257,7 @@ public class SaveFileWizardPage extends WizardPage
     m_formatViewer.setInput( m_formats.keySet() );
     ( (ComboViewer)m_formatViewer ).getCombo().addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleComboSelected();

@@ -85,7 +85,7 @@ public class PropertyUrlCatalog implements IUrlCatalog
    */
   public URL getURL( final String key )
   {
-    return (URL)m_catalog.get( key );
+    return m_catalog.get( key );
   }
 
   /**
