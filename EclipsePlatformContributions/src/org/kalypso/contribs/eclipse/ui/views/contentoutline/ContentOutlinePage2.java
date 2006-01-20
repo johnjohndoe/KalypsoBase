@@ -92,6 +92,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * 
    * @param parent
    */
+  @Override
   public void createControl( final Composite parent )
   {
     treeViewer = createTreeViewer( parent );
@@ -139,6 +140,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.ui.part.IPage#getControl()
    */
+  @Override
   public Control getControl()
   {
     if( treeViewer == null )
@@ -169,6 +171,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
    */
+  @Override
   public void init( IPageSite pageSite )
   {
     super.init( pageSite );
@@ -194,6 +197,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * Sets focus to a part in the page.
    */
+  @Override
   public void setFocus()
   {
     treeViewer.getControl().setFocus();

@@ -70,12 +70,12 @@ public class JavaApiContributionsExtension
   {
     if( m_catalogs == null )
       initRegistry();
-    return (IUrlCatalog[])m_catalogs.values().toArray( new IUrlCatalog[m_catalogs.size()] );
+    return m_catalogs.values().toArray( new IUrlCatalog[m_catalogs.size()] );
   }
 
   public static IUrlCatalog getCatalog( Object id )
   {
-    return (IUrlCatalog)m_catalogs.get( id );
+    return m_catalogs.get( id );
   }
 
   public static synchronized void registerCatalog( final Object id, final IUrlCatalog catalog ) throws Exception

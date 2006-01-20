@@ -59,6 +59,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
   /**
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
+  @Override
   public void done( final IJobChangeEvent event )
   {
     final int stateMask = m_stateMask;

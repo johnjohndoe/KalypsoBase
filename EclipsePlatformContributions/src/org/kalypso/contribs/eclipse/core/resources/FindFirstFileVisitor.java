@@ -3,7 +3,6 @@ package org.kalypso.contribs.eclipse.core.resources;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.CoreException;
 
 public class FindFirstFileVisitor implements IResourceVisitor
 {
@@ -24,7 +23,7 @@ public class FindFirstFileVisitor implements IResourceVisitor
     return m_result;
   }
 
-  public boolean visit( final IResource resource ) throws CoreException
+  public boolean visit( final IResource resource )
   {
     if( m_result == null && resource instanceof IFile )
     {

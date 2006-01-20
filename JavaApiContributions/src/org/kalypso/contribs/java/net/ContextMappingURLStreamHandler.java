@@ -81,6 +81,7 @@ public class ContextMappingURLStreamHandler extends URLStreamHandler
   /**
    * @see java.net.URLStreamHandler#openConnection(java.net.URL)
    */
+  @Override
   protected URLConnection openConnection( final URL u ) throws IOException
   {
     final String protocol = u.getProtocol();
@@ -88,7 +89,7 @@ public class ContextMappingURLStreamHandler extends URLStreamHandler
     if( !m_replacements.containsKey( protocol ) )
       return u.openConnection();
 
-    final URL context = (URL) m_replacements.get( protocol );
+    final URL context = m_replacements.get( protocol );
 
     return new URL( context, u.toExternalForm().replaceFirst( protocol + ":", "" ) ).openConnection();
   }

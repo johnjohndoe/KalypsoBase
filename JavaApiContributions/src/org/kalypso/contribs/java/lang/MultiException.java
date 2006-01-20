@@ -64,6 +64,7 @@ public class MultiException extends Exception
   /**
    * @see java.lang.Object#finalize()
    */
+  @Override
   protected void finalize() throws Throwable
   {
     if( !isEmpty() )
@@ -83,6 +84,7 @@ public class MultiException extends Exception
   /**
    * @see java.lang.Throwable#getMessage()
    */
+  @Override
   public String getMessage()
   {
     if( isEmpty() )

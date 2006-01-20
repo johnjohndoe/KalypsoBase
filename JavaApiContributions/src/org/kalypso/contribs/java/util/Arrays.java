@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * utility stuff for arrays
@@ -60,6 +59,7 @@ public final class Arrays
    * 
    * @deprecated This method is obsolete, use <code>java.util.Arrays.asList( array );</code> insted. 
    */
+  @Deprecated
   public static List copyAsList( final Object[] array )
   {
     return java.util.Arrays.asList( array );
@@ -436,6 +436,7 @@ public final class Arrays
   /**
    * @deprecated You should use java.util.Arrays.sort() and doubleArray[ doubleArray.length - 1 ] to get the max
    */
+  @Deprecated
   public static double findMax( double[] doubleArray )
   {
     double result = doubleArray[0];
@@ -528,7 +529,7 @@ public final class Arrays
    */
   public static Object[] concat( final Object[] array1, final Object[] array2, final Object[] type )
   {
-    final ArrayList list = new ArrayList( array1.length + array2.length );
+    final ArrayList<Object> list = new ArrayList<Object>( array1.length + array2.length );
     list.addAll( java.util.Arrays.asList( array1 ) );
     list.addAll( java.util.Arrays.asList( array2 ) );
 
@@ -547,7 +548,7 @@ public final class Arrays
    */
   public static Object[] concat( final Object[] array, final Object object, final Object[] type )
   {
-    final ArrayList list = new ArrayList( array.length + 1 );
+    final ArrayList<Object> list = new ArrayList<Object>( array.length + 1 );
     list.addAll( java.util.Arrays.asList( array ) );
     list.add( object );
 
@@ -567,8 +568,8 @@ public final class Arrays
       return false;
 
     // wrap them into sets and compare the sets
-    final HashSet globalSet = new HashSet( java.util.Arrays.asList( array1 ) );
-    final HashSet set = new HashSet( java.util.Arrays.asList( array2 ) );
+    final HashSet<Object> globalSet = new HashSet<Object>( java.util.Arrays.asList( array1 ) );
+    final HashSet<Object> set = new HashSet<Object>( java.util.Arrays.asList( array2 ) );
 
     return globalSet.equals( set );
   }

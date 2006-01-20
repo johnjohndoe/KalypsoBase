@@ -70,6 +70,7 @@ public final class NoMouseDownTableViewer extends TableViewer
     } );
     handler.addPostSelectionListener( new SelectionAdapter()
     {
+      @Override
       @SuppressWarnings( "synthetic-access" )
       public void widgetSelected( SelectionEvent e )
       {

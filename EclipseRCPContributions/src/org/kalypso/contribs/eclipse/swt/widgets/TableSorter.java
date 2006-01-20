@@ -133,6 +133,7 @@ public class TableSorter
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         onColumenSelected( viewer, column );

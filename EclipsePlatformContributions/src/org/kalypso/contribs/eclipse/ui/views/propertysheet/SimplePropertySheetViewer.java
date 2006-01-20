@@ -87,6 +87,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
+  @Override
   public Control getControl( )
   {
     return m_viewer.getControl();
@@ -95,6 +96,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getInput()
    */
+  @Override
   public Object getInput( )
   {
     return m_viewer.getInput();
@@ -103,6 +105,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     return m_viewer.getSelection();
@@ -111,6 +114,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#refresh()
    */
+  @Override
   public void refresh( )
   {
     m_viewer.refresh();
@@ -119,6 +123,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#setInput(java.lang.Object)
    */
+  @Override
   public void setInput( final Object input )
   {
     m_viewer.setInput( input );
@@ -127,6 +132,7 @@ public class SimplePropertySheetViewer extends Viewer
   /**
    * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
    */
+  @Override
   public void setSelection( ISelection selection, boolean reveal )
   {
     m_viewer.setSelection( selection, reveal );

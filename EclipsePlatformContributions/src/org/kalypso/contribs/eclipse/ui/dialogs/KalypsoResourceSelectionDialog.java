@@ -68,6 +68,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
+  @Override
   protected Control createDialogArea( Composite parent )
   {
     // create composite
@@ -113,6 +114,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
     return dialogArea;
   }
 
+  @Override
   protected Control createContents( Composite parent )
   {
     //  create the top level composite for the dialog
@@ -141,6 +143,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of
    * the selected resource containers for later retrieval by the client and closes this dialog.
    */
+  @Override
   protected void okPressed()
   {
     final List<IPath> chosenResourcePathList = new ArrayList<IPath>();

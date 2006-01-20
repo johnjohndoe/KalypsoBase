@@ -50,6 +50,7 @@ public abstract class CatchThread extends Thread
   /**
    * @see java.lang.Runnable#run()
    */
+  @Override
   public final void run()
   {
     try

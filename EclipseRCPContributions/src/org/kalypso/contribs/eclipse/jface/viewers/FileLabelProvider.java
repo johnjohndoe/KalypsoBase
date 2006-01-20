@@ -58,6 +58,7 @@ public class FileLabelProvider extends LabelProvider
   private static final Image IMG_FILE = PlatformUI.getWorkbench().getSharedImages().getImage(
       ISharedImages.IMG_OBJ_FILE );
 
+  @Override
   public Image getImage( Object element )
   {
     if( element instanceof File )
@@ -71,6 +72,7 @@ public class FileLabelProvider extends LabelProvider
     return null;
   }
 
+  @Override
   public String getText( Object element )
   {
     if( element instanceof File )

@@ -56,6 +56,7 @@ public class PasswordDialog extends InputDialog
     super( parentShell, dialogTitle, dialogMessage, "", new PasswordValidator() );
   }
 
+  @Override
   protected Control createDialogArea( Composite parent )
   {
     final Control composite = super.createDialogArea( parent );

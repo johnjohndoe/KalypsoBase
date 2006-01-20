@@ -179,6 +179,7 @@ public class DateRangeInputControl extends Composite
     m_days = days;
   }
 
+  @Override
   public void dispose( )
   {
     m_btnUseDays.removeSelectionListener( m_selListener );

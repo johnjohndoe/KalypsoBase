@@ -68,7 +68,7 @@ public class ConfigurableURLStreamHandlerFactory implements URLStreamHandlerFact
     if( !m_map.containsKey( protocol ) )
       return null; // let default Java implementation decide what to do...
 
-    final URLStreamHandler handler = (URLStreamHandler) m_map.get( protocol );
+    final URLStreamHandler handler = m_map.get( protocol );
     return handler;
   }
 }

@@ -96,6 +96,7 @@ public class CalendarIterator implements Iterator
     return result;
   }
 
+  @Override
   public String toString()
   {
     return "current : " + m_currentCal.getTime().toString() + "\n" + "    end : " + m_end.getTime().toString();

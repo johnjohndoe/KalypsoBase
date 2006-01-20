@@ -42,6 +42,7 @@ public final class InformSuccessJobChangeAdapter extends JobChangeAdapter
   /**
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
+  @Override
   public void done( final IJobChangeEvent event )
   {
     final IStatus status = event.getResult();

@@ -75,6 +75,7 @@ public class DateRangeInputDialog extends TitleAreaDialog
     m_sruct = sruct;
   }
 
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     setTitle( m_title );
@@ -85,6 +86,7 @@ public class DateRangeInputDialog extends TitleAreaDialog
     return m_control;
   }
 
+  @Override
   protected void okPressed( )
   {
     final String err = m_control.validateInput();

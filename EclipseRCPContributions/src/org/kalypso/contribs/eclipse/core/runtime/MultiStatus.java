@@ -26,6 +26,7 @@ public class MultiStatus extends Status
   /**
    * @see java.lang.Object#finalize()
    */
+  @Override
   protected void finalize() throws Throwable
   {
     m_errorMessages.clear();
@@ -44,6 +45,7 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#isOK()
    */
+  @Override
   public boolean isOK()
   {
     return !hasMessages();
@@ -52,6 +54,7 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
+  @Override
   public boolean isMultiStatus()
   {
     return true;
@@ -60,6 +63,7 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.MultiStatus#getChildren()
    */
+  @Override
   public IStatus[] getChildren()
   {
     final IStatus[] stati = new IStatus[m_errorMessages.size()];
@@ -79,6 +83,7 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#getException()
    */
+  @Override
   public Throwable getException()
   {
     return new Exception( "Siehe details" );

@@ -90,7 +90,7 @@ public class ProjectUtilities
       }
     }
 
-    return (IProject[])projects.toArray( new IProject[projects.size()] );
+    return projects.toArray( new IProject[projects.size()] );
   }
 
   /**
