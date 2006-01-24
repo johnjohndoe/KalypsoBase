@@ -5,7 +5,9 @@
 	Erzeugt von NAS Schema Generator
 	Erstellt: 02.11.2005 09:12:40
 -->
-<xs:schema targetNamespace="http://www.xplanung.de/bplangml" xmlns:bplan="http://www.xplanung.de/bplangml" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="2.1">
+<xs:schema targetNamespace="http://www.xplanung.de/bplangml"
+ xmlns:adv="http://www.adv-online.de"
+ xmlns:bplan="http://www.xplanung.de/bplangml" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="2.1">
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	<!-- Paket Praesentationsobjekte -->
 	<xs:element name="BPlanPPO" type="bplan:BPlanPPOType" substitutionGroup="bplan:BPlanPraesentationsobjekt"/>
@@ -574,6 +576,7 @@ Festsetzung einer Fläche mit besonderem Nutzungszweck, der durch besondere stä
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+<!-- doemming das wird nicht benutzt -->
 	<xs:complexType name="GestaltungBaugebietType">
 		<xs:annotation>
 			<xs:documentation>
@@ -587,6 +590,7 @@ Parameter zur Festsetzung von Gestaltungs-Merkmalen
 			<xs:element name="dachform" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+<!-- doemming -->
 	<xs:complexType name="FestsetzungenBaugebietType">
 		<xs:annotation>
 			<xs:documentation>
