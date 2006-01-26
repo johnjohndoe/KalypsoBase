@@ -29,9 +29,9 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.feature.FeatureType;
 
 /**
  * 
@@ -41,6 +41,11 @@ import org.kalypso.gmlschema.basics.IInitialize;
  */
 public interface IRelationContentType extends IInitialize
 {
-  public void toStringTree( StringWriter writer, int indent );
+
+  /**
+   * @param context
+   * @param includeAbstract
+   */
+  FeatureType[] getTargetFeatureTypes( final GMLSchema context, boolean includeAbstract );
 
 }

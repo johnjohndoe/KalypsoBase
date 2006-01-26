@@ -29,7 +29,6 @@
  */
 package org.kalypso.gmlschema;
 
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
@@ -61,7 +59,6 @@ import org.kalypso.gmlschema.property.PropertyContentType;
 import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
-import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -288,14 +285,6 @@ public class GMLSchema
     }
   }
 
-  public String toString()
-  {
-    final StringBuffer result = new StringBuffer( "GMLSchema " );
-    result.append( m_context );
-    result.append( " " );
-    return result.toString();
-  }
-
   /**
    * @param element
    */
@@ -326,23 +315,6 @@ public class GMLSchema
   public Object getBuildedObjectFor( ComplexType complexType )
   {
     return m_buildedObjectHash.get( complexType );
-  }
-
-  /**
-   * 
-   * @param indent
-   */
-  public void toStringTree( final StringWriter writer, final int indent )
-  {
-    writer.write( StringUtils.repeat( " ", indent ) );
-    writer.write( "SCHEMA: " + m_context + "\n" );
-    writer.write( StringUtils.repeat( " ", indent ) );
-    writer.write( "    NS: " + getTargetNamespace() + "\n" );
-    FeatureType[] featureTypes = getAllFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-    {
-      featureTypes[i].toStringTree( writer, indent );
-    }
   }
 
   public FeatureContentType getFeatureContentTypeFor( final ComplexType complexType )

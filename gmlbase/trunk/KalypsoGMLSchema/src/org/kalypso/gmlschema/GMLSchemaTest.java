@@ -30,14 +30,16 @@
 package org.kalypso.gmlschema;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.net.URL;
 
-import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
-import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
-import org.kalypso.gmlschema.visitor.PrintGMLSchemaVisitor;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
+import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
+import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
+import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 
 /**
  * 
@@ -80,12 +82,11 @@ public class GMLSchemaTest extends TestCase
       //            GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( GMLSchemaConstants.NS_XMLSCHEMA, schemaLocationURL );
       if( schema != null )
       {
-        final StringWriter writer = new StringWriter();
-        schema.toStringTree( writer, 0 );
-        final IGMLSchemaVisitor visitor = new PrintGMLSchemaVisitor( schema, writer );
-        schema.accept( visitor );
-        System.out.println( writer.toString() );
-        System.out.println( "super" );
+        final StringBuffer buffer = new StringBuffer();
+        final ITreeContentProviderVisitor visitor = new PrintVisitor( new GMLSchemaLabelProvider(), buffer );
+        final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( schema, true );
+        provider.accept( schema, visitor, 0 );
+        System.out.println( buffer.toString() );
       }
     }
     catch( Exception e )
@@ -102,5 +103,33 @@ public class GMLSchemaTest extends TestCase
     //    String schemaLocation3 = includeArray[0].getSchemaLocation();
     //    final String namespace = resource.getNamespace();
     //    System.out.println( "fertig" );
+
+  }
+
+  private class PrintVisitor implements ITreeContentProviderVisitor
+  {
+    private final ILabelProvider m_labelProvider;
+
+    private final StringBuffer m_buffer;
+
+    public PrintVisitor( final ILabelProvider labelProvider, StringBuffer buffer )
+    {
+      m_labelProvider = labelProvider;
+      m_buffer = buffer;
+    }
+
+    public boolean visit( Object element, int indent )
+    {
+      final String space = StringUtils.repeat( ".  ", indent );
+      final String text = m_labelProvider.getText( element );
+      final String[] lines = text.split( "\n" );
+      for( int i = 0; i < lines.length; i++ )
+      {
+        m_buffer.append( space );
+        m_buffer.append( lines[i] );
+        m_buffer.append( "\n" );
+      }
+      return true;
+    }
   }
 }

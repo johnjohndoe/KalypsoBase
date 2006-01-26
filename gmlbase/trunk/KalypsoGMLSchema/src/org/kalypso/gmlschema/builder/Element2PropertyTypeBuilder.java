@@ -98,6 +98,8 @@ public class Element2PropertyTypeBuilder implements IBuilder
     {
       if("GeometryAssociationType".equals(localPart))
         return true;
+      if("BoundingShapeType".equals(localPart))
+        return true;
     }
     return false;
   }

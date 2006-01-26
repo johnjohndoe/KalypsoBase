@@ -29,11 +29,8 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -82,17 +79,12 @@ public class ForcedRelationContentType implements IRelationContentType, IInitial
   }
 
   /**
-   * @param writer
-   * @param indent
+   * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
+   *      boolean)
    */
-  public void toStringTree( StringWriter writer, int indent )
+  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "RelationContentType generated from xs:appinfo/adv:referenziertesElement" );
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "related to --> " + m_ftRelationTarget.getQName() );
-    //    super.toStringTree( writer, indent );
-    indent++;
-    //    m_ftRelationTarget.toStringTree( writer, indent );
+    return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
   }
+  
 }

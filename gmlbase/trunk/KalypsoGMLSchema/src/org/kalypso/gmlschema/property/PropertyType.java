@@ -29,11 +29,8 @@
  */
 package org.kalypso.gmlschema.property;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
@@ -49,7 +46,7 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
  * 
  * @author doemming
  */
-public class PropertyType extends AbstractPropertyTypeFromElement
+public class PropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
 {
 
   private IPropertyContentType m_propertyContentType = null;
@@ -107,24 +104,4 @@ public class PropertyType extends AbstractPropertyTypeFromElement
     return m_propertyContentType.getValueQName();
   }
 
-  /**
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    super.toStringTree( writer, indent );
-//    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( " PropertyType " + getQName() );
-    if( m_propertyContentType != null )
-    {
-      indent++;
-      m_propertyContentType.toStringTree( writer, indent );
-    }
-    else
-    {
-      writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-      writer.write( "          valueType: " + m_valueQName );
-    }
-  }
 }

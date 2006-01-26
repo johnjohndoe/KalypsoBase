@@ -29,7 +29,6 @@
  */
 package org.kalypso.gmlschema.basics;
 
-import java.io.StringWriter;
 
 /**
  * 
@@ -48,8 +47,5 @@ public interface IInitialize
    * This is intended to be done here.
    */
   public void init();
-
-  // TODO use LabelProvider for this ugly code
-  public void toStringTree( StringWriter writer, int indent );
 
 }

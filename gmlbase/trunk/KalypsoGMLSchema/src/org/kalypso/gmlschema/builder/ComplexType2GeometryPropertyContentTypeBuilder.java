@@ -36,7 +36,6 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.GeometryPropertyContentType;
-import org.kalypso.gmlschema.property.PropertyContentType;
 
 /**
  * 
@@ -79,6 +78,8 @@ public class ComplexType2GeometryPropertyContentTypeBuilder implements IBuilder
     // XML-SCHEMA
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
+    if("BoundingShapeType".equals(localPart))
+      return true;
     return "GeometryAssociationType".equals( localPart );
   }
 }

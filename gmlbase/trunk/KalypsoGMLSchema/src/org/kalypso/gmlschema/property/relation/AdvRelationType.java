@@ -29,13 +29,11 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 
 /**
@@ -64,19 +62,6 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   }
 
   /**
-   * 
-   * @see org.kalypso.gmlschema.property.relation.IRelationType#toStringTree(java.io.StringWriter, int)
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "RelationType : " + getQName() );
-    super.toStringTree( writer, indent );
-    indent++;
-    m_relationContentType.toStringTree( writer, indent );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
   public boolean isInlineAble()
@@ -90,5 +75,14 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   public boolean isLinkAble()
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
+   *      boolean)
+   */
+  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  {
+    return m_relationContentType.getTargetFeatureTypes( context, includeAbstract );
   }
 }

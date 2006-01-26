@@ -29,11 +29,8 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
@@ -80,33 +77,6 @@ public class RelationContentTypeFromRestriction extends RelationContentType
     final ComplexType complexType = reference.getComplexType();
     m_restrictionBase = schema.getRelationContentTypeFor( complexType );
     super.init();
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    final StringBuffer result = new StringBuffer( super.toString() );
-    if( m_restrictionBase != null )
-      result.append( " restricted from " + m_restrictionBase.toString() );
-    else
-      result.append( " restricted from unknown (not initiated" );
-    return result.append( "\n" ).toString();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    super.toStringTree( writer, indent );
-    indent++;
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "restricts from" );
-    indent++;
-
-    m_restrictionBase.toStringTree( writer, indent );
   }
 
 }

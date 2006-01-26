@@ -29,8 +29,18 @@
  */
 package org.kalypso.gmlschema.basics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IDetailedFeatureType;
+import org.kalypso.gmlschema.feature.IFeatureContentType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
  * 
@@ -41,13 +51,90 @@ import org.eclipse.jface.viewers.Viewer;
 public class GMLSchemaTreeContentProvider implements ITreeContentProvider
 {
 
+  private final boolean m_detailed;
+
+  private final GMLSchema m_context;
+
+  public GMLSchemaTreeContentProvider( GMLSchema context, boolean detailed )
+  {
+    m_context = context;
+    m_detailed = detailed;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( Object parent )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( parent == null )
+      return new Object[0];
+    if( parent instanceof LabelAndChildsProvider )
+      return ( (LabelAndChildsProvider)parent ).getChilds();
+    if( parent instanceof GMLSchema )
+    {
+      GMLSchema schema = (GMLSchema)parent;
+      return schema.getAllFeatureTypes();
+    }
+    if( !m_detailed )
+    {
+      if( parent instanceof IFeatureType )
+        return ( (IFeatureType)parent ).getProperties();
+    }
+    else
+    {
+      if( parent instanceof IDetailedFeatureType )
+      {
+        final IFeatureContentType featureContentType = ( (IDetailedFeatureType)parent ).getFeatureContentType();
+        return new Object[]
+        { featureContentType };
+      }
+      if( parent instanceof IFeatureContentType )
+      {
+        final IFeatureContentType fct = (IFeatureContentType)parent;
+        final IPropertyType[] properties = fct.getDirectProperties();
+        final String label;
+        switch( fct.getDerivationType() )
+        {
+        case IFeatureContentType.DERIVATION_NONE:
+          return properties;
+        case IFeatureContentType.DERIVATION_BY_EXTENSION:
+          label = "extended by";
+          break;
+        case IFeatureContentType.DERIVATION_BY_RESTRICTION:
+          label = "restricted by";
+          break;
+        default:
+          throw new UnsupportedOperationException();
+        }
+        final LabelAndChildsProvider provider = new LabelAndChildsProvider( label, new Object[]
+        { fct.getBase() } );
+        final Object[] result = new Object[properties.length + 1];
+        result[0] = provider;
+        for( int i = 0; i < properties.length; i++ )
+          result[i + 1] = properties[i];
+        return result;
+      }
+    }
+
+    if( parent instanceof IRelationType )
+    {
+      final IRelationType relationType = (IRelationType)parent;
+      final FeatureType[] targetFeatureTypes = relationType.getTargetFeatureTypes( m_context, true );
+      final List result = new ArrayList();
+      for( int i = 0; i < targetFeatureTypes.length; i++ )
+      {
+        final FeatureType type = targetFeatureTypes[i];
+        result.add( " -> " + type.getQName() );
+      }
+      return result.toArray();
+    }
+    //    if(parent instanceof )
+    //      return (())parent).;
+    //    if(parent instanceof )
+    //      return (())parent).;
+    //    if(parent instanceof )
+    //      return (())parent).;
+    return new Object[0];
   }
 
   /**
@@ -64,8 +151,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( Object element )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return getChildren( element ).length > 0;
   }
 
   /**
@@ -73,8 +159,12 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( inputElement instanceof GMLSchema )
+    {
+      return new Object[]
+      { inputElement };
+    }
+    return new Object[0];
   }
 
   /**
@@ -82,8 +172,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public void dispose()
   {
-  // TODO Auto-generated method stub
-
+  // nothing to dispose
   }
 
   /**
@@ -92,8 +181,17 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-  // TODO Auto-generated method stub
-
+  // nothing to change
   }
 
+  public void accept( Object element, ITreeContentProviderVisitor visitor, int indent )
+  {
+    if( visitor.visit( element, indent ) )
+    {
+      final Object[] children = getChildren( element );
+      indent++;
+      for( int i = 0; i < children.length; i++ )
+        accept( children[i], visitor, indent );
+    }
+  }
 }

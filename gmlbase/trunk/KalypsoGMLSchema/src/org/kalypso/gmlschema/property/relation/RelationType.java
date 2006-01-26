@@ -29,13 +29,11 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
@@ -45,7 +43,7 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public class RelationType extends AbstractPropertyTypeFromElement implements IRelationType
 {
-  private RelationContentType m_relationContentType;
+  private IRelationContentType m_relationContentType;
 
   public RelationType( final GMLSchema gmlSchema, final Element element )
   {
@@ -67,19 +65,6 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   }
 
   /**
-   * 
-   * @see org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement#toStringTree(java.io.StringWriter, int)
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "RelationType : " + getQName() );
-    super.toStringTree( writer, indent );
-    indent++;
-    m_relationContentType.toStringTree( writer, indent );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
   public boolean isInlineAble()
@@ -93,5 +78,13 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   public boolean isLinkAble()
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema, boolean)
+   */
+  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  {
+    return m_relationContentType.getTargetFeatureTypes(context,includeAbstract);
   }
 }

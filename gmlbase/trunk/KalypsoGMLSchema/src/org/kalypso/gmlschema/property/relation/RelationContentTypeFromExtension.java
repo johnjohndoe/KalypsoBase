@@ -29,11 +29,8 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
@@ -77,33 +74,6 @@ public class RelationContentTypeFromExtension extends RelationContentType
     final ComplexType complexType = reference.getComplexType();
     m_extensionBase = schema.getRelationContentTypeFor( complexType );
     super.init();
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    final StringBuffer result = new StringBuffer( super.toString() );
-    if( m_extensionBase != null )
-      result.append( " extended from " + m_extensionBase.toString() );
-    else
-      result.append( " extended from unknown (not initiated" );
-    return result.append( "\n" ).toString();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    super.toStringTree( writer, indent );
-    indent++;
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "extends from" );
-    indent++;
-
-    m_extensionBase.toStringTree( writer, indent );
   }
 
 }

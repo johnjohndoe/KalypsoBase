@@ -194,21 +194,8 @@ public class GMLSchemaBuilder
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {
       final Object[] buildedObjects = builder.build( gmlSchema, object );
-      for( int i = 0; i < buildedObjects.length; i++ )
-      {
-        final Object buildedObject = buildedObjects[i];
-        if( buildedObject != null ) // TODO and not registered
-        {
-          //          gmlSchema.register( object, buildedObject );
-          //          System.out.println( "OBJECT:" + buildedObject.toString() );
-        }
-        else
-          System.out.println( "UNKNOWN" );
-      }
       rbuild( gmlSchema, buildedObjects );
     }
-    else
-      System.out.println( "no builder" );
   }
 
   /**

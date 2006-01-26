@@ -29,11 +29,8 @@
  */
 package org.kalypso.gmlschema.property;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 
@@ -75,11 +72,6 @@ public class PropertyContentType implements IPropertyContentType
     return m_gmlSchema;
   }
 
-  public String toString()
-  {
-    return m_simpleType.getName();
-  }
-
   /**
    */
   public QName getValueQName()
@@ -87,13 +79,4 @@ public class PropertyContentType implements IPropertyContentType
     return m_valueQName;
   }
 
-  /**
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "PropertyContentType " + m_valueQName );
-  }
 }

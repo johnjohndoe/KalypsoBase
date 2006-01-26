@@ -78,8 +78,6 @@ public class GMLSchemaUtilities
       final QName typeQName = new QName( gmlSchema.getTargetNamespace(), name );
       if( isKnownType( typeQName ) )
         return getKnownTypeFor( typeQName );
-      //      System.out.println( "TODO, implement it" );
-      //      return null;
     }
     if( sequence != null )
     {
@@ -246,6 +244,8 @@ public class GMLSchemaUtilities
       else if( "MultiLineStringType".equals( localPart ) )
         return result;
       else if( "MultiPolygonType".equals( localPart ) )
+        return result;
+      else if( "BoundingShapeType".equals( localPart ) )
         return result;
       else
         return null;

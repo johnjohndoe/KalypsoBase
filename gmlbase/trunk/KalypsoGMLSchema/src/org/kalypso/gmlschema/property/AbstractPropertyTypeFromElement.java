@@ -35,7 +35,6 @@ import java.math.BigInteger;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
@@ -44,7 +43,7 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
  * 
  * @author doemming
  */
-public abstract class AbstractPropertyTypeFromElement extends QualifiedElement
+public abstract class AbstractPropertyTypeFromElement extends QualifiedElement implements IPropertyType
 {
 
   public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element )
@@ -68,7 +67,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement
     if( maxOccurs instanceof Number )
       return ( (Number)maxOccurs ).intValue();
     if( "unbounded".equals( maxOccurs ) )
-      return GMLSchemaConstants.OCCURS_UNOUNDED;
+      return IPropertyType.OCCURS_UNOUNDED;
     throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
   }
 
@@ -78,7 +77,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement
     final int minOccurs = getMinOccurs();
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
     writer.write( " [" + minOccurs + "-" );
-    if( maxOccurs == GMLSchemaConstants.OCCURS_UNOUNDED )
+    if( maxOccurs == IPropertyType.OCCURS_UNOUNDED )
       writer.write( "unbounded" );
     else
       writer.write( Integer.toString( maxOccurs ) );

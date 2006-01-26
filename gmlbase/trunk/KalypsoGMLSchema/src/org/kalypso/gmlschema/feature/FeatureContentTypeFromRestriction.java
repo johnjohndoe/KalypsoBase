@@ -29,15 +29,13 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
@@ -46,7 +44,7 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  * 
  * @author doemming
  */
-public class FeatureContentTypeFromRestriction extends FeatureContentType 
+public class FeatureContentTypeFromRestriction extends FeatureContentType
 {
 
   private final ComplexRestrictionType m_restriction;
@@ -83,30 +81,34 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
-  public String toString()
+  public IPropertyType[] getProperties()
   {
-    final StringBuffer result = new StringBuffer( super.toString() );
-    if( m_restrictionBase != null )
-      result.append( " restricted from " + m_restrictionBase.toString() );
-    else
-      result.append( " restricted from unknown (not initiated" );
-    return result.append( "\n" ).toString();
+    return m_pt;
   }
-  
+
   /**
-   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
-  public void toStringTree( StringWriter writer, int indent )
+  public IFeatureContentType getBase()
   {
-    super.toStringTree( writer, indent );
-    indent++;
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "restricts from" );
-    indent++;
-
-    m_restrictionBase.toStringTree( writer, indent );
+    return m_restrictionBase;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
+   */
+  public int getDerivationType()
+  {
+    return DERIVATION_BY_RESTRICTION;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
+   */
+  public IPropertyType[] getDirectProperties()
+  {
+    return m_pt;
+  }
 }

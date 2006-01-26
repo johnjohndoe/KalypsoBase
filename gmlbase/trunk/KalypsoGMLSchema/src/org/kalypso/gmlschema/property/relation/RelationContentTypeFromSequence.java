@@ -55,4 +55,6 @@ public class RelationContentTypeFromSequence extends RelationContentType
     return m_sequence;
   }
 
+ 
+
 }

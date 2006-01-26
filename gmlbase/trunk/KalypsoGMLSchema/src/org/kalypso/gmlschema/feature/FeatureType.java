@@ -29,16 +29,14 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -49,18 +47,18 @@ import org.kalypso.gmlschema.xml.ElementReference;
  * 
  * @author doemming
  */
-public class FeatureType extends QualifiedElement 
+public class FeatureType extends QualifiedElement implements IDetailedFeatureType
 {
 
   // will initilized in init()
-  private FeatureContentType m_featureContentType = null;
+  private IFeatureContentType m_featureContentType = null;
 
   // will initilized in init()
   private FeatureType m_substituteFT = null;
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
-    super(gmlSchema, element);
+    super( gmlSchema, element );
   }
 
   public void init()
@@ -69,7 +67,7 @@ public class FeatureType extends QualifiedElement
         m_element );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
-    m_featureContentType = (FeatureContentType)schema.getBuildedObjectFor( complexType );
+    m_featureContentType = (IFeatureContentType)schema.getBuildedObjectFor( complexType );
 
     // initialize substitution group
     final QName substitutionGroup = m_element.getSubstitutionGroup();
@@ -85,7 +83,7 @@ public class FeatureType extends QualifiedElement
       m_substituteFT = null;
   }
 
-  public FeatureContentType getFeatureContentType()
+  public IFeatureContentType getFeatureContentType()
   {
     return m_featureContentType;
   }
@@ -112,7 +110,8 @@ public class FeatureType extends QualifiedElement
   }
 
   /**
-   * @return
+   * 
+   * @see org.kalypso.gmlschema.feature.IFeatureType#isAbstract()
    */
   public boolean isAbstract()
   {
@@ -120,27 +119,80 @@ public class FeatureType extends QualifiedElement
   }
 
   /**
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "FeatureType : " + getQName() );
-    if( m_substituteFT != null )
-    {
-      writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-      writer.write( " substitutes: " + m_substituteFT.getQName() );
-    }
-    indent++;
-    m_featureContentType.toStringTree( writer, indent );
-  }
-
-  /**
-   * @return
+   * 
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstitutionGroupFT()
    */
   public FeatureType getSubstitutionGroupFT()
   {
     return m_substituteFT;
   }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
+   * @deprecated use getQName()
+   */
+  public String getName()
+  {
+    return m_qName.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
+   * @deprecated use getQName()
+   */
+  public String getNamespace()
+  {
+    return m_qName.getNamespaceURI();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
+   */
+  public IPropertyType[] getProperties()
+  {
+    return m_featureContentType.getProperties();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties(int)
+   */
+  public IPropertyType getProperties( int position )
+  {
+    return getProperties()[position];
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getSizeOfProperties()
+   */
+  public int getSizeOfProperties()
+  {
+    return getProperties().length;
+  }
+
+  /**
+   * 
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(javax.xml.namespace.QName)
+   */
+  public IPropertyType getProperty( QName qName )
+  {
+    return m_featureContentType.getProperty( qName );
+  }
+
+  /**
+   * 
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
+   * @deprecated use getProperty(QName qName)
+   */
+  public IPropertyType getProperty( String name )
+  {
+    final IPropertyType[] properties = getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      IPropertyType pt = properties[i];
+      if( name.equals( pt.getQName().getLocalPart() ) )
+        return pt;
+    }
+    return null;
+  }
+
 }

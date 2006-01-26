@@ -29,13 +29,11 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
@@ -111,25 +109,18 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   public abstract ExplicitGroup getSequence();
 
   /**
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "RelationContentType " + m_complexType.getName() );
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "related to --> " + m_ftRelationTarget.getQName() );
-    //    super.toStringTree( writer, indent );
-    indent++;
-    //    m_ftRelationTarget.toStringTree( writer, indent );
-  }
-
-  /**
    */
   public ComplexType getComplexType()
   {
     return m_complexType;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
+   *      boolean)
+   */
+  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  {
+    return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
+  }
 }

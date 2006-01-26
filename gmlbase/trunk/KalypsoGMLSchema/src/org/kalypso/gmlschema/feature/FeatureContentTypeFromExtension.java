@@ -29,15 +29,13 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.io.StringWriter;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
@@ -50,6 +48,8 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   private final ExtensionType m_extension;
 
   private FeatureContentType m_extensionBase = null;
+
+  private IPropertyType[] m_fullProps = null;
 
   public FeatureContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
   {
@@ -80,30 +80,52 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
-  public String toString()
+  public IPropertyType[] getProperties()
   {
-    final StringBuffer result = new StringBuffer( super.toString() );
-    if( m_extensionBase != null )
-      result.append( " extended from " + m_extensionBase.toString() );
-    else
-      result.append( " extended from unknown (not initiated" );
-    return result.append( "\n" ).toString();
+    if( m_fullProps == null )
+    {
+      final IPropertyType[] propsFromExtension = m_extensionBase.getProperties();
+      final IPropertyType[] props = new IPropertyType[m_pt.length + propsFromExtension.length];
+      int n = 0;
+
+      for( int i = 0; i < m_pt.length; i++ )
+      {
+        props[n] = m_pt[i];
+        n++;
+      }
+      for( int i = 0; i < propsFromExtension.length; i++ )
+      {
+        props[n] = propsFromExtension[i];
+        n++;
+      }
+      m_fullProps = props;
+    }
+    return m_fullProps;
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.FeatureContentType#toStringTree(java.io.StringWriter, int)
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
-  public void toStringTree( StringWriter writer, int indent )
+  public IFeatureContentType getBase()
   {
-    super.toStringTree( writer, indent );
-    indent++;
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "extends from" );
-    indent++;
-
-    m_extensionBase.toStringTree( writer, indent );
+    return m_extensionBase;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
+   */
+  public int getDerivationType()
+  {
+    return DERIVATION_BY_EXTENSION;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
+   */
+  public IPropertyType[] getDirectProperties()
+  {
+    return m_pt;
+  }
 }

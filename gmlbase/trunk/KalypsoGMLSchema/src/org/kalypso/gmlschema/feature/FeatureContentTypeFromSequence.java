@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.feature;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
  * 
@@ -53,6 +54,38 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   public ExplicitGroup getSequence()
   {
     return m_sequence;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   */
+  public IPropertyType[] getProperties()
+  {
+    return m_pt;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
+   */
+  public IFeatureContentType getBase()
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
+   */
+  public int getDerivationType()
+  {
+    return DERIVATION_NONE;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
+   */
+  public IPropertyType[] getDirectProperties()
+  {
+    return m_pt;
   }
 
 }

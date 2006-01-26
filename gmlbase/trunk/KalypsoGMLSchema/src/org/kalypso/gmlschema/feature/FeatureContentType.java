@@ -29,19 +29,16 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
@@ -50,21 +47,32 @@ import org.kalypso.gmlschema.xml.ElementReference;
  * 
  * @author doemming
  */
-public abstract class FeatureContentType
+public abstract class FeatureContentType implements IFeatureContentType
 {
 
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
 
-  private PropertyType[] m_pt = null;
+  protected IPropertyType[] m_pt = null;
 
-  private IRelationType[] m_rt = null;
+  private final QName m_qName;
 
   public FeatureContentType( final GMLSchema gmlSchema, ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
     m_complexType = complexType;
+    final String targetNamespace = gmlSchema.getTargetNamespace();
+    final String name = m_complexType.getName();
+    if( name != null )
+      m_qName = new QName( targetNamespace, name );
+    else
+      m_qName = new QName( "anonymous" );
+  }
+
+  public QName getQName()
+  {
+    return m_qName;
   }
 
   public GMLSchema getGMLSchema()
@@ -74,19 +82,11 @@ public abstract class FeatureContentType
 
   public abstract ExplicitGroup getSequence();
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    return "FCT: " + m_complexType.getName();
-  }
-
   public void init()
   {
     final ExplicitGroup sequence = getSequence();
     final List propertyTypes = new ArrayList();
-    final List relationTypes = new ArrayList();
+    //    final List relationTypes = new ArrayList();
     if( sequence != null )
     {
       final Element[] elementArray = sequence.getElementArray();
@@ -107,46 +107,31 @@ public abstract class FeatureContentType
           element = reference.getElement();
         }
         final Object buildedObject = schema.getBuildedObjectFor( element );
-        if( buildedObject instanceof PropertyType )
-          propertyTypes.add( buildedObject );
-        if( buildedObject instanceof IRelationType )
-          relationTypes.add( buildedObject );
+            
+        propertyTypes.add( buildedObject );
       }
     }
-    m_pt = (PropertyType[])propertyTypes.toArray( new PropertyType[propertyTypes.size()] );
-    m_rt = (IRelationType[])relationTypes.toArray( new IRelationType[relationTypes.size()] );
+    m_pt = (IPropertyType[])propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
   }
 
-  /**
-   * 
-   * @param writer
-   * @param indent
-   */
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( "FeatureContentType " + m_complexType.getName() );
-    //    super.toStringTree( writer, indent );
-    indent++;
-    final PropertyType[] pts = getPTs();
-    for( int i = 0; i < pts.length; i++ )
-    {
-      pts[i].toStringTree( writer, indent );
-    }
-    final IRelationType[] rts = m_rt;
-    for( int i = 0; i < rts.length; i++ )
-    {
-      rts[i].toStringTree( writer, indent );
-    }
-  }
-
-  public PropertyType[] getPTs()
-  {
-    return m_pt;
-  }
 
   public ComplexType getComplexType()
   {
     return m_complexType;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperty(javax.xml.namespace.QName)
+   */
+  public IPropertyType getProperty( QName qName )
+  {
+    final IPropertyType[] properties = getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      final IPropertyType pt = properties[i];
+      if( pt.getQName().equals( qName ) )
+        return pt;
+    }
+    return null;
   }
 }
