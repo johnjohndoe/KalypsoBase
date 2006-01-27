@@ -40,4 +40,28 @@ import javax.xml.namespace.QName;
 public interface IValuePropertyType extends IPropertyType
 {
   public QName getValueQName();
+
+  public IPropertyContentType getPropertyContentType();
+
+  public boolean hasRestriction();
+
+  public IRestriction getRestriction();
+
+  public boolean isFixed();
+
+  /**
+   * initialize properties with this value and never change
+   * 
+   * @return default value
+   */
+  public String getFixed();
+
+  public boolean hasDefault();
+
+  /**
+   * if nothing specified initialize properties with this value
+   * 
+   * @return default value
+   */
+  public String getDefault();
 }

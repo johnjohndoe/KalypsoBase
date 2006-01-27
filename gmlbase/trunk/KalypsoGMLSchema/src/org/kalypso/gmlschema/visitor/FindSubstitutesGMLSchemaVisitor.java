@@ -37,7 +37,7 @@ import org.kalypso.gmlschema.feature.FeatureType;
 
 /**
  * 
- * TODO: insert type comment here
+ * schemavisitor that collects the substitutes of a feature inside a given schema-context
  * 
  * @author doemming
  */

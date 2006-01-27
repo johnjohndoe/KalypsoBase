@@ -36,7 +36,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -50,7 +49,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.property.GeometryPropertyContentType;
@@ -67,7 +65,7 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * represents a gml schema
  * 
  * @author doemming
  */
@@ -75,8 +73,6 @@ public class GMLSchema
 {
 
   private final Schema m_schema;
-
-  private final Logger m_logger;
 
   private final Hashtable m_refHash = new Hashtable();
 
@@ -100,13 +96,25 @@ public class GMLSchema
 
   private final Hashtable m_relationContentTypes = new Hashtable();
 
-  public GMLSchema( final Schema schema, final Logger logger, final URL context ) throws GMLSchemaException
+  private final String m_gmlVersion;
+
+  public GMLSchema( final Schema schema,  final URL context,final String gmlVersion ) throws GMLSchemaException
   {
+    m_gmlVersion=gmlVersion;
     m_schema = schema;
-    m_logger = logger;
     m_context = context;
     m_urlResolver = new UrlResolver();
     init();
+  }
+
+  public String getGMLVersion()
+  {
+    return m_gmlVersion;
+  }
+
+  public String getVersion()
+  {
+    return m_schema.getVersion();
   }
 
   /**
@@ -152,7 +160,6 @@ public class GMLSchema
     {
       final ImportDocument.Import import_ = importArray[i];
       String schemaLocation = import_.getSchemaLocation();
-      m_logger.info( "\nIMPORT: \n" + toString() + "\n imports " + schemaLocation );
       final URL url;
       try
       {
@@ -164,7 +171,7 @@ public class GMLSchema
           throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
         throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
       }
-      final GMLSchema gmlSchema = GMLSchemaBuilder.getInstance().generateGMLSchema( import_.getNamespace(), url );
+      final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( import_.getNamespace(), url );
       m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
     }
 
@@ -219,7 +226,6 @@ public class GMLSchema
       if( schemaForNamespaceURI != null )
         return schemaForNamespaceURI;
     }
-    m_logger.warning( "imported schema not found for namespaceURI: " + namespaceURI );
     return null;
   }
 

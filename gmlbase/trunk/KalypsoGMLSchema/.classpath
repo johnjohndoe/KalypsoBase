@@ -2,12 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
-	<classpathentry kind="lib" path="lib/resolver.jar"/>
-	<classpathentry kind="lib" path="lib/xbean_xpath.jar"/>
-	<classpathentry sourcepath="lib/doc/xmlbeans-2.1.0-src.zip" kind="lib" path="lib/xbean.jar"/>
-	<classpathentry kind="lib" path="lib/xmlpublic.jar"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="src" path="/KalypsoCommons"/>
+	<classpathentry sourcepath="lib/doc/xmlbeans-2.1.0-src.zip" kind="lib" path="lib/xbean.jar"/>
+	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

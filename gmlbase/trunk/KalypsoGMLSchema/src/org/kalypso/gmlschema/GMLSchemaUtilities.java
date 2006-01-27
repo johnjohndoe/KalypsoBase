@@ -81,7 +81,6 @@ public class GMLSchemaUtilities
     }
     if( sequence != null )
     {
-      System.out.println( "TODO, implement it" );
       return null;
     }
     if( complexContent == null )

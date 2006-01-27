@@ -40,7 +40,7 @@ import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */

@@ -38,7 +38,7 @@ import org.kalypso.gmlschema.GMLSchemaConstants;
 
 /**
  * 
- * TODO: insert type comment here
+ * utilities to handle adv related stuff
  * 
  * @author doemming
  */

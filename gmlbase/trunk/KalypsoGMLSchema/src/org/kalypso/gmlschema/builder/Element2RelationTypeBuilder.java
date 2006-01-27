@@ -41,7 +41,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */

@@ -40,7 +40,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */
@@ -91,7 +91,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
     if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
     {
       if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
-        return false; // TODO implement builder for "anyType" ?
+        return false; 
       return true;
     }
     if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )

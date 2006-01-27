@@ -39,7 +39,9 @@ import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IDetailedFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
@@ -128,8 +130,13 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       }
       return result.toArray();
     }
-    //    if(parent instanceof )
-    //      return (())parent).;
+    if( parent instanceof IValuePropertyType )
+    {
+      final IValuePropertyType vpt = (IValuePropertyType)parent;
+      if( vpt.hasRestriction() )
+        return new Object[]
+        { vpt.getRestriction() };
+    }
     //    if(parent instanceof )
     //      return (())parent).;
     //    if(parent instanceof )

@@ -59,7 +59,7 @@ public class ComplexType2GeometryPropertyContentTypeBuilder implements IBuilder
     { gpct };
     //    final Union union = simpleType.getUnion();
     //    if( union != null )
-    //      ;//TODO return ...
+    //      union not supported
   }
 
   /**
@@ -78,7 +78,7 @@ public class ComplexType2GeometryPropertyContentTypeBuilder implements IBuilder
     // XML-SCHEMA
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    if("BoundingShapeType".equals(localPart))
+    if( "BoundingShapeType".equals( localPart ) )
       return true;
     return "GeometryAssociationType".equals( localPart );
   }

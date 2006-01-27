@@ -29,15 +29,13 @@
  */
 package org.kalypso.gmlschema.builder;
 
-import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.apache.xmlbeans.impl.tool.SchemaResourceManager;
-import org.apache.xmlbeans.impl.tool.SchemaImportResolver.SchemaResource;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
@@ -51,55 +49,24 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
 
 /**
  * 
- * TODO: insert type comment here
+ * schema-builder for a special gml version (e.g. gml_2.1.x)
  * 
  * @author doemming
  */
 public class GMLSchemaBuilder
 {
-  final private SchemaResourceManager m_manager;
-
   final private Set m_registeredBuilders = new HashSet();
 
-  private static GMLSchemaBuilder m_instance = null;
+  private final String m_gmlVersion;
 
-  public static GMLSchemaBuilder getInstance()
+  public String getGMLVersion()
   {
-    if( m_instance == null )
-    {
-      m_instance = new GMLSchemaBuilder();
-      m_instance.registerBuilder( new GMLSchema2SchemaBasicsBuilder() );
-      // complex type ...
-      m_instance.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );
-      m_instance.registerBuilder( new FeatureContentType2ElementBuilder() );
-      // element ...
-      m_instance.registerBuilder( new Element2FeatureTypeBuilder() );
-      m_instance.registerBuilder( new FeatureType2ComplexTypeBuilder() );
-      // element ...
-      m_instance.registerBuilder( new Element2PropertyTypeBuilder() );
-      m_instance.registerBuilder( new PropertyType2SimpleTypeBuilder() );
-      // simple type...
-      m_instance.registerBuilder( new SimpleType2PropertyContentTypeBuilder() );
-      // relations
-      //      m_instance.registerBuilder( new Element2RelationTypeBuilder() );
-      m_instance.registerBuilder( new RelationType2ComplexTypeBuilder() );
-      m_instance.registerBuilder( new ComplexType2RelationContentTypeBuilder() );
-      // test
-      m_instance.registerBuilder( new ComplexType2GeometryPropertyContentTypeBuilder() );
-      m_instance.registerBuilder( new AdvElement2RelationTypeBuilder() );
-    }
-    return m_instance;
+    return m_gmlVersion;
   }
 
-  private GMLSchemaBuilder()
+  public GMLSchemaBuilder( final String gmlVersion )
   {
-    final File schemaResourceDir = new File( "C:\\TMP\\schemaResourceDir" );
-    schemaResourceDir.mkdirs();
-
-    m_manager = new SchemaResourceManager( schemaResourceDir );
-    final String[] xsdFileNames = schemaResourceDir.list();
-    m_manager.syncCacheWithLocalXsdFiles( xsdFileNames, false );
-    //    m_manager.processAll(false, true, false)
+    m_gmlVersion = gmlVersion;
   }
 
   public void registerBuilder( final IBuilder builder )
@@ -118,11 +85,20 @@ public class GMLSchemaBuilder
     return null;
   }
 
-  public GMLSchema generateGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
+  public GMLSchema buildGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
   {
     final URL urlSchemaLocation = getSchemaLocationForURN( urn, schemaLocationURL );
-    final SchemaResource resource = m_manager.lookupResource( urn, urlSchemaLocation.toExternalForm() );
-    final Schema schema = resource.getSchema();
+
+    SchemaDocument document;
+    try
+    {
+      document = SchemaDocument.Factory.parse( urlSchemaLocation.openStream() );
+    }
+    catch( Exception e )
+    {
+      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+    }
+    final Schema schema = document.getSchema();
     if( schema == null )
     {
       // this is crap, apache catches the exception and keeps it :-(
@@ -133,7 +109,7 @@ public class GMLSchemaBuilder
       throw new GMLSchemaException(
           "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
-    final GMLSchema gmlSchema = new GMLSchema( schema, Logger.global, schemaLocationURL );
+    final GMLSchema gmlSchema = new GMLSchema( schema, schemaLocationURL, m_gmlVersion );
     // I Step build the objects
     rBuild( gmlSchema, gmlSchema );
     // II Step initialize the elements
@@ -174,20 +150,6 @@ public class GMLSchemaBuilder
       relationTypes[i].init();
   }
 
-  /**
-   * @param urn
-   * @param schemaLocationURL
-   */
-  private static URL getSchemaLocationForURN( String urn, URL schemaLocationURL )
-  {
-    // TODO use schema cache
-    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_GML2 ) )
-      return GMLSchemaBuilder.class.getResource( "../resources/feature.xsd" );
-    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_XLINK ) )
-      return GMLSchemaBuilder.class.getResource( "../resources/xlinks.xsd" );
-    return schemaLocationURL;
-  }
-
   private void rBuild( GMLSchema gmlSchema, Object object )
   {
     final IBuilder builder = getBuilderFor( gmlSchema, object, null );
@@ -209,5 +171,19 @@ public class GMLSchemaBuilder
       final Object object = objects[i];
       rBuild( gmlSchema, object );
     }
+  }
+
+  /**
+   * @param urn
+   * @param schemaLocationURL
+   */
+  private static URL getSchemaLocationForURN( String urn, URL schemaLocationURL )
+  {
+    // TODO use schema cache
+    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_GML2 ) )
+      return GMLSchemaBuilder.class.getResource( "../resources/feature.xsd" );
+    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_XLINK ) )
+      return GMLSchemaBuilder.class.getResource( "../resources/xlinks.xsd" );
+    return schemaLocationURL;
   }
 }

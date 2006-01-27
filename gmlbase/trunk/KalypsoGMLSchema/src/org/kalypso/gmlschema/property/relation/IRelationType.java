@@ -45,5 +45,6 @@ public interface IRelationType extends IPropertyType
 
   public boolean isLinkAble();
 
-  public FeatureType[] getTargetFeatureTypes(final GMLSchema context,final boolean includeAbstract);
+  public FeatureType[] getTargetFeatureTypes( final GMLSchema context, final boolean includeAbstract );
+
 }

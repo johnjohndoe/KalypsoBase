@@ -41,7 +41,10 @@ import org.kalypso.gmlschema.basics.IInitialize;
  */
 public interface IPropertyContentType extends IInitialize
 {
-  /**
-   */
   public abstract QName getValueQName();
+
+  public abstract boolean hasRestriction();
+
+  public abstract IRestriction getRestriction();
+
 }

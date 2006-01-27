@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */

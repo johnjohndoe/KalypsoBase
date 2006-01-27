@@ -39,7 +39,7 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
  * 
- * TODO: insert type comment here
+ * Property feature type that is build from a xml-element
  * 
  * @author doemming
  */

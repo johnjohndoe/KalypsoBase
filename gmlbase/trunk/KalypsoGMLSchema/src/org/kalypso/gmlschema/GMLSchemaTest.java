@@ -68,15 +68,14 @@ public class GMLSchemaTest extends TestCase
   {
     try
     {
-      final GMLSchemaBuilder schemaBuilder = GMLSchemaBuilder.getInstance();
       //      final URL schemaLocationURL = getClass().getResource( "resources/feature.xsd" );
       //      GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( NS_GML2, schemaLocationURL );
 
       //      final URL schemaLocationURL = getClass().getResource( "resources/namodell.xsd" );
-      //      final GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
+      //      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "http://www.tuhh.de/kalypsoNA", schemaLocationURL );
 
       final URL schemaLocationURL = getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" );
-      final GMLSchema schema = schemaBuilder.generateGMLSchema( "http://www.xplanung.de/bplangml", schemaLocationURL );
+      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "http://www.xplanung.de/bplangml", schemaLocationURL );
 
       //            final URL schemaLocationURL = getClass().getResource( "resources/XMLSchema.xsd" );
       //            GMLSchema schema2 = GMLSchemaBuilder.generateGMLSchema( GMLSchemaConstants.NS_XMLSCHEMA, schemaLocationURL );
@@ -84,7 +83,7 @@ public class GMLSchemaTest extends TestCase
       {
         final StringBuffer buffer = new StringBuffer();
         final ITreeContentProviderVisitor visitor = new PrintVisitor( new GMLSchemaLabelProvider(), buffer );
-        final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( schema, true );
+        final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( schema, false );
         provider.accept( schema, visitor, 0 );
         System.out.println( buffer.toString() );
       }

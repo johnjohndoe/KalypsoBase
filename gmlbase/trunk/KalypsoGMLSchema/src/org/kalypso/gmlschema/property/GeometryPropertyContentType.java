@@ -85,4 +85,20 @@ public class GeometryPropertyContentType implements IPropertyContentType
   {
     return m_complexType;
   }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyContentType#hasRestriction()
+   */
+  public boolean hasRestriction()
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyContentType#getRestriction()
+   */
+  public IRestriction getRestriction()
+  {
+    return null;
+  }
 }

@@ -137,8 +137,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   }
 
   /**
+   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
-   * @deprecated use getQName()
    */
   public String getNamespace()
   {

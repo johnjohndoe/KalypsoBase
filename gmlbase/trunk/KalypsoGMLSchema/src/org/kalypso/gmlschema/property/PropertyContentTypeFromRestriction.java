@@ -31,7 +31,10 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlAnySimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.NoFixedFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
@@ -51,6 +54,8 @@ public class PropertyContentTypeFromRestriction extends PropertyContentType
 
   private IPropertyContentType m_restrictionBase = null;
 
+  private IRestriction m_valueRestriction;
+
   public PropertyContentTypeFromRestriction( final GMLSchema gmlSchema, final SimpleType simpleType,
       final Restriction restriction )
   {
@@ -64,7 +69,7 @@ public class PropertyContentTypeFromRestriction extends PropertyContentType
     final QName base = m_restriction.getBase();
     if( base.getNamespaceURI().equals( GMLSchemaConstants.NS_XMLSCHEMA ) )
     {
-      
+
     }
     else
     {
@@ -73,5 +78,27 @@ public class PropertyContentTypeFromRestriction extends PropertyContentType
       final SimpleTypeReference simpleTypeReference = (SimpleTypeReference)reference;
       m_restrictionBase = schema.getFeaturePropertyContentTypeFor( simpleTypeReference.getSimpleType() );
     }
+    m_valueRestriction = new ContentRestriction( m_restriction );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.PropertyContentType#hasRestriction()
+   */
+  public boolean hasRestriction()
+  {
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.PropertyContentType#getRestriction()
+   */
+  public IRestriction getRestriction()
+  {
+    return m_valueRestriction;
+  }
+
+  public QName getValueQName()
+  {
+    return m_restriction.getBase();
   }
 }

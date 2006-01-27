@@ -39,7 +39,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * relation forced by informations from a appinfo-tag (e.g. adv:referenziertesElement)
  * 
  * @author doemming
  */
@@ -86,5 +86,5 @@ public class ForcedRelationContentType implements IRelationContentType, IInitial
   {
     return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
   }
-  
+
 }

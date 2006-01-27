@@ -36,7 +36,7 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */

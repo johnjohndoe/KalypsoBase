@@ -67,7 +67,7 @@ public class SimpleType2PropertyContentTypeBuilder implements IBuilder
     { pct };
     //    final Union union = simpleType.getUnion();
     //    if( union != null )
-    //      ;//TODO return ...
+    //      union not supported
   }
 
   /**
@@ -88,7 +88,7 @@ public class SimpleType2PropertyContentTypeBuilder implements IBuilder
     if( !GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
       return false;
     if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
-      return false; // TODO implement builder for "anyType" ?
+      return false;
     return true;
   }
 }

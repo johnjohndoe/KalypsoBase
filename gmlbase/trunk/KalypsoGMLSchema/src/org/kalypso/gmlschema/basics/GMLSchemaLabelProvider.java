@@ -36,6 +36,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IRestriction;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -75,8 +76,35 @@ public class GMLSchemaLabelProvider implements ILabelProvider
 
     if( element instanceof IFeatureContentType )
       return "ContentType: " + ( (IFeatureContentType)element ).getQName();
-
     final StringBuffer result = new StringBuffer();
+
+    if( element instanceof IRestriction )
+    {
+      final IRestriction restriction = (IRestriction)element;
+      if( restriction.hasEnumeration() )
+      {
+        result.append( "enumeration:\n" );
+        final String[] enumeration = restriction.getEnumeration();
+        for( int i = 0; i < enumeration.length; i++ )
+          result.append( "  " + enumeration[i] + "\n" );
+      }
+      if( restriction.hasMinLength() )
+        result.append( "  length >=" + restriction.getMinLength() + "\n" );
+      if( restriction.hasMaxLength() )
+        result.append( "  length <=" + restriction.getMaxLength() + "\n" );
+
+      if( restriction.hasMinInclusive() )
+        result.append( "  value >=" + restriction.getMinInclusive() + "\n" );
+      if( restriction.hasMinExclusive() )
+        result.append( "  value >" + restriction.getMinExclusive() + "\n" );
+
+      if( restriction.hasMaxInclusive() )
+        result.append( "  value <=" + restriction.getMaxInclusive() + "\n" );
+      if( restriction.hasMaxExclusive() )
+        result.append( "  value <" + restriction.getMaxExclusive() + "\n" );
+      return result.toString();
+    }
+
     if( element instanceof IPropertyType )
     {
       IPropertyType prop = (IPropertyType)element;
@@ -92,8 +120,15 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     if( element instanceof IRelationType )
       result.append( "  Relation: " + ( (IRelationType)element ).getQName() );
     else if( element instanceof IValuePropertyType )
-      result.append( "Property: " + ( (IValuePropertyType)element ).getQName() + // 
-          "\n     Value: " + ( (IValuePropertyType)element ).getValueQName() );
+    {
+      final IValuePropertyType vpt = (IValuePropertyType)element;
+      result.append( "Property: " + vpt.getQName() );
+      result.append( "\n     Value: " + vpt.getValueQName() );
+      if( vpt.hasDefault() )
+        result.append( "\n     default: " + vpt.getDefault() );
+      if( vpt.isFixed() )
+        result.append( "\n     fixed: " + vpt.getFixed() );
+    }
     else
       return "unknown";
     return result.toString();

@@ -38,7 +38,7 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * 
- * TODO: insert type comment here
+ * another builder
  * 
  * @author doemming
  */

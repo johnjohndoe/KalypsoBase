@@ -51,7 +51,6 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
 
   private IPropertyContentType m_propertyContentType = null;
 
-  // null if not a XML-Schematype // TODO
   private QName m_valueQName = null;
 
   public PropertyType( GMLSchema gmlSchema, Element element )
@@ -95,13 +94,63 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
     return m_propertyContentType;
   }
 
-  /**
-   */
   public QName getValueQName()
   {
     if( m_valueQName != null )
       return m_valueQName;
     return m_propertyContentType.getValueQName();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
+   */
+  public boolean hasRestriction()
+  {
+    if( m_propertyContentType == null )
+      return false;
+    return m_propertyContentType.hasRestriction();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
+   */
+  public IRestriction getRestriction()
+  {
+    return m_propertyContentType.getRestriction();
+  }
+
+  /**
+   * 
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
+   */
+  public boolean isFixed()
+  {
+    return m_element.isSetFixed();
+  }
+
+  /**
+   * 
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
+   */
+  public String getFixed()
+  {
+    return m_element.getFixed();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
+   */
+  public boolean hasDefault()
+  {
+    return m_element.isSetDefault();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
+   */
+  public String getDefault()
+  {
+    return m_element.getDefault();
   }
 
 }
