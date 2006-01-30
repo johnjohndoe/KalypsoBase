@@ -114,21 +114,12 @@ public class ModelSynchronizer
     monitor.beginTask( "Projekt synchronizieren", 1000 );
     try
     {
-      // SOUT
-      System.out.println( "sync start: " + System.currentTimeMillis() );
-      
       final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true, ModelNature.CONTROL_NAME );
       org.kalypso.commons.java.io.FileUtilities.accept( from, copyVisitor, true );
 
-      // SOUT
-      System.out.println( "sync after copy: " + System.currentTimeMillis() );
-      
       final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from,
           ModelNature.CONTROL_NAME );
       FileUtilities.accept( to, deleteVisitor, true );
-
-      // SOUT
-      System.out.println( "sync stop: " + System.currentTimeMillis() );
     }
     finally
     {
