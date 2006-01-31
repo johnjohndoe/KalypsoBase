@@ -1,13 +1,27 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 package samples.ubl.report.facade;
 
-import org.oasis.ubl.commonaggregatetypes.OrderLineType;
-import org.oasis.ubl.commonaggregatetypes.BasePriceType;
-import org.oasis.ubl.commonaggregatetypes.ItemType;
+import org.oasis.ubl.commonaggregatecomponents.OrderLineType;
+import org.oasis.ubl.commonaggregatecomponents.BasePriceType;
 
 /**
  * The <code>OrderLineTypeFacade</code> class provides a set of read-only
@@ -37,7 +51,7 @@ public class OrderLineTypeFacade {
     public String getItemPartNumber() {
         String num = "";
         try {
-            num = lineItem.getItem().getSellersItemIdentification().getID().getValue();
+            num = lineItem.getLineItem().getItem().getSellersItemIdentification().getID().getValue();
         } catch (NullPointerException npe) {
         }
         return num;
@@ -51,7 +65,7 @@ public class OrderLineTypeFacade {
     public String getItemDescription() {
         String descr = "";
         try {
-            descr = lineItem.getItem().getDescription().getValue();
+            descr = lineItem.getLineItem().getItem().getDescription().getValue();
         } catch (NullPointerException npe){
         }
         return descr;
@@ -72,6 +86,19 @@ public class OrderLineTypeFacade {
     }
 
     /**
+     * Returns the currency of the price associated with a line item.
+     *
+     * <p>
+     * Both java.util.Currency and UBL currency IDs follow
+     * ISO 4217 currency codes.
+     *
+     * @return Currency of price
+     */
+    public java.util.Currency getItemPriceCurrency() {
+	return java.util.Currency.getInstance(getTheItemPrice().getPriceAmount().getAmountCurrencyID());
+    }
+
+    /**
      * Returns the quantity associated with a line item.
      *
      * @return an <code>int</code> representing the quantity of this line item
@@ -79,7 +106,7 @@ public class OrderLineTypeFacade {
     public int getItemQuantity() {
         int quantity = 0;
         try {
-            quantity = lineItem.getQuantity().getValue().intValue();
+            quantity = lineItem.getLineItem().getQuantity().getValue().intValue();
         } catch (NullPointerException npe){
         }
         return quantity;
@@ -91,19 +118,9 @@ public class OrderLineTypeFacade {
      * @return a <code>BasePriceType</code> representing the price of this item
      */
     private BasePriceType getTheItemPrice() {
-        BasePriceType result = null;
-        java.util.ListIterator iter = 
-            lineItem.getItem().getBasePrice().listIterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (obj instanceof BasePriceType) {
-                result =(BasePriceType) obj;
-                break;
-            }
-        }
-        return result;
+        return (BasePriceType) lineItem.getLineItem().getItem().getBasePrice().get(0);
     }
- 
+
     static public class Iterator implements java.util.Iterator {
         java.util.Iterator iter;
         

@@ -13,7 +13,7 @@ rem Environment Variable Prequisites
 rem
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
 rem
-rem $Id: catalina.bat,v 1.2 2004/03/30 23:28:00 ofung Exp $
+rem $Id: catalina.bat,v 1.5 2005/04/18 19:43:21 rameshm Exp $
 rem ---------------------------------------------------------------------------
 
 rem Get standard environment variables
@@ -66,6 +66,6 @@ goto setArgs
 :doneSetArgs
 
 rem Execute the Tomcat launcher
-"%JAVA_HOME%\bin\java.exe" -classpath "%CATALINA_HOME%\jwsdp-shared\bin;%CATALINA_HOME%\jwsdp-shared\bin\commons-launcher.jar;%CATALINA_HOME%\apache-ant\lib\ant.jar;%CATALINA_HOME%\apache-ant\lib\optional.jar;%CATALINA_HOME%\jaxp\lib\jaxp-api.jar;%CATALINA_HOME%\jaxp\lib\endorsed\sax.jar;%CATALINA_HOME%\jaxp\lib\endorsed\dom.jar;%CATALINA_HOME%\jaxp\lib\endorsed\xercesImpl.jar;%CATALINA_HOME%\jaxp\lib\endorsed\xalan.jar" -DJAVA_HOME="%JAVA_HOME%" -DCATALINA_OPTS="%CATALINA_OPTS%" LauncherBootstrap jwsdp %CMD_LINE_ARGS%
+"%JAVA_HOME%\bin\java.exe" -Djava.endorsed.dirs="%CATALINA_HOME%\jaxp\lib;%CATALINA_HOME%\jaxp\lib\endorsed" -classpath "%CATALINA_HOME%\jwsdp-shared\bin;%CATALINA_HOME%\jwsdp-shared\bin\commons-launcher.jar;%CATALINA_HOME%\apache-ant\lib\ant.jar;%CATALINA_HOME%\apache-ant\lib\ant-launcher.jar;%CATALINA_HOME%\apache-ant\lib\ant-nodeps.jar" -DJAVA_HOME="%JAVA_HOME%" -DCATALINA_OPTS="%CATALINA_OPTS%" LauncherBootstrap jwsdp %CMD_LINE_ARGS%
 
 :end

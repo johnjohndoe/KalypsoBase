@@ -4,14 +4,13 @@
         <name>Alice Smith</name>
         <street>123 Maple Street</street>
         <city>Cambridge</city>
-        <state>MA</state>
         <zip>12345</zip>
+        <state>MA</state>
     </shipTo>
     <billTo country="US">
         <name>Robert Smith</name>
         <street>8 Oak Avenue</street>
         <city>Cambridge</city>
-        <state>MA</state>
         <zip>12345</zip>
     </billTo>
     <items>
@@ -29,6 +28,10 @@
 	    	<productName>Godzilla and Mothra: Battle for Earth/Godzilla vs. King Ghidora</productName>
 	    	<quantity>3</quantity>
 	    	<USPrice>27.95</USPrice>
+	    </item>
+    	<item>
+	    	<quantity>3</quantity>
+	    	<productName>Godzilla and Mothra: Battle for Earth/Godzilla vs. King Ghidora</productName>
 	    </item>
 	</items>
 </purchaseOrder>

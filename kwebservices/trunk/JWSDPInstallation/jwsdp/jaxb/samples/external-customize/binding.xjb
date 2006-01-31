@@ -3,12 +3,11 @@
                xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <jxb:bindings schemaLocation="po.xsd" node="/xs:schema">
     <jxb:globalBindings
-         fixedAttributeAsConstantProperty="true"
+         fixedAttributeAsConstantProperty="false"
          collectionType="java.util.Vector"
          typesafeEnumBase="xs:NCName"
          choiceContentProperty="false"
          typesafeEnumMemberName="generateError"
-         bindingStyle="elementBinding"
          enableFailFastCheck="false"   
          generateIsSetMethod="false"
          underscoreBinding="asCharInWord"/>

@@ -1,6 +1,21 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 import java.io.FileInputStream;
@@ -8,6 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -41,14 +57,15 @@ public class Main {
             
             // unmarshal a po instance document into a tree of Java content
             // objects composed of classes from the "com.example.ipo" package
-            PurchaseOrder po = 
-                (PurchaseOrder)u.unmarshal( new FileInputStream( "ipo.xml" ) );
+            JAXBElement<PurchaseOrderType>  poe = 
+                (JAXBElement<PurchaseOrderType>)u.unmarshal( new FileInputStream( "ipo.xml" ) );
+	    PurchaseOrderType po = poe.getValue();
 
             // create a Marshaller and marshal to a file
 	    System.out.println("Original Purchase Order");
             Marshaller m = jc.createMarshaller();
             m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-            m.marshal( po, System.out );
+            m.marshal( poe, System.out );
 	    System.out.println("******************************************************");
 
             // Process a return. Reverse purchase order addresses.
@@ -58,7 +75,7 @@ public class Main {
 	    po.setShipTo(billToAddress);
 
 	    System.out.println("Return Merchandise. Ship and Bill address reversed.");
-            m.marshal( po, System.out );
+            m.marshal( poe, System.out );
 	    System.out.println("******************************************************");
 
 	    /*********************************************************************/
@@ -79,9 +96,9 @@ public class Main {
             //PurchaseOrder element type in schema is "PurchaseOrderType".
             //Set it to an instance of type "USTaxExemptPurchaseOrderType" that
             //extends (derives using XML terminology) from "PurchaseOrderType".
-	    po.setValueObject(uspo);
+	    poe.setValue(uspo);
 	    System.out.println("Tax Exempt Purchase Order composed within Application.");
-            m.marshal( po, System.out );
+            m.marshal( poe, System.out );
 	    System.out.println("******************************************************");
 
 	    /*********************************************************************/
@@ -90,21 +107,22 @@ public class Main {
 
             // unmarshal an instance document that identifies derived type 
 	    // "ipo:USTaxExemptPurchaseOrder" for global root element <ipo:purchaseOrder>. 
-            po = (PurchaseOrder)u.unmarshal( new FileInputStream( "ustaxexemptpo.xml" ) );
+            poe = (JAXBElement<PurchaseOrderType>)u.unmarshal( new FileInputStream( "ustaxexemptpo.xml" ) );
 
             // Access data added to element <ipo:purchaseOrder> via type substitution.
             // All data added by derivation by extension from the element's original
             // type specified in the schema must be accessed through this unwrapping
             // of the element.
-            PurchaseOrderType pot = po.getValueObject();
-            if (pot instanceof USTaxExemptPurchaseOrderType) {
+            PurchaseOrderType pot = poe.getValue();
+            if (poe.isTypeSubstituted() && 
+		pot instanceof USTaxExemptPurchaseOrderType) {
 		USTaxExemptPurchaseOrderType taxexemptpo = (USTaxExemptPurchaseOrderType)pot;
 		System.out.println("US Tax exempt id: " + taxexemptpo.getTaxExemptId());
 	    }
 
             // create a Marshaller and marshal to a file
 	    System.out.println("Tax Exempt Purchase Order");
-            m.marshal( po, System.out );
+            m.marshal( poe, System.out );
 	    System.out.println("******************************************************");
 
             

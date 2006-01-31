@@ -8,6 +8,7 @@
     <!-- ========== Version numbers for JWSDP components ================= -->
 
   <property name="ant.home" value="${basedir}/../../apache-ant"/>
+  <property name="jwsdp.version" value="2.0"/>
 
 
   <target name="check.catalina.home" unless="CATALINA_HOME">
@@ -25,7 +26,7 @@
     <echo>
       The jwsdp.home property is not set correctly. Please
       pass this property with the value set to the directory
-      where the Java(TM) Web Services Developer Pack 1.4 is
+      where the Java(TM) Web Services Developer Pack 2.0 is
       installed and rerun ant with the following usage:
            ant -Djwsdp.home=xxx -Dcatalina.home=yyy target
     </echo>
@@ -122,6 +123,23 @@
  
   <target name="integrate.init" depends="init"
     description="Initialize integration for Tomcat">
+ 
+    <property file="${basedir}/../../conf/jwsdp.properties" />
+    <echo message="Adding TC5.0 to containers info" />
+    <propertyfile file="${user.home}/.jwsdp.info-${jwsdp.version}" >
+        <entry key="containers" value="TC5.0 " operation="+" />
+    </propertyfile>
+
+    <echo message="Adding TC5.0_HOME info into jwsdp.properties" />
+    <propertyfile file="${basedir}/../../jwsdp-shared/bin/jwsdp.properties" >
+        <entry key="TC5.0_HOME" value="${CATALINA_HOME}"  />
+    </propertyfile>
+
+    <echo message="Adding TC5.0_HOME info into the LIST in jwsdp.properties" />
+    <propertyfile file="${basedir}/../../jwsdp-shared/bin/jwsdp.properties" >
+        <entry key="TC5.0_HOME_LIST" value="${CATALINA_HOME} " operation="+"  />
+    </propertyfile>
+
     <echo message="Creating Backup directory for the integration" />
     <mkdir dir="${JWSDP_BACKUPDIR}" />
 
@@ -196,6 +214,12 @@
     </replace>
 
 
+    <!-- Integrate jwsdp-callback application into Tomcat   -->
+    <copy todir="${CATALINA_HOME}/webapps/jwsdp-callback" overwrite="true">
+      <fileset dir="${JWSDP_HOME}/jwsdp-shared/webapps/jwsdp-callback">
+      </fileset>
+    </copy>
+
     <!-- copy over jwsdp server files 
     <copy todir="${CATALINA_HOME}/server/webapps/jwsdp-catalog" overwrite="true">
       <fileset dir="${JWSDP_HOME}/server/webapps/jwsdp-catalog">
@@ -203,6 +227,15 @@
     </copy>
 
     -->
+
+    <echo message="Adding missing catalina.home/jaxp/lib/endorsed/*.jar to common.loader entry" />
+    <replace file="${CATALINA_HOME}/conf/catalina.properties">
+      <replacevalue><![CDATA[${catalina.home}/common/endorsed/*.jar,${catalina.home}/jaxp/lib/endorsed/*.jar,${catalina.home}/*/lib/*.jar]]></replacevalue>
+      <replacetoken><![CDATA[${catalina.home}/common/endorsed/*.jar,${catalina.home}/*/lib/*.jar]]></replacetoken>
+    </replace>
+
+    <!-- Moving ant.jar that is incompatible in Tomcat -->
+    <move file="${CATALINA_HOME}/common/lib/ant.jar" tofile="${CATALINA_HOME}/common/lib/ant-jar" failonerror="false"/>  
 
     <!-- Updating setenv -->
     <antcall target="update-setenv" />
@@ -273,11 +306,11 @@ set JWSDP_HOME=]]></replacevalue>
     <echo message="Integrating JAX-RPC" />
     <antcall target="integrate.jaxrpc" />
 
-    <echo message="Integrating JSTL" />
-    <antcall target="integrate.jstl" />
+    <echo message="Integrating JAXWS" />
+    <antcall target="integrate.jaxws" />
 
-    <echo message="Integrating Registry Server" />
-    <antcall target="integrate.registry-server" />
+    <echo message="Integrating JAXWSA" />
+    <antcall target="integrate.jaxwsa" />
 
     <echo message="Integrating WS-I Sample Application" />
     <antcall target="integrate.wsi-sampleapp" />
@@ -288,11 +321,46 @@ set JWSDP_HOME=]]></replacevalue>
     <echo message="Integrating XML Digital Signatures" />
     <antcall target="integrate.xmldsig" />
 
+    <echo message="Integrating Streaming API for XML" />
+    <antcall target="integrate.sjsxp" />
+
+    <echo message="Integrating Fast Infoset" />
+    <antcall target="integrate.fastinfoset" />
+
+    <echo message="Integrating Service Registry" />
+    <antcall target="integrate.registry" />
+
   </target>
 
+    <target name="load_setenv.sh" if="isNotWindows" depends="init" >
+    <copy file="${basedir}/setenv.sh" tofile="${basedir}/setenv.bak" overwrite="true" />
+    <replace file="${basedir}/setenv.bak">
+      <replacetoken><![CDATA["]]></replacetoken>
+      <replacetoken><![CDATA[]]></replacetoken>
+     </replace>
+    <property file="${basedir}/setenv.bak" />
+    <available property="MUSTANG" file="${JAVA_HOME}/bin/wsgen" />
+    <delete file="${basedir}/setenv.bak" quiet="true" />
 
+  </target>
 
-  <target name="integrate.jaxp" depends="init"
+  <target name="load_setenv.bat" if="isWindows" depends="init" >
+    <copy file="${basedir}/setenv.bat" tofile="${basedir}/setenv.bak" overwrite="true" />
+    <replace file="${basedir}/setenv.bak">
+      <replacetoken><![CDATA["]]></replacetoken>
+      <replacetoken><![CDATA[]]></replacetoken>
+     </replace>
+    <property file="${basedir}/setenv.bak" />
+    <available property="MUSTANG" file="${JAVA_HOME}/bin/wsgen.exe" />
+    <delete file="${basedir}/setenv.bak" quiet="true" />
+  </target>
+
+  <target name="integrate.jaxp" depends="load_setenv.sh, load_setenv.bat"
+    description="Integrate JAXP into Tomcat">
+    <antcall target="integrate.jaxp.ifneeded" />
+  </target>
+
+  <target name="integrate.jaxp.ifneeded" depends="init" unless="MUSTANG"
     description="Integrate JAXP into Tomcat">
 
     <echo message="Copying JAXP jar files to ${CATALINA_HOME}/jaxp" />
@@ -380,7 +448,67 @@ set JWSDP_HOME=]]></replacevalue>
 
   </target>
 
+  <target name="integrate.jaxwsa" depends="init"
+    description="Integrating JAXWSA into Tomcat">
 
+    <echo message="Copying JAXWSA jar files to ${CATALINA_HOME}/jaxwsa" />
+
+    <!-- Setting failonerror to false as in the normal JWSDP 2.0 build
+       jaxwsa won't be present -->
+    <copy todir="${CATALINA_HOME}/jaxwsa" failonerror="false">
+      <fileset dir="${JWSDP_HOME}/jaxwsa">
+      </fileset>
+    </copy>
+
+  </target>
+
+  <target name="integrate.jaxws" depends="init"
+    description="Integrating JAXWS into Tomcat">
+
+    <echo message="Copying JAXWS jar files to ${CATALINA_HOME}/jaxws" />
+
+    <copy todir="${CATALINA_HOME}/jaxws">
+      <fileset dir="${JWSDP_HOME}/jaxws">
+      </fileset>
+    </copy>
+    
+    <antcall target="update-jaxws-scripts.sh" />
+    <antcall target="update-jaxws-scripts.bat" />
+
+    <chmod perm="+x" file="${CATALINA_HOME}/jaxws/bin/wsgen.sh" />
+    <chmod perm="+x" file="${CATALINA_HOME}/jaxws/bin/wsimport.sh" />
+
+  </target>
+
+  <target name="update-jaxws-scripts.bat" depends="init"  if="isWindows" >
+      <echo message="Updating JAX-WS Scripts to work in Tomcat environment" />
+
+    <replace file="${CATALINA_HOME}/jaxws/bin/wsgen.bat">
+      <replacetoken><![CDATA[%JAXWS_HOME%\lib\jaxws-tools.jar ]]></replacetoken>
+     <replacevalue><![CDATA[%JAXWS_HOME%\lib\jaxws-rt.jar;%JAXWS_HOME%\lib\jaxws-tools.jar;%JAXWS_HOME%\..\jaxb\lib\jaxb-xjc.jar;%JAXWS_HOME%\..\jwsdp-shared\lib\relaxngDatatype.jar;%JAXWS_HOME%\..\jwsdp-shared\lib\resolver.jar]]></replacevalue>
+   </replace>
+
+    <replace file="${CATALINA_HOME}/jaxws/bin/wsimport.bat" >
+      <replacetoken><![CDATA[%JAXWS_HOME%\lib\jaxws-tools.jar ]]></replacetoken>
+     <replacevalue><![CDATA[%JAXWS_HOME%\lib\jaxws-rt.jar;%JAXWS_HOME%\lib\jaxws-tools.jar;%JAXWS_HOME%\..\jaxb\lib\jaxb-xjc.jar;%JAXWS_HOME%\..\jwsdp-shared\lib\relaxngDatatype.jar;%JAXWS_HOME%\..\jwsdp-shared\lib\resolver.jar]]></replacevalue>
+   </replace>
+
+  </target>
+
+  <target name="update-jaxws-scripts.sh" depends="init"  if="isNotWindows" >
+      <echo message="Updating JAX-WS Scripts to work in Tomcat environment" />
+
+    <replace file="${CATALINA_HOME}/jaxws/bin/wsgen.sh">
+      <replacetoken><![CDATA["$JAXWS_HOME/lib/jaxws-tools.jar"]]></replacetoken>
+     <replacevalue><![CDATA["$JAXWS_HOME/lib/jaxws-rt.jar":"$JAXWS_HOME/lib/jaxws-tools.jar":"$JAXWS_HOME/../jaxb/lib/jaxb-xjc.jar":"$JAXWS_HOME/../jwsdp-shared/lib/relaxngDatatype.jar":"$JAXWS_HOME/../jwsdp-shared/lib/resolver.jar"]]></replacevalue>
+    </replace>
+
+    <replace file="${CATALINA_HOME}/jaxws/bin/wsimport.sh">
+      <replacetoken><![CDATA["$JAXWS_HOME/lib/jaxws-tools.jar"]]></replacetoken>
+     <replacevalue><![CDATA["$JAXWS_HOME/lib/jaxws-rt.jar":"$JAXWS_HOME/lib/jaxws-tools.jar":"$JAXWS_HOME/../jaxb/lib/jaxb-xjc.jar":"$JAXWS_HOME/../jwsdp-shared/lib/relaxngDatatype.jar":"$JAXWS_HOME/../jwsdp-shared/lib/resolver.jar"]]></replacevalue>
+    </replace>
+
+  </target>
 
   <target name="integrate.jaxrpc" depends="init"
     description="Integrating JAX-RPC into Tomcat">
@@ -468,14 +596,21 @@ set JWSDP_HOME=]]></replacevalue>
   <target name="deploy.wsi-sampleapp.webapps" depends="init"
     description="Deploy WS-I Sample Application into Tomcat">
 
+    <echo message="Noop for now as we are not integrating wsi-sampleapp now" />
+   <!--
+    <echo message="Deleting the wsi-server dir under webapps if it exist" />
+    <delete dir="${CATALINA_HOME}/webapps/wsi-server" quiet="true" /> 
+
     <echo message="Copying wsi-sampleapp jar files to ${CATALINA_HOME}/wsi-sampleapp" />
 
-    <copy todir="${CATALINA_HOME}/wsi-sampleapp">
+    <copy todir="${CATALINA_HOME}/wsi-sampleapp" overwrite="true" >
       <fileset dir="${JWSDP_HOME}/wsi-sampleapp">
       </fileset>
     </copy>
+   -->
 
     <!-- make sure *.sh and *.bat are executeable -->
+  <!--
     <chmod perm="+x" >
         <fileset dir="${CATALINA_HOME}/bin" >
             <include name="*.sh"  />
@@ -488,6 +623,7 @@ set JWSDP_HOME=]]></replacevalue>
           <include name="wsi-*"/>
         </fileset>
     </copy>
+  -->
 
   </target>
 
@@ -495,48 +631,9 @@ set JWSDP_HOME=]]></replacevalue>
 
   <target name="integrate.jstl" depends="init"
     description="Integrate JSTL into Tomcat">
-
-    <echo message="Copying jstl jar files to ${CATALINA_HOME}/jstl" />
-
-    <copy todir="${CATALINA_HOME}/jstl">
-      <fileset dir="${JWSDP_HOME}/jstl">
-      </fileset>
-    </copy>
-
-    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
-	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
-          <include name="jstl-*"/>
-        </fileset>
-    </copy>
-
+      <!-- Do nothing -->
   </target>
 
-
-  <target name="integrate.registry-server" depends="init"
-    description="Integrate Registry Server into Tomcat">
-
-    <antcall target="deploy.registry-server.webapps" />
-
-  </target>
-
-  <target name="deploy.registry-server.webapps" depends="init"
-    description="Deploy Registry Server into Tomcat">
-
-    <echo message="Copying registry-server war files to ${CATALINA_HOME}/registry-server" />
-
-    <copy todir="${CATALINA_HOME}/registry-server">
-      <fileset dir="${JWSDP_HOME}/registry-server">
-      </fileset>
-    </copy>
-
-    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
-	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
-          <include name="registry*"/>
-          <include name="xindice.xml"/>
-        </fileset>
-    </copy>
-
-  </target>
 
 
   <target name="integrate.xmldsig" depends="init"
@@ -555,6 +652,155 @@ set JWSDP_HOME=]]></replacevalue>
         </fileset>
     </copy>
 
+  </target>
+
+   <target name="update-spja-integrate-setenv.sh" depends="init"  if="isNotWindows" >
+        <java classname="com.sun.script.util.JwsdpCobundleInstallHelper"
+           fork="true"
+           failonerror="true"
+           >
+         <arg value="--integrate"/>
+         <arg value="${CATALINA_HOME}/jwsdp-shared/bin/setenv.sh" />
+         <arg value="${CATALINA_HOME}/spja/lib"/>
+         <classpath>
+           <pathelement location="${JWSDP_HOME}/spja/lib/script.jar"/>
+         </classpath>
+    </java>
+ </target>
+
+  <target name="update-spja-integrate-setenv.bat" depends="init"  if="isWindows" >
+        <java classname="com.sun.script.util.JwsdpCobundleInstallHelper"
+           fork="true"
+           failonerror="true"
+           >
+         <arg value="--integrate"/>
+         <arg value="${CATALINA_HOME}/jwsdp-shared/bin/setenv.bat" />
+         <arg value="${CATALINA_HOME}/spja/lib"/>
+         <classpath>
+           <pathelement location="${JWSDP_HOME}/spja/lib/script.jar"/>
+         </classpath>
+    </java>
+ </target>
+
+  <target name="update-spja-integrate-run.sh" depends="init"
+    description="Updating spja/bin/run.sh" if="isNotWindows">
+
+        <property environment="env"/>
+        <property name="spja_bin_run_file" value="${CATALINA_HOME}/spja/bin/run.sh" />
+    <replace file="${spja_bin_run_file}" value="${env.JAVA_HOME}">
+      <replacetoken>$java_home_replace</replacetoken>
+    </replace>
+    <replace file="${spja_bin_run_file}" value="${catalina.home}/spja">
+      <replacetoken>$spja_install_dir_replace</replacetoken>
+    </replace>
+        <chmod file="${spja_bin_run_file}" perm="ugo+rx"/>
+  </target>
+
+  <target name="update-spja-integrate-run.bat" depends="init"
+    description="Updating spja/bin/run.sh" if="isWindows">
+
+        <property environment="env"/>
+        <property name="spja_bin_run_file" value="${CATALINA_HOME}/spja/bin/run.bat" />
+    <replace file="${spja_bin_run_file}" value="${env.JAVA_HOME}">
+      <replacetoken>%java_home_replace%</replacetoken>
+    </replace>
+    <replace file="${spja_bin_run_file}" value="${catalina.home}\spja">
+      <replacetoken>%spja_install_dir_replace%</replacetoken>
+    </replace>
+        <chmod file="${spja_bin_run_file}" perm="ugo+rx"/>
+ </target>
+
+  <target name="integrate.spja" depends="init"
+    description="Integrate JSR 223 into Tomcat">
+
+    <echo message="Copying JSR 223 jar files to ${CATALINA_HOME}/spja" />
+
+    <copy todir="${CATALINA_HOME}/spja">
+      <fileset dir="${JWSDP_HOME}/spja">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="spja-*"/>
+        </fileset>
+    </copy>
+
+    <echo message="Updating web.xml for adding the URI mappings needed for SPJA"/>
+    <replace file="${CATALINA_HOME}/conf/web.xml">
+      <replacetoken><![CDATA[<!-- Server Side Includes processing servlet, which processes SSI         -->]]></replacetoken>
+     <replacevalue>
+<![CDATA[
+    <!-- SPJA ( JSR 223 ) Script Servlet -->
+    <servlet>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <servlet-class>com.sun.script.http.ScriptServlet</servlet-class>
+       <init-param>
+           <param-name>script-blocks</param-name>
+           <param-value>js,groovy</param-value>
+       </init-param>
+   </servlet> 
+  <!-- Server Side Includes  processing servlet, which processes SSI         -->]]></replacevalue>
+    </replace>
+
+    <replace file="${CATALINA_HOME}/conf/web.xml">
+      <replacetoken><![CDATA[<!-- The mapping for the JSP servlet -->]]></replacetoken>
+     <replacevalue><![CDATA[
+    <!-- Mappings used by SPJA ( JSR 223) Script Servlet -->
+    <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.js</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.php</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.groovy</url-pattern>
+   </servlet-mapping>
+   <!-- The mapping for the  JSP servlet -->]]></replacevalue>
+    </replace>
+
+    <!-- Integrate saaj webapps -->
+    <antcall target="deploy.spja.webapps" />
+    <antcall target="update-spja-integrate-setenv.sh" />
+    <antcall target="update-spja-integrate-setenv.bat" />
+    <antcall target="update-spja-integrate-run.sh" />
+    <antcall target="update-spja-integrate-run.bat" />
+    
+  </target>
+
+  <target name="deploy.spja.webapps" depends="init"
+    description="Deploying SPJA into Tomcat">
+
+    <echo message="Integrating SPJA samples" />
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+        <fileset dir="${JWSDP_HOME}/spja/webapps">
+          <include name="spja-script.xml"/>
+        </fileset>
+    </copy>
+  </target>
+
+
+  <target name="integrate.sjsxp" depends="init"
+    description="Integrate StAX into Tomcat">
+
+    <echo message="Copying StAX jar files to ${CATALINA_HOME}/sjsxp" />
+
+    <copy todir="${CATALINA_HOME}/sjsxp">
+      <fileset dir="${JWSDP_HOME}/sjsxp">
+      </fileset>
+    </copy>
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="sjsxp-*"/>
+        </fileset>
+    </copy>
+    
   </target>
 
 
@@ -646,6 +892,30 @@ set JWSDP_HOME=]]></replacevalue>
     </delete>
   </target>
 
+  <target name="revert.jaxwsa.changes" depends="revert.init"
+    description="Revert JAXWSA changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jaxwsa"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jaxwsa-*"/>
+        </fileset>
+    </delete>
+  </target>
+
+  <target name="revert.jaxws.changes" depends="revert.init"
+    description="Revert JAXWS changes from Tomcat">
+
+    <delete  dir="${CATALINA_HOME}/jaxws"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="jaxws-*"/>
+        </fileset>
+    </delete>
+  </target>
+
   <target name="revert.jaxr.changes" depends="revert.init"
     description="Revert JAXR changes from Tomcat">
 
@@ -688,6 +958,104 @@ set JWSDP_HOME=]]></replacevalue>
           <include name="xmldsig-*"/>
         </fileset>
     </delete>
+  </target>
+
+   <target name="update-spja-revert-setenv.sh" depends="init"  if="isNotWindows" >
+        <java classname="com.sun.script.util.JwsdpCobundleInstallHelper"
+           fork="true"
+           failonerror="true"
+           >
+         <arg value="--revert"/>
+         <arg value="${CATALINA_HOME}/jwsdp-shared/bin/setenv.sh" />
+         <arg value="${CATALINA_HOME}/spja/lib"/>
+         <classpath>
+           <pathelement location="${JWSDP_HOME}/spja/lib/script.jar"/>
+         </classpath>
+    </java>
+ </target>
+
+  <target name="update-spja-revert-setenv.bat" depends="init"  if="isWindows" >
+        <java classname="com.sun.script.util.JwsdpCobundleInstallHelper"
+           fork="true"
+           failonerror="true"
+           >
+         <arg value="--revert"/>
+         <arg value="${CATALINA_HOME}/jwsdp-shared/bin/setenv.bat" />
+         <arg value="${CATALINA_HOME}/spja/lib"/>
+         <classpath>
+           <pathelement location="${JWSDP_HOME}/spja/lib/script.jar"/>
+         </classpath>
+    </java>
+  </target>
+
+  <target name="revert.spja.changes" depends="init"
+    description="Revert JSR 223 changes from Tomcat">
+    
+    <delete  dir="${CATALINA_HOME}/spja"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="spja-*"/>
+          <include name="script.xml"/>
+        </fileset>
+    </delete>
+
+    <echo message="Removing changes made in web.xml for SPJA"/>
+
+    <replace file="${CATALINA_HOME}/conf/web.xml">
+      <replacevalue><![CDATA[<!-- Server Side Includes processing servlet, which processes SSI         -->]]></replacevalue>
+     <replacetoken>
+<![CDATA[
+    <!-- SPJA ( JSR 223 ) Script Servlet -->
+    <servlet>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <servlet-class>com.sun.script.http.ScriptServlet</servlet-class>
+       <init-param>
+           <param-name>script-blocks</param-name>
+           <param-value>js,groovy</param-value>
+       </init-param>
+   </servlet> 
+  <!-- Server Side Includes  processing servlet, which processes SSI         -->]]></replacetoken>
+    </replace>
+
+
+    <replace file="${CATALINA_HOME}/conf/web.xml">
+      <replacevalue><![CDATA[<!-- The mapping for the JSP servlet -->]]></replacevalue>
+     <replacetoken><![CDATA[
+    <!-- Mappings used by SPJA ( JSR 223) Script Servlet -->
+    <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.js</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.php</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+       <servlet-name>JSR223ScriptServlet</servlet-name>
+       <url-pattern>*.groovy</url-pattern>
+   </servlet-mapping>
+   <!-- The mapping for the  JSP servlet -->]]></replacetoken>
+    </replace>
+
+    <antcall target="update-spja-revert-setenv.sh" />
+    <antcall target="update-spja-revert-setenv.bat" />
+     
+  </target>
+
+  <target name="revert.sjsxp.changes" depends="revert.init"
+    description="Revert StAX changes from Tomcat">
+    
+    <delete  dir="${CATALINA_HOME}/sjsxp"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="sjsxp-*"/>
+        </fileset>
+    </delete>
+     
   </target>
 
 
@@ -751,56 +1119,9 @@ set JWSDP_HOME=]]></replacevalue>
 
   <target name="revert.jstl.changes" depends="revert.init"
     description="Revert JSTL changes from Tomcat">
-
-    <delete  dir="${CATALINA_HOME}/jstl"  quiet="true" />
-
-    <delete quiet="true">
-	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
-          <include name="jstl-*"/>
-        </fileset>
-    </delete>
-
-    <delete quiet="true" includeEmptyDirs="true">
-	<fileset dir="${CATALINA_HOME}/webapps">  
-          <include name="jstl-*/**"/>
-        </fileset>
-    </delete>
-
-    <delete quiet="true" includeEmptyDirs="true">
-	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
-          <include name="jstl-*/**"/>
-        </fileset>
-    </delete>
+      <!-- Do nothing -->
   </target>
 
-
-  <target name="revert.registry-server.changes" depends="revert.init"
-    description="Revert Registry Server changes from Tomcat">
-
-    <delete  dir="${CATALINA_HOME}/registry-server"  quiet="true" />
-
-    <delete quiet="true">
-	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
-          <include name="registry*"/>
-          <include name="xindice.xml"/>
-        </fileset>
-    </delete>
-
-    <delete quiet="true" includeEmptyDirs="true">
-	<fileset dir="${CATALINA_HOME}/webapps">  
-          <include name="RegistryServer/**"/>
-          <include name="Xindice/**"/>
-        </fileset>
-    </delete>
-
-    <delete quiet="true" includeEmptyDirs="true">
-	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
-          <include name="RegistryServer/**"/>
-          <include name="Xindice/**"/>
-        </fileset>
-    </delete>
-
-  </target>
 
 
 
@@ -832,10 +1153,24 @@ set JWSDP_HOME=]]></replacevalue>
 
     <delete dir="${CATALINA_HOME}/server/webapps/jwsdp-catalog" quiet="true"/>
 
+
   </target>
 
   <target name="clean" depends="init"
-    description="Clean up temporary directories for Tomcat">
+    description="Clean up temporary directories for Tomcat and callback">
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="jwsdp-callback/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="jwsdp-callback/**"/>
+        </fileset>
+    </delete>
+
 
     <delete dir="${JWSDP_BACKUPDIR}" quiet="true" />
     <delete dir="${MYTEMPDIR}" quiet="true" />
@@ -844,10 +1179,10 @@ set JWSDP_HOME=]]></replacevalue>
 
 
   <target name="revert.tomcat.changes" depends="revert.init"
-    description="Backing out Java WSDP 1.4 changes from Tomcat">
+    description="Backing out Java WSDP 2.0 changes from Tomcat">
 
 
-    <echo message="Backing out the changes made during Java WSDP 1.4 integration into Tomcat" />
+    <echo message="Backing out the changes made during Java WSDP 2.0 integration into Tomcat" />
 
     <echo message="Reverting JAXP changes" />
     <antcall target="revert.jaxp.changes" />
@@ -858,29 +1193,37 @@ set JWSDP_HOME=]]></replacevalue>
     <echo message="Reverting JAX-RPC changes" />
     <antcall target="revert.jaxrpc.changes" />
 
+    <echo message="Reverting JAX-WS changes" />
+    <antcall target="revert.jaxws.changes" />
+
+    <echo message="Reverting JAX-WSA changes" />
+    <antcall target="revert.jaxwsa.changes" />
+
     <echo message="Reverting JAXR changes" />
     <antcall target="revert.jaxr.changes" />
 
     <echo message="Reverting JAXB changes" />
     <antcall target="revert.jaxb.changes" />
 
-    <echo message="Reverting  JSTL" />
-    <antcall target="revert.jstl.changes" />
-
-    <echo message="Reverting  Registry Server" />
-    <antcall target="revert.registry-server.changes" />
-
-    <echo message="Reverting  WS-I Sample Application" />
+    <echo message="Reverting WS-I Sample Application" />
     <antcall target="revert.wsi-sampleapp.changes" />
 
-    <echo message="Reverting  XML and Web Services Security" />
+    <echo message="Reverting XML and Web Services Security" />
     <antcall target="revert.xws-security.changes" />
 
-    <echo message="Reverting  XML Digital Signatures" />
+    <echo message="Reverting XML Digital Signatures" />
     <antcall target="revert.xmldsig.changes" />
 
-    <echo message="Reverting  Tomcat specific  changes" />
+    <echo message="Reverting Streaming API for XML" />
+    <antcall target="revert.sjsxp.changes" />
 
+    <echo message="Reverting Fast Infoset" />
+    <antcall target="revert.fastinfoset.changes" />
+
+    <echo message="Reverting Service Registry changes" />
+    <antcall target="revert.registry.changes" />
+
+    <echo message="Reverting Tomcat specific changes" />
     <antcall target="clean" />
   </target>
 
@@ -896,6 +1239,138 @@ set JWSDP_HOME=]]></replacevalue>
     </copy>
 
   </target>
+
+   <target name="integrate.fastinfoset" depends="init"
+    description="Integrate Fast Infoset into Tomcat">
+    <echo message="Integrating Fast Infoset component" />
+    <echo message="Copying Fast Infoset files to ${CATALINA_HOME}/fastinfoset" />
+
+    <copy todir="${CATALINA_HOME}/fastinfoset">
+      <fileset dir="${JWSDP_HOME}/fastinfoset">
+      </fileset>
+    </copy>
+
+ </target>
+
+  <target name="revert.fastinfoset.changes" depends="init"
+    description="Revert Fast Infoset changes">
+    <echo message="Reverting changes made for Fast Infoset component" />
+    <delete  dir="${CATALINA_HOME}/fastinfoset"  quiet="true" />
+ </target>
+
+  <target name="integrate.registry" depends="init"
+    description="Integrate Service Registry into Tomcat">
+  </target>
+
+  <target name="integrate.registry.old" depends="init"
+    description="Integrate Service Registry into Tomcat">
+    <echo message="Integrating Service Registry " />
+    <echo message="Copying Service Registry jar files to ${CATALINA_HOME}/registry" />
+
+    <copy todir="${CATALINA_HOME}/registry">
+      <fileset dir="${JWSDP_HOME}/registry">
+      </fileset>
+    </copy>
+    <echo message="Extracting soar.war into the ${CATALINA_HOME}/webapps" />
+     
+    <mkdir dir="${CATALINA_HOME}/webapps/soar" />
+ 
+    <unjar src="${JWSDP_HOME}/registry/webapps/soar.war"
+      dest="${CATALINA_HOME}/webapps/soar"  overwrite="true" />
+
+    <!-- make commos-logging.jar available to Registry webapp -->
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/commons-logging.jar" 
+        todir="${CATALINA_HOME}/webapps/soar/WEB-INF/lib" overwrite="true" />
+
+    <copy todir="${CATALINA_HOME}/conf/Catalina/localhost" overwrite="true">
+	<fileset dir="${JWSDP_HOME}/conf/Catalina/localhost">  
+          <include name="soar.xml"/>
+        </fileset>
+    </copy>
+    
+
+    <property name="registry.dir" value="${JWSDP_HOME}/registry" />
+    <property name="soar.sdk.home" value="${JWSDP_HOME}/registry" />
+    <property name="soar.install.dir" value="${JWSDP_HOME}/registry/bin" />
+    <property name="soar.name" value="soar" />
+    <property name="soar.version" value="3.0" />
+     <property name="soar.data.home" value="${user.home}/${soar.name}/tomcat" />
+
+   <replace file="${CATALINA_HOME}/conf/Catalina/localhost/soar.xml" value="${soar.data.home}/${soar.version}">
+      <replacetoken><![CDATA[${DATABASE_LOCATION}]]></replacetoken>
+    </replace>
+
+    <!-- Save default install.properties file as install.properties.default -->
+    <copy file="${soar.install.dir}/install.properties" tofile="${soar.install.dir}/install.properties.default
+" overwrite="false" />
+
+     <propertyfile file="${soar.install.dir}/install.properties" >
+    <entry key="sun.ant.home" value="${ant.home}" operation="=" />
+    <entry key="soar.sdk.home" value="${JWSDP_HOME}/registry" operation="=" />
+    <entry key="soar.name" value="soar" operation="=" />
+        <entry key="soar.data.home" value="${soar.data.home}" operation="=" />
+    <entry key="soar-data.jar.home" value="${registry.dir}/lib" operation="=" />
+    <entry key="tomcat.root.dir" value="${CATALINA_HOME}" operation="=" />
+    <entry key="libs.derby.jar" value="${registry.dir}/lib/derby.jar" operation="=" />
+    <entry key="libs.jaxrpc-spi.jar" value="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-spi.jar" operation="=" />
+    <entry key="libs.jaxrpc-api.jar" value="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-api.jar" operation="=" />
+    <entry key="libs.jaxrpc-impl.jar" value="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-impl.jar" operation="=" />
+    <entry key="libs.saaj-api.jar" value="${JWSDP_HOME}/saaj/lib/saaj-api.jar" operation="=" />
+    <entry key="libs.saaj-impl.jar" value="${JWSDP_HOME}/saaj/lib/saaj-impl.jar" operation="=" />
+    <entry key="libs.saaj-ri.jar" value="${JWSDP_HOME}/saaj/lib/saaj-impl.jar" operation="=" />
+    <entry key="libs.namespace.jar" value="${JWSDP_HOME}/jwsdp-shared/lib/namespace.jar" operation="=" />
+    <entry key="soar.war" value="${JWSDP_HOME}/registry/webapps/soar.war" operation="=" />
+    <entry key="registry.install.ServerInstancePort" value="${SJSAS_PORT}" operation="=" />
+    <entry key="registry.install.ServerInstanceSecurePort" value="${HTTPS_PORT}" operation="=" />
+    <entry key="registry.install.AdministrationPort" value="${ADMIN_PORT}" operation="=" />
+    <entry key="registry.install.AdministratorUserID" value="${USERNAME}" operation="=" />
+
+    <entry key="registry.install.AdministratorPassword" value="${PASSWORD}" operation="=" />
+    <entry key="derby.dest.dir" value="${CATALINA_HOME}/webapps/soar/WEB-INF/lib" operation="=" />
+
+    </propertyfile>
+
+    <echo message="Using build-install.xml of sun-ecm for configuring Tomcat" />
+    <echo message="Installing db" />
+  <ant dir="${soar.install.dir}" antfile="build-install.xml" target="install.db" />
+    <echo message="generating keystore info " />
+  <ant dir="${soar.install.dir}" antfile="build-install.xml" target="genKeys" />
+
+  <echo message="Fixing the property files in deployed webapp" />
+  <ant dir="${soar.install.dir}" antfile="build-install.xml" target="tomcat.deploy.fixprops" />
+
+
+    <delete file="${CATALINA_HOME}/webapps/soar/WEB-INF/lib/jsp-api.jar" quiet="true" />
+
+
+ </target>
+
+  <target name="revert.registry.changes" depends="init"
+    description="Revert Service Registry changes">
+    <echo message="Reverting changes made for Service Registry component" />
+
+    <delete dir="${CATALINA_HOME}/registry"  quiet="true" />
+
+    <delete quiet="true">
+	<fileset dir="${CATALINA_HOME}/conf/Catalina/localhost">  
+          <include name="soar*"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/webapps">  
+          <include name="soar*/**"/>
+        </fileset>
+    </delete>
+
+    <delete quiet="true" includeEmptyDirs="true">
+	<fileset dir="${CATALINA_HOME}/work/Catalina/localhost">  
+          <include name="soar*/**"/>
+        </fileset>
+    </delete>
+ </target>
+
+
 
 </project>
 

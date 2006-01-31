@@ -5,10 +5,23 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Sign target="{http://xmlsoap.org/Ping}ticket"
-               keyReferenceType="Identifier"/>
-    <xwss:Sign/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!-- 
+              Signing multiple targets as part of the same ds:Signature
+              element in the security header
+            -->
+            <xwss:Sign>
+                <xwss:Target type="qname">{http://xmlsoap.org/Ping}ticket</xwss:Target>
+                <xwss:Target type="xpath">//env:Body</xwss:Target>
+            </xwss:Sign>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

@@ -5,7 +5,28 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            dumpMessages="true">
-    <xwss:Sign senderCertificateAlias="xws-security-client"/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!--
+              Note that in the <Sign> operation, a Timestamp is exported
+              in the security header and signed by default.
+            -->
+            <xwss:Sign>
+                <xwss:X509Token certificateAlias="xws-security-client"/>
+            </xwss:Sign>
+            <!--
+              Signature requirement. No target is specified, hence the 
+              soap body is expected to be signed. Also, by default, a
+              Timestamp is expected to be signed.
+            -->
+            <xwss:RequireSignature/>
+        </xwss:SecurityConfiguration>
+   </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

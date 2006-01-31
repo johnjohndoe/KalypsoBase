@@ -7,6 +7,7 @@ import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dom.*;
 import javax.xml.crypto.dsig.dom.*;
 import javax.xml.crypto.dsig.keyinfo.*;
+import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.soap.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -134,7 +135,8 @@ public class SignedSoap {
 	    sigFactory.newDigestMethod(DigestMethod.SHA1, null));
         SignedInfo signedInfo = sigFactory.newSignedInfo(
 	    sigFactory.newCanonicalizationMethod(
-		CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, null),
+		CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, 
+		(C14NMethodParameterSpec) null),
             sigFactory.newSignatureMethod(SignatureMethod.DSA_SHA1, null),
 	    Collections.singletonList(ref));
 	KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
@@ -170,6 +172,10 @@ public class SignedSoap {
         // Validate the signature using the public key generated above
         DOMValidateContext valContext =
 	    new DOMValidateContext(keypair.getPublic(), sigElement);
+	// register Body ID attribute
+	valContext.setIdAttributeNS
+	    (getNextSiblingElement(header),
+	     "http://schemas.xmlsoap.org/soap/security/2000-12","id");
         boolean isValid = sig.validate(valContext);
 	System.out.println("Validating the signature... " +
 	    (isValid ? "valid" : "invalid"));

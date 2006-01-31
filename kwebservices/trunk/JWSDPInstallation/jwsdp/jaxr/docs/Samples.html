@@ -13,7 +13,7 @@ Java<sup><font size=-2>TM</font></sup> API for XML Registries (JAXR)<br>
 Sample Applications</font></h1>
 
 <b>Specification Version:</b> 1.0<br>
-<b>Reference Implementation (RI) Version:</b> 1.0.6
+<b>Reference Implementation (RI) Version:</b> 1.0.8_01 EA
 </center>
 
 <h3>jaxr-publish</h3>
@@ -31,9 +31,7 @@ identifier.</p>
 Before running the example, configure it as follows:
 <ol>
 <li>
-By default, the registry publishes information to the Java WSDP 
-Registry Server, the private UDDI V2 registry implementation bundled with the 
-Java WSDP.
+By default, the example publishes information to the IBM test registry.
 
 <p>You can publish to any registry you wish by setting the following
 properties in the <code>publish.properties</code> file:
@@ -47,18 +45,17 @@ properties in the <code>publish.properties</code> file:
 first with the registry provider.
 </li>
 <li>
-If you are running the example from behind a firewall and are using a public 
-registry, add the proxy information by setting the following properties:
+If you are running the example from behind a firewall, add the proxy 
+information by setting the following properties:
 <blockquote>
 <tt>http.proxy.host<br>
 http.proxy.port</tt>
 </blockquote>
 </li>
 <li>
-By default, the <tt>user.name</tt> and <tt>user.password</tt> properties are 
-set to the values used by the Java WSDP Registry Server. If you are using a 
-public registry, provide the username and password you obtained when you 
-registered with the registry provider.
+Set the <tt>user.name</tt> and <tt>user.password</tt> properties to the 
+user name and password you obtained when you registered with the registry 
+provider.
 </li>
 </ol>
 
@@ -84,8 +81,8 @@ information for details about the organization and the services it provides.</p>
 <p>Before running the example, configure it as follows:</p>
 <ol>
 <li>
-By default, the registry queries for information from the Java WSDP Registry 
-Server. You can query any registry you wish by setting the following 
+By default, the example queries for information from the IBM test registry. 
+You can query any registry you wish by setting the following 
 properties in the <tt>query.properties</tt> file:
 
 <blockquote><tt>query.url</tt>: the URL for sending queries to the
@@ -95,8 +92,8 @@ registry
 <tt><a href="">http://www.uddi.org/find.html</a></tt>.</p>
 </li>
 <li>
-If you are running the example from behind a firewall and are querying a public 
-registry, add the proxy information by setting the following properties:
+If you are running the example from behind a firewall, add the proxy 
+information by setting the following properties:
 
 <blockquote><tt>http.proxy.host<br>
 http.proxy.port</tt></blockquote>
@@ -171,16 +168,14 @@ and click Search.
 <p>To publish information to the registry, select the Submissions Panel.
 Make sure you have the publishing URL selected for the Registry Location.
 Fill in the information to publish and click Submit. It brings up
-an authentication dialog. Type in the username and password for your account
+an authentication dialog. Type the user name and password for your account
 on the registry and click OK to publish the entry to the registry.</p>
 </li>
 </ol>
-<p>For complete details on using the browser, refer to the 
-<a href="http://java.sun.com/webservices/tutorial.html">Java Web Services 
-Tutorial</a>.</p>
+
 <hr>
 <p><A href="../../docs/Copyright.html"><FONT 
-  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  size="-1"><I>Copyright &copy; 2005 Sun Microsystems, Inc. All rights 
   reserved.</I></FONT></A> </P>
 
 </body>

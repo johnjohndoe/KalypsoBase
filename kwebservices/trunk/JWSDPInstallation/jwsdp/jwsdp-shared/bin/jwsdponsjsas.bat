@@ -7,13 +7,13 @@ REM
 
 if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
-rem Script to copy JWSDP files into a Sun Java System App Server8.0 installation
+rem Script to copy JWSDP files into a Sun Java System App Server8.1 installation
 rem
 rem Environment Variable Prequisites
 rem
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
 rem
-rem $Id: jwsdponsjsas.bat,v 1.2 2004/03/30 23:28:00 ofung Exp $
+rem $Id: jwsdponsjsas.bat,v 1.6 2005/11/15 01:04:23 rameshm Exp $
 rem ---------------------------------------------------------------------------
 
 rem Get standard environment variables
@@ -67,7 +67,6 @@ goto setArgs
 
 rem Execute the Launcher using the "ant" target by giving jwsdponsjsas.xml
 rem as build file
-"%JAVA_HOME%\bin\java.exe" -classpath "%JWSDP_HOME%\jwsdp-shared\bin;%JWSDP_HOME%\jwsdp-shared\bin\commons-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant.jar;%JWSDP_HOME%\apache-ant\lib\optional.jar;%JWSDP_HOME%\jaxp\lib\jaxp-api.jar;%JWSDP_HOME%\jaxp\lib\endorsed\sax.jar;%JWSDP_HOME%\jaxp\lib\endorsed\dom.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xercesImpl.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xalan.jar" LauncherBootstrap -verbose ant -buildfile "%JWSDP_HOME%\jwsdp-shared\bin\jwsdponsjsas.xml"  -Dsjsas.home="%APPSERVER_HOME%" %CMD_LINE_ARGS%
+"%JAVA_HOME%\bin\java.exe"  -Djava.endorsed.dirs="%JWSDP_HOME%\jaxp\lib;%JWSDP_HOME%\jaxp\lib\endorsed" -classpath "%JWSDP_HOME%\jwsdp-shared\bin;%JWSDP_HOME%\jwsdp-shared\bin\commons-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant.jar;%JWSDP_HOME%\apache-ant\lib\ant-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant-nodeps.jar;%JWSDP_HOME%\jaxp\lib\jaxp-api.jar;%JWSDP_HOME%\jaxp\lib\endorsed\sax.jar;%JWSDP_HOME%\jaxp\lib\endorsed\dom.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xercesImpl.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xalan.jar" LauncherBootstrap -verbose ant -buildfile "%JWSDP_HOME%\jwsdp-shared\bin\jwsdponsjsas.xml"  -Dsjsas.home="%APPSERVER_HOME%" %CMD_LINE_ARGS% 
 
 
-:end

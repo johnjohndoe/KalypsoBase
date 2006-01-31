@@ -1,52 +1,66 @@
 #!/bin/sh
+#
+# The contents of this file are subject to the terms
+# of the Common Development and Distribution License
+# (the "License").  You may not use this file except
+# in compliance with the License.
+# 
+# You can obtain a copy of the license at
+# https://jwsdp.dev.java.net/CDDLv1.0.html
+# See the License for the specific language governing
+# permissions and limitations under the License.
+# 
+# When distributing Covered Code, include this CDDL
+# HEADER in each file and include the License file at
+# https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+# add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your
+# own identifying information: Portions Copyright [yyyy]
+# [name of copyright owner]
+#
 
 #
-# Copyright 2004 Sun Microsystems, Inc. All rights reserved.
-# SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+# Make sure that JAXB_HOME and JAVA_HOME are set
 #
+if [ -z "$JAXB_HOME" ]
+then
+    # search the installation directory
+    
+    PRG=$0
+    progname=`basename $0`
+    saveddir=`pwd`
+    
+    cd `dirname $PRG`
+    
+    while [ -h "$PRG" ] ; do
+        ls=`ls -ld "$PRG"`
+        link=`expr "$ls" : '.*-> \(.*\)$'`
+        if expr "$link" : '.*/.*' > /dev/null; then
+            PRG="$link"
+        else
+            PRG="`dirname $PRG`/$link"
+        fi
+    done
 
-
-# -----------------------------------------------------------------------------
-#
-# Script for launching xjc using the Launcher
-#
-# -----------------------------------------------------------------------------
-
-# Resolve links - $0 may be a softlink
-PRG="$0"
-
-while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '.*/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "$PRG"`/"$link"
-  fi
-done
-
-# Get standard environment variables
-PRGDIR=`dirname "$PRG"`
-if [ -r "$PRGDIR"/../../jwsdp-shared/bin/setenv.sh ]; then
-  . "$PRGDIR"/../../jwsdp-shared/bin/setenv.sh
+    JAXB_HOME=`dirname "$PRG"`/..
+    
+    # make it fully qualified
+    cd "$saveddir"
+    JAXB_HOME=`cd "$JAXB_HOME" && pwd`
+    
+    cd $saveddir
 fi
-
-# Set JAXB_HOME variable 
-JAXB_HOME="$PRGDIR"/../jaxb
-
-# Make sure prerequisite environment variables are set
-if [ -z "$JAVA_HOME" ]; then
-  echo "The JAVA_HOME environment variable is not defined."
-  echo "This environment variable is needed to run this program."
-  exit 1
-fi
-
-CLASSPATH="${PRGDIR}:${PRGDIR}/../../jwsdp-shared/bin"
 
 [ `expr \`uname\` : 'CYGWIN'` -eq 6 ] &&
 {
-    CLASSPATH=`cygpath -w -p ${CLASSPATH}`
+    JAXB_HOME=`cygpath -w "$JAXB_HOME"`
 }
 
-# Execute the Launcher using the "xjc" target
-exec "$JAVA_HOME"/bin/java -classpath "${CLASSPATH}" LauncherBootstrap -verbose xjc  -DJAXB_HOME="$JAXB_HOME" -DJAVA_HOME="$JAVA_HOME" "$@"
+if [ -n "$JAVA_HOME" ]
+then
+    JAVA="$JAVA_HOME/bin/java"
+else
+    JAVA=java
+fi
+
+exec "$JAVA" $XJC_OPTS -jar "$JAXB_HOME/lib/jaxb-xjc.jar" "$@"

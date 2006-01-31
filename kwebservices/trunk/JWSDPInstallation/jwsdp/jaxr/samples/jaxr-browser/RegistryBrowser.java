@@ -16,14 +16,14 @@ import javax.xml.registry.infomodel.*;
  *
  */
 public class RegistryBrowser extends JFrame {
-    
+
     static final String selectAnItem = ResourceBundle.getBundle("BrowserStrings").getString("[enter_URL_or_choose_from_menu]");
     static Cursor defaultCursor;
     static RegistryBrowser instance;
     static JAXRClient client;
 
     boolean conceptsTreeModelUpdated = false;
-    
+
     // used outside constructor
     FindByPanel findByPanel;
     ConceptsTree conceptsTree;
@@ -75,7 +75,7 @@ public class RegistryBrowser extends JFrame {
         }
         return instance;
     }
-    
+
     /**
      * Class Constructor.
      *
@@ -103,7 +103,7 @@ public class RegistryBrowser extends JFrame {
         setTitle(ResourceBundle.getBundle("BrowserStrings").getString("Registry_Browser"));
         setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout(0, 0));
-        
+
         // Scale window to be centered using 70% of screen
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((int)(dim.getWidth() * .15),(int)(dim.getHeight() * .1),
@@ -114,12 +114,12 @@ public class RegistryBrowser extends JFrame {
         topPanel.setLayout(gb);
         getContentPane().add("North", topPanel);
         GridBagConstraints  c = new GridBagConstraints();
-        
+
         toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         toolbarPanel.setBounds(0, 0, 488, 29);
         browseToolBar.setAlignmentY(0.222222F);
         toolbarPanel.add(browseToolBar);
-        
+
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -131,16 +131,16 @@ public class RegistryBrowser extends JFrame {
         c.insets = new Insets(0, 0, 0, 0);
         gb.setConstraints(toolbarPanel, c);
         topPanel.add(toolbarPanel);
-        
+
         JPanel locationPanel = new JPanel();
         GridBagLayout gb1 = new GridBagLayout();
         locationPanel.setLayout(gb1);
-        
+
         JLabel locationLabel = new JLabel(ResourceBundle.getBundle("BrowserStrings").getString("Registry_Location:"));
         locationLabel.setLabelFor(registryCombo);
         locationLabel.setDisplayedMnemonic('r');
         //		locationLabel.setPreferredSize(new Dimension(80, 23));
-        
+
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -153,9 +153,9 @@ public class RegistryBrowser extends JFrame {
         gb1.setConstraints(locationLabel, c);
         //locationPanel.setBackground(Color.green);
         locationPanel.add(locationLabel);
-        
+
         String pathSep = System.getProperty("file.separator");
-        
+
         registryObjectsTableModel = new RegistryObjectsTableModel();
         registryObjectsTable =
             new RegistryObjectsTable(registryObjectsTableModel);
@@ -164,7 +164,7 @@ public class RegistryBrowser extends JFrame {
         conceptsTree = new ConceptsTree(false);
 
 	    registryCombo.addItem(selectAnItem);
-		  registryCombo.addItem("http://localhost:8080/RegistryServer/");
+
         registryCombo.addItem("http://uddi.ibm.com/ubr/inquiryapi");
         registryCombo.addItem("https://uddi.ibm.com/ubr/publishapi");
         registryCombo.addItem("http://uddi.ibm.com/testregistry/inquiryapi");
@@ -173,19 +173,19 @@ public class RegistryBrowser extends JFrame {
         registryCombo.addItem("https://uddi.microsoft.com/publish");
         registryCombo.addItem("http://test.uddi.microsoft.com/inquire");
         registryCombo.addItem("https://test.uddi.microsoft.com/publish");
-        
-	
+
+
         registryCombo.setEditable(true);
         registryCombo.setEnabled(true);
         registryCombo.setToolTipText(java.util.ResourceBundle.getBundle("BrowserStrings").getString("Select_URL_for_connection."));
-        
+
         registryCombo.addActionListener(new ActionListener()  {
             public void actionPerformed(ActionEvent e)  {
 		String url = (String) registryCombo.getSelectedItem();
 		if (url.equals(selectAnItem)) {
 		    return;
 		}
-                    
+
 		Cursor oldCursor = RegistryBrowser.this.getCursor();
 		RegistryBrowser.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		connectToRegistry(url);
@@ -198,11 +198,11 @@ public class RegistryBrowser extends JFrame {
 		    ((ConceptsTreeModel)conceptsTree.getModel()).update();
 		    conceptsTreeModelUpdated = true;
 		}
-                    
+
 		RegistryBrowser.this.setCursor(oldCursor);
             }
         });
-        
+
         c.gridx = 1;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -214,7 +214,7 @@ public class RegistryBrowser extends JFrame {
         c.insets = new Insets(0, 0, 5, 0);
         gb1.setConstraints(registryCombo, c);
         locationPanel.add(registryCombo);
-        
+
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -226,28 +226,28 @@ public class RegistryBrowser extends JFrame {
         c.insets = new Insets(0, 0, 0, 0);
         gb.setConstraints(locationPanel, c);
         topPanel.add(locationPanel, c);
-        
+
         browseToolBar.setBounds(0, 0, 199, 29);
         searchButton.setText(ResourceBundle.getBundle("BrowserStrings").getString("Search"));
         searchButton.setToolTipText(ResourceBundle.getBundle("BrowserStrings").getString("Search"));
         searchButton.setMnemonic((int) 'S');
         browseToolBar.add(searchButton);
         searchButton.setBounds(141, 4, 23, 23);
-        
+
         // submission toolbar
         JButton	submitButton = new javax.swing.JButton();
         submitButton.setText(ResourceBundle.getBundle("BrowserStrings").getString("Submit"));
         submitButton.setMnemonic((int) 'S');
         submissionToolBar.add(submitButton);
-        
+
         JButton	addServiceButton = new javax.swing.JButton();
         addServiceButton.setText(ResourceBundle.getBundle("BrowserStrings").getString("Add_service"));
         addServiceButton.setMnemonic((int) 'A');
         submissionToolBar.add(addServiceButton);
-        
+
         getContentPane().add("Center", tabbedPane);
         tabbedPane.setBounds(0, 29, 488, 280);
-        
+
         tabbedPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 toolbarPanel.removeAll();
@@ -260,19 +260,19 @@ public class RegistryBrowser extends JFrame {
                 }
             }
         });
-        
+
         // set up the Browse panel
         browsePanel.setLayout(new BorderLayout());
         tabbedPane.add(browsePanel);
-        
+
         registryObjectsPanel.setLayout(new BorderLayout());
         JScrollPane conceptsTreePane = new JScrollPane(conceptsTree);
-        
+
         // added to findSplitPane
         findByPanel = new FindByPanel();
         JScrollPane findByPane = new JScrollPane(findByPanel);
         findPanel = new JPanel();
-        
+
         // add panels that take user input for searching
         findPanel.setLayout(new CardLayout());
         int numPanes = FindByPanel.findMethods.length;
@@ -287,7 +287,7 @@ public class RegistryBrowser extends JFrame {
                 new JScrollPane(findInputPanels[i]));
             }
         }
-        
+
         //add findByPanel and findPanel to findSplitPane and add to browserSplitPane
         JSplitPane findSplitPane =
             new JSplitPane(JSplitPane.VERTICAL_SPLIT, findByPane, findPanel);
@@ -297,7 +297,7 @@ public class RegistryBrowser extends JFrame {
                 registryObjectsTablePane);
         browserSplitPane.setDividerLocation(200);
         browsePanel.add(browserSplitPane, "Center");
-        
+
         // set up the Submission panel
         submissionPanel = new SubmissionPanel();
         tabbedPane.add(submissionPanel);
@@ -325,7 +325,7 @@ public class RegistryBrowser extends JFrame {
             tabbedPane.setTitleAt(0, ResourceBundle.getBundle("BrowserStrings").getString("Browse"));
             tabbedPane.setTitleAt(1, ResourceBundle.getBundle("BrowserStrings").getString("Submissions"));
         } catch (ArrayIndexOutOfBoundsException e) {}
-        
+
         fileMenu.setText(ResourceBundle.getBundle("BrowserStrings").getString("File"));
         fileMenu.setActionCommand(ResourceBundle.getBundle("BrowserStrings").getString("File"));
         fileMenu.setMnemonic((int) 'F');
@@ -335,19 +335,19 @@ public class RegistryBrowser extends JFrame {
         exitItem.setMnemonic((int) 'X');
         fileMenu.add(exitItem);
         tabbedPane.setSelectedIndex(0);
-        
+
         //REGISTER_LISTENERS
         SymWindow   aSymWindow = new SymWindow();
-        
+
         this.addWindowListener(aSymWindow);
         SymAction   lSymAction = new SymAction();
-        
+
         openItem.addActionListener(lSymAction);
         saveItem.addActionListener(lSymAction);
         exitItem.addActionListener(lSymAction);
         aboutItem.addActionListener(lSymAction);
         searchButton.addActionListener(lSymAction);
-        
+
         SwingUtilities.updateComponentTreeUI(getContentPane());
         SwingUtilities.updateComponentTreeUI(menuBar);
         SwingUtilities.updateComponentTreeUI(submissionToolBar);
@@ -357,7 +357,7 @@ public class RegistryBrowser extends JFrame {
     public void connectToRegistry(String url) {
 	client.makeNewConnection(url);
     }
-    
+
     /**
      * Used to kick off a search as if the search button had
      * been pressed.
@@ -365,7 +365,7 @@ public class RegistryBrowser extends JFrame {
     void performSearch(ActionEvent ev) {
         searchButton.doClick();
     }
-    
+
     /**
      * Allows editing of a registry object for submission. Sets
      * tabbed pane to the Submission pane and fills out fields with
@@ -383,7 +383,7 @@ public class RegistryBrowser extends JFrame {
     SubmissionPanel getSubmissionPanel() {
         return submissionPanel;
     }
-    
+
     /**
      * Delete an object from the registry.
      */
@@ -401,7 +401,7 @@ public class RegistryBrowser extends JFrame {
             throw new JAXRException(ResourceBundle.getBundle("BrowserStrings").getString("Can_only_delete_Organizations."));
         }
     }
-    
+
     /*
      * Utility method for components that use
      * GridBagLayout.
@@ -421,14 +421,14 @@ public class RegistryBrowser extends JFrame {
     }
 
     /**
-     * Helper method to let browser subcomponents set a 
+     * Helper method to let browser subcomponents set a
      * wait cursor while performing long operations.
      */
     static void setWaitCursor() {
         defaultCursor = instance.getCursor();
         instance.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
-    
+
     /**
      * Helper method for browser subcomponents to set the
      * cursor back to its default version.
@@ -436,23 +436,23 @@ public class RegistryBrowser extends JFrame {
     static void setDefaultCursor() {
         instance.setCursor(defaultCursor);
     }
-    
+
     static void displayError(String message) {
 	JOptionPane.showMessageDialog(null, message, ResourceBundle.getBundle("BrowserStrings").getString("Error:"),
 				      JOptionPane.ERROR_MESSAGE);
     }
-    
+
     static void displayError(String message, Throwable t) {
 	JOptionPane.showMessageDialog(null, (message + "\n" + t),
 				      ResourceBundle.getBundle("BrowserStrings").getString("Error:"),
                                       JOptionPane.ERROR_MESSAGE);
     }
-    
+
     static void displayError(Throwable t) {
         JOptionPane.showMessageDialog(null, t.toString(), ResourceBundle.getBundle("BrowserStrings").getString("Exception:"),
             JOptionPane.ERROR_MESSAGE);
     }
-    
+
     /**
      * The entry point for this application.
      * Sets the Look and Feel to the System Look and Feel.
@@ -463,7 +463,15 @@ public class RegistryBrowser extends JFrame {
 	    if ((args.length == 1) && (args[0].equalsIgnoreCase("help"))) {
 		System.err.println(ResourceBundle.getBundle("BrowserStrings").getString("\nWith_no_firewall,_usage:_java_RegistryBrowser\nWith_firewall,_usage:_java_RegistryBrowser_proxyHost_proxyPort\nor:_java_RegistryBrowser_httpProxyHost_httpProxyPort_httpsProxyHost_httpsProxyPort\n"));
 		System.exit(0);
-	    }
+	    } else
+        if ((args.length == 1) && (args[0].equalsIgnoreCase("help_unix"))) {
+System.err.println(ResourceBundle.getBundle("BrowserStrings").getString("\n_script_unix:With_no_firewall,_usage:_java_RegistryBrowser\nWith_firewall,_usage:_java_RegistryBrowser_proxyHost_proxyPort\nor:_java_RegistryBrowser_httpProxyHost_httpProxyPort_httpsProxyHost_httpsProxyPort\n"));
+		System.exit(0);
+        } else
+        if ((args.length == 1) && (args[0].equalsIgnoreCase("help_windows"))) {
+System.err.println(ResourceBundle.getBundle("BrowserStrings").getString("\n_script_windows:With_no_firewall,_usage:_java_RegistryBrowser\nWith_firewall,_usage:_java_RegistryBrowser_proxyHost_proxyPort\nor:_java_RegistryBrowser_httpProxyHost_httpProxyPort_httpsProxyHost_httpsProxyPort\n"));
+		System.exit(0);
+        }
             RegistryBrowser browser = getInstance();
             // Fetch system properties for proxies.
             browser.client.httpProxyHost = System.getProperty("http.proxyHost");
@@ -487,14 +495,14 @@ public class RegistryBrowser extends JFrame {
 		browser.client.httpsProxyPort = args[3];
 		System.out.println(ResourceBundle.getBundle("BrowserStrings").getString("Browser_will_use_proxy_") + args[2] +
 				   ResourceBundle.getBundle("BrowserStrings").getString("_on_port_") + args[3] + ResourceBundle.getBundle("BrowserStrings").getString("_for_ssl"));
-	    }		
+	    }
 	    browser.setVisible(true);
         } catch (Throwable t) {
             System.err.println(t.getMessage());
             System.exit(1);
         }
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -505,16 +513,16 @@ public class RegistryBrowser extends JFrame {
      */
     void exitApplication(boolean doConfirm, int exitStatus) {
         boolean doExit = true;
-        
+
         if (doConfirm) {
             try {
-                
+
                 // Show a confirmation dialog
                 int reply = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("BrowserStrings").getString("Do_you_really_want_to_exit?"),
                 ResourceBundle.getBundle("BrowserStrings").getString("Registry_Browser"),
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
-                
+
                 // If the confirmation was affirmative, handle exiting.
                 if (reply == JOptionPane.YES_OPTION) {
                     this.setVisible(false);     // hide the Frame
@@ -525,13 +533,13 @@ public class RegistryBrowser extends JFrame {
                 }
             } catch (Exception e) {}
         }
-        
+
         if (doExit) {
             System.exit(exitStatus);
         }
-        
+
     }
-    
+
     /**
      * Class Declaration.
      *
@@ -542,7 +550,7 @@ public class RegistryBrowser extends JFrame {
      * @version   1.17, 03/29/00
      */
     class SymWindow extends WindowAdapter {
-        
+
         /**
          * Method Declaration.
          *
@@ -553,14 +561,14 @@ public class RegistryBrowser extends JFrame {
          */
         public void windowClosing(WindowEvent event) {
             Object  object = event.getSource();
-            
+
             if (object == RegistryBrowser.this) {
                 RegistryBrowser_windowClosing(event);
             }
         }
-        
+
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -570,11 +578,11 @@ public class RegistryBrowser extends JFrame {
      * @see
      */
     void RegistryBrowser_windowClosing(WindowEvent event) {
-        
+
         // to do: code goes here.
         RegistryBrowser_windowClosing_Interaction1(event);
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -588,7 +596,7 @@ public class RegistryBrowser extends JFrame {
             this.exitApplication(true, 0);
         } catch (Exception e) {}
     }
-    
+
     /**
      * Class Declaration.
      *
@@ -599,7 +607,7 @@ public class RegistryBrowser extends JFrame {
      * @version   1.17, 03/29/00
      */
     class SymAction implements ActionListener {
-        
+
         /**
          * Method Declaration.
          *
@@ -610,7 +618,7 @@ public class RegistryBrowser extends JFrame {
          */
         public void actionPerformed(ActionEvent event) {
             Object  object = event.getSource();
-            
+
             if (object == openItem) {
                 openItem_actionPerformed(event);
             } else if (object == saveItem) {
@@ -623,9 +631,9 @@ public class RegistryBrowser extends JFrame {
                 searchButton_actionPerformed(event);
             }
         }
-        
+
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -635,11 +643,11 @@ public class RegistryBrowser extends JFrame {
      * @see
      */
     void openItem_actionPerformed(ActionEvent event) {
-        
+
         // to do: code goes here.
         openItem_actionPerformed_Interaction1(event);
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -653,7 +661,7 @@ public class RegistryBrowser extends JFrame {
             openFileDialog.setVisible(true);
         } catch (Exception e) {}
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -663,11 +671,11 @@ public class RegistryBrowser extends JFrame {
      * @see
      */
     void saveItem_actionPerformed(ActionEvent event) {
-        
+
         // to do: code goes here.
         saveItem_actionPerformed_Interaction1(event);
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -681,7 +689,7 @@ public class RegistryBrowser extends JFrame {
             saveFileDialog.setVisible(true);
         } catch (Exception e) {}
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -691,11 +699,11 @@ public class RegistryBrowser extends JFrame {
      * @see
      */
     void exitItem_actionPerformed(ActionEvent event) {
-        
+
         // to do: code goes here.
         exitItem_actionPerformed_Interaction1(event);
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -709,7 +717,7 @@ public class RegistryBrowser extends JFrame {
             this.exitApplication(true, 0);
         } catch (Exception e) {}
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -719,11 +727,11 @@ public class RegistryBrowser extends JFrame {
      * @see
      */
     void aboutItem_actionPerformed(ActionEvent event) {
-        
+
         // to do: code goes here.
         aboutItem_actionPerformed_Interaction1(event);
     }
-    
+
     /**
      * Method Declaration.
      *
@@ -735,18 +743,18 @@ public class RegistryBrowser extends JFrame {
     void aboutItem_actionPerformed_Interaction1(ActionEvent event) {
 /* jimbog
         try {
- 
+
             // JAboutDialog Create with owner and show as modal
             {
                 JAboutDialog    JAboutDialog1 = new JAboutDialog(this);
- 
+
                 JAboutDialog1.setModal(true);
                 JAboutDialog1.show();
             }
         } catch (Exception e) {}
  */
     }
-    
+
     /**
      * Determine which search criteria was used and
      * call the proper method to update the table.
@@ -757,10 +765,10 @@ public class RegistryBrowser extends JFrame {
      */
     public void searchButton_actionPerformed(ActionEvent event) {
         int panelNumber = findByPanel.findByCombo.getSelectedIndex();
-        
+
         Cursor oldCursor = RegistryBrowser.this.getCursor();
         RegistryBrowser.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
+
         switch (panelNumber) {
             case 0: // search by name
                 searchButton_actionPerformed_Interaction2(event, panelNumber);
@@ -771,7 +779,7 @@ public class RegistryBrowser extends JFrame {
         }
         RegistryBrowser.this.setCursor(oldCursor);
     }
-    
+
     /**
      * This method updates the table based on the
      * concepts tree.
@@ -781,7 +789,7 @@ public class RegistryBrowser extends JFrame {
         ((RegistryObjectsTableModel)registryObjectsTable.getModel()).
         updateTableModelByClassifications(conceptsTree.getSelectionPaths());
     }
-    
+
     /**
      * This method updates the table based on a
      * search by name.

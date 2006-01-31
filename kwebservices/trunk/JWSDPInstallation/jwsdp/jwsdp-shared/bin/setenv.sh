@@ -13,8 +13,8 @@
 #  $Id: setenv.sh,v 1.9 2004/03/30 23:27:52 ofung Exp $
 # -----------------------------------------------------------------------------
 
-JAVA_HOME="C:\Programme\Java\j2sdk1.4.2_06"
-ANT_HOME="C:\programme\java\jwsdp-1.4\apache-ant"
-ANT_OPTS="-Djava.endorsed.dirs=C:\programme\java\jwsdp-1.4\jaxp\lib\endorsed"
-JWSDP_HOME="C:\programme\java\jwsdp-1.4"
-UNINSTALL_JAR_FILE="C:\programme\java\jwsdp-1.4\_uninst\uninstall.jar"
+JAVA_HOME="C:\Programme\Java\jdk1.5.0_01"
+ANT_HOME="C:\Programme\Java\jwsdp-2.0\apache-ant"
+ANT_OPTS="-Djava.endorsed.dirs=C:\Programme\Java\jwsdp-2.0\jaxp\lib\endorsed;C:\Programme\Java\jwsdp-2.0\jaxp\lib"
+JWSDP_HOME="C:\Programme\Java\jwsdp-2.0"
+UNINSTALL_JAR_FILE="C:\Programme\Java\jwsdp-2.0\_uninst\uninstall.jar"

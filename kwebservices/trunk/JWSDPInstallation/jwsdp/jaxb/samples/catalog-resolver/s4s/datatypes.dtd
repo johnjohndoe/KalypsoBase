@@ -1,6 +1,6 @@
 <!--
         DTD for XML Schemas: Part 2: Datatypes
-        $Id: datatypes.dtd,v 1.1.10.2 2004/04/02 22:43:17 ryans Exp $
+        $Id: datatypes.dtd,v 1.1 2005/04/15 20:06:25 kohsuke Exp $
         Note this DTD is NOT normative, or even definitive. - - the
         prose copy in the datatypes REC is the definitive version
         (which shouldn't differ from this one except for this comment

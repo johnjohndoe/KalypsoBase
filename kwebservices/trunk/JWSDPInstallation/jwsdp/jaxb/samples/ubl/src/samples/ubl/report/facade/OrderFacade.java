@@ -1,21 +1,37 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 package samples.ubl.report.facade;
 
 import java.text.DateFormat;
 
-import java.util.Calendar;
-import java.util.ListIterator;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
+import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.oasis.ubl.commonaggregatetypes.BuyerPartyType;
-import org.oasis.ubl.commonaggregatetypes.PartyNameType;
-import org.oasis.ubl.commonaggregatetypes.SellerPartyType;
+import org.oasis.ubl.commonaggregatecomponents.BuyerPartyType;
+import org.oasis.ubl.commonaggregatecomponents.PartyNameType;
+import org.oasis.ubl.commonaggregatecomponents.SellerPartyType;
+import org.oasis.ubl.commonbasiccomponents.NameType;
 
-import org.oasis.ubl.order.Order;
+import org.oasis.ubl.order.OrderType;
 
 /**
  * The <code>OrderFacade</code> class provides a set of read-only methhods for
@@ -26,14 +42,14 @@ import org.oasis.ubl.order.Order;
  */
 public class OrderFacade {
 
-    Order order = null;
+    OrderType order = null;
 
     /**
      * Creates a new <code>OrderFacade</code> instance.
      *
      * @param order an <code>Order</code> value
      */
-    public OrderFacade(Order order) {
+    public OrderFacade(OrderType order) {
         this.order = order;
     }
 
@@ -42,17 +58,11 @@ public class OrderFacade {
      * with this order.
      *
      * @return a <code>String</code> value representing the name of a person
-     * familiar with <code>Order</code>
+     * familiar with <code>OrderType</code>
      */
     public String getBuyerContact() {
         BuyerPartyType party = order.getBuyerParty();
-        if (party != null) {
-            if (party.getBuyerContact() != null) {
-                return party.getBuyerContact().getName() != null
-                    ? party.getBuyerContact().getName().getValue() : null;
-            }
-        }
-        return "";             
+        return ((NameType) party.getParty().getPartyName().getName().get(0)).getValue();
     }
 
     /**
@@ -63,36 +73,9 @@ public class OrderFacade {
      * placing this order
      */
     public String getBuyerName() {
-        PartyNameType party = getBuyerParty(order.getBuyerParty());
-        if (party != null) {
-            return party.getName() != null
-                ? party.getName().getValue() : null;
-        }
-        return "";             
-    }
-
-    /**
-     * Returns the first <code>PartyNameType</code> in list order contained by
-     * the <code>BuyerPartyType</code> representing the entity placing this
-     * order.
-     *
-     * @param buyer a <code>BuyerPartyType</code> representing the entity
-     * placing this order
-     * @return a <code>PartyNameType</code> value representing the name of the
-     * entity placing this order
-     */
-    private PartyNameType getBuyerParty(BuyerPartyType buyer) {
-        if (buyer.getPartyName() != null) {
-            ListIterator iter = buyer.getPartyName().listIterator();
-            while (iter.hasNext()) {
-                Object obj = iter.next();
-                if (obj instanceof PartyNameType) {
-                    return (PartyNameType) obj;
-                }
-            }
-        }
-        return null;            
-    }
+        BuyerPartyType party = order.getBuyerParty();
+        return ((NameType) party.getParty().getPartyName().getName().get(0)).getValue();
+     }
 
     /**
      * Returns the first <code>AddressFacade</code> in list order contained by
@@ -103,12 +86,7 @@ public class OrderFacade {
      * the entity placing this order
      */
     public AddressFacade getBuyerAddress() {
-        AddressFacade addr = null;
-        try {
-            addr = AddressFacade.getFirstAddress(order.getBuyerParty().getAddress());
-        } catch (NullPointerException npe) {
-        }
-        return addr;
+        return new AddressFacade(order.getBuyerParty().getParty().getAddress());
     }
 
 
@@ -120,12 +98,8 @@ public class OrderFacade {
      * fulfilling this order
      */
     public String getSellerName() {
-        PartyNameType party = getSellerParty(order.getSellerParty());
-        if (party != null) {
-            return party.getName() != null
-                ? party.getName().getValue() : null;
-        }
-        return null;             
+        SellerPartyType party = order.getSellerParty();
+        return ((NameType) party.getParty().getPartyName().getName().get(0)).getValue();
     }
 
 
@@ -140,16 +114,7 @@ public class OrderFacade {
      * entity fulfilling this order
      */
     private PartyNameType getSellerParty(SellerPartyType seller) {
-        if (seller.getPartyName() != null) {
-            ListIterator iter = seller.getPartyName().listIterator();
-            while (iter.hasNext()) {
-                Object obj = iter.next();
-                if (obj instanceof PartyNameType) {
-                    return (PartyNameType) obj;
-                }
-            }
-        }
-        return null;            
+        return seller.getParty().getPartyName();
     }
 
     /**
@@ -161,36 +126,31 @@ public class OrderFacade {
      * entity fulfilling this order
      */
     public AddressFacade getSellerAddress() {
-        AddressFacade result = null;
-        try {
-            result= AddressFacade.getFirstAddress(order.getSellerParty().getAddress());
-        } catch (NullPointerException npe) {
-        }
-        return result;
+        return new AddressFacade(order.getSellerParty().getParty().getAddress());
     }
 
     /**
-     * Returns an UBL <code>Order</code> issue date in the <code>LONG</code>
+     * Returns an UBL <code>OrderType</code> issue date in the <code>LONG</code>
      * format as defined by <code>java.text.DateFormat</code>.
      *
      * @return a <code>String</code> value representing the issue date of this
-     * UBL <code>Order</code>
+     * UBL <code>OrderType</code>
      */
     public String getLongDate() {
         DateFormat form = DateFormat.getDateInstance(DateFormat.LONG);
-        Calendar cal = getCalendar();
+        GregorianCalendar cal = getCalendar().toGregorianCalendar();
         form.setTimeZone(cal.getTimeZone());
         return form.format(cal.getTime());
     }
 
     /**
      * Returns a <code>Calendar</code> representing the issue date of this UBL
-     * <code>Order</code>.
+     * <code>OrderType</code>.
      *
      * @return a <code>Calendar</code> representing the issue date of this UBL order
      */
-    private Calendar getCalendar() {
-        Calendar date = null;
+    private XMLGregorianCalendar getCalendar() {
+        XMLGregorianCalendar date = null;
         return order.getIssueDate() != null
             ? order.getIssueDate().getValue()
             : date;

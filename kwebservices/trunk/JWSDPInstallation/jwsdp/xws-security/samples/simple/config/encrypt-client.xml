@@ -5,10 +5,22 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<!-- Basic encrypt sample-->
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Encrypt receiverCertificateAlias="s1as"/>
-</xwss:SecurityConfiguration>
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!--
+              Since no targets have been specified below, the contents of
+              the soap body would be encrypted by default.
+            -->
+            <xwss:Encrypt>
+                <xwss:X509Token certificateAlias="s1as"/>
+            </xwss:Encrypt>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

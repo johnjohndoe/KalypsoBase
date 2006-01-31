@@ -13,7 +13,7 @@ rem Environment Variable Prequisites
 rem
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
 rem
-rem $Id: jwsdpontomcat.bat,v 1.2 2004/03/30 23:28:01 ofung Exp $
+rem $Id: jwsdpontomcat.bat,v 1.4 2005/06/02 09:41:01 rameshm Exp $
 rem ---------------------------------------------------------------------------
 
 rem Get standard environment variables
@@ -67,7 +67,7 @@ goto setArgs
 
 rem Execute the Launcher using the "ant" target by giving jwsdpontomcat.xml
 rem as build file
-"%JAVA_HOME%\bin\java.exe" -classpath "%JWSDP_HOME%\jwsdp-shared\bin;%JWSDP_HOME%\jwsdp-shared\bin\commons-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant.jar;%JWSDP_HOME%\apache-ant\lib\optional.jar;%JWSDP_HOME%\jaxp\lib\jaxp-api.jar;%JWSDP_HOME%\jaxp\lib\endorsed\sax.jar;%JWSDP_HOME%\jaxp\lib\endorsed\dom.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xercesImpl.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xalan.jar" LauncherBootstrap -verbose ant -buildfile "%JWSDP_HOME%\jwsdp-shared\bin\jwsdpontomcat.xml"  -Dcatalina.home="%CATALINA_HOME%" %CMD_LINE_ARGS%
+"%JAVA_HOME%\bin\java.exe" -Djava.endorsed.dirs="%JWSDP_HOME%\jaxp\lib;%JWSDP_HOME%\jaxp\lib\endorsed" -classpath "%JWSDP_HOME%\jwsdp-shared\bin;%JWSDP_HOME%\jwsdp-shared\bin\commons-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant.jar;%JWSDP_HOME%\apache-ant\lib\ant-launcher.jar;%JWSDP_HOME%\apache-ant\lib\ant-nodeps.jar;%JWSDP_HOME%\jaxp\lib\jaxp-api.jar;%JWSDP_HOME%\jaxp\lib\endorsed\sax.jar;%JWSDP_HOME%\jaxp\lib\endorsed\dom.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xercesImpl.jar;%JWSDP_HOME%\jaxp\lib\endorsed\xalan.jar" LauncherBootstrap -verbose ant -buildfile "%JWSDP_HOME%\jwsdp-shared\bin\jwsdpontomcat.xml"  -Dcatalina.home="%CATALINA_HOME%" %CMD_LINE_ARGS%
 
 
 :end

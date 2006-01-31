@@ -1,11 +1,27 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 import java.util.Enumeration;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
@@ -17,7 +33,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.NamespaceSupport;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-import primer.PurchaseOrder;
+import primer.PurchaseOrderType;
 
 /*
  * @(#)$Id$
@@ -127,10 +143,11 @@ public class Splitter extends XMLFilterImpl {
                 
                 // then retrieve the fully unmarshalled object
                 try {
-                    PurchaseOrder result = (PurchaseOrder)unmarshallerHandler.getResult();
+                    JAXBElement<PurchaseOrderType> result = 
+			(JAXBElement<PurchaseOrderType>)unmarshallerHandler.getResult();
                     
                     // process this new purchase order
-                    process(result);
+                    process(result.getValue());
                 } catch( JAXBException je ) {
                     // error was found during the unmarshalling.
                     // you can either abort the processing by throwing a SAXException,
@@ -145,7 +162,7 @@ public class Splitter extends XMLFilterImpl {
         }
     }
     
-    public void process( PurchaseOrder order ) {
+    public void process( PurchaseOrderType order ) {
         System.out.println("this order will be shipped to "
             + order.getShipTo().getName() );
     }

@@ -18,10 +18,12 @@
   <path id="classpath">
     <pathelement path="src" />
     <pathelement path="classes" />
+    <pathelement path="schemas" />
     <!--for use with bundled ant-->
     <fileset dir="${jwsdp.home}" includes="jaxb/lib/*.jar" />
-    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/*.jar" />
-    <fileset dir="${jwsdp.home}" includes="jaxp/lib/**/*.jar" />
+    <fileset dir="${jwsdp.home}" includes="sjsxp/lib/*.jar" />
+    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/activation.jar" />
+    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/resolver.jar" />
   </path>
   <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
     <classpath refid="classpath" />
@@ -31,7 +33,7 @@
   <target name="compile" description="Compile all Java source files">
     <echo message="Compiling the schema..." />
     <mkdir dir="gen-src" />
-    <xjc schema="po.xsd" package="primer.po" target="gen-src">
+    <xjc schema="po.xsd" package="primer.po" destdir="gen-src">
       <produces dir="gen-src/primer.po" includes="**/*.java" />
     </xjc>
     <echo message="Compiling the java source files..." />
@@ -41,12 +43,6 @@
       <src path="gen-src" />
       <classpath refid="classpath" />
     </javac>
-    <copy todir="classes">
-      <fileset dir="gen-src">
-        <include name="**/*.properties" />
-        <include name="**/bgm.ser" />
-      </fileset>
-    </copy>
   </target>
 
   <target name="run" depends="compile" description="Run the sample app">
@@ -67,6 +63,7 @@
   <target name="clean" description="Deletes all the generated artifacts.">
     <delete dir="docs/api" />
     <delete dir="gen-src" />
+    <delete dir="schemas" />
     <delete dir="classes" />
   </target>
 </project>

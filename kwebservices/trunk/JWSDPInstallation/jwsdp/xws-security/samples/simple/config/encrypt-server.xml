@@ -5,8 +5,20 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Encrypt receiverCertificateAlias="xws-security-client"/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!--
+              Encryption requirement. As no target is specified, the contents
+              of the soap body of the request are expected to be encrypted. 
+            -->
+            <xwss:RequireEncryption/>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

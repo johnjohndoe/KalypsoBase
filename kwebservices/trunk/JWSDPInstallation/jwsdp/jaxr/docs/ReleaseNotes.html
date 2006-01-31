@@ -8,17 +8,17 @@
 <center>
 <h1>
 <font color="#000099">Java<sup><font size="-2">TM</font></sup> API for XML 
-Registries (JAXR) 1.0.6<br>
+Registries (JAXR) 1.0.8_01 EA<br>
 Release Notes</font>
 </h1>
 <b>Specification Version:</b> 1.0<br>
-<b>Reference Implementation (RI) Version:</b> 1.0.6
+<b>Reference Implementation (RI) Version:</b> 1.0.8_01 EA
 </center>
 
 <p>For an updated, online version of these release notes, see 
-<a href="http://java.sun.com/webservices/docs/1.4/jaxr/ReleaseNotes.html">Release Notes</a>.</p>
+<a href="http://java.sun.com/webservices/docs/2.0/jaxr/ReleaseNotes.html">Release Notes</a>.</p>
 
-<p>Revised: 05/13/2004</p>
+<p>Revised: 11/29/05</p>
 
 <h3>Contents</h3>
 
@@ -34,9 +34,6 @@ Release Notes</font>
 </li>
 <li>
 <a href="#limitations">Current Limitations</a>
-</li>
-<li>
-<a href="#fixed">Fixed Bug</a>
 </li>
 <li>
 <a href="#bugs">Known Issues</a>
@@ -61,7 +58,7 @@ and the <a href="index.html">JAXR home page</a>.
 This release includes
 </p>
 <ul>
-<li>The JAXR 1.0.6 Reference Implementation (RI)
+<li>The JAXR 1.0.8_01 EA Reference Implementation (RI)
 </li>
 <li>API documentation
 </li>
@@ -271,7 +268,7 @@ These properties may also be set with the <code>-D</code> option on the
 
 <a name="limitations"><h3>Current Limitations</h3></a>
 <p>
-The 1.0.6 release of the JAXR RI has the following limitations:
+The 1.0.8_01 EA release of the JAXR RI has the following limitations:
 </p>
 <ul>
 <p>
@@ -286,7 +283,7 @@ specification.
 <li>
 It supports access to UDDI registries but not to ebXML registries.  More
 specifically, it supports access to Version 2 UDDI registries but not to 
-Version 1 UDDI registries.
+Version 1 UDDI registries. 
 </li>
 </p>
 <p>
@@ -302,42 +299,32 @@ a Java Naming and Directory Interface<sup><font size="-2">TM</font></sup>
 (JNDI) API namespace.
 </li>
 </p>
-</ul>
-<a name="fixed"><h3>Fixed Bug</h3></a>
-The following bug in release 1.0.5 of the JAXR RI is fixed in release 1.0.6:
-<ul>
+<p>
 <li>
-5021488: JAXR was incorrectly parsing service names returned by the Microsoft registry.
+It allows a <code>SpecificationLink</code> object to have no more than one 
+usage parameter, which must be no more than 255 characters in length. 
+(See Section D.6.3.1 of the JAXR Specification.)
 </li>
+</p>
 </ul>
 
 <a name="bugs"><h3>Known Issues</h3></a>
 <p>
-At this release, the JAXR RI has the following known issues:
-</p>
+At this release, the JAXR RI has the following known issue:</p>
 <ul>
-<p>
-<li>
-Any attempt to publish to the IBM V2 test registry fails with a 
-<code>javax.xml.registry.SaveException</code> and an <code>E_fatalError</code> 
-report. Most queries also fail in various ways. The registry refuses 
-to accept names or descriptions with the valid <code>xml:lang</code> attribute 
-set. (Bug 5015233)
-</li>
-</p>
-<p>
-<li>Because the Java WSDP Registry Server does not support the 
-<code>find_relatedBusinesses</code> request message at this release, 
-use of the JAXR API <code>findAssociations</code> method will fail with 
-the Registry Server.  For details, see the 
-<a href="../../registry-server/docs/ReleaseNotes.html">Java WSDP Registry Server 
-Release Notes</a>.
-</li>
-</p>
+<li><p>If you publish an organization from a system whose locale setting 
+includes a country code (for example, a locale of <code>en_US</code>), its name 
+and description (and those of its services and service bindings) will not be 
+retrievable from a system whose locale setting does not include a country code 
+(for example, a locale of <code>en</code>). (Bug 6347992)</p>
+
+<p>Workaround: Make sure the locale settings are the same on all systems that 
+you use to query or publish.</p></li>
 </ul>
+
 <hr>
 <p><A href="../../docs/Copyright.html"><FONT 
-  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  size="-1"><I>Copyright &copy; 2005 Sun Microsystems, Inc. All rights 
   reserved.</I></FONT></A> </P>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
 <TITLE>
-        JAXB RI 1.0.3 -- Changelog
+        JAXB RI 1.0.x -- Changelog
     </TITLE>
     
 <META content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
@@ -19,22 +19,35 @@
 <CENTER>
     
 <H1>Java<SUP><FONT size="-2">TM</FONT></SUP> Architecture for XML Binding<BR>
-      CHANGELOG
+      1.0.x CHANGELOG
     </H1>
-      
-<B>Specification Version:</B> 1.0<BR>
-      
-<B>Reference Implementation (RI) Version:</B> 1.0.3<BR>
       <!--
- Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ The contents of this file are subject to the terms
+ of the Common Development and Distribution License
+ (the "License").  You may not use this file except
+ in compliance with the License.
+ 
+ You can obtain a copy of the license at
+ https://jwsdp.dev.java.net/CDDLv1.0.html
+ See the License for the specific language governing
+ permissions and limitations under the License.
+ 
+ When distributing Covered Code, include this CDDL
+ HEADER in each file and include the License file at
+ https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ add the following below this CDDL HEADER, with the
+ fields enclosed by brackets "[]" replaced with your
+ own identifying information: Portions Copyright [yyyy]
+ [name of copyright owner]
 -->
 <hr width="50%">
-  Main: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="ant.html">Ant task</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog.html">Changelog</a>
+  JAXB 2.0: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="xjcTask.html">XJCTask</a> | <a href="schemagen.html">SchemaGen</a> | <a href="schemagenTask.html">schemagenTask</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog2.html">Changelog</a>
 <br>
-  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a>
+  JAXB 1.0.x: <a href="jaxb-1_0.html">Release Notes</a> | <a href="changelog.html">Changelog</a>
 <br>
-  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="relaxng.html">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
+  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a> | <a href="developPlugins.html">Develop Plugins</a>
+<br>
+  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="vendorSchemaLangs.html#relaxng">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
 <br>
   JAXB Community: <a href="http://jaxb.dev.java.net">Java.net Homepage</a> | <a href="https://jaxb.dev.java.net/servlets/ProjectMailingListList">Developer interest list</a> | <a href="https://jaxb.dev.java.net/faq/index.html">FAQ</a>
 <br>
@@ -42,6 +55,77 @@
 <hr width="50%">
     
 </CENTER>
+
+    
+<P>Please refer to the <A href="changelog2.html">JAXB 2.0.x changelog</A> for the most recent changes.</P>
+    
+    
+<A name="diffs-to-1.0.4"></A>
+    
+<H2>Changes between 1.0.3 FCS and 1.0.4 FCS </H2>
+      
+<P>The following list summarizes significant changes made to the JAXB Reference Implementation
+         since the JAXB version 1.0.3 FCS release.
+      </P>
+
+      
+<UL>
+        
+<LI>Bug Fixes
+          <UL>
+            
+<LI>IssueTracker:
+              <UL>
+                
+<LI>
+<A href="https://jaxb.dev.java.net/issues/show_bug.cgi?id=15">15 - can't parse W3 SOAP 2003-05 envelope XML schema: "xml:lang"</A>
+</LI>
+                
+<LI>
+<A href="https://jaxb.dev.java.net/issues/show_bug.cgi?id=18">18 - Performance Improvement in NamespaceContextImpl.java</A>
+</LI>
+                
+<LI>
+<A href="https://jaxb.dev.java.net/issues/show_bug.cgi?id=19">19 - Performance Improvement in NamespaceContextImpl.java</A>
+</LI>
+                
+<LI>
+<A href="https://jaxb.dev.java.net/issues/show_bug.cgi?id=24">24 - XJC doesn't work with directories with spaces in them</A>
+</LI>
+                
+<LI>
+<A href="https://jaxb.dev.java.net/issues/show_bug.cgi?id=28">28 - ValidatorImpl does not initialize DatatypeConverter</A>
+</LI>
+              
+</UL>
+            
+</LI>
+            
+<LI>fixed an NPE that affected Acord and UBL 1.0 schemas</LI>
+            
+<LI>found and fixed a StackOverflowError in XJC</LI>
+            
+<LI>xjc handles non-existant ouput directories more gracefully</LI>
+            
+<LI>found and removed some dependencies on jdk1.4</LI>
+            
+<LI>fixed a bug in the entity resolver handling</LI>
+          
+</UL>
+        
+</LI>
+
+        
+<LI>Other
+          <UL>
+            
+<LI>updated UBL sample app to UBL 1.0 schema (Visit the <A href="https://jwsdp.dev.java.net/ubl/index.html">UBL interest</A> page for more information).</LI>
+          
+</UL>
+        
+</LI>
+      
+</UL>
 
     
 <A name="diffs-to-1.0.3"></A>
@@ -391,11 +475,11 @@
             give more descriptive names - see the <A href="samples.html#samples">Sample Apps page</A>
             for more information.</LI>
         
-<LI>Improved <A href="ant.html">XJC Ant Task</A> support.</LI>
+<LI>Improved <A href="xjcTask.html">XJC Ant Task</A> support.</LI>
         
 <LI>
 <TT>javax.xml.namespace.QName</TT> has been updated.  See the 
-            <A href="../../docs/api/javax/xml/namespace/QName.html">QName javadocs</A>
+            <A href="java.sun.com/webservices/docs/1.5/api/javax/xml/namespace/QName.html">QName javadocs</A>
 </LI>
       
 </OL>

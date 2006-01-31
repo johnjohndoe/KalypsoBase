@@ -12,9 +12,8 @@
     <pathelement location="${jwsdp.home}/jaxp/lib/jaxp-api.jar"/>
     <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/dom.jar"/>
     <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/xercesImpl.jar"/>
-    <pathelement location="${jwsdp.home}/xws-security/lib/xmlsec.jar"/>
+    <pathelement location="${jwsdp.home}/jwsdp-shared/lib/xmlsec.jar"/>
     <pathelement location="${jwsdp.home}/jaxp/lib/endorsed/xalan.jar"/>
-    <pathelement location="${jwsdp.home}/jwsdp-shared/lib/commons-logging.jar"/>
   </path>
 
   <!-- Compile the example program -->
@@ -37,7 +36,7 @@
     <property name="sample.args" value="envelopingSignature.xml"/>
     <echo>java GenEnveloping ${sample.args}</echo>
     <java classname="GenEnveloping" fork="true">
-      <jvmarg value="-Djava.endorsed.dirs=${jwsdp.home}/jaxp/lib/endorsed/"/>
+      <jvmarg value="-Djava.endorsed.dirs=${jwsdp.home}/jaxp/lib/endorsed:${jwsdp.home}/jaxp/lib"/>
       <sysproperty key="jsr105Provider" value="${jsr105Provider}"/>
       <arg value="${sample.args}"/>
       <classpath refid="project-classpath"/>

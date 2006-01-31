@@ -5,10 +5,17 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Encrypt keyReferenceType="IssuerSerialNumber" 
-                  receiverCertificateAlias="xws-security-client"/>
-    <xwss:Sign/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <xwss:RequireSignature/>
+            <xwss:RequireEncryption/>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

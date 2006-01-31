@@ -1,8 +1,7 @@
-com.sun.xml.rpc.security
 com.sun.xml.wss
-com.sun.xml.wss.configuration
-com.sun.xml.wss.filter
-com.sun.xml.wss.helpers
-com.sun.xml.wss.impl
-com.sun.xml.wss.keyinfo
-com.sun.xml.wss.reference
+com.sun.xml.wss.impl.callback
+com.sun.xml.wss.impl.configuration
+com.sun.xml.wss.impl.policy
+com.sun.xml.wss.impl.policy.mls
+com.sun.xml.wss.saml
+com.sun.xml.xwss

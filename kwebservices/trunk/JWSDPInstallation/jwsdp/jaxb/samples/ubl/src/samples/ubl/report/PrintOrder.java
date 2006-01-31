@@ -1,6 +1,21 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 package samples.ubl.report;
@@ -14,14 +29,12 @@ import java.io.IOException;
 
 import java.text.NumberFormat;
 
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.oasis.ubl.commonaggregatetypes.OrderLineType;
-import org.oasis.ubl.order.Order;
+import org.oasis.ubl.order.OrderType;
 
 /*
  * $Id$
@@ -53,14 +66,14 @@ public class PrintOrder {
         try {
             JAXBContext jc =
                 JAXBContext.newInstance("org.oasis.ubl.order:"
-                                        + "org.oasis.ubl.commonaggregatetypes");
+                                        + "org.oasis.ubl.commonaggregatecomponents");
             Unmarshaller u = jc.createUnmarshaller();
-            Order order =
-                (Order) u.unmarshal(new
-                                    FileInputStream("0p70/xml/"
-                                                    + "OfficeSupplyOrder"
-                                                    + "Instance.xml"));
+            JAXBElement orderElement =
+                (JAXBElement)u.unmarshal(new
+                                    FileInputStream("cd-UBL-1.0/xml/office/"
+                                                    + "UBL-Order-1.0-Office-Example.xml"));
 
+	    OrderType order = (OrderType)orderElement.getValue(); 
             OrderFacade of = new OrderFacade(order);
 
             printLetterHead(of);
@@ -144,6 +157,7 @@ public class PrintOrder {
             double subtotal = qty * price;
             total += subtotal;
 
+	    form.setCurrency(lineItem.getItemPriceCurrency());
             System.out.println("\n"
                                + (i + 1)
                                + ". Part No.: "

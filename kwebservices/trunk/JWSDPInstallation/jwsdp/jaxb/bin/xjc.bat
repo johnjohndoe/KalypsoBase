@@ -1,53 +1,51 @@
 @echo off
 
 REM
-REM Copyright 2004 Sun Microsystems, Inc. All rights reserved.
-REM SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+REM The contents of this file are subject to the terms
+REM of the Common Development and Distribution License
+REM (the "License").  You may not use this file except
+REM in compliance with the License.
+REM 
+REM You can obtain a copy of the license at
+REM https://jwsdp.dev.java.net/CDDLv1.0.html
+REM See the License for the specific language governing
+REM permissions and limitations under the License.
+REM 
+REM When distributing Covered Code, include this CDDL
+REM HEADER in each file and include the License file at
+REM https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+REM add the following below this CDDL HEADER, with the
+REM fields enclosed by brackets "[]" replaced with your
+REM own identifying information: Portions Copyright [yyyy]
+REM [name of copyright owner]
 REM
 
-if "%OS%" == "Windows_NT" setlocal
-rem ---------------------------------------------------------------------------
-rem Script for launching xjc usng the Launcher
 rem
-rem Environment Variable Prequisites
+rem Make sure that JAXB_HOME and JAVA_HOME are set
 rem
-rem   JAVA_HOME       Must point at your Java Development Kit installation.
-rem
-rem $Id: xjc.bat,v 1.11 2004/05/14 19:10:58 kk122374 Exp $
-rem ---------------------------------------------------------------------------
+if not "%JAXB_HOME%" == "" goto CHECKJAVAHOME
 
-rem Get standard environment variables
-set PRG=%0
-if exist %PRG%\..\..\..\jwsdp-shared\bin\setenv.bat goto gotCmdPath
-rem %0 must have been found by DOS using the %PATH% so we assume that setenv.bat
-rem will also be found in the %PATH%
-call setenv.bat
-goto doneSetenv
-:gotCmdPath
-call %PRG%\..\..\..\jwsdp-shared\bin\setenv.bat
-:doneSetenv
+rem Try to locate JAXB_HOME
+set JAXB_HOME=%~dp0
+set JAXB_HOME=%JAXB_HOME%\..
+if exist %JAXB_HOME%\lib\jaxb-xjc.jar goto CHECKJAVAHOME
 
-rem Set JAXB_HOME variable
-set JAXB_HOME="%PRG%"\..\jaxb
+rem Unable to find it
+echo JAXB_HOME must be set before running this script
+goto END
 
-rem Make sure prerequisite environment variables are set
-if not "%JAVA_HOME%" == "" goto gotJavaHome
-echo The JAVA_HOME environment variable is not defined.
-echo This environment variable is needed to run this program.
-goto end
-:gotJavaHome
+:CHECKJAVAHOME
+if not "%JAVA_HOME%" == "" goto USE_JAVA_HOME
 
-rem Capture options
-rem ===============
-set xOpts=
-:addOption
-if ""%1x""==""x"" goto endOptions
-set xOpts=%xOpts% %1
-shift
-goto addOption
-:endOptions
+set JAVA=java
+goto LAUNCHXJC
 
-rem  Execute the Launcher using the "xjc" target
-"%JAVA_HOME%\bin\java.exe" -classpath "%PRG%";%PRG%\..;"%PRG%"\..\..\..\jwsdp-shared\bin;"%PATH%" LauncherBootstrap -verbose xjc  -DJAXB_HOME="%JAXB_HOME%" -DJAVA_HOME="%JAVA_HOME%" %xOpts%
+:USE_JAVA_HOME
+set JAVA="%JAVA_HOME%\bin\java"
+goto LAUNCHXJC
 
-:end
+:LAUNCHXJC
+%JAVA% %XJC_OPTS% -jar %JAXB_HOME%\lib\jaxb-xjc.jar %*
+
+:END
+%COMSPEC% /C exit %ERRORLEVEL%

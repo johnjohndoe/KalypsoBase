@@ -10,12 +10,12 @@ jwsdp.home -> Pointer to the location where you have installed jwsdp
 1.4. Note you do not need to set this property if you are using the
 version of ant that was part of jwsdp 1.4.
 
-build.dir -> The directory where you want the classes to be compiled into.
+build.dir -> The directory where you want the generated sources and the 
+compiled classes to be in.
 
 dist.dir -> The directory where you want the jar distribution to be
 placed to be able to use it.
 
-src.dir -> the location where the sources are placed.
 
 configfile -> Configuration needed for building the web service
 client. This file generally has the location to the wsdl and also the
@@ -58,7 +58,8 @@ proxy.port -> Port of the proxy server to use.
 
   <!-- This target does the initialization - creating directories etc -->
   <target name="init">
-    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dir}/src"/>
+    <mkdir dir="${build.dir}/classes"/>
     <mkdir dir="${dist.dir}"/>
   </target>
 
@@ -67,8 +68,8 @@ proxy.port -> Port of the proxy server to use.
 
     <wscompile keep="true" 
     	       client="true"
-	       base="${build.dir}"
-	       sourceBase="${src.dir}"
+	       base="${build.dir}/classes"
+	       sourceBase="${build.dir}/src"
                httpproxy="${proxy.host}:${proxy.port}"
 	       config="${configfile}">
 	       <classpath refid="build.classpath"/>
@@ -76,21 +77,17 @@ proxy.port -> Port of the proxy server to use.
 
   </target>
 
-  <!-- This target compiles all the classes in the specified src dir -->
   <target name="build" depends="runWscompile">
-    <mkdir dir="${build.dir}/classes"/>
-    <javac srcdir="${src.dir}" destdir="${build.dir}/classes"
-    classpathref="build.classpath"/>
   </target>
 
   <!-- This target creates the jar files for the client -->
   <target name="jars" depends="build">
-    <jar jarfile="${build.dir}/${jarname}" basedir="${build.dir}/classes"/>
+    <jar jarfile="${build.dir}/${jarname}.jar" basedir="${build.dir}/classes"/>
   </target>
 
   <!-- This target creates a distribution that can be used --> 
   <target name="dist" depends="jars">
-    <copy todir="${dist.dir}/lib" file="${build.dir}/${jarname}"/>
+    <copy todir="${dist.dir}/lib" file="${build.dir}/${jarname}.jar"/>
   </target>
 
   <!-- This target runs the web service client -->

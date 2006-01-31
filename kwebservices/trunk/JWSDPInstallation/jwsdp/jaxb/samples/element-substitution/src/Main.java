@@ -1,12 +1,29 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -40,42 +57,47 @@ public class Main {
             
             // unmarshal a po instance document into a tree of Java content
             // objects composed of classes from the primer.po package.
-            Folder folder = 
-                (Folder)u.unmarshal( new FileInputStream( "folder.xml" ) );
+	    Object folderE = u.unmarshal( new FileInputStream( "folder.xml" ) );
+
+	    // get XML content.
+	    // normalize that unmarshal returns either JAXBElement OR 
+	    // class annotated with @XmlRootElement.
+	    Folder folder = (Folder)(folderE instanceof JAXBElement ?
+				     ((JAXBElement)folderE).getValue() :
+				     folderE);
+
+	    JAXBIntrospector inspect = jc.createJAXBIntrospector();
+	    System.out.println("Unmarshalled xml element tag is:" + inspect.getElementName(folderE));
 
             System.out.println("Processing headers...");
             ObjectFactory of = new ObjectFactory();
-	    java.util.Iterator iter = folder.getDocument().listIterator();
-	    while (iter.hasNext()) {
-		Document doc = (Document)iter.next();
-		Header hdr = doc.getHeaderE();
-		if (hdr instanceof OrderHeaderE) {
-	           OrderHeaderE ohe= (OrderHeaderE)hdr;
+	    for( JAXBElement<? extends Header> hdrE : folder.getHeaderE()) {
+		Header hdr = hdrE.getValue();
+		if (hdr instanceof OrderHeader) {
+	           OrderHeader oh= (OrderHeader)hdr;
 	           System.out.println("OrderHeader info:" + 
-				      ohe.getOrderInfo());
-                } else if (hdr instanceof InvoiceHeaderE) {
-	           InvoiceHeaderE ihe= (InvoiceHeaderE)hdr;
+				      oh.getOrderInfo());
+                } else if (hdr instanceof InvoiceHeader) {
+	           InvoiceHeader ih = (InvoiceHeader)hdr;
 	           System.out.println("InvoiceHeader info:" + 
-				      ihe.getInvoiceInfo());
-	           OrderHeaderE ohe=of.createOrderHeaderE();
-		   ohe.setOrderInfo("OVERRIDE: used to be a invoice header");
-	           ohe.setGeneralComment("No");
-	           doc.setHeaderE(ohe);
-                } else if (hdr instanceof BidHeaderE ) {
-	           BidHeaderE bhe= (BidHeaderE)hdr;
+				      ih.getInvoiceInfo());
+                } else if (hdr instanceof BidHeader ) {
+	           BidHeader bh= (BidHeader)hdr;
 	           System.out.println("BidHeader info:" + 
-				      bhe.getBidInfo());
-	           OrderHeaderE ohe=of.createOrderHeaderE();
-		   ohe.setOrderInfo("OVERRIDE: used to be a bid header");
-	           ohe.setGeneralComment("No");
-	           doc.setHeaderE(ohe);
+				      bh.getBidInfo());
                 }
             }
+
+	    InvoiceHeader ih = of.createInvoiceHeader();
+	    ih.setGeneralComment("New Comment");
+	    ih.setInvoiceInfo("New Invoice Info");
+	    JAXBElement newHdr = of.createInvoiceHeaderE(ih);
+	    folder.getHeaderE().add(newHdr);
 
             // create a Marshaller and marshal to a file
             Marshaller m = jc.createMarshaller();
             m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-            m.marshal( folder, System.out );
+            m.marshal( folderE, System.out );
             
         } catch( JAXBException je ) {
             je.printStackTrace();

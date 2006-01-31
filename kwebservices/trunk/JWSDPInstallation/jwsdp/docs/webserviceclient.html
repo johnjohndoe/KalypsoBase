@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>Integrating Java WSDP Components into the Sun Java System Application
-Server Platform Edition 8</title>
+  <title>Template build file for web service client development.
+</title>
 </head>
 <body bgcolor="white">
 
@@ -10,11 +10,11 @@ Server Platform Edition 8</title>
 <blockquote>
 <p>You can use the 
    <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin/webserviceclient.xml</code> 
-   template build file to help you build your webservice client.
+   template build file to help you build your web service client.
 </p>
 
 <p>This document explains how to use this Ant build file with various
-   targets to help you build and set up the classpath for your Web service
+   targets to help you build and set up the classpath for your web service
    client. 
 </p>
 
@@ -22,84 +22,67 @@ Server Platform Edition 8</title>
    Java WSDP (installed all of the components) if you want to use the
    installation for integration with the Sun 
    Java<SUP><FONT size="-2">TM</FONT></SUP> System Application Server
-   Platform Edition 8. If you performed a
+   Platform Edition 8.1 2005Q2 Update 2. If you performed a
    "Custom" installation, not all of the required JAR files were installed. 
-   If the <code>webserviceclient.xml</code> build
-file cannot locate these JAR 
+   If the <code>webserviceclient.xml</code> build file cannot locate these JAR 
    files, it may not execute properly.
 </p>
 
 <p>To execute these instructions, first change to the 
-   <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin</code>
-directory. 
+   <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin</code>directory. 
 </p>
 </blockquote>
 
 <a name="setup"></a>
-<h3>Setting Up Your Web Service Client Application to Use Java WSDP 1.4
+<h3>Setting Up Your Web Service Client Application to Use Java WSDP 2.0
 Components</h3>
 <blockquote>
-<p>To set up the classpath environment to build and run your Web service 
+<p>To set up the classpath environment to build and run your web service 
    client, modify the following properties in the 
    <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin/webserviceclient.props</code>
    file:
 </p>
 <ul>
-<li><p><code>jwsdp.home</code>: The directory where Java WSDP 1.4 is
-    installed. You do not need to set this field if you are using the
-version
-    of Ant that is part of the Java WSDP 1.4 installation. 
+<li><p><code>jwsdp.home</code>: The directory where Java WSDP 2.0 is
+    installed. You do not need to set this field if you are using the version
+    of Ant that is part of the Java WSDP 2.0 installation. 
 </p></li>
 
 <li><p><code>build.dir</code>: The directory into which you want the
     classes to be compiled.
 </p></li>
 
-<li><p><code>dist.dir</code>: The
-directory where you want the JAR files to 
+<li><p><code>dist.dir</code>: The directory where you want the JAR files to 
     be placed.
 </p>
 </li>
 
-<li><p><code>src.dir:</code> The
-location of the source files.
-</p>
-</li>
 
-<li><p><code>configfile</code>:
-Configuration needed for building the Web 
-    service client. This file
-generally has the location of the WSDL file 
-    and also the package name to be
-used for the generated source. For an 
+<li><p><code>configfile</code>:Configuration needed for building the web 
+    service client. This file generally has the location of the WSDL file 
+    and also the package name to be used for the generated source. For an 
     example, see 
    <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin/config-client.xml</code>.
 </p>
 </li>
 
-<li><p><code>jarname</code>: Name of
-the resulting JAR file.
+<li><p><code>jarname</code>: Name ofthe resulting JAR file.
 </p>
 </li>
 
-<li><p><code>proxy.host</code>: Name
-of the proxy host, if the client uses a 
+<li><p><code>proxy.host</code>: Name of the proxy host, if the client uses a 
     proxy server.
 </p>
 </li>
 
-<li><p><code>proxy.port</code>: Port
-of the proxy server (usually 8080).
+<li><p><code>proxy.port</code>: Port of the proxy server (usually 8080).
 </p>
 </li>
 </ul>
 
-<p><b>Note:</b> You can perform this step for every Web service
-client you 
-   write, or you can place a global <code>webserviceclient.props</code>
-file 
-   in
-your home directory for all Web service clients.<br>
+<p><b>Note:</b> You can perform this step for every web service client you 
+   write, or you can place a global <code>webserviceclient.props</code>file 
+   in your home directory for all web service clients.<br>
     </p>
 </blockquote>
 
@@ -110,8 +93,7 @@ your home directory for all Web service clients.<br>
 <ol>
 <li><p>Copy the <code>webserviceclient.xml</code> and 
     <code>client-config.xml</code> files from 
-    <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin</code>
-to the top-level 
+    <code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin</code>to the top-level 
     directory of your client code. Copy the <code>webserviceclient.props</code> 
     file either to the same directory or to your home directory.
 </p>
@@ -124,12 +106,9 @@ to the top-level
 
 <li><p>Edit the file <code>client-config.xml</code>, which is defined as 
     <code>configfile</code> in <code>webserviceclient.props</code>. This XML 
-    file contains the
-information needed by the JAX-RPC <code>wscompile</code> 
-    tool. Specify the
-location of the WSDL definition file and the package 
-    name to be used for the class files that are
-generated from the WSDL for 
+    file contains the information needed by the JAX-RPC <code>wscompile</code> 
+    tool. Specify the location of the WSDL definition file and the package 
+    name to be used for the class files that are generated from the WSDL for 
     the client.
 </p>
 </li>
@@ -139,10 +118,8 @@ generated from the WSDL for
 
 <pre>ant -f webserviceclient.xml</pre>
 
-<p>The
-default target for the build file is <code>dist</code>. This target 
-   creates the client
-distribution JAR file in the <code>dist.dir</code> 
+<p>The default target for the build file is <code>dist</code>. This target 
+   creates the client distribution JAR file in the <code>dist.dir</code> 
    directory defined in <code>webserviceclient.props</code>. 
 </p>
 </li>
@@ -156,7 +133,7 @@ distribution JAR file in the <code>dist.dir</code>
 </p>
 
     <p><a href="Copyright.html">
-    <font size="-1"><i>Copyright &copy; 2004 Sun Microsystems, Inc. All
+    <font size="-1"><i>Copyright &copy; 2005 Sun Microsystems, Inc. All
 rights reserved.</i></font></a>
     </p>
   </li>

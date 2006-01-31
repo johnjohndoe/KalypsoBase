@@ -17,7 +17,19 @@
     model="/WEB-INF/model.xml.gz"
     wsdl="/WEB-INF/PingService.wsdl"/>
 
+   <endpoint name="SecureEndpoint0"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping0"
+    interface="simple.PingPort"
+    implementation="simple.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
    <endpointMapping endpointName="SecureEndpoint"
     urlPattern="/Ping"/>   
+
+   <endpointMapping endpointName="SecureEndpoint0"
+    urlPattern="/Ping0"/>   
      
 </webServices>

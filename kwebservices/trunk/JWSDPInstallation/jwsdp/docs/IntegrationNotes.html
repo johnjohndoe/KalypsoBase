@@ -10,8 +10,8 @@
 <blockquote>
 <p>This document explains how to run the integration scripts that come with 
    the Java WSDP.  These scripts allow you to integrate the Java WSDP 
-   technologies with a Web container, if you originally installed the Java WSDP
-   with the "No Web Container" option, or with a Web container that is 
+   technologies with a web container, if you originally installed the Java WSDP
+   with the "No Web Container" option, or with a web container that is 
    different from the one that you selected at installation time.
 </p>   
    
@@ -23,8 +23,8 @@
 <h3>Integrating the Java WSDP Component Technologies with the Sun Java 
     System Application Server Platform Edition 8</h3>
 <blockquote>
-<p>Complete the following steps to integrate the Java WSDP 1.4 component 
-   technologies with Sun Java System Application Server Platform Edition 8:
+<p>Complete the following steps to integrate the Java WSDP 2.0 component 
+   technologies with Sun Java System Application Server Platform Edition 8.x:
 </p>
 <ol>
 <li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
@@ -36,16 +36,35 @@
     <li><p>Set the USERNAME property to your admin username.</p></li>
     <li><p>Set the PASSWORD property to your admin password.</p></li>
     <li><p>Set the SJSAS_PORT property to your http server port.</p></li>
+    <li><p>Set the DOMAIN_DIR property to the domain directory.</p></li>
+    <li><p>Set the ADMIN_PORT_LIST property to a comma-separated list 
+           of the admin ports from each domain.</p></li>
+    <li><p>Set the DOMAIN_DIR_LIST property to a comma-separated list of domain directories. </p></li>
+    <li><p>Set the DOMAIN_NAME_LIST property to a comma-separated list of 
+           domain_names. </p></li>
+    <li><p>Set the SJSAS_PORT_LIST property to a comma-separated list of 
+           the http server ports from each domain. </p></li>
+    <li><p>Set the DOMAIN_NAME property to the domain name. </p></li>
+    <li><p>Set the ADMIN_PORT to your admin port. </p></li>
     </ol>
 </li>
 
 <li><p>If you performed a "Typical" installation (installed all of the Java WSDP
-    1.4 component technologies), run the <code>jwsdponsjsas.sh</code> 
+    2.0 component technologies), run the <code>jwsdponsjsas.sh</code> 
     (Solaris/Linux) or <code>jwsdponsjsas.bat</code> (Windows) integration 
     script.</p>
     
+    <p>If you performed a "Custom" installation and selected "JAX-WSA" in 
+       addition to all the rest of the Java WSDP 2.0 component technologies, 
+       run the <code>jwsdponsjsas.sh</code> (Solaris/Linux) or 
+       <code>jwsdponsjsas.bat</code> (Windows) integration script. JAX-WSA 
+       and an experimental version of JAX-WS will be integrated along with 
+       the rest of the Java WSDP 2.0 component technologies.  (If you did
+       <em>not</em> select JAX-WSA, JAX-WS 2.0 EA will be integrated 
+       instead.) </p>
+    
     <p>If you performed a "Custom" installation (installed a subset of the 
-       Java WSDP 1.4 component technologies), run the integration script 
+       Java WSDP 2.0 component technologies), run the integration script 
        using the following targets:</p>
        
        <ol type="a" start="a">
@@ -58,63 +77,15 @@
         </p></li>
 </ol></li>
 
-<li><p>Run the integration script using the <code>revert.sjsas.changes</code> 
-    target before you uninstall the Java WSDP.</p></li>
-</ol>
-</blockquote>
- 
-<h3>Integrating with the Sun Java System Web Server 6.1</h3>
-<blockquote>
-<p>Complete the following steps to integrate the Java WSDP 1.4 component 
-   technologies with the Sun Java System Web Server 6.1 Container:
-</p>
-<ol>
-<li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
-    directory.</p>
-</li>
-
-<li><p>Modify the following properties in the <code>sjsws.props</code> file:</p>
-    <ol type="a" start="a">
-    <li><p>Set the SERVER_INSTANCE property to the server instance 
-        directory name (typically with the format 
-        <code>https-&lt;<em>servername</em>&gt;</code>) and the 
-        SERVER_INSTANCE_LIST property to 
-        a comma delimited list of server instances.</p></li> 
-    <li><p>Set the SJSWS_PORT property to the server instance 
-        port number and the SJSWS_PORT_LIST property to 
-        a comma delimited list of server instance port numbers which correspond
-        to the server instances in the SERVER_INSTANCE_LIST property.</p> 
-  </li>
-    </ol>
-</li>
-
-<li><p>If you performed a "Typical" installation (installed all of the Java WSDP
-    1.4 component technologies), run the <code>jwsdponsjws.sh</code> 
-    (Solaris/Linux) or <code>jwsdponsjsws.bat</code> (Windows) integration 
-    script.</p>
+<li>Edit the <code>&lt;jwsdp.home&gt;/conf/jwsdp.properties</code> file, 
+    then add and set the following properties:
     
-    <p>If you performed a "Custom" installation (installed a subset of the 
-       Java WSDP 1.4 component technologies), run the integration script 
-       using the following targets:
-       
-       <ol type="a" start="a">
-       <li><p><code>integrate.init</code> to initialize the integration</p></li>
-       <li><p><code>integrate.&lt;<em>component-technology</em>&gt;</code> to
-           integrate the component technology or technologies</p>
-       <p>Look at the <code>setup</code> target to see what target(s) you need 
-          to execute for the component technology or technologies that you 
-          installed.
-       </p></li>
-       <li><p><code>stop-sjsws</code> to stop the Web Server</p></li>
-       <li><p><code>start-sjsws</code> to restart the Web Server</p></li>
-       <li><p>If applicable, any of the following targets to deploy the installed sample applications:</p>
-       <ul>
-       <li><code>deploy.wsi-sampleapp.webapps</code> deploys the WS-I Sample application</li>
-       <li><code>deploy.saaj.webapps</code> deploys the SAAJ sample applications</li>
-       <li><code>deploy.registry-server.webapps</code> deploys the Java WSDP Registry Server</li></li>
-</ol></li>
+    <pre>http.proxyHost=</pre>
+    <pre>http.proxyPort=</pre>
+    
+    <p>so applications can access servers outside a firewall.</li>
 
-<li><p>Run the integration script using the <code>revert.sjsws.changes</code> 
+<li><p>Run the integration script using the <code>revert.sjsas.changes</code> 
     target before you uninstall the Java WSDP.</p></li>
 </ol>
 </blockquote>
@@ -122,7 +93,7 @@
 <h3>Integrating the Java WSDP Component Technologies with the Tomcat 5.0 for 
     Java WSDP Container</h3>
 <blockquote>
-<p>Complete the following steps to integrate the Java WSDP 1.4 component 
+<p>Complete the following steps to integrate the Java WSDP 2.0 component 
    technologies with the Tomcat 5.0 for Java WSDP Container:
 </p>
 <ol>
@@ -135,12 +106,12 @@
 </li>
 
 <li><p>If you performed a "Typical" installation (installed all of the Java WSDP
-    1.4 component technologies), run the <code>jwsdpontomcat.sh</code> 
+    2.0 component technologies), run the <code>jwsdpontomcat.sh</code> 
     (Solaris/Linux) or <code>jwsdpontomcat.bat</code> (Windows) integration 
     script.</p>
     
     <p>If you performed a "Custom" installation (installed a subset of the 
-       Java WSDP 1.4 component technologies), run the integration script 
+       Java WSDP 2.0 component technologies), run the integration script 
        using the following targets:
        
        <ol type="a" start="a">
@@ -153,18 +124,76 @@
         </p></li>
 </ol></li>
 
+<li>Edit the <code>&lt;jwsdp.home&gt;/conf/jwsdp.properties</code> file, 
+    then add and set the following properties:
+    
+    <pre>http.proxyHost=</pre>
+    <pre>http.proxyPort=</pre>
+    
+    <p>so applications can access servers outside a firewall.</li>
+
 <li><p>Run the integration script using the <code>revert.tomcat.changes</code> 
     target before you uninstall the Java WSDP.</p></li>
 </ol>
 </blockquote>
  
+<h3>Integrating the Java WSDP Component Technologies with the Glassfish 
+    Container</h3>
+<blockquote>
+<p>Complete the following steps to integrate the Java WSDP 2.0 component 
+   technologies (JAX-WSA and an experimental version of JAX-WS) with Glassfish:
+</p>
+<ol>
+<li><p>Change to the <code>&lt;<em>JWSDP_HOME</em>&gt;/jwsdp-shared/bin</code> 
+    directory.</p>
+</li>
+
+<li><p>Modify the following properties in the <code>sjsas.props</code> file:</p>
+    <ol type="a" start="a">
+    <li><p>Set the USERNAME property to your admin username.</p></li>
+    <li><p>Set the PASSWORD property to your admin password.</p></li>
+    <li><p>Set the SJSAS_PORT property to your http server port.</p></li>
+    <li><p>Set the DOMAIN_DIR property to the domain directory.</p></li>
+    <li><p>Set the ADMIN_PORT_LIST property to a comma-separated list 
+           of the admin ports from each domain.</p></li>
+    <li><p>Set the DOMAIN_DIR_LIST property to a comma-separated list of domain directories. </p></li>
+    <li><p>Set the DOMAIN_NAME_LIST property to a comma-separated list of 
+           domain_names. </p></li>
+    <li><p>Set the SJSAS_PORT_LIST property to a comma-separated list of 
+           the http server ports from each domain. </p></li>
+    <li><p>Set the DOMAIN_NAME property to the domain name. </p></li>
+    <li><p>Set the ADMIN_PORT to your admin port. </p></li>
+    </ol>
+</li>
+
+<li><p>After you performed a "Custom" installation (selected and installed 
+    JAX-WSA and all of the rest of the Java WSDP 2.0 component technologies), 
+    run the <code>jwsdponsjsas9.sh</code> (Solaris/Linux) or 
+    <code>jwsdponsjsas9.bat</code> (Windows) integration script.  Only 
+    JAX-WSA and an experimental version of JAX-WS will be integrated into 
+    the Glassfish container.</p>
+    </li>
+
+<li>Edit the <code>&lt;jwsdp.home&gt;/conf/jwsdp.properties</code> file, 
+    then add and set the following properties:
+    
+    <pre>http.proxyHost=</pre>
+    <pre>http.proxyPort=</pre>
+    
+    <p>so applications can access servers outside a firewall.</li>
+
+<li><p>Run the integration script using the <code>revert.sjsas.changes</code> 
+    target before you uninstall the Java WSDP.</p></li>
+</ol>
+</blockquote>
+
 <p> </p>
 <hr>
 <p>Please send feedback on the Java Web Services Developer Pack to 
    <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>. 
 </p>
 
-<p><a href="Copyright.html"><font size=-1><i>Copyright &#169; 2004 Sun 
+<p><a href="Copyright.html"><font size=-1><i>Copyright &#169; 2005 Sun 
    Microsystems, Inc. All rights reserved.</i></font></a>
 </p>
 

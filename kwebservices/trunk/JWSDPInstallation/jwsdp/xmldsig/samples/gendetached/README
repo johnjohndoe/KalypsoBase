@@ -1,6 +1,6 @@
 This is a simple example of generating a Detached XML
 Signature using the JSR 105 API. The resulting signature will look
-like (key and signature values will be different):
+like (however, the key and signature values will be different):
 
  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
    <SignedInfo>
@@ -40,14 +40,14 @@ like (key and signature values will be different):
    </KeyInfo>
  </Signature>
 
-Command Line Usage:
+Also, the signature above is formatted with indents and line breaks for readability. 
 
-  Modify the build.properties file if you are behind a firewall and use
-  an HTTP proxy server.
+Command Line Usage:
 
   To compile and run this sample, execute the following command:
 
-  $ ant 
+  $ export JWSDP_HOME=<pathname of JWSDP>
+  $ $JWSDP_HOME/apache-ant/bin/ant 
 
   This will generate a detached signature and store it in the file
   detachedSignature.xml in the current working directory.

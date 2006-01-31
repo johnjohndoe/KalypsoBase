@@ -38,6 +38,10 @@
             <input message="tns:PingRequest"/> 
             <output message="tns:PingResponse"/> 
         </operation> 
+        <operation name="Ping0"> 
+            <input message="tns:PingRequest"/> 
+            <output message="tns:PingResponse"/> 
+        </operation> 
     </portType> 
     <binding name="PingBinding" type="tns:PingPort"> 
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/> 
@@ -50,10 +54,22 @@
                 <soap:body use="literal"/> 
             </output> 
         </operation> 
+        <operation name="Ping0"> 
+            <soap:operation/> 
+            <input> 
+                <soap:body use="literal"/> 
+            </input> 
+            <output> 
+                <soap:body use="literal"/> 
+            </output> 
+        </operation> 
     </binding> 
     <service name="PingService"> 
         <port name="Ping" binding="tns:PingBinding"> 
             <soap:address location="http://localhost:8080/securesimple/Ping"/> 
+        </port>
+        <port name="Ping0" binding="tns:PingBinding"> 
+            <soap:address location="http://localhost:8080/securesimple/Ping0"/> 
         </port> 
     </service> 
 </definitions> 

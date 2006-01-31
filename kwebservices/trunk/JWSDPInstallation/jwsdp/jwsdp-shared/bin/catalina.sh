@@ -60,4 +60,4 @@ if [ -z "$1" ]; then
 fi
 
 # Execute the Launcher using the "jwsdp" target
-exec "$JAVA_HOME"/bin/java -classpath "$CATALINA_HOME/jwsdp-shared/bin:$CATALINA_HOME/jwsdp-shared/bin/commons-launcher.jar:$CATALINA_HOME/apache-ant/lib/ant.jar:$CATALINA_HOME/apache-ant/lib/optional.jar:$CATALINA_HOME/jaxp/lib/jaxp-api.jar:$CATALINA_HOME/jaxp/lib/endorsed/sax.jar:$CATALINA_HOME/jaxp/lib/endorsed/dom.jar:$CATALINA_HOME/jaxp/lib/endorsed/xercesImpl.jar:$CATALINA_HOME/jaxp/lib/endorsed/xalan.jar" -DJAVA_HOME="$JAVA_HOME" -DCATALINA_OPTS="$CATALINA_OPTS" LauncherBootstrap  jwsdp "$@"
+exec "$JAVA_HOME"/bin/java -Djava.endorsed.dirs="$CATALINA_HOME/jaxp/lib:$CATALINA_HOME/jaxp/lib/endorsed" -classpath "$CATALINA_HOME/jwsdp-shared/bin:$CATALINA_HOME/jwsdp-shared/bin/commons-launcher.jar:$CATALINA_HOME/apache-ant/lib/ant.jar:$CATALINA_HOME/apache-ant/lib/ant-launcher.jar:$CATALINA_HOME/apache-ant/lib/ant-nodeps.jar" -DJAVA_HOME="$JAVA_HOME" -DCATALINA_OPTS="$CATALINA_OPTS" LauncherBootstrap  jwsdp "$@"

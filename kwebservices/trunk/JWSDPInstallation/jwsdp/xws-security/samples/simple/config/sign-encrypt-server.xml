@@ -5,10 +5,26 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Sign/>
-    <xwss:Encrypt keyReferenceType="Identifier" 
-    	          receiverCertificateAlias="xws-security-client"/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <xwss:Sign/>
+            <xwss:Encrypt>
+                <xwss:X509Token certificateAlias="xws-security-client" keyReferenceType="Identifier"/>
+            </xwss:Encrypt>
+            <!--
+                Note the order of the requirements below. The message sender
+                should have first signed the body and then encrypted its
+                contents.
+            -->
+            <xwss:RequireEncryption/>
+            <xwss:RequireSignature/>    
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

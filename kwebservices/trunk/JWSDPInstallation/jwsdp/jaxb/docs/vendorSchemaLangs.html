@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
 <TITLE>
-        JAXB RI 1.0.3 -- Vendor Schema Languages
+        JAXB RI 2.0 ea3 -- Vendor Schema Languages
     </TITLE>
     
 <META content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
@@ -23,19 +23,36 @@
       Experimental Schema Languages
     </H1>
       
-<B>Specification Version:</B> 1.0<BR>
+<B>Specification Version:</B> 2.0<BR>
       
-<B>Reference Implementation (RI) Version:</B> 1.0.3<BR>
+<B>Reference Implementation (RI) Version:</B> 2.0 ea3<BR>
       <!--
- Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ The contents of this file are subject to the terms
+ of the Common Development and Distribution License
+ (the "License").  You may not use this file except
+ in compliance with the License.
+ 
+ You can obtain a copy of the license at
+ https://jwsdp.dev.java.net/CDDLv1.0.html
+ See the License for the specific language governing
+ permissions and limitations under the License.
+ 
+ When distributing Covered Code, include this CDDL
+ HEADER in each file and include the License file at
+ https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ add the following below this CDDL HEADER, with the
+ fields enclosed by brackets "[]" replaced with your
+ own identifying information: Portions Copyright [yyyy]
+ [name of copyright owner]
 -->
 <hr width="50%">
-  Main: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="ant.html">Ant task</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog.html">Changelog</a>
+  JAXB 2.0: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="xjcTask.html">XJCTask</a> | <a href="schemagen.html">SchemaGen</a> | <a href="schemagenTask.html">schemagenTask</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog2.html">Changelog</a>
 <br>
-  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a>
+  JAXB 1.0.x: <a href="jaxb-1_0.html">Release Notes</a> | <a href="changelog.html">Changelog</a>
 <br>
-  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="relaxng.html">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
+  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a> | <a href="developPlugins.html">Develop Plugins</a>
+<br>
+  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="vendorSchemaLangs.html#relaxng">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
 <br>
   JAXB Community: <a href="http://jaxb.dev.java.net">Java.net Homepage</a> | <a href="https://jaxb.dev.java.net/servlets/ProjectMailingListList">Developer interest list</a> | <a href="https://jaxb.dev.java.net/faq/index.html">FAQ</a>
 <br>
@@ -75,390 +92,88 @@
 	
 <BLOCKQUOTE>
 	
-<P>This section outlines experimental support for W3C XML Schema features that
-	   are not required by the specification.  This behavior is only available when
-	   the JAXB RI binding compiler is run with the <A href="xjc.html">"<TT>-extension" 
-	   mode</TT></A>" enabled.  Future versions of the JAXB Specification may describe 
-	   portable bindings for these schema features.</P>
+<P>JAXB 2.0 RI FCS will contain 100% support for W3C XML Schema.  However, this is an Early Access
+	   release and is not functionally complete.  This section outlines areas that the RI deviates from
+	   the JAXB 2.0 Specification Early Draft 2.</P>
 
-	
-<H4>
-<A name="typesub">Type Substitution Support&nbsp;&nbsp;</A><IMG src="new.gif"></H4>
-    
-<BLOCKQUOTE>
-    
-<P>Note: Type substitution support is experimental at present.  <A href="http://jcp.org/en/jsr/detail?id=222">JAXB 2.0</A> will specify the standard
-       binding for type substitution. The JAXB RI currently only supports type
-       substitution for complex types only. See <A href="vendorCustomizations.html#typesub">Enabling Type Substitution</A> for how to
-       customize your schema to enable this support. Type substitution for an element
-       declaration with a simple type definition will be supported in a subsequent
-       release.</P>
-
-    
-<P>The following international purchase order example is taken from W3C XML Schema 
-       Part 0: Primer and which defines a couple of address types and a purchase order
-       type:</P>
-          
-
-<PRE class="schema">
-<XMP>
- &lt;complexType name="Address"&gt;
-  &lt;sequence&gt;
-   ...
-  &lt;/sequence&gt;
- &lt;/complexType&gt;
-
- &lt;complexType name="USAddress"&gt;
-  &lt;complexContent&gt;
-   &lt;extension base="ipo:Address"&gt;
-     ...
-   &lt;/extension&gt;
-  &lt;/complexContent&gt;
- &lt;/complexType&gt;
-
- &lt;complexType name="UKAddress"&gt;
-  &lt;complexContent&gt;
-   &lt;extension base="ipo:Address"&gt;
-     ...
-   &lt;/extension&gt;
-  &lt;/complexContent&gt;
- &lt;/complexType&gt;
- 
- &lt;complexType name="PurchaseOrderType"&gt;
-  &lt;sequence&gt;
-   &lt;element name="shipTo"     type="ipo:Address"/&gt;
-   &lt;element name="billTo"     type="ipo:Address"/&gt;
-   ...
-  &lt;/sequence&gt;
-  ...
- &lt;/complexType&gt;
-
-</XMP>
-</PRE>
-
-    
-<P>The following pseudo code represents what the JAXB RI generates for this schema:</P>
-
-
-<PRE class="code">
-<XMP>
-interface Address { ... }
-interface USAddress extends Address { ... }
-interface UKAddress extends Address { ... }
-interface PurchaseOrderType {
-    Address getBillTo();
-    void setBillTo(Address value);
-    Address getShipTo();
-    void setShipTo(Address value);
-    ...
-}
-interface PurchaseOrder extends PurchaseOrderType, javax.xml.bind.Element {
-    PurchaseOrderType getValueObject();
-    void setValueObject(PurchaseOrderType value);
-}
-</XMP>
-</PRE>    
-
-    
-<P>Type substitution enables an instance document to explicitly identify
-       a derived type that supercedes an element declaration's schema specified
-       type. Given local elements <TT>billTo</TT> and <TT>shipTo</TT> are mapped
-       to JAXB properties with a base type of <TT>Address</TT>, type substitution
-       allows instances of types that derive from <TT>Address</TT> to be set/get 
-       from the JAXB properties for <TT>billTo</TT> and <TT>shipTo</TT>. So for
-       this case, it is possible to set instances of <TT>USAddress</TT> or 
-       <TT>UKAddress</TT> for JAXB properties <TT>billTo</TT> and <TT>shipTo</TT>.
-       The <TT>xsi:type</TT> attribute (defined in the 
-       http://www.w3.org/2001/XMLSchema-instance namespace) specifies which address 
-       type is being used, as shown in the following XML fragment:</P>
-    
-
-<PRE class="schema">
-<XMP>
-&lt;ipo:purchaseOrder ... &gt;
-
-    &lt;shipTo xsi:type="ipo:UKAddress"&gt;
-        ...
-    &lt;/shipTo&gt;
-
-    &lt;billTo xsi:type="ipo:USAddress"&gt;
-        ....
-    &lt;/billTo&gt;
-    
-    ...
-
-&lt;/ipo:purchaseOrder&gt;
-</XMP>
-</PRE>
-
-    
-<P>In your client application code, you can simply rely on the type hierarchy
-       derived from the schema and the type safety of the Java programming language 
-       to perform substitution.  In the following code fragment (taken from 
-       samples/type-substitution/Main.java), you can see that instances of the 
-       different address types can be easily swapped:</P>
-
-
-<PRE class="code">
-<XMP>
-    // unmarshal an instance doc that has a UKAddress in the &lt;shipTo&gt; element
-    // and a USAddress in the &lt;billTo&gt; element
-    PurchaseOrder po = 
-        (PurchaseOrder)u.unmarshal( new FileInputStream( "ipo.xml" ) );
-
-    // Process a return - Reverse purchase order addresses.
-    Address billToAddress = po.getBillTo();
-    Address shipToAddress = po.getShipTo();
-    po.setBillTo(shipToAddress);
-    po.setShipTo(billToAddress);
-</XMP>
-</PRE>
-
-    
-<P>When marshalled back out, the new purchase order has the proper xsi:type
-       attributes reversed:</P>
-
-
-<PRE class="schema">
-<XMP>
-&lt;ipo:purchaseOrder ... &gt;
-
-    &lt;shipTo xsi:type="ipo:USAddress"&gt;
-        ...
-    &lt;/shipTo&gt;
-
-    &lt;billTo xsi:type="ipo:UKAddress"&gt;
-        ....
-    &lt;/billTo&gt;
-    
-    ...
-
-&lt;/ipo:purchaseOrder&gt;
-</XMP>
-</PRE>
-
-    
-<H5>Generated <TT>getValueObject</TT> &amp; <TT>setValueObject</TT> Methods</H5>
-    
-<BLOCKQUOTE>
-    
-<P>Running the binding compiler in -extension mode causes all complex schema 
-       derived types<SUP><FONT size="-1">*</FONT></SUP> that implement <TT>
-       javax.xml.bind.Element</TT> to include two new API's <TT>setValueObject</TT> 
-       and <TT>getValueObject</TT> - as shown in the <TT>PurchaseOrder</TT> interface.  
-       These API's provide a way for you to access and perform type substitutions 
-       allowed by the schema.</P>
-    
-    
-<BLOCKQUOTE>
-    
-<P>
-<I><SUP><FONT size="-1">*</FONT></SUP>The JAXB RI currently supports type 
-       substitution for complex types only.  As a result, element declarations with 
-       simple types like &lt;xs:element name="comment" type="xs:string"/&gt;, 
-       do not have <TT>get/setObjectValue()</TT> API's generated in their Java bindings.
-       Type substitution for an element declaration with a simple type definition
-       will be supported in a subsequent release.
-       </I>
-</P>
-    
-</BLOCKQUOTE>
-
-    
-<P>The <TT>setValueObject</TT> API allows you to perform a type substitution
-       within your client application.  If we extend the sample above by creating
-       a new <TT>USTaxExemptPurchaseOrderType</TT>:</P>
-
-
-<PRE class="schema">
-<XMP>     
-&lt;complexType name="USTaxExemptPurchaseOrderType"&gt;
-  &lt;complexContent&gt;
-    &lt;extension base="ipo:PurchaseOrderType"&gt;
-      &lt;sequence&gt;
-        &lt;element name="taxExemptId" type="xsd:string"/&gt;
-      &lt;/sequence&gt;
-    &lt;/extension&gt;
-  &lt;/complexContent&gt;
-&lt;/complexType&gt;
-</XMP>
-</PRE>
-       
-    
-<P>Since <TT>USTaxExemptPurchaseOrderType</TT> derives by extension from 
-       <TT>PurchaseOrderType</TT>, instances of <TT>USTaxExemptPurchaseOrderType</TT>
-       can be substituted for instances of <TT>PurchaseOrderType</TT> in your XML
-       data.  JAXB client applications can use the <TT>setValueObject</TT> API on
-       <TT>PurchaseOrderType.java</TT> to perform a substitution with an instance
-       of <TT>USTaxExemptPurchaseOrderType.java</TT>.
-       
-<PRE class="code">
-// unmarshal a PurchaseOrder
-PurchaseOrder po = 
-    (PurchaseOrder)u.unmarshal( new FileInputStream( "ipo.xml" ) );
-    
-// build a tax-exempt PO
-USTaxExemptPurchaseOrderType uspo = 
-    new ObjectFactory().createUSTaxExemptPurchaseOrderType();
-// set fields on uspo
-	    
-// perform the type substitution
-po.setValueObject(uspo);
-</PRE>
-
-    
-</P>
-<P>Marshalling the <TT>po</TT> object causes the proper xsi:type attribute to
-       appear in the XML data including the additional content added in the tax-exempt
-       purchase order definition:</P>
-       
-
-<PRE class="schema">
-<XMP>
-&lt;purchaseOrder xsi:type="USTaxExemptPurchaseOrderType" ... &gt;
-    ...
-    &lt;taxExemptId&gt;charity007&lt;/taxExemptId&gt;
-&lt;/purchaseOrder&gt;
-</XMP>
-</PRE>
-    
-    
-<P>In order to access type substituted content of an element, the <TT>getValueObject</TT>
-       API provides access to instances of the derived type (and the methods added to 
-       the derived type).  For example, given the following XML fragment where a tax-exempt 
-       purchase order has been substituted for a regular purchase order:</P>
-    
-
-<PRE class="schema">
-<XMP>
-&lt;ipo:purchaseOrder xsi:type="ipo:USTaxExemptPurchaseOrderType" ...&gt;
-    ...
-    &lt;taxExemptId&gt;charity44987&lt;/taxExemptId&gt;
-&lt;/ipo:purchaseOrder&gt;
-</XMP>
-</PRE>
-    
-    
-<P>Your client application can unmarshal the content as a instance of the 
-       Java class <TT>PurchaseOrder</TT>, but you need to access it's value type
-       and perform a cast before being able to access the data specific to the
-       derived tax-exempt type:</P>
-    
-
-<PRE class="code">
-po = (PurchaseOrder)u.unmarshal( new FileInputStream( "ustaxexemptpo.xml" ) );
-
-// Access data added to element <PURCHASEORDER> via type substitution.
-// All data added by derivation by extension from the element's original
-// type specified in the schema must be accessed through this unwrapping
-// of the element.
-PurchaseOrderType pot = po.getValueObject();
-if (pot instanceof USTaxExemptPurchaseOrderType) {
-    USTaxExemptPurchaseOrderType taxexemptpo = (USTaxExemptPurchaseOrderType)pot;
-    System.out.println("US Tax exempt id: " + taxexemptpo.getTaxExemptId());
-}
-</PURCHASEORDER>
-</PRE>
-    
-</BLOCKQUOTE>
-    
-	
-<P>
-	See <A href="typesub-extend.html">Implications of Type
-	Substitution for Subclassing</A> if using type substitution with
-	application-specific implementation classes.</P>
-	
-    
-</BLOCKQUOTE>
-
-	
-<H4>
-<A name="subgroup"></A>Substitution Group Support</H4>
-	
-<BLOCKQUOTE>
-	
-<P>
-		In extension mode, the JAXB RI the JAXB RI generates code that 
-		handles element substitution group. For example, consider the 
-		following schema:
-	</P>
-
-<PRE class="schema">
-<XMP>
-  &lt;xs:complexType name="foo"&gt;
-    &lt;xs:sequence&gt;
-      &lt;xs:element ref="head" /&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-  
-  &lt;xs:element name="head" type="t" /&gt;
-  &lt;xs:element name="sub"  type="t" substitutionGroup="head"/&gt;
-  
-  &lt;xs:complexType name="t"&gt;
-    ...
-  &lt;/xs:complexType&gt;
-</XMP>
-</PRE>
-	
-<P>
-		The following pseudo-code represents what the JAXB RI generates for this schema:
-	</P>
-
-<PRE class="code">
-<XMP>
-interface Foo {
-    Head head;
-}
-interface Head extends T {}
-interface Sub extends T {}
-interface T {
-    ...
-}
-</XMP>
-</PRE>
-	
-<P>
-		When a document containing a &lt;<TT>sub</TT>&gt; element is 
-		unmarshalled, the <CODE>head</CODE> property will return an 
-		instance of <CODE>Sub</CODE>. Similarly, if you set an instance 
-		of <CODE>Sub</CODE> interface and marshal it, you'll get a 
-		&lt;<TT>sub</TT>&gt; element.
-	</P>
-<P></P>
-<P>
-		For details of what type you should expect and what type you 
-		can set, see the API documentation of the generated interfaces.
-	</P>
-    
-</BLOCKQUOTE>
-    
-	
-<H4>
-<A name="block"></A>Support for <TT>@block, @abstract, @final, @blockDefault, and 
-        @finalDefault</TT> attributes for the <TT>&lt;complexType&gt;, &lt;element&gt;, 
-        and &lt;schema&gt;</TT> elements&nbsp;&nbsp;<IMG src="new.gif"></H4>
-    
-<P>
       
+<BLOCKQUOTE>
+        
 <UL>
-        
-<LI>if @abstract=true, XJC generates abstract impl classes that 
-            cannot be instantiated.</LI>
-        
-<LI>if @block is present, type substitution support recognizes
-            this and allows/disallows certain substitutions.  The <TT>
-            Unmarshaller</TT> fails with an <TT>UnmarshalException</TT>
-            (whether it was set to validate or not), marshalling will 
-            fail with a <TT>MarshalException</TT>, and validating your 
-            content tree will inform you of illegal substitutions.</LI>
-        
-<LI>if @final is present, the compiler will properly detect errors 
-            in the input schema if the final constraint is violated.</LI>
-      
+	      
+<LI>From Section 8: Java to XML
+	        <UL>
+              
+<LI>The specification does not specify the default property order, <TT>@XmlType.propOrder()</TT>. JAXB RI would
+                  like source code order.  While source code order is working for <TT>@XmlAccessorType(AccessType.FIELD)</TT>,
+                  the default <TT>@XmlAccessorType(AccessType.PROPERTY)</TT> is not following source code order, but
+                  rather Unicode code point alphabetical order.  This ordering issue is still open for discussion
+                  and debate for future releases.</LI>
+              
+<LI>The specification states that if a property or a field has been marked with <TT>@XmlValue</TT>
+                  annotation, then the containing class must not extend another class (other than
+                  <TT>java.lang.Object</TT>).  The RI currently does not enforce this.</LI>
+              
+<LI>The specification restricts <TT>@XmlJavaTypeAdapter</TT> from being placed on a package and
+                  the RI enforces this.  We may reconsider allowing this in the final version.</LI>
+              
+<LI>According to Table 8-4 in the specification "Mapping class to Complex Type Definition",
+                  when a property/field is annotated with <TT>@XmlValue</TT> annotation, the complex type to which
+                  the class maps must derived from the schema type to which the property/field annotated
+                  with <TT>@XmlValue</TT> is mapped.  The RI does not currently bind this correctly.</LI>
+              
+<LI>The RI has not fully implemented support for the Unmarshal(S4.4.1) and Marshal(S4.5.1) Callback Events from
+                  the ObjectLifeCycle interface.</LI>
+              
+<LI>The RI has not fully implemented support for the schema customizations &lt;inlineBinaryData&gt;to disable
+                  MTOM/XOP (S 7.13) and control ref:swaRef binding &lt;jaxb:property @attachmentRef&gt; (S 7.8.1).</LI>
+	        
 </UL>
-    
-</P>
-    
+</LI>
+	      
+<LI>Section 6, 7: Schema to Java Binding
+	        <UL>
+              
+<LI>Binding of a simple element property (Sec 6.7.5) that is the head of an element substition
+                  group or customization with <TT>&lt;jaxb:property generateElementProperty?="true"/&gt;</TT> (Sec 7.8.1).
+                  The RI only generates an element setter/getter (Sec 5.5.5), it does not generate the additional
+                  type setter/getter(Sec 5.1). The RI generates a raw <TT>JAXBElement</TT> instead of a <TT>JAXBElement</TT> with
+                  an upper bound wildcard notation. (i.e. <TT>JAXBElement</TT> instead of <TT>JAXBElement&lt;? extends Base&gt;</TT>).</LI>
+              
+<LI>RI annotates the schema-derived class for a global element declaration's anonymous complex
+                  type definition with <TT>@XmlRootElement</TT> instead of generating an element instance factory
+                  that returns <TT>javax.xml.bind.JAXBElement&lt;JAXBBindingOfAnonComplexTypeDef&gt;</TT> as specified in
+                  Sec 6.7.3. Note that unmarshal methods do not return an instance of <TT>javax.xml.bind.JAXBElement</TT>
+                  for instances bound in this manner.</LI>
+              
+<LI>RI does not generate schema derived enum methods, <TT>value()</TT> or <TT>fromValue(String)</TT>, as specified
+                  in Section 6.2.3.3 "Enum Constant".</LI>
+              
+<LI>Section 7.12 <TT>&lt;jaxb:dom&gt;</TT> schema customization is not supported by RI.</LI>
+              
+<LI>The RI does not have support for marshalling fixed attributes bound with customization
+                  <TT>@fixedAttributesAsConstantProperty</TT>. Currently it fails to marshal the attributes.</LI>
+              
+<LI>
+<TT>@XmlSchemaType</TT> was added for mapping <TT>XmlGregorianCalendar</TT>, but has not been implemented
+                  by the RI yet.</LI>
+              
+<LI>The spec has changed the mapping of <TT>XMLGregorianCalendar</TT> to <TT>xs:anySimpleType</TT>, but the RI still
+                  maps it to <TT>xs:dateTime</TT>.</LI>
+              
+<LI>The spec allows <TT>@XmlJavaTypeAdapter</TT> on classes and fields, but the RI only supports this annotation
+                  on fields.</LI>
+              
+<LI>The spec allows mapping of public static final fields annotated with <TT>@XmlAttribute</TT> to a fixed
+                     attribute in schema, the RI doesn't handle this case yet.</LI>
+	       
+</UL>
+</LI>
+        
+</UL>
+	  
+</BLOCKQUOTE>
+	
 </BLOCKQUOTE>
 
 
@@ -466,11 +181,14 @@ interface T {
 	
 <A name="relaxng"></A>
 	
-<H3>RELAX NG<IMG src="new.gif"></H3>
+<H3>RELAX NG</H3>
 	
 <BLOCKQUOTE>
+	<!--p>See <a href="relaxng.html">this document</a> for details of RELAX NG support.</p-->
 	
-<P>See <A href="relaxng.html">this document</A> for details of RELAX NG support.</P>
+<P>
+		The RELAX NG support is not yet implemented in this early access.
+	</P>
 	
 </BLOCKQUOTE>
 

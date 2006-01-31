@@ -13,21 +13,20 @@ public class BusinessQueryTest {
     String httpProxyHost = "";
     String httpProxyPort = "";
     String regUrli  = "";
-    String regUrlp  = "";
+    String company ="";
     Properties connProps = new Properties();
 
     private static final String QUERY_URL = "query.url";
-    private static final String PUBLISH_URL = "publish.url"; 
     private static final String PROXY_HOST = "http.proxy.host";
     private static final String PROXY_PORT = "http.proxy.port";
-    
+    private static final String COMPANY ="company";
     public static void main(String[] args) {
         String company = "%USA%";
         try {
             Properties properties = new Properties();
             properties.load(new FileInputStream("./query.properties"));
             BusinessQueryTest bqt = new BusinessQueryTest();
-            bqt.executeQueryTest(properties, company);
+            bqt.executeQueryTest(properties);
         } catch (JAXRException e){
 	    System.err.println("Error during the test: " + e);
         } catch (IOException ioe) {
@@ -36,7 +35,7 @@ public class BusinessQueryTest {
         
     }
     
-    public void executeQueryTest(Properties properties, String cname)
+    public void executeQueryTest(Properties properties)
         throws JAXRException {
             try {
                 assignUserProperties(properties);
@@ -50,7 +49,7 @@ public class BusinessQueryTest {
                 
                 
                 ArrayList names = new ArrayList();
-                names.add(cname);
+                names.add(company);
                 
                 Collection fQualifiers = new ArrayList();
                 fQualifiers.add(FindQualifier.SORT_BY_NAME_DESC);
@@ -61,7 +60,7 @@ public class BusinessQueryTest {
                 if (br.getStatus() == JAXRResponse.STATUS_SUCCESS) {
                     System.out.println("Successfully queried the " +
                        "registry for organization matching the " +
-                       "name pattern: \"" + cname + "\""); 
+                       "name pattern: \"" + company + "\""); 
                     Collection orgs = br.getCollection();
                     System.out.println("Results found: " + orgs.size() + "\n");
                     Iterator iter = orgs.iterator();
@@ -108,10 +107,6 @@ public class BusinessQueryTest {
         if (temp != null)
             regUrli = temp;
        
-        temp = ((String)props.get(PUBLISH_URL)).trim();
-        if (temp != null)
-            regUrlp = temp;
-        
         temp = ((String)props.get(PROXY_HOST)).trim();
         if (temp != null)
             httpProxyHost = temp;
@@ -119,11 +114,14 @@ public class BusinessQueryTest {
         temp = ((String)props.get(PROXY_PORT)).trim();
         if (temp != null)
             httpProxyPort = temp;
+	temp = ((String)props.get(COMPANY)).trim();
+	if(temp != null)
+	    company = temp;
+	else company = "%USA%";
     }
     
     private void setConnectionProperties() {
 	connProps.setProperty("javax.xml.registry.queryManagerURL", regUrli);
-        connProps.setProperty("javax.xml.registry.lifeCycleManagerURL", regUrlp);
         connProps.setProperty("javax.xml.registry.factoryClass",
                     "com.sun.xml.registry.uddi.ConnectionFactoryImpl");
         connProps.setProperty("com.sun.xml.registry.http.proxyHost", httpProxyHost);

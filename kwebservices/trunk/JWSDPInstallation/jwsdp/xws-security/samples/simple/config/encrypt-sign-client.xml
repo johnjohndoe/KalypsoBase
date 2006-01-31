@@ -5,10 +5,27 @@ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
-                            useTimestamps="true"
-                            dumpMessages="true">
-    <xwss:Encrypt keyReferenceType="IssuerSerialNumber" 
-    	          receiverCertificateAlias="s1as"/>
-    <xwss:Sign/>
-</xwss:SecurityConfiguration>
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!--
+              First encrypt the contents of the soap body
+            -->
+            <xwss:Encrypt>
+                <xwss:X509Token keyReferenceType="Identifier" certificateAlias="s1as"/>
+            </xwss:Encrypt>
+            <!--
+              Secondly, sign the soap body using some default private key.
+              The sample CallbackHandler implementation has code to handle
+              the default signature private key request.
+            -->
+            <xwss:Sign/>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

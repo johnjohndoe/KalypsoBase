@@ -1,12 +1,26 @@
 /*
- * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
  */
  
 package samples.ubl.report.facade;
 
-import org.oasis.ubl.commonaggregatetypes.AddressType;
-import java.util.ListIterator;
+import org.oasis.ubl.commonaggregatecomponents.AddressType;
 
 /**
  * The <code>AddressFacade</code> class provides a set of read-only
@@ -37,7 +51,7 @@ public class AddressFacade {
     public String getStreet() {
         String result = "";
         try {
-            result = address.getStreet().getValue();
+            result = address.getStreetName().getValue();
         } catch (NullPointerException npe) {
         }
         return result;
@@ -52,7 +66,7 @@ public class AddressFacade {
     public String getState() {
         String result = "";
         try {
-            result = address.getCountrySubEntity().getValue();
+            result = address.getCountrySubentityCode().getValue();
         } catch (NullPointerException npe) {
         }
         return result;
@@ -84,28 +98,6 @@ public class AddressFacade {
         try {
             result = address.getPostalZone().getValue();
         } catch (NullPointerException npe) {
-        }
-        return result;
-    }
-
-    /**
-     * <code>getFirstAddress</code> searches a <code>java.util.List</code> for a
-     * <code>AddressFacade</code> and returns the first one it finds. If it
-     * finds none, returns <code>null</code>.
-     *
-     * @param addresses a <code>java.util.List</code> value
-     * @return an <code>AddressFacade</code> value
-     */
-    static public AddressFacade getFirstAddress(java.util.List addresses) {
-        AddressFacade result = null;
-
-        ListIterator iter = addresses.listIterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (obj != null && obj instanceof AddressType) {
-                result =  new AddressFacade((AddressType) obj);
-                break;
-            }
         }
         return result;
     }

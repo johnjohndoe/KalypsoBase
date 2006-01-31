@@ -13,7 +13,7 @@ rem Environment Variable Prequisites
 rem
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
 rem
-rem $Id: wscompile.bat,v 1.6 2004/03/30 23:28:22 ofung Exp $
+rem $Id: wscompile.bat,v 1.7 2005/06/08 09:52:51 rameshm Exp $
 rem ---------------------------------------------------------------------------
 
 rem Get standard environment variables
@@ -34,6 +34,15 @@ echo This environment variable is needed to run this program
 goto end
 :gotJavaHome
 
+if not "%JWSDP_HOME%" == "" goto gotJWSDPHOME
+echo The JWSDP_HOME environment variable is not defined
+echo This environment variable is needed to run this program
+echo Please check <JWSDP_InstallDir>\jwsdp-shared\bin\setenv.bat file
+echo to see if JWSDP_HOME variable is defined
+goto end
+:gotJWSDPHOME
+
+
 rem Get command line arguments and save them
 set CMD_LINE_ARGS=
 :setArgs
@@ -44,6 +53,6 @@ goto setArgs
 :doneSetArgs
 
 rem Execute the Tomcat launcher
-"%JAVA_HOME%\bin\java.exe" -classpath %PRG%\..;%PRG%\..\..\..\jwsdp-shared\bin;"%PATH%" LauncherBootstrap -verbose wscompile %CMD_LINE_ARGS%
+"%JAVA_HOME%\bin\java.exe" -Djava.endorsed.dirs="%JWSDP_HOME%\jaxp\lib;%JWSDP_HOME%\jaxp\lib\endorsed"  -classpath %PRG%\..;%PRG%\..\..\..\jwsdp-shared\bin;"%PATH%" LauncherBootstrap -verbose wscompile %CMD_LINE_ARGS%
 
 :end

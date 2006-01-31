@@ -9,5 +9,13 @@
     xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
     <wsdl
         location="./etc/HelloWorldService.wsdl"
-        packageName="hello" />
+        packageName="hello">
+        <!--
+        <handlerChains>
+            <chain runAt="client">
+                <handler className="hello.DummyHandler"/>
+            </chain>
+        </handlerChains>
+        -->
+    </wsdl>
 </configuration>

@@ -35,5 +35,5 @@ fi
 JWSDP_HOME="$PRGDIR"/../..
 JAXRPC_SEC_LIB_HOME="$JWSDP_HOME"/xws-security/lib
 
-CLASSPATH="$JAXRPC_SEC_LIB_HOME"/jaxrpc-sec.jar
+CLASSPATH="$JAXRPC_SEC_LIB_HOME"/pkcs12import.jar
 "$JAVA_HOME"/bin/java -classpath $CLASSPATH  com.sun.xml.wss.tools.PKCS12Import "$@"

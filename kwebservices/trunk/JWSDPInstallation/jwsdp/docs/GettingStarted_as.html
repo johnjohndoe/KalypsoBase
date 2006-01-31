@@ -1,47 +1,49 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
-<TITLE>Getting Started with Java(tm) Web Services Developer Pack 1.4</TITLE>
+<TITLE>Getting Started with Java(tm) Web Services Developer Pack 2.0</TITLE>
 <BODY bgColor=white>
 
 <H1>Getting Started with Java<SUP><FONT size=-2>TM</FONT></SUP> Web Services 
-Developer Pack 1.4 on Sun Java System Application Server Platform Edition 8</H1></CENTER>
+Developer Pack 2.0 on Sun Java System Application Server Platform Edition 8.1 
+2005Q2 Update 2</H1></CENTER>
 
 <H3>Introduction</H3>
 <BLOCKQUOTE>
-<P>You can use this page to quickly deploy your own Web applications, start 
-  the Sun Java System Application Server, try out tools that come with the 
-  Java WSDP, and see where to get the documentation that more completely 
-  explains how to use the technologies in the Java WSDP. The instructions on 
-  this page assume that you have already performed a "Typical" installation 
-  (installed all of the components). 
+<P>You can use this page to quickly deploy your own web applications, start 
+   the Sun Java System Application Server, try out tools that come with the 
+   Java WSDP, and see where to get the documentation that more completely 
+   explains how to use the technologies in the Java WSDP. The instructions on 
+   this page assume that you have already performed a "Typical" installation 
+   (installed all of the components). 
 </P>
 </BLOCKQUOTE>
 
 <H3>Deploying Your Own Web Applications</H3>
 <BLOCKQUOTE>
 
-<P>To quickly deploy your own Web applications, copy your Web archive (WAR) 
-  files to the <CODE>&lt;<i>AS_HOME</i>&gt;/domains/domain1/autodeploy</CODE> 
-  directory. When you start the Application Server, these applications will 
-  be deployed. See the "Getting Started with Web Applications" chapter of the 
-  <A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
-  Tutorial</a> for more information about deploying Web applications. 
+<P>To quickly deploy your own web applications, copy your web archive (WAR) 
+   files to the <CODE>&lt;<i>AS_HOME</i>&gt;/domains/domain1/autodeploy</CODE> 
+   directory. When you start the Application Server, these applications will 
+   be deployed. See the "Getting Started with Web Applications" chapter of the 
+   <A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
+   Tutorial</a> for more information about deploying web applications. 
 </P>
 </BLOCKQUOTE>
 
 <H3>Starting the Application Server</H3>
 <BLOCKQUOTE>
 <P>On a system running the Solaris or Linux operating system, go to the 
-  <CODE>&lt;<i>AS_HOME</i>&gt;/bin</CODE> directory and execute the following command
-  to bring up the Application Server: 
+   <CODE>&lt;<i>AS_HOME</i>&gt;/bin</CODE> directory and execute the 
+   following command
+to bring up the Application Server: 
 </P>
 <pre>
 asadmin start-domain domain1
 </pre>
 
 <P>On a system running Microsoft Windows, from the Start menu, select Programs, 
-   Sun Microsystems, J2EE 1.4 SDK, and Start Default Server. Once the server 
+   Sun Microsystems, Application Server PE, and Start Default Server. Once the server 
    is up and running, point your browser to 
    <CODE>http://localhost:8080/JWSDP.html</CODE>. The page that is 
    displayed contains links to several sample programs. </P></BLOCKQUOTE>
@@ -130,7 +132,7 @@ and services. </td>
 <tr>
 <td><code>wsdeploy</code></td>
 
-<td>Generates implementation-specific, ready-to-deploy WAR files for Web service 
+<td>Generates implementation-specific, ready-to-deploy WAR files for web service 
 applications that use JAX-RPC.</td>
 </tr>
 
@@ -145,20 +147,60 @@ applications that use JAX-RPC.</td>
    Java WSDP technologies. 
 </P>
 
-<P><A href="http://java.sun.com/webservices/tutorial.html">Click here</A> to 
-  download the version of the Java Web Services Tutorial that provides 
+<p>Visit the <a href="http://java.sun.com/webservices/docs/2.0/news/">Java WSDP News
+   website</a> for news about soon-to-be-released technologies, such as 
+   the version of the Java Web Services Tutorial that provides 
   information about technologies specific to this version of the Java Web 
-  Services Developer Pack. See the 
-  <A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/index.html">J2EE 
-  Tutorial</a> for information about the other Web services technologies.
+  Services Developer Pack.
+</p>
+</BLOCKQUOTE>
+
+
+<H3>Community</H3>
+<BLOCKQUOTE>
+
+<P>The main developer community is the <a href="http://jwsdp.dev.java.net">jwsdp
+   community</a> at Java.Net.  <a href="http://java.net">Java.Net</a> hosts a
+   number of projects and communities related to the Java WSDP.  Sites include
+   the <a href="http://jwsdp.dev.java.net">JWSDP</a> community (<a
+href="http://jwsdp.dev.java.net/servlets/SummarizeList?listName=users">mailing list</a>),
+   the <a href="http://jax-ws.dev.java.net">JAX-WS</a> project
+(<a href="http://jax-ws.dev.java.net/servlets/SummarizeList?listName=users">mailing list</a>),
+   the <a href="http://jax-rpc.dev.java.net">JAX-RPC</a> project
+(<a href="http://jax-rpc.dev.java.net/servlets/SummarizeList?listName=users">mailing list</a>),
+   and the <a href="http://jaxb.dev.java.net">JAXB</a> project
+(<a href="http://jaxb.dev.java.net/servlets/SummarizeList?listName=users">mailing list</a>).
+   There are <a href="http://forum.java.sun.com">Java Technology Forums</a> for
+   the following technologies:
+   <a href="http://forum.java.sun.com/forum.jsp?forum=45">JSP and JSTL</a>,
+   <a href="http://forum.java.sun.com/forum.jsp?forum=33">Java Servlet</a> 
+   Technology,
+   <a href="http://forum.java.sun.com/forum.jsp?forum=427">JavaServer Faces</a>
+   Technology.
+   There are also forums for <a href="http://forum.java.sun.com/forum.jsp?forum=34">Java Technology and XML</a>
+   and <a href="http://forum.java.sun.com/forum.jsp?forum=331">Java Technologies
+   for Web Services</a>, but the Java.Net mailing lists are preferred.
+
 </P>
 
-<P>Visit <A HREF="http://java.sun.com/webservices/docs/1.4/news/">this 
-   website</A> for news about soon to be released technologies, such as 
-   WebRowSet, that you can use with Java WSDP v1.4.
-</P>
+<SCRIPT LANGUAGE="JavaScript">
+  if (document.all) {
+
+      var url="http://jwsdp.dev.java.net";
+      var title="jwsdp community";
+
+      document.write('<P><A HREF="javascript:window.external.AddFavorite(url,title);"');
+      document.write('onMouseOver=" window.status=');
+      document.write("'Add our site to your favorites!'; return true ");
+      document.write('"onMouseOut=" window.status=');
+      document.write("' '; return true ");      
+      document.write('">Click here</A> to bookmark the jwsdp community site.');
+      document.write('</P>');
+  }
+</SCRIPT>
 
 </BLOCKQUOTE>
+
 
 <p> </p>
 <hr>

@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
 <TITLE>
-        JAXB RI 1.0.3 -- Vendor Properties
+        JAXB RI 2.0 ea3 -- Vendor Properties
     </TITLE>
     
 <META content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
@@ -23,19 +23,36 @@
       Runtime Properties
     </H1>
       
-<B>Specification Version:</B> 1.0<BR>
+<B>Specification Version:</B> 2.0<BR>
       
-<B>Reference Implementation (RI) Version:</B> 1.0.3<BR>
+<B>Reference Implementation (RI) Version:</B> 2.0 ea3<BR>
       <!--
- Copyright 2004 Sun Microsystems, Inc. All rights reserved.
- SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ The contents of this file are subject to the terms
+ of the Common Development and Distribution License
+ (the "License").  You may not use this file except
+ in compliance with the License.
+ 
+ You can obtain a copy of the license at
+ https://jwsdp.dev.java.net/CDDLv1.0.html
+ See the License for the specific language governing
+ permissions and limitations under the License.
+ 
+ When distributing Covered Code, include this CDDL
+ HEADER in each file and include the License file at
+ https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ add the following below this CDDL HEADER, with the
+ fields enclosed by brackets "[]" replaced with your
+ own identifying information: Portions Copyright [yyyy]
+ [name of copyright owner]
 -->
 <hr width="50%">
-  Main: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="ant.html">Ant task</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog.html">Changelog</a>
+  JAXB 2.0: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="xjcTask.html">XJCTask</a> | <a href="schemagen.html">SchemaGen</a> | <a href="schemagenTask.html">schemagenTask</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog2.html">Changelog</a>
 <br>
-  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a>
+  JAXB 1.0.x: <a href="jaxb-1_0.html">Release Notes</a> | <a href="changelog.html">Changelog</a>
 <br>
-  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="relaxng.html">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
+  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a> | <a href="developPlugins.html">Develop Plugins</a>
+<br>
+  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="vendorSchemaLangs.html#relaxng">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
 <br>
   JAXB Community: <a href="http://jaxb.dev.java.net">Java.net Homepage</a> | <a href="https://jaxb.dev.java.net/servlets/ProjectMailingListList">Developer interest list</a> | <a href="https://jaxb.dev.java.net/faq/index.html">FAQ</a>
 <br>
@@ -343,11 +360,25 @@ public abstract class NamespacePrefixMapper {
 </TABLE>
   
 		
-<P>
-			When set to true, the marshaller will print out the XML declaration (you'll see &lt;?xml version='1.0' encoding='<I>encoding</I>' standalone='yes' ?&gt; in the output.) When set to false, the marshaller will not write this declaration.
+<P> This experimental JAXB RI 1.0.x property has been adopted as a standard in JAXB 2.0.  The 2.0 RI will
+		    continue to support this property, but client code should be using the <A href="api/Marshaller.html#JAXB_FRAGMENT">
+		    Marshaller.JAXB_FRAGMENT</A> property instead.  Please refer to the <A href="api/Marshaller.html#supportedProps">Marshaller
+		    javadoc</A> for a complete description of the behavior.
+
+        </P>
+<P> In JAXB 2.0, calling:<BR>
+            
+<BLOCKQUOTE>marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);</BLOCKQUOTE>
+            is equivalent to calling:<BR>
+            
+<BLOCKQUOTE>marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);</BLOCKQUOTE>
+
+        
+</P>
+<P> JAXB 1.0 generated code and clients will continue to work exactly the same on the JAXB 2.0 runtime as
+            they did on the JAXB 1.0 runtime.
 		</P>
-<P>
-			Turning this option to false could be useful if you are inserting the output of the XML into another XML.
+<P> Enabling fragment marshalling could be useful if you are inserting the output of the XML into another XML.
 		</P>
 <P>
 			Also, this option can be used when you need to print out things like DOCTYPE declarations or XML stylesheet processing instructions. See the following code for example.
@@ -360,17 +391,9 @@ PrintWriter out = ...;
 out.println("&lt;xml version='1.0'?&gt;");
 out.println("&lt;!DOCTYPE foo SYSTEM 'dummy.dtd'&gt;");
 
-marshaller.setProperty("com.sun.xml.bind.xmlDeclaration",Boolean.FALSE);
+marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
 marshaller.marshal( jaxbObject, out );
 </PRE>
-    
-<H4>Limitations</H4>
-    
-<P>
-			DOM and SAX are not capable of representing the XML declaration. As a result, when marshalling to DOM Node or SAX <CODE>ContentHandler</CODE>, this setting will not take effect. In other words, this setting takes effect only when you are marshalling to <CODE>Writer</CODE> or <CODE>OutputStream</CODE>.
-    </P>
-
-
 	
 <HR>
 	

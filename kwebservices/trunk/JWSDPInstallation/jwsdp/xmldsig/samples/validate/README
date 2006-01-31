@@ -4,17 +4,15 @@ in a KeyValue KeyInfo element in the XML Signature.
 
 Command Line Usage:
 
-  Modify the build.properties file if you are behind a firewall and use
-  an HTTP proxy server.
-
-  $ ant
+  $ export JWSDP_HOME=<pathname to JWSDP>
+  $ $JWSDP_HOME/apache-ant/bin/ant
 
   This will validate the signature in the file envelopedSignature.xml in 
   the current working directory. 
 
   To validate a different signature, run as follows:
 
-  $ ant -Dsample.args="signature.xml" 
+  $ $JWSDP_HOME/apache-ant/bin/ant -Dsample.args="signature.xml" 
 
     where "signature.xml" is the pathname of the file.
 

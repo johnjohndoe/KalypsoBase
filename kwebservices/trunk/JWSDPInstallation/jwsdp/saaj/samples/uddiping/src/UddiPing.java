@@ -70,11 +70,10 @@ public class UddiPing {
             
             SOAPMessage reply = connection.call(msg, endpoint);
 
-            System.out.println("\n\nReceived reply from: "+endpoint);
+            System.out.println("Received reply from: "+endpoint);
 
             System.out.println("\n----------- Reply Message ----------\n");
             reply.writeTo(System.out);
-            System.out.println();
 
             connection.close();
         } catch (Exception ex) {

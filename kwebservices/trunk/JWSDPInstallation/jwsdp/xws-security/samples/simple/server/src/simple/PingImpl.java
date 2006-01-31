@@ -25,21 +25,20 @@ import com.sun.xml.rpc.server.http.ServletEndpointContextImpl;
 import com.sun.xml.rpc.server.TieBase;
 import com.sun.xml.rpc.spi.runtime.Tie;
 
-import com.sun.xml.rpc.security.LoggerConstants;
-
 public  class PingImpl implements PingPort, ServiceLifecycle {
-    private static Logger log =
-        Logger.getLogger(
-            LoggerConstants.RPC_SECURITY_DOMAIN,
-            LoggerConstants.RPC_SECURITY_RESOURCE_BUNDLE);
 
+    Object context = null;
 
     // --- implementation of main operation ---
     public String ping(
         TicketType ticket, String message) {
         System.out.println("The message is here : " + message);        
-        // System.out.println("The Ticket id is here : " + ticket.getId());
         return message;
+    }
+
+    public String ping0(
+        TicketType ticket, String message) {
+        return ping(ticket, message);
     }
 
     /* (non-Javadoc)
@@ -50,6 +49,6 @@ public  class PingImpl implements PingPort, ServiceLifecycle {
     }
     
     public void init(Object context) throws ServiceException {
+        this.context = context;
     }
-
 }

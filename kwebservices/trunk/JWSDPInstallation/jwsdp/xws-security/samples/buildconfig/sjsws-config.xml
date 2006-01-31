@@ -1,14 +1,14 @@
-  <property name="java.endorsed.dirs" value="${jwsdp.home}/bin/https/ws-jars/endorsed"/>
+  <property name="java.endorsed.dir" value="${sjsws.home}/bin/https/ws-jars/endorsed"/>
 
   <!-- Construct app classpath -->
   <path id="app.classpath">
-    <fileset dir="${jwsdp.home}/bin/https/ws-jars/endorsed">
+    <fileset dir="${sjsws.home}/bin/https/ws-jars/endorsed">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${jwsdp.home}/bin/https/ws-jars">
+    <fileset dir="${sjsws.home}/bin/https/ws-jars">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${jwsdp.home}/bin/https/jar">
+    <fileset dir="${sjsws.home}/bin/https/jar">
       <include name="webserv-ext.jar"/>
     </fileset>
      <fileset dir="${javahome}/lib">

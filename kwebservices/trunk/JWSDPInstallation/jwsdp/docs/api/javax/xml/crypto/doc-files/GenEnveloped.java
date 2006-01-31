@@ -3,6 +3,7 @@ import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dom.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.*;
+import javax.xml.crypto.dsig.spec.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -91,13 +92,15 @@ public class GenEnveloped {
 	Reference ref = fac.newReference
 	    ("", fac.newDigestMethod(DigestMethod.SHA1, null),
              Collections.singletonList
-	      (fac.newTransform(Transform.ENVELOPED, null)), 
+	      (fac.newTransform
+		(Transform.ENVELOPED, (TransformParameterSpec) null)), 
 	     null, null);
 
 	// Create the SignedInfo
 	SignedInfo si = fac.newSignedInfo
 	    (fac.newCanonicalizationMethod
-	     (CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, null), 
+	     (CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, 
+	      (C14NMethodParameterSpec) null), 
 	     fac.newSignatureMethod(SignatureMethod.DSA_SHA1, null),
 	     Collections.singletonList(ref));
 

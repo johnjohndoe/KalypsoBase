@@ -1,16 +1,13 @@
 /*
  * $Id$
- */
-
-/*
  * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package simple;
 
-import javax.xml.namespace.QName;
 import javax.xml.rpc.*;
+import javax.xml.namespace.QName;
 
 public class TestClient {    
 
@@ -28,13 +25,12 @@ public class TestClient {
 
         System.out.println("Service URL=" + serviceURL);
 
-        PingPort_Stub stub = (PingPort_Stub)  
+        PingPort_Ping_Stub stub = (PingPort_Ping_Stub)  
                     (pingService.getPing());           
 
         stub._setProperty(  
             javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY, serviceURL);   
 
         stub.ping(new TicketType(null, "SUNW"), "Hello !"); 
-        //stub.ping(new TicketType("Id", "SUNW"), "Hello !"); 
     }
 }

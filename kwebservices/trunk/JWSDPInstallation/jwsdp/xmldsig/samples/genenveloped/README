@@ -45,12 +45,14 @@ like (key and signature values will be different):
   </Signature>
 </Envelope>
 
+Also, the signature above is formatted with indents and line breaks for readability.
 
 Command Line Usage:
 
   To compile and run this sample, execute the following command:
 
-  $ ant 
+  $ export JWSDP_HOME=<pathname of JWSDP>
+  $ $JWSDP_HOME/apache-ant/bin/ant 
 
   This will generate an enveloped signature of the document in envelope.xml 
   and store it in the file envelopedSignature.xml in the current working 

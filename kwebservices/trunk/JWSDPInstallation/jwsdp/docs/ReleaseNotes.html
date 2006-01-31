@@ -1,77 +1,80 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
-<TITLE>Java(TM) Web Services Developer Pack 1.4 Release Notes</TITLE>
+<TITLE>Java(TM) Web Services Developer Pack 2.0 Release Notes</TITLE>
 
 <BODY bgColor=#ffffff><!-- specifies whether the components exist -->
 
-<SCRIPT language=JavaScript1.1 src="ReleaseNotes_files/Components.js" 
+<SCRIPT language=JavaScript1.1 src="Components.js" 
 type=text/javascript></SCRIPT>
 
-<P><A href="./index.html">Java Web Services Developer Pack 1.4</A> 
-
-<H1>Java<SUP><FONT size=-2>TM</FONT></SUP> Web Services Developer Pack 1.4 
+<H1>Java<SUP><FONT size=-2>TM</FONT></SUP> Web Services Developer Pack 2.0 
 Release Notes</H1>
 <H3>Contents</H3>
 <BLOCKQUOTE>
-<P><A href="./ReleaseNotes.html#platforms">Supported Platforms</A> 
-<BR><A href="./ReleaseNotes.html#new">What's New in Java WSDP 1.4?</A> 
-<BR><A href="./ReleaseNotes.html#RedistributableComponents">Redistributable 
-    Components</A> 
-<BR><A href="./ReleaseNotes.html#NonredistributableComponents">Nonredistributable 
-    Components</A> 
+<P><A href="./ReleaseNotes.html#docs">Documentation</A> 
+<BR><A href="./ReleaseNotes.html#platforms">Supported Platforms</A> 
+<BR><A href="./ReleaseNotes.html#new">What's New in Java WSDP 2.0?</A> 
+<BR><A href="./ReleaseNotes.html#RedistributableComponents">Redistributables</A> 
 <BR><A href="./ReleaseNotes.html#ev">Environment Variables</A> 
 <BR><A href="./ReleaseNotes.html#AntOnLinux">Using Ant That Comes with Java WSDP on Linux</A> 
-<BR><A href="./ReleaseNotes.html#uninstalling">Uninstalling Java WSDP 1.4</A> 
+<BR><A href="./ReleaseNotes.html#uninstalling">Uninstalling Java WSDP 2.0</A> 
 <BR><A href="./ReleaseNotes.html#KnownIssues">Known Issues</A> 
 </P>
 
+<A NAME="docs"> </A>
+<H3>Documentation</H3>
+<BLOCKQUOTE>
 <p>The Java<SUP><SMALL>TM</SMALL></SUP> Web Services Developer Pack (Java WSDP) 
    is an all-in-one download containing key technologies to simplify building 
-   of Web services using the Java 2 Platform. For release notes for these 
+   of web services using the Java 2 Platform. For release notes for these 
    technologies see: 
 <UL>
 <SCRIPT language=JavaScript1.1 type=text/javascript>
       document.open();
       
+      if (fastinfoset == true) {
+          document.write('<li><a href="../fastinfoset/docs/ReleaseNotes.html">Fast Infoset 1.0.1 Release Notes</a></li>');
+      }
+
+     if (jaxwsa == true) {
+          document.write('<li><a href="../jaxwsa/docs/ReleaseNotes.html">Java API for XML Web Services Addressing 1.0 EA Release Notes</a></li>');
+      }
+
+     if (sjsxp == true) {
+          document.write('<li><a href="../sjsxp/docs/ReleaseNotes.html">Sun Java Streaming XML Parser Version 1.0 EA Release Notes</a></li>');
+      }
+
       if (xmldsig == true) {
-          document.write('<li><a href="../xmldsig/docs/index.html">XML Digital Signature 1.0 EA Release Notes</a></li>');
+          document.write('<li><a href="../xmldsig/docs/index.html">XML Digital Signature 1.0.1 Release Notes</a></li>');
       }
 
       if (xws_sec == true) {
-          document.write('<li><a href="../xws-security/docs/ReleaseNotes.html">XML and Web Services Security 1.0 EA3 Release Notes</a></li>');
+          document.write('<li><a href="../xws-security/docs/ReleaseNotes.html">XML and Web Services Security 2.0 EA2 Release Notes</a></li>');
       }
 
-      if (wsi == true) {
-          document.write('<li><a href="../wsi-sampleapp/docs/index.html">WS-I Attachment Sample Application 1.0 EA Release Notes</a></li>');
+      if (jaxws == true) {
+          document.write('<li><a href="../jaxws/docs/ReleaseNotes.html">JAX-WS 2.0 EA Release Notes</a></li>');
       }
 
       if (jaxb == true) {
-          document.write('<li><a href="../jaxb/docs/ReleaseNotes.html">JAXB 1.0.3 FCS Release Notes</a></li>');
+          document.write('<li><a href="../jaxb/docs/ReleaseNotes.html">JAXB 2.0 EA Release Notes</a></li>');
       }
 
       if (jaxp == true) {
-          document.write('<li><a href="../jaxp/docs/ReleaseNotes.html">JAXP 1.2.6 FCS Release Notes</a></li>');
+          document.write('<li><a href="../jaxp/docs/ReleaseNotes.html">JAXP 1.3.1_01 Release Notes</a></li>');
       }
 
       if (jaxr == true) {
-          document.write('<li><a href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.6 FCS Release Notes</a></li>');
+          document.write('<li><a href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.8_01 EA Release Notes</a></li>');
       }
 
       if (jaxrpc == true) {
-          document.write('<li><a href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.2 FCS Release Notes</a></li>');
+          document.write('<li><a href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.3_01 EA Release Notes</a></li>');
       }
 
       if (saaj == true) {
-          document.write('<li><a href="../saaj/docs/ReleaseNotes.html">SAAJ 1.2.1 FCS Release Notes</a></li>');
-      }
-
-      if (jstl == true) {
-          document.write('<li><a href="../jstl/docs/ReleaseNotes.html">JSTL 1.1 FCS Release Notes</a></li>');
-      }
-
-      if (registry == true) {
-          document.write('<li><a href="../registry-server/docs/ReleaseNotes.html">Registry Server 1.0_06 FCS Release Notes</a></li>');
+          document.write('<li><a href="../saaj/docs/ReleaseNotes.html">SAAJ 1.3 EA Release Notes</a></li>');
       }
 
       if (tomcat == true) {
@@ -82,164 +85,193 @@ Release Notes</H1>
 </SCRIPT>
     
 <NOSCRIPT>
-<LI><A href="../xmldsig/docs/index.html">XML Digital Signature 1.0 EA Release 
+<LI><A HREF="../fastinfoset/docs/ReleaseNotes.html">Fast Infoset 1.0.1</A></LI>
+<LI><A HREF="../jaxwsa/docs/ReleaseNotes.html">Java API for XML Web Services 
+    Addressing 1.0 EA Release Notes</A></LI>
+<LI><A href="../sjsxp/docs/ReleaseNotes.html">Sun Java Streaming XML Parser 1.0 
+    EA Release Notes</A></LI> 
+<LI><A href="../xmldsig/docs/index.html">XML Digital Signature 1.0.1 Release 
     Notes</A></LI> 
 <LI><A href="../xws-security/docs/ReleaseNotes.html">XML and Web Services 
-    Security 1.0 EA3</A></LI> 
-<LI><A href="../wsi-sampleapp/docs/index.html">WS-I Attachment Sample Application 1.0 EA 
-    Release Notes</A></LI> 
-<LI><A href="../jaxb/docs/ReleaseNotes.html">JAXB 1.0.3 FCS Release Notes</A></LI> 
-<LI><A href="../jaxp/docs/ReleaseNotes.html">JAXP 1.2.6 FCS Release Notes</A></LI> 
-<LI><A href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.6 FCS Release Notes</A></LI>
-<LI><A href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.2 FCS Release 
+    Security 2.0 EA2 Release Notes</A></LI> 
+<LI><A href="../jaxws/docs/index.html">JAX-WS 2.0 EA Release Notes</A></LI> 
+<LI><A href="../jaxb/docs/ReleaseNotes.html">JAXB 2.0 EA Release Notes</A></LI> 
+<LI><A href="../jaxp/docs/ReleaseNotes.html">JAXP 1.3.1_01 Release Notes</A></LI> 
+<LI><A href="../jaxr/docs/ReleaseNotes.html">JAXR 1.0.8_01 EA Release Notes</A></LI>
+<LI><A href="../jaxrpc/docs/ReleaseNotes.html">JAX-RPC 1.1.3_01 EA Release 
     Notes</A></LI> 
-<LI><A href="../saaj/docs/ReleaseNotes.html">SAAJ 1.2.1 FCS Release Notes</A></LI> 
-<LI><A href="../jstl/docs/ReleaseNotes.html">JSTL 1.1 EA Release Notes</A></LI> 
-<LI><A href="../registry-server/docs/ReleaseNotes.html">Registry Server 1.0_06 
-    EA Release Notes</A></LI>
+<LI><A href="../saaj/docs/ReleaseNotes.html">SAAJ 1.3 EA Release Notes</A></LI> 
 </NOSCRIPT>
 </UL>
-  <P>Updated, online versions of the release notes are available <A 
-  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html">here</A>. 
-  </P></BLOCKQUOTE>
+
+<P>Updated, online versions of the Release Notes are available <A 
+HREF="http://java.sun.com/webservices/docs/2.0/ReleaseNotes.html">here</A>.</P>
+
+<P>Go to the <A HREF="./index.html">Java Web Services Developer Pack 2.0 
+   index page</A> and visit the links to the API documentation and reference 
+   documentation for all the technologies.</P>
+</BLOCKQUOTE>
   
 <A name=platforms></A>
 <H3>Supported Platforms</H3>
 <BLOCKQUOTE>
 
 <P>This release of the Java WSDP has been tested in various configurations 
-  with J2SE SDK version 1.4.2_<EM>xx</EM> on the following platforms: 
+  with J2SE 5.0 on the following platforms with the containers Sun Java 
+  System Application Server Platform Edition 8.1 Update 2, and Glassfish 
+  (Application Server Platform Edition 9.0 Beta (JAX-WSA only), and Tomcat 
+  5.0 for JWSDP: 
 
 <UL>
-<LI>Solaris<SUP><FONT size=-2>TM</FONT></SUP> 9 Operating System 
-<LI>Windows 2003 Server Professional Edition 
-<LI>Windows XP Professional Edition 
+<LI>Solaris<SUP><FONT size=-2>TM</FONT></SUP> 9 Operating System on 
+    Sparc and x86 </LI>
+<LI>Solaris<SUP><FONT size=-2>TM</FONT></SUP> 10 Operating System on 
+    Sparc and Opteron
+</LI>
+<LI>Windows 2003 Server Professional Edition </LI>
+<LI>Windows XP Professional Edition </LI>
+<LI>Windows 2000 Professional Edition </LI>
 <LI>RedHat Linux 9.0 </LI>
+<LI>RedHat Linux AS 3.0 (including Update 4)</LI>
 </UL>
 </BLOCKQUOTE>
 
 <A name=new> </A>
-<H3>What's New in Java WSDP 1.4?</H3>
+<H3>What's New in Java WSDP 2.0?</H3>
 <BLOCKQUOTE>
 
 <UL>
-<LI>JSR-105, XML Digital Signature API</LI>
+<li>JAX-WS 2.0 early access (Java API for XML Web Services)</li>
 
-<LI>Support for multiple Web containers (Sun Java System Application Server 
-    Platform Edition 8, Sun Java System Web Server 6.1, Tomcat 5.0 for Java 
-    WSDP Container) or no Web container</LI>
+<li>JAXB 2.0 early access</li>
 
-<LI>Support for the following profiles, based on draft versions dated April 19, 
-    2004:
-    <UL>
-    <LI>WS-I Basic Profile 1.1</LI>
-    <LI>WS-I Attachment Profile 1.0</LI>
-    <LI>WS-I Simple SOAP Binding Profile 1.0</LI>
-    </UL</LI>
+<li>SAAJ 1.3 early access</li>
 
-<LI>XML and Web Services Security EA3, which implements "Web Services Security:
-    SOAP Message Security" 1.0 from OASIS</LI>
+<li>JAX-WSA 1.0 early access (Java API for XML Web Services Addressing) and
+    an experimental version of JAX-WS that works with Glassfish</li>
 
-<LI>Renamed JAXP Packages (from org.apache to com.sun.org.apache)</LI>
+<li>Fast Infoset 1.0.1 FCS release acceleration technology built on 
+    ASN.1 standards </li>
+
+<li>XML Web Services Security 2.0 early access
+</li>
+
+<li>Sun Java Streaming XML Parser 1.0 early access, a high performance 
+    implementation of JSR 173 </li>
+
+<li>JAXP 1.3.1_01 FCS release
+</li>
+ 
+<li>XML Digital Signatures 1.0.1 FCS release, with significant performance 
+    enhancements
+</li>
+
+<li>Bug fixes, refreshed core components (JAX-RPC early access, JAXR early 
+    access, and more)
+</li>
+
+<li>Ant Version 1.6.5</li>
+
+<li>WS-I Sample Application has been removed </li>
+
+<li>Service Registry has been removed</li>
+
+<li>Sun Java System Web Server is no longer a supported container</li>
+
 </UL>
 </BLOCKQUOTE>
 
 <A name=RedistributableComponents> </A>
-<H3>Redistributable Components</H3>
+<H3>Redistributables</H3>
 <BLOCKQUOTE>
-  <P>Redistribution of the entire Java WSDP is subject to this <A 
-  href="../LICENSE">license</A>. 
-  <P>The following Java WSDP components are individually redistributable. 
-  Redistribution of a component entails the redistribution of all files 
-  comprising the component and any dependent components. 
+<P>DISTRIBUTION BY DEVELOPERS.  Subject to the terms and 
+   conditions of the Software License Agreement and the 
+   obligations, restrictions, and exceptions set forth 
+   below, You may reproduce and distribute the portions 
+   of Software identified below ("Redistributable"), 
+   provided that:</P>
+
+<OL TYPE=a>
+<LI> you distribute the Redistributable complete and 
+     unmodified and only bundled as part of Your 
+     applets and applications ("Programs"), </LI>
+
+<LI> your Programs add significant and primary 
+     functionality to the Software, </LI> 
+
+<LI> you distribute Redistributable for the sole 
+     purpose of running your Programs, </LI>
+
+<LI> you do not distribute additional software 
+     intended to replace any component(s) of the 
+     Redistributable, </LI>
+
+<LI> you do not remove or alter any proprietary 
+     legends or notices contained in or on the 
+     Redistributable, </LI>
+ 
+<LI> you only distribute the Redistributable 
+     subject to a license agreement that protects 
+     Sun's interests consistent with the terms 
+     contained in the Software License Agreement, 
+     and </LI>
+
+<LI> you agree to defend and indemnify Sun and its 
+     licensors from and against any damages, costs, 
+     liabilities, settlement amounts and/or 
+     expenses  (including attorneys' fees) incurred 
+     in connection with any claim, lawsuit or 
+     action by any third party that arises or 
+     results from the use or distribution of any 
+     and all Programs and/or Redistributable. </LI>
+</OL> 
+
+<P>The following files are Redistributables: </P>
   <P>
   <TABLE cellPadding=5 summary="" border=1>
     <TBODY>
     <TR>
       <TH align=left>Redistributable Component</TH>
-      <TH align=left>Files</TH></TR>
+      <TH align=left>Redistributable Files</TH></TR>
     <TR>
       <TD>JAXP</TD>
       <TD><CODE>jaxp-api.jar</CODE>, <CODE>dom.jar</CODE>, 
         <CODE>sax.jar</CODE>, <CODE>xalan.jar</CODE>, 
-        <CODE>xercesImpl.jar</CODE>, <CODE>xsltc.jar</CODE></TD></TR>
-    <TR>
-      <TD>JAXB <SUP><B>*</B></SUP></TD>
-      <TD>JAXB JAR files (<CODE>jaxb-api.jar</CODE>, 
-        <CODE>jaxb-impl.jar</CODE>, <CODE>jaxb-libs.jar</CODE>, 
-        <CODE>jaxb-xjc.jar</CODE>), JAXP 1.1 or higher JAR files 
-        (<CODE>jaxp-api.jar</CODE>, <CODE>sax.jar</CODE>, <CODE>dom.jar</CODE>, 
-        <CODE>xalan.jar</CODE>), JWSDP Shared JAR files 
-        (<CODE>jax-qname.jar</CODE>, <CODE>namespace.jar</CODE>, 
-        <CODE>xsdlib.jar</CODE>, <CODE>relaxngDataype.jar</CODE>) </TD></TR>
-    <TR>
-      <TD>JAX-RPC</TD>
-      <TD><CODE>jaxrpc-api.jar</CODE>, <CODE>jaxrpc-impl.jar</CODE>, 
-        <CODE>jaxrpc-spi.jar</CODE>, <CODE>relaxngDatatype.jar</CODE>, 
-        <CODE>xsdlib.jar</CODE>, JAXP, SAAJ, <CODE>jcert.jar</CODE>, 
-        <CODE>jnet.jar</CODE>, <CODE>jsse.jar</CODE> </TD></TR>
-    <TR>
-      <TD>SAAJ</TD>
-      <TD><CODE>saaj-api.jar</CODE>, <CODE>saaj-impl.jar</CODE>, 
-        <CODE>jaxp-api.jar</CODE>, <CODE>dom.jar</CODE>, <CODE>sax.jar</CODE>, 
-        <CODE>xalan.jar</CODE>, <CODE>xercesImpl.jar</CODE>, 
-        <CODE>activation.jar</CODE>, <CODE>mail.jar</CODE>, 
-        <CODE>servlet.jar</CODE></TD></TD></TR>
-    <TR>
-      <TD>JAXR</TD>
-      <TD><CODE>jaxr-api.jar</CODE>, <CODE>jaxr-impl.jar</CODE>, 
-        <CODE>jaxb-api.jar</CODE>, <CODE>jaxb-impl.jar</CODE>, 
-        <CODE>jaxb-libs.jar</CODE>, <CODE>saaj-api.jar</CODE>, 
-        <CODE>saaj-impl.jar</CODE>, <CODE>jaxp-api.jar</CODE>, 
-        <CODE>dom.jar</CODE>, <CODE>sax.jar</CODE>, <CODE>xercesImpl.jar</CODE>, 
-        <CODE>activation.jar</CODE>, <CODE>jaas.jar</CODE>, 
-        <CODE>mail.jar</CODE>, <CODE>namespace.jar</CODE>, 
-        <CODE>relaxngDatatype.jar</CODE>, <CODE>xsdlib.jar</CODE></TD></TD></TR>
-    <TR>
-      <TD colSpan=2><SUP><B>*</B></SUP>&nbsp;&nbsp;<FONT size=-1>If the 
-        application will not be doing any compilation at runtime, the 
-        <CODE>jaxb-xjc.jar</CODE> file does not need to be redistributed with 
-        the application.</FONT></TD></TR></TBODY></TABLE>
-  <P>Click <A 
-  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html#RedistributableComponents">here</A> 
-  to check for any changes. </P></BLOCKQUOTE><A name=NonredistributableComponents>
-<H3>Nonredistributable Components</H3>
-<BLOCKQUOTE>
-  <P>The following Java WSDP components are <EM>not</EM> redistributable. These 
-  components can be used for designing, developing, and testing purposes only. 
-  <P>
-  <TABLE cellPadding=5 summary="" border=1>
-    <TBODY>
-    <TR>
-      <TH align=left>Nonredistributable Component</TH>
-      <TH align=left>Files</TH></TR>
-    <TR>
-      <TD>Registry Server</TD>
-      <TD><CODE>registry-server.war</CODE>, <CODE>xindice.jar</CODE></TD></TR>
-    <TR>
-      <TD>Java XML &amp; Web Services Security</TD>
-      <TD>all</TD></TR>
+        <CODE>xercesImpl.jar</CODE></CODE></TD></TR>
     <TR>
       <TD>XML Digital Signature</TD>
-      <TD>all</TD></TR>
+      <TD><CODE>xmldsig.jar</CODE>, <CODE>xmlsec.jar</CODE></TD></TR>
     <TR>
-      <TD>JSTL</TD>
-      <TD>all</TD></TR>
-    <TR>
-      <TD>WS-I Sample Application</TD>
-      <TD>all</TD></TR>
+      <TD>Fast Infoset</TD>
+      <TD><CODE>FastInfoset.jar</CODE>, <CODE>dom.jar</CODE>, 
+      <CODE>sax.jar</CODE>, <CODE>jsr173_api.jar</CODE></TD></TR>
 </TBODY></TABLE>
 
-<P>Click <A 
-  href="http://java.sun.com/webservices/docs/1.4/ReleaseNotes.html#NonredistributableComponents">here</A> 
-  to check for any changes. </P></BLOCKQUOTE>
+<P>Click <A  
+href="http://java.sun.com/webservices/docs/2.0/ReleaseNotes.html#RedistributableComponents">here</A> 
+to check for any changes. </P>
+</BLOCKQUOTE>
   
+<a name="JAXP131_w_J2SE5"></a>
+<h3>Using JAXP 1.3.1_01 in Java WSDP 2.0 with J2SE 5.0</h3>
+
+<blockquote>
+<p>If you are using Java WSDP 2.0 with J2SE 5.0, you should be using the 
+   JAXP 1.3.1_01 JAR files from JWSDP 2.0, not the JAXP 1.3 JAR files from 
+   J2SE 5.0.  Since the JAXP classes have been renamed to "com.sun..."
+   in both JDK 5 and Java WSDP 2.0, we need to override the built-in classes.
+   The APIs are the same (both are version 1.3) but version 1.3.1_01 
+   implementation classes that ship with Java WSDP 2.0 include some bug fixes 
+   that are not included in the version 1.3 implementation classes that ship 
+   with J2SE 5.0. </p>
+</blockquote> 
+
 <a name=AntOnLinux> </a>
 <h3>Using Ant That Comes with Java WSDP on Linux</h3>
 <blockquote>
 <p>On Linux systems, even if you set your ANT_HOME and PATH environment 
    variables to point to the version of Ant that is installed with the Java 
-   WSDP 1.4, when you run the Java WSDP's Ant scripts, your system will look in 
+   WSDP 2.0, when you run the Java WSDP's Ant scripts, your system will look in 
    the <code>/etc/ant.conf</code> configuration file and execute the version of 
    Ant that is configured there.  In this case, the default entry is 
    <code>/usr/share/ant</code>.  If you want to use the version of ANT that is 
@@ -249,6 +281,15 @@ Release Notes</H1>
 </p>
 </blockquote>
 
+<a name=fastinfoset_off_by_default> </a>
+<h3>Fast Infoset Is Turned Off By Default</h3>
+<blockquote>
+<p>Fast Infoset is turned off (content negotiation is set to <em>none</em>) 
+   by default in Java WSDP 2.0.  See the 
+   <a href="../jaxrpc/docs/fastinfoset/manual.html">Fast Infoset User's 
+   Manual</a> for information about turning on content negotiation.
+</p>
+</blockquote>
 
 <A name=ev>
 </a>
@@ -272,13 +313,24 @@ http.proxyPort=8080
   <P><B>Microsoft Windows</B>: <CODE>catalina -Dhttp.proxyHost=webcache 
   -Dhttp.proxyPort=8080</CODE> </P></BLOCKQUOTE>
   
-<A name=uninstalling> </a>
-<H3>Uninstalling Java WSDP 1.4</H3>
+<A NAME="java5"> </A>
+<H3>Console Installation on J2SE 5.0.</H3>
 <BLOCKQUOTE>
-  <P>At some point, you may need to uninstall Java WSDP 1.4: </P>
+<P>If you are running a console installation on a remote system 
+   with J2SE 5.0, the installation will exit if the DISPLAY 
+   variable hasn't been set.  Make sure that you set the 
+   DISPLAY variable <em>before</em> you start the console 
+   installation on a remote system.
+</P>
+</BLOCKQUOTE>
+
+<A name=uninstalling> </a>
+<H3>Uninstalling Java WSDP 2.0</H3>
+<BLOCKQUOTE>
+  <P>At some point, you may need to uninstall Java WSDP 2.0: </P>
   <UL>
     <LI>On Microsoft Windows, select Start --&gt; Programs --&gt; Java(TM) Web 
-    Services Developer Pack 1.4 --&gt; Uninstall. 
+    Services Developer Pack 2.0 --&gt; Uninstall. 
     <LI>On Solaris and Linux, run the 
     <CODE>&lt;<EM>JWSDP_HOME</EM>&gt;/uninstall.sh</CODE> script. </LI>
 </UL>
@@ -290,13 +342,46 @@ http.proxyPort=8080
 </BLOCKQUOTE>
 
 <A name=KnownIssues>
-  <H3>Known Issues</H3>
-  <BLOCKQUOTE>
-    <P>Click <A 
-    href="http://java.sun.com/webservices/1.4/ReleaseNotes.html#KnownIssues">here</A> 
-    to display an up-to-date list of known problems with the Java WSDP 1.4 
-    release.</P></BLOCKQUOTE>
-  <P>&nbsp;</P>
+<H3>Known Issues</H3>
+
+<P>Click <A 
+HREF="http://java.sun.com/webservices/docs/2.0/ReleaseNotes.html#KnownIssues/">here</A> 
+to display the most up-to-date list of known problems with this release of the 
+Java Web Services Developers Pack.</P>
+
+<H4>FastInfoset Does Not Improve
+Performance in Some Cases</H4>
+<BLOCKQUOTE>
+<P>FastInfoset makes little or no impact
+when: </P>
+<UL>
+<LI>There is no binding, using the <code>wscompile</code>
+option 
+    -<code>f:nodatabinding</code>
+</LI>
+<LI>Complex schema that results in the use of <code>SOAPElement</code> 
+    for non-supported schema features, such as <code>xsd:choice</code> 
+</LI>
+</UL>
+</BLOCKQUOTE>
+
+<H4>FastInfoset and EJB Web Services Endpoints Using Authentication in
+    Application Server 8.1 2005Q2 UR2 </H4>
+<BLOCKQUOTE>
+<P>There is a problem with authentication
+when FastInfoset is enabled and 
+   EJBs are
+used as WebService endpoints. This is
+because 
+   &quot;EJBWebServiceDispatcher&quot; is rejecting all the
+messages that 
+   are not of type &quot;text/xml&quot;. As a result,
+applications using 
+   &quot;EJB Webservices endpoints&quot; may fail when FastInfoset is used. 
+</P>
+</BLOCKQUOTE>
+
+<P>&nbsp;</P>
 
 <p> </p>
 <hr>
@@ -305,5 +390,5 @@ http.proxyPort=8080
 </p>
 
 <P><A href="./Copyright.html"><FONT 
-  size=-1><I>Copyright © 2004 Sun Microsystems, Inc. All rights 
+  size=-1><I>Copyright © 2005 Sun Microsystems, Inc. All rights 
   reserved.</I></FONT></A> </P></BLOCKQUOTE></BODY></HTML>

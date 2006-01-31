@@ -39,11 +39,14 @@ like (key and signature values will be different):
   <Object Id="object">some text</Object>
 </Signature>
 
+Also, the signature above is formatted with indents and line breaks for readability.
+
 Command Line Usage:
 
   To compile and run this sample, execute the following command:
 
-  $ ant 
+  $ export JWSDP_HOME=<pathname to JWSDP>
+  $ $JWSDP_HOME/apache-ant/bin/ant 
 
   This will generate an enveloping signature and store it in the file 
   envelopingSignature.xml in the current working directory.

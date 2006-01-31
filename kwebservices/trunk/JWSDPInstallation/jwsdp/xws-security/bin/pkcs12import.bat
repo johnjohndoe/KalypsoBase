@@ -41,7 +41,7 @@ goto setArgs
 
 set JWSDP_HOME=%PRG%\..\..\..
 set JAXRPC_SEC_LIB_HOME=%JWSDP_HOME%\xws-security\lib
-set CLASSPATH=%JAXRPC_SEC_LIB_HOME%\jaxrpc-sec.jar
+set CLASSPATH=%JAXRPC_SEC_LIB_HOME%\pkcs12import.jar
 
 rem Execute the target
 "%JAVA_HOME%\bin\java.exe" -classpath %PRG%\..;"%CLASSPATH%";"%PATH%" com.sun.xml.wss.tools.PKCS12Import %CMD_LINE_ARGS%

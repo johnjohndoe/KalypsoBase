@@ -12,6 +12,7 @@
 
   <!-- Values in build.properties (if any) override the values in this file -->
   <property file="build.properties"/>
+  <property file="../build.properties"/>
   
   <property name="context-path" value="securesimple"/>  
   <property name="client-class" value="${ant.project.name}.TestClient"/>
@@ -19,9 +20,6 @@
   <property name="url" value="http://${endpoint.host}:${endpoint.port}/manager/"/>
   <property name="username" value="${username}"/>
   <property name="password" value="${password}"/>
-
-  <property name="http.proxyHost" value="webcache.sfbay.sun.com"/>
-  <property name="http.proxyPort" value="8080"/>
 
   <property name="build.home" value="build"/>
   <property name="dist.home" value="dist"/>
@@ -37,14 +35,62 @@
             
   <property name="jaxrpc.tool.verbose" value="false"/>
   
-  <target name="prepare">
-    <mkdir dir="${build.home}/client"/>
+
+  <target name="as8-check" if="sjsas.home">
+    <mkdir dir="${build.home}/client/classes"/>
     <mkdir dir="${build.home}/server/WEB-INF/classes"/>
     <mkdir dir="${dist.home}"/>
-  <!-- replace this switch with &sjsws; or &tomcat; for running with
-       SJSWS and Tomcat Containers -->
     &sjsas;
   </target>
+
+  <target name="ws-check" if="sjsws.home">
+    <mkdir dir="${build.home}/client/classes"/>
+    <mkdir dir="${build.home}/server/WEB-INF/classes"/>
+    <mkdir dir="${dist.home}"/>
+    &sjsws;
+  </target>
+
+  <target name="tc-check" if="tomcat.home">
+    <mkdir dir="${build.home}/client/classes"/>
+    <mkdir dir="${build.home}/server/WEB-INF/classes"/>
+    <mkdir dir="${dist.home}"/>
+    &tomcat;
+  </target>
+
+  <target name="prepare" depends="as8-check, ws-check, tc-check, compile-handler-code, create-handler-jar">
+  </target>
+
+  <target name="compile-handler-code"
+          description="Compiles the handler">
+    <echo message="Compiling the handler source code "/>
+    <javac debug="true"
+           srcdir="src"
+           destdir="${build.home}/server/WEB-INF/classes"
+           includes="**/*.java">
+    <classpath>
+        <path refid="app.classpath"/>
+    </classpath>
+    </javac>
+    <javac debug="true"
+           srcdir="src"
+           destdir="${build.home}/client/classes"
+           includes="**/*.java">
+    <classpath>
+        <path refid="app.classpath"/>
+    </classpath>
+    </javac>
+  </target>
+
+  <target name="create-handler-jar"
+          description="Creating jar file">
+    <jar jarfile="${build.home}/client/secenv-handler.jar">
+      <fileset dir="${build.home}/client/classes">
+        <include name="**/*.class"/>
+      </fileset>
+    </jar>
+  </target>
+    
+
 
   <target name="compile-server" depends="gen-server"
           description="Compiles the server-side source code">
@@ -64,6 +110,7 @@
     <echo message="Running wscompile...."/>
     <wscompile verbose="${jaxrpc.tool.verbose}" 
                xPrintStackTrace="true"    
+               jvmargs="-Djava.endorsed.dirs=${java.endorsed.dir}"
                keep="true" fork="true" 
                security="${server.security.config}"
                import="true"
@@ -103,6 +150,7 @@
     <delete file="${dist.home}/${deployable-war}"/>
 
     <wsdeploy fork="true" verbose="${jaxrpc-tool-verbose}" keep="true"
+              jvmargs="-Djava.endorsed.dirs=${java.endorsed.dir}"
               tmpdir="${build.home}/server"
               outwarfile="${dist.home}/${deployable-war}"
               inwarfile="${dist.home}/${portable-war}">
@@ -209,9 +257,27 @@
             path="/${context-path}" war="file:${war-path}"/>
   </target>
 
-  <target name="undeploy-tomcat" if="tom.webapp.deployed">
+
+ <target name="undeploy-tomcat-proper" if="webapp.deployed">
+      <echo message="Undeploying existing webapp at ${context-path}"/>
+      <undeploy-catalina url="${url}" username="${username}" password="${password}" path="/${context-path}"/>
+  </target>
+                                                                                                                          
+  <target name="undeploy-tomcat-war-present" if="war.present">
+      <echo message="Undeploying existing webapp at ${context-path}"/>
+      <undeploy-catalina url="${url}" username="${username}" password="${password}" path="/${context-path}"/>
+  </target>
+                                                                                                                          
+  <target name="undeploy-tomcat" if="tomcat.home">
     <echo message="Undeploying existing webapp at ${context-path}"/>
-    <undeploy-catalina url="${url}" username="${username}" password="${password}" path="/${context-path}"/>
+    <condition  property="war.present">
+        <available file="${tomcat.home}/webapps/${deployable-war}" />
+    </condition>
+    <antcall target="undeploy-tomcat-war-present" />
+    <condition property="webapp.deployed">
+      <http url="http://${endpoint.host}:${endpoint.port}/${context-path}/"/>
+    </condition>
+    <antcall target="undeploy-tomcat-proper" />
  </target>
   <!--End of Tomcat -->
 
@@ -229,12 +295,16 @@
           description="Runs wscompile to generate client side artifacts">
     <echo message="Running wscompile...."/>
     <wscompile fork="true" verbose="${jaxrpc.tool.verbose}" keep="true"
+               jvmargs="-Djava.endorsed.dirs=${java.endorsed.dir}"
                client="true"
                security="${client.security.config}"
                base="${build.home}/client"
                features=""
                config="${client.config.rpcenc.file}">
       <classpath>
+        <fileset dir="${build.home}/client">
+            <include name="secenv-handler.jar"/>
+        </fileset>
         <path refid="app.classpath"/>
       </classpath>
     </wscompile>
@@ -249,6 +319,9 @@
            includes="**/*.java">
       <classpath>
         <path refid="app.classpath"/>
+        <fileset dir="${build.home}/client">
+            <include name="secenv-handler.jar"/>
+        </fileset>
       </classpath>
     </javac>
   </target>
@@ -262,18 +335,16 @@
           description="Runs the example client">
     <echo message="Running the ${client-class} program...."/>
     <java fork="on" classname="${client-class}">
-      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dir}"/>
       <sysproperty key="endpoint.host" value="${endpoint.host}"/>
       <sysproperty key="endpoint.port" value="${endpoint.port}"/>
       <sysproperty key="service.url" value="${service.url}"/>
-      <sysproperty key="javax.net.ssl.keyStore" value="${jwsdp.home}/xws-security/etc/client-keystore.jks"/>
-      <sysproperty key="javax.net.ssl.keyStorePassword" value="changeit"/>
-      <sysproperty key="javax.net.ssl.keyStoreType" value="JKS"/>
-      <sysproperty key="javax.net.ssl.trustStore" value="${jwsdp.home}/xws-security/etc/client-truststore.jks"/>
-      <sysproperty key="javax.net.ssl.trustStorePassword" value="changeit"/>
-      <sysproperty key="javax.net.ssl.trustStoreType" value="JKS"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
       <classpath>
         <pathelement location="${build.home}/client"/>
+        <fileset dir="${build.home}/client">
+            <include name="secenv-handler.jar"/>
+        </fileset>
         <path refid="app.classpath"/>
       </classpath>
     </java>
@@ -284,20 +355,18 @@
           description="Runs the example client">
     <echo message="Running the ${client-class} program...."/>
     <java fork="on" classname="${client-class}">
-      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dir}"/>
       <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
       <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
       <sysproperty key="endpoint.host" value="${endpoint.host}"/>
       <sysproperty key="endpoint.port" value="${endpoint.port}"/>
       <sysproperty key="service.url" value="${service.url}"/>
-      <sysproperty key="javax.net.ssl.keyStore" value="${jwsdp.home}/xws-security/etc/client-keystore.jks"/>
-      <sysproperty key="javax.net.ssl.keyStorePassword" value="changeit"/>
-      <sysproperty key="javax.net.ssl.keyStoreType" value="JKS"/>
-      <sysproperty key="javax.net.ssl.trustStore" value="${jwsdp.home}/xws-security/etc/client-truststore.jks"/>
-      <sysproperty key="javax.net.ssl.trustStorePassword" value="changeit"/>
-      <sysproperty key="javax.net.ssl.trustStoreType" value="JKS"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
       <classpath>
         <pathelement location="${build.home}/client"/>
+        <fileset dir="${build.home}/client">
+            <include name="secenv-handler.jar"/>
+        </fileset>
         <path refid="app.classpath"/>
       </classpath>
     </java>

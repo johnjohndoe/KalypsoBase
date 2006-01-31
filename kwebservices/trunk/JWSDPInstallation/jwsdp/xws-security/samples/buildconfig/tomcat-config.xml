@@ -1,14 +1,22 @@
 <property name="ant.jar"
             value="${tomcat.home}/server/lib/catalina-ant.jar"/>
+<property name="java.endorsed.dir" value="${tomcat.home}/jaxp/lib/endorsed:${tomcat.home}/jaxp/lib/"/>
 
   <path id="app.classpath">
     <fileset dir="${tomcat.home}/xws-security/lib"/>
+    <fileset dir="${tomcat.home}/xmldsig/lib"/>
     <fileset dir="${tomcat.home}/jwsdp-shared/lib"/>
     <fileset dir="${tomcat.home}/common/lib"/>
+    <fileset dir="${tomcat.home}/sjsxp/lib"/>
+    <fileset dir="${tomcat.home}/jaxb/lib"/>
     <fileset dir="${tomcat.home}/jaxrpc/lib"/>
     <fileset dir="${tomcat.home}/saaj/lib"/>
+    <fileset dir="${tomcat.home}/fastinfoset/lib"/>
     <fileset dir="${tomcat.home}/jaxp/lib">
-      <include name="**/*.jar"/>
+      <include name="jaxp-api.jar"/>
+    </fileset>
+    <fileset dir="${tomcat.home}/jaxp/lib/endorsed">
+      <include name="*.jar"/>
     </fileset>
     <fileset dir="${javahome}/lib">
       <include name="tools.jar"/>

@@ -7,30 +7,21 @@ about the organization and the services it provides.
 
 Configuration:
 --------------
-Before running the example, you need to configure it as follows:
+Before running the example, you need to change the query.properties as follows:
 
 1. If you are running the example from behind a firewall, please add the proxy
-   information, by modifying the following fields in query.properties:
+   information:
        http.proxy.host 
        http.proxy.port
 
-
-2. By default, the registry attempts to query information from Microsoft's
-   public UDDI v2 test registry. You can query any registry you wish, by
-   setting the following variables:
-       regUrli : the URL for sending queries to the registries
-       regUrlp : the URL for publishing data to the registries
+2. You can query any registry you wish, by setting the
+       query.url : the URL for sending queries to the registries
    (The URLs for the public registries can be found here:
        http://www.uddi.org/find.html )
-       
-   For the private UDDI V2 registry implementation bundled with the JWSDP, the
-   URLs are :
-       regUrli : http://localhost:8080/RegistryServer/
-       regUrlp : http://localhost:8080/RegistryServer/
-       
+        
 3. You can edit the pattern being searched for, by editing the settings for the
    "company" variable. For example, to search for the organization published 
-   in the jaxr-publish sample, you could replace %foo% by USA-Works
+   in the jaxr-publish sample, you could replace %USA% by USA-Works
    
 Running the sample:
 -------------------

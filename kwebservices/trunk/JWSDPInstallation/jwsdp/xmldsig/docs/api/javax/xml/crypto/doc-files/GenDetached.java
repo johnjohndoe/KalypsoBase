@@ -3,6 +3,7 @@ import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dom.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.*;
+import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.security.*;
@@ -82,7 +83,8 @@ public class GenDetached {
 	// Create the SignedInfo
 	SignedInfo si = fac.newSignedInfo(
 	    fac.newCanonicalizationMethod
-	        (CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, null),
+	        (CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, 
+		 (C14NMethodParameterSpec) null),
 	    fac.newSignatureMethod(SignatureMethod.DSA_SHA1, null),
 	    Collections.singletonList(ref));
 

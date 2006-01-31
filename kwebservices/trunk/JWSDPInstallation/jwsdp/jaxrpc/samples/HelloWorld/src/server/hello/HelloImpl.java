@@ -7,9 +7,7 @@ package hello;
 
 public class HelloImpl implements hello.HelloIF, java.rmi.Remote {
 
-    public ValueType echoValueType(ValueType vt) {
-        System.out.println("in echoValue type : " + vt);
-        return vt;
+    public void sayHelloBackOneWay(java.lang.String str) {
     }
 
     public String sayHelloBack(java.lang.String str) {

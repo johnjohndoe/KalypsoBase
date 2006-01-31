@@ -4,9 +4,9 @@
 -->
 <project basedir="." default="run">
   <description>
-			This example demonstrates how one can use one communication channel
-			(such as a socket) to send multiple XML messages, and how it can be
-			combined with JAXB.
+      This example demonstrates how one can use one communication channel
+      (such as a socket) to send multiple XML messages, and how it can be
+      combined with JAXB.
     </description>
   <!--
     if you are not running from $JWSDP_HOME/jaxb/samples AND you
@@ -17,20 +17,34 @@
   <path id="classpath">
     <pathelement path="src" />
     <pathelement path="classes" />
+    <pathelement path="schemas" />
+    <!--additional jar files for this sample-->
+    <fileset dir="lib" includes="*.jar" />
     <!--for use with bundled ant-->
     <fileset dir="${jwsdp.home}" includes="jaxb/lib/*.jar" />
-    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/*.jar" />
-    <fileset dir="${jwsdp.home}" includes="jaxp/lib/**/*.jar" />
+    <fileset dir="${jwsdp.home}" includes="sjsxp/lib/*.jar" />
+    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/activation.jar" />
+    <fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/resolver.jar" />
   </path>
   <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
     <classpath refid="classpath" />
   </taskdef>
 
+  <!--
+    Check if the necessary jar files are properly installed.
+  -->
+  <target name="jar-check">
+    <available file="lib/sjsxp.jar" property="sjsxp.jar-present" />
+    <fail unless="sjsxp.jar-present">
+              Please download sjsxp.jar from the web and place it in the lib directory.
+            </fail>
+  </target>
+
   <!--compile Java source files-->
-  <target name="compile" description="Compile all Java source files">
+  <target name="compile" description="Compile all Java source files" depends="jar-check">
     <echo message="Compiling the schema..." />
     <mkdir dir="gen-src" />
-    <xjc schema="message.xsd" package="message" target="gen-src">
+    <xjc schema="message.xsd" package="message" destdir="gen-src">
       <produces dir="gen-src/message" includes="**/*.java" />
     </xjc>
     <echo message="Compiling the java source files..." />
@@ -40,12 +54,6 @@
       <src path="gen-src" />
       <classpath refid="classpath" />
     </javac>
-    <copy todir="classes">
-      <fileset dir="gen-src">
-        <include name="**/*.properties" />
-        <include name="**/bgm.ser" />
-      </fileset>
-    </copy>
   </target>
 
   <target name="run" depends="compile" description="Run the sample app">
@@ -66,6 +74,7 @@
   <target name="clean" description="Deletes all the generated artifacts.">
     <delete dir="docs/api" />
     <delete dir="gen-src" />
+    <delete dir="schemas" />
     <delete dir="classes" />
   </target>
 </project>
