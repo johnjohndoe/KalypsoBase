@@ -134,5 +134,5 @@ public abstract class ScrolledCompositeCreator
     return m_scrolledComposite;
   }
 
-  protected abstract Control createContents( final ScrolledComposite parent, final int style );
+  protected abstract Control createContents( final Composite parent, final int style );
 }

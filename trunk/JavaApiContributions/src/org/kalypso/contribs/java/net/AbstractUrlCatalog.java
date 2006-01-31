@@ -51,19 +51,19 @@ import java.util.Map;
  */
 public abstract class AbstractUrlCatalog implements IUrlCatalog
 {
-  private final HashMap m_catalog = new HashMap();
+  private final HashMap<String, URL> m_catalog = new HashMap<String, URL>();
 
   public AbstractUrlCatalog()
   {
     fillCatalog( getClass(), m_catalog );
   }
 
-  protected abstract void fillCatalog( final Class myClass, final Map catalog );
+  protected abstract void fillCatalog( final Class myClass, final Map<String, URL> catalog );
 
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
-  public final Map getCatalog()
+  public final Map<String, URL> getCatalog()
   {
     return m_catalog;
   }
@@ -73,6 +73,6 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
    */
   public final URL getURL( final String namespace )
   {
-    return (URL)m_catalog.get( namespace );
+    return m_catalog.get( namespace );
   }
 }

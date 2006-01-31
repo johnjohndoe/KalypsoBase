@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EclipsePlatformContributions Plug-in
+Bundle-SymbolicName: org.kalypso.contribs.eclipseplatform; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: EclipsePlatformContributions.jar
+Bundle-Activator: org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.contribs.eclipse,
+ org.kalypso.contribs.eclipse.compare,
+ org.kalypso.contribs.eclipse.core.resources,
+ org.kalypso.contribs.eclipse.jface.wizard,
+ org.kalypso.contribs.eclipse.jface.wizard.view,
+ org.kalypso.contribs.eclipse.platform,
+ org.kalypso.contribs.eclipse.platform.adapter,
+ org.kalypso.contribs.eclipse.ui,
+ org.kalypso.contribs.eclipse.ui.dialogs,
+ org.kalypso.contribs.eclipse.ui.editorinput,
+ org.kalypso.contribs.eclipse.ui.views.contentoutline,
+ org.kalypso.contribs.eclipse.ui.views.propertysheet
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.ui.editors,
+ org.eclipse.core.resources,
+ org.eclipse.compare,
+ org.eclipse.ui.views,
+ org.eclipse.ui.ide,
+ org.kalypso.contribs.eclipsercp;visibility:=reexport,
+ org.eclipse.help,
+ org.eclipse.ui,
+ org.kalypso.contribs.java
+Eclipse-AutoStart: true

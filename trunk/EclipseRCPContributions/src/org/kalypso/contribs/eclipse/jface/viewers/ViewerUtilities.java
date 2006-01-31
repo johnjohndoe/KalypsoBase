@@ -40,6 +40,10 @@
  --------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
+import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -54,6 +58,26 @@ public final class ViewerUtilities
   /** Never gets instatiated */
   private ViewerUtilities( )
   {
+    // never instantiate it
+  }
+  
+  /**
+   * Sets the selection of this viewer to its first input-element.
+   * <p>
+   * The content provider must be a {@link IStructuredContentProvider}.
+   * </p>
+   *  
+   */
+  public final static void selectFirstElement( final ContentViewer viewer )
+  {
+    final IContentProvider contentProvider = viewer.getContentProvider();
+    if( contentProvider instanceof IStructuredContentProvider )
+    {
+      final IStructuredContentProvider provider = (IStructuredContentProvider)contentProvider;
+      final Object[] elements = provider.getElements( viewer.getInput() );
+      if( elements != null && elements.length > 0 )
+        viewer.setSelection( new StructuredSelection( elements[0] ), true );
+    }
   }
 
   /**

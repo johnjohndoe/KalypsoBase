@@ -81,7 +81,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   {
     String label;
 
-    ArrayList resources = new ArrayList();
+    ArrayList<IResource> resources = new ArrayList<IResource>();
 
     boolean resourcesSorted = true;
 
@@ -732,7 +732,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    */
   private Image getImage( ResourceDescriptor desc )
   {
-    IResource r = (IResource)desc.resources.get( 0 );
+    IResource r = desc.resources.get( 0 );
     return labelProvider.getImage( r );
   }
 
@@ -782,7 +782,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * @param resources
    *          resources that match
    */
-  protected void getMatchingResources( final ArrayList resources )
+  protected void getMatchingResources( final ArrayList<IResource> resources )
   {
     try
     {
@@ -868,11 +868,11 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         if( descriptorsSize < 2 )
           return;
         ResourceDescriptor current = descriptors[index];
-        IResource currentResource = (IResource)current.resources.get( 0 );
+        IResource currentResource = current.resources.get( 0 );
         for( int i = 1; i < descriptorsSize; i++ )
         {
           ResourceDescriptor next = descriptors[i];
-          IResource nextResource = (IResource)next.resources.get( 0 );
+          IResource nextResource = next.resources.get( 0 );
           if( nextResource.getType() == currentResource.getType() && next.label.equals( current.label ) )
           {
             current.resources.add( nextResource );
@@ -886,7 +886,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             descriptors[index + 1] = descriptors[i];
             index++;
             current = descriptors[index];
-            currentResource = (IResource)current.resources.get( 0 );
+            currentResource = current.resources.get( 0 );
           }
         }
         descriptorsSize = index + 1;
@@ -917,7 +917,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     TableItem items[] = folderNames.getSelection();
     if( items.length == 1 )
     {
-      ArrayList result = new ArrayList();
+      final ArrayList<Object> result = new ArrayList<Object>();
       result.add( items[0].getData() );
       setResult( result );
     }
@@ -963,12 +963,12 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         if( !desc.resourcesSorted )
         {
           // sort the folder names
-          Collections.sort( desc.resources, new Comparator()
+          Collections.sort( desc.resources, new Comparator<IResource>()
           {
-            public int compare( Object o1, Object o2 )
+            public int compare( IResource o1, IResource o2 )
             {
-              String s1 = getParentLabel( (IResource)o1 );
-              String s2 = getParentLabel( (IResource)o2 );
+              String s1 = getParentLabel( o1 );
+              String s2 = getParentLabel( o2 );
               return collator.compare( s1, s2 );
             }
           } );
@@ -978,7 +978,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         for( int i = 0; i < desc.resources.size(); i++ )
         {
           TableItem newItem = new TableItem( folderNames, SWT.NONE );
-          IResource r = (IResource)desc.resources.get( i );
+          IResource r = desc.resources.get( i );
           newItem.setText( getParentLabel( r ) );
           newItem.setImage( getParentImage( r ) );
           newItem.setData( r );

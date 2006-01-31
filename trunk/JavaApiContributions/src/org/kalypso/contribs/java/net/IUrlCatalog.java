@@ -58,8 +58,6 @@ public interface IUrlCatalog
 
   /**
    * Gibt den Katalog als Map zurück.
-   * 
-   * @return Ein Map {@link String}to {@link URL}.
    */
-  public Map getCatalog();
+  public Map<String, URL> getCatalog( );
 }

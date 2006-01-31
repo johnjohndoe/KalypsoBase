@@ -43,7 +43,6 @@ package org.kalypso.contribs.java.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -68,9 +67,8 @@ public final class Arrays
   /**
    * Add all elementsToAdd to the given collection.
    */
-  public static void addAll( final Collection c, final Object[] elementsToAdd )
+  public static void addAll( final Collection<Object> c, final Object[] elementsToAdd )
   {
-    // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok, any side-effects?
     c.addAll( java.util.Arrays.asList( elementsToAdd ) );
   }
 
@@ -85,12 +83,10 @@ public final class Arrays
    * @param desiredclass
    *          instances of this class or subclasses of it will be added to dest
    */
-  public static void addAllOfClass( final Collection source, final Collection dest, final Class desiredclass )
+  public static void addAllOfClass( final Collection source, final Collection<Object> dest, final Class<?> desiredclass )
   {
-    for( final Iterator it = source.iterator(); it.hasNext(); )
+    for( final Object obj : source )
     {
-      final Object obj = it.next();
-
       if( desiredclass.isAssignableFrom( obj.getClass() ) )
         dest.add( obj );
     }
