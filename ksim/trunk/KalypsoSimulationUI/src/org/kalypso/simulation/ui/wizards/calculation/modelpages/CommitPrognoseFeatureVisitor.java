@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -76,7 +76,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 {
   private final static Logger LOG = Logger.getLogger( CommitPrognoseFeatureVisitor.class.getName() );
 
-  private final Collection m_stati = new ArrayList();
+  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
   private final IProgressMonitor m_monitor;
   private final String m_sourceTS;
   private final String m_targetTS;
@@ -119,8 +119,8 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
     final String id = f.getId();
 
-    final TimeseriesLink sourceLink = (TimeseriesLink)f.getProperty( m_sourceTS );
-    final TimeseriesLink targetLink = (TimeseriesLink)f.getProperty( m_targetTS );
+    final TimeseriesLinkType sourceLink = (TimeseriesLinkType)f.getProperty( m_sourceTS );
+    final TimeseriesLinkType targetLink = (TimeseriesLinkType)f.getProperty( m_targetTS );
     if( sourceLink == null )
       return new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Kein Link für Property " + m_sourceTS
           + " in Feature ID = " + id, null );
@@ -199,6 +199,6 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
   public IStatus[] getStati()
   {
-    return (IStatus[])m_stati.toArray( new IStatus[m_stati.size()] );
+    return m_stati.toArray( new IStatus[m_stati.size()] );
   }
 }

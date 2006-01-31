@@ -41,17 +41,18 @@
 package org.kalypso.simulation.ui.startscreen;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.simulation.modellist.ModellistType;
-import org.kalypso.simulation.modellist.ModellistType.ModelType;
+import org.kalypso.simulation.modellist.Modellist;
+import org.kalypso.simulation.modellist.Modellist.Model;
 
 /**
  * @author Belger
  */
 public class ModelLabelProvider extends LabelProvider
 {
+  @Override
   public String getText( final Object element )
   {
-    final ModellistType.ModelType model = (ModelType)element;
+    final Modellist.Model model = (Model)element;
 
     return model.getLabel();
   }

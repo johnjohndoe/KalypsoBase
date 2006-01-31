@@ -48,6 +48,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -85,11 +87,11 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.simulation.modellist.ImageLabelType;
 import org.kalypso.simulation.modellist.Modellist;
-import org.kalypso.simulation.modellist.ModellistType;
 import org.kalypso.simulation.modellist.ObjectFactory;
-import org.kalypso.simulation.modellist.ModellistType.ModelType;
+import org.kalypso.simulation.modellist.Modellist.Model;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
@@ -102,11 +104,13 @@ import org.xml.sax.InputSource;
  */
 public class PrognosePanel
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private Modellist m_modellist = null;
 
   private String m_errorMessage;
 
-  private final Map m_imageHash = new HashMap();
+  private final Map<Modellist.Model, ImageData> m_imageHash = new HashMap<Modellist.Model, ImageData>();
 
   private final ModelLabelProvider m_labelProvider = new ModelLabelProvider();
 
@@ -120,7 +124,8 @@ public class PrognosePanel
 
   private Composite m_control;
 
-  private ModelType m_model;
+  private Model m_model;
+
 
   public PrognosePanel( final URL modellistLocation )
   {
@@ -129,7 +134,7 @@ public class PrognosePanel
     try
     {
       final InputSource inputSource = new InputSource( modellistLocation.openStream() );
-      m_modellist = (Modellist)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
+      m_modellist = (Modellist)JC.createUnmarshaller().unmarshal( inputSource );
     }
     catch( final Exception e )
     {
@@ -216,6 +221,7 @@ public class PrognosePanel
     startButton.setFont( buttonfont );
     startButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final IProject project = updateModel( window );
@@ -231,6 +237,7 @@ public class PrognosePanel
     organizeButton.setToolTipText( "Hochwasser-Vorhersagen verwalten" );
     organizeButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final IProject project = updateModel( window );
@@ -270,7 +277,7 @@ public class PrognosePanel
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final ModellistType.ModelType model = (ModelType)( (IStructuredSelection)event.getSelection() )
+        final Modellist.Model model = (Model)( (IStructuredSelection)event.getSelection() )
             .getFirstElement();
 
         setModel( model );
@@ -302,6 +309,7 @@ public class PrognosePanel
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
        */
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         Program.launch( linkUrl );
@@ -337,13 +345,13 @@ public class PrognosePanel
     return null;
   }
 
-  protected void setModel( final ModellistType.ModelType model )
+  protected void setModel( final Modellist.Model model )
   {
     m_model = model;
 
     final Image oldImage = m_imageLabel.getImage();
 
-    ImageData imageData = (ImageData)m_imageHash.get( model );
+    ImageData imageData = m_imageHash.get( model );
     if( imageData == null )
     {
       try
@@ -385,6 +393,7 @@ public class PrognosePanel
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
+      @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();

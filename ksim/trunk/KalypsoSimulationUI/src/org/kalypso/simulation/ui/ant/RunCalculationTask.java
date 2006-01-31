@@ -43,8 +43,8 @@ package org.kalypso.simulation.ui.ant;
 
 import java.lang.reflect.InvocationTargetException;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Validator;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.BuildException;
@@ -65,9 +65,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.xml.ModeldataType;
+import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.impl.ModeldataTypeImpl;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
@@ -77,6 +77,9 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  */
 public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
+  private static final ObjectFactory OF = new ObjectFactory();
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   /**
    * Gets a display
    * 
@@ -148,27 +151,13 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
   private String m_calcCasePath;
 
-  private ModeldataType m_modeldata;
-
-  private ObjectFactory m_factory;
-
-  private Validator m_validator;
+  private Modeldata m_modeldata;
 
   private IFolder m_calcCaseFolder;
 
   public RunCalculationTask()
   {
-    m_factory = new ObjectFactory();
-    try
-    {
-      m_modeldata = m_factory.createModeldata();
-      m_validator = m_factory.createValidator();
-    }
-    catch( final JAXBException e )
-    {
-      // should never happen
-      e.printStackTrace();
-    }
+    m_modeldata = OF.createModeldata();
   }
 
   public String getCalcCaseFolder()
@@ -186,17 +175,17 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     m_modeldata.setTypeID( typeID );
   }
 
-  public void addConfiguredInput( final ModeldataTypeImpl.InputTypeImpl input )
+  public void addConfiguredInput( final Modeldata.Input input )
   {
     m_modeldata.getInput().add( input );
   }
 
-  public void addConfiguredOutput( final ModeldataTypeImpl.OutputTypeImpl output )
+  public void addConfiguredOutput( final Modeldata.Output output )
   {
     m_modeldata.getOutput().add( output );
   }
 
-  public void addConfiguredclearAfterCalc( final ModeldataTypeImpl.ClearAfterCalcTypeImpl clearAfterCalc )
+  public void addConfiguredclearAfterCalc( final Modeldata.ClearAfterCalc clearAfterCalc )
   {
     m_modeldata.getClearAfterCalc().add( clearAfterCalc );
   }
@@ -215,6 +204,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
+  @Override
   public void execute() throws BuildException
   {
     // give implementing class a chance to validate its input
@@ -241,7 +231,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
     try
     {
-      m_validator.validate( m_modeldata );
+      JC.createValidator().validate( m_modeldata );
 
       monitor.worked( 500 );
 

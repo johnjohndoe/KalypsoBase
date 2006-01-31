@@ -111,7 +111,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   {
     super( "newFolderPage1" );//$NON-NLS-1$
     setTitle( pageName );
-    setDescription( IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.description" ) ); //$NON-NLS-1$
+    setDescription( IDEWorkbenchMessages.WizardNewFolderMainPage_description ); //$NON-NLS-1$
     this.currentSelection = selection;
   }
 
@@ -134,7 +134,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     resourceGroup = new ResourceAndContainerGroup(
         composite,
         this,
-        IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.folderName" ), IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.folderLabel" ), false, SIZING_CONTAINER_GROUP_HEIGHT ); //$NON-NLS-2$ //$NON-NLS-1$
+        IDEWorkbenchMessages.WizardNewFolderMainPage_folderName, IDEWorkbenchMessages.WizardNewFolderMainPage_folderLabel, false, SIZING_CONTAINER_GROUP_HEIGHT ); //$NON-NLS-2$ //$NON-NLS-1$
     resourceGroup.setAllowExistingResources( false );
     initializePage();
     validatePage();
@@ -160,10 +160,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    */
   protected void initializePage()
   {
-    Iterator enum = currentSelection.iterator();
-    if( enum.hasNext() )
+    final Iterator currSel = currentSelection.iterator();
+    if( currSel.hasNext() )
     {
-      Object next = enum.next();
+      final Object next = currSel.next();
       IResource selectedResource = null;
       if( next instanceof IResource )
       {

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -61,7 +62,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
@@ -78,9 +78,10 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.ArgListType;
 import org.kalypso.model.xml.ArgType;
-import org.kalypso.model.xml.CalcwizardType;
+import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
@@ -90,7 +91,6 @@ import org.kalypso.simulation.ui.wizards.calculation.createchoices.CopyCalcCaseC
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.CopyServerCalcCaseChoice;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener;
-import org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage;
 import org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -98,6 +98,8 @@ import org.xml.sax.InputSource;
 
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private static final RGB DEFAULT_TITLE_RGB = new RGB( 255, 255, 255 );
 
   private final IProject m_project;
@@ -106,7 +108,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   protected SteuerparameterWizardPage m_controlPage;
 
-  private final List m_pages = new ArrayList();
+  private final List<IWizardPage> m_pages = new ArrayList<IWizardPage>();
 
   private IWizardContainer m_container;
 
@@ -116,10 +118,11 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   private boolean m_buttonsLocked;
 
-  private CalcwizardType m_calcwizard;
+  private Calcwizard m_calcwizard;
 
   /** Scenario of current calcCase */
   protected IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
+
 
   /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
@@ -143,7 +146,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
       inputSource.setEncoding( wizardConfigFile.getCharset() );
 
-      m_calcwizard = (CalcwizardType)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
+      m_calcwizard = (Calcwizard)JC.createUnmarshaller().unmarshal( inputSource );
     }
     catch( final JAXBException e )
     {
@@ -196,7 +199,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       final java.util.List pages = m_calcwizard.getPage();
       for( final Iterator pIt = pages.iterator(); pIt.hasNext(); )
       {
-        final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
+        final Calcwizard.Page page = (Calcwizard.Page)pIt.next();
 
         final Arguments arguments = buildArguments( page );
 
@@ -250,8 +253,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
+      @Override
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Geänderte Daten werden gespeichert", 1000 );
 
@@ -300,7 +303,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     // notify pages
     for( int i = 0; i < m_pages.size(); i++ )
-      ( (IWizardPage)m_pages.get( i ) ).dispose();
+      m_pages.get( i ).dispose();
   }
 
   /**
@@ -318,7 +321,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     if( m_pages.size() == 0 )
       return null;
-    return (IWizardPage)m_pages.get( 0 );
+    return m_pages.get( 0 );
   }
 
   /**
@@ -330,6 +333,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
+      @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         if( page == m_createCalcCasePage )
@@ -440,7 +444,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       // last page or page not found
       return null;
 
-    return (IWizardPage)m_pages.get( index + 1 );
+    return m_pages.get( index + 1 );
   }
 
   /**
@@ -459,7 +463,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     if( page == m_controlPage )
       return null;
 
-    return (IWizardPage)m_pages.get( index - 1 );
+    return m_pages.get( index - 1 );
   }
 
   /**
@@ -522,7 +526,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public IWizardPage[] getPages()
   {
-    return (IWizardPage[])m_pages.toArray( new IWizardPage[m_pages.size()] );
+    return m_pages.toArray( new IWizardPage[m_pages.size()] );
   }
 
   /**
@@ -632,7 +636,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     monitor.beginTask( "Seiten werden gespeichert...", 1 * pageCount );
 
-    final List statusList = new ArrayList( pageCount );
+    final List<IStatus> statusList = new ArrayList<IStatus>( pageCount );
     try
     {
       for( int i = 0; i < pageCount; i++ )
@@ -677,7 +681,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     monitor.beginTask( "Seiten werden wiederhergestellt", pageCount );
 
-    final List statusList = new ArrayList( pageCount );
+    final List<IStatus> statusList = new ArrayList<IStatus>( pageCount );
     for( int i = 0; i < pageCount; i++ )
     {
       final IWizardPage page = pages[i];

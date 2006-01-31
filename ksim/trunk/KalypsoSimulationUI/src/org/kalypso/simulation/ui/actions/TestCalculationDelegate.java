@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
@@ -70,11 +71,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.compare.CompareType;
+import org.kalypso.compare.Compare;
 import org.kalypso.compare.ObjectFactory;
-import org.kalypso.compare.ResourceType;
-import org.kalypso.compare.ResourceType.PathType;
+import org.kalypso.compare.Resource;
+import org.kalypso.compare.Resource.Path;
 import org.kalypso.contribs.eclipse.compare.ResourceCompareInputCopy;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.CalcCaseJob;
 import org.xml.sax.InputSource;
@@ -84,6 +86,8 @@ import org.xml.sax.InputSource;
  */
 public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private IWorkbenchWindow m_window;
 
   /**
@@ -124,6 +128,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
 
       final Job diffJob = new Job( "Vergleiche Ergebnisse für: " + folder.getName() )
       {
+        @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
@@ -181,6 +186,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
         /**
          * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
          */
+        @Override
         public void done( final IJobChangeEvent event )
         {
           // nur falls die Berechnung erfolgreich war, den diff-job starten
@@ -210,13 +216,11 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     {
       monitor.beginTask( "Lese Vergleichskonfiguration", 1000 );
 
-      // ein eigener unmarshaller pro job, weil die jaxb Klasse nicht thread
-      // safe sind
-      final Unmarshaller unmarshaller = new ObjectFactory().createUnmarshaller();
+      final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
       final IFile file = calcCaseFolder.getFile( ".test.xml" );
       reader = new InputStreamReader( new BufferedInputStream( file.getContents() ), file.getCharset() );
-      final CompareType compare = (CompareType)unmarshaller.unmarshal( new InputSource( reader ) );
+      final Compare compare = (Compare)unmarshaller.unmarshal( new InputSource( reader ) );
       reader.close();
 
       final List diffList = compare.getDiff();
@@ -226,12 +230,12 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
       for( final Iterator diffIt = diffList.iterator(); diffIt.hasNext(); )
       {
         final Object diff = diffIt.next();
-        if( diff instanceof ResourceType )
+        if( diff instanceof Resource )
         {
-          final ResourceType resource = (ResourceType)diff;
+          final Resource resource = (Resource)diff;
           final List pathList = resource.getPath();
-          final ResourceType.PathType first = (PathType)pathList.get( 0 );
-          final ResourceType.PathType second = (PathType)pathList.get( 1 );
+          final Resource.Path first = (Path)pathList.get( 0 );
+          final Resource.Path second = (Path)pathList.get( 1 );
 
           final IResource firstRes = getResource( first, calcCaseFolder );
           final IResource secondRes = getResource( second, calcCaseFolder );
@@ -264,7 +268,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     }
   }
 
-  private static final IResource getResource( final ResourceType.PathType path, final IFolder calcCaseFolder )
+  private static final IResource getResource( final Resource.Path path, final IFolder calcCaseFolder )
       throws CoreException
   {
     final IProject project = calcCaseFolder.getProject();

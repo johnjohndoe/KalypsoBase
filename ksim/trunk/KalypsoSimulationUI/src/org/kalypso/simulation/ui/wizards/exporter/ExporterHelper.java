@@ -72,8 +72,8 @@ import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -130,7 +130,7 @@ public final class ExporterHelper
    */
   public static String[] getArgumentValues( final String prefix, final Arguments args )
   {
-    final List values = new ArrayList();
+    final List<String> values = new ArrayList<String>();
 
     for( final Iterator it = args.entrySet().iterator(); it.hasNext(); )
     {
@@ -144,7 +144,7 @@ public final class ExporterHelper
       }
     }
 
-    return (String[])values.toArray( new String[values.size()] );
+    return values.toArray( new String[values.size()] );
   }
 
   /**
@@ -163,8 +163,8 @@ public final class ExporterHelper
   public static UrlArgument[] createUrlItems( final String argumentPrefix, final Arguments arguments, final URL context )
       throws CoreException
   {
-    final Collection items = new ArrayList();
-    final Collection stati = new ArrayList();
+    final Collection<UrlArgument> items = new ArrayList<UrlArgument>();
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
 
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
@@ -192,10 +192,10 @@ public final class ExporterHelper
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[])stati
+      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati
           .toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
 
-    return (UrlArgument[])items.toArray( new UrlArgument[items.size()] );
+    return items.toArray( new UrlArgument[items.size()] );
   }
 
   /**
@@ -232,7 +232,7 @@ public final class ExporterHelper
       chart = new ObservationChart( tpl, true );
       chart.setBackgroundPaint( Color.WHITE );
 
-      final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader );
+      final Obsdiagview xml = DiagViewUtils.loadDiagramTemplateXML( reader );
 
       IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
@@ -302,7 +302,7 @@ public final class ExporterHelper
     {
       tpl = new TableView();
       table = new ObservationTable( tpl, true, false );
-      final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader );
+      final Obstableview xml = TableViewUtils.loadTableTemplateXML( reader );
 
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
@@ -369,6 +369,7 @@ public final class ExporterHelper
       return m_args.getProperty( key, defaultValue );
     }
 
+    @Override
     public String toString()
     {
       return m_label;

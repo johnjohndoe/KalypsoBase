@@ -92,8 +92,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
@@ -137,10 +138,10 @@ import org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
-import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -348,7 +349,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private TableView m_tableView = null;
 
-  private ObstableviewType m_tableTemplate = null;
+  private Obstableview m_tableTemplate = null;
 
   private ObservationTable m_table = null;
 
@@ -361,6 +362,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // WARNING: this adapter causes the map to bee painted twice, each time it is resized
     // the reason ist, that the map-panel itself is also a resize-listener
     // moreover, the order in which the two resize events are called is random!
+    @Override
     public void controlResized( final ControlEvent e )
     {
       maximizeMap();
@@ -389,6 +391,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_mapModell != null )
@@ -772,7 +775,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     final List selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
 
-    final Collection foundObservations = new ArrayList( selectedFeatures.size() );
+    final Collection<TSLinkWithName> foundObservations = new ArrayList<TSLinkWithName>( selectedFeatures.size() );
 
     for( final Iterator it = selectedFeatures.iterator(); it.hasNext(); )
     {
@@ -793,7 +796,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         else
           name = tsprop.getNameString();
 
-        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( tsprop.getLinkColumn() );
+        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( tsprop.getLinkColumn() );
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(), obsLink.getHref(),
@@ -803,7 +806,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     }
 
-    return (TSLinkWithName[])foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
+    return foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
   protected FeatureList getSelectedFeatures()
@@ -859,13 +862,17 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.dialogs.DialogPage#setControl(org.eclipse.swt.widgets.Control)
    */
+  @Override
   protected void setControl( final Control newControl )
   {
     final String helpId = getHelpId();
 
     // this is where we hook the help id with the given control
     if( helpId != null )
-      WorkbenchHelp.setHelp( newControl, helpId );
+    {
+      final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+      helpSystem.setHelp( newControl, helpId );
+    }
 
     super.setControl( newControl );
   }
@@ -879,14 +886,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     refreshDiagram();
     refreshZMLTable();
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#performHelp()
-   */
-  public void performHelp()
-  {
-  // todo get helpid, show help
   }
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
@@ -925,6 +924,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         if( radioQ.getSelection() )
@@ -937,6 +937,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         if( radioW.getSelection() )
@@ -1044,6 +1045,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
+      @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( taskName, 3000 );
@@ -1085,6 +1087,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
+      @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         return calcWizard.refreshAllPages( monitor );
@@ -1143,7 +1146,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final FeatureList featureList = kft.getFeatureListVisible( null );
           if( featureList != null && featureList.size() != 0 )
           {
-            final List easyFeatures = new ArrayList( fids.length );
+            final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( fids.length );
             for( int i = 0; i < fids.length; i++ )
             {
               final String fid = fids[i];
@@ -1159,7 +1162,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               easyArray = new EasyFeatureWrapper[]
               { new EasyFeatureWrapper( workspace, (Feature)featureList.get( 0 ), null, null ) };
             else
-              easyArray = (EasyFeatureWrapper[])easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
+              easyArray = easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
             final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
             selectionManager.changeSelection( featuresToRemove, easyArray );
@@ -1226,6 +1229,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         launchAnt( antLaunch, buttonTooltipOwn, buttonTextOwn, buttonTooltipOwn, buttonProperties );
@@ -1288,6 +1292,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getNextPage()
    */
+  @Override
   public IWizardPage getNextPage()
   {
     final IWizardPage page = getPageFromProperty( PROP_NEXTPAGE );
@@ -1302,6 +1307,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
    */
+  @Override
   public IWizardPage getPreviousPage()
   {
     final IWizardPage page = getPageFromProperty( PROP_PREVPAGE );
@@ -1328,6 +1334,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getName()
    */
+  @Override
   public String getName()
   {
     return getArguments().getProperty( PROP_PAGE_ID, super.getName() );

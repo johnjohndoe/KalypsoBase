@@ -129,7 +129,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       {
         try
         {
-          monitor.beginTask( IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
+          monitor.beginTask( IDEWorkbenchMessages.WizardNewFolderCreationPage_progress, 5000 ); //$NON-NLS-1$
           final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent().getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
@@ -166,7 +166,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       {
         ErrorDialog.openError( getContainer().getShell(), // Was
             // Utilities.getFocusShell()
-            IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
+            IDEWorkbenchMessages.WizardNewFolderCreationPage_errorTitle, //$NON-NLS-1$
             null, // no special message
             ( (CoreException)e.getTargetException() ).getStatus() );
       }
@@ -180,7 +180,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         MessageDialog
             .openError(
                 getContainer().getShell(),
-                IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.internalErrorTitle" ), IDEWorkbenchMessages.format( "WizardNewFolder.internalError", new Object[] { e.getTargetException().getMessage() } ) ); //$NON-NLS-2$ //$NON-NLS-1$
+                IDEWorkbenchMessages.WizardNewFolderCreationPage_internalErrorTitle, IDEWorkbenchMessages.bind( IDEWorkbenchMessages.WizardNewFolder_internalError, new Object[] { e.getTargetException().getMessage() } ) ); //$NON-NLS-2$ //$NON-NLS-1$
       }
 
       cleanup( newFolderHandle );

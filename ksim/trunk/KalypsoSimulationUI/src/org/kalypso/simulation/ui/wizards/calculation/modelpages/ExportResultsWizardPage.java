@@ -49,8 +49,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -106,8 +104,8 @@ import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -169,19 +167,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
   protected Object[] m_checkedElements;
 
-  protected ObsdiagviewType m_obsdiagviewType;
+  protected Obsdiagview m_obsdiagviewType;
 
   public ExportResultsWizardPage()
   {
     super( "<ViewResultsWizardPage>", SELECT_FROM_MAPVIEW );
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  public void dispose()
-  {
-    super.dispose();
   }
 
   /**
@@ -208,6 +198,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       initButtons( rightBottomPanel, "Zeitreihe(n) bearbeiten",
           "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung", new SelectionAdapter()
           {
+            @Override
             public void widgetSelected( final SelectionEvent e )
             {
               startGrafik();
@@ -298,6 +289,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         exportPrognoseTimeseries();
@@ -313,6 +305,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         exportSelectedDocuments();
@@ -333,6 +326,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         archiveCalcCase();
@@ -350,6 +344,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
+      @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Rechenvariante wird archiviert", 1000 );
@@ -431,7 +426,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    */
   private IExporter[] createExporters()
   {
-    final Collection stati = new ArrayList();
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
 
     final Arguments arguments = getArguments();
     final ISupplierCreator creator = new ISupplierCreator()
@@ -442,16 +437,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       }
     };
     
-    final Collection exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
+    final Collection<IExporter> exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
 
     if( stati.size() > 0 )
     {
-      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[])stati
+      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati
           .toArray( new IStatus[stati.size()] ), "", null );
       ErrorDialog.openError( getContainer().getShell(), "", "", status );
     }
 
-    return (IExporter[])exporters.toArray( new IExporter[exporters.size()] );
+    return exporters.toArray( new IExporter[exporters.size()] );
   }
 
   private FeatureList chooseSelectedFeatures( final IFolder calcCase )
@@ -510,8 +505,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     URL resultURL;
     for( Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
-      Feature fe = (Feature)iter.next();
-      TimeseriesLink resultLink = (TimeseriesLink)fe.getProperty( propertyNameTimeserieslink );
+      final Feature fe = (Feature)iter.next();
+      final TimeseriesLinkType resultLink = (TimeseriesLinkType)fe.getProperty( propertyNameTimeserieslink );
       if( resultLink == null )
         continue;
 
@@ -574,17 +569,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
 
-    final ObsdiagviewType xml;
-    try
-    {
-      xml = DiagViewUtils.buildDiagramTemplateXML( m_diagView );
-    }
-    catch( JAXBException e2 )
-    {
-      e2.printStackTrace();
-      return;
-    }
-
+    final Obsdiagview xml = DiagViewUtils.buildDiagramTemplateXML( m_diagView );
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
@@ -618,6 +603,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere Rechenfälle ausführen
    */
+  @Override
   public void refreshDiagram()
   {
     m_diagView.removeAllItems();
