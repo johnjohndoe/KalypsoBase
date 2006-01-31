@@ -1,0 +1,36 @@
+
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <!-- the exact policy to apply will be decided by the SecurityEnvironmentHandler at runtime -->
+        <xwss:SecurityConfiguration dumpMessages="true" enableDynamicPolicy="true">
+
+            <!-- username and password will be obtained dynamically -->
+            <xwss:UsernameToken id="ut1"/>
+            
+            <!-- targets to be encrypted will be obtained dynamically -->
+            <!-- In case of DynamicPolicy default target BODY won't be applied here -->
+            <xwss:Encrypt/>
+
+            <!-- targets to be signed will be obtained dynamically -->
+            <!-- In case of DynamicPolicy default target BODY won't be applied here -->
+            <xwss:Sign/>
+
+            <!-- receiver setting is empty -->
+            <!-- receiver settings will be obtained dynamically from the SecurityEnvironmentHandler at runtime -->
+        </xwss:SecurityConfiguration>
+   </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.ClientSecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

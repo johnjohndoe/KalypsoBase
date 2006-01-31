@@ -1,0 +1,21 @@
+<!--
+                                                                                                                                              
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+                                                                                                                                              
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+<xwss:Service>
+<xwss:SecurityConfiguration dumpMessages="true"
+xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+        <xwss:RequireUsernameToken nonceRequired="true"
+passwordDigestRequired="false"/>
+        <xwss:RequireSignature requireTimestamp="false"/>
+        <xwss:RequireTimestamp/>
+        </xwss:SecurityConfiguration>
+</xwss:Service>
+<xwss:SecurityEnvironmentHandler>
+    sample.SecurityEnvironmentHandler
+</xwss:SecurityEnvironmentHandler>
+</xwss:JAXRPCSecurity>

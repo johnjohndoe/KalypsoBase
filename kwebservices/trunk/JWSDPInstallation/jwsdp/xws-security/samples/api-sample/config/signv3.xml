@@ -1,0 +1,17 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+
+<xwss:SecurityConfiguration dumpMessages="true"  xmlns:xwss="http://java.sun.com/xml/ns/xwss/config" >
+    <!--
+      Note that in the <Sign> operation, a Timestamp is exported
+      in the security header and signed by default.
+    -->
+    <xwss:Sign>
+        <xwss:X509Token certificateAlias="xws-security-client" keyReferenceType="Identifier"/>
+    </xwss:Sign>
+</xwss:SecurityConfiguration>

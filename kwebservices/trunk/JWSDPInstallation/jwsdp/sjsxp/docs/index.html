@@ -1,0 +1,75 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+   <title>Sun Java Streaming XML Parser 1.0 EA -- Readme
+    </title>
+<link rel="stylesheet" type="text/css" href="style/default.css"/>
+</head>
+<body>
+
+<h1>Sun Java Streaming XML Parser</h1>
+
+<center>
+<p><br><b>Implementation Version:</b> 1.0 EA</center>
+
+<blockquote>
+<p><b>Sun Java Streaming XML Parser</b> <b>(SJSXP)</b> is the implementation 
+   of <a href="http://www.jcp.org/en/jsr/detail?id=173">JSR 173</a>.  JSR 173 
+   introduces new Streaming APIs for XML (StAX), a Java-based API for
+   pull-parsing XML.  This SJSXP release supports all the features of JSR 173
+   with different configurations.  This is an Early Access release.  We encourage
+   you to try the implementation and send your feedback to 
+   <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>.</p>
+
+<p>This project was code named "Zephyr", so you may still find some references to 
+   "Zephyr", such as in the factory implementation class name. Zephyr started
+   with the Xerces2 code base.  The Xerces2 lower layers (Scanner and related 
+   classes) have been  redesigned to behave in pull fashion. There are two main
+   reasons for this redesign:
+<ul>
+<li>It is easier to build a push layer atop the pull layer than the other way 
+    around.</li>
+<li>It is more efficient.</li>
+</ul>
+
+<p>In addition to these changes in the lower layers, StAX-related functionality 
+   has been added and many performance-enhancing improvements have been made.  
+   <b>SJSXP</b> is a non-validating, W3C XML 1.0- and Namespace 1.0-compliant 
+   parser.</p>
+  
+<p>This distribution includes samples that show a Java application developer 
+   how to use the JSR 173 Streaming APIs for XML APIs. 
+</blockquote>
+
+<a NAME="documentation"></a>
+<h2>Documentation</h2>
+<blockquote>
+
+<p>The documentation for this release consists of the following: </p>
+
+<ul>
+<li><a href="../../docs/index.html">Java Web Services Developer Pack 2.0 
+    Documentation</a></li>
+
+<li><a href="./ReleaseNotes.html">Release Notes</a></li>
+
+<li><a href="samples.html">Sample Applications</a></li>
+
+<li><a href="http://java.sun.com/webservices/faq.html">Web Services 
+    FAQ on java.sun.com</a></li>
+</ul>
+</blockquote>
+
+<a NAME="feedback"></a>
+<h2>Questions, Feedback, Bug Reports</h2>
+<blockquote>
+<p>Please send questions, comments, and feedback to 
+   <a href="mailto:users@jwsdp.dev.java.net">users@jwsdp.dev.java.net</a>.
+</p>
+<p><i>Due to the high volume of e-mail received on these aliases, you may 
+   not receive an immediate response to your inquiry.</i></p>
+</blockquote>
+
+</body>
+</html>

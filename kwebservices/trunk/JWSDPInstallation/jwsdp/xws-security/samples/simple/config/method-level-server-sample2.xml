@@ -1,0 +1,76 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+   <xwss:Service>
+
+      <xwss:SecurityConfiguration dumpMessages="true">
+         <xwss:Encrypt>
+            <xwss:X509Token certificateAlias="xws-security-client"/>
+         </xwss:Encrypt>
+         <xwss:RequireEncryption/>
+      </xwss:SecurityConfiguration>
+
+      <xwss:Port name="{http://xmlsoap.org/Ping}Ping"> 
+
+         <xwss:SecurityConfiguration dumpMessages="true">
+            <xwss:RequireSignature/>
+         </xwss:SecurityConfiguration>
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping"> 
+
+            <xwss:SecurityConfiguration dumpMessages="true">
+			<OptionalTargets xmlns="http://java.sun.com/xml/ns/xwss/config">
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}Action</Target>
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}MessageID</Target> 
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}ReplyTo</Target> 
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}To</Target> 
+			</OptionalTargets> 
+			<xwss:RequireEncryption> 
+				<xwss:Target type="xpath">//env:Body</xwss:Target> 
+				<xwss:Target type="xpath" contentOnly="true">//ds:Signature</xwss:Target>
+            </xwss:RequireEncryption>
+            <xwss:RequireSignature/>
+          </xwss:SecurityConfiguration>
+
+         </xwss:Operation> 
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping0"> 
+            <xwss:SecurityConfiguration dumpMessages="true">
+                <xwss:Encrypt>
+                   <xwss:X509Token certificateAlias="xws-security-client"/>
+                </xwss:Encrypt>
+                <xwss:RequireSignature/>
+            </xwss:SecurityConfiguration>
+
+         </xwss:Operation>
+
+      </xwss:Port>
+
+      <xwss:Port name="{http://xmlsoap.org/Ping}Ping0"> 
+
+         <xwss:SecurityConfiguration dumpMessages="true">
+            <xwss:Encrypt>
+               <xwss:X509Token certificateAlias="xws-security-client"/>
+            </xwss:Encrypt>
+            <xwss:RequireSignature/>
+         </xwss:SecurityConfiguration>
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping"/> 
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping0"/>
+
+      </xwss:Port>      
+
+   </xwss:Service>
+
+   <xwss:SecurityEnvironmentHandler>
+          sample.SecurityEnvironmentHandler
+   </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

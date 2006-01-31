@@ -1,0 +1,22 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:SecurityConfiguration dumpMessages="true"  xmlns:xwss="http://java.sun.com/xml/ns/xwss/config" >
+	<xwss:Sign>
+  		<xwss:X509Token certificateAlias="xws-security-client"/>
+	</xwss:Sign>
+    <xwss:Sign>
+        		<xwss:X509Token certificateAlias="xws-security-client"/>
+				<xwss:Target type="qname">{http://schemas.xmlsoap.org/soap/envelope/}Body</xwss:Target>
+                <xwss:SignatureTarget type="xpath" value="/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature[1]/ds:KeyInfo/wsse:SecurityTokenReference">
+				<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+					<xwss:Transform algorithm="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#STR-Transform">
+						<xwss:AlgorithmParameter name="CanonicalizationMethod" value="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+					</xwss:Transform>
+				</xwss:SignatureTarget>
+    </xwss:Sign>
+</xwss:SecurityConfiguration>

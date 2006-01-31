@@ -1,0 +1,10 @@
+.TBD {
+	font-style: italic;
+	font-weight: bold;
+	color: #FF0000;
+}
+.Fixed {
+	font-family: "Courier New", Courier, mono;
+	font-size: smaller;
+}
+

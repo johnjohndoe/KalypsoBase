@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+<xwss:Service conformance= "bsp">
+    <xwss:SecurityConfiguration dumpMessages="true" >
+
+
+        <xwss:RequireSignature id="@rs" requireTimestamp="true">
+            <xwss:X509Token encodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" 
+                            valueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" certificateAlias="xws-security-client" id="x" keyReferenceType="Direct"/>
+            <xwss:CanonicalizationMethod algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <xwss:SignatureMethod algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <!-- <xwss:SignatureTarget enforce="true" type="xpath" value="./SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature[2]/ds:KeyInfo/wsse:SecurityTokenReference">
+                <xwss:DigestMethod algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <xwss:Transform algorithm="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#STR-Transform">
+                    <xwss:AlgorithmParameter name="CanonicalizationMethod" value="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                </xwss:Transform>
+            </xwss:SignatureTarget> -->
+        </xwss:RequireSignature>
+
+        <xwss:RequireSignature>
+             <xwss:X509Token encodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+                            valueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier" certificateAlias="xws-security-client" keyReferenceType="Identifier"/>
+        </xwss:RequireSignature>
+    </xwss:SecurityConfiguration>
+</xwss:Service>
+<xwss:SecurityEnvironmentHandler>simple.server.SecurityEnvironmentHandler
+</xwss:SecurityEnvironmentHandler>
+</xwss:JAXRPCSecurity>

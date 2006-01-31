@@ -1,0 +1,33 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!--
+              Export a username token into the security header. Assign it
+              the mentioned wsu:Id
+            -->
+            <xwss:UsernameToken name="Ron" password="noR" id="username-token"/>
+            <xwss:Encrypt>
+                <xwss:X509Token certificateAlias="s1as"/>
+                <xwss:Target type="xpath">//SOAP-ENV:Body</xwss:Target>
+                <!--
+                  The username token has been refered as an encryption
+                  target using a URI fragment
+                -->
+                <xwss:Target type="uri">#username-token</xwss:Target>
+            </xwss:Encrypt>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

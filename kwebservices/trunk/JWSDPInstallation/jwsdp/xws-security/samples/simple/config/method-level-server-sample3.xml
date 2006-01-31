@@ -1,0 +1,74 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+   <xwss:Service>
+
+      <xwss:SecurityConfiguration dumpMessages="true">
+      </xwss:SecurityConfiguration>
+
+      <xwss:Port name="{http://xmlsoap.org/Ping}Ping"> 
+
+         <xwss:SecurityConfiguration dumpMessages="true">
+         </xwss:SecurityConfiguration>
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping"> 
+
+            <xwss:SecurityConfiguration xmlns="http://java.sun.com/xml/ns/xwss/config" dumpMessages="true">
+			<!--
+			-->
+			<OptionalTargets>
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}Action</Target>
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}MessageID</Target> 
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}ReplyTo</Target> 
+				<Target type="qname">{http://schemas.xmlsoap.org/ws/2004/03/addressing}To</Target> 
+			</OptionalTargets> 
+            <xwss:RequireSignature/>
+			<xwss:RequireEncryption> 
+				<xwss:Target type="xpath">//env:Body</xwss:Target> 
+				<xwss:Target type="xpath" contentOnly="true">//ds:Signature[2]</xwss:Target>
+            </xwss:RequireEncryption>
+            <xwss:RequireSignature/>
+			<!--
+                <xwss:RequireEncryption>
+                      <xwss:Target type="qname">{http://schemas.xmlsoap.org/soap/envelope/}Body</xwss:Target>
+                </xwss:RequireEncryption> 
+                <xwss:RequireSignature>
+                      <xwss:Target type="qname">{http://xmlsoap.org/Ping}ticket</xwss:Target>
+                      <xwss:Target type="qname">{http://xmlsoap.org/Ping}text</xwss:Target>
+                </xwss:RequireSignature>  
+
+                <xwss:RequireUsernameToken nonceRequired="false"
+                                           passwordDigestRequired="false"/>
+							-->
+            </xwss:SecurityConfiguration>
+
+         </xwss:Operation> 
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping0"> 
+
+         </xwss:Operation>
+
+      </xwss:Port>
+
+      <xwss:Port name="{http://xmlsoap.org/Ping}Ping0"> 
+
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping"/> 
+
+         <xwss:Operation name="{http://xmlsoap.org/Ping}Ping0"/>
+
+      </xwss:Port>      
+
+   </xwss:Service>
+
+   <xwss:SecurityEnvironmentHandler>
+          sample.SecurityEnvironmentHandler
+   </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

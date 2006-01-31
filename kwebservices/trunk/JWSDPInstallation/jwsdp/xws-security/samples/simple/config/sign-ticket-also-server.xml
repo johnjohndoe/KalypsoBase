@@ -1,0 +1,27 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <!-- 
+              Verify that multiple targets have signed as part of the same
+              ds:Signature element.
+            -->
+            <xwss:RequireSignature>
+                <xwss:Target type="qname">{http://xmlsoap.org/Ping}ticket</xwss:Target>
+                <xwss:Target type="xpath">//env:Body</xwss:Target>
+            </xwss:RequireSignature>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

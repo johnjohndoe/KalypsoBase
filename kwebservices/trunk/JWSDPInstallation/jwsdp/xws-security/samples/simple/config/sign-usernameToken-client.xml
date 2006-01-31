@@ -1,0 +1,24 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<xwss:JAXRPCSecurity xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+    <xwss:Service>
+        <xwss:SecurityConfiguration dumpMessages="true">
+            <xwss:UsernameToken name="Ron" password="noR" id="username-token"/>
+            <xwss:Sign>
+                <xwss:Target type="xpath">//SOAP-ENV:Body</xwss:Target>
+                <xwss:Target type="uri">#username-token</xwss:Target>
+            </xwss:Sign>
+        </xwss:SecurityConfiguration>
+    </xwss:Service>
+
+    <xwss:SecurityEnvironmentHandler>
+        sample.SecurityEnvironmentHandler
+    </xwss:SecurityEnvironmentHandler>
+
+</xwss:JAXRPCSecurity>

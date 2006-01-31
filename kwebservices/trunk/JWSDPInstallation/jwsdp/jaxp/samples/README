@@ -1,0 +1,168 @@
+-------------------------------------------------------------------------
+ 			
+		Java API for XML Processing (JAXP) 1.3 Samples
+		
+-------------------------------------------------------------------------
+	
+Contents :
+=========
+	* How to compile and run samples.
+	* A short description about each sample.
+
+
+
+How to Compile and Run the Samples
+==================================
+	
+A ant script(build.xml) has been provided to simplify the task of compiling
+and running the samples. The default target in the ant script is the "run"
+target, run target compiles all the samples and runs them.  
+
+From the samples directory run the following command:
+
+	$ ant
+
+Alternatively, run:
+
+	$ ant run.
+
+The build.xml file has targets for each JAXP sample. The target name is
+the sample file name without ".java" extension.
+
+	$ ant SchemaValidator  
+
+It is also possible to run samples on the command line without using Ant. For 
+example, if you are using JDK 1.3 to compile and run the SchemaValidator sample, 
+you can type the following command:
+
+	$ javac -d . -classpath
+		<$PATH>/jaxp-api.jar:<$PATH>/sax.jar:<$PATH>/dom.jar:
+		<$PATH>/xercesImpl.jar:<$PATH>/xalan.jar SchemaValidator.java
+
+	$ java -classpath <$PATH>/jaxp-api.jar:<$PATH>/sax.jar:<$PATH>/dom.jar:
+		<$PATH>/xercesImpl.jar:<$PATH>/xalan.jar:.  
+		validation.SchemaValidator data/personal.xsd
+		data/personal-schema.xml
+
+If a sample is executed with the incorrect arguments, the usage of that sample 
+is displayed.
+
+A Short Description of Each Sample  
+==================================
+
+1) XPath
+
+XPath demonstrates a simple use of the XPath 1.0 APIs in JAXP 1.3.
+XPath takes an XML file and an XPath Expression as input.
+
+    ant XPath -Dfile=<XML file> -Dexpression=<XPath Expression>
+    
+The sample default values are:
+
+    ant XPath -Dfile=data/HelloWorldService.wsdl -Dexpression=//soap:body
+		
+The XPath Expression is evaluated against the XML file.
+The resulting NodeList is displayed.
+
+XPath Expressions can be compiled, cached and reused.
+			
+To run directly:
+
+	$ java XPath <XML file> <XPath Expression>
+	$ java XPath data/HelloWorldService.wsdl //soap:body
+
+			
+2) XIncludeParser 
+
+The XIncludeParser sample demonstrates how to enable the XInclude support that 
+the JAXP 1.3 RI provides. It creates an XInclude-aware DOM parser from the 
+DocumentBuilderFactory by setting setXIncludeAware to true. The document object 
+obtained from the parser is written to an output file using DOM Level 3 Load and 
+Save APIs. 
+			
+XIncludeParser takes two arguments as input: an input file that needs to be 
+parsed and an output file to which result has to be written.
+
+How to run:
+				
+	$ java -classpath <classpath> XInclude.XIncludeParser
+	  data/document_xinclude.xml build/xinclude_output.xml
+				
+	$ java -classpath <classpath> XInclude.XIncludeParser
+	  data/document_xpointer.xml build/xpointer_output.xml
+
+
+3) DOMSerializer
+			
+DOMSerializer uses JAXP APIs to parse an XML file and create a W3C DOM Document 
+object. It then uses W3C DOM Level 3 Load and Save APIs to serialize the 
+document object into a file.
+
+How to run:
+
+	$ java -classpath <classpath> dom.DOMSerializer data/foo.xml
+	  build/dom_serializer_output.xml
+
+4) SchemaValidator
+
+SchemaValidator shows how to parse a W3C XML Schema and use it to validate an 
+XML instance, using JAXP 1.3 Validation APIs. SchemaValidator accepts a W3C XML 
+Schema file and an XML instance as arguments. The grammar object created as a 
+result of parsing XML Schema can be cached and used to validate other XML 
+instances refering to the same schema.
+		
+How to run:
+
+	$ java -classpath <classpath>  validation.SchemaValidator
+ 	  data/personal.xsd data/personal-schema.xml
+		
+5) SecureParser
+			
+SecureParser shows how to use the secure processing feature provided in JAXP 
+1.3.
+
+How to run:
+			
+	$ java -classpath <classpath> SecureProcessing.SecureParse
+	  -enableSecureProcessing=true data/personal-schema.xml
+	
+	$ java -classpath <classpath> SecureProcessing.SecureParse
+	  -enableSecureProcessing=false data/personal-schema.xml
+					
+6) DOMEcho
+
+DOMEcho demonstrates the use of W3C DOM Level 2 interfaces and JAXP
+APIs. DOMEcho shows how to do the following:
+ 
+i)  Use JAXP APIs to parse an XML file and create a W3c DOM Document object.
+ii)  Validate an XML instance against a grammar object (W3C schema/DTD).
+iii)  Print the contents of the DOM tree.
+			
+How to run:
+				
+	$ java -classpath <classpath> dom.DOMEcho -xsd  data/personal-schema.xml
+	$ java -classpath <classpath> dom.DOMEcho data/personal-schema.xml
+	
+
+7) NewDatatypes
+
+This class shows how to use the new Datatype APIs introduced in JSR 206.
+This samples just shows you some (out of many ) of the cool new thing
+which is possible with new javax.xml.datatype APIs. Check the source
+code of sample NewDatatypes.java
+				
+How to run:
+				
+	$ java -classpath <classpath> Datatype.NewDatatypes					
+
+
+8) DOMLS
+
+Demonstrate the use of DOMLevel 3 LSParser and LSParseFilter interfaces. DOMLS sample
+uses implementation of LSParser to parse a XML file and writes to an outputfile
+using implementation of LSSerializer. DOMLS filters out all TEXT Nodes.
+
+How to run:
+	
+	$ java -classpath <classpath> dom.DOMLS data/foo.xml
+	  build/dom_ls_output.xml

@@ -1,0 +1,11 @@
+<!--
+   Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+   SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<xwss:SecurityConfiguration dumpMessages="true" 
+   xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">    
+   <xwss:Encrypt>
+      <xwss:X509Token certificateAlias="s1as"/>
+   </xwss:Encrypt>
+</xwss:SecurityConfiguration>

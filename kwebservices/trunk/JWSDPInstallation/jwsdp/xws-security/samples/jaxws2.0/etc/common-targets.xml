@@ -1,0 +1,48 @@
+<!--
+ Copyright (c) 2005 Sun Microsystems, Inc.
+ All rights reserved. 
+-->
+
+<property name="domain" value="domain1"/>
+<path id="jaxws.classpath">
+    <pathelement location="${sjsas.home}/lib/sjsxp.jar"/>
+    <pathelement location="${java.home}/../lib/tools.jar"/>
+    <pathelement location="${sjsas.home}/lib/xws-security.jar"/>
+    <pathelement location="${sjsas.home}/lib/xws-security_jaxrpc.jar"/>
+    <pathelement location="${sjsas.home}/lib/xmlsec.jar"/>
+    <pathelement location="${sjsas.home}/lib/xmldsig.jar"/>
+    <pathelement location="${sjsas.home}/lib/activation.jar"/>
+    <pathelement location="${sjsas.home}/lib/FastInfoset.jar"/>
+    <pathelement location="${sjsas.home}/lib/http.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxb-api.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxb-impl.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxb-libs.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxb-xjc.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxws-api.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxws-rt.jar"/>
+    <pathelement location="${sjsas.home}/lib/jaxws-tools.jar"/>
+    <pathelement location="${sjsas.home}/lib/jsr173_api.jar"/>
+    <pathelement location="${sjsas.home}/lib/jsr181-api.jar"/>
+    <pathelement location="${sjsas.home}/lib/jsr250-api.jar"/>
+    <pathelement location="${sjsas.home}/lib/relaxngDatatype.jar"/>
+    <pathelement location="${sjsas.home}/lib/saaj-api.jar"/>
+    <pathelement location="${sjsas.home}/lib/saaj-impl.jar"/>
+    <pathelement location="${sjsas.home}/lib/resolver.jar"/>
+    <pathelement location="${lib.sample.home}/jaxwsSampleUtils.jar"/>
+    <pathelement location="${sjsas.home}/lib/*.jar"/>
+    <fileset dir="${sjsas.home}/lib">
+          <include name="*.jar"/>
+      </fileset>
+</path>
+
+<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+    <classpath refid="jaxws.classpath"/>
+</taskdef>
+
+<taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
+    <classpath refid="jaxws.classpath"/>
+</taskdef>
+
+<taskdef name="apt" classname="com.sun.tools.ws.ant.Apt">
+    <classpath refid="jaxws.classpath"/>
+</taskdef>

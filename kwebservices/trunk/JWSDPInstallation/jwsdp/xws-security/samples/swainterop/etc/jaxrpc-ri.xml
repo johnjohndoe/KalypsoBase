@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<webServices xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/dd"
+             version="1.0">
+
+   <endpoint name="SecureEndpoint1"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping1"
+    interface="swainterop.PingPort"
+    implementation="swainterop.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+    <endpoint name="SecureEndpoint2"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping2"
+    interface="swainterop.PingPort"
+    implementation="swainterop.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+    <endpoint name="SecureEndpoint3"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping3"
+    interface="swainterop.PingPort"
+    implementation="swainterop.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+    <endpoint name="SecureEndpoint4"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping4"
+    interface="swainterop.PingPort"
+    implementation="swainterop.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpointMapping endpointName="SecureEndpoint1"
+    urlPattern="/Ping1"/>   
+
+   <endpointMapping endpointName="SecureEndpoint2"
+    urlPattern="/Ping2"/>   
+
+   <endpointMapping endpointName="SecureEndpoint3"
+    urlPattern="/Ping3"/>   
+
+   <endpointMapping endpointName="SecureEndpoint4"
+    urlPattern="/Ping4"/>   
+     
+</webServices>

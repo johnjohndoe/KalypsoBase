@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (c) 2005 Sun Microsystems, Inc.
+ All rights reserved. 
+-->
+
+<endpoints
+    xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
+    version="2.0">
+
+    <endpoint
+        name="simple"
+        interface="simple.server.PingPort"
+        implementation="simple.server.PingImpl"
+        wsdl="WEB-INF/wsdl/PingService.wsdl"
+        service="{http://xmlsoap.org/Ping}PingService"
+        port="{http://xmlsoap.org/Ping}Ping"
+        url-pattern="/simple" />
+        <!-- how to configure multiple ports here port="{http://duke.org}Ping0"-->
+
+</endpoints>

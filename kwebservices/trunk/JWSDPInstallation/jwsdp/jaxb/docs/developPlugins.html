@@ -1,0 +1,133 @@
+<HTML>
+  
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+<TITLE>
+        JAXB RI 2.0 ea3 -- Developing JAXB RI Extensions
+    </TITLE>
+    
+<META content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+    
+<LINK href="style/default.css" rel="stylesheet" type="text/css">
+  
+</HEAD>
+
+  
+<BODY>
+    
+<CENTER>
+    
+<H1>Java<SUP><FONT size="-2">TM</FONT></SUP> Architecture for XML Binding<BR>
+      Developing JAXB RI Extensions
+    </H1>
+      
+<B>Specification Version:</B> 2.0<BR>
+      
+<B>Reference Implementation (RI) Version:</B> 2.0 ea3<BR>
+      <!--
+ The contents of this file are subject to the terms
+ of the Common Development and Distribution License
+ (the "License").  You may not use this file except
+ in compliance with the License.
+ 
+ You can obtain a copy of the license at
+ https://jwsdp.dev.java.net/CDDLv1.0.html
+ See the License for the specific language governing
+ permissions and limitations under the License.
+ 
+ When distributing Covered Code, include this CDDL
+ HEADER in each file and include the License file at
+ https://jwsdp.dev.java.net/CDDLv1.0.html  If applicable,
+ add the following below this CDDL HEADER, with the
+ fields enclosed by brackets "[]" replaced with your
+ own identifying information: Portions Copyright [yyyy]
+ [name of copyright owner]
+-->
+<hr width="50%">
+  JAXB 2.0: <a href="ReleaseNotes.html">Release Notes</a> | <a href="xjc.html">XJC</a> | <a href="xjcTask.html">XJCTask</a> | <a href="schemagen.html">SchemaGen</a> | <a href="schemagenTask.html">schemagenTask</a> | <a href="samples.html">Sample Apps</a> | <a href="changelog2.html">Changelog</a>
+<br>
+  JAXB 1.0.x: <a href="jaxb-1_0.html">Release Notes</a> | <a href="changelog.html">Changelog</a>
+<br>
+  JAXB RI Extensions: <a href="vendorProperties.html">Runtime Properties</a> | <a href="vendorCustomizations.html">XJC Customizations</a> | <a href="developPlugins.html">Develop Plugins</a>
+<br>
+  JAXB RI Schema Languages: <a href="vendorSchemaLangs.html#xschema">W3C XML Schema</a> | <a href="vendorSchemaLangs.html#relaxng">RELAX NG</a> | <a href="vendorSchemaLangs.html#dtd">DTD</a>
+<br>
+  JAXB Community: <a href="http://jaxb.dev.java.net">Java.net Homepage</a> | <a href="https://jaxb.dev.java.net/servlets/ProjectMailingListList">Developer interest list</a> | <a href="https://jaxb.dev.java.net/faq/index.html">FAQ</a>
+<br>
+
+<hr width="50%">
+    
+</CENTER>
+
+    
+<P>
+      This document describes how to write a JAXB RI plugin to extend the code generation of the JAXB RI.
+    </P>
+<P>
+    
+    
+</P>
+<H3>What Can A Plugin Do?</H3>
+    
+<P>
+      A JAXB RI plugin participates in the code generation from a schema. It can define its own customizations that users can use to control it, it can access the code that the JAXB RI generates, and it can generate additional classes/methods/fields/annotations/comments.
+    </P>
+<P>
+      As a show case of what a plugin can do, take a look at <A href="https://hyperjaxb.dev.java.net/">HyperJAXB</A> and <A href="https://jaxb-verification.dev.java.net/">JAXB-verification</A> projects.
+    </P>
+    
+    
+    
+<H3>Quick Start</H3>
+    
+<P>
+      To write a plugin, do the following simple steps.
+    </P>
+    
+<OL>
+      
+<LI>Write a class, say, <TT>org.acme.MyPlugin</TT> by extending <TT>com.sun.tools.xjc.Plugin</TT>. See javadoc for how to implement methods.
+      </LI>
+<LI>Write the name of your plugin class in a text file and put it as <TT>/META-INF/services/com.sun.tools.xjc.Plugin</TT> in your jar file.
+    </LI>
+</OL>
+    
+<P>
+      Users can then use your plugins by declaring an XJC ant task with your jar files.
+    </P>
+
+<PRE>
+&lt;taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"&gt;
+  &lt;classpath&gt;
+    &lt;fileset dir="jaxb-ri/lib" includes="*.jar" /&gt;
+    &lt;fileset dir="your-plugin" includes="*.jar" /&gt;
+  &lt;/classpath&gt;
+&lt;/taskdef&gt;
+</PRE>
+    
+    
+<H3>Resources</H3>
+    
+<OL>
+      
+<LI>
+<A href="jaxb-xjc.javadoc.zip">Javadoc of XJC</A>
+</LI>
+      
+<LI>
+<A href="jaxb-impl.javadoc.zip">Javadoc of JAXB RI runtime</A>
+</LI>
+      
+<LI>
+<A href="https://jaxb.dev.java.net/servlets/ProjectMailingListList">the JAXB users mailing list</A> for posting questions</LI>
+    
+</OL>
+    
+<P>
+      Although we will do our best to maintain the compatibility of the interfaces, it is still subject to change at this point.
+    </P>
+  
+
+</BODY>
+</HTML>
