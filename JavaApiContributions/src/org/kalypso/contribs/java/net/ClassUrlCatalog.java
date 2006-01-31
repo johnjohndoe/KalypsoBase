@@ -137,7 +137,7 @@ public class ClassUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
-  public Map getCatalog()
+  public Map<String, URL> getCatalog()
   {
     return m_catalog.getCatalog();
   }

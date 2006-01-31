@@ -1,4 +1,4 @@
-#Fri Jan 20 19:39:07 CET 2006
+#Sat Jan 28 09:44:33 CET 2006
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=clean
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -323,7 +323,7 @@ org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line=false
 org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line=false
 org.eclipse.jdt.core.formatter.lineSplit=200
 org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body=0
-org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve=0
+org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve=1
 org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line=true
 org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.tabulation.size=2

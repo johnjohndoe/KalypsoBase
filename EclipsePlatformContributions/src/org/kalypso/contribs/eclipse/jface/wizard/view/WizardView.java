@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -79,6 +80,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -94,7 +96,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.java.lang.CatchRunnable;
@@ -516,13 +518,13 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * 
    * @param button
    */
-  protected void setButtonLayoutData( Button button )
+  protected void setButtonLayoutData( final Button button )
   {
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-    data.heightHint = convertVerticalDLUsToPixels( IDialogConstants.BUTTON_HEIGHT );
-    int widthHint = convertHorizontalDLUsToPixels( IDialogConstants.BUTTON_WIDTH );
-    data.widthHint = Math.max( widthHint, button.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).x );
-    button.setLayoutData( data );
+    final GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+    int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+    final Point minSize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+    data.widthHint = Math.max(widthHint, minSize.x);
+    button.setLayoutData(data);
   }
 
   /**
@@ -1002,7 +1004,10 @@ public class WizardView extends ViewPart implements IWizardContainer3
         
         // take the first topic found and directly display it
 		if (context != null && context.getRelatedTopics().length > 0 )
-		  WorkbenchHelp.displayHelpResource( context.getRelatedTopics()[0].getHref() );
+        {
+          final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+		  helpSystem.displayHelpResource( context.getRelatedTopics()[0].getHref() );
+        }
 		else
 		  Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
       }

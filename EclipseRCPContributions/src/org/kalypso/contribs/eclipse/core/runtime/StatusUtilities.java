@@ -220,15 +220,15 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
-  public static IStatus createStatus( final List stati, final String message )
+  public static IStatus createStatus( final List<IStatus> stati, final String message )
   {
     if( stati.size() == 0 )
       return Status.OK_STATUS;
 
     if( stati.size() == 1 )
-      return (IStatus) stati.get( 0 );
+      return stati.get( 0 );
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, (IStatus[]) stati.toArray( new IStatus[stati.size()] ), message, null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), message, null );
   }
 
   /**

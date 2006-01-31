@@ -250,7 +250,7 @@ public class ResourceSelectionGroup extends Composite
     selectedResource = resource;
 
     //expand to and select the specified container
-    List itemsToExpand = new ArrayList();
+    final List<IContainer> itemsToExpand = new ArrayList<IContainer>();
     IContainer parent = resource.getParent();
     while( parent != null )
     {
