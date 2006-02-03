@@ -51,7 +51,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
@@ -93,7 +93,7 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
 
     // die Rechenfälle sollen nacheinander aktualisiert werden
     // parallelität macht hier keinen Sinn
-    final MutexSchedulingRule mutexRule = new MutexSchedulingRule();
+    final MutexRule mutexRule = new MutexRule();
 
     // alle Rechenfälle aktualisieren
     for( int i = 0; i < calcCases.length; i++ )
