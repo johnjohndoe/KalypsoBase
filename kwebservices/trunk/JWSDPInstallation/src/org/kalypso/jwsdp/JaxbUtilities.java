@@ -42,6 +42,9 @@ package org.kalypso.jwsdp;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * @author Belger
@@ -52,11 +55,16 @@ public final class JaxbUtilities
   {
     // never instantiate
   }
-  
+
+  /**
+   * 
+   */
   public static JAXBContext createQuiet( final Class... objectFactoryClasses )
   {
     try
     {
+      // final Map<String, Object> map = new HashMap<String, Object>();
+      // map.put( JAXBRIContext.DEFAULT_NAMESPACE_REMAP, "gistreeview.template.kalypso.org");
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
@@ -64,5 +72,35 @@ public final class JaxbUtilities
       e.printStackTrace();
       return null;
     }
+  }
+
+  public static NamespacePrefixMapper getNSPrefixMapper( )
+  {
+    return new NamespacePrefixMapper()
+    {
+      @Override
+      public String getPreferredPrefix( String namespaceUri, String suggestion, boolean requirePrefix )
+      {
+        if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) )
+          return "xlink";
+        else
+          return suggestion;
+        // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
+        // at methode createMarshaller()
+      }
+    };
+  }
+
+  /**
+   * create marshaller with namespace prefixmapping<br>
+   * use this methode to avoid bug in jaxb-implementation when prefixing attributes with defaultnamespace like this:
+   * <code><element xmlns="www.xlink..." :href="test"/></code> instead if
+   * <code><element xmlns:xlink="blabla" xlink:href="test"/></code>.
+   */
+  public static Marshaller createMarshaller( JAXBContext context ) throws JAXBException
+  {
+    final Marshaller marshaller = context.createMarshaller();
+    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper() );
+    return marshaller;
   }
 }
