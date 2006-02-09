@@ -40,10 +40,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -63,54 +63,60 @@ public abstract class RelationContentType implements IRelationContentType, IInit
     m_complexType = complexType;
   }
 
-  public GMLSchema getGMLSchema()
+  public GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }
 
   /**
-   *  
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  public void init( int initializeRun )
   {
-    final ExplicitGroup sequence = getSequence();
-    final List result = new ArrayList();
-    if( sequence != null )
+    switch( initializeRun )
     {
-      final Element[] elementArray = sequence.getElementArray();
-      for( int i = 0; i < elementArray.length; i++ )
-      {
-        final QName ref = elementArray[i].getRef();
-        final Element element;
-        final GMLSchema schema;
-        if( ref == null )
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final ExplicitGroup sequence = getSequence();
+        final List result = new ArrayList();
+        if( sequence != null )
         {
-          element = elementArray[i];
-          schema = getGMLSchema();
+          final Element[] elementArray = sequence.getElementArray();
+          for( int i = 0; i < elementArray.length; i++ )
+          {
+            final QName ref = elementArray[i].getRef();
+            final Element element;
+            final GMLSchema schema;
+            if( ref == null )
+            {
+              element = elementArray[i];
+              schema = getGMLSchema();
+            }
+            else
+            {
+              final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
+              schema = reference.getGMLSchema();
+              element = reference.getElement();
+            }
+            final Object buildedObject = schema.getBuildedObjectFor( element );
+            if( buildedObject instanceof FeatureType )
+              result.add( buildedObject );
+          }
         }
-        else
-        {
-          final ElementReference reference = (ElementReference)m_gmlSchema.resolveReference( ref );
-          schema = reference.getGMLSchema();
-          element = reference.getElement();
-        }
-        final Object buildedObject = schema.getBuildedObjectFor( element );
-        if( buildedObject instanceof FeatureType )
-          result.add( buildedObject );
-      }
+        if( result.size() != 1 )
+          throw new UnsupportedOperationException();
+        m_ftRelationTarget = (FeatureType) result.get( 0 );
+        break;
     }
-    if( result.size() != 1 )
-      throw new UnsupportedOperationException();
-    m_ftRelationTarget = (FeatureType)result.get( 0 );
   }
 
   /**
    */
-  public abstract ExplicitGroup getSequence();
+  public abstract ExplicitGroup getSequence( );
 
   /**
    */
-  public ComplexType getComplexType()
+  public ComplexType getComplexType( )
   {
     return m_complexType;
   }
@@ -119,7 +125,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
     return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
   }

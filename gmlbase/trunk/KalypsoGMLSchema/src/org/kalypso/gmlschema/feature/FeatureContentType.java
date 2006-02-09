@@ -38,11 +38,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * representation of a feature content definition from xml schema
  * 
  * @author doemming
@@ -70,52 +70,59 @@ public abstract class FeatureContentType implements IFeatureContentType
       m_qName = new QName( "anonymous" );
   }
 
-  public QName getQName()
+  public QName getQName( )
   {
     return m_qName;
   }
 
-  public GMLSchema getGMLSchema()
+  public GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }
 
-  public abstract ExplicitGroup getSequence();
+  public abstract ExplicitGroup getSequence( );
 
-  public void init()
+  /**
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
+   */
+  public void init( int initializeRun )
   {
-    final ExplicitGroup sequence = getSequence();
-    final List propertyTypes = new ArrayList();
-    //    final List relationTypes = new ArrayList();
-    if( sequence != null )
+    switch( initializeRun )
     {
-      final Element[] elementArray = sequence.getElementArray();
-      for( int i = 0; i < elementArray.length; i++ )
-      {
-        final QName ref = elementArray[i].getRef();
-        final Element element;
-        final GMLSchema schema;
-        if( ref == null )
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final ExplicitGroup sequence = getSequence();
+        final List propertyTypes = new ArrayList();
+        // final List relationTypes = new ArrayList();
+        if( sequence != null )
         {
-          element = elementArray[i];
-          schema = getGMLSchema();
+          final Element[] elementArray = sequence.getElementArray();
+          for( int i = 0; i < elementArray.length; i++ )
+          {
+            final QName ref = elementArray[i].getRef();
+            final Element element;
+            final GMLSchema schema;
+            if( ref == null )
+            {
+              element = elementArray[i];
+              schema = getGMLSchema();
+            }
+            else
+            {
+              final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
+              element = reference.getElement();
+              schema = reference.getGMLSchema();
+            }
+            final Object buildedObject = schema.getBuildedObjectFor( element );
+            propertyTypes.add( buildedObject );
+          }
         }
-        else
-        {
-          final ElementReference reference = (ElementReference)m_gmlSchema.resolveReference( ref );
-          schema = reference.getGMLSchema();
-          element = reference.getElement();
-        }
-        final Object buildedObject = schema.getBuildedObjectFor( element );
-            
-        propertyTypes.add( buildedObject );
-      }
+        m_pt = (IPropertyType[]) propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
+        break;
     }
-    m_pt = (IPropertyType[])propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
   }
 
-
-  public ComplexType getComplexType()
+  public ComplexType getComplexType( )
   {
     return m_complexType;
   }

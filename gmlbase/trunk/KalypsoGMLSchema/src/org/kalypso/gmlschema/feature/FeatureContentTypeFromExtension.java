@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
@@ -58,31 +59,37 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
-  public ExplicitGroup getSequence()
+  @Override
+  public ExplicitGroup getSequence( )
   {
     return m_extension.getSequence();
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.FeatureType#init()
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  @Override
+  public void init( int initializeRun )
   {
-    final QName base = m_extension.getBase();
-    final ComplexTypeReference reference = (ComplexTypeReference)getGMLSchema().resolveReference( base );
-    final GMLSchema schema = reference.getGMLSchema();
-    final ComplexType complexType = reference.getComplexType();
-    m_extensionBase = schema.getFeatureContentTypeFor( complexType );
-    super.init();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+        final QName base = m_extension.getBase();
+        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final GMLSchema schema = reference.getGMLSchema();
+        final ComplexType complexType = reference.getComplexType();
+        m_extensionBase = schema.getFeatureContentTypeFor( complexType );
+        break;
+    }
+    super.init( initializeRun );
   }
 
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
-  public IPropertyType[] getProperties()
+  public IPropertyType[] getProperties( )
   {
     if( m_fullProps == null )
     {
@@ -90,14 +97,14 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
       final IPropertyType[] props = new IPropertyType[m_pt.length + propsFromExtension.length];
       int n = 0;
 
-      for( int i = 0; i < m_pt.length; i++ )
-      {
-        props[n] = m_pt[i];
-        n++;
-      }
       for( int i = 0; i < propsFromExtension.length; i++ )
       {
         props[n] = propsFromExtension[i];
+        n++;
+      }
+      for( int i = 0; i < m_pt.length; i++ )
+      {
+        props[n] = m_pt[i];
         n++;
       }
       m_fullProps = props;
@@ -108,7 +115,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
-  public IFeatureContentType getBase()
+  public IFeatureContentType getBase( )
   {
     return m_extensionBase;
   }
@@ -116,7 +123,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
-  public int getDerivationType()
+  public int getDerivationType( )
   {
     return DERIVATION_BY_EXTENSION;
   }
@@ -124,7 +131,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
-  public IPropertyType[] getDirectProperties()
+  public IPropertyType[] getDirectProperties( )
   {
     return m_pt;
   }

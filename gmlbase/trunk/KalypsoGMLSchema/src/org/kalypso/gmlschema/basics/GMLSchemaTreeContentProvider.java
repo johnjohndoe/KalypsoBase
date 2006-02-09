@@ -35,17 +35,14 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IDetailedFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -71,45 +68,43 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     if( parent == null )
       return new Object[0];
     if( parent instanceof LabelAndChildsProvider )
-      return ( (LabelAndChildsProvider)parent ).getChilds();
+      return ((LabelAndChildsProvider) parent).getChilds();
     if( parent instanceof GMLSchema )
     {
-      GMLSchema schema = (GMLSchema)parent;
+      GMLSchema schema = (GMLSchema) parent;
       return schema.getAllFeatureTypes();
     }
     if( !m_detailed )
     {
       if( parent instanceof IFeatureType )
-        return ( (IFeatureType)parent ).getProperties();
+        return ((IFeatureType) parent).getProperties();
     }
     else
     {
       if( parent instanceof IDetailedFeatureType )
       {
-        final IFeatureContentType featureContentType = ( (IDetailedFeatureType)parent ).getFeatureContentType();
-        return new Object[]
-        { featureContentType };
+        final IFeatureContentType featureContentType = ((IDetailedFeatureType) parent).getFeatureContentType();
+        return new Object[] { featureContentType };
       }
       if( parent instanceof IFeatureContentType )
       {
-        final IFeatureContentType fct = (IFeatureContentType)parent;
+        final IFeatureContentType fct = (IFeatureContentType) parent;
         final IPropertyType[] properties = fct.getDirectProperties();
         final String label;
         switch( fct.getDerivationType() )
         {
-        case IFeatureContentType.DERIVATION_NONE:
-          return properties;
-        case IFeatureContentType.DERIVATION_BY_EXTENSION:
-          label = "extended by";
-          break;
-        case IFeatureContentType.DERIVATION_BY_RESTRICTION:
-          label = "restricted by";
-          break;
-        default:
-          throw new UnsupportedOperationException();
+          case IFeatureContentType.DERIVATION_NONE:
+            return properties;
+          case IFeatureContentType.DERIVATION_BY_EXTENSION:
+            label = "extended by";
+            break;
+          case IFeatureContentType.DERIVATION_BY_RESTRICTION:
+            label = "restricted by";
+            break;
+          default:
+            throw new UnsupportedOperationException();
         }
-        final LabelAndChildsProvider provider = new LabelAndChildsProvider( label, new Object[]
-        { fct.getBase() } );
+        final LabelAndChildsProvider provider = new LabelAndChildsProvider( label, new Object[] { fct.getBase() } );
         final Object[] result = new Object[properties.length + 1];
         result[0] = provider;
         for( int i = 0; i < properties.length; i++ )
@@ -120,27 +115,27 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
 
     if( parent instanceof IRelationType )
     {
-      final IRelationType relationType = (IRelationType)parent;
-      final FeatureType[] targetFeatureTypes = relationType.getTargetFeatureTypes( m_context, true );
-      final List result = new ArrayList();
+      final IRelationType relationType = (IRelationType) parent;
+      final IFeatureType[] targetFeatureTypes = relationType.getTargetFeatureTypes( m_context, true );
+      final List<String> result = new ArrayList<String>();
       for( int i = 0; i < targetFeatureTypes.length; i++ )
       {
-        final FeatureType type = targetFeatureTypes[i];
-        result.add( " -> " + type.getQName() );
+        final IFeatureType type = targetFeatureTypes[i];
+        final String isAbstract;
+        if( type.isAbstract() )
+          isAbstract = "\t  [x] abstract";
+        else
+          isAbstract = "";
+        result.add( " -> " + type.getQName() + isAbstract );
       }
       return result.toArray();
     }
     if( parent instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType)parent;
+      final IValuePropertyType vpt = (IValuePropertyType) parent;
       if( vpt.hasRestriction() )
-        return new Object[]
-        { vpt.getRestriction() };
+        return vpt.getRestriction();
     }
-    //    if(parent instanceof )
-    //      return (())parent).;
-    //    if(parent instanceof )
-    //      return (())parent).;
     return new Object[0];
   }
 
@@ -168,8 +163,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   {
     if( inputElement instanceof GMLSchema )
     {
-      return new Object[]
-      { inputElement };
+      return new Object[] { inputElement };
     }
     return new Object[0];
   }
@@ -177,9 +171,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // nothing to dispose
+    // nothing to dispose
   }
 
   /**
@@ -188,7 +182,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-  // nothing to change
+    // nothing to change
   }
 
   public void accept( Object element, ITreeContentProviderVisitor visitor, int indent )

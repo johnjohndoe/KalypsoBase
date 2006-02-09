@@ -31,37 +31,47 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.ITypeHandler;
+
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
  */
 public interface IValuePropertyType extends IPropertyType
 {
-  public QName getValueQName();
+  public QName getValueQName( );
 
-  public IPropertyContentType getPropertyContentType();
+  public IPropertyContentType getPropertyContentType( );
 
-  public boolean hasRestriction();
+  public boolean hasRestriction( );
 
-  public IRestriction getRestriction();
+  public IRestriction[] getRestriction( );
 
-  public boolean isFixed();
+  public boolean isFixed( );
+
+  public boolean isNullable( );
 
   /**
    * initialize properties with this value and never change
    * 
    * @return default value
    */
-  public String getFixed();
+  public String getFixed( );
 
-  public boolean hasDefault();
+  public boolean hasDefault( );
+
+  public boolean isGeometry( );
 
   /**
    * if nothing specified initialize properties with this value
    * 
    * @return default value
    */
-  public String getDefault();
+  public String getDefault( );
+
+  public Class getValueClass( );
+
+  public ITypeHandler getTypeHandler( );
 }

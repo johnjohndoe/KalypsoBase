@@ -29,26 +29,26 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureContentType;
-import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 
 /**
- * 
  * schema-builder for a special gml version (e.g. gml_2.1.x)
  * 
  * @author doemming
@@ -59,7 +59,7 @@ public class GMLSchemaBuilder
 
   private final String m_gmlVersion;
 
-  public String getGMLVersion()
+  public String getGMLVersion( )
   {
     return m_gmlVersion;
   }
@@ -78,21 +78,19 @@ public class GMLSchemaBuilder
   {
     for( Iterator iterator = m_registeredBuilders.iterator(); iterator.hasNext(); )
     {
-      final IBuilder builder = (IBuilder)iterator.next();
+      final IBuilder builder = (IBuilder) iterator.next();
       if( builder.isBuilderFor( gmlSchema, object, null ) )
         return builder;
     }
     return null;
   }
 
-  public GMLSchema buildGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
+  public GMLSchema buildGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    final URL urlSchemaLocation = getSchemaLocationForURN( urn, schemaLocationURL );
-
     SchemaDocument document;
     try
     {
-      document = SchemaDocument.Factory.parse( urlSchemaLocation.openStream() );
+      document = SchemaDocument.Factory.parse( inputStream );
     }
     catch( Exception e )
     {
@@ -106,10 +104,9 @@ public class GMLSchemaBuilder
       // documentation of errors:
       // - namespace not set (e.g. xmlns:adv="...")
       // TODO use a schema-validator to report
-      throw new GMLSchemaException(
-          "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
+      throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
-    final GMLSchema gmlSchema = new GMLSchema( schema, schemaLocationURL, m_gmlVersion );
+    final GMLSchema gmlSchema = new GMLSchema( schema, context, m_gmlVersion );
     // I Step build the objects
     rBuild( gmlSchema, gmlSchema );
     // II Step initialize the elements
@@ -121,33 +118,37 @@ public class GMLSchemaBuilder
    * initilize builded objects
    * 
    * @param gmlSchema
-   *  
    */
   private void rInit( final GMLSchema gmlSchema )
   {
-    final FeatureContentType[] featureContentTypes = gmlSchema.getAllFeatureContentTypes();
-    for( int i = 0; i < featureContentTypes.length; i++ )
-      featureContentTypes[i].init();
+    for( int n = 0; n < IInitialize.INIT_ORDER.length; n++ )
+    {
+      int initRun = IInitialize.INIT_ORDER[n];
 
-    final FeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-      featureTypes[i].init();
+      final FeatureContentType[] featureContentTypes = gmlSchema.getAllFeatureContentTypes();
+      for( int i = 0; i < featureContentTypes.length; i++ )
+        featureContentTypes[i].init( initRun );
 
-    final PropertyType[] propertyTypes = gmlSchema.getAllPropertyTypes();
-    for( int i = 0; i < propertyTypes.length; i++ )
-      propertyTypes[i].init();
+      final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
+      for( int i = 0; i < featureTypes.length; i++ )
+        featureTypes[i].init( initRun );
 
-    final IPropertyContentType[] propertyContentTypes = gmlSchema.getAllPropertyContentTypes();
-    for( int i = 0; i < propertyContentTypes.length; i++ )
-      propertyContentTypes[i].init();
+      final PropertyType[] propertyTypes = gmlSchema.getAllPropertyTypes();
+      for( int i = 0; i < propertyTypes.length; i++ )
+        propertyTypes[i].init( initRun );
 
-    final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
-    for( int i = 0; i < relationContentTypes.length; i++ )
-      relationContentTypes[i].init();
+      final IPropertyContentType[] propertyContentTypes = gmlSchema.getAllPropertyContentTypes();
+      for( int i = 0; i < propertyContentTypes.length; i++ )
+        propertyContentTypes[i].init( initRun );
 
-    final IRelationType[] relationTypes = gmlSchema.getAllRelationTypes();
-    for( int i = 0; i < relationTypes.length; i++ )
-      relationTypes[i].init();
+      final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
+      for( int i = 0; i < relationContentTypes.length; i++ )
+        relationContentTypes[i].init( initRun );
+
+      final IRelationType[] relationTypes = gmlSchema.getAllRelationTypes();
+      for( int i = 0; i < relationTypes.length; i++ )
+        relationTypes[i].init( initRun );
+    }
   }
 
   private void rBuild( GMLSchema gmlSchema, Object object )
@@ -177,9 +178,9 @@ public class GMLSchemaBuilder
    * @param urn
    * @param schemaLocationURL
    */
-  private static URL getSchemaLocationForURN( String urn, URL schemaLocationURL )
+  public static URL getSchemaLocationForURN( String urn, URL schemaLocationURL )
   {
-    // TODO use schema cache
+    // TODO use url catalog
     if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_GML2 ) )
       return GMLSchemaBuilder.class.getResource( "../resources/feature.xsd" );
     if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_XLINK ) )

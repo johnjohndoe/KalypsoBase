@@ -35,11 +35,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
- * 
  * representation of a feature content definition from xml schema that is defined by restriction.
  * 
  * @author doemming
@@ -51,39 +51,45 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
 
   private FeatureContentType m_restrictionBase = null;
 
-  public FeatureContentTypeFromRestriction( GMLSchema schema, ComplexType complexType,
-      ComplexRestrictionType restriction )
+  public FeatureContentTypeFromRestriction( GMLSchema schema, ComplexType complexType, ComplexRestrictionType restriction )
   {
     super( schema, complexType );
     m_restriction = restriction;
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
-  public ExplicitGroup getSequence()
+  @Override
+  public ExplicitGroup getSequence( )
   {
     return m_restriction.getSequence();
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.FeatureType#init()
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  @Override
+  public void init( int initializeRun )
   {
-    final QName base = m_restriction.getBase();
-    final ComplexTypeReference reference = (ComplexTypeReference)getGMLSchema().resolveReference( base );
-    final GMLSchema schema = reference.getGMLSchema();
-    final ComplexType complexType = reference.getComplexType();
-    m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
-    super.init();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final QName base = m_restriction.getBase();
+        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final GMLSchema schema = reference.getGMLSchema();
+        final ComplexType complexType = reference.getComplexType();
+        m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
+        break;
+    }
+    super.init( initializeRun );
   }
 
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
-  public IPropertyType[] getProperties()
+  public IPropertyType[] getProperties( )
   {
     return m_pt;
   }
@@ -91,7 +97,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
-  public IFeatureContentType getBase()
+  public IFeatureContentType getBase( )
   {
     return m_restrictionBase;
   }
@@ -99,7 +105,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
-  public int getDerivationType()
+  public int getDerivationType( )
   {
     return DERIVATION_BY_RESTRICTION;
   }
@@ -107,7 +113,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
-  public IPropertyType[] getDirectProperties()
+  public IPropertyType[] getDirectProperties( )
   {
     return m_pt;
   }

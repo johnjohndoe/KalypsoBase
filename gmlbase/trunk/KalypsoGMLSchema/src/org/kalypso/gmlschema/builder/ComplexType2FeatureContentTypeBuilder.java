@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
 
 /**
- * 
  * a builder
  * 
  * @author doemming
@@ -54,14 +53,13 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
 {
 
   /**
-   * 
    * @param gmlSchema
    * @param complexTypeObject
    */
   public Object[] build( GMLSchema gmlSchema, Object complexTypeObject )
   {
     FeatureContentType result = null;
-    final ComplexType complexType = (ComplexType)complexTypeObject;
+    final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
     final ExplicitGroup sequence = complexType.getSequence();
     if( sequence != null ) // no complex content
@@ -82,8 +80,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     if( result != null )
     {
       gmlSchema.register( complexTypeObject, result );
-      return new Object[]
-      { result };
+      return new Object[] { result };
     }
     return new Object[0];
 
@@ -95,9 +92,9 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof ComplexType ) )
+    if( !(object instanceof ComplexType) )
       return false;
-    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType)object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();

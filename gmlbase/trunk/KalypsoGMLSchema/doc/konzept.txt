@@ -51,9 +51,16 @@ relations:
 - support xlink:actuate 
 
 additional appinfo information in schema:
+- read only
 - heavy relationships
 - format-strings
 - root-element-tags
 - topology-themes
 - linked-relation
 - inline-relation
+- virtual-property
+	-Association
+	-ID
+	-key
+	
+

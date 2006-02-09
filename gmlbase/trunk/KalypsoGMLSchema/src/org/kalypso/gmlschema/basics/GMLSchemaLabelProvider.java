@@ -36,12 +36,17 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IRestriction;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.restriction.EnumerationResitriction;
+import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MaxLengthRestriction;
+import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -66,64 +71,88 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     if( element == null )
       return "null";
     if( element instanceof LabelAndChildsProvider )
-      return ( (LabelAndChildsProvider)element ).getText();
+      return ((LabelAndChildsProvider) element).getText();
     if( element instanceof String )
-      return (String)element;
+      return (String) element;
     if( element instanceof GMLSchema )
-      return "GMLSchema: " + ( (GMLSchema)element ).getTargetNamespace();
+      return "GMLSchema: " + ((GMLSchema) element).getTargetNamespace();
     if( element instanceof IFeatureType )
-      return "Feature: " + ( (IFeatureType)element ).getQName();
+      return "Feature: " + ((IFeatureType) element).getQName();
 
     if( element instanceof IFeatureContentType )
-      return "ContentType: " + ( (IFeatureContentType)element ).getQName();
+      return "ContentType: " + ((IFeatureContentType) element).getQName();
     final StringBuffer result = new StringBuffer();
 
-    if( element instanceof IRestriction )
+    // IRestrictions
+    if( element instanceof EnumerationResitriction )
     {
-      final IRestriction restriction = (IRestriction)element;
-      if( restriction.hasEnumeration() )
-      {
-        result.append( "enumeration:\n" );
-        final String[] enumeration = restriction.getEnumeration();
-        for( int i = 0; i < enumeration.length; i++ )
-          result.append( "  " + enumeration[i] + "\n" );
-      }
-      if( restriction.hasMinLength() )
-        result.append( "  length >=" + restriction.getMinLength() + "\n" );
-      if( restriction.hasMaxLength() )
-        result.append( "  length <=" + restriction.getMaxLength() + "\n" );
-
-      if( restriction.hasMinInclusive() )
-        result.append( "  value >=" + restriction.getMinInclusive() + "\n" );
-      if( restriction.hasMinExclusive() )
-        result.append( "  value >" + restriction.getMinExclusive() + "\n" );
-
-      if( restriction.hasMaxInclusive() )
-        result.append( "  value <=" + restriction.getMaxInclusive() + "\n" );
-      if( restriction.hasMaxExclusive() )
-        result.append( "  value <" + restriction.getMaxExclusive() + "\n" );
+      final EnumerationResitriction restriction = (EnumerationResitriction) element;
+      result.append( "enumeration:\n" );
+      final String[] enumeration = restriction.getEnumeration();
+      for( int i = 0; i < enumeration.length; i++ )
+        result.append( "  " + enumeration[i] + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MinLengthRestriction )
+    {
+      MinLengthRestriction restriction = (MinLengthRestriction) element;
+      result.append( "  length >=" + restriction.getMinLength() + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MaxLengthRestriction )
+    {
+      MaxLengthRestriction restriction = (MaxLengthRestriction) element;
+      result.append( "  length <=" + restriction.getMaxLength() + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MinInclusiveRestriction )
+    {
+      MinInclusiveRestriction restriction = (MinInclusiveRestriction) element;
+      result.append( "  value >=" + restriction.getMinInclusive() + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MinExclusiveRestriction )
+    {
+      MinExclusiveRestriction restriction = (MinExclusiveRestriction) element;
+      result.append( "  value >" + restriction.getMinExclusive() + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MaxInclusiveRestriction )
+    {
+      MaxInclusiveRestriction restriction = (MaxInclusiveRestriction) element;
+      result.append( "  value <=" + restriction.getMaxInclusive() + "\n" );
+      return result.toString();
+    }
+    if( element instanceof MaxExclusiveRestriction )
+    {
+      MaxExclusiveRestriction restriction = (MaxExclusiveRestriction) element;
+      result.append( "  value <" + restriction.getMaxExclusive() + "\n" );
       return result.toString();
     }
 
     if( element instanceof IPropertyType )
     {
-      IPropertyType prop = (IPropertyType)element;
+      final IPropertyType prop = (IPropertyType) element;
       result.append( "[" + prop.getMinOccurs() + "," );
       int maxOccurs = prop.getMaxOccurs();
-      if( maxOccurs == IPropertyType.OCCURS_UNOUNDED )
+      if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
         result.append( "oo" );
       else
         result.append( maxOccurs );
       result.append( "]" );
+
     }
 
     if( element instanceof IRelationType )
-      result.append( "  Relation: " + ( (IRelationType)element ).getQName() );
+      result.append( "  Relation: " + ((IRelationType) element).getQName() );
     else if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType)element;
+      final IValuePropertyType vpt = (IValuePropertyType) element;
       result.append( "Property: " + vpt.getQName() );
+      if( vpt.isGeometry() )
+        result.append( "    [X] GEOMETRY" );
       result.append( "\n     Value: " + vpt.getValueQName() );
+      result.append( "\n     Class: " + vpt.getValueClass() );
       if( vpt.hasDefault() )
         result.append( "\n     default: " + vpt.getDefault() );
       if( vpt.isFixed() )
@@ -139,15 +168,15 @@ public class GMLSchemaLabelProvider implements ILabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
 
   }
 
@@ -164,7 +193,7 @@ public class GMLSchemaLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
 }

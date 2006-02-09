@@ -33,11 +33,11 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 
 /**
- * 
  * @author doemming
  */
 public class AdvRelationType extends AbstractPropertyTypeFromElement implements IRelationType
@@ -53,18 +53,24 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   }
 
   /**
-   *  
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  public void init( int initializeRun )
   {
-    m_relationContentType = new ForcedRelationContentType( m_gmlSchema, m_advReferenziertesElement );
-    m_relationContentType.init();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+        m_relationContentType = new ForcedRelationContentType( m_gmlSchema, m_advReferenziertesElement );
+        break;
+    }
+    if( m_relationContentType != null )
+      m_relationContentType.init( initializeRun );
   }
 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
-  public boolean isInlineAble()
+  public boolean isInlineAble( )
   {
     return false;
   }
@@ -72,7 +78,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
-  public boolean isLinkAble()
+  public boolean isLinkAble( )
   {
     return true;
   }
@@ -81,7 +87,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
     return m_relationContentType.getTargetFeatureTypes( context, includeAbstract );
   }

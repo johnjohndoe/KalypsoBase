@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
@@ -55,25 +56,32 @@ public class RelationContentTypeFromExtension extends RelationContentType
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
-  public ExplicitGroup getSequence()
+  @Override
+  public ExplicitGroup getSequence( )
   {
     return m_extension.getSequence();
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.FeatureType#init()
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  @Override
+  public void init( int initializeRun )
   {
-    final QName base = m_extension.getBase();
-    final ComplexTypeReference reference = (ComplexTypeReference)getGMLSchema().resolveReference( base );
-    final GMLSchema schema = reference.getGMLSchema();
-    final ComplexType complexType = reference.getComplexType();
-    m_extensionBase = schema.getRelationContentTypeFor( complexType );
-    super.init();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final QName base = m_extension.getBase();
+        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final GMLSchema schema = reference.getGMLSchema();
+        final ComplexType complexType = reference.getComplexType();
+        m_extensionBase = schema.getRelationContentTypeFor( complexType );
+        break;
+    }
+    super.init(initializeRun);
   }
 
 }

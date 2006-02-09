@@ -35,7 +35,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -58,7 +57,7 @@ public class QualifiedElement
     m_qName = new QName( targetNamespace, name );
   }
 
-  public final GMLSchema getGMLSchema()
+  public final GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }
@@ -66,17 +65,29 @@ public class QualifiedElement
   /**
    * <b>do not use QName as key, it is qualified, but not unique ! </b>
    */
-  public final QName getQName()
+  public final QName getQName( )
   {
     return m_qName;
   }
 
   /**
+   * @deprecated
+   */
+  public String getName( )
+  {
+    return m_qName.getLocalPart();
+  }
+
+  /**
    *  
    */
-  public final Element getElement()
+  public final Element getElement( )
   {
     return m_element;
   }
 
+  public String toString( )
+  {
+    return m_qName.toString();
+  }
 }

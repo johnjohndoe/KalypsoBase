@@ -41,13 +41,15 @@ import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.Reference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -63,7 +65,6 @@ public class GMLSchemaUtilities
   private static final int CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE = 4;
 
   /**
-   * 
    * @param gmlSchema
    * @param complexType
    */
@@ -72,19 +73,24 @@ public class GMLSchemaUtilities
     final ComplexContent complexContent = complexType.getComplexContent();
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
-    //    if( name != null && complexContent == null )
+
+    // 1. check if it is a named type
+    // propably a typehanlder exists for this
     if( name != null )
     {
       final QName typeQName = new QName( gmlSchema.getTargetNamespace(), name );
       if( isKnownType( typeQName ) )
         return getKnownTypeFor( typeQName );
     }
+
     if( sequence != null )
     {
       return null;
     }
     if( complexContent == null )
       return null;
+    // 2. check for base (extension or restriction)
+    // propably a typehanlder exists for this
     final ExtensionType extension = complexContent.getExtension();
     final ComplexRestrictionType restriction = complexContent.getRestriction();
     final QName base;
@@ -98,16 +104,27 @@ public class GMLSchemaUtilities
     }
     else
       throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
+    if( isXDSAnyType( base ) )
+      return null;
+
     if( isKnownType( base ) )
       return getKnownTypeFor( base );
 
+    // 3. handle a reference
     final Reference reference = gmlSchema.resolveReference( base );
     if( reference instanceof ComplexTypeReference )
-      return findBaseType( (ComplexTypeReference)reference );
+      return findBaseType( (ComplexTypeReference) reference );
     else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference)reference );
+      return findBaseType( (SimpleTypeReference) reference );
     else
       throw new UnsupportedOperationException();
+  }
+
+  private static boolean isXDSAnyType( QName base )
+  {
+    if( !base.getNamespaceURI().equals( GMLSchemaConstants.NS_XMLSCHEMA ) )
+      return false;
+    return base.getLocalPart().equals( "anyType" );
   }
 
   /**
@@ -117,10 +134,25 @@ public class GMLSchemaUtilities
   public static QName findBaseType( GMLSchema schema, SimpleType simpleType )
   {
     final Restriction restriction = simpleType.getRestriction();
+
+    // 1. check if it is a named type
+    // propably a typehanlder exists for this
+    final String name = simpleType.getName();
+    if( name != null )
+    {
+      final QName namedBase = new QName( schema.getTargetNamespace(), name );
+      if( isKnownType( namedBase ) )
+        return getKnownTypeFor( namedBase );
+    }
+
+    // 2. check for base
+    // propably a typehanlder exists for this
     final QName base = restriction.getBase();
     if( isKnownType( base ) )
       return getKnownTypeFor( base );
-    final ElementReference reference = (ElementReference)schema.resolveReference( base );
+
+    // 3. handle a reference
+    final ElementReference reference = (ElementReference) schema.resolveReference( base );
     return findBaseType( reference );
   }
 
@@ -129,30 +161,30 @@ public class GMLSchemaUtilities
     final QName qName;
     switch( getConstructionType( element ) )
     {
-    case CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE:
-      final LocalSimpleType simpleType = element.getSimpleType();
-      return findBaseType( schema, simpleType );
-    case CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE:
-      final LocalComplexType complexType = element.getComplexType();
-      return findBaseType( schema, complexType );
-    case CONSTRUCTION_REFERENCED_TYPE:
-      qName = element.getRef();
-      break;
-    case CONSTRUCTION_NAMED_TYPE:
-      qName = element.getType();
-      break;
-    default:
-      throw new UnsupportedOperationException();
+      case CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE:
+        final LocalSimpleType simpleType = element.getSimpleType();
+        return findBaseType( schema, simpleType );
+      case CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE:
+        final LocalComplexType complexType = element.getComplexType();
+        return findBaseType( schema, complexType );
+      case CONSTRUCTION_REFERENCED_TYPE:
+        qName = element.getRef();
+        break;
+      case CONSTRUCTION_NAMED_TYPE:
+        qName = element.getType();
+        break;
+      default:
+        throw new UnsupportedOperationException();
     }
     if( isKnownType( qName ) )
       return getKnownTypeFor( qName );
     final Reference reference = schema.resolveReference( qName );
     if( reference instanceof ComplexTypeReference )
-      return findBaseType( (ComplexTypeReference)reference );
+      return findBaseType( (ComplexTypeReference) reference );
     else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference)reference );
+      return findBaseType( (SimpleTypeReference) reference );
     else if( reference instanceof ElementReference )
-      return findBaseType( (ElementReference)reference );
+      return findBaseType( (ElementReference) reference );
     else
       throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
   }
@@ -196,8 +228,10 @@ public class GMLSchemaUtilities
   }
 
   /**
+   * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
    * 
    * @param qName
+   * @return true is qName is a known type
    */
   private static boolean isKnownType( final QName qName )
   {
@@ -212,48 +246,52 @@ public class GMLSchemaUtilities
   }
 
   /**
-   * 
    * @param qName
    */
   private static QName getKnownTypeFor( final QName qName )
   {
+    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qName );
+    if( typeHandler != null )
+      return qName;
+
     final QName result = qName;
     final String namespaceURI = qName.getNamespaceURI();
     final String localPart = qName.getLocalPart();
-    if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
-      return result;
-    else if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    // if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
+    // return result;
+    if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
     {
-      if( "GeometryAssociationType".equals( localPart ) )
+      // if( "GeometryAssociationType".equals( localPart ) )
+      // return result;
+      if( "AbstractFeatureType".equals( localPart ) ) // -> build a FeatureType
         return result;
-      else if( "AbstractFeatureType".equals( localPart ) )
+      else if( "FeatureAssociationType".equals( localPart ) ) // -> build a RelationType
         return result;
-      else if( "FeatureAssociationType".equals( localPart ) )
-        return result;
-      else if( "AbstractGeometryType".equals( localPart ) )
-        return result;
-      else if( "PointType".equals( localPart ) )
-        return result;
-      else if( "LineStringType".equals( localPart ) )
-        return result;
-      else if( "PolygonType".equals( localPart ) )
-        return result;
-      else if( "MultiPointType".equals( localPart ) )
-        return result;
-      else if( "MultiLineStringType".equals( localPart ) )
-        return result;
-      else if( "MultiPolygonType".equals( localPart ) )
-        return result;
-      else if( "BoundingShapeType".equals( localPart ) )
-        return result;
-      else
-        return null;
+      // else if( "AbstractGeometryType".equals( localPart ) )
+      // return result;
+      // else if( "PointType".equals( localPart ) )
+      // return result;
+      // else if( "LineStringType".equals( localPart ) )
+      // return result;
+      // else if( "PolygonType".equals( localPart ) )
+      // return result;
+      // else if( "MultiPointType".equals( localPart ) )
+      // return result;
+      // else if( "MultiLineStringType".equals( localPart ) )
+      // return result;
+      // else if( "MultiPolygonType".equals( localPart ) )
+      // return result;
+      // else if( "BoundingShapeType".equals( localPart ) )
+      // return result;
+      // else
+      // return null;
     }
-    else if( GMLSchemaConstants.NS_OBSLINK.equals( namespaceURI ) )
-    {
-      if( "TimeseriesLinkType".equals( localPart ) )
-        return result;
-    }
+    // else if( GMLSchemaConstants.NS_OBSLINK.equals( namespaceURI ) )
+    // {
+    // if( "TimeseriesLinkType".equals( localPart ) )
+    // return result;
+    // }
     return null;
   }
 
@@ -266,7 +304,7 @@ public class GMLSchemaUtilities
   {
     final QName type = element.getType();
     if( type != null )
-      return (ComplexTypeReference)gmlSchema.resolveReference( type );
+      return (ComplexTypeReference) gmlSchema.resolveReference( type );
     final ComplexType complexType = element.getComplexType();
     return new ComplexTypeReference( gmlSchema, complexType );
   }

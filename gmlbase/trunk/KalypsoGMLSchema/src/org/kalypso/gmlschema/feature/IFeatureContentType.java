@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.feature;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
@@ -39,7 +40,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
  * 
  * @author doemming
  */
-public interface IFeatureContentType
+public interface IFeatureContentType extends IInitialize
 {
   public final static int DERIVATION_NONE = 0;
 

@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.property.relation;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * 
@@ -46,6 +47,6 @@ public interface IRelationContentType extends IInitialize
    * @param context
    * @param includeAbstract
    */
-  FeatureType[] getTargetFeatureTypes( final GMLSchema context, boolean includeAbstract );
+  IFeatureType[] getTargetFeatureTypes( final GMLSchema context, boolean includeAbstract );
 
 }

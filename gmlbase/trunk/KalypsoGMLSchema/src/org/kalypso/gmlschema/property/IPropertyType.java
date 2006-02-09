@@ -42,11 +42,18 @@ import org.kalypso.gmlschema.basics.IInitialize;
 public interface IPropertyType extends IInitialize
 
 {
-  public final static int OCCURS_UNOUNDED = -1;
+	public final static int UNBOUND_OCCURENCY = -1;
 
-  public int getMinOccurs();
+	public int getMinOccurs();
 
-  public int getMaxOccurs();
+	public int getMaxOccurs();
 
-  public QName getQName();
+	public QName getQName();
+
+	/**
+	 * @deprecated use getQName()
+	 * @return local part of qualified name
+	 */
+	public String getName();
+
 }

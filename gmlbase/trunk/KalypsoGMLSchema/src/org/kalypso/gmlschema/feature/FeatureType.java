@@ -29,26 +29,36 @@
  */
 package org.kalypso.gmlschema.feature;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * representation of a feature definition from xml schema
  * 
  * @author doemming
  */
 public class FeatureType extends QualifiedElement implements IDetailedFeatureType
 {
+  private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
+
+  private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<String, IPropertyType>();
+
+  private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
 
   // will initilized in init()
   private IFeatureContentType m_featureContentType = null;
@@ -56,40 +66,101 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   // will initilized in init()
   private FeatureType m_substituteFT = null;
 
+  private int m_defaultGeometryPosition = -1;
+
+  private IValuePropertyType[] m_geoPTs = null;
+
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
     super( gmlSchema, element );
   }
 
-  public void init()
+  /**
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
+   */
+  public void init( int initializeRun )
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema,
-        m_element );
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+        initFirst();
+        break;
+      case IInitialize.INITIALIZE_RUN_GEOMETRY:
+        initGeometry();
+        break;
+      case IInitialize.INITIALIZE_RUN_DEPRECATED:
+        initDeprecated();
+        break;
+    }
+  }
+
+  /**
+   * init map for fast finding IPropertyTypes
+   */
+  private void initDeprecated( )
+  {
+    final IPropertyType[] pts = m_featureContentType.getProperties();
+    for( int i = 0; i < pts.length; i++ )
+    {
+      final IPropertyType pt = pts[i];
+      m_localPartMap.put( pt.getName(), pt );
+      m_qNameMap.put( pt.getQName(), pt );
+    }
+  }
+
+  private void initFirst( )
+  {
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema, m_element );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
-    m_featureContentType = (IFeatureContentType)schema.getBuildedObjectFor( complexType );
+    m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
 
     // initialize substitution group
     final QName substitutionGroup = m_element.getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = (ElementReference)m_gmlSchema.resolveReference( substitutionGroup );
+      final ElementReference substitutesReference = (ElementReference) m_gmlSchema.resolveReference( substitutionGroup );
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
-      final FeatureType ft = (FeatureType)substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
+      final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
       m_substituteFT = ft;
     }
     else
       m_substituteFT = null;
   }
 
-  public IFeatureContentType getFeatureContentType()
+  /**
+   * initialize geometryinformation after
+   */
+  private void initGeometry( )
+  {
+    final IPropertyType[] properties = m_featureContentType.getProperties();
+    final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      final IPropertyType pt = properties[i];
+      m_positionMap.put( pt, new Integer( i ) );
+      if( pt instanceof IValuePropertyType )
+      {
+        final IValuePropertyType vpt = (IValuePropertyType) pt;
+        // check for defaultgeometryPosition
+        if( vpt.isGeometry() )
+        {
+          list.add( vpt );
+          if( m_defaultGeometryPosition < 0 )
+            m_defaultGeometryPosition = i;
+        }
+      }
+    }
+    m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
+  }
+
+  public IFeatureContentType getFeatureContentType( )
   {
     return m_featureContentType;
   }
 
-  public FeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract,
-      final boolean inclusiveThis )
+  public IFeatureType[] getSubstituts( GMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
   {
     if( m_substituteFT == null ) // no substitutiongroup
     {
@@ -97,32 +168,30 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       {
         if( !includeAbstract && isAbstract() ) // abstract-behaviour ?
           return new FeatureType[0];
-        return new FeatureType[]
-        { this };
+        return new FeatureType[] { this };
       }
       return new FeatureType[0];
     }
+    if( contextSchema == null )
+      contextSchema = getGMLSchema();
     // query for it
-    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( contextSchema, this,
-        includeAbstract, inclusiveThis );
+    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( contextSchema, this, includeAbstract, inclusiveThis );
     contextSchema.accept( visitor );
     return visitor.getSubstitutes();
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#isAbstract()
    */
-  public boolean isAbstract()
+  public boolean isAbstract( )
   {
     return m_element.isSetAbstract();
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstitutionGroupFT()
    */
-  public FeatureType getSubstitutionGroupFT()
+  public FeatureType getSubstitutionGroupFT( )
   {
     return m_substituteFT;
   }
@@ -131,16 +200,16 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
    * @deprecated use getQName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_qName.getLocalPart();
   }
 
   /**
-   * 
+   * @deprecated
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
    */
-  public String getNamespace()
+  public String getNamespace( )
   {
     return m_qName.getNamespaceURI();
   }
@@ -148,7 +217,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
    */
-  public IPropertyType[] getProperties()
+  public IPropertyType[] getProperties( )
   {
     return m_featureContentType.getProperties();
   }
@@ -164,35 +233,65 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSizeOfProperties()
    */
-  public int getSizeOfProperties()
+  public int getSizeOfProperties( )
   {
     return getProperties().length;
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getProperty( QName qName )
+  public IPropertyType getProperty( final QName qName )
   {
-    return m_featureContentType.getProperty( qName );
+    return m_qNameMap.get( qName );
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
-   * @deprecated use getProperty(QName qName)
+   * @deprecated use getProperty(IPropertyType)
    */
-  public IPropertyType getProperty( String name )
+  public IPropertyType getProperty( final String propNameLocalPart )
   {
-    final IPropertyType[] properties = getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      IPropertyType pt = properties[i];
-      if( name.equals( pt.getQName().getLocalPart() ) )
-        return pt;
-    }
+    return m_localPartMap.get( propNameLocalPart );
+  }
+
+  public int getDefaultGeometryPropertyPosition( )
+  {
+    return m_defaultGeometryPosition;
+  }
+
+  public int getPropertyPosition( IPropertyType propertyType )
+  {
+    return m_positionMap.get( propertyType ).intValue();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getAllGeomteryProperties()
+   */
+  public IValuePropertyType[] getAllGeomteryProperties( )
+  {
+    return m_geoPTs;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getDefaultGeometryProperty()
+   */
+  public IValuePropertyType getDefaultGeometryProperty( )
+  {
+    if( m_geoPTs.length > 0 )
+      return m_geoPTs[0];
     return null;
   }
 
+  public String toString( )
+  {
+    final StringBuffer b=new StringBuffer(super.toString());
+    final IPropertyType[] properties = getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      final IPropertyType pt = properties[i];
+      b.append("\n").append(pt.getQName());
+    }
+    return b.toString();
+  }
 }

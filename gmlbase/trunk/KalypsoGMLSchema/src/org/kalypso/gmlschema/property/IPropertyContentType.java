@@ -32,19 +32,26 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.ITypeHandler;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
  */
 public interface IPropertyContentType extends IInitialize
 {
-  public abstract QName getValueQName();
+  public QName getValueQName( );
 
-  public abstract boolean hasRestriction();
+  public boolean hasRestriction( );
 
-  public abstract IRestriction getRestriction();
+  public IRestriction[] getRestriction( );
+
+  public boolean isGeometry( );
+
+  public Class getValueClass( );
+
+  public ITypeHandler getTypeHandler( );
 
 }

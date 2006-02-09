@@ -32,29 +32,29 @@ package org.kalypso.gmlschema.feature;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 
 /**
- * 
- * 
  * @author doemming
  */
-public interface IFeatureType
+public interface IFeatureType extends IInitialize
 {
 
   /**
-   * returns the name of the FeatureType
+   * @deprecated TODO change to getNameLocalPart returns the name of the FeatureType
    */
-  public String getName();
+  public String getName( );
 
   /**
    * returns the properties of this feature type
    */
-  public IPropertyType[] getProperties();
+  public IPropertyType[] getProperties( );
 
   public IPropertyType getProperties( int position );
 
-  public int getSizeOfProperties();
+  public int getSizeOfProperties( );
 
   public IPropertyType getProperty( QName qname );
 
@@ -63,40 +63,50 @@ public interface IFeatureType
    * 
    * @deprecated use getProperty(QName qname)
    */
-  public IPropertyType getProperty( String name );
+  public IPropertyType getProperty( String nameLocalPart );
 
   /**
    * @return true if is abstract
    */
-  public boolean isAbstract();
+  public boolean isAbstract( );
 
-  public FeatureType getSubstitutionGroupFT();
+  public IFeatureType getSubstitutionGroupFT( );
 
-  public FeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract,
-      final boolean inclusiveThis );
+  public IFeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis );
 
-  public QName getQName();
+  public QName getQName( );
 
   /**
    * @return namespace
    * @deprecated use getQName
    */
-  public String getNamespace();
+  public String getNamespace( );
+
+  public int getDefaultGeometryPropertyPosition( );
+
+  public int getPropertyPosition( final IPropertyType propertyType );
+
+  public IValuePropertyType[] getAllGeomteryProperties( );
+
+  public IValuePropertyType getDefaultGeometryProperty( );
 
   /*
-   * public Annotation getAnnotation( String langKey );
-   * 
-   * public Map getAnnotationMap();
-   * 
-   * public void setVirtualFeatureTypeProperty( FeatureTypeProperty[] properties );
-   * 
-   * public FeatureTypeProperty[] getVirtualFeatureTypeProperty();
-   * 
-   * public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
-   * 
-   * public boolean isVirtuelProperty( String propertyName );
-   * 
-   * public boolean hasGeometryProperty();
+   * public Annotation getAnnotation( String langKey ); public Map getAnnotationMap(); public void
+   * setVirtualFeatureTypeProperty( FeatureTypeProperty[] properties ); public FeatureTypeProperty[]
+   * getVirtualFeatureTypeProperty(); public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
+   * public boolean isVirtuelProperty( String propertyName ); public boolean hasGeometryProperty();
    */
-
+  // m_name = name;
+  // m_namespace = namespace;
+  // m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
+  // m_annotationMap.put( Annotation.UNSUPPORTED_LANG_KEY, new Annotation( Annotation.UNSUPPORTED_LANG_KEY, m_name, "",
+  // m_namespace + ":" + m_name ) );
+  // public final Annotation getAnnotation( String lang )
+  // {
+  // final Annotation annotation = (Annotation)m_annotationMap.get( lang );
+  // if( annotation == null )
+  // return (Annotation)m_annotationMap.get( Annotation.UNSUPPORTED_LANG_KEY );
+  // return annotation;
+  //
+  // }
 }

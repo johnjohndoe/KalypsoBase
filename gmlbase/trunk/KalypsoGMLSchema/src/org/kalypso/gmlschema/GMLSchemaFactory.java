@@ -29,15 +29,17 @@
  */
 package org.kalypso.gmlschema;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.builder.AdvElement2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
-import org.kalypso.gmlschema.builder.ComplexType2GeometryPropertyContentTypeBuilder;
+import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
@@ -47,10 +49,17 @@ import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 import org.kalypso.gmlschema.builder.PropertyType2SimpleTypeBuilder;
 import org.kalypso.gmlschema.builder.RelationType2ComplexTypeBuilder;
-import org.kalypso.gmlschema.builder.SimpleType2PropertyContentTypeBuilder;
+import org.kalypso.gmlschema.feature.CustomFeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.CustomPropertyContentType;
+import org.kalypso.gmlschema.property.CustomValueProperType;
+import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.ITypeHandler;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -64,6 +73,9 @@ public class GMLSchemaFactory
   {
     final GMLSchemaBuilder builder = new GMLSchemaBuilder( "2.1.2" );
     builder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() );
+    // test
+    builder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );
+
     // complex type ...
     builder.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );
     builder.registerBuilder( new FeatureContentType2ElementBuilder() );
@@ -74,13 +86,13 @@ public class GMLSchemaFactory
     builder.registerBuilder( new Element2PropertyTypeBuilder() );
     builder.registerBuilder( new PropertyType2SimpleTypeBuilder() );
     // simple type...
-    builder.registerBuilder( new SimpleType2PropertyContentTypeBuilder() );
+//    builder.registerBuilder( new SimpleType2PropertyContentTypeBuilder() );
     // relations
-    //      m_instance.registerBuilder( new Element2RelationTypeBuilder() );
+    // m_instance.registerBuilder( new Element2RelationTypeBuilder() );
     builder.registerBuilder( new RelationType2ComplexTypeBuilder() );
     builder.registerBuilder( new ComplexType2RelationContentTypeBuilder() );
     // test
-    builder.registerBuilder( new ComplexType2GeometryPropertyContentTypeBuilder() );
+//    builder.registerBuilder( new ComplexType2GeometryPropertyContentTypeBuilder() );
     builder.registerBuilder( new AdvElement2RelationTypeBuilder() );
     m_register.add( builder );
   }
@@ -91,19 +103,54 @@ public class GMLSchemaFactory
    */
   public static GMLSchema createGMLSchema( String urn, URL schemaLocationURL ) throws GMLSchemaException
   {
+    final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
+    return createGMLSchema( urlSchemaLocation );
+    // return createGMLSchema( schemaLocationURL );
+  }
+
+  public static GMLSchema createGMLSchema( URL schemaLocationURL ) throws GMLSchemaException
+  {
+    try
+    {
+      final InputStream inputStream = schemaLocationURL.openStream();
+      return createGMLSchema( inputStream, schemaLocationURL );
+    }
+    catch( Exception e )
+    {
+      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+    }
+  }
+
+  public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
+  {
     final GMLSchemaBuilder builder = getBuilderForVersion( "2.1." );
-    return builder.buildGMLSchema( urn, schemaLocationURL );
+    return builder.buildGMLSchema( inputStream, context );
   }
 
   private static GMLSchemaBuilder getBuilderForVersion( String gmlVersion )
   {
     for( Iterator iter = m_register.iterator(); iter.hasNext(); )
     {
-      final GMLSchemaBuilder builder = (GMLSchemaBuilder)iter.next();
+      final GMLSchemaBuilder builder = (GMLSchemaBuilder) iter.next();
       if( gmlVersion == null || builder.getGMLVersion().startsWith( gmlVersion ) )
         return builder;
     }
     throw new UnsupportedOperationException( "GML Version " + gmlVersion + " not supported" );
   }
 
+  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
+  {
+    return new CustomFeatureType( qName, properties );
+  }
+
+  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final ITypeHandler typeHandler, final int minOccurs, final int maxOccurs )
+  {
+    final IPropertyContentType pct = new CustomPropertyContentType( valueQName, typeHandler );
+    return new CustomValueProperType( name, pct, minOccurs, maxOccurs );
+  }
+
+  public static IRelationType createRelationType( final QName qName, final IFeatureType[] targetFTs, final int minOccurs, final int maxOccurs )
+  {
+    return new CustomRelationType( qName, targetFTs, minOccurs, maxOccurs );
+  }
 }

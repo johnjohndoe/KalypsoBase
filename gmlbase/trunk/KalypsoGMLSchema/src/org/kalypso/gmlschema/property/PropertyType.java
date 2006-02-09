@@ -36,12 +36,17 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.Reference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 
 /**
- * 
  * representation a the property definition from xml schema
  * 
  * @author doemming
@@ -49,62 +54,79 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
 public class PropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
 {
 
+  /**
+   * if value is XML-SCHEMA-simpletype it is null
+   */
   private IPropertyContentType m_propertyContentType = null;
 
-  private QName m_valueQName = null;
+  // private QName m_valueQName = null;
+  //
+  // private Class m_valueClass = null;
 
   public PropertyType( GMLSchema gmlSchema, Element element )
   {
     super( gmlSchema, element );
-
+    // final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element );
+    // final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    // m_typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
   }
 
-  public void init()
+  /**
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
+   */
+  public void init( int initializeRun )
   {
-    final QName type = m_element.getType();
-    if( type != null )
+    switch( initializeRun )
     {
-      if( type.getNamespaceURI().equals( GMLSchemaConstants.NS_XMLSCHEMA ) )
-        m_valueQName = type;
-      else
-      {
-        final Reference reference = m_gmlSchema.resolveReference( type );
-        final GMLSchema schema = reference.getGMLSchema();
-        if( reference instanceof SimpleTypeReference )
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final QName type = m_element.getType();
+        if( type != null )
         {
-          final SimpleType simpleType = ( (SimpleTypeReference)reference ).getSimpleType();
-          m_propertyContentType = (PropertyContentType)schema.getBuildedObjectFor( simpleType );
+          final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+          final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( type );
+          if( typeHandler != null )
+            m_propertyContentType = new CustomPropertyContentType( type, typeHandler );
+          else
+          {
+            final Reference reference = m_gmlSchema.resolveReference( type );
+            final GMLSchema schema = reference.getGMLSchema();
+            if( reference instanceof SimpleTypeReference )
+            {
+              final SimpleType simpleType = ((SimpleTypeReference) reference).getSimpleType();
+              m_propertyContentType = (IPropertyContentType) schema.getBuildedObjectFor( simpleType );
+            }
+            else if( reference instanceof ComplexTypeReference )
+            {
+              final ComplexType complexType = ((ComplexTypeReference) reference).getComplexType();
+              final Object buildedObject = schema.getBuildedObjectFor( complexType );
+              m_propertyContentType = (IPropertyContentType) buildedObject;
+            }
+          }
         }
-        else if( reference instanceof ComplexTypeReference )
+        else
         {
-          final ComplexType complexType = ( (ComplexTypeReference)reference ).getComplexType();
-          m_propertyContentType = (IPropertyContentType)schema.getBuildedObjectFor( complexType );
+          final SimpleType simpleType = m_element.getSimpleType();
+          m_propertyContentType = (IPropertyContentType) m_gmlSchema.getBuildedObjectFor( simpleType );
         }
-      }
-    }
-    else
-    {
-      final SimpleType simpleType = m_element.getSimpleType();
-      m_propertyContentType = (PropertyContentType)m_gmlSchema.getBuildedObjectFor( simpleType );
+        break;
     }
   }
 
-  public IPropertyContentType getPropertyContentType()
+  public IPropertyContentType getPropertyContentType( )
   {
     return m_propertyContentType;
   }
 
-  public QName getValueQName()
+  public QName getValueQName( )
   {
-    if( m_valueQName != null )
-      return m_valueQName;
     return m_propertyContentType.getValueQName();
   }
 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasRestriction()
    */
-  public boolean hasRestriction()
+  public boolean hasRestriction( )
   {
     if( m_propertyContentType == null )
       return false;
@@ -114,25 +136,23 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
-  public IRestriction getRestriction()
+  public IRestriction[] getRestriction( )
   {
     return m_propertyContentType.getRestriction();
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
-  public boolean isFixed()
+  public boolean isFixed( )
   {
     return m_element.isSetFixed();
   }
 
   /**
-   * 
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getFixed()
    */
-  public String getFixed()
+  public String getFixed( )
   {
     return m_element.getFixed();
   }
@@ -140,7 +160,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#hasDefault()
    */
-  public boolean hasDefault()
+  public boolean hasDefault( )
   {
     return m_element.isSetDefault();
   }
@@ -148,9 +168,47 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
-  public String getDefault()
+  public String getDefault( )
   {
     return m_element.getDefault();
+  }
+
+  public boolean isNullable( )
+  {
+    return m_element.isSetNillable();
+  }
+
+  /**
+   * @deprecated
+   */
+  @Override
+  public String getName( )
+  {
+    return m_qName.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return m_propertyContentType.isGeometry();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
+   */
+  public Class getValueClass( )
+  {
+    return m_propertyContentType.getValueClass();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
+   */
+  public ITypeHandler getTypeHandler( )
+  {
+    return m_propertyContentType.getTypeHandler();
   }
 
 }

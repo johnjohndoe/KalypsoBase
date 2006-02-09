@@ -35,10 +35,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * relation forced by informations from a appinfo-tag (e.g. adv:referenziertesElement)
  * 
  * @author doemming
@@ -58,31 +58,36 @@ public class ForcedRelationContentType implements IRelationContentType, IInitial
     m_referencedQNameFeatureType = referencedQNameFeatureType;
   }
 
-  public GMLSchema getGMLSchema()
+  public GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }
 
   /**
-   *  
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  public void init( int initializeRun )
   {
-    final ElementReference reference = (ElementReference)m_gmlSchema.resolveReference( m_referencedQNameFeatureType );
-    final GMLSchema schema = reference.getGMLSchema();
-    final Element element = reference.getElement();
-    final Object buildedObject = schema.getBuildedObjectFor( element );
-    if( buildedObject instanceof FeatureType )
-      m_ftRelationTarget = (FeatureType)buildedObject;
-    else
-      throw new UnsupportedOperationException();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+        final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( m_referencedQNameFeatureType );
+        final GMLSchema schema = reference.getGMLSchema();
+        final Element element = reference.getElement();
+        final Object buildedObject = schema.getBuildedObjectFor( element );
+        if( buildedObject instanceof FeatureType )
+          m_ftRelationTarget = (FeatureType) buildedObject;
+        else
+          throw new UnsupportedOperationException();
+        break;
+    }
   }
 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
     return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
   }

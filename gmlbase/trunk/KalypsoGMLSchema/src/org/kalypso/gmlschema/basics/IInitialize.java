@@ -29,9 +29,7 @@
  */
 package org.kalypso.gmlschema.basics;
 
-
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -39,13 +37,40 @@ package org.kalypso.gmlschema.basics;
 public interface IInitialize
 {
   /**
+   * precondition:<br>
+   * featuretypes, propertytypes and contenttypes are builded<br>
+   * task:<br>
+   * connect builded types
+   */
+  public static final int INITIALIZE_RUN_FIRST = 0;
+
+  /**
+   * precondition:<br>
+   * builded types are connected <br>
+   * task:<br>
+   * featuretypes initialize their default geoemtries
+   */
+  public static final int INITIALIZE_RUN_GEOMETRY = 1;
+
+  /**
+   * precondition:<br>
+   * builded types are connected <br>
+   * task:<br>
+   * generate maps for deprecated access. (propertyname without namespace / as String not as QName)
+   */
+  public static final int INITIALIZE_RUN_DEPRECATED = 2;
+
+  public static final int[] INIT_ORDER = { INITIALIZE_RUN_FIRST, INITIALIZE_RUN_GEOMETRY ,INITIALIZE_RUN_DEPRECATED};
+
+  /**
    * initialize builded object. <br>
    * This methode is intended to be called only from org.kalypso.gmlschema.GMLSchemaBuilder. Implement here the linking
    * of the objects and other initialization stuff that can not be done in the contructor(e.g. because other objects
    * from the schema may not be builded at construction time). <br>
    * Assume that all objects are builded from the schema, but they may not be initialized or linked with each other.
-   * This is intended to be done here.
+   * This is intended to be done here. <br>
+   * as there may be initialize dependencies implementation should switch for initializeRuns
    */
-  public void init();
+  public void init( int initializeRun );
 
 }

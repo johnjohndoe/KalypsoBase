@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.property.relation;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
@@ -45,6 +46,6 @@ public interface IRelationType extends IPropertyType
 
   public boolean isLinkAble();
 
-  public FeatureType[] getTargetFeatureTypes( final GMLSchema context, final boolean includeAbstract );
+  public IFeatureType[] getTargetFeatureTypes( final GMLSchema context, final boolean includeAbstract );
 
 }

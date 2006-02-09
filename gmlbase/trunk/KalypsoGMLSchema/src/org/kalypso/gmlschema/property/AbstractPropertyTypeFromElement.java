@@ -67,7 +67,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     if( maxOccurs instanceof Number )
       return ( (Number)maxOccurs ).intValue();
     if( "unbounded".equals( maxOccurs ) )
-      return IPropertyType.OCCURS_UNOUNDED;
+      return IPropertyType.UNBOUND_OCCURENCY;
     throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
   }
 
@@ -77,7 +77,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     final int minOccurs = getMinOccurs();
     writer.write( "\n" + StringUtils.repeat( " ", indent ) );
     writer.write( " [" + minOccurs + "-" );
-    if( maxOccurs == IPropertyType.OCCURS_UNOUNDED )
+    if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
       writer.write( "unbounded" );
     else
       writer.write( Integer.toString( maxOccurs ) );

@@ -33,12 +33,12 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
- * 
  * @author doemming
  */
 public class RelationType extends AbstractPropertyTypeFromElement implements IRelationType
@@ -51,23 +51,28 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   }
 
   /**
-   *  
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init()
+  public void init( int initializeRun )
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema,
-        m_element );
-    final ComplexType complexType = complexTypeReference.getComplexType();
-    final GMLSchema schema = complexTypeReference.getGMLSchema();
-    m_relationContentType = (RelationContentType)schema.getBuildedObjectFor( complexType );
-    if( m_relationContentType == null )
-      throw new UnsupportedOperationException();
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema, m_element );
+        final ComplexType complexType = complexTypeReference.getComplexType();
+        final GMLSchema schema = complexTypeReference.getGMLSchema();
+        m_relationContentType = (RelationContentType) schema.getBuildedObjectFor( complexType );
+        if( m_relationContentType == null )
+          throw new UnsupportedOperationException();
+        break;
+    }
   }
 
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */
-  public boolean isInlineAble()
+  public boolean isInlineAble( )
   {
     return true;
   }
@@ -75,16 +80,18 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isLinkAble()
    */
-  public boolean isLinkAble()
+  public boolean isLinkAble( )
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema, boolean)
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
+   *      boolean)
    */
-  public FeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
-    return m_relationContentType.getTargetFeatureTypes(context,includeAbstract);
+    return m_relationContentType.getTargetFeatureTypes( context, includeAbstract );
   }
+
 }

@@ -34,9 +34,9 @@ import java.util.List;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
- * 
  * schemavisitor that collects the substitutes of a feature inside a given schema-context
  * 
  * @author doemming
@@ -44,18 +44,17 @@ import org.kalypso.gmlschema.feature.FeatureType;
 public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 {
 
-  private final FeatureType m_substitutionHeadFT;
+  private final IFeatureType m_substitutionHeadFT;
 
   private final boolean m_includeAbstract;
 
   private final boolean m_includeThis;
 
-  private final List m_result = new ArrayList();
+  private final List<IFeatureType> m_result = new ArrayList<IFeatureType>();
 
   private final GMLSchema m_contextGMLSchema;
 
-  public FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final FeatureType substitutionHeadFT,
-      boolean includeAbstract, boolean includeThis )
+  public FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
   {
     m_contextGMLSchema = contextGMLSchema;
     m_substitutionHeadFT = substitutionHeadFT;
@@ -68,19 +67,19 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
    */
   public boolean visit( final GMLSchema gmlSchema )
   {
-    final List rHeads = step1( gmlSchema );
+    final List<IFeatureType> rHeads = step1( gmlSchema );
     step2( rHeads );
     return true;
   }
 
-  private List step1( GMLSchema gmlSchema )
+  private List<IFeatureType> step1( GMLSchema gmlSchema )
   {
     // step 1
-    final List rheads = new ArrayList();
-    final FeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
+    final List<IFeatureType> rheads = new ArrayList<IFeatureType>();
+    final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
     for( int i = 0; i < allFeatureTypes.length; i++ )
     {
-      final FeatureType ft = allFeatureTypes[i];
+      final IFeatureType ft = allFeatureTypes[i];
       if( ft.getSubstitutionGroupFT() == m_substitutionHeadFT )
       {
         m_result.add( ft );
@@ -90,20 +89,19 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     return rheads;
   }
 
-  private void step2( final List heads )
+  private void step2( final List<IFeatureType> heads )
   {
     // step 2 check also for sub-substitutionGroups
-    final FeatureType[] headFTs = (FeatureType[])heads.toArray( new FeatureType[heads.size()] );
+    final IFeatureType[] headFTs = heads.toArray( new IFeatureType[heads.size()] );
     for( int i = 0; i < headFTs.length; i++ )
     {
-      final FeatureType ft = headFTs[i];
-      final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( m_contextGMLSchema, ft,
-          m_includeAbstract, m_includeThis );
+      final IFeatureType ft = headFTs[i];
+      final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( m_contextGMLSchema, ft, m_includeAbstract, m_includeThis );
       m_contextGMLSchema.accept( visitor );
-      final FeatureType[] substitutes = visitor.getSubstitutes();
+      final IFeatureType[] substitutes = visitor.getSubstitutes();
       for( int j = 0; j < substitutes.length; j++ )
       {
-        final FeatureType ft2 = substitutes[j];
+        final IFeatureType ft2 = substitutes[j];
         m_result.add( ft2 );
       }
     }
@@ -111,31 +109,32 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 
   /**
    * @return
-   *  
    */
-  public FeatureType[] getSubstitutes()
+  public IFeatureType[] getSubstitutes( )
   {
-    final List result = new ArrayList();
-    final FeatureType[] fT = (FeatureType[])m_result.toArray( new FeatureType[m_result.size()] );
+    final List<IFeatureType> result = new ArrayList<IFeatureType>();
+    if( !result.contains( m_substitutionHeadFT ) && isRequested( m_substitutionHeadFT ) )
+      result.add( m_substitutionHeadFT );
+    final IFeatureType[] fT = m_result.toArray( new IFeatureType[m_result.size()] );
     for( int i = 0; i < fT.length; i++ )
     {
-      final FeatureType ft = fT[i];
+      final IFeatureType ft = fT[i];
       if( !result.contains( ft ) && isRequested( ft ) )
         result.add( ft );
     }
-    return (FeatureType[])result.toArray( new FeatureType[result.size()] );
+    return result.toArray( new FeatureType[result.size()] );
   }
 
   /**
    * @param ft
    */
-  private boolean isRequested( FeatureType ft )
+  private boolean isRequested( IFeatureType ft )
   {
     // abstract behaviour
     if( !m_includeAbstract && ft.isAbstract() )
       return false;
     // self-include behaviour
-    if( m_includeThis && ft == m_substitutionHeadFT )
+    if( !m_includeThis && ft == m_substitutionHeadFT )
       return false;
     return true;
   }

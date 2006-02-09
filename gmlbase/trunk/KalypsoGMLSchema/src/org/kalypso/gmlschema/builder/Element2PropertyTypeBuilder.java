@@ -35,11 +35,15 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.property.CustomValueProperType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
@@ -52,17 +56,17 @@ public class Element2PropertyTypeBuilder implements IBuilder
    */
   public Object[] build( final GMLSchema gmlSchema, final Object elementObject )
   {
-    final Element element = (Element)elementObject;
+    final Element element = (Element) elementObject;
     final QName ref = element.getRef();
     if( ref != null )
     {
-      final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
+      final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
       return build( reference );
     }
-    final PropertyType pt = new PropertyType( gmlSchema, element );
+    // final IPropertyType pt = new PropertyType( gmlSchema, element );
+    final IPropertyType pt = new PropertyType( gmlSchema, element );
     gmlSchema.register( element, pt );
-    return new Object[]
-    { pt };
+    return new Object[] { pt };
   }
 
   /**
@@ -81,27 +85,14 @@ public class Element2PropertyTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof Element ) )
+    if( !(object instanceof Element) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element)object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object );
     if( baseType == null )
       return false;
-    final String namespaceURI = baseType.getNamespaceURI();
-    final String localPart = baseType.getLocalPart();
-    if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
-    {
-      if( "anyType".equals( localPart ) ) // how to assign a builder for this ?
-        return false; 
-      return true;
-    }
-    if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
-    {
-      if("GeometryAssociationType".equals(localPart))
-        return true;
-      if("BoundingShapeType".equals(localPart))
-        return true;
-    }
-    return false;
+    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
+    return typeHandler != null;
   }
 
 }

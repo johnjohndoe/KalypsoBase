@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <!--<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.floodrisk.perspective.FloodRiskPerspective"
+            icon="icons/sample.gif"
+            fixed="false"
+            name="Kalypso FloodRisk"
+            id="KalypsoFloodRiskAnalysis"/>
+   </extension>-->
+   <!--<extension
+         point="org.kalypso.ui.mapviewaction">
+      <MapviewAction
+            title="KalypsoFloodRiskAnalysis.MapviewAction1"
+            enabled="true"
+            icon="icons/sample.gif"
+            class="org.kalypso.floodrisk.action.ExportThemeAction"
+            tooltip="Export active theme as jpg"/>
+   </extension>-->
+
+</plugin>
