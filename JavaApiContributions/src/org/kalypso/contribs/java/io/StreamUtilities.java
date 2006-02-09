@@ -49,9 +49,9 @@ import java.io.OutputStream;
  */
 public class StreamUtilities
 {
-  private StreamUtilities()
+  private StreamUtilities( )
   {
-  // diese Klasse wird nicht instantiiert
+    // diese Klasse wird nicht instantiiert
   }
 
   /**
@@ -87,11 +87,12 @@ public class StreamUtilities
   }
 
   /**
-   * compares content of two inputstreams
+   * compares content of two inputstreams <br>
+   * closes the streams at the end of the operation
    * 
    * @param isA
    * @param isB
-   * @return true is content is equal
+   * @return true if content is equal
    * @throws IOException
    */
   public static final boolean isEqual( final InputStream isA, final InputStream isB ) throws IOException
