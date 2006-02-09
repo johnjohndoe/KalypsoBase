@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
@@ -74,7 +75,6 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -115,7 +115,7 @@ public class SteuerparameterWizardPage extends WizardPage
         changes.add( change );
       }
 
-      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
         // TODO:
       }});

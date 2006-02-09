@@ -104,6 +104,7 @@ import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -144,7 +145,6 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -669,7 +669,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         // do nothing in wizard modus
         }
 
-        public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+        public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
         {
         // do nothing in wizard modus
         }

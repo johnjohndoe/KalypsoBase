@@ -103,6 +103,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.Mapper;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.CalcCaseConfig;
 import org.kalypso.model.xml.Modeldata;
@@ -116,7 +117,6 @@ import org.kalypso.util.transformation.TransformationHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 import org.xml.sax.InputSource;
 

@@ -85,6 +85,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.ISupplier;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.metadoc.IExportTarget;
 import org.kalypso.metadoc.IExporter;
 import org.kalypso.metadoc.impl.MetadocExtensions;
@@ -108,8 +110,6 @@ import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -461,11 +461,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
           context );
       // view it!
       final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-      final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() ).getFeatureType();
-      final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
+      final IFeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() ).getFeatureType();
+      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( nameProperty );
       if( ftp == null )
       {
-        System.out.println( "No FeatureType for Property: " + nameProperty );
+        System.out.println( "No IFeatureType for Property: " + nameProperty );
         return null;
       }
 
