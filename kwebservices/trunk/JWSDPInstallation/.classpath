@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar">
+	<classpathentry exported="true" sourcepath="doc/jaxb-api-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar">
 		<attributes>
 			<attribute value="file:/C:/Eclipse/Profileditor/JWSDPInstallation/jwsdp/docs/api/" name="javadoc_location"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
+	<classpathentry exported="true" sourcepath="/jaxb2-sources" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
@@ -28,5 +28,23 @@
 	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/sjsxp.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="jwsdp/jaxr/lib/jaxr-api.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxr/lib/jaxr-impl.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxws/lib/jaxws-api.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxws/lib/jaxws-rt.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxws/lib/jaxws-tools.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxws/lib/jsr181-api.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jaxws/lib/jsr250-api.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jwsdp-shared/lib/jaas.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jwsdp-shared/lib/jta-spec1_0_1.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jwsdp-shared/lib/resolver.jar"/>
+	<classpathentry kind="lib" path="jwsdp/jwsdp-shared/lib/xmlsec.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xmldsig/lib/xmldsig.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/keyexport.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/pkcs12import.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/security-plugin.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/wss-provider-update.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/xws-security_jaxrpc.jar"/>
+	<classpathentry kind="lib" path="jwsdp/xws-security/lib/xws-security.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

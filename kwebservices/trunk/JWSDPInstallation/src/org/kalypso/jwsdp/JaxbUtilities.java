@@ -83,6 +83,10 @@ public final class JaxbUtilities
       {
         if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) )
           return "xlink";
+        if( "http://www.opengis.net/gml".equals( namespaceUri ) )
+          return "gml2";
+        if( "http://www.tuhh.de/kalypsoNA".equals( namespaceUri ) )
+          return "na";
         else
           return suggestion;
         // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
