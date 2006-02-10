@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
-import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -82,9 +82,9 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   private final String m_targetTS;
   private final URL m_context;
   private final IUrlResolver m_resolver;
-  private final IObservationService m_srv;
+  private final KalypsoObservationService m_srv;
 
-  public CommitPrognoseFeatureVisitor( final IObservationService srv, final IUrlResolver resolver, final URL context,
+  public CommitPrognoseFeatureVisitor( final KalypsoObservationService srv, final IUrlResolver resolver, final URL context,
       final String sourceTS, final String targetTS, final IProgressMonitor monitor )
   {
     m_srv = srv;
