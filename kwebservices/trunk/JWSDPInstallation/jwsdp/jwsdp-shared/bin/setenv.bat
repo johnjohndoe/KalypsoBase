@@ -20,7 +20,7 @@ rem ---------------------------------------------------------------------------
 rem Warning: Donot change value of JWSDP_HOME property. Specially donot update that
 rem to have value with quotes (")
 
-set JAVA_HOME=C:\Programme\Java\jdk1.5.0_01
-set ANT_HOME=C:\Programme\Java\jwsdp-2.0\apache-ant
-set ANT_OPTS=-Djava.endorsed.dirs=C:\Programme\Java\jwsdp-2.0\jaxp\lib\endorsed;C:\Programme\Java\jwsdp-2.0\jaxp\lib
-set JWSDP_HOME=C:\Programme\Java\jwsdp-2.0
+set JAVA_HOME=C:\Programme\Java\jdk1.5.0_05
+set ANT_HOME=C:\Programme\java\jwsdp-2.0\apache-ant
+set ANT_OPTS=-Djava.endorsed.dirs=C:\Programme\java\jwsdp-2.0\jaxp\lib\endorsed;C:\Programme\java\jwsdp-2.0\jaxp\lib
+set JWSDP_HOME=C:\Programme\java\jwsdp-2.0

@@ -1,7 +1,0 @@
-com.sun.xml.wss
-com.sun.xml.wss.impl.callback
-com.sun.xml.wss.impl.configuration
-com.sun.xml.wss.impl.policy
-com.sun.xml.wss.impl.policy.mls
-com.sun.xml.wss.saml
-com.sun.xml.xwss
