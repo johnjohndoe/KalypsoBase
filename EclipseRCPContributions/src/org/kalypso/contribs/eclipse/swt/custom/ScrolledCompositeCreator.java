@@ -61,7 +61,7 @@ public abstract class ScrolledCompositeCreator
     m_maxSizeProvider = maxSizeProvider;
   }
 
-  public void createControl( final Composite parent, final int style, final int contentStyle )
+  public final void createControl( final Composite parent, final int style, final int contentStyle )
   {
     final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | style );
 
@@ -124,12 +124,12 @@ public abstract class ScrolledCompositeCreator
     } );
   }
 
-  public Control getContentControl( )
+  public final Control getContentControl( )
   {
     return m_contentControl;
   }
 
-  public ScrolledComposite getScrolledComposite( )
+  public final ScrolledComposite getScrolledComposite( )
   {
     return m_scrolledComposite;
   }
