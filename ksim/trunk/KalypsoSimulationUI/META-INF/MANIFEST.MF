@@ -25,16 +25,17 @@ Export-Package: org.kalypso.compare,
  org.kalypso.simulation.ui.wizards.exporter.sumuptable
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.kalypso.contribs.eclipseplatform,
  org.eclipse.ui.forms,
  org.eclipse.debug.core,
  org.eclipse.ui.externaltools,
  org.eclipse.core.variables,
  org.eclipse.debug.ui,
  org.eclipse.ui.externaltools,
+ org.eclipse.ant.core,
+ org.eclipse.ant.ui,
+ org.kalypso.contribs.eclipseplatform,
  org.kalypso.ui,
  org.kalypso.auth,
- org.eclipse.ant.core,
  org.kalypso.metadoc,
- org.eclipse.ant.ui
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true

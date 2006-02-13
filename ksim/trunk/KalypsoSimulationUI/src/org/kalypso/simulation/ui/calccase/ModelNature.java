@@ -48,7 +48,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -110,7 +109,8 @@ import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.proxy.ICalculationService;
+import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
@@ -368,7 +368,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
-      final Map attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap() );
+      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap() );
       attribute.putAll( userProperties );
       if( antProps != null )
         attribute.putAll( antProps );
@@ -878,7 +878,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         throw new CoreException( StatusUtilities.createErrorStatus( "Verzeichnis ist keine Rechenvariante:" + calcCaseFolder.getName() ) );
 
       final String typeID = modelspec.getTypeID();
-      final ICalculationService calcService = findCalculationServiceForType( typeID );
+      final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
@@ -887,36 +887,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       monitor.done();
     }
-  }
-
-  /**
-   * Finds th first Calculation-Service, which can calculate the given type.
-   */
-  private ICalculationService findCalculationServiceForType( final String typeID ) throws ServiceException
-  {
-    final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
-    // System.out.println("search for >"+typeID+"<");
-    for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
-    {
-      final ICalculationService proxy = (ICalculationService) iter.next();
-      try
-      {
-        final String[] jobTypes = proxy.getJobTypes();
-        for( int i = 0; i < jobTypes.length; i++ )
-        {
-          // System.out.println("jobtypes:>"+jobTypes[i]+"<");
-          if( typeID.equals( jobTypes[i] ) )
-            return proxy;
-        }
-      }
-      catch( final RemoteException e )
-      {
-        // ignore, this service is invalid
-        e.printStackTrace();
-      }
-    }
-
-    throw new ServiceException( "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen: " + typeID );
   }
 
   /**

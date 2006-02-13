@@ -45,8 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,10 +69,10 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.Modeldata.ClearAfterCalc;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.proxy.CalcJobClientBean;
-import org.kalypso.services.proxy.CalcJobInfoBean;
-import org.kalypso.services.proxy.ICalculationService;
+import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -88,9 +86,9 @@ public class CalcJobHandler
 
   private String m_jobID = null;
 
-  private final ICalculationService m_calcService;
+  private final ISimulationService m_calcService;
 
-  public CalcJobHandler( final Modeldata modelspec, final ICalculationService calcService )
+  public CalcJobHandler( final Modeldata modelspec, final ISimulationService calcService )
   {
     m_modelspec = modelspec;
     m_calcService = calcService;
@@ -112,14 +110,14 @@ public class CalcJobHandler
       int oldProgess = 0;
       while( true )
       {
-        final CalcJobInfoBean bean = m_calcService.getJob( m_jobID );
+        final SimulationInfo bean = m_calcService.getJob( m_jobID );
 
         boolean bStop = false;
         switch( bean.getState() )
         {
-          case ICalcServiceConstants.FINISHED:
-          case ICalcServiceConstants.ERROR:
-          case ICalcServiceConstants.CANCELED:
+          case FINISHED:
+          case ERROR:
+          case CANCELED:
             bStop = true;
             break;
 
@@ -153,12 +151,12 @@ public class CalcJobHandler
 
       calcMonitor.done();
 
-      final CalcJobInfoBean jobBean = m_calcService.getJob( m_jobID );
+      final SimulationInfo jobBean = m_calcService.getJob( m_jobID );
 
       // Abhängig von den Ergebnissen was machen
       switch( jobBean.getState() )
       {
-        case ICalcServiceConstants.FINISHED:
+        case FINISHED:
           // Ergebniss abholen
           final DataHandler handler = m_calcService.transferCurrentResults( m_jobID );
 
@@ -185,10 +183,10 @@ public class CalcJobHandler
           final String message = finishText == null ? "" : finishText;
           return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, System.getProperty( "line.separator" ), null );
 
-        case ICalcServiceConstants.CANCELED:
+        case CANCELED:
           throw m_cancelException;
 
-        case ICalcServiceConstants.ERROR:
+        case ERROR:
         {
           final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
           throw new CoreException( status );
@@ -202,7 +200,7 @@ public class CalcJobHandler
         }
       }
     }
-    catch( final RemoteException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) );
@@ -269,16 +267,16 @@ public class CalcJobHandler
       final File zipFile = File.createTempFile( "CalcJobData_", ".zip" );
       zipFile.deleteOnExit();
 
-      final CalcJobClientBean[] input = zipData( calcCaseFolder, monitor, inputList, zipFile );
-      final CalcJobClientBean[] output = createOutputBeans( calcCaseFolder );
+      final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputList, zipFile );
+      final SimulationDataPath[] output = createOutputBeans( calcCaseFolder );
 
       final DataSource jarSource = new FileDataSource( zipFile );
       final DataHandler jarHandler = new DataHandler( jarSource );
 
-      final CalcJobInfoBean bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description", jarHandler, input, output );
+      final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description", jarHandler, input, output );
       return bean.getId();
     }
-    catch( final ServerException se )
+    catch( final SimulationException se )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( se, "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes." ) );
     }
@@ -292,10 +290,10 @@ public class CalcJobHandler
     }
   }
 
-  private CalcJobClientBean[] createOutputBeans( final IFolder calcCaseFolder )
+  private SimulationDataPath[] createOutputBeans( final IFolder calcCaseFolder )
   {
     final List list = m_modelspec.getOutput();
-    final CalcJobClientBean[] output = new CalcJobClientBean[list.size()];
+    final SimulationDataPath[] output = new SimulationDataPath[list.size()];
     int count = 0;
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
@@ -305,13 +303,13 @@ public class CalcJobHandler
       final boolean relCalcCase = ot.isRelativeToCalcCase();
       final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath;
 
-      output[count++] = new CalcJobClientBean( ot.getId(), path );
+      output[count++] = new SimulationDataPath( ot.getId(), path );
     }
 
     return output;
   }
 
-  private CalcJobClientBean[] zipData( final IFolder calcCaseFolder, final IProgressMonitor monitor, final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
+  private SimulationDataPath[] zipData( final IFolder calcCaseFolder, final IProgressMonitor monitor, final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
   {
     ZipResourceVisitor zipper = null;
     try
@@ -320,7 +318,7 @@ public class CalcJobHandler
 
       final IProject project = calcCaseFolder.getProject();
 
-      final List<CalcJobClientBean> inputBeanList = new ArrayList<CalcJobClientBean>();
+      final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
       {
         final Modeldata.Input input = (Modeldata.Input) iter.next();
@@ -340,13 +338,13 @@ public class CalcJobHandler
         final IPath projectRelativePath = inputResource.getProjectRelativePath();
         inputResource.accept( zipper );
 
-        final CalcJobClientBean calcJobDataBean = new CalcJobClientBean( input.getId(), projectRelativePath.toString() );
+        final SimulationDataPath calcJobDataBean = new SimulationDataPath( input.getId(), projectRelativePath.toString() );
         inputBeanList.add( calcJobDataBean );
 
         monitor.worked( 1 );
       }
 
-      return inputBeanList.toArray( new CalcJobClientBean[inputBeanList.size()] );
+      return inputBeanList.toArray( new SimulationDataPath[inputBeanList.size()] );
     }
     finally
     {
