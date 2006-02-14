@@ -203,4 +203,12 @@ public class CustomValueProperType implements IValuePropertyType
   {
     return m_contentType.getTypeHandler();
   }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isList()
+   */
+  public boolean isList( )
+  {
+    return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
+  }
 }

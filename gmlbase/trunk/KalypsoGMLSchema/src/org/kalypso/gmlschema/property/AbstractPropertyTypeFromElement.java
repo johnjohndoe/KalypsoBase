@@ -38,7 +38,6 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
- * 
  * Property feature type that is build from a xml-element
  * 
  * @author doemming
@@ -51,7 +50,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     super( gmlSchema, element );
   }
 
-  public final int getMinOccurs()
+  public final int getMinOccurs( )
   {
     if( !m_element.isSetMinOccurs() )
       return 1;
@@ -59,16 +58,24 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     return minOccurs.intValue();
   }
 
-  public final int getMaxOccurs()
+  public final int getMaxOccurs( )
   {
     if( !m_element.isSetMaxOccurs() )
       return 1;
     final Object maxOccurs = m_element.getMaxOccurs();
     if( maxOccurs instanceof Number )
-      return ( (Number)maxOccurs ).intValue();
+      return ((Number) maxOccurs).intValue();
     if( "unbounded".equals( maxOccurs ) )
       return IPropertyType.UNBOUND_OCCURENCY;
     throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isList()
+   */
+  public boolean isList( )
+  {
+    return getMaxOccurs() > 1 || getMaxOccurs() == UNBOUND_OCCURENCY;
   }
 
   public void toStringTree( StringWriter writer, int indent )

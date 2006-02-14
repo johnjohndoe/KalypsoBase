@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -98,6 +99,8 @@ public class GMLSchema
   private final Hashtable m_relationContentTypes = new Hashtable();
 
   private final String m_gmlVersion;
+
+  private HashMap<QName, IFeatureType> m_featuretypeMap = null;
 
   public GMLSchema( final Schema schema, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
@@ -284,12 +287,12 @@ public class GMLSchema
       final ComplexType complexType = rct.getComplexType();
       m_relationContentTypes.put( complexType, rct );
     }
-//    else if( buildedObject instanceof IPropertyContentType )
-//    {
-//      final IPropertyContentType pct = (IPropertyContentType) buildedObject;
-//      final SimpleType simpleType = pct.getSimpleType();
-//      m_propertyContentTypes.put( simpleType, pct );
-//    }
+    // else if( buildedObject instanceof IPropertyContentType )
+    // {
+    // final IPropertyContentType pct = (IPropertyContentType) buildedObject;
+    // final SimpleType simpleType = pct.getSimpleType();
+    // m_propertyContentTypes.put( simpleType, pct );
+    // }
   }
 
   /**
@@ -435,8 +438,25 @@ public class GMLSchema
 
   public IFeatureType getFeatureType( final QName qName )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( m_featuretypeMap == null )
+    {
+      // TODO move this to a init methode
+      m_featuretypeMap = new HashMap<QName, IFeatureType>();
+      final IFeatureType[] allFeatureTypes = getAllFeatureTypes();
+      for( int i = 0; i < allFeatureTypes.length; i++ )
+      {
+        final IFeatureType ft = allFeatureTypes[i];
+        m_featuretypeMap.put( ft.getQName(), ft );
+      }
+    }
+    final String namespaceURI = qName.getNamespaceURI();
+    if( namespaceURI == null || namespaceURI.equals( getTargetNamespace() ) )
+      return m_featuretypeMap.get( qName );
+    else
+    {
+      final GMLSchema schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
+      return schemaForNamespaceURI.getFeatureType( qName );
+    }
   }
 
   public IFeatureType getFeatureType( final String nameLocalPart )
@@ -451,6 +471,6 @@ public class GMLSchema
   @Override
   public String toString( )
   {
-    return "XML-Schema: "+getTargetNamespace();
+    return "XML-Schema: " + getTargetNamespace();
   }
 }

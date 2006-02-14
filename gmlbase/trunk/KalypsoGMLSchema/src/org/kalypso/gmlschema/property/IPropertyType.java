@@ -47,6 +47,8 @@ public interface IPropertyType extends IInitialize
 	public int getMinOccurs();
 
 	public int getMaxOccurs();
+    
+    public boolean isList( );
 
 	public QName getQName();
 

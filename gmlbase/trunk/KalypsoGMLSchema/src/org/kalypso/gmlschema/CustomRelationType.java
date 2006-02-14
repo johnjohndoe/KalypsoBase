@@ -134,4 +134,12 @@ public class CustomRelationType implements IRelationType
     // TODO nothing to init
   }
 
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isList()
+   */
+  public boolean isList( )
+  {
+    return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
+  }
+
 }

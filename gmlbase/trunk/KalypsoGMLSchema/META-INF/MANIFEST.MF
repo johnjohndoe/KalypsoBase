@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.gmlschema
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.jface,
- org.kalypso.jwsdp,
+ org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.commons,
  org.junit
 Bundle-ClassPath: lib/xbean.jar,
@@ -69,6 +69,8 @@ Export-Package: javax.xml.namespace,
  org.kalypso.gmlschema.types,
  org.kalypso.gmlschema.visitor,
  org.kalypso.gmlschema.xml,
+ org.kalypso.jwsdp,
+ org.kalypso.ogc,
  org.kalypso.ogc.gml,
  org.shiftone.cache,
  org.shiftone.cache.adaptor,
