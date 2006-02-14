@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
-	<classpathentry exported="true" sourcepath="D:/temp/jaxrpc-src.zip" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-spi.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/mail.jar"/>
