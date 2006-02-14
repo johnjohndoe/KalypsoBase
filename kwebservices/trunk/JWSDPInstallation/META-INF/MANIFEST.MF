@@ -46,7 +46,8 @@ Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="2.1",
- org.eclipse.core.runtime.compatibility
+ org.eclipse.core.runtime.compatibility,
+ org.kalypso.commons;visibility:=reexport
 Export-Package: com.sun.xml.bind,
  com.sun.xml.bind.marshaller,
  javax.activation,
@@ -117,6 +118,7 @@ Export-Package: com.sun.xml.bind,
  org.jcp.xml.dsig.internal.dom,
  org.jvnet.fastinfoset,
  org.jvnet.fastinfoset.sax,
+ org.kalypso.jwsdp,
  org.kohsuke.rngom.ast.builder,
  org.kohsuke.rngom.ast.om,
  org.kohsuke.rngom.ast.util,
