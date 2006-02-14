@@ -42,8 +42,6 @@ package org.kalypsodeegree_impl.extension;
 
 import javax.xml.namespace.QName;
 
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-
 /**
  * @author doemming
  */
@@ -91,4 +89,5 @@ public abstract class AbstractXSDSimpleTypeHandler implements IMarshallingTypeHa
   {
     return false;
   }
+
 }
