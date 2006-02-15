@@ -37,3 +37,6 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.metadoc,
  org.kalypso.simulation.core
 Eclipse-AutoStart: true
+Export-Package: org.kalypso.simulation.ui,
+ org.kalypso.simulation.ui.calccase,
+ org.kalypso.simulation.ui.startscreen

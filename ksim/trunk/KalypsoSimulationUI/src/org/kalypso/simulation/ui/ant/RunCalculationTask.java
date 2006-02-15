@@ -45,7 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -245,10 +244,6 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     catch( final JAXBException e )
     {
       throw new InvocationTargetException( e, "Deklaration des Ant-Task ist fehlerhaft" );
-    }
-    catch( final ServiceException e )
-    {
-      throw new InvocationTargetException( e, "Fehler beim Aufruf des Berechnungsdienstes" );
     }
     finally
     {

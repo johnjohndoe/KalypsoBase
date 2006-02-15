@@ -847,28 +847,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( modelSpec == null )
       return runCalculation( calcCaseFolder, monitor );
 
-    try
+    // for backwards compability
+    // new models always should use the ant task
+    final Modeldata modelspec = getModelspec( modelSpec );
+    if( modelspec == null )
     {
-      // for backwards compability
-      // new models always should use the ant task
-      final Modeldata modelspec = getModelspec( modelSpec );
-      if( modelspec == null )
-      {
-        // if there is no 'modelspec' file
-        // we try to call the ant task
-        return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor );
-      }
+      // if there is no 'modelspec' file
+      // we try to call the ant task
+      return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor );
+    }
 
-      return runCalculation( calcCaseFolder, monitor, modelspec );
-    }
-    catch( final ServiceException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Rechendienst konnte nicht initialisiert werden" ) );
-    }
+    return runCalculation( calcCaseFolder, monitor, modelspec );
   }
 
-  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws ServiceException, CoreException
+  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
     monitor.beginTask( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
 

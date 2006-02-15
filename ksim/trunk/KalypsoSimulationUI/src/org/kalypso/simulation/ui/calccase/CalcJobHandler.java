@@ -55,7 +55,6 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -94,7 +93,7 @@ public class CalcJobHandler
     m_calcService = calcService;
   }
 
-  public IStatus runJob( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus runJob( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(), 5000 );
     try
@@ -230,7 +229,7 @@ public class CalcJobHandler
     }
   }
 
-  private void clearResults( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private void clearResults( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -256,7 +255,7 @@ public class CalcJobHandler
     }
   }
 
-  private String startCalcJob( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private String startCalcJob( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -290,7 +289,7 @@ public class CalcJobHandler
     }
   }
 
-  private SimulationDataPath[] createOutputBeans( final IFolder calcCaseFolder )
+  private SimulationDataPath[] createOutputBeans( final IContainer calcCaseFolder )
   {
     final List list = m_modelspec.getOutput();
     final SimulationDataPath[] output = new SimulationDataPath[list.size()];
@@ -309,7 +308,7 @@ public class CalcJobHandler
     return output;
   }
 
-  private SimulationDataPath[] zipData( final IFolder calcCaseFolder, final IProgressMonitor monitor, final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
+  private SimulationDataPath[] zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor, final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
   {
     ZipResourceVisitor zipper = null;
     try
@@ -325,7 +324,7 @@ public class CalcJobHandler
         final String inputPath = input.getPath();
 
         // alles relativ zum Projekt auflösen!
-        final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer) calcCaseFolder : (IContainer) project;
+        final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
         final IResource inputResource = baseresource.findMember( inputPath );
         if( inputResource == null )
         {
