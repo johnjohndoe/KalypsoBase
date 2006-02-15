@@ -7,7 +7,7 @@
    provider-name="kalypso.org"
    class="org.kalypso.contribs.java.JavaApiContributionsPlugin">
 
-   <runtime>
+ <runtime>
       <library name="JavaApiContributions.jar">
          <export name="*"/>
       </library>
