@@ -8,8 +8,6 @@ Bundle-ClassPath: KalypsoSimulationUI.jar,
 Bundle-Activator: org.kalypso.simulation.ui.KalypsoSimulationUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Export-Package: org.kalypso.compare,
- org.kalypso.simulation.modellist,
  org.kalypso.simulation.ui,
  org.kalypso.simulation.ui.actions,
  org.kalypso.simulation.ui.ant,
