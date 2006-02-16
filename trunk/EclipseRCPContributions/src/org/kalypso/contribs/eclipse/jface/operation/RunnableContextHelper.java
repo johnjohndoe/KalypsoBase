@@ -153,12 +153,13 @@ public final class RunnableContextHelper
   /**
    * Runs a runnable in a progress monitor dialog.
    */
-  public final static void executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable,
+  public final static IStatus executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable,
       final IErrorHandler errorHandler )
   {
     // run the execute method in a Progress-Dialog
     final ProgressMonitorDialog dialog = new ProgressMonitorDialog( shell );
     final IStatus status = execute( dialog, false, true, runnable );
     errorHandler.handleError( shell, status );
+    return status;
   }
 }
