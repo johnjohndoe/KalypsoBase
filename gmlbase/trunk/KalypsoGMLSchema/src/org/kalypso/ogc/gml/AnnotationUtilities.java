@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -50,9 +51,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 public class AnnotationUtilities
 {
   // TODO use PlatForm.getNL();
-  public static Annotation getAnnotation( IPropertyType ftp )
+  public static Annotation getAnnotation( IPropertyType pt )
   {
-    return new Annotation( "de", ftp.getName(), ftp.getName(), ftp.getName() );
+    final String nl = Platform.getNL();
+    //    final Annotation annotation = (Annotation) pt.getAdapter( Annotation.class );
+    return new Annotation( "de", pt.getName(), pt.getName(), pt.getName() );
   }
 
   public static Annotation getAnnotation( IFeatureType ft )

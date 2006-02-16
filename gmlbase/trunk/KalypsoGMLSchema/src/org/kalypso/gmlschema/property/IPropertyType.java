@@ -31,31 +31,32 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
  */
 public interface IPropertyType extends IInitialize
+//, IAdaptable
 
 {
-	public final static int UNBOUND_OCCURENCY = -1;
+  public final static int UNBOUND_OCCURENCY = -1;
 
-	public int getMinOccurs();
+  public int getMinOccurs( );
 
-	public int getMaxOccurs();
-    
-    public boolean isList( );
+  public int getMaxOccurs( );
 
-	public QName getQName();
+  public boolean isList( );
 
-	/**
-	 * @deprecated use getQName()
-	 * @return local part of qualified name
-	 */
-	public String getName();
+  public QName getQName( );
+
+  /**
+   * @deprecated use getQName()
+   * @return local part of qualified name
+   */
+  public String getName( );
 
 }

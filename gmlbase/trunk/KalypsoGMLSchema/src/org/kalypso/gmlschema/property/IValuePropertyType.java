@@ -41,7 +41,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public interface IValuePropertyType extends IPropertyType
 {
-  public QName getValueQName( );
 
   public IPropertyContentType getPropertyContentType( );
 
@@ -71,7 +70,15 @@ public interface IValuePropertyType extends IPropertyType
    */
   public String getDefault( );
 
+  /**
+   * @return java class that instanciates the value
+   */
   public Class getValueClass( );
 
   public ITypeHandler getTypeHandler( );
+
+  /**
+   * @return qname of XML type
+   */
+  public QName getValueQName( );
 }
