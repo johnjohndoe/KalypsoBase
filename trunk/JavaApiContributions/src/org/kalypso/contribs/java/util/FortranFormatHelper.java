@@ -97,7 +97,7 @@ public class FortranFormatHelper
    *          line to scan
    * @return HasMap that contains the values, key as given in formatLine(String),value is scaned value(String)
    */
-  public static HashMap scanf( String formatLine, String line ) throws Exception
+  public static HashMap<String,String> scanf( String formatLine, String line ) throws Exception
   {
     final HashMap<String, String> result = new HashMap<String, String>();
     line = line + "                                                ";
