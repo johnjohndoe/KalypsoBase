@@ -102,7 +102,7 @@ public class XSDDateTypeHandler extends AbstractXSDSimpleTypeHandler
    */
   public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
   {
-    return (Double) objectToClone;
+    return ((DateWithoutTime)objectToClone).clone();
   }
 
   /**
