@@ -290,7 +290,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType pt = properties[i];
-      b.append("\n").append(pt.getQName());
+      b.append("\n    - ").append(pt.getQName());
     }
     return b.toString();
   }

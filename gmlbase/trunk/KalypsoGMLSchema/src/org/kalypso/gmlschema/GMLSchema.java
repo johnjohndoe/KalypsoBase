@@ -459,10 +459,14 @@ public class GMLSchema
     }
   }
 
+  /**
+   * @deprecated use getFeatureType(QName qName)
+   */
+  @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final QName name = new QName( getTargetNamespace(), nameLocalPart );
+    return getFeatureType( name );
   }
 
   /**
