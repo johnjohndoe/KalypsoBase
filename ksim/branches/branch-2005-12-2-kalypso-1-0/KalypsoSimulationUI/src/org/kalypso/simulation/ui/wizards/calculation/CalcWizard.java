@@ -357,7 +357,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
             final IStatus result;
             if( m_controlPage.isUpdate() )
+            {
               result = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+
+              // only update once, user has to check it again, to reload timeseries
+              m_controlPage.setUpdate( false );
+            }
             else
             {
               monitor.worked( 1000 );
@@ -365,8 +370,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             }
 
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
-            // TODO: test: verändern sich denn die Daten?
-            // vermutlich die alten seiten wegschmeissen und neu erzeugen!
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
