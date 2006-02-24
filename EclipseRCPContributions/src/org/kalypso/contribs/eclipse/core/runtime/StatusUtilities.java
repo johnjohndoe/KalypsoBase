@@ -277,6 +277,14 @@ public final class StatusUtilities
   }
 
   /**
+   * Creates a ok-status with given message and null throwable.
+   */
+  public static IStatus createOkStatus( final String warningMessage )
+  {
+    return createStatus( IStatus.OK, warningMessage, null );
+  }
+
+  /**
    * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
    * then it is simply returned.
    * 
