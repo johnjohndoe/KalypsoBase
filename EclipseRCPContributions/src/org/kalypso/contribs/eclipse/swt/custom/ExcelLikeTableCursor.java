@@ -375,7 +375,7 @@ public class ExcelLikeTableCursor extends TableCursor
     if( DEBUG )
       System.out.println( "add to selection" );
     final IStructuredSelection tableSelection = (IStructuredSelection)m_viewer.getSelection();
-    final List<Object> featureList = new ArrayList<Object>( tableSelection.toList() );
+    final List<Object> featureList = new ArrayList<Object>( Arrays.asList( tableSelection.toArray() ) );
     featureList.add( item.getData() );
     final IStructuredSelection newSelection = new StructuredSelection( featureList );
 
@@ -397,7 +397,8 @@ public class ExcelLikeTableCursor extends TableCursor
     if( DEBUG )
       System.out.println( "toggle selection" );
     final IStructuredSelection tableSelection = (IStructuredSelection)m_viewer.getSelection();
-    final List<Object> featureList = new ArrayList<Object>( tableSelection.toList() );
+
+    final List<Object> featureList = new ArrayList<Object>( Arrays.asList( tableSelection.toArray() ) );
     final Object feature = item.getData();
     if( featureList.contains( feature ) )
       featureList.remove( feature );
