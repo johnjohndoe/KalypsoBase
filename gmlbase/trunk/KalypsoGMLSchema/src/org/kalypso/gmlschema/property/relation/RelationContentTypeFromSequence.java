@@ -50,6 +50,7 @@ public class RelationContentTypeFromSequence extends RelationContentType
     m_sequence = sequence;
   }
 
+  @Override
   public ExplicitGroup getSequence()
   {
     return m_sequence;

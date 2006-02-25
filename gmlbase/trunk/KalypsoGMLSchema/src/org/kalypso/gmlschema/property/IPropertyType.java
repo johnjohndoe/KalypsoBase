@@ -31,7 +31,6 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
@@ -57,6 +56,7 @@ public interface IPropertyType extends IInitialize
    * @deprecated use getQName()
    * @return local part of qualified name
    */
+  @Deprecated
   public String getName( );
 
 }

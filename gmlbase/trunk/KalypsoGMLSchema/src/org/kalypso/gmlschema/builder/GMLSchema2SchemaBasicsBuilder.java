@@ -39,7 +39,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
@@ -52,7 +51,7 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object schemaObject )
   {
-    final List result = new ArrayList();
+    final List<Object> result = new ArrayList<Object>();
     final Schema schema = gmlSchema.getSchema();
     // TopLevelComplexTypes -> FeatureContentTypes
     final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
@@ -79,10 +78,11 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
   }
 
   /**
-   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object, java.lang.String)
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    return object instanceof GMLSchema ;
+    return object instanceof GMLSchema;
   }
 }

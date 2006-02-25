@@ -33,7 +33,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -47,7 +46,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 {
-
   private final GMLSchema m_gmlSchema;
 
   private final Object m_typeObject;

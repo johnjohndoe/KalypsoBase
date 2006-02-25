@@ -42,8 +42,6 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IAdapterFactory;
-import org.kalypso.gmlschema.adapter.AdapterRegistry;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
 

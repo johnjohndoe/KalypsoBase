@@ -55,7 +55,7 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
  */
 public class GMLSchemaBuilder
 {
-  final private Set m_registeredBuilders = new HashSet();
+  final private Set<IBuilder> m_registeredBuilders = new HashSet<IBuilder>();
 
   private final String m_gmlVersion;
 

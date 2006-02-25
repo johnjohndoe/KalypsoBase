@@ -35,7 +35,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * TODO: insert type comment here
  * 
  * @author doemming
  */
@@ -71,7 +70,7 @@ public class QualifiedElement
   }
 
   /**
-   * @deprecated
+   * @deprecated No more used, so we can delete it?
    */
   public String getName( )
   {
@@ -86,6 +85,7 @@ public class QualifiedElement
     return m_element;
   }
 
+  @Override
   public String toString( )
   {
     return m_qName.toString();

@@ -36,7 +36,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -190,6 +189,7 @@ public class CopyOfPropertyType extends AbstractPropertyTypeFromElement implemen
   /**
    * @deprecated
    */
+  @Deprecated
   @Override
   public String getName( )
   {

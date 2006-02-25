@@ -41,10 +41,10 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
  */
 public interface IFeatureType extends IInitialize
 {
-
   /**
    * @deprecated TODO change to getNameLocalPart returns the name of the FeatureType
    */
+  @Deprecated
   public String getName( );
 
   /**
@@ -63,6 +63,7 @@ public interface IFeatureType extends IInitialize
    * 
    * @deprecated use getProperty(QName qname)
    */
+  @Deprecated
   public IPropertyType getProperty( String nameLocalPart );
 
   /**
@@ -80,6 +81,7 @@ public interface IFeatureType extends IInitialize
    * @return namespace
    * @deprecated use getQName
    */
+  @Deprecated
   public String getNamespace( );
 
   public int getDefaultGeometryPropertyPosition( );

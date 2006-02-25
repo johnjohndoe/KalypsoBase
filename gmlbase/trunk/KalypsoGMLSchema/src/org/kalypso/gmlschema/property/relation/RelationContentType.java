@@ -78,7 +78,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final ExplicitGroup sequence = getSequence();
-        final List result = new ArrayList();
+        final List<FeatureType> result = new ArrayList<FeatureType>();
         if( sequence != null )
         {
           final Element[] elementArray = sequence.getElementArray();
@@ -100,12 +100,12 @@ public abstract class RelationContentType implements IRelationContentType, IInit
             }
             final Object buildedObject = schema.getBuildedObjectFor( element );
             if( buildedObject instanceof FeatureType )
-              result.add( buildedObject );
+              result.add( (FeatureType) buildedObject );
           }
         }
         if( result.size() != 1 )
           throw new UnsupportedOperationException();
-        m_ftRelationTarget = (FeatureType) result.get( 0 );
+        m_ftRelationTarget = result.get( 0 );
         break;
     }
   }

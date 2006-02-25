@@ -200,6 +200,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
    * @deprecated use getQName()
    */
+  @Override
+  @Deprecated
   public String getName( )
   {
     return m_qName.getLocalPart();
@@ -209,6 +211,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @deprecated
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
    */
+  @Deprecated
   public String getNamespace( )
   {
     return m_qName.getNamespaceURI();
@@ -250,6 +253,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    * @deprecated use getProperty(IPropertyType)
    */
+  @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
     return m_localPartMap.get( propNameLocalPart );
@@ -283,6 +287,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return null;
   }
 
+  @Override
   public String toString( )
   {
     final StringBuffer b=new StringBuffer(super.toString());

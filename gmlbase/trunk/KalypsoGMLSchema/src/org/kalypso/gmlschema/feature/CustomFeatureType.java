@@ -78,7 +78,7 @@ public class CustomFeatureType implements IFeatureType
     {
       final IPropertyType pt = pts[i];
       m_qNameMap.put( pt.getQName(), pt );
-      m_locatPartMap.put( pt.getName(), pt );
+      m_locatPartMap.put( pt.getQName().getLocalPart(), pt );
       m_positionMap.put( pt, new Integer( i ) );
       if( pt instanceof IValuePropertyType )
       {

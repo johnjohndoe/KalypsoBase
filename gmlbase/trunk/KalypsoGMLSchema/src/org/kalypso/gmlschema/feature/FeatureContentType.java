@@ -92,7 +92,7 @@ public abstract class FeatureContentType implements IFeatureContentType
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final ExplicitGroup sequence = getSequence();
-        final List propertyTypes = new ArrayList();
+        final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
         // final List relationTypes = new ArrayList();
         if( sequence != null )
         {
@@ -114,10 +114,11 @@ public abstract class FeatureContentType implements IFeatureContentType
               schema = reference.getGMLSchema();
             }
             final Object buildedObject = schema.getBuildedObjectFor( element );
-            propertyTypes.add( buildedObject );
+            // why are alle buildedObjects of type IPropertyType ? 
+            propertyTypes.add( (IPropertyType) buildedObject );
           }
         }
-        m_pt = (IPropertyType[]) propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
+        m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
         break;
     }
   }

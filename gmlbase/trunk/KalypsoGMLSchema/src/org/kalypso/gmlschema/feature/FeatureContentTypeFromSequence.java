@@ -51,6 +51,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
     m_sequence = sequence;
   }
 
+  @Override
   public ExplicitGroup getSequence()
   {
     return m_sequence;

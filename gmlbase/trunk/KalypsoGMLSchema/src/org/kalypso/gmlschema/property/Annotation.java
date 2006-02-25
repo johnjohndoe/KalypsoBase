@@ -46,6 +46,7 @@ public class Annotation
     return m_lang;
   }
 
+  @Override
   public String toString()
   {
     final StringBuffer b = new StringBuffer( "[" + m_lang + "]" );
