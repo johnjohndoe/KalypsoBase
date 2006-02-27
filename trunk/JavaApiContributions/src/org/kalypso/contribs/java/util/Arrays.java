@@ -160,10 +160,11 @@ public final class Arrays
    * NOTE: the type of the elements in someArray must be the same as the type of the elements of the desired array.
    * </p>
    */
-  public static Object[] castArray( Object[] array, Object[] type )
+  @SuppressWarnings("unchecked")
+  public static <T> T[] castArray( final Object[] array, T[] type )
   {
     if( type.length < array.length )
-      type = (Object[]) java.lang.reflect.Array.newInstance( type.getClass().getComponentType(), array.length );
+      type = (T[]) java.lang.reflect.Array.newInstance( type.getClass().getComponentType(), array.length );
 
     System.arraycopy( array, 0, type, 0, array.length );
 
