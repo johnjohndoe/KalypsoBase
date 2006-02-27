@@ -65,6 +65,7 @@ public class CalcCaseJob extends Job
   /**
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
     try

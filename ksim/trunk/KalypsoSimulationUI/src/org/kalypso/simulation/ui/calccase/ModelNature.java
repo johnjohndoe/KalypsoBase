@@ -60,7 +60,6 @@ import java.util.Map.Entry;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
@@ -351,7 +350,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String progressText, final String launchName, final Map antProps, final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( progressText, 5000 );
 
@@ -531,6 +530,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * 
    * @deprecated use ant launch framework instead. Leave here until all models have been ported to the new system.
    */
+  @Deprecated
   private IStatus doCalcTransformation( final String taskName, final int type, final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( taskName, 2000 );

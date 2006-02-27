@@ -186,6 +186,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
            * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
            *      int)
            */
+          @Override
           public void onWizardChanged( final IWizard newwizard, final int reason )
           {
             if( reason == IWizardContainerListener.REASON_FINISHED
@@ -202,6 +203,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
           /**
            * @see org.kalypso.contribs.eclipse.ui.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
            */
+          @Override
           public void partClosed( final IWorkbenchPartReference partRef )
           {
             final IWorkbenchPart part = partRef.getPart( false );

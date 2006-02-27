@@ -136,14 +136,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
     m_control = panel;
 
-    try
-    {
-      refresh( new NullProgressMonitor() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+    refresh( new NullProgressMonitor() );
   }
 
   /**
@@ -161,7 +154,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     validateChoice();
   }
 
-  public void refresh( final IProgressMonitor monitor ) throws CoreException
+  public void refresh( final IProgressMonitor monitor )
   {
     m_viewer.refresh();
   }
@@ -190,6 +183,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#toString()
    */
+  @Override
   public String toString()
   {
     return m_label;

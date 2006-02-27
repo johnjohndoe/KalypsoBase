@@ -103,6 +103,7 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
       /**
        * @see org.eclipse.jface.wizard.WizardDialog#updateButtons()
        */
+      @Override
       public void updateButtons()
       {
         super.updateButtons();

@@ -94,7 +94,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private ListViewer m_viewer;
 
-  private Collection m_serverDirs = new LinkedList();
+  private Collection<File> m_serverDirs = new LinkedList<File>();
 
   private final CreateCalcCasePage m_page;
 
@@ -170,6 +170,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     // may take a while and blocks the gui, so do it in a job
     final Job job = new Job( "Archivierte Rechenvarianten werden ermittelt" )
     {
+      @Override
       protected IStatus run( IProgressMonitor monitor )
       {
         refresh( new NullProgressMonitor() );
@@ -277,6 +278,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#toString()
    */
+  @Override
   public String toString()
   {
     return m_label;

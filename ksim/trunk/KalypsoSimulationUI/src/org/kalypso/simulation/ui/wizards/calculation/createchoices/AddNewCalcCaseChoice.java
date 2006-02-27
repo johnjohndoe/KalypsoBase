@@ -202,6 +202,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#toString()
    */
+  @Override
   public String toString()
   {
     return m_label;

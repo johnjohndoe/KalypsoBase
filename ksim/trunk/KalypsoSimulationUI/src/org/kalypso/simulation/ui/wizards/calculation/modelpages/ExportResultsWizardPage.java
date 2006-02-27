@@ -478,7 +478,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         return null;
 
       final Object[] result = dialog.getResult();
-      final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result,
+      final Feature[] resultFeatures = org.kalypso.contribs.java.util.Arrays.castArray( result,
           new Feature[result.length] );
       return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(),
           resultFeatures );
@@ -547,8 +547,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       if( iter.hasNext() )
         sb.append( ';' );
     }
-    final Properties antProps = new Properties();
-    antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
+    
+    final Arguments antProps = new Arguments();
+    antProps.put( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
     launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN,

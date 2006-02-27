@@ -75,7 +75,7 @@ public class CalcWizardHelper
    */
   public static TimeserieFeatureProps[] parseTimeserieFeatureProps( final Arguments props )
   {
-    final ArrayList l = new ArrayList();
+    final ArrayList<TimeserieFeatureProps> l = new ArrayList<TimeserieFeatureProps>();
 
     for( final Iterator names = props.keySet().iterator(); names.hasNext(); )
     {
@@ -85,7 +85,7 @@ public class CalcWizardHelper
         l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString( (String)props.get( pName ), '#' ) ) );
     }
 
-    return (TimeserieFeatureProps[])l.toArray( new TimeserieFeatureProps[0] );
+    return l.toArray( new TimeserieFeatureProps[0] );
   }
 
   /**

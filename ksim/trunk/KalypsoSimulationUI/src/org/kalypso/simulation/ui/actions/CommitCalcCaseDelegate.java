@@ -90,6 +90,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       m_calcCases = calcCases;
     }
 
+    @Override
     protected IStatus run( final IProgressMonitor monitor )
     {
       monitor.beginTask( RECHENVARIANTEN_ARCHIVIEREN, m_calcCases.length * 1000 );
@@ -106,7 +107,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         return ce.getStatus();
       }
 
-      final Collection errorStati = new LinkedList();
+      final Collection<IStatus> errorStati = new LinkedList<IStatus>();
       for( int i = 0; i < m_calcCases.length; i++ )
       {
         final IFolder folder = m_calcCases[i];
@@ -115,7 +116,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         {
           synchronizer.commitFolder( folder, new SubProgressMonitor( monitor, 1000 ) );
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           errorStati.add( e.getStatus() );
           e.printStackTrace();
@@ -125,7 +126,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       if( errorStati.isEmpty() )
         return Status.OK_STATUS;
 
-      final IStatus[] stati = (IStatus[])errorStati.toArray( new IStatus[errorStati.size()] );
+      final IStatus[] stati = errorStati.toArray( new IStatus[errorStati.size()] );
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
           "Nicht alle Rechenvarianten konnten archiviert werden.", null );
     }

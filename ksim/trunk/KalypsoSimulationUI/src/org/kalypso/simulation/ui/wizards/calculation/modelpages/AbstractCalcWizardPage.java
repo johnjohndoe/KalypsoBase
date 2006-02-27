@@ -1010,6 +1010,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @deprecated use ant-stuff instead
    */
+  @Deprecated
   protected void runCalculation()
   {
     runSomething( new ICoreExceptionRunnable()
@@ -1261,7 +1262,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   protected void launchAnt( final String antLaunch, final String taskName, final String title,
-      final String errorMessage, final Map antProps )
+      final String errorMessage, final Map<String, Object> antProps )
   {
     runSomething( new ICoreExceptionRunnable()
     {

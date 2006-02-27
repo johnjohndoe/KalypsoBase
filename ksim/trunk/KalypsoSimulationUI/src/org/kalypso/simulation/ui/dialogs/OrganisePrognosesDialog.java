@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.simulation.ui.SimulationImageProvider;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate.CommitCalcCaseJob;
@@ -89,6 +90,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
      */
+    @Override
     public void runWithEvent( final Event event )
     {
       deleteCalcCases( event );
@@ -100,6 +102,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
      */
+    @Override
     public void runWithEvent( final Event event )
     {
       archiveCalcCases();
@@ -121,6 +124,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   /**
    * @see org.eclipse.jface.dialogs.Dialog#close()
    */
+  @Override
   public boolean close()
   {
     m_titleImage.dispose();
@@ -134,6 +138,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected Control createDialogArea( Composite parent )
   {
     setTitleImage( m_titleImage );
@@ -194,6 +199,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
     final DeleteResourceAction action = new DeleteResourceAction( getParentShell() )
     {
+      @Override
       protected List getSelectedResources()
       {
         return list;
@@ -207,7 +213,9 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   protected void archiveCalcCases()
   {
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
-    final IFolder[] calcCases = (IFolder[])selection.toList().toArray( new IFolder[selection.size()] );
+    final Object[] calcCaseObjs = selection.toArray();
+    final IFolder[] calcCases = Arrays.castArray( calcCaseObjs, null );
+    
     final CommitCalcCaseJob job = new CommitCalcCaseDelegate.CommitCalcCaseJob( m_prognoseFolder.getProject(),
         calcCases );
     

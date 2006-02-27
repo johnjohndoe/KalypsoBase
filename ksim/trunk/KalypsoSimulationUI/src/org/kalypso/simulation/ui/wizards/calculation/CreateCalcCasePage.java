@@ -72,13 +72,13 @@ import org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListen
  */
 public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
 {
-  private final List m_choices = new LinkedList();
+  private final List<IAddCalcCaseChoice> m_choices = new LinkedList<IAddCalcCaseChoice>();
 
   private IFolder m_currentCalcCase = null;
 
   private IAddCalcCaseChoice m_choice;
 
-  private Collection m_choiceListener = new LinkedList();
+  private Collection<IChoiceListener> m_choiceListener = new LinkedList<IChoiceListener>();
 
   public CreateCalcCasePage( final String pagename, final String title, final ImageDescriptor image )
   {
@@ -88,6 +88,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     m_choiceListener.clear();
@@ -139,6 +140,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
         /**
          * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
          */
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           choiceSelected( choiceGroup, choiceLayout, choice, choiceRadio );

@@ -9,8 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.contribs.java,
  org.kalypso.jwsdp,
- org.kalypso.commons,
- org.kalypso.gmlschema
+ org.kalypso.commons
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.util

@@ -70,6 +70,7 @@ public class PrognoseView extends ViewPart
     m_panel = location == null ? null : new PrognosePanel( location );
   }
 
+  @Override
   public void dispose()
   {
     if( m_panel != null )
@@ -80,6 +81,7 @@ public class PrognoseView extends ViewPart
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     final Display display = parent.getDisplay();
@@ -129,6 +131,7 @@ public class PrognoseView extends ViewPart
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
+  @Override
   public void setFocus()
   {
   // mir doch egal
