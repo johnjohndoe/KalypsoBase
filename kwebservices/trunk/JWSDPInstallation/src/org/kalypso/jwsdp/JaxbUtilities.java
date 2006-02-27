@@ -43,6 +43,9 @@ package org.kalypso.jwsdp;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
 
 import org.kalypso.commons.xml.NSPrefixProvider;
 
@@ -97,10 +100,20 @@ public final class JaxbUtilities
    * <code><element xmlns="www.xlink..." :href="test"/></code> instead if
    * <code><element xmlns:xlink="blabla" xlink:href="test"/></code>.
    */
-  public static Marshaller createMarshaller( JAXBContext context ) throws JAXBException
+  public static Marshaller createMarshaller( final JAXBContext context ) throws JAXBException
   {
     final Marshaller marshaller = context.createMarshaller();
     marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper() );
     return marshaller;
+  }
+  
+  public static Validator createValidator( final JAXBContext context ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = context.createUnmarshaller();
+    final Schema schema = unmarshaller.getSchema();
+    if( schema == null )
+      return null;
+    
+    return schema.newValidator();
   }
 }
