@@ -9,5 +9,11 @@
             class="org.kalypso.simulation.core.internal.local.LocalSimulationService"
             id="org.kalypso.simulation.core.localService"/>
    </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.simulation.core.internal.local.LocalURLCatalog"
+            id="localSimulationCatalog"/>
+   </extension>
 
 </plugin>

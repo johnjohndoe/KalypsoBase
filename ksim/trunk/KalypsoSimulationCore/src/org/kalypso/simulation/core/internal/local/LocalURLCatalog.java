@@ -45,9 +45,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 
 /**
  * Lädt alle als EclipsePlugins geladenen Calculation-Plugins anhand des Extension-Points.
@@ -61,7 +63,9 @@ public class LocalURLCatalog implements IUrlCatalog
   public LocalURLCatalog( )
   {
     final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>();
-    KalypsoSimulationCoreExtensions.createCatalogs( catalogs );
+    final IStatus status = KalypsoSimulationCoreExtensions.createCatalogs( catalogs );
+    if( !status.isOK() )
+      KalypsoSimulationCorePlugin.getDefault().getLog().log( status );
 
     m_catalog = new MultiUrlCatalog( catalogs.toArray( new IUrlCatalog[catalogs.size()] ) );
   }
