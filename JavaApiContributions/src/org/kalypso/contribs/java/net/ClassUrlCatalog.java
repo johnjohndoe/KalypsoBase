@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Ein URL Katalog, welche r die Namespace anhand von anderen URL-Katalogen auflöst, deren Klassennamen er aus einer
+ * Ein URL Katalog, welcher die Namespaces anhand von anderen URL-Katalogen auflöst, deren Klassennamen er aus einer
  * Property-Liste liest. Die Kataloge werden per Reflektion über den Standard-Konstruktor instantiiert.
  * 
  * @author thuel2
