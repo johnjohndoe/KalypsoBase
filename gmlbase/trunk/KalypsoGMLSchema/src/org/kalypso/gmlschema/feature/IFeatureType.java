@@ -42,7 +42,8 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 public interface IFeatureType extends IInitialize
 {
   /**
-   * @deprecated TODO change to getNameLocalPart returns the name of the FeatureType
+   * @return the name of the FeatureType
+   * @deprecated TODO change to getNameLocalPart
    */
   @Deprecated
   public String getName( );
@@ -52,6 +53,7 @@ public interface IFeatureType extends IInitialize
    */
   public IPropertyType[] getProperties( );
 
+  /** @TODO rename to 'getProperty' ?*/
   public IPropertyType getProperties( int position );
 
   public int getSizeOfProperties( );

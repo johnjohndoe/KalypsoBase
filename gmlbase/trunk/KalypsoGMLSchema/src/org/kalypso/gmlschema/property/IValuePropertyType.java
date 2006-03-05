@@ -41,7 +41,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public interface IValuePropertyType extends IPropertyType
 {
-
   public IPropertyContentType getPropertyContentType( );
 
   public boolean hasRestriction( );

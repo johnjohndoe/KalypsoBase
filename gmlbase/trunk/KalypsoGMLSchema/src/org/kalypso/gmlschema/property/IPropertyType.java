@@ -39,8 +39,6 @@ import org.kalypso.gmlschema.basics.IInitialize;
  * @author doemming
  */
 public interface IPropertyType extends IInitialize
-//, IAdaptable
-
 {
   public final static int UNBOUND_OCCURENCY = -1;
 

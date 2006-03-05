@@ -112,6 +112,7 @@ public class GMLSchemaFactory
   {
     try
     {
+      // TODO: close the stream!
       final InputStream inputStream = schemaLocationURL.openStream();
       return createGMLSchema( inputStream, schemaLocationURL );
     }

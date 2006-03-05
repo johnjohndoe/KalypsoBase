@@ -36,6 +36,27 @@ package org.kalypso.gmlschema.basics;
  */
 public interface IInitialize
 {
+  // TODO: Hi Andreas: try an enum instead:
+//  public static enum INITIALIZE
+//  {
+//    RUN_FIRST, RUN_GEOMETRY, RUN_DEPRECATED
+//  };
+  
+  // an to iterate over it (i think the order of the constants is preserved)
+//  static
+//  {
+//    for( final INITIALIZE initialize : initializes )
+//    {
+//      switch( initialize )
+//      {
+//        case RUN_DEPRECATED:
+//          break;
+//          
+//          ... and so on
+//      }
+//    }
+//  }
+  
   /**
    * precondition:<br>
    * featuretypes, propertytypes and contenttypes are builded<br>
