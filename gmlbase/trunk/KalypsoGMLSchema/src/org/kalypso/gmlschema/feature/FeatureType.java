@@ -290,12 +290,12 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   @Override
   public String toString( )
   {
-    final StringBuffer b=new StringBuffer(super.toString());
+    final StringBuffer b = new StringBuffer( super.toString() );
     final IPropertyType[] properties = getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType pt = properties[i];
-      b.append("\n    - ").append(pt.getQName());
+      b.append( "\n    - " ).append( pt.getQName() );
     }
     return b.toString();
   }

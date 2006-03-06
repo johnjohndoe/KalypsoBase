@@ -61,7 +61,7 @@ public interface IFeatureType extends IInitialize
   public IPropertyType getProperty( QName qname );
 
   /**
-   * returns a property of this feature type identified by its name
+   * @return a property of this feature type identified by its name, or <code>null</code> if unknown property
    * 
    * @deprecated use getProperty(QName qname)
    */
