@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -61,5 +62,8 @@ public class AnnotationUtilities
   {
     return new Annotation( "de", ft.getName(), ft.getName(), ft.getName() );
   }
-
+//public test()
+//{
+//    IAdaptable
+//}
 }
