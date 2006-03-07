@@ -4,7 +4,7 @@ Bundle-Name: EclipsePlatformContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipseplatform; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: EclipsePlatformContributions.jar
-Bundle-Activator: org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPlugin
+Bundle-Activator: org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
@@ -12,8 +12,6 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.core.resources,
  org.kalypso.contribs.eclipse.jface.wizard,
  org.kalypso.contribs.eclipse.jface.wizard.view,
- org.kalypso.contribs.eclipse.platform,
- org.kalypso.contribs.eclipse.platform.adapter,
  org.kalypso.contribs.eclipse.ui,
  org.kalypso.contribs.eclipse.ui.dialogs,
  org.kalypso.contribs.eclipse.ui.editorinput,
