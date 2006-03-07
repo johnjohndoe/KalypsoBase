@@ -32,13 +32,15 @@ package org.kalypso.gmlschema.basics;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IAdapterManager;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * @author doemming
  */
-public class QualifiedElement
+public class QualifiedElement implements IAdaptable
 {
 
   protected final GMLSchema m_gmlSchema;
@@ -78,6 +80,14 @@ public class QualifiedElement
   }
 
   /**
+   * @deprecated No more used, so we can delete it?
+   */
+  public String getNamespace( )
+  {
+    return m_qName.getNamespaceURI();
+  }
+
+  /**
    *  
    */
   public final Element getElement( )
@@ -89,5 +99,17 @@ public class QualifiedElement
   public String toString( )
   {
     return m_qName.toString();
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapterClass )
+  {
+
+    final IAdapterManager adapterManager = Platform.getAdapterManager();
+    final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
+    return adapter;
+    // return adapterManager.getAdapter( this, adapter );
   }
 }

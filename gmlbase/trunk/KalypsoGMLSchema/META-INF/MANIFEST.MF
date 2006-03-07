@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.gmlschema
-Bundle-SymbolicName: org.kalypso.gmlschema
+Bundle-SymbolicName: org.kalypso.gmlschema; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.jface,
@@ -59,6 +59,7 @@ Export-Package: javax.xml.namespace,
  org.apache.xmlbeans.xml.stream.events,
  org.apache.xmlbeans.xml.stream.utils,
  org.kalypso.gmlschema,
+ org.kalypso.gmlschema.adapter,
  org.kalypso.gmlschema.adv,
  org.kalypso.gmlschema.basics,
  org.kalypso.gmlschema.builder,
@@ -90,3 +91,4 @@ Export-Package: javax.xml.namespace,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper,
  org.w3c.dom
+Bundle-Activator: org.kalypso.gmlschema.KalypsoGMLSchemaPlugin

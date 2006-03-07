@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.feature;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -39,8 +40,9 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 /**
  * @author doemming
  */
-public interface IFeatureType extends IInitialize
+public interface IFeatureType extends IInitialize, IAdaptable
 {
+
   /**
    * @return the name of the FeatureType
    * @deprecated TODO change to getNameLocalPart
@@ -53,7 +55,7 @@ public interface IFeatureType extends IInitialize
    */
   public IPropertyType[] getProperties( );
 
-  /** @TODO rename to 'getProperty' ?*/
+  /** @TODO rename to 'getProperty' ? */
   public IPropertyType getProperties( int position );
 
   public int getSizeOfProperties( );
@@ -62,7 +64,6 @@ public interface IFeatureType extends IInitialize
 
   /**
    * @return a property of this feature type identified by its name, or <code>null</code> if unknown property
-   * 
    * @deprecated use getProperty(QName qname)
    */
   @Deprecated

@@ -41,9 +41,8 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.eclipse.core.runtime.Platform;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 
 /**
  * @author doemming
@@ -51,19 +50,23 @@ import org.kalypso.gmlschema.property.IPropertyType;
 public class AnnotationUtilities
 {
   // TODO use PlatForm.getNL();
-  public static Annotation getAnnotation( IPropertyType pt )
-  {
-//    final String nl = Platform.getNL();
-    //    final Annotation annotation = (Annotation) pt.getAdapter( Annotation.class );
-    return new Annotation( "de", pt.getName(), pt.getName(), pt.getName() );
-  }
+  // public static IAnnotation getAnnotation( IPropertyType pt )
+  // {
+  // // final String nl = Platform.getNL();
+  // // final Annotation annotation = (Annotation) pt.getAdapter( Annotation.class );
+  // return new Annotation( "de", pt.getName(), pt.getName(), pt.getName() );
+  // }
+  //
+  // public static IAnnotation getAnnotation( IFeatureType ft )
+  // {
+  // return getAnnotation(ft);
+  // // return new Annotation( "de", ft.getName(), ft.getName(), ft.getName() );
+  // }
 
-  public static Annotation getAnnotation( IFeatureType ft )
+  public static IAnnotation getAnnotation( Object object )
   {
-    return new Annotation( "de", ft.getName(), ft.getName(), ft.getName() );
+    if(object instanceof IAdaptable)
+      return (IAnnotation) ((IAdaptable)object).getAdapter(IAnnotation.class);
+    return (IAnnotation) Platform.getAdapterManager().getAdapter( object, IAnnotation.class );
   }
-//public test()
-//{
-//    IAdaptable
-//}
 }

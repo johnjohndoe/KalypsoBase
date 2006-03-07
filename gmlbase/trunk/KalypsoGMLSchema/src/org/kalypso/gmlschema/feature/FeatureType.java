@@ -37,6 +37,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -197,27 +198,6 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
-   * @deprecated use getQName()
-   */
-  @Override
-  @Deprecated
-  public String getName( )
-  {
-    return m_qName.getLocalPart();
-  }
-
-  /**
-   * @deprecated
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
-   */
-  @Deprecated
-  public String getNamespace( )
-  {
-    return m_qName.getNamespaceURI();
-  }
-
-  /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
    */
   public IPropertyType[] getProperties( )
@@ -299,4 +279,5 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     }
     return b.toString();
   }
+
 }

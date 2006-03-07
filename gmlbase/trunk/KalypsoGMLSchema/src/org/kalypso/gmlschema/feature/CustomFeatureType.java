@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -224,6 +225,14 @@ public class CustomFeatureType implements IFeatureType
   public void init( int initializeRun )
   {
     // TODO nothing to init
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    return Platform.getAdapterManager().getAdapter( this, adapter );
   }
 
 }

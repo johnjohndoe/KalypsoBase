@@ -42,6 +42,7 @@ package org.kalypso.gmlschema;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -142,4 +143,11 @@ public class CustomRelationType implements IRelationType
     return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    return Platform.getAdapterManager().getAdapter( this, adapter );
+  }
 }

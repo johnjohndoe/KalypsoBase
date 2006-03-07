@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
 
@@ -210,6 +211,14 @@ public class CustomValueProperType implements IValuePropertyType
   public boolean isList( )
   {
     return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    return Platform.getAdapterManager().getAdapter( this, adapter );
   }
 
 }
