@@ -91,4 +91,3 @@ Export-Package: javax.xml.namespace,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper,
  org.w3c.dom
-Bundle-Activator: org.kalypso.gmlschema.KalypsoGMLSchemaPlugin
