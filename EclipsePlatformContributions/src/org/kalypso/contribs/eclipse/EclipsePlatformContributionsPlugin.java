@@ -17,12 +17,10 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  public static String getID()
-  {
-    return getDefault().getBundle().getSymbolicName();
-  }
-  
-  public EclipsePlatformContributionsPlugin()
+  /**
+   * The constructor.
+   */
+  public EclipsePlatformContributionsPlugin( )
   {
     super();
     plugin = this;
@@ -51,7 +49,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the shared instance.
    */
-  public static EclipsePlatformContributionsPlugin getDefault()
+  public static EclipsePlatformContributionsPlugin getDefault( )
   {
     return plugin;
   }
@@ -59,12 +57,12 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
-  public static String getResourceString( String key )
+  public static String getResourceString( final String key )
   {
     ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return ( bundle != null ) ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -75,18 +73,22 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle()
+  public ResourceBundle getResourceBundle( )
   {
     try
     {
       if( resourceBundle == null )
-        resourceBundle = ResourceBundle
-            .getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" );
+        resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" );
     }
     catch( MissingResourceException x )
     {
       resourceBundle = null;
     }
     return resourceBundle;
+  }
+
+  public static String getID( )
+  {
+    return getDefault().getBundle().getSymbolicName();
   }
 }
