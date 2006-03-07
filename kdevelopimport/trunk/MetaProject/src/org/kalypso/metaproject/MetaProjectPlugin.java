@@ -51,13 +51,13 @@ import java.util.*;
  */
 public class MetaProjectPlugin extends AbstractUIPlugin
 {
-  //The shared instance.
+  // The shared instance.
   private static MetaProjectPlugin PLUGIN;
 
-  //Resource bundle.
+  // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  public MetaProjectPlugin()
+  public MetaProjectPlugin( )
   {
     PLUGIN = this;
     try
@@ -73,6 +73,7 @@ public class MetaProjectPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
+  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
@@ -81,6 +82,7 @@ public class MetaProjectPlugin extends AbstractUIPlugin
   /**
    * This method is called when the plug-in is stopped
    */
+  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );
@@ -89,7 +91,7 @@ public class MetaProjectPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static MetaProjectPlugin getDefault()
+  public static MetaProjectPlugin getDefault( )
   {
     return PLUGIN;
   }
@@ -102,7 +104,7 @@ public class MetaProjectPlugin extends AbstractUIPlugin
     ResourceBundle bundle = MetaProjectPlugin.getDefault().getResourceBundle();
     try
     {
-      return ( bundle != null ) ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -113,12 +115,12 @@ public class MetaProjectPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle()
+  public ResourceBundle getResourceBundle( )
   {
     return resourceBundle;
   }
 
-  public static String getId()
+  public static String getId( )
   {
     return getDefault().getBundle().getSymbolicName();
   }

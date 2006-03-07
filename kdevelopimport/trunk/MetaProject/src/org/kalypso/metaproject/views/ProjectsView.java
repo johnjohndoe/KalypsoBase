@@ -132,6 +132,7 @@ public class ProjectsView extends ViewPart
   /**
    * This is a callback that will allow us to create the viewer and initialize it.
    */
+  @Override
   public void createPartControl( Composite parent )
   {
     m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
@@ -274,6 +275,7 @@ public class ProjectsView extends ViewPart
   {
     m_actionRefresh = new Action( "Refresh" )
     {
+      @Override
       public void run()
       {
         refreshProjectsList();
@@ -284,6 +286,7 @@ public class ProjectsView extends ViewPart
 
     m_actionLayoutReduced = new Action( "Reduced-View", IAction.AS_CHECK_BOX )
     {
+      @Override
       public void run()
       {
         m_projectTCP.setLayoutReduced( m_actionLayoutReduced.isChecked() );
@@ -296,6 +299,7 @@ public class ProjectsView extends ViewPart
 
     m_actionCollapse = new Action( "Collapse All" )
     {
+      @Override
       public void run()
       {
         m_viewer.collapseAll();
@@ -305,6 +309,7 @@ public class ProjectsView extends ViewPart
 
     m_actionShowDescription = new Action( "Show Description", IAction.AS_CHECK_BOX )
     {
+      @Override
       public void run()
       {
         m_cmpDesc.setVisible( m_actionShowDescription.isChecked() );
@@ -325,6 +330,7 @@ public class ProjectsView extends ViewPart
 
     m_actionDump = new Action( "Dump to clipboard" )
     {
+      @Override
       public void run()
       {
         final String dump = dumpTree();
@@ -359,6 +365,7 @@ public class ProjectsView extends ViewPart
 
     m_actionAnt = new Action( "Kalypso Ant Dependencies" )
     {
+      @Override
       public void run()
       {
         final ISelection selection = m_viewer.getSelection();
@@ -386,6 +393,7 @@ public class ProjectsView extends ViewPart
 
     m_actionFullDepends = new Action( "Compute Full Dependencies " )
     {
+      @Override
       public void run()
       {
         final InputDialog dlg = new InputDialog( m_viewer.getControl().getShell(), "Compute dependencies",
@@ -397,7 +405,7 @@ public class ProjectsView extends ViewPart
           try
           {
             // fetch all dependencies in a set to avoid duplicates
-            final Set depends = new TreeSet();
+            final Set<String> depends = new TreeSet<String>();
             for( int i = 0; i < ids.length; i++ )
               fullDepends( depends, ids[i] );
 
@@ -422,7 +430,7 @@ public class ProjectsView extends ViewPart
         }
       }
 
-      private void fullDepends( Set depends, String id ) throws BundleException
+      private void fullDepends( Set<String> depends, String id ) throws BundleException
       {
         depends.add( id );
         
@@ -445,6 +453,7 @@ public class ProjectsView extends ViewPart
 
     doubleClickAction = new Action()
     {
+      @Override
       public void run()
       {
         final ISelection selection = m_viewer.getSelection();
@@ -543,6 +552,7 @@ public class ProjectsView extends ViewPart
 
     final Job job = new Job( "Saving File " + readme.getName() )
     {
+      @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         try
@@ -568,7 +578,8 @@ public class ProjectsView extends ViewPart
   /**
    * Passing the focus request to the viewer's control.
    */
-  public void setFocus()
+  @Override
+  public void setFocus( )
   {
     m_viewer.getControl().setFocus();
   }

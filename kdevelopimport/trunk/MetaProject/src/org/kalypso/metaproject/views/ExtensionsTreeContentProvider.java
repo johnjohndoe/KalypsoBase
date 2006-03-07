@@ -142,6 +142,7 @@ public class ExtensionsTreeContentProvider implements ITreeContentProvider
       return m_namespace;
     }
 
+    @Override
     public String toString()
     {
       return m_namespace;
@@ -152,7 +153,7 @@ public class ExtensionsTreeContentProvider implements ITreeContentProvider
       final ExtensionInfo ei = new ExtensionInfo( m_namespace );
       final ExtensionPointInfo epi = new ExtensionPointInfo( m_namespace );
 
-      final ArrayList l = new ArrayList( 2 );
+      final ArrayList<IInfo> l = new ArrayList<IInfo>( 2 );
 
       if( ei.hasChildren() )
         l.add( ei );
@@ -188,6 +189,7 @@ public class ExtensionsTreeContentProvider implements ITreeContentProvider
       return m_reg.getExtensions( m_namespace );
     }
 
+    @Override
     public String toString()
     {
       return "Extensions";
@@ -213,6 +215,7 @@ public class ExtensionsTreeContentProvider implements ITreeContentProvider
       return m_reg.getExtensionPoints( m_namespace );
     }
 
+    @Override
     public String toString()
     {
       return "ExtensionPoints";

@@ -41,6 +41,7 @@ public class GmlConvertLauncher implements IEditorLauncher
 
     final Job job = new Job( "GML Konvertieren" )
     {
+      @Override
       protected IStatus run( IProgressMonitor monitor )
       {
         try

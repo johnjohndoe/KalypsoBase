@@ -83,6 +83,7 @@ public class ExtensionsView extends ViewPart
   /**
    * This is a callback that will allow us to create the viewer and initialize it.
    */
+  @Override
   public void createPartControl( Composite parent )
   {
     m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
@@ -158,6 +159,7 @@ public class ExtensionsView extends ViewPart
   {
     m_actionRefresh = new Action( "Refresh" )
     {
+      @Override
       public void run()
       {
         refreshPluginsList();
@@ -168,6 +170,7 @@ public class ExtensionsView extends ViewPart
 
     m_actionCollapse = new Action( "Collapse All" )
     {
+      @Override
       public void run()
       {
         m_viewer.collapseAll();
@@ -177,6 +180,7 @@ public class ExtensionsView extends ViewPart
 
     m_actionDump = new Action( "Dump to clipboard" )
     {
+      @Override
       public void run()
       {
         final String dump = dumpTree();
@@ -194,11 +198,11 @@ public class ExtensionsView extends ViewPart
     final IExtensionRegistry reg = Platform.getExtensionRegistry();
     final String[] namespaces = reg.getNamespaces();
 
-    final Comparator cmp = new Comparator()
+    final Comparator<String> cmp = new Comparator<String>()
     {
-      public int compare( Object o1, Object o2 )
+      public int compare( String o1, String o2 )
       {
-        return o1.toString().compareTo( o2.toString() );
+        return o1.compareTo( o2 );
       }
     };
     
@@ -231,6 +235,7 @@ public class ExtensionsView extends ViewPart
   /**
    * Passing the focus request to the viewer's control.
    */
+  @Override
   public void setFocus()
   {
     m_viewer.getControl().setFocus();

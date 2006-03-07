@@ -59,6 +59,7 @@ public class ExtensionsLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#dispose()
    */
+  @Override
   public void dispose()
   {
     m_imgPlugin.dispose();
@@ -71,6 +72,7 @@ public class ExtensionsLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
+  @Override
   public Image getImage( Object element )
   {
     if( element instanceof ExtensionsTreeContentProvider.NamespaceInfo )

@@ -123,7 +123,7 @@ public class ProjectsTreeContentProvider implements ITreeContentProvider
          */
 
         final IProject[] projects = (IProject[])inputElement;
-        final List list = new ArrayList( projects.length );
+        final List<IProject> list = new ArrayList<IProject>( projects.length );
 
         for( int i = 0; i < projects.length; i++ )
         {

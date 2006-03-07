@@ -45,12 +45,10 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -69,7 +67,6 @@ public class SimpleWQTableObsManipulator implements IObservationManipulator
    *      java.lang.String, java.lang.Object)
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-      throws CoreException
   {
   // empty
   }
@@ -78,7 +75,7 @@ public class SimpleWQTableObsManipulator implements IObservationManipulator
    * @see org.kalypso.ogc.sensor.manipulator.IObservationManipulator#manipulate(org.kalypso.ogc.sensor.IObservation,
    *      java.lang.Object)
    */
-  public void manipulate( final IObservation obs, final Object data ) throws SensorException
+  public void manipulate( final IObservation obs, final Object data )
   {
     // do not overwrite existing table
     if( obs.getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )

@@ -96,7 +96,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     public abstract String getValue( final KeyInfo info );
   }
 
-  private final Collection m_columns = new ArrayList( 3 );
+  private final Collection<PoolViewColumn> m_columns = new ArrayList<PoolViewColumn>( 3 );
 
   private ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
@@ -110,6 +110,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   {
     m_task = new TimerTask()
     {
+      @Override
       public void run()
       {
         updateView();
@@ -146,6 +147,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
    */
+  @Override
   public void dispose()
   {
     m_task.cancel();
@@ -155,6 +157,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     m_viewer = new TableViewer( parent, SWT.NONE );
@@ -177,6 +180,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
             /**
              * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
              */
+            @Override
             public String getText( Object element )
             {
               if( element != null )
@@ -208,6 +212,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
+  @Override
   public void setFocus()
   {
   // egal
@@ -272,12 +277,14 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
+  @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
 
     m_columns.add( new PoolViewColumn( "Key", memento )
     {
+      @Override
       public String getValue( final KeyInfo info )
       {
         final IPoolableObjectType key = info.getKey();
@@ -287,6 +294,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     m_columns.add( new PoolViewColumn( "Listener", memento )
     {
+      @Override
       public String getValue( final KeyInfo info )
       {
         return "" + info.getListeners().length;
@@ -295,6 +303,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     m_columns.add( new PoolViewColumn( "Object", memento )
     {
+      @Override
       public String getValue( final KeyInfo info )
       {
         return "" + info.getObject();
@@ -306,6 +315,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
+  @Override
   public void saveState( final IMemento memento )
   {
     super.saveState( memento );
