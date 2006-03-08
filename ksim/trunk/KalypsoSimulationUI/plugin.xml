@@ -130,10 +130,10 @@
          </action>
       </actionSet>
       <actionSet
-            label="%org.kalypso.simulation.ui.actionSet.label"
-            description="%org.kalypso.simulation.ui.actionSet.description"
+            label="%org.kalypso.simulation.ui.debug.actionSet.label"
+            description="%org.kalypso.simulation.ui.debug.actionSet.description"
             visible="false"
-            id="org.kalypso.simulation.ui.actionSet">
+            id="org.kalypso.simulation.ui.debug.actionSet">
          <menu
                label="%org.kalypso.simulation.ui.menu.debug.label"
                path="additions"
