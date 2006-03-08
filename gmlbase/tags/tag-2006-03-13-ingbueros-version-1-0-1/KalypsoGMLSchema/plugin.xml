@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="KalypsoGMLSchema.adapters"
+         name="KalypsoGMLSchemaadapters"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.gmlschema.basics.QualifiedElement"
+            class="org.kalypso.gmlschema.adapter.IAnnotationAdapterFactory">
+         <adapter type="org.kalypso.gmlschema.adapter.IAnnotation"/>
+      </factory>
+   </extension>
+</plugin>
