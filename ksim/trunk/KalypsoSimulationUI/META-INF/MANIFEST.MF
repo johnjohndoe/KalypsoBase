@@ -29,13 +29,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.variables,
  org.eclipse.debug.ui,
  org.eclipse.ui.externaltools,
- org.eclipse.ant.core,
- org.eclipse.ant.ui,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.ui,
  org.kalypso.auth,
  org.kalypso.metadoc,
- org.kalypso.simulation.core
+ org.kalypso.simulation.core,
+ org.eclipse.ant.ui
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.simulation.ui,
  org.kalypso.simulation.ui.calccase,

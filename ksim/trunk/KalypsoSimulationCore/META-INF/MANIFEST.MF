@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.util
+Bundle-ClassPath: kalypsoSimulationCore.jar
