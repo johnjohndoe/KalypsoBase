@@ -26,6 +26,6 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui.plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.kalypso.contribs.java,
- org.junit
+ org.junit,
+ org.kalypso.contribs.java;visibility:=reexport
 Eclipse-AutoStart: true
