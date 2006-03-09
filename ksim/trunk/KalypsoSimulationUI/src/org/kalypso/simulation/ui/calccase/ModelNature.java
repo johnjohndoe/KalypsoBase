@@ -382,7 +382,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
 
       // TODO: timeout konfigurierbar machen?
-      final int minutes = 3;
+      final int minutes = 4;
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( launch.isTerminated() )
@@ -419,6 +419,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         svm.removeVariables( userVariables );
 
       // alle resourcen des CalcCase refreshen
+      // intern the parent of folder will used as rule
       folder.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
 
       monitor.done();
