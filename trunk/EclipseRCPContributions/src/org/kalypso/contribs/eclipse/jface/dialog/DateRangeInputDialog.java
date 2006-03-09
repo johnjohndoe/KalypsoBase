@@ -80,7 +80,8 @@ public class DateRangeInputDialog extends TitleAreaDialog
   {
     setTitle( m_title );
     setMessage( m_message );
-
+    // final Composite composite= (Composite) super.createDialogArea(parent);
+    // m_control = new DateRangeInputControl( composite, SWT.NONE, m_sruct );
     m_control = new DateRangeInputControl( parent, SWT.NONE, m_sruct );
 
     return m_control;
