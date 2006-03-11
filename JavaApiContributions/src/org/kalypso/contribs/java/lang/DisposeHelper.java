@@ -75,7 +75,7 @@ public final class DisposeHelper
     m_candidates.addAll( Arrays.asList( disposeCandidates ) );
   }
 
-  public DisposeHelper( final Collection<Object> collection )
+  public DisposeHelper( final Collection<? extends Object> collection )
   {
     m_candidates.addAll( collection );
   }
