@@ -119,6 +119,6 @@ public class CalcCaseHelper
       return null;
 
     final Object[] calcCasesToCalc = dlg.getResult();
-    return (IFolder[])Arrays.castArray( calcCasesToCalc, new IFolder[calcCasesToCalc.length] );
+    return Arrays.castArray( calcCasesToCalc, new IFolder[calcCasesToCalc.length] );
   }
 }

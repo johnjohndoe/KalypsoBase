@@ -37,7 +37,7 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin
       resourceBundle = null;
     }
     // force to initialize
-    KalypsoGisPlugin default1 = KalypsoGisPlugin.getDefault();
+    /* KalypsoGisPlugin default1 = */KalypsoGisPlugin.getDefault();
   }
 
   /**

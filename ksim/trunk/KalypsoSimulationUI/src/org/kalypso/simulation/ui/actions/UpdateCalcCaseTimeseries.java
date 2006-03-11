@@ -51,7 +51,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**

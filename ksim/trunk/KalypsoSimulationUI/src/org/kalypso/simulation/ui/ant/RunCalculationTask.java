@@ -41,11 +41,6 @@
 
 package org.kalypso.simulation.ui.ant;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.eclipse.core.resources.IFolder;
@@ -64,7 +59,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -77,7 +71,6 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
   private static final ObjectFactory OF = new ObjectFactory();
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   /**
    * Gets a display
@@ -224,13 +217,13 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
 
     try
     {
-      JC.createValidator().validate( m_modeldata );
+//      JC.createValidator().validate( m_modeldata );
 
       monitor.worked( 500 );
 
@@ -240,10 +233,6 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       final IProject calcProject = m_calcCaseFolder.getProject();
       final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
       return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
-    }
-    catch( final JAXBException e )
-    {
-      throw new InvocationTargetException( e, "Deklaration des Ant-Task ist fehlerhaft" );
     }
     finally
     {

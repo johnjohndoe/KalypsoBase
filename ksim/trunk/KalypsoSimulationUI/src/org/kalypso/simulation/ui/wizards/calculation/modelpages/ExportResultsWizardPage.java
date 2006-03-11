@@ -46,7 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;

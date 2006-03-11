@@ -115,6 +115,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     super( "<MapAndFeatureWizardPage>", SELECT_FROM_FEATUREVIEW );
   }
 
+  @Override
   public void dispose()
   {
     if( m_templateviewer != null )
@@ -166,6 +167,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     else
       initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
       {
+        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           runCalculation();
@@ -188,6 +190,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( new ControlAdapter()
     {
+      @Override
       public void controlResized( ControlEvent e )
       {
         maximizeMap();
@@ -198,6 +201,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveState(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void saveState( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Daten speichern", 2 );
@@ -212,6 +216,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState()
    */
+  @Override
   public void restoreState() throws CoreException
   {
     super.restoreState();
@@ -295,6 +300,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       /**
        * @see java.lang.Thread#run()
        */
+      @Override
       public void run()
       {
         super.run();
@@ -329,6 +335,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getSelectedFeatures()
    */
+  @Override
   protected FeatureList getSelectedFeatures()
   {
     final FeatureList list = FeatureFactory.createFeatureList( null, null );
@@ -341,6 +348,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getFeatures()
    */
+  @Override
   protected FeatureList getFeatures()
   {
     final FeatureList result = FeatureFactory.createFeatureList( null, null );
@@ -353,6 +361,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     super.selectionChanged( event );
