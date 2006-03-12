@@ -9,6 +9,11 @@
             class="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"
             name="WizardView"
             id="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"/>
+      <view
+            allowMultiple="true"
+            class="org.kalypso.contribs.eclipse.ui.browser.BrowserView"
+            id="org.kalypso.contribs.eclipse.ui.browser.view"
+            name="BrowserView"/>
    </extension>
 
 </plugin>
