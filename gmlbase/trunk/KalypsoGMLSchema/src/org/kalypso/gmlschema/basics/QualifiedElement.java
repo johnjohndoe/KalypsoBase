@@ -42,7 +42,6 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public class QualifiedElement implements IAdaptable
 {
-
   protected final GMLSchema m_gmlSchema;
 
   protected final Element m_element;
@@ -74,6 +73,7 @@ public class QualifiedElement implements IAdaptable
   /**
    * @deprecated No more used, so we can delete it?
    */
+  @Deprecated
   public String getName( )
   {
     return m_qName.getLocalPart();
@@ -82,6 +82,7 @@ public class QualifiedElement implements IAdaptable
   /**
    * @deprecated No more used, so we can delete it?
    */
+  @Deprecated
   public String getNamespace( )
   {
     return m_qName.getNamespaceURI();

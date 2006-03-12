@@ -42,7 +42,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
  */
 public interface IFeatureType extends IInitialize, IAdaptable
 {
-
   /**
    * @return the name of the FeatureType
    * @deprecated TODO change to getNameLocalPart

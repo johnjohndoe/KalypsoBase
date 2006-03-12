@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class FeatureContentType implements IFeatureContentType
 {
-
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
@@ -114,7 +113,7 @@ public abstract class FeatureContentType implements IFeatureContentType
               schema = reference.getGMLSchema();
             }
             final Object buildedObject = schema.getBuildedObjectFor( element );
-            // why are alle buildedObjects of type IPropertyType ? 
+            // why are alle buildedObjects of type IPropertyType ?
             propertyTypes.add( (IPropertyType) buildedObject );
           }
         }

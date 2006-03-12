@@ -51,7 +51,6 @@ import org.kalypso.gmlschema.xml.SimpleTypeReference;
  */
 public class PropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
 {
-
   /**
    * if value is XML-SCHEMA-simpletype it is null
    */

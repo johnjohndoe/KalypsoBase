@@ -185,7 +185,6 @@ public class CustomValueProperType implements IValuePropertyType
    */
   public String getName( )
   {
-
     return m_qName.getLocalPart();
   }
 
