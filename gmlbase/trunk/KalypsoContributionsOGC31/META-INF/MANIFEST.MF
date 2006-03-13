@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoOGCContributions Plug-in
+Bundle-SymbolicName: KalypsoOGCContributions31
+Bundle-Version: 1.0.0
+Bundle-Vendor: org.kalypso
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.jwsdp
+Eclipse-AutoStart: true
+Bundle-ClassPath: kalypsoContribsOGC31.jar

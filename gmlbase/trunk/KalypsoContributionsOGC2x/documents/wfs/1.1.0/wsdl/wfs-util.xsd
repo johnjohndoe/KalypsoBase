@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.opengis.net/wfs-util" xmlns:util="http://www.opengis.net/wfs-util" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:documentation>
+         This file defines the type of the DescribeFeatureType response, because WSDL requires that types be explicitly defined in the types section, perhaps thru imports.
+      </xsd:documentation>
+	</xsd:annotation>
+	<xsd:import namespace="http://www.w3.org/2001/XMLSchema" schemaLocation="xmlschema.xsd"/>
+	<xsd:complexType name="DescribeFeatureTypeResponseType">
+		<xsd:sequence>
+			<xsd:element ref="xsd:schema"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GetGMLObjectResponseType">
+		<xsd:sequence>
+			<xsd:element ref="xsd:schema"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
