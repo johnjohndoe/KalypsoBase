@@ -84,27 +84,27 @@ public class SimpleWQTableObsManipulator implements IObservationManipulator
     final IAxis[] axes = obs.getAxisList();
 
     // only do this for W/Q/V timeseries
-//    if( ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL )
-//        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME )
-//        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF ) )
-//    {
-//      final InputStream stream = getClass().getResourceAsStream( "/org/kalypso/debug/zml/wqtable.xml" );
-//      try
-//      {
-//        final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
-//        stream.close();
-//
-//        final String mdWQ = WQTableFactory.createXMLString( tableSet );
-//        obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, mdWQ );
-//      }
-//      catch( final Exception e )
-//      {
-//        Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
-//      }
-//      finally
-//      {
-//        IOUtils.closeQuietly( stream );
-//      }
-//    }
+    if( ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL )
+        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME )
+        || ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF ) )
+    {
+      final InputStream stream = getClass().getResourceAsStream( "/org/kalypso/debug/zml/wqtable.xml" );
+      try
+      {
+        final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
+        stream.close();
+
+        final String mdWQ = WQTableFactory.createXMLString( tableSet );
+        obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, mdWQ );
+      }
+      catch( final Exception e )
+      {
+        Logger.getLogger( getClass().getName() ).warning( "Could not load wq-table: " + e.getLocalizedMessage() );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( stream );
+      }
+    }
   }
 }
