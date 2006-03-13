@@ -35,6 +35,7 @@ import java.util.List;
 import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NoFixedFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
+import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.property.restriction.EnumerationResitriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -44,6 +45,7 @@ import org.kalypso.gmlschema.property.restriction.MaxLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
+import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
 
 /**
  * represents restiction on a simple content
@@ -56,7 +58,7 @@ public class ContentRestrictionFactory
   public static IRestriction[] createRestrictions( final Restriction restriction )
   {
     final List<IRestriction> result = new ArrayList<IRestriction>();
-
+    
     // enumeration
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
     final List<String> enumList = new ArrayList<String>();
@@ -68,6 +70,19 @@ public class ContentRestrictionFactory
     final String[] _enum = enumList.toArray( new String[enumList.size()] );
     if( _enum.length > 0 )
       result.add( new EnumerationResitriction( _enum ) );
+    
+    final Pattern[] patternArray = restriction.getPatternArray();
+    if(patternArray.length>0)
+    {
+      final List<String> list=new ArrayList<String>();
+      for( int i = 0; i < patternArray.length; i++ )
+      {
+        final Pattern pattern = patternArray[i];
+        final String stringValue = pattern.getValue().getStringValue();
+        list.add(stringValue);
+      }
+      result.add(new RegExpRestriction(list.toArray(new String[list.size()])));
+    }
 
     // maxlength
 
@@ -89,6 +104,8 @@ public class ContentRestrictionFactory
     if( restriction.getMinExclusiveArray().length > 0 )
       result.add( new MinExclusiveRestriction( getMaxAsDouble( restriction.getMinExclusiveArray() ) ) );
 
+    
+    
     return result.toArray( new IRestriction[result.size()] );
   }
 
