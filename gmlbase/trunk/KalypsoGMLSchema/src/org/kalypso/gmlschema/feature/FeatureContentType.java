@@ -104,6 +104,7 @@ public abstract class FeatureContentType implements IFeatureContentType
             final Element element;
             if( buildedObject == null )
             {
+              // everything should be registered for the local element, nothing for the referenced element
               final QName ref = elementArray[i].getRef();
               final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
               element = reference.getElement();

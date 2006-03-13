@@ -58,7 +58,10 @@ public class Element2RelationTypeBuilder implements IBuilder
     if( ref != null )
     {
       final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
-      return build( reference );
+      final IRelationType rt= (IRelationType) build( reference )[0];
+      final ReferencedRelationType result = new ReferencedRelationType(gmlSchema,element,rt);
+      gmlSchema.register( element, result );
+      return new Object[]{ result}; 
     }
     final IRelationType result = new RelationType( gmlSchema, element );
     gmlSchema.register( element, result );

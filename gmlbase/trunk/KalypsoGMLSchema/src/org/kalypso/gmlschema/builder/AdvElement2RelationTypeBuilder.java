@@ -61,7 +61,7 @@ public Object[] build( GMLSchema gmlSchema, Object elementObject )
     {
       final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
       final IRelationType rt= (IRelationType) build( reference )[0];
-      ReferencedRelationType result = new ReferencedRelationType(gmlSchema,element,rt);
+      final ReferencedRelationType result = new ReferencedRelationType(gmlSchema,element,rt);
       gmlSchema.register( element, result );
       return new Object[]{ result};
     }

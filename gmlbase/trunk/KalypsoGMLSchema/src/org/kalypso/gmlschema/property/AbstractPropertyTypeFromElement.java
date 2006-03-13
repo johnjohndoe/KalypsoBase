@@ -84,17 +84,4 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return getMaxOccurs() > 1 || getMaxOccurs() == UNBOUND_OCCURENCY;
   }
-
-  public void toStringTree( StringWriter writer, int indent )
-  {
-    final int maxOccurs = getMaxOccurs();
-    final int minOccurs = getMinOccurs();
-    writer.write( "\n" + StringUtils.repeat( " ", indent ) );
-    writer.write( " [" + minOccurs + "-" );
-    if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-      writer.write( "unbounded" );
-    else
-      writer.write( Integer.toString( maxOccurs ) );
-    writer.write( "]" );
-  }
 }

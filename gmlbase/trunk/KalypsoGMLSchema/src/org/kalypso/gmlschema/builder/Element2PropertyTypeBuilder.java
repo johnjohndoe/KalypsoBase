@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -59,7 +60,11 @@ public class Element2PropertyTypeBuilder implements IBuilder
     if( ref != null )
     {
       final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
-      return build( reference );
+      final IValuePropertyType pt= (IValuePropertyType) build( reference )[0];
+      
+      final ReferencedPropertyType result = new ReferencedPropertyType(gmlSchema,element,pt);
+      gmlSchema.register( element, result );
+      return new Object[]{ result}; 
     }
     // final IPropertyType pt = new PropertyType( gmlSchema, element );
     final IPropertyType pt = new PropertyType( gmlSchema, element );

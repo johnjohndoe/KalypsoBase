@@ -43,6 +43,7 @@ import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerT
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
+import org.kalypso.gmlschema.builder.Element2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
 import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
@@ -72,28 +73,30 @@ public class GMLSchemaFactory
   static
   {
     final GMLSchemaBuilder builder = new GMLSchemaBuilder( "2.1.2" );
-    builder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() );
+    builder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() ); //ok
     // test
-    builder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );
+    builder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );//ok
 
     // complex type ...
-    builder.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );
-    builder.registerBuilder( new FeatureContentType2ElementBuilder() );
+    builder.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );// OK
+    builder.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
+
     // element ...
-    builder.registerBuilder( new Element2FeatureTypeBuilder() );
-    builder.registerBuilder( new FeatureType2ComplexTypeBuilder() );
+    builder.registerBuilder( new Element2FeatureTypeBuilder() ); //ok
+    builder.registerBuilder( new FeatureType2ComplexTypeBuilder() );//ok
+    
     // element ...
-    builder.registerBuilder( new Element2PropertyTypeBuilder() );
-    builder.registerBuilder( new PropertyType2SimpleTypeBuilder() );
-    // simple type...
-//    builder.registerBuilder( new SimpleType2PropertyContentTypeBuilder() );
+    builder.registerBuilder( new Element2PropertyTypeBuilder() );//ok
+    builder.registerBuilder( new PropertyType2SimpleTypeBuilder() );//ok
+    
     // relations
-    // m_instance.registerBuilder( new Element2RelationTypeBuilder() );
-    builder.registerBuilder( new RelationType2ComplexTypeBuilder() );
-    builder.registerBuilder( new ComplexType2RelationContentTypeBuilder() );
-    // test
-//    builder.registerBuilder( new ComplexType2GeometryPropertyContentTypeBuilder() );
-    builder.registerBuilder( new AdvElement2RelationTypeBuilder() );
+
+    builder.registerBuilder( new RelationType2ComplexTypeBuilder() ); //ok
+    builder.registerBuilder( new ComplexType2RelationContentTypeBuilder() ); //ok
+    // special
+//    builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
+    // replaces: element2RelationTypebuilder
+    builder.registerBuilder( new AdvElement2RelationTypeBuilder() ); //ok
     m_register.add( builder );
   }
 

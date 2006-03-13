@@ -52,32 +52,13 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class ReferencedRelationType extends AbstractPropertyTypeFromElement implements IRelationType
 {
-  private final IRelationType m_rt;
+  private final IRelationType m_globalRT;
 
   public ReferencedRelationType( final GMLSchema gmlSchema, Element element, IRelationType rt )
   {
+    // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
     super( gmlSchema, element, rt.getQName() );
-    m_rt = rt;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement#getMaxOccurs()
-   */
-  @Override
-  public int getMaxOccurs( )
-  {
-    // TODO Auto-generated method stub
-    return super.getMaxOccurs();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement#getMinOccurs()
-   */
-  @Override
-  public int getMinOccurs( )
-  {
-    // TODO Auto-generated method stub
-    return super.getMinOccurs();
+    m_globalRT = rt;
   }
 
   /**
@@ -86,7 +67,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
   {
-    return m_rt.getTargetFeatureTypes( context, includeAbstract );
+    // global knows content
+    return m_globalRT.getTargetFeatureTypes( context, includeAbstract );
   }
 
   /**
@@ -94,7 +76,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isInlineAble( )
   {
-    return m_rt.isInlineAble();
+    // global knows content
+    return m_globalRT.isInlineAble();
   }
 
   /**
@@ -102,7 +85,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isLinkAble( )
   {
-    return m_rt.isLinkAble();
+    // global knows content
+    return m_globalRT.isLinkAble();
   }
 
   /**
@@ -119,6 +103,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   @Override
   public Element getElement( )
   {
-    return ((QualifiedElement) m_rt).getElement();
+    // allways return the one that known content
+    // TODO for other usage implement AppinfoProvider
+    return ((QualifiedElement) m_globalRT).getElement();
   }
 }
