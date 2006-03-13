@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.property;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NoFixedFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
@@ -58,7 +59,7 @@ public class ContentRestrictionFactory
   public static IRestriction[] createRestrictions( final Restriction restriction )
   {
     final List<IRestriction> result = new ArrayList<IRestriction>();
-    
+
     // enumeration
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
     final List<String> enumList = new ArrayList<String>();
@@ -104,8 +105,6 @@ public class ContentRestrictionFactory
     if( restriction.getMinExclusiveArray().length > 0 )
       result.add( new MinExclusiveRestriction( getMaxAsDouble( restriction.getMinExclusiveArray() ) ) );
 
-    
-    
     return result.toArray( new IRestriction[result.size()] );
   }
 
@@ -162,7 +161,8 @@ public class ContentRestrictionFactory
    */
   private static int intValue( NumFacet facet )
   {
-    return Integer.parseInt( facet.getValue().toString() );
+    final XmlAnySimpleType value = facet.getValue();
+    return Integer.parseInt( value.getStringValue() );
   }
 
   /**
@@ -170,7 +170,7 @@ public class ContentRestrictionFactory
    */
   private static double doubleValue( Facet facet )
   {
-    return Double.parseDouble( facet.getValue().toString() );
+    return Double.parseDouble( facet.getValue().getStringValue() );
   }
 
 }

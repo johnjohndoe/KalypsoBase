@@ -454,6 +454,7 @@ public class GMLSchema
     else
     {
       final GMLSchema schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
+      System.out.println( "getFeatureType " + qName );
       return schemaForNamespaceURI.getFeatureType( qName );
     }
   }

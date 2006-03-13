@@ -98,21 +98,18 @@ public abstract class FeatureContentType implements IFeatureContentType
           final Element[] elementArray = sequence.getElementArray();
           for( int i = 0; i < elementArray.length; i++ )
           {
-            final QName ref = elementArray[i].getRef();
+            GMLSchema schema = getGMLSchema();
+            Object buildedObject = schema.getBuildedObjectFor( elementArray[i] );
+
             final Element element;
-            final GMLSchema schema;
-            if( ref == null )
+            if( buildedObject == null )
             {
-              element = elementArray[i];
-              schema = getGMLSchema();
-            }
-            else
-            {
+              final QName ref = elementArray[i].getRef();
               final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
               element = reference.getElement();
               schema = reference.getGMLSchema();
+              buildedObject = schema.getBuildedObjectFor( element );
             }
-            final Object buildedObject = schema.getBuildedObjectFor( element );
             // why are alle buildedObjects of type IPropertyType ?
             propertyTypes.add( (IPropertyType) buildedObject );
           }

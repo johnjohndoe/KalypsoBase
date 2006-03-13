@@ -42,7 +42,6 @@ import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * a builder for adv references
  * 
  * @author doemming
@@ -53,14 +52,18 @@ public class AdvElement2RelationTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object elementObject )
+public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element)elementObject;
+    final Element element = (Element) elementObject;
     final QName ref = element.getRef();
+    // TODO if elements have Props they get lost here ....
     if( ref != null )
     {
-      final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
-      return build( reference );
+      final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
+      final IRelationType rt= (IRelationType) build( reference )[0];
+      ReferencedRelationType result = new ReferencedRelationType(gmlSchema,element,rt);
+      gmlSchema.register( element, result );
+      return new Object[]{ result};
     }
 
     final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element );
@@ -72,10 +75,8 @@ public class AdvElement2RelationTypeBuilder implements IBuilder
     }
     final IRelationType result = new RelationType( gmlSchema, element );
     gmlSchema.register( element, result );
-    return new Object[]
-    { result };
+    return new Object[] { result };
   }
-
   /**
    * @param reference
    */
@@ -92,9 +93,9 @@ public class AdvElement2RelationTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof Element ) )
+    if( !(object instanceof Element) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element)object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();

@@ -172,6 +172,8 @@ public class GMLSchemaUtilities
         break;
       case CONSTRUCTION_NAMED_TYPE:
         qName = element.getType();
+        // if(qName.getLocalPart().startsWith("DIP"))
+        // System.out.println( "looking for" + qName );
         break;
       default:
         throw new UnsupportedOperationException();

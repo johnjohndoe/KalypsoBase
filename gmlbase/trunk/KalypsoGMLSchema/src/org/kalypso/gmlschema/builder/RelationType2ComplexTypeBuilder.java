@@ -33,8 +33,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
@@ -51,12 +51,12 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
    */
   public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject )
   {
-    final RelationType rt = (RelationType)relationTypeObject;
-    final Element element = rt.getElement();
+    final QualifiedElement qe = (QualifiedElement) relationTypeObject;
+    final Element element = qe.getElement();
     final ComplexTypeReference complexTypeReference = GMLSchemaUtilities
         .getComplexTypeReferenceFor( gmlSchema, element );
     final ComplexType complexType = complexTypeReference.getComplexType();
-    gmlSchema.register( rt, complexType );
+    gmlSchema.register( qe, complexType );
     return new Object[]
     { complexType };
   }

@@ -76,7 +76,6 @@ public final class GMLSchemaCatalog
 
     try
     {
-//      final GMLSchema schema = new GMLSchema( schemaLocation );
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
       THE_CACHE.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );

@@ -150,4 +150,5 @@ public class CustomRelationType implements IRelationType
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
+
 }

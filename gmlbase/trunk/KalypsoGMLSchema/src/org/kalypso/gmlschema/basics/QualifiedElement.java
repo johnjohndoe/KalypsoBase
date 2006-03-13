@@ -50,11 +50,21 @@ public class QualifiedElement implements IAdaptable
 
   public QualifiedElement( GMLSchema gmlSchema, Element element )
   {
+    this( gmlSchema, element, createQName( gmlSchema, element ) );
+  }
+
+  private static QName createQName( GMLSchema gmlSchema, Element element )
+  {
+    final String targetNamespace = gmlSchema.getTargetNamespace();
+    final String name = element.getName();
+    return new QName( targetNamespace, name );
+  }
+
+  public QualifiedElement( GMLSchema gmlSchema, Element element, QName qName )
+  {
     m_gmlSchema = gmlSchema;
     m_element = element;
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    final String name = m_element.getName();
-    m_qName = new QName( targetNamespace, name );
+    m_qName = qName;
   }
 
   public final GMLSchema getGMLSchema( )
@@ -65,7 +75,7 @@ public class QualifiedElement implements IAdaptable
   /**
    * <b>do not use QName as key, it is qualified, but not unique ! </b>
    */
-  public final QName getQName( )
+  public QName getQName( )
   {
     return m_qName;
   }
@@ -91,7 +101,7 @@ public class QualifiedElement implements IAdaptable
   /**
    *  
    */
-  public final Element getElement( )
+  public Element getElement( )
   {
     return m_element;
   }

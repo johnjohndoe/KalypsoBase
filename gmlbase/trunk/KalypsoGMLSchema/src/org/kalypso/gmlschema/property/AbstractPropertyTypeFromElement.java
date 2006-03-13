@@ -32,6 +32,8 @@ package org.kalypso.gmlschema.property;
 import java.io.StringWriter;
 import java.math.BigInteger;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
@@ -45,12 +47,17 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
 public abstract class AbstractPropertyTypeFromElement extends QualifiedElement implements IPropertyType
 {
 
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element, QName qName )
+  {
+    super( gmlSchema, element ,qName);
+  }
+  
   public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element )
   {
     super( gmlSchema, element );
   }
 
-  public final int getMinOccurs( )
+  public int getMinOccurs( )
   {
     if( !m_element.isSetMinOccurs() )
       return 1;
@@ -58,7 +65,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
     return minOccurs.intValue();
   }
 
-  public final int getMaxOccurs( )
+  public int getMaxOccurs( )
   {
     if( !m_element.isSetMaxOccurs() )
       return 1;
