@@ -1101,6 +1101,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void selectFeaturesInMap( final String[] fids )
   {
+    selectFeaturesInMap( fids, false );
+  }
+
+  protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection )
+  {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
     final IMapModell mapModell = getMapModell();
 
@@ -1126,6 +1131,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
 
           final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
+
           if( kft != null && panToFid != null )
           {
             final GMLWorkspace workspace = kft.getWorkspace();
@@ -1138,44 +1144,50 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             }
           }
 
-          final CommandableWorkspace workspace = kft.getWorkspace();
-
-          final FeatureList featureList = kft.getFeatureListVisible( null );
-          if( featureList != null && featureList.size() != 0 )
+          if( !noDefaultSelection )
           {
-            final List easyFeatures = new ArrayList( fids.length );
-            for( int i = 0; i < fids.length; i++ )
+            final CommandableWorkspace workspace = kft.getWorkspace();
+
+            final FeatureList featureList = kft.getFeatureListVisible( null );
+            if( featureList != null && featureList.size() != 0 )
             {
-              final String fid = fids[i];
-              if( fid != null )
+              final List easyFeatures = new ArrayList( fids.length );
+              for( int i = 0; i < fids.length; i++ )
               {
-                final Feature feature = workspace.getFeature( fid );
-                if( feature != null )
-                  easyFeatures.add( new EasyFeatureWrapper( workspace, feature, null, null ) );
+                final String fid = fids[i];
+                if( fid != null )
+                {
+                  final Feature feature = workspace.getFeature( fid );
+                  if( feature != null )
+                    easyFeatures.add( new EasyFeatureWrapper( workspace, feature, null, null ) );
+                }
               }
+              final EasyFeatureWrapper[] easyArray;
+              if( easyFeatures.isEmpty() && selectFirstFeatureByDefault() )
+                easyArray = new EasyFeatureWrapper[]
+                { new EasyFeatureWrapper( workspace, (Feature)featureList.get( 0 ), null, null ) };
+              else
+                easyArray = (EasyFeatureWrapper[])easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
+
+              final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+              selectionManager.changeSelection( featuresToRemove, easyArray );
+
+              // only refresh diagram explicitly, if we dont send an selection event
+              refreshDiagramHack = false;
             }
-            final EasyFeatureWrapper[] easyArray;
-            if( easyFeatures.isEmpty() && selectFirstFeatureByDefault() )
-              easyArray = new EasyFeatureWrapper[]
-              { new EasyFeatureWrapper( workspace, (Feature)featureList.get( 0 ), null, null ) };
-            else
-              easyArray = (EasyFeatureWrapper[])easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
-
-            final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-            selectionManager.changeSelection( featuresToRemove, easyArray );
-
-            // only refresh diagram explicitly, if we dont send an selection event
-            refreshDiagramHack = false;
           }
         }
 
-        // maybe redundant?
-        if( refreshDiagramHack )
-          refreshDiagram();
+        if( !noDefaultSelection )
+        {
+          // maybe redundant?
+          if( refreshDiagramHack )
+            refreshDiagram();
 
-        // timing problem: manschmal wird die Tabelle doch nicht aktualisiert
-        if( !"selected".equalsIgnoreCase( showZmlTable ) || refreshDiagramHack )
-          refreshZMLTable();
+          // timing problem: manschmal wird die Tabelle doch nicht aktualisiert
+          if( !"selected".equalsIgnoreCase( showZmlTable ) || refreshDiagramHack )
+            refreshZMLTable();
+        }
 
         maximizeMap();
       }

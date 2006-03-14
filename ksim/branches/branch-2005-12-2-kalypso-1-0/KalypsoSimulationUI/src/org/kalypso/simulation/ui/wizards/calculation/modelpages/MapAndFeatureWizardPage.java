@@ -283,18 +283,15 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     // if the featureToSelect property is set, we use the map!
     final String[] fid = getFeaturesToSelect();
-    if( fid.length > 0 )
+//    if( fid.length > 0 )
     {
-      selectFeaturesInMap( fid );
-      return;
+      selectFeaturesInMap( fid, true );
+//      return;
     }
 
     // else we show the feature defined in the feature-template
     final Thread waitForFeature = new Thread()
     {
-      /**
-       * @see java.lang.Thread#run()
-       */
       public void run()
       {
         super.run();
@@ -323,7 +320,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       }
     };
     waitForFeature.start();
-
   }
 
   /**

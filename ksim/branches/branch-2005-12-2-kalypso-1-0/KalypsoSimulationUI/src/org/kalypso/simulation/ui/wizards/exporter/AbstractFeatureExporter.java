@@ -42,6 +42,7 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -91,6 +92,8 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
           selItems.add( fi );
       }
 
+      Collections.sort( selItems );
+      
       final Object[] array = selItems.toArray();
 
       if( features.size() == 0 )
@@ -151,7 +154,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
    * 
    * @author schlienger
    */
-  private final static class FeatureItem
+  private final static class FeatureItem implements Comparable
   {
     private final Feature m_feature;
 
@@ -173,12 +176,19 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       return m_name;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString()
     {
       return getName();
+    }
+
+    public int compareTo( Object o )
+    {
+      if( o == this )
+        return 0;
+      
+      final FeatureItem fi = (FeatureItem)o;
+      
+      return m_name.compareTo( fi.m_name );
     }
   }
 }
