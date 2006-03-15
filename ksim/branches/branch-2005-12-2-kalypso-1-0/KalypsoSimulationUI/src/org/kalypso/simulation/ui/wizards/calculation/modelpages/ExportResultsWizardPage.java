@@ -44,6 +44,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -112,6 +113,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -461,7 +463,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     {
       final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
       final URL context = ResourceUtilities.createURL( calcCase );
-      final FeatureList features = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
+      final FeatureList featureList = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
+      final Feature[] features = featureList.toFeatures();
+      
       final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty,
           context );
       // view it!
@@ -474,6 +478,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         return null;
       }
 
+      // features sortieren
+      Arrays.sort( features, new FeatureComparator( nameProperty ) );
+      
       final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
       final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
           new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
@@ -485,7 +492,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final Object[] result = dialog.getResult();
       final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result,
           new Feature[result.length] );
-      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(),
+      return FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList.getParentFeatureTypeProperty(),
           resultFeatures );
     }
     catch( final MalformedURLException e )

@@ -42,7 +42,7 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -92,7 +92,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
           selItems.add( fi );
       }
 
-      Collections.sort( selItems );
+      Arrays.sort( items );
       
       final Object[] array = selItems.toArray();
 
