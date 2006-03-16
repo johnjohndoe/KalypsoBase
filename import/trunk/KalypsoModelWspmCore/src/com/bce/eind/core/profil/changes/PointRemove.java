@@ -36,9 +36,10 @@ public class PointRemove implements IProfilChange
     
     m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
     
-    m_profil.removePoint( m_point );
+    if (m_profil.removePoint( m_point ))
 
     return new PointAdd( m_profil, m_pointBefore, m_point );
+    else return new IllegalChange("Punkt bei "+" kann nicht gelöscht werden");
   }
 
   /**
