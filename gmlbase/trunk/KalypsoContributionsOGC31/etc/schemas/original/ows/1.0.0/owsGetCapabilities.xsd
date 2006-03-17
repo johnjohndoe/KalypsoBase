@@ -4,7 +4,7 @@ xmlns:ows="http://www.opengis.net/ows"
 xmlns="http://www.w3.org/2001/XMLSchema" 
 elementFormDefault="qualified" version="1.0.0" xml:lang="en">
 	<annotation>
-		<appinfo>owsGetCapabilities.xsd 2005-11-21</appinfo>
+		<appinfo>owslbilities.xsd 2005-11-21</appinfo>
 		<documentation>This XML Schema Document defines the GetCapabilities operation request and response XML elements and types, which are common to all OWSs. This XML Schema shall be edited by each OWS, for example, to specify a specific value for the "service" attribute.
 		Copyright © 2005 Open Geospatial Consortium, Inc. All Rights Reserved. </documentation>
 	</annotation>
@@ -65,7 +65,14 @@ elementFormDefault="qualified" version="1.0.0" xml:lang="en">
 		<annotation>
 			<documentation>Service type identifier, where the string value is the OWS type abbreviation, such as "WMS" or "WFS". </documentation>
 		</annotation>
-		<restriction base="string"/>
+
+<!--doemming
+	  <restriction base="string"/>
+-->
+	  <restriction base="string">
+		<enumeration value="WFS"/>
+	  </restriction>
+
 	</simpleType>
 	<!-- ========================================================= -->
 	<complexType name="AcceptVersionsType">
