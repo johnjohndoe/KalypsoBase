@@ -13,8 +13,9 @@
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
 		
 	<target name="prepareSchemas">
+		<mkdir dir="${project}/etc/schemas/generated"/>
 		<delete>
-			<fileset dir="${project}/etc/schemas/generated" id="idjh">
+			<fileset dir="${project}/etc/schemas/generated">
     			<include name="**/*.xsd"/>
 			</fileset>
 		</delete>

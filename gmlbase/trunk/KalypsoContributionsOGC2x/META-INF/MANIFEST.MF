@@ -1,11 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions Plug-in
-Bundle-SymbolicName: KalypsoOGCContributions2x
+Bundle-SymbolicName: org.kalypso.contribs.ogc.mixed
 Bundle-Version: 1.0.0
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp
 Eclipse-AutoStart: true
-Bundle-ClassPath: kalypsoContribsOGC2x.jar
+Bundle-ClassPath: kalypsoContribOGCmixed.jar
+Export-Package: ogc2.www.opengis.net.gml,
+ ogc2.www.opengis.net.ogc,
+ ogc2.www.opengis.net.ows,
+ ogc2.www.opengis.net.sld

@@ -33,12 +33,6 @@ extension-element-prefixes="gml http://www.opengis.net/gml"
 	    </copy>
 	</template>
 
-<!--                   restriction
-			<if test="name()='simpleType'
-			 and $className!=''
-			 and ./xsd:restriction/@base='string'"
-			 >
--->
 	<template match='*'  >
     	<element name="{name()}">
 			<for-each select="@*">
@@ -48,35 +42,11 @@ extension-element-prefixes="gml http://www.opengis.net/gml"
 			</for-each>
 			<variable name="className" select="@name"/>
 
-			<variable name="customizeSimpleType" 
-				select="boolean(name()='simpleType'
-			 					and $className!=''
-			 					and ./xsd:restriction/@base='string')"/>
 			<variable name="customizeElement" 
 				select="boolean(name()='element'
 								 and name(../.)='schema'
 								 and $className!=''
 								 and contains('_abcdefghijklmnopqrstuvwxyz', substring($className,1,1)))"/>
-
-			<if test="$customizeSimpleType">
-				<element name="xsd:annotation">
-					<!-- copy original annotation if there was any -->
-					<apply-templates select="./xsd:annotation/*"  />
-					<element name="xsd:appinfo">
-						<element name="jxb:javaType">
-							<attribute name="name">java.lang.String</attribute>				
-<!--
-							<attribute name="parseMethod">fromString</attribute>				
-							<attribute name="printMethod">toString</attribute>				
--->
-						</element>
-					</element>
-				</element>
-				<apply-templates select="./*[not(name()='annotation')]" />
-			</if> 
-			 <!--
-			 parseMethod="fromString" printMethod="toString"
-			 -->
 
 			<!-- is global element tag and name starts lowercase or '_' -->
 			<if test="$customizeElement">
@@ -90,14 +60,11 @@ extension-element-prefixes="gml http://www.opengis.net/gml"
 				</element>
 				<apply-templates select="./*[not(name()='annotation')]" />
 			</if>
-			<if test="not($customizeElement or $customizeSimpleType)">
+			<if test="not($customizeElement)">
 				<apply-templates  />
 			</if>
 		</element>
 	</template>
-	<!--
-			and not(name()='simpleType' and name(./xsd:annotation)='annotation'">
-	-->
 	
 	
 	<template name="makeAppinfo">
