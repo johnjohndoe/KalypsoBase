@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-
      <extension
          point="org.eclipse.ui.views">
       <view
@@ -9,11 +8,6 @@
             class="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"
             name="WizardView"
             id="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"/>
-      <view
-            allowMultiple="true"
-            class="org.kalypso.contribs.eclipse.ui.browser.BrowserView"
-            id="org.kalypso.contribs.eclipse.ui.browser.view"
-            name="BrowserView"/>
    </extension>
 
 </plugin>
