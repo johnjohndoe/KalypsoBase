@@ -3,11 +3,13 @@ package org.kalypso.contribs.eclipse.ui.browser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
@@ -19,10 +21,8 @@ import org.eclipse.ui.internal.browser.BrowserViewer;
 import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
 import org.eclipse.ui.part.ViewPart;
 
-public class BrowserView extends ViewPart implements IBrowserViewerContainer
+public abstract class AbstractBrowserView extends ViewPart implements IBrowserViewerContainer
 {
-  public static final String WEB_BROWSER_VIEW_ID = "org.kalypso.contribs.eclipse.ui.browser.view"; //$NON-NLS-1$
-
   private IMemento m_memento;
 
   // Persistance tags.
@@ -37,54 +37,75 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
 
   private static final String TAG_SELECTION = "selection";
 
-  protected BrowserViewer viewer;
+  private BrowserViewer m_viewer;
 
-  private LocationListener locationListener = new LocationAdapter()
+  protected ILocationChangedHandler m_locationChangedHandler;
+
+  private LocationListener m_locationListener = new LocationAdapter()
   {
     @Override
     public void changed( final LocationEvent event )
     {
-//      event.doit = false;
+      // just let the handler do the work
+      final String href = event.location;
+      if( m_locationChangedHandler != null )
+        event.doit = m_locationChangedHandler.handleLocationChange( href );
+      else
+        event.doit = true;
     }
   };
 
   @Override
-  public void init( IViewSite site, IMemento memento ) throws PartInitException
+  public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
     m_memento = memento;
   }
 
+  /** Set the handler which will react to location changed events. */
+  public void setLocationChangedHandler( final ILocationChangedHandler handler )
+  {
+    m_locationChangedHandler = handler;
+  }
+
   private void addBrowserListener( )
   {
-    viewer.getBrowser().addLocationListener( locationListener );
+    m_viewer.getBrowser().addLocationListener( m_locationListener );
   }
 
   private void removeLocationListener( )
   {
-    if( viewer.getBrowser().isDisposed() )
+    if( m_viewer.getBrowser().isDisposed() )
       return;
-    viewer.getBrowser().removeLocationListener( locationListener );
+    m_viewer.getBrowser().removeLocationListener( m_locationListener );
   }
 
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
-    viewer = new BrowserViewer( parent, SWT.NONE );// BrowserViewer.LOCATION_BAR
-    viewer.setContainer( this );
+    m_viewer = new BrowserViewer( parent, SWT.NONE );// BrowserViewer.LOCATION_BAR
+    m_viewer.setContainer( this );
+    
+    // Delete IE Menu
+    final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
+    menuManager.setRemoveAllWhenShown( true );
+    final Menu contextMenu = menuManager.createContextMenu( m_viewer.getBrowser() );
+    m_viewer.getBrowser().setMenu( contextMenu );
+    getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
+    
     addBrowserListener();
     if( m_memento != null )
       restoreState( m_memento );
     m_memento = null;
   }
 
-  protected void restoreState( IMemento memento )
+  protected void restoreState( final IMemento memento )
   {
-    String url = memento.getString( TAG_URL );
+    final String url = memento.getString( TAG_URL );
     // set the url of the browser
-    viewer.setURL( url );
-    if( viewer.combo != null )
-      viewer.combo.setText( url );
+    m_viewer.setURL( url );
+    if( m_viewer.combo != null )
+      m_viewer.combo.setText( url );
 
     IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
     if( scrollbars == null )
@@ -93,7 +114,7 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
     if( horizontal != null )
     {
       int hSelection = horizontal.getInteger( TAG_SELECTION ).intValue();
-      ScrollBar horizontalBar = viewer.getHorizontalBar();
+      ScrollBar horizontalBar = m_viewer.getHorizontalBar();
       if( horizontalBar != null )
         horizontalBar.setSelection( hSelection );
     }
@@ -101,7 +122,7 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
     if( vertical != null )
     {
       int vSelection = vertical.getInteger( TAG_SELECTION ).intValue();
-      ScrollBar verticalBar = viewer.getVerticalBar();
+      ScrollBar verticalBar = m_viewer.getVerticalBar();
       if( verticalBar != null )
         verticalBar.setSelection( vSelection );
     }
@@ -111,27 +132,27 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
   public void dispose( )
   {
     removeLocationListener();
-    if( viewer != null )
-      viewer.dispose();
+    if( m_viewer != null )
+      m_viewer.dispose();
     super.dispose();
   }
 
   public void setHtml( final String html )
   {
-    if( viewer != null )
-      viewer.getBrowser().setText( html );
+    if( m_viewer != null )
+      m_viewer.getBrowser().setText( html );
   }
 
   public void setURL( String url )
   {
-    if( viewer != null )
-      viewer.setURL( url );
+    if( m_viewer != null )
+      m_viewer.setURL( url );
   }
 
   @Override
   public void setFocus( )
   {
-    viewer.setFocus();
+    m_viewer.setFocus();
   }
 
   public boolean close( )
@@ -152,19 +173,19 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
     return getViewSite().getActionBars();
   }
 
-  public void openInExternalBrowser( String url )
+  public void openInExternalBrowser( final String url )
   {
     try
     {
-      URL theURL = new URL( url );
+      final URL theURL = new URL( url );
       IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
       support.getExternalBrowser().openURL( theURL );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // TODO handle this
     }
-    catch( PartInitException e )
+    catch( final PartInitException e )
     {
       // TODO handle this
     }
@@ -176,30 +197,37 @@ public class BrowserView extends ViewPart implements IBrowserViewerContainer
    * @param name
    * @return
    */
-  protected boolean isWebFile( String name )
+  public static boolean isWebFile( final String name )
   {
-    return name.endsWith( "html" ) || name.endsWith( "htm" ) || name.endsWith( "gif" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        name.endsWith( "jpg" ); //$NON-NLS-1$
+    final String lowerCase = name.toLowerCase();
+    return lowerCase.endsWith( "html" ) || lowerCase.endsWith( "htm" ) || lowerCase.endsWith( "gif" ) || lowerCase.endsWith( "png" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        lowerCase.endsWith( "jpg" ); //$NON-NLS-1$
   }
 
   @Override
-  public void saveState( IMemento memento )
+  public void saveState( final IMemento memento )
   {
-    if( viewer == null )
+    if( m_viewer == null )
     {
       if( m_memento != null ) // Keep the old state;
         memento.putMemento( m_memento );
       return;
     }
-    memento.putString( TAG_URL, viewer.getURL() );
+
+    // BUGFIX + HACK: do not store memento because restoring
+    // it lead sometimes to a bug (IE asks to save the url instead of
+    // displaying it)
+    // memento.putString( TAG_URL, m_viewer.getURL() );
+    memento.putString( TAG_URL, null );
+
     IMemento scrollbarMemento = memento.createChild( TAG_SCROLLBARS );
-    ScrollBar horizontalBar = viewer.getHorizontalBar();
+    ScrollBar horizontalBar = m_viewer.getHorizontalBar();
     if( horizontalBar != null )
     {
       IMemento horizontal = scrollbarMemento.createChild( TAG_HORIZONTAL_BAR );
       horizontal.putInteger( TAG_SELECTION, horizontalBar.getSelection() );
     }
-    ScrollBar verticalBar = viewer.getVerticalBar();
+    ScrollBar verticalBar = m_viewer.getVerticalBar();
     if( verticalBar != null )
     {
       IMemento vertical = scrollbarMemento.createChild( TAG_VERTICAL_BAR );
