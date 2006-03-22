@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class ResourceContentProvider implements ITreeContentProvider
 {
-
   private boolean m_showClosedProjects = true;
 
   private String[] m_allowedResourceExtensions;
