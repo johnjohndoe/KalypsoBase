@@ -48,6 +48,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import org.eclipse.ui.IMemento;
+import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**
  * MementoUtils
@@ -108,5 +109,10 @@ public class MementoUtils
     {
       ins.close();
     }
+  }
+
+  public static MementoWithUrlResolver createMementoWithUrlResolver( IMemento memento, IUrlResolver2 resolver )
+  {
+    return new MementoWithUrlResolver( memento, resolver );
   }
 }
