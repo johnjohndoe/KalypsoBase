@@ -162,6 +162,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   public IFeatureType[] getSubstituts( GMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
   {
+    // TODO check
     if( m_substituteFT == null ) // no substitutiongroup
     {
       if( inclusiveThis ) // return this ?
