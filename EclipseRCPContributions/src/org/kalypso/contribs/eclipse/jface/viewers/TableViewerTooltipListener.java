@@ -10,8 +10,11 @@ import org.kalypso.contribs.eclipse.swt.widgets.AbstractControlTooltipListener;
 
 public class TableViewerTooltipListener extends AbstractControlTooltipListener
 {
-  /** Creates the listener and hooks it to the table. 
-   * @param alwaysVisible */
+  /**
+   * Creates the listener and hooks it to the table.
+   * 
+   * @param alwaysVisible
+   */
   public final static void hookViewer( final TableViewer viewer, final boolean alwaysVisible )
   {
     final AbstractControlTooltipListener tableListener = new TableViewerTooltipListener( viewer, alwaysVisible );
@@ -31,15 +34,15 @@ public class TableViewerTooltipListener extends AbstractControlTooltipListener
   {
     final Table table = m_viewer.getTable();
     final TableItem item = table.getItem( new Point( event.x, event.y ) );
-    
+
     final IBaseLabelProvider labelProvider = m_viewer.getLabelProvider();
     if( item != null && labelProvider instanceof ITooltipProvider )
     {
-      final ITooltipProvider tp = (ITooltipProvider)labelProvider;
+      final ITooltipProvider tp = (ITooltipProvider) labelProvider;
 
       return tp.getTooltip( item.getData() );
     }
-    
+
     return null;
   }
 }
