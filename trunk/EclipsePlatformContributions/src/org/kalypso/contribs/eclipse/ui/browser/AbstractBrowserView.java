@@ -201,7 +201,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     final String lowerCase = name.toLowerCase();
     return lowerCase.endsWith( "html" ) || lowerCase.endsWith( "htm" ) || lowerCase.endsWith( "gif" ) || lowerCase.endsWith( "png" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$
+        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "pdf" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
