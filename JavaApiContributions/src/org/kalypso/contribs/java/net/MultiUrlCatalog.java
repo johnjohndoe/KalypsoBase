@@ -92,7 +92,7 @@ public class MultiUrlCatalog implements IUrlCatalog
     {
       final Object key = iterator.next();
       final Object value = m_catalog.get( key );
-      result.append( "\n").append(key.toString() ).append( "\t " ).append( value.toString() ).append( "\n" );
+      result.append( "\n").append(key.toString() ).append( " = " ).append( value.toString() ).append( "\n" );
     }
     return result.toString();
   }
