@@ -42,6 +42,8 @@ package org.kalypso.ogc.wfs;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+
 /**
  * @author doemming
  */
@@ -50,5 +52,7 @@ public interface IWFSLayer
   public QName getQName( );
 
   public String getTitle( );
+
+  public IFeatureType getFeatureType( );
 
 }
