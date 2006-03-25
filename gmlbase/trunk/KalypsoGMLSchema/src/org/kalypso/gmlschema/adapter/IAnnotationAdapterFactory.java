@@ -69,7 +69,11 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
           };
         }
       }
-      return createDefaultAnnotation( platformLang, " ? " );
+      String elementName = xsdElement.getName();
+      if( elementName != null )
+        return createDefaultAnnotation( platformLang, elementName );
+      else
+        return createDefaultAnnotation( platformLang, "?" );
     }
     return null;
   }

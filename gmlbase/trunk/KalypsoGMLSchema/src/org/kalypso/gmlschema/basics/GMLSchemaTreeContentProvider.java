@@ -50,14 +50,24 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 public class GMLSchemaTreeContentProvider implements ITreeContentProvider
 {
 
-  private final boolean m_detailed;
+  private boolean m_detailed;
 
-  private final GMLSchema m_context;
+  private GMLSchema m_context;
 
-  public GMLSchemaTreeContentProvider( GMLSchema context, boolean detailed )
+  public GMLSchemaTreeContentProvider( final GMLSchema context, boolean detailed )
   {
     m_context = context;
     m_detailed = detailed;
+  }
+
+  public void setDetailed( boolean detailed )
+  {
+    m_detailed = detailed;
+  }
+
+  public void setContext( GMLSchema context )
+  {
+    m_context = context;
   }
 
   /**
@@ -161,11 +171,12 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    if( inputElement instanceof GMLSchema )
-    {
-      return new Object[] { inputElement };
-    }
-    return new Object[0];
+    return getChildren( inputElement );
+    // if( inputElement instanceof GMLSchema )
+    // {
+    // return new Object[] { "String", inputElement };
+    // }
+    // return new Object[0];
   }
 
   /**
@@ -182,7 +193,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    // nothing to change
+    setContext( (GMLSchema) newInput );
   }
 
   public void accept( Object element, ITreeContentProviderVisitor visitor, int indent )

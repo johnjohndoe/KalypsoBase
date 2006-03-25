@@ -35,6 +35,7 @@ import java.util.List;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 
@@ -53,6 +54,23 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
   {
     final List<Object> result = new ArrayList<Object>();
     final Schema schema = gmlSchema.getSchema();
+    collectSchemaBasics( schema, result );
+    final Schema[] includedSchemas = gmlSchema.getIncludedSchemas();
+    for( int i = 0; i < includedSchemas.length; i++ )
+    {
+      final Schema includedSchema = includedSchemas[i];
+      collectSchemaBasics( includedSchema, result );
+    }
+    return result.toArray();
+  }
+
+  private List<Object> collectSchemaBasics( final Schema schema, final List<Object> list )
+  {
+    final List<Object> result;
+    if( list == null )
+      result = new ArrayList<Object>();
+    else
+      result = list;
     // TopLevelComplexTypes -> FeatureContentTypes
     final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
     for( int i = 0; i < complexTypeArray.length; i++ )
@@ -74,7 +92,8 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
       TopLevelElement element = elementArray[i];
       result.add( element );
     }
-    return result.toArray();
+
+    return result;
   }
 
   /**

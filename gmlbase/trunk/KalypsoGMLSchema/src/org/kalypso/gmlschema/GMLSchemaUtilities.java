@@ -29,6 +29,9 @@
  */
 package org.kalypso.gmlschema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
@@ -41,6 +44,9 @@ import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -309,5 +315,32 @@ public class GMLSchemaUtilities
       return (ComplexTypeReference) gmlSchema.resolveReference( type );
     final ComplexType complexType = element.getComplexType();
     return new ComplexTypeReference( gmlSchema, complexType );
+  }
+
+  public static String[] createFeaturePathes( final GMLSchema gmlSchma, final String pathToHere, IFeatureType featureType )
+  {
+    final List<String> result = new ArrayList<String>();
+    if( featureType.getAllGeomteryProperties().length > 0 )
+      result.add( pathToHere );
+    final IPropertyType[] props = featureType.getProperties();
+    for( int i = 0; i < props.length; i++ )
+    {
+      final IPropertyType pt = props[i];
+      if( pt instanceof IRelationType )
+      {
+        final IRelationType rt = (IRelationType) pt;
+        final String newPath = pathToHere + "/" + rt.getQName().getLocalPart();
+        final IFeatureType[] targetFeatureTypes = rt.getTargetFeatureTypes( gmlSchma, true );
+        for( int j = 0; j < targetFeatureTypes.length; j++ )
+        {
+          final IFeatureType type = targetFeatureTypes[j];
+          if(rt.isList()&& type.getAllGeomteryProperties().length>0)
+            result.add(newPath + "[" + type.getQName().getLocalPart() + "]");
+            createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
+        }
+      }
+    }
+
+    return null;
   }
 }

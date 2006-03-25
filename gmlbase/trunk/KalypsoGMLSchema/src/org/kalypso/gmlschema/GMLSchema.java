@@ -44,11 +44,14 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
@@ -101,13 +104,15 @@ public class GMLSchema
 
   private HashMap<QName, IFeatureType> m_featuretypeMap = null;
 
+  private List<Schema> m_includedSchemas = new ArrayList<Schema>();
+
   public GMLSchema( final Schema schema, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
     m_schema = schema;
     m_context = context;
     m_urlResolver = new UrlResolver();
-    init();
+    init( schema );
   }
 
   public String getGMLVersion( )
@@ -125,80 +130,84 @@ public class GMLSchema
    * 
    * @throws GMLSchemaException
    */
-  private void init( ) throws GMLSchemaException
+  private void init( Schema schema ) throws GMLSchemaException
   {
-    final TopLevelComplexType[] complexTypeArray = m_schema.getComplexTypeArray();
-    for( int i = 0; i < complexTypeArray.length; i++ )
+    try
     {
-      final TopLevelComplexType complexType = complexTypeArray[i];
-
-      final QName key = new QName( getTargetNamespace(), complexType.getName() );
-      final ComplexTypeReference ref = new ComplexTypeReference( this, complexType );
-      m_refHash.put( key, ref );
-    }
-    // simple types
-    final TopLevelSimpleType[] simpleTypeArray = m_schema.getSimpleTypeArray();
-    for( int i = 0; i < simpleTypeArray.length; i++ )
-    {
-      final TopLevelSimpleType simpleType = simpleTypeArray[i];
-
-      final QName key = new QName( getTargetNamespace(), simpleType.getName() );
-      final SimpleTypeReference reference = new SimpleTypeReference( this, simpleType );
-      m_refHash.put( key, reference );
-    }
-
-    // elements
-    final TopLevelElement[] elementArray = m_schema.getElementArray();
-    for( int i = 0; i < elementArray.length; i++ )
-    {
-      final TopLevelElement element = elementArray[i];
-      final QName key = new QName( getTargetNamespace(), element.getName() );
-      final ElementReference reference = new ElementReference( this, element );
-      m_refHash.put( key, reference );
-    }
-    // import
-    final Import[] importArray = m_schema.getImportArray();
-    for( int i = 0; i < importArray.length; i++ )
-    {
-      final ImportDocument.Import import_ = importArray[i];
-      String schemaLocation = import_.getSchemaLocation();
-      GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( import_.getNamespace() );
-      if( gmlSchema == null )
+      final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
+      for( int i = 0; i < complexTypeArray.length; i++ )
       {
-        final URL url;
-        try
-        {
-          url = m_urlResolver.resolveURL( m_context, schemaLocation );
-        }
-        catch( MalformedURLException e )
-        {
-          if( schemaLocation != null )
-            throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
-          throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
-        }
-        gmlSchema = GMLSchemaCatalog.getSchema( url );
+        final TopLevelComplexType complexType = complexTypeArray[i];
+
+        final QName key = new QName( getTargetNamespace(), complexType.getName() );
+        final ComplexTypeReference ref = new ComplexTypeReference( this, complexType );
+        m_refHash.put( key, ref );
       }
-      m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+      // simple types
+      final TopLevelSimpleType[] simpleTypeArray = schema.getSimpleTypeArray();
+      for( int i = 0; i < simpleTypeArray.length; i++ )
+      {
+        final TopLevelSimpleType simpleType = simpleTypeArray[i];
+
+        final QName key = new QName( getTargetNamespace(), simpleType.getName() );
+        final SimpleTypeReference reference = new SimpleTypeReference( this, simpleType );
+        m_refHash.put( key, reference );
+      }
+
+      // elements
+      final TopLevelElement[] elementArray = schema.getElementArray();
+      for( int i = 0; i < elementArray.length; i++ )
+      {
+        final TopLevelElement element = elementArray[i];
+        final QName key = new QName( getTargetNamespace(), element.getName() );
+        final ElementReference reference = new ElementReference( this, element );
+        m_refHash.put( key, reference );
+      }
+      // import
+      final Import[] importArray = schema.getImportArray();
+      for( int i = 0; i < importArray.length; i++ )
+      {
+        final ImportDocument.Import import_ = importArray[i];
+        String schemaLocation = import_.getSchemaLocation();
+        GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( import_.getNamespace() );
+        if( gmlSchema == null )
+        {
+          final URL url;
+          try
+          {
+            url = m_urlResolver.resolveURL( m_context, schemaLocation );
+          }
+          catch( MalformedURLException e )
+          {
+            if( schemaLocation != null )
+              throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
+            throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
+          }
+          gmlSchema = GMLSchemaCatalog.getSchema( url );
+        }
+        m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+      }
+
+      // include
+      final Include[] includeArray = schema.getIncludeArray();
+
+      for( int i = 0; i < includeArray.length; i++ )
+      {
+        final IncludeDocument.Include include = includeArray[i];
+        final URL includeURL = m_urlResolver.resolveURL( m_context, include.getSchemaLocation() );
+        SchemaDocument document = SchemaDocument.Factory.parse( includeURL );
+        final Schema includedSchema = document.getSchema();
+        m_includedSchemas.add( includedSchema );
+        init( includedSchema );
+      }
     }
-
-    // include
-    // TODO merge arrays with the ones from m_schema
-    // final Include[] includeArray = m_schema.getIncludeArray();
-    // final GMLSchema[] includedSchemas = new
-    // GMLSchema[includeArray.length];
-    //   
-    // for( int i = 0; i < includeArray.length; i++ )
-    // {
-    // final IncludeDocument.Include include = includeArray[i];
-    // final URL includeURL = m_urlResolver.resolveURL( m_context,
-    // include.getSchemaLocation() );
-    // m_logger.info( "\nINCLUDE: \n" + toString() + "\n includes " +
-    // includeURL );
-    // includedSchemas[i] = GMLSchemaBuilder.generateGMLSchema(
-    // getTargetNamespace(), includeURL );
-    // }
-    // generate elements
-
+    catch( Exception e )
+    {
+      if( e instanceof GMLSchemaException )
+        throw (GMLSchemaException) e;
+      else
+        throw new GMLSchemaException( e );
+    }
   }
 
   /**
@@ -235,7 +244,8 @@ public class GMLSchema
       if( schemaForNamespaceURI != null )
         return schemaForNamespaceURI;
     }
-    return null;
+    // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
+    return GMLSchemaCatalog.getSchema(namespaceURI);
   }
 
   public String getTargetNamespace( )
@@ -261,6 +271,10 @@ public class GMLSchema
     if( buildedObject instanceof FeatureType )
     {
       final FeatureType ft = (FeatureType) buildedObject;
+      if( ft == null )
+      {
+        System.out.println( "debug " + getClass() );
+      }
       m_featureTypesList.add( ft );
     }
     else if( buildedObject instanceof IRelationType )
@@ -454,7 +468,6 @@ public class GMLSchema
     else
     {
       final GMLSchema schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
-      System.out.println( "getFeatureType " + qName );
       return schemaForNamespaceURI.getFeatureType( qName );
     }
   }
@@ -476,5 +489,10 @@ public class GMLSchema
   public String toString( )
   {
     return "XML-Schema: " + getTargetNamespace();
+  }
+
+  public Schema[] getIncludedSchemas( )
+  {
+    return m_includedSchemas.toArray( new Schema[m_includedSchemas.size()] );
   }
 }
