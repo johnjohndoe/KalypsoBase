@@ -411,6 +411,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_mapPanel != null )
       m_mapPanel.removeSelectionChangedListener( this );
+    
+    if( getImage() != null )
+      getImage().dispose();
   }
 
   public Arguments getArguments()
