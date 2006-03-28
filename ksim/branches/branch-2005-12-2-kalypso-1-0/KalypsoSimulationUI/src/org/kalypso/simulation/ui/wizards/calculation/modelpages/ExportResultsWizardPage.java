@@ -179,14 +179,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   }
 
   /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  public void dispose()
-  {
-    super.dispose();
-  }
-
-  /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   public void createControl( final Composite parent )
