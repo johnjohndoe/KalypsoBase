@@ -86,9 +86,9 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), new URL[] {} );
   
-  private final Collection m_changes = new ArrayList();
+  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
 
   private boolean m_update;
 
@@ -107,7 +107,7 @@ public class SteuerparameterWizardPage extends WizardPage
     super( "EditCalcCaseControlPage", "Steuerparameter", image );
     m_canGoBack = canGoBack;
 
-    final Collection changes = m_changes;
+    final Collection<FeatureChange> changes = m_changes;
     m_featureComposite.addChangeListener( new IFeatureChangeListener() {
 
       public void featureChanged( final FeatureChange change )
@@ -142,12 +142,13 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.beginTask( "Steuerparameter speichern", 2000 );
 
     // COMMITTEN
-    final Collection changes = m_changes;
-    final FeatureChange[] featureChanges = (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] );
+    final Collection<FeatureChange> changes = m_changes;
+    final FeatureChange[] featureChanges = changes.toArray( new FeatureChange[changes.size()] );
     changes.clear();
 
     getControl().getDisplay().syncExec( new CatchRunnable()
     {
+      @Override
       public void runIntern() throws Exception
       {
         // BUG command wird nicht ausgeführt
@@ -165,6 +166,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final GMLWorkspace workspace = m_workspace;
     final SetContentHelper thread = new SetContentHelper()
     {
+      @Override
       public void write( final OutputStreamWriter w ) throws Throwable
       {
         GmlSerializer.serializeWorkspace( w, workspace );
@@ -258,7 +260,7 @@ public class SteuerparameterWizardPage extends WizardPage
     if( m_workspace != null )
     {
       final Feature f = m_workspace.getRootFeature();
-      m_featureComposite.setFeature( m_workspace, f );
+      m_featureComposite.setFeature( f );
     }
 
     try
@@ -294,6 +296,7 @@ public class SteuerparameterWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         setUpdate( checkUpdate.getSelection() );
@@ -303,7 +306,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final FeatureComposite featureComposite = m_featureComposite;
     if( featureComposite != null )
     {
-      featureComposite.setFeature( m_workspace, m_workspace.getRootFeature() );
+      featureComposite.setFeature( m_workspace.getRootFeature() );
       featureComposite.updateControl();
     }
   }
@@ -311,6 +314,7 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
    */
+  @Override
   public IWizardPage getPreviousPage()
   {
     return m_canGoBack ? super.getPreviousPage() : null;
