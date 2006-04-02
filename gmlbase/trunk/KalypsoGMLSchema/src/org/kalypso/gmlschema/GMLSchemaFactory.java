@@ -43,7 +43,6 @@ import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerT
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
-import org.kalypso.gmlschema.builder.Element2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
 import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
@@ -68,7 +67,7 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 public class GMLSchemaFactory
 {
 
-  private static List m_register = new ArrayList();
+  private static List<GMLSchemaBuilder> m_register = new ArrayList<GMLSchemaBuilder>();
 
   static
   {

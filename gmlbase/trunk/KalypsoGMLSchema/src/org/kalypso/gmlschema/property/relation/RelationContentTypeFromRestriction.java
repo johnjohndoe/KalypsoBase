@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public class RelationContentTypeFromRestriction extends RelationContentType
 {
-
   private final ComplexRestrictionType m_restriction;
 
   private RelationContentType m_restrictionBase = null;
