@@ -29,10 +29,8 @@
  */
 package org.kalypso.gmlschema;
 
-
 /**
- * 
- * TODO: insert type comment here
+ * FIXME: use class NS !!
  * 
  * @author doemming
  */
@@ -58,6 +56,5 @@ public abstract class GMLSchemaConstants
   public static final int TYPE_PROP_SIMPLE = 2;
 
   public static final int TYPE_PROP_LINK = 3;
-
 
 }

@@ -65,8 +65,10 @@ public class AnnotationUtilities
 
   public static IAnnotation getAnnotation( Object object )
   {
-    if(object instanceof IAdaptable)
-      return (IAnnotation) ((IAdaptable)object).getAdapter(IAnnotation.class);
-    return (IAnnotation) Platform.getAdapterManager().getAdapter( object, IAnnotation.class );
+    if( object instanceof IAdaptable )
+      return (IAnnotation) ((IAdaptable) object).getAdapter( IAnnotation.class );
+    if( Platform.isRunning() )
+      return (IAnnotation) Platform.getAdapterManager().getAdapter( object, IAnnotation.class );
+    return null;
   }
 }

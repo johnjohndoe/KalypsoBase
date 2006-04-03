@@ -34,10 +34,12 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.NSPrefixProvider;
+import org.kalypso.commons.xml.NSUtilities;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 
 /**
- * 
  * utilities to handle adv related stuff
  * 
  * @author doemming
@@ -45,10 +47,19 @@ import org.kalypso.gmlschema.GMLSchemaConstants;
 public class ADVUtilities
 {
 
-  public static final String NS_ADV = "http://www.adv-online.de";
+  final static String advPrefix;
 
-  private static final String ADV_XPATH_NS = "declare namespace xsd='" + GMLSchemaConstants.NS_XMLSCHEMA + "' "
-      + "declare namespace adv='" + NS_ADV + "' ";
+  final static String xsPrefix;
+  static
+  {
+    NSPrefixProvider provider = NSUtilities.getNSProvider();
+    advPrefix = provider.getPreferredPrefix( NS.NS_ADV, "adv" );
+    xsPrefix = provider.getPreferredPrefix( NS.NS_XSD_SCHEMA, "xsd" );
+  }
+
+  // public static final String NS_ADV =
+  // NS.NS_ADV;
+  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.NS_XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.NS_ADV + "' ";
 
   /**
    * @param element
@@ -70,7 +81,6 @@ public class ADVUtilities
    * @param xpath
    *          xpath mus return single result
    * @return result as QName or <code>null</code> for unknown element
-   *  
    */
   private static QName selectXPathAsQName( final Element element, final String xpath )
   {
@@ -78,22 +88,20 @@ public class ADVUtilities
 
     switch( xmlObjects.length )
     {
-    case 0:
-      return null;
-    case 1:
-      final XmlAnyTypeImpl qName = (XmlAnyTypeImpl)xmlObjects[0];
-      final String name = qName.stringValue();
-      final String[] names = name.split( ":" );
-      final String namespace = qName.get_store().getNamespaceForPrefix( names[0] );
-      return new QName( namespace, names[1] );
-    default:
-      throw new UnsupportedOperationException(
-          "can not handle multi 'adv:referenziertesElement' fragments in schema: \n" + element.toString() );
+      case 0:
+        return null;
+      case 1:
+        final XmlAnyTypeImpl qName = (XmlAnyTypeImpl) xmlObjects[0];
+        final String name = qName.stringValue();
+        final String[] names = name.split( ":" );
+        final String namespace = qName.get_store().getNamespaceForPrefix( names[0] );
+        return new QName( namespace, names[1] );
+      default:
+        throw new UnsupportedOperationException( "can not handle multi 'adv:referenziertesElement' fragments in schema: \n" + element.toString() );
     }
   }
 
   /**
-   * 
    * @param element
    * @param xpath
    * @return result of query

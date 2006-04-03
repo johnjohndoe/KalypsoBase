@@ -117,7 +117,8 @@ public class QualifiedElement implements IAdaptable
    */
   public Object getAdapter( Class adapterClass )
   {
-
+    if( !Platform.isRunning() )
+      return null;
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
     return adapter;
