@@ -6,6 +6,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -74,6 +75,11 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
         return createDefaultAnnotation( platformLang, elementName );
       else
         return createDefaultAnnotation( platformLang, "?" );
+    }
+    if( adapterType == IAnnotation.class && adaptableObject instanceof IPropertyType )
+    {
+      IPropertyType pt = (IPropertyType) adaptableObject;
+      return createDefaultAnnotation( platformLang, pt.getQName().getLocalPart() );
     }
     return null;
   }

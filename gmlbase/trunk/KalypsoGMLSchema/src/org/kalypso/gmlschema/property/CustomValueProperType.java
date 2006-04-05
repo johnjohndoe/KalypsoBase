@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -215,9 +216,11 @@ public class CustomValueProperType implements IValuePropertyType
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( Class adapterClass )
   {
-    return Platform.getAdapterManager().getAdapter( this, adapter );
+    final IAdapterManager adapterManager = Platform.getAdapterManager();
+    final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
+    return adapter;
   }
 
 }

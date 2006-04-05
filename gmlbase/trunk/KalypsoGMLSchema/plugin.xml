@@ -10,5 +10,10 @@
             class="org.kalypso.gmlschema.adapter.IAnnotationAdapterFactory">
          <adapter type="org.kalypso.gmlschema.adapter.IAnnotation"/>
       </factory>
+      <factory
+            adaptableType="org.kalypso.gmlschema.property.CustomValueProperType"
+            class="org.kalypso.gmlschema.adapter.IAnnotationAdapterFactory">
+         <adapter type="org.kalypso.gmlschema.adapter.IAnnotation"/>
+      </factory>
    </extension>
 </plugin>
