@@ -330,13 +330,16 @@ public class GMLSchemaUtilities
       {
         final IRelationType rt = (IRelationType) pt;
         final String newPath = pathToHere + "/" + rt.getQName().getLocalPart();
-        final IFeatureType[] targetFeatureTypes = rt.getTargetFeatureTypes( gmlSchma, true );
+
+        final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+        final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( gmlSchma, true, true );
+
         for( int j = 0; j < targetFeatureTypes.length; j++ )
         {
           final IFeatureType type = targetFeatureTypes[j];
-          if(rt.isList()&& type.getAllGeomteryProperties().length>0)
-            result.add(newPath + "[" + type.getQName().getLocalPart() + "]");
-            createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
+          if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
+            result.add( newPath + "[" + type.getQName().getLocalPart() + "]" );
+          createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
         }
       }
     }

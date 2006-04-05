@@ -125,8 +125,8 @@ public abstract class RelationContentType implements IRelationContentType, IInit
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType getTargetFeatureType( )
   {
-    return m_ftRelationTarget.getSubstituts( context, includeAbstract, true );
+    return m_ftRelationTarget;
   }
 }

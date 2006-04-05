@@ -65,10 +65,10 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType getTargetFeatureType( )
   {
     // global knows content
-    return m_globalRT.getTargetFeatureTypes( context, includeAbstract );
+    return m_globalRT.getTargetFeatureType();
   }
 
   /**

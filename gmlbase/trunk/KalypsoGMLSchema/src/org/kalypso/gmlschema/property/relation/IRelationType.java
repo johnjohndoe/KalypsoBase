@@ -29,27 +29,25 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
  */
 public interface IRelationType extends IPropertyType
 {
-  public boolean isInlineAble();
+  public boolean isInlineAble( );
 
-  public boolean isLinkAble();
+  public boolean isLinkAble( );
 
   // @Andreas: would it not be better to have a mehtod like this:
   // public IFeatureType getTargetType();
   // to retrieve the target of this relation
-  // and instead of the next method, just ask first the trgetType and then 
+  // and instead of the next method, just ask first the trgetType and then
   // ask the schema for its substitues?
   // Gernot
-  public IFeatureType[] getTargetFeatureTypes( final GMLSchema context, final boolean includeAbstract );
+  public IFeatureType getTargetFeatureType( );
 }

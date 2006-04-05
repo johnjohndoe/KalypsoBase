@@ -34,7 +34,6 @@ import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -43,9 +42,10 @@ public interface IRelationContentType extends IInitialize
 {
 
   /**
-   * @param context
-   * @param includeAbstract
+   * <b>do not forget that substututes are allowed also, use FeatureType.getSubstituts() </b>
+   * 
+   * @return the target featuretype that can be associated
    */
-  IFeatureType[] getTargetFeatureTypes( final GMLSchema context, boolean includeAbstract );
+  public IFeatureType getTargetFeatureType( );
 
 }

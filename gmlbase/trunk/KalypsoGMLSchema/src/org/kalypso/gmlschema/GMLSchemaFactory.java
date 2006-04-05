@@ -152,8 +152,8 @@ public class GMLSchemaFactory
     return new CustomValueProperType( name, pct, minOccurs, maxOccurs );
   }
 
-  public static IRelationType createRelationType( final QName qName, final IFeatureType[] targetFTs, final int minOccurs, final int maxOccurs )
+  public static IRelationType createRelationType( final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs )
   {
-    return new CustomRelationType( qName, targetFTs, minOccurs, maxOccurs );
+    return new CustomRelationType( qName, targetFT, minOccurs, maxOccurs );
   }
 }

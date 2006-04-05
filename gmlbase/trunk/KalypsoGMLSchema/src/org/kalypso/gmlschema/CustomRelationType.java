@@ -52,7 +52,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 public class CustomRelationType implements IRelationType
 {
 
-  private final IFeatureType[] m_targetFT;
+  private final IFeatureType m_targetFT;
 
   private final int m_minOccurs;
 
@@ -60,10 +60,10 @@ public class CustomRelationType implements IRelationType
 
   private final QName m_qName;
 
-  public CustomRelationType( final QName qName, final IFeatureType[] targetFeatureTypes, final int minOccurs, final int maxOccurs )
+  public CustomRelationType( final QName qName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs )
   {
     m_qName = qName;
-    m_targetFT = targetFeatureTypes;
+    m_targetFT = targetFeatureType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
   }
@@ -90,7 +90,7 @@ public class CustomRelationType implements IRelationType
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType getTargetFeatureType()
   {
     return m_targetFT;
   }

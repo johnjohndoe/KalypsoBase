@@ -126,7 +126,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     if( parent instanceof IRelationType )
     {
       final IRelationType relationType = (IRelationType) parent;
-      final IFeatureType[] targetFeatureTypes = relationType.getTargetFeatureTypes( m_context, true );
+      final IFeatureType targetFeatureType = relationType.getTargetFeatureType();
+      final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( m_context, true, true );
+
       final List<String> result = new ArrayList<String>();
       for( int i = 0; i < targetFeatureTypes.length; i++ )
       {

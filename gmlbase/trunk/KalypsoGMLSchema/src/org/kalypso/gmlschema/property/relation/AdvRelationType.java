@@ -87,8 +87,8 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType[] getTargetFeatureTypes( GMLSchema context, boolean includeAbstract )
+  public IFeatureType getTargetFeatureType()
   {
-    return m_relationContentType.getTargetFeatureTypes( context, includeAbstract );
+    return m_relationContentType.getTargetFeatureType();
   }
 }
