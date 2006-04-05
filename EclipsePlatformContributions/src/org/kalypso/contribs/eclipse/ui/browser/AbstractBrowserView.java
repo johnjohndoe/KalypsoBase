@@ -20,6 +20,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.BrowserViewer;
 import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 
 public abstract class AbstractBrowserView extends ViewPart implements IBrowserViewerContainer
 {
@@ -40,6 +41,8 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   private BrowserViewer m_viewer;
 
   protected ILocationChangedHandler m_locationChangedHandler;
+  
+  protected URL m_context = null;
 
   private LocationListener m_locationListener = new LocationAdapter()
   {
@@ -85,21 +88,96 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     m_viewer = new BrowserViewer( parent, SWT.NONE );// BrowserViewer.LOCATION_BAR
     m_viewer.setContainer( this );
-    
+
     // Delete IE Menu
     final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     menuManager.setRemoveAllWhenShown( true );
     final Menu contextMenu = menuManager.createContextMenu( m_viewer.getBrowser() );
     m_viewer.getBrowser().setMenu( contextMenu );
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
-    
+
     addBrowserListener();
     if( m_memento != null )
       restoreState( m_memento );
     m_memento = null;
   }
 
-  protected void restoreState( final IMemento memento )
+  protected void restoreState( IMemento memento )
+  {
+    final String urlAsString = memento.getString( TAG_URL );
+    Runnable runnable = null;
+    if( memento instanceof MementoWithUrlResolver )
+    {
+      try
+      {
+        final MementoWithUrlResolver m = (MementoWithUrlResolver) memento;
+        final URL url = m.getURLResolver().resolveURL( urlAsString );
+        m_context = url;
+        final String externalForm = url.toExternalForm();
+        runnable = new Runnable()
+        {
+
+          public void run( )
+          {
+            m_viewer.setURL( externalForm );
+            if( m_viewer.combo != null )
+              m_viewer.combo.setText( externalForm );
+            m_viewer.forward();
+          }
+        };
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    if( runnable == null )
+    {
+      try
+      {
+        m_context = new URL( urlAsString );
+      }
+      catch( MalformedURLException e )
+      {
+        // nothing
+      }
+      runnable = new Runnable()
+      {
+
+        public void run( )
+        {
+          m_viewer.setURL( urlAsString );
+          if( m_viewer.combo != null )
+            m_viewer.combo.setText( urlAsString );
+          m_viewer.forward();
+        }
+      };
+    }
+
+    getSite().getShell().getDisplay().asyncExec( runnable );
+
+    IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
+    if( scrollbars == null )
+      return;
+    IMemento horizontal = scrollbars.getChild( TAG_HORIZONTAL_BAR );
+    if( horizontal != null )
+    {
+      int hSelection = horizontal.getInteger( TAG_SELECTION ).intValue();
+      ScrollBar horizontalBar = m_viewer.getHorizontalBar();
+      if( horizontalBar != null )
+        horizontalBar.setSelection( hSelection );
+    }
+    IMemento vertical = scrollbars.getChild( TAG_VERTICAL_BAR );
+    if( vertical != null )
+    {
+      int vSelection = vertical.getInteger( TAG_SELECTION ).intValue();
+      ScrollBar verticalBar = m_viewer.getVerticalBar();
+      if( verticalBar != null )
+        verticalBar.setSelection( vSelection );
+    }
+  }
+
+  protected void restoreStateOld( final IMemento memento )
   {
     final String url = memento.getString( TAG_URL );
     // set the url of the browser
@@ -183,11 +261,11 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     }
     catch( final MalformedURLException e )
     {
-      // TODO handle this
+      // skip
     }
     catch( final PartInitException e )
     {
-      // TODO handle this
+      // skip
     }
   }
 
@@ -201,7 +279,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     final String lowerCase = name.toLowerCase();
     return lowerCase.endsWith( "html" ) || lowerCase.endsWith( "htm" ) || lowerCase.endsWith( "gif" ) || lowerCase.endsWith( "png" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "pdf" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
+        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$
   }
 
   @Override
