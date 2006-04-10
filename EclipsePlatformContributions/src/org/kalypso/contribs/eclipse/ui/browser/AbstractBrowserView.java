@@ -38,7 +38,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   private static final String TAG_SELECTION = "selection";
 
-  private BrowserViewer m_viewer;
+  protected BrowserViewer m_viewer;
 
   protected ILocationChangedHandler m_locationChangedHandler;
   
@@ -221,10 +221,33 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       m_viewer.getBrowser().setText( html );
   }
 
-  public void setURL( String url )
+  public void setURL( final String url )
   {
-    if( m_viewer != null )
-      m_viewer.setURL( url );
+    if( m_viewer == null )
+      return;
+    
+    // BUGFIX: see bugfix below, this is also needed
+    setHtml( "<html><body></body></html>" );
+
+    m_viewer.getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          // BUGFIX: Internet explorer may be not yet initialised
+          // when the view was just opened.
+          // If we dont wait, he sometimes doesnt show the file but instead
+          // asks to download it,
+          Thread.sleep( 0, 1 );
+        }
+        catch( final InterruptedException e )
+        {
+          e.printStackTrace();
+        }
+        m_viewer.setURL( url );
+      }
+    } );
   }
 
   @Override
