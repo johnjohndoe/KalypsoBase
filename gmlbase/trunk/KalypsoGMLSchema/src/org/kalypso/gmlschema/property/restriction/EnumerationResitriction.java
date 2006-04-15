@@ -45,10 +45,9 @@ package org.kalypso.gmlschema.property.restriction;
  */
 public class EnumerationResitriction implements IRestriction
 {
-
   private final String[] m_enumeration;
 
-  public EnumerationResitriction( String[] enumeration )
+  public EnumerationResitriction( final String[] enumeration )
   {
     m_enumeration = enumeration;
   }

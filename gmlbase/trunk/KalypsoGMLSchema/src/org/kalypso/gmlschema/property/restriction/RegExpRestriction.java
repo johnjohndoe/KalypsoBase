@@ -45,7 +45,6 @@ package org.kalypso.gmlschema.property.restriction;
  */
 public class RegExpRestriction implements IRestriction
 {
-
   private final String[] m_patterns;
 
   public RegExpRestriction( final String[] patterns )
