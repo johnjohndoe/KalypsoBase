@@ -41,7 +41,6 @@
 package org.kalypso.contribs.eclipse.ui;
 
 import org.eclipse.ui.IMemento;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**
