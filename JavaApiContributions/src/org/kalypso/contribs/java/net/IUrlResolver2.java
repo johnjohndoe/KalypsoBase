@@ -44,9 +44,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
+ * URLResolver
+ * 
  * @author doemming
  */
 public interface IUrlResolver2
 {
-  public URL resolveURL( final String relative ) throws MalformedURLException;
+  public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException;
 }
