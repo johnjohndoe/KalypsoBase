@@ -29,23 +29,16 @@ public class TypeRegistry_impl implements ITypeRegistry
    */
   public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException
   {
-    final QName[] typeNames = typeHandler.getTypeName();
+    final QName typeName = typeHandler.getTypeName();
     final Class className = typeHandler.getValueClass();
 
-    for( int i = 0; i < typeNames.length; i++ )
-    {
-      final QName typeName = typeNames[i];
-      if( m_typeMap.containsKey( typeName ) )
-        throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
-    }
+    if( m_typeMap.containsKey( typeName ) )
+      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
+
     if( m_classMap.containsKey( className ) )
       throw new TypeRegistryException( "Classname wurde bereits registriert: " + className );
 
-    for( int i = 0; i < typeNames.length; i++ )
-    {
-      final QName typeName = typeNames[i];
-      m_typeMap.put( typeName, typeHandler );
-    }
+    m_typeMap.put( typeName, typeHandler );
 
     m_classMap.put( className, typeHandler );
   }

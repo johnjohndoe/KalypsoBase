@@ -76,13 +76,13 @@ import org.w3c.dom.Node;
  */
 public class GMLSchema
 {
-  private final Schema m_schema;
+  private final SchemaDocument m_schemaDocument;
 
   private final Hashtable<QName, Reference> m_refHash = new Hashtable<QName, Reference>();
 
-  private final URL m_context;
+  final URL m_context;
 
-  private final UrlResolver m_urlResolver;
+  final UrlResolver m_urlResolver;
 
   private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<String, GMLSchema>();
 
@@ -104,15 +104,15 @@ public class GMLSchema
 
   private HashMap<QName, IFeatureType> m_featuretypeMap = null;
 
-  private List<Schema> m_includedSchemas = new ArrayList<Schema>();
+  private List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
 
-  public GMLSchema( final Schema schema, final URL context, final String gmlVersion ) throws GMLSchemaException
+  public GMLSchema( SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
-    m_schema = schema;
+    m_schemaDocument = schemaDocument;
     m_context = context;
     m_urlResolver = new UrlResolver();
-    init( schema );
+    init( schemaDocument );
   }
 
   public String getGMLVersion( )
@@ -122,7 +122,7 @@ public class GMLSchema
 
   public String getVersion( )
   {
-    return m_schema.getVersion();
+    return m_schemaDocument.getSchema().getVersion();
   }
 
   /**
@@ -130,10 +130,11 @@ public class GMLSchema
    * 
    * @throws GMLSchemaException
    */
-  private void init( Schema schema ) throws GMLSchemaException
+  private void init( SchemaDocument schemaDocument ) throws GMLSchemaException
   {
     try
     {
+      final Schema schema = schemaDocument.getSchema();
       final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
       for( int i = 0; i < complexTypeArray.length; i++ )
       {
@@ -195,10 +196,10 @@ public class GMLSchema
       {
         final IncludeDocument.Include include = includeArray[i];
         final URL includeURL = m_urlResolver.resolveURL( m_context, include.getSchemaLocation() );
-        SchemaDocument document = SchemaDocument.Factory.parse( includeURL );
-        final Schema includedSchema = document.getSchema();
-        m_includedSchemas.add( includedSchema );
-        init( includedSchema );
+        final SchemaDocument includedSchemaDocument = SchemaDocument.Factory.parse( includeURL );
+
+        m_includedSchemas.add( includedSchemaDocument );
+        init( includedSchemaDocument );
       }
     }
     catch( Exception e )
@@ -245,17 +246,17 @@ public class GMLSchema
         return schemaForNamespaceURI;
     }
     // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
-    return GMLSchemaCatalog.getSchema(namespaceURI);
+    return GMLSchemaCatalog.getSchema( namespaceURI );
   }
 
   public String getTargetNamespace( )
   {
-    return m_schema.getTargetNamespace();
+    return m_schemaDocument.getSchema().getTargetNamespace();
   }
 
-  public Schema getSchema( )
+  public SchemaDocument getSchema( )
   {
-    return m_schema;
+    return m_schemaDocument;
   }
 
   /**
@@ -444,7 +445,7 @@ public class GMLSchema
 
   public Document getXMLDocument( )
   {
-    final Node domNode = m_schema.getDomNode();
+    final Node domNode = m_schemaDocument.getDomNode();
     return domNode.getOwnerDocument();
     // return (Document) domNode;
   }
@@ -491,8 +492,9 @@ public class GMLSchema
     return "XML-Schema: " + getTargetNamespace();
   }
 
-  public Schema[] getIncludedSchemas( )
+  public SchemaDocument[] getIncludedSchemas( )
   {
-    return m_includedSchemas.toArray( new Schema[m_includedSchemas.size()] );
+    return m_includedSchemas.toArray( new SchemaDocument[m_includedSchemas.size()] );
   }
+
 }

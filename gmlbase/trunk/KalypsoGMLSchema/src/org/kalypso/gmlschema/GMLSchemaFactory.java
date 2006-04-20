@@ -45,6 +45,8 @@ import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
 import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
 import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
+import org.kalypso.gmlschema.builder.GML3_ComplexType2RelationContentTypeBuilder;
+import org.kalypso.gmlschema.builder.GML3_FeaturePropertyType2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 import org.kalypso.gmlschema.builder.PropertyType2SimpleTypeBuilder;
@@ -71,32 +73,62 @@ public class GMLSchemaFactory
 
   static
   {
-    final GMLSchemaBuilder builder = new GMLSchemaBuilder( "2.1.2" );
-    builder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() ); //ok
+    GMLSchemaBuilder builder = new GMLSchemaBuilder( "2.1.2" );
+    builder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() ); // ok
     // test
-    builder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );//ok
+    builder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );// ok
 
     // complex type ...
     builder.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );// OK
     builder.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
 
     // element ...
-    builder.registerBuilder( new Element2FeatureTypeBuilder() ); //ok
-    builder.registerBuilder( new FeatureType2ComplexTypeBuilder() );//ok
-    
+    builder.registerBuilder( new Element2FeatureTypeBuilder() ); // ok
+    builder.registerBuilder( new FeatureType2ComplexTypeBuilder() );// ok
+
     // element ...
-    builder.registerBuilder( new Element2PropertyTypeBuilder() );//ok
-    builder.registerBuilder( new PropertyType2SimpleTypeBuilder() );//ok
-    
+    builder.registerBuilder( new Element2PropertyTypeBuilder() );// ok
+    builder.registerBuilder( new PropertyType2SimpleTypeBuilder() );// ok
+
     // relations
 
-    builder.registerBuilder( new RelationType2ComplexTypeBuilder() ); //ok
-    builder.registerBuilder( new ComplexType2RelationContentTypeBuilder() ); //ok
+    builder.registerBuilder( new RelationType2ComplexTypeBuilder() ); // ok
+    builder.registerBuilder( new ComplexType2RelationContentTypeBuilder() ); // ok
     // special
-//    builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
+    // builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
     // replaces: element2RelationTypebuilder
-    builder.registerBuilder( new AdvElement2RelationTypeBuilder() ); //ok
+    builder.registerBuilder( new AdvElement2RelationTypeBuilder() ); // ok
     m_register.add( builder );
+
+    final GMLSchemaBuilder builder31 = new GMLSchemaBuilder( "3.1" );
+    builder31.registerBuilder( new GMLSchema2SchemaBasicsBuilder() ); // ok
+    // test
+    builder31.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );// ok
+
+    // complex type ...
+    builder31.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );// OK
+    builder31.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
+
+    // element ...
+    builder31.registerBuilder( new Element2FeatureTypeBuilder() ); // ok
+    builder31.registerBuilder( new FeatureType2ComplexTypeBuilder() );// ok
+
+    // element ...
+    builder31.registerBuilder( new Element2PropertyTypeBuilder() );// ok
+    builder31.registerBuilder( new PropertyType2SimpleTypeBuilder() );// ok
+
+    // relations
+
+    builder31.registerBuilder( new RelationType2ComplexTypeBuilder() ); // ok
+    builder31.registerBuilder( new ComplexType2RelationContentTypeBuilder() ); // ok
+    // special
+    // builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
+    // replaces: element2RelationTypebuilder
+    builder31.registerBuilder( new AdvElement2RelationTypeBuilder() ); // ok
+    builder31.registerBuilder( new GML3_ComplexType2RelationContentTypeBuilder() ); 
+    builder31.registerBuilder( new GML3_FeaturePropertyType2RelationTypeBuilder() ); 
+    m_register.add( builder31 );
+
   }
 
   /**
@@ -120,13 +152,14 @@ public class GMLSchemaFactory
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
     }
   }
 
   public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    final GMLSchemaBuilder builder = getBuilderForVersion( "2.1." );
+    final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
     return builder.buildGMLSchema( inputStream, context );
   }
 

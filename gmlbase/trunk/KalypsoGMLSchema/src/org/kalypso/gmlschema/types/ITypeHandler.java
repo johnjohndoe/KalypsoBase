@@ -53,7 +53,7 @@ public interface ITypeHandler
   public Class getValueClass();
 
   /** Der XML-Typname */
-  public QName[] getTypeName();
+  public QName getTypeName();
   
   public boolean isGeometry();
   

@@ -29,11 +29,19 @@
  */
 package org.kalypso.gmlschema;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.impl.common.JarHelper;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
@@ -41,9 +49,18 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
+import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.apache.xmlbeans.impl.xb.xsdschema.UnionDocument.Union;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -54,9 +71,12 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.Reference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /**
- * TODO: insert type comment here
+ * Utilities around GMLSchema-processing
  * 
  * @author doemming
  */
@@ -69,6 +89,10 @@ public class GMLSchemaUtilities
   private static final int CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE = 3;
 
   private static final int CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE = 4;
+
+  private static final String BASE_SCHEMA_IN_JAR = "base.xsd";
+
+  private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 
   /**
    * @param gmlSchema
@@ -139,7 +163,6 @@ public class GMLSchemaUtilities
    */
   public static QName findBaseType( GMLSchema schema, SimpleType simpleType )
   {
-    final Restriction restriction = simpleType.getRestriction();
 
     // 1. check if it is a named type
     // propably a typehanlder exists for this
@@ -153,6 +176,27 @@ public class GMLSchemaUtilities
 
     // 2. check for base
     // propably a typehanlder exists for this
+    final Restriction restriction = simpleType.getRestriction();
+    if( restriction != null )
+      return findBaseType( schema, restriction );
+
+    final Union union = simpleType.getUnion();
+    if( union != null )
+      return findBaseType( schema, union );
+
+    // should never happen !
+    throw new UnsupportedOperationException();
+  }
+
+  private static QName findBaseType( GMLSchema schema, Union union )
+  {
+    final LocalSimpleType[] simpleTypeArray = union.getSimpleTypeArray();
+    // we do not support mixed types
+    return findBaseType( schema, simpleTypeArray[0] );
+  }
+
+  private static QName findBaseType( GMLSchema schema, Restriction restriction )
+  {
     final QName base = restriction.getBase();
     if( isKnownType( base ) )
       return getKnownTypeFor( base );
@@ -160,6 +204,7 @@ public class GMLSchemaUtilities
     // 3. handle a reference
     final ElementReference reference = (ElementReference) schema.resolveReference( base );
     return findBaseType( reference );
+
   }
 
   public static QName findBaseType( final GMLSchema schema, final Element element )
@@ -276,6 +321,8 @@ public class GMLSchemaUtilities
         return result;
       else if( "FeatureAssociationType".equals( localPart ) ) // -> build a RelationType
         return result;
+      else if( "FeaturePropertyType".equals( localPart ) ) // -> build a RelationType
+        return result;
       // else if( "AbstractGeometryType".equals( localPart ) )
       // return result;
       // else if( "PointType".equals( localPart ) )
@@ -345,5 +392,120 @@ public class GMLSchemaUtilities
     }
 
     return null;
+  }
+
+  /**
+   * creates schema archive, that recursive includes all xs:include-schemas
+   */
+  public static void createSchemaArchive( final URL schemaURL, final File archiveFile ) throws XmlException, IOException
+  {
+    final File tmpBase = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
+
+    final UrlResolver resolver = new UrlResolver();
+    final IUrlResolver2 resolver2 = new IUrlResolver2()
+    {
+
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return resolver.resolveURL( schemaURL, relativeOrAbsolute );
+      }
+
+    };
+    final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
+    final Map<URL, String> map = new Hashtable<URL, String>();
+    final String baseName = BASE_SCHEMA_IN_JAR;
+    map.put( schemaURL, baseName );
+    serializeToArchiveDir( schemaDocument, tmpBase, baseName, resolver2, map );
+    JarHelper helper = new JarHelper();
+    helper.jarDir( tmpBase, archiveFile );
+    FileUtilities.deleteRecursive( tmpBase );
+  }
+
+  private static void serializeToArchiveDir( SchemaDocument schemaDocument, File baseDir, String newSchemaLocation, IUrlResolver2 urlResolver, Map<URL, String> knownlocations ) throws XmlException, IOException
+  {
+    final UrlResolver resolver = new UrlResolver();
+    final Include[] includeArray = schemaDocument.getSchema().getIncludeArray();
+    for( int i = 0; i < includeArray.length; i++ )
+    {
+      final Include include = includeArray[i];
+      final String oldSchemaLocation = include.getSchemaLocation();
+      final URL originalIncludeURL = urlResolver.resolveURL( oldSchemaLocation );
+
+      // document original schemalocation in schema as annotation
+      final Annotation annotation = include.addNewAnnotation();
+      final Documentation documentation = annotation.addNewDocumentation();
+      documentation.setLang( "en" );
+      documentation.setSource( "www.kalypso.wb.tu-harburg.de" );
+      final Node domNode = documentation.getDomNode();
+      final Document ownerDocument = domNode.getOwnerDocument();
+      final Text text = ownerDocument.createTextNode( "original absolute schemaLocation was here: " + originalIncludeURL.toExternalForm() );
+      domNode.appendChild( text );
+
+      // find new schemalocation in archive
+      final String newIncludeSchemaLocation;
+      final boolean doRecursive;
+      if( knownlocations.containsKey( originalIncludeURL ) )
+      {
+        newIncludeSchemaLocation = knownlocations.get( originalIncludeURL );
+        doRecursive = false;
+      }
+      else
+      {
+        newIncludeSchemaLocation = createSchemaLocation( knownlocations, oldSchemaLocation );
+        knownlocations.put( originalIncludeURL, newIncludeSchemaLocation );
+        doRecursive = true;
+      }
+      include.setSchemaLocation( newIncludeSchemaLocation );
+
+      // process included schema is not allready in archive
+      if( doRecursive )
+      {
+        final SchemaDocument includedSchemaDocument = SchemaDocument.Factory.parse( originalIncludeURL );
+
+        final IUrlResolver2 newResolver = new IUrlResolver2()
+        {
+          public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+          {
+            return resolver.resolveURL( originalIncludeURL, relativeOrAbsolute );
+          }
+        };
+        serializeToArchiveDir( includedSchemaDocument, baseDir, newIncludeSchemaLocation, newResolver, knownlocations );
+      }
+    }
+    // serialize schema itself into archive
+    final File newSchemaFile = new File( baseDir, newSchemaLocation );
+    final File parent = newSchemaFile.getParentFile();
+    if( !parent.exists() )
+      parent.mkdirs();
+    schemaDocument.save( newSchemaFile );
+  }
+
+  private static String createSchemaLocation( final Map<URL, String> knownlocations, final String oldSchemaLocation )
+  {
+    // first try on expeced format
+    String newSchemaLocation = oldSchemaLocation.replaceAll( "\\.xsd$", "" );
+    newSchemaLocation = newSchemaLocation.replaceAll( "\\.XSD$", "" );
+    newSchemaLocation = newSchemaLocation.replaceAll( ".*\\\\", "" );
+    newSchemaLocation = newSchemaLocation.replaceAll( ".*/", "" );
+    newSchemaLocation = newSchemaLocation.replaceAll( "\\.", "_" );
+    newSchemaLocation = newSchemaLocation + ".xsd";
+    if( newSchemaLocation.length() > 4 && !knownlocations.containsValue( newSchemaLocation ) )
+      return newSchemaLocation;
+    // generate generic result
+    String location = "include";
+    int i = 1;
+    String result;
+    do
+    {
+      result = location + i + ".xsd";
+      i++;
+    }
+    while( knownlocations.containsValue( result ) );
+    return result;
+  }
+
+  public static URL getSchemaURLForArchive( final File schemaJarArchive ) throws MalformedURLException
+  {
+    return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toURL().toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
 }

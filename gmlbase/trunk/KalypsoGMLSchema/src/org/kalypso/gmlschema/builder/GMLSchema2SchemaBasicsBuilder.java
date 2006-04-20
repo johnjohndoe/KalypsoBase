@@ -32,10 +32,10 @@ package org.kalypso.gmlschema.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
-import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
 
@@ -52,13 +52,15 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object schemaObject )
   {
+    // process included schemas
     final List<Object> result = new ArrayList<Object>();
-    final Schema schema = gmlSchema.getSchema();
+    final Schema schema = gmlSchema.getSchema().getSchema();
     collectSchemaBasics( schema, result );
-    final Schema[] includedSchemas = gmlSchema.getIncludedSchemas();
+    final SchemaDocument[] includedSchemas = gmlSchema.getIncludedSchemas();
+
     for( int i = 0; i < includedSchemas.length; i++ )
     {
-      final Schema includedSchema = includedSchemas[i];
+      final Schema includedSchema = includedSchemas[i].getSchema();
       collectSchemaBasics( includedSchema, result );
     }
     return result.toArray();
@@ -92,7 +94,6 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
       TopLevelElement element = elementArray[i];
       result.add( element );
     }
-
     return result;
   }
 

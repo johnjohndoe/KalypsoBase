@@ -79,24 +79,32 @@ public class GMLSchemaBuilder
     for( Iterator iterator = m_registeredBuilders.iterator(); iterator.hasNext(); )
     {
       final IBuilder builder = (IBuilder) iterator.next();
-      if( builder.isBuilderFor( gmlSchema, object, null ) )
-        return builder;
+      try
+      {
+        if( builder.isBuilderFor( gmlSchema, object, null ) )
+          return builder;
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        // nothing
+      }
     }
     return null;
   }
 
   public GMLSchema buildGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    SchemaDocument document;
+    SchemaDocument schemaDocument;
     try
     {
-      document = SchemaDocument.Factory.parse( inputStream );
+      schemaDocument = SchemaDocument.Factory.parse( inputStream );
     }
     catch( Exception e )
     {
       throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
     }
-    final Schema schema = document.getSchema();
+    final Schema schema = schemaDocument.getSchema();
     if( schema == null )
     {
       // this is crap, apache catches the exception and keeps it :-(
@@ -106,7 +114,7 @@ public class GMLSchemaBuilder
       // TODO use a schema-validator to report
       throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
-    final GMLSchema gmlSchema = new GMLSchema( schema, context, m_gmlVersion );
+    final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion );
     // I Step build the objects
     rBuild( gmlSchema, gmlSchema );
     // II Step initialize the elements
