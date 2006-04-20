@@ -82,6 +82,8 @@ import org.w3c.dom.Text;
  */
 public class GMLSchemaUtilities
 {
+  public static final String BASE_SCHEMA_IN_JAR = "base.xsd";
+
   private static final int CONSTRUCTION_REFERENCED_TYPE = 1;
 
   private static final int CONSTRUCTION_NAMED_TYPE = 2;
@@ -89,8 +91,6 @@ public class GMLSchemaUtilities
   private static final int CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE = 3;
 
   private static final int CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE = 4;
-
-  private static final String BASE_SCHEMA_IN_JAR = "base.xsd";
 
   private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 

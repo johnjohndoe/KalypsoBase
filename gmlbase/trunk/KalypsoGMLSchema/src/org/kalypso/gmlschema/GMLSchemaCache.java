@@ -51,18 +51,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.kalypso.commons.cache.StringValidityFileCache;
+import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.cache.FileCache;
 import org.kalypso.commons.cache.StringValidityKey;
+import org.kalypso.commons.cache.StringValidityKeyFactory;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.serializer.ISerializer;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
-import org.w3c.dom.Document;
 
 /**
  * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer URL) lokal in einem File-Cache
@@ -80,14 +77,14 @@ public class GMLSchemaCache
 
   private final Cache m_memCache;
 
-  private final StringValidityFileCache m_fileCache;
+  private final FileCache<StringValidityKey, GMLSchema> m_fileCache;
 
   public GMLSchemaCache( final File cacheDirectory )
   {
     final LfuCacheFactory factory = new LfuCacheFactory();
     m_memCache = factory.newInstance( "gml.schemas", TIMEOUT, SIZE );
 
-    m_fileCache = new StringValidityFileCache( new GMLSchemaSerializer(), cacheDirectory );
+    m_fileCache = new FileCache<StringValidityKey, GMLSchema>( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(), new GMLSchemaSerializer(), cacheDirectory );
   }
 
   /**
@@ -107,7 +104,7 @@ public class GMLSchemaCache
    */
   public GMLSchema getSchema( final String namespace, final URL schemaURL )
   {
-    if( namespace == null )
+    if( namespace    == null )
       throw new NullPointerException( "Namespace darf nicht null sein" );
 
     Date validity = null;
@@ -139,23 +136,29 @@ public class GMLSchemaCache
 
     if( validity != null && (realKey == null || realKey.getValidity().before( validity )) )
     {
+      // cache is not not valid any more, load from url
+      
+      // if we have no url, we cant do anything
+      if( schemaURL == null )
+        return null;
+      
       try
       {
-        if( schemaURL != null )
-          schema = GMLSchemaFactory.createGMLSchema( schemaURL );
+          final File tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip" );
+          GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpFile );
+          // put it into cache as file
+          m_fileCache.addFile( key, tmpFile );
+          tmpFile.delete();
       }
       catch( final Exception e )
       {
         LOGGER.log( Level.WARNING, "Fehler beim Laden von Schema aus URL: " + schemaURL + "\nEs wird versucht die lokale Kopie zu laden.", e );
       }
-      // als file speichern falls laden geklappt hat
-      if( schema != null )
-        m_fileCache.addObject( key, schema );
     }
 
     // falls noch valid oder laden hat nicht geklappt: aus dem File-Cache
     if( schema == null )
-      schema = (GMLSchema) m_fileCache.get( key );
+      schema = m_fileCache.getObject( key );
 
     if( schema != null )
       m_memCache.addObject( namespace, new GMLSchemaWrapper( schema, validity ) );
@@ -163,46 +166,41 @@ public class GMLSchemaCache
     return schema;
   }
 
-  private static class GMLSchemaSerializer implements ISerializer
+  private static class GMLSchemaSerializer implements ISerializer<GMLSchema>
   {
-    public Object read( final InputStream ins ) throws InvocationTargetException
+    public GMLSchema read( final InputStream ins ) throws InvocationTargetException
     {
+      OutputStream fos = null;
+      File tmpDir = null;
       try
       {
-        return GMLSchemaFactory.createGMLSchema( ins, null );
-        // return new GMLSchema( XMLHelper.getAsDOM( ins, true ), null );
+        tmpDir = FileUtilities.createNewTempDir( "tmpSchemaCacheDir_unzipped" );
+        
+        // we unzip because of the problem of deleting zip files, once accessed via a zip-url-stream
+        ZipUtilities.unzip( ins, tmpDir );
+
+        final URL url = tmpDir.toURL();
+        final URL schemaURL = new URL( url, GMLSchemaUtilities.BASE_SCHEMA_IN_JAR );
+        
+        return GMLSchemaFactory.createGMLSchema( schemaURL );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
 
         throw new InvocationTargetException( e );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
+        IOUtils.closeQuietly( fos );
+        FileUtilities.deleteRecursive( tmpDir );
       }
     }
 
-    public void write( final Object object, final OutputStream os ) throws InvocationTargetException
+    public void write( final GMLSchema object, final OutputStream os )
     {
-      try
-      {
-        final Document document = ((GMLSchema) object).getXMLDocument();
-        final TransformerFactory tFactory = TransformerFactory.newInstance();
-
-        final Transformer t = tFactory.newTransformer();
-
-//        final String charset = document.getInputEncoding();
-        t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-        t.setOutputProperty( OutputKeys.INDENT, "yes" );
-//        if( charset != null )
-//          t.setOutputProperty( OutputKeys.ENCODING, charset );
-
-        t.transform( new DOMSource( document ), new StreamResult( os ) );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-
-        throw new InvocationTargetException( e );
-      }
+      throw new UnsupportedOperationException();
     }
   }
 

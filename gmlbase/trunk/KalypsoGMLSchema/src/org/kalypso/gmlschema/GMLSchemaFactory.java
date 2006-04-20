@@ -37,6 +37,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.gmlschema.builder.AdvElement2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
@@ -125,8 +126,8 @@ public class GMLSchemaFactory
     // builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
     // replaces: element2RelationTypebuilder
     builder31.registerBuilder( new AdvElement2RelationTypeBuilder() ); // ok
-    builder31.registerBuilder( new GML3_ComplexType2RelationContentTypeBuilder() ); 
-    builder31.registerBuilder( new GML3_FeaturePropertyType2RelationTypeBuilder() ); 
+    builder31.registerBuilder( new GML3_ComplexType2RelationContentTypeBuilder() );
+    builder31.registerBuilder( new GML3_FeaturePropertyType2RelationTypeBuilder() );
     m_register.add( builder31 );
 
   }
@@ -139,21 +140,24 @@ public class GMLSchemaFactory
   {
     final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
     return createGMLSchema( urlSchemaLocation );
-    // return createGMLSchema( schemaLocationURL );
   }
 
-  public static GMLSchema createGMLSchema( URL schemaLocationURL ) throws GMLSchemaException
+  public static GMLSchema createGMLSchema( final URL schemaLocationURL ) throws GMLSchemaException
   {
+    InputStream inputStream = null;
     try
     {
-      // TODO: close the stream!
-      final InputStream inputStream = schemaLocationURL.openStream();
+      inputStream = schemaLocationURL.openStream();
       return createGMLSchema( inputStream, schemaLocationURL );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
     }
   }
 
