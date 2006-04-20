@@ -38,7 +38,9 @@ import org.apache.xmlbeans.impl.xb.xsdschema.NoFixedFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
-import org.kalypso.gmlschema.property.restriction.EnumerationResitriction;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.adapter.IAnnotationAdapterFactory;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
@@ -55,34 +57,43 @@ import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
  */
 public class ContentRestrictionFactory
 {
-
   public static IRestriction[] createRestrictions( final Restriction restriction )
   {
     final List<IRestriction> result = new ArrayList<IRestriction>();
 
     // enumeration
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
-    final List<String> enumList = new ArrayList<String>();
-    for( int i = 0; i < enumerationArray.length; i++ )
+    if( enumerationArray.length > 0 )
     {
-      final NoFixedFacet facet = enumerationArray[i];
-      enumList.add( facet.getValue().getStringValue() );
+      final String[] values = new String[enumerationArray.length];
+      final String[] labels = new String[enumerationArray.length];
+      for( int i = 0; i < enumerationArray.length; i++ )
+      {
+        final NoFixedFacet facet = enumerationArray[i];
+
+        final String stringValue = facet.getValue().getStringValue();
+
+        final String platformLang = IAnnotationAdapterFactory.getPlatformLang();
+        final IAnnotation annotation = IAnnotationAdapterFactory.annotationForElement( platformLang, facet.getAnnotation(), stringValue );
+
+        values[i] = stringValue;
+        labels[i] = annotation.getLabel();
+      }
+
+      result.add( new EnumerationRestriction( values, labels ) );
     }
-    final String[] _enum = enumList.toArray( new String[enumList.size()] );
-    if( _enum.length > 0 )
-      result.add( new EnumerationResitriction( _enum ) );
-    
+
     final Pattern[] patternArray = restriction.getPatternArray();
-    if(patternArray.length>0)
+    if( patternArray.length > 0 )
     {
-      final List<String> list=new ArrayList<String>();
+      final List<String> list = new ArrayList<String>();
       for( int i = 0; i < patternArray.length; i++ )
       {
         final Pattern pattern = patternArray[i];
         final String stringValue = pattern.getValue().getStringValue();
-        list.add(stringValue);
+        list.add( stringValue );
       }
-      result.add(new RegExpRestriction(list.toArray(new String[list.size()])));
+      result.add( new RegExpRestriction( list.toArray( new String[list.size()] ) ) );
     }
 
     // maxlength

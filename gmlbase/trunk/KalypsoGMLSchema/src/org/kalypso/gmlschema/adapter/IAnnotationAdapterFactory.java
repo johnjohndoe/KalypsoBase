@@ -10,81 +10,95 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+// TODO: rename: this is not an interface
 public class IAnnotationAdapterFactory implements IAdapterFactory
 {
-
-  public Object getAdapter( Object adaptableObject, Class adapterType )
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    final String nl = Platform.getNL();
+    final String platformLang = getPlatformLang();
 
-    final String platformLang;
-    if( "de_de".equalsIgnoreCase( nl ) )
-      platformLang = "de";
-    else if( "en_en".equalsIgnoreCase( nl ) )
-      platformLang = "en";
-    else
-      platformLang = nl;
     if( adapterType == IAnnotation.class && adaptableObject instanceof QualifiedElement )
     {
       final Element xsdElement = ((QualifiedElement) adaptableObject).getElement();
-      final Annotation xsdAnnotation = xsdElement.getAnnotation();
-      if( xsdAnnotation == null )
-        return createDefaultAnnotation( platformLang, xsdElement.getName() );
-      final Documentation[] documentationArray = xsdAnnotation.getDocumentationArray();
-      if( documentationArray == null )
-        return createDefaultAnnotation( platformLang, xsdElement.getName() );
-
-      for( int i = 0; i < documentationArray.length; i++ )
-      {
-        final Documentation documentation = documentationArray[i];
-        final String lang = documentation.getLang();
-        if( platformLang.equals( lang ) )
-        {
-          final Node domNode = documentation.getDomNode();
-          final org.w3c.dom.Element ele = (org.w3c.dom.Element) domNode;
-          final String tooltip = getStringFromChildElement( ele, "http://www.w3.org/2001/XMLSchema", "tooltip" );
-          final String label = getStringFromChildElement( ele, "http://www.w3.org/2001/XMLSchema", "label" );
-          final String description = getStringFromChildElement( ele, "http://www.w3.org/2001/XMLSchema", "description" );
-          final String defaultValue = xsdElement.getName();
-          return new IAnnotation()
-          {
-            public String getLang( )
-            {
-              return lang;
-            }
-
-            public String getTooltip( )
-            {
-              return tooltip == null ? defaultValue : tooltip;
-            }
-
-            public String getLabel( )
-            {
-              return label == null ? defaultValue : label;
-            }
-
-            public String getDescription( )
-            {
-              return description == null ? defaultValue : description;
-            }
-          };
-        }
-      }
-      String elementName = xsdElement.getName();
-      if( elementName != null )
-        return createDefaultAnnotation( platformLang, elementName );
-      else
-        return createDefaultAnnotation( platformLang, "?" );
+      return annotationForElement( platformLang, xsdElement.getAnnotation(), xsdElement.getName() );
     }
+
     if( adapterType == IAnnotation.class && adaptableObject instanceof IPropertyType )
     {
       IPropertyType pt = (IPropertyType) adaptableObject;
       return createDefaultAnnotation( platformLang, pt.getQName().getLocalPart() );
     }
+
     return null;
   }
 
-  private Object createDefaultAnnotation( final String lang, final String defaultName )
+  public static String getPlatformLang( )
+  {
+    final String nl = Platform.getNL();
+
+    if( "de_de".equalsIgnoreCase( nl ) )
+      return "de";
+
+    if( "en_en".equalsIgnoreCase( nl ) )
+      return "en";
+
+    return nl;
+  }
+
+  public static IAnnotation annotationForElement( final String platformLang, final Annotation xsdAnnotation, final String defaultName )
+  {
+    if( xsdAnnotation == null )
+      return createDefaultAnnotation( platformLang, defaultName );
+    final Documentation[] documentationArray = xsdAnnotation.getDocumentationArray();
+    if( documentationArray == null )
+      return createDefaultAnnotation( platformLang, defaultName );
+
+    for( int i = 0; i < documentationArray.length; i++ )
+    {
+      final Documentation documentation = documentationArray[i];
+      final String lang = documentation.getLang();
+      if( platformLang.equals( lang ) )
+      {
+        final Node domNode = documentation.getDomNode();
+        final org.w3c.dom.Element ele = (org.w3c.dom.Element) domNode;
+        // TODO: get namespace constants from somewhere else!
+        final String xmlSchemaNamespace = "http://www.w3.org/2001/XMLSchema";
+        final String tooltip = getStringFromChildElement( ele, xmlSchemaNamespace, "tooltip" );
+        final String label = getStringFromChildElement( ele, xmlSchemaNamespace, "label" );
+        final String description = getStringFromChildElement( ele, xmlSchemaNamespace, "description" );
+        final String defaultValue = defaultName;
+        return new IAnnotation()
+        {
+          public String getLang( )
+          {
+            return lang;
+          }
+
+          public String getTooltip( )
+          {
+            return tooltip == null ? defaultValue : tooltip;
+          }
+
+          public String getLabel( )
+          {
+            return label == null ? defaultValue : label;
+          }
+
+          public String getDescription( )
+          {
+            return description == null ? defaultValue : description;
+          }
+        };
+      }
+    }
+    String elementName = defaultName;
+    if( elementName != null )
+      return createDefaultAnnotation( platformLang, elementName );
+    else
+      return createDefaultAnnotation( platformLang, "?" );
+  }
+
+  private static IAnnotation createDefaultAnnotation( final String lang, final String defaultName )
   {
     return new IAnnotation()
     {

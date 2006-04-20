@@ -97,4 +97,12 @@ public class TypeRegistry_impl implements ITypeRegistry
       throw new UnsupportedOperationException();
     return getTypeHandlerForTypeName( ((IValuePropertyType) pt).getValueQName() );
   }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeRegistry#getRegisteredTypeHandler()
+   */
+  public ITypeHandler[] getRegisteredTypeHandler( )
+  {
+    return m_classMap.values().toArray( new ITypeHandler[m_classMap.size()] );
+  }
 }

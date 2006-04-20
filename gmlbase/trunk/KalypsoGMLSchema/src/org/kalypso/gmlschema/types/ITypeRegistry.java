@@ -24,4 +24,6 @@ public interface ITypeRegistry
   public ITypeHandler getTypeHandlerForClassName( final Class clazz );
 
   public ITypeHandler getTypeHandlerFor( IPropertyType ftp );
+
+  public ITypeHandler[] getRegisteredTypeHandler( );
 }

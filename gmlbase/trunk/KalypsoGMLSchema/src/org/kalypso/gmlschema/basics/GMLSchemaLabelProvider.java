@@ -38,7 +38,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.restriction.EnumerationResitriction;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxLengthRestriction;
@@ -84,9 +84,9 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     final StringBuffer result = new StringBuffer();
 
     // IRestrictions
-    if( element instanceof EnumerationResitriction )
+    if( element instanceof EnumerationRestriction )
     {
-      final EnumerationResitriction restriction = (EnumerationResitriction) element;
+      final EnumerationRestriction restriction = (EnumerationRestriction) element;
       result.append( "enumeration:\n" );
       final String[] enumeration = restriction.getEnumeration();
       for( int i = 0; i < enumeration.length; i++ )

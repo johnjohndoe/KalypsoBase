@@ -104,7 +104,7 @@ public class GMLSchemaCache
    */
   public GMLSchema getSchema( final String namespace, final URL schemaURL )
   {
-    if( namespace    == null )
+    if( namespace == null )
       throw new NullPointerException( "Namespace darf nicht null sein" );
 
     Date validity = null;
@@ -137,18 +137,18 @@ public class GMLSchemaCache
     if( validity != null && (realKey == null || realKey.getValidity().before( validity )) )
     {
       // cache is not not valid any more, load from url
-      
+
       // if we have no url, we cant do anything
       if( schemaURL == null )
         return null;
-      
+
       try
       {
-          final File tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip" );
-          GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpFile );
-          // put it into cache as file
-          m_fileCache.addFile( key, tmpFile );
-          tmpFile.delete();
+        final File tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip" );
+        GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpFile );
+        // put it into cache as file
+        m_fileCache.addFile( key, tmpFile );
+        tmpFile.delete();
       }
       catch( final Exception e )
       {
@@ -175,13 +175,13 @@ public class GMLSchemaCache
       try
       {
         tmpDir = FileUtilities.createNewTempDir( "tmpSchemaCacheDir_unzipped" );
-        
+
         // we unzip because of the problem of deleting zip files, once accessed via a zip-url-stream
         ZipUtilities.unzip( ins, tmpDir );
 
         final URL url = tmpDir.toURL();
         final URL schemaURL = new URL( url, GMLSchemaUtilities.BASE_SCHEMA_IN_JAR );
-        
+
         return GMLSchemaFactory.createGMLSchema( schemaURL );
       }
       catch( final Exception e )

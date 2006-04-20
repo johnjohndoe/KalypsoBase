@@ -56,5 +56,4 @@ public interface ITypeHandler
   public QName getTypeName();
   
   public boolean isGeometry();
-  
 }

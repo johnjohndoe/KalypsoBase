@@ -68,7 +68,6 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements IMarshallingTypeHandler
 {
-
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
