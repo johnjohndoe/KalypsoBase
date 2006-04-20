@@ -42,6 +42,7 @@ package org.kalypso.gml;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -67,59 +68,25 @@ public class ParserTest extends TestCase
 
   }
 
-  // public void testBoth( ) throws Exception
-  // {
-  // final Calendar start = Calendar.getInstance();
-  // for( int i = 100; i > 0; i-- )
-  // {
-  // System.out.print( i + ". ..." );
-  // loadOld();
-  // }
-  // final Calendar end = Calendar.getInstance();
-  // System.out.println( end.getTimeInMillis() - start.getTimeInMillis() + " millis" );
-  // }
-
-  public void testloadOld( ) throws Exception
+  public void testload( ) throws Exception
   {
     try
     {
       final URL resource = getClass().getResource( "resources/modell.gml" );
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
+      final File file = new File( "C:/TMP/newParserInAndNewOut.gml" );
+      final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file ), "UTF-8" );
+      GmlSerializer.serializeWorkspace( writer, workspace );
+      IOUtils.closeQuietly( writer );
+      // secound pass
 
-      final GMLParser parser = new GMLParser();
-      final FileOutputStream stream = new FileOutputStream( new File( "C:/TMP/oldParserInAndNewOut.xml" ) );
-      parser.writeGML( workspace, stream );
-      IOUtils.closeQuietly( stream );
-      System.out.println( " loaded" );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      throw e;
-    }
+      final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( file.toURL() );
+      final File file2 = new File( "C:/TMP/newParserInAndNewOut2.gml" );
+      final OutputStreamWriter writer2 = new OutputStreamWriter( new FileOutputStream( file2 ), "UTF-8" );
+      GmlSerializer.serializeWorkspace( writer2, workspace2 );
+      IOUtils.closeQuietly( writer2 );
 
-  }
-
-  public void testloadNew( ) throws Exception
-  {
-    try
-    {
-      final URL resource = getClass().getResource( "resources/modell.gml" );
-      final GMLParser parser = new GMLParser();
-      final GMLWorkspace workspace = parser.parseGML( resource );
-      final File file = new File( "C:/TMP/newParserInAndNewOut.xml" );
-      final FileOutputStream stream = new FileOutputStream( file );
-      parser.writeGML( workspace, stream );
-      IOUtils.closeQuietly( stream );
-      
-      final GMLWorkspace workspace2 = parser.parseGML( file.toURL() );
-      final File file2 = new File( "C:/TMP/newOut_newIn_newOut.xml" );
-      final FileOutputStream stream2 = new FileOutputStream( file2 );
-      parser.writeGML( workspace2, stream2 );
-      IOUtils.closeQuietly( stream2 );
-      
-      
-      
     }
     catch( Exception e )
     {
