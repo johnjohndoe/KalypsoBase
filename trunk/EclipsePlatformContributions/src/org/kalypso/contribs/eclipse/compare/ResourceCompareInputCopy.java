@@ -44,6 +44,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.ITypedElement;
