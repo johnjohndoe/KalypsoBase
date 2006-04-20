@@ -184,12 +184,18 @@ public final class StatusUtilities
    * 
    * @param message
    *          [optional] used as message for newly created status if specified
-   * 
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
   public static IStatus statusFromThrowable( final Throwable t, final String message )
   {
+    if( message != null )
+    {
+      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, message, null );
+      status.add( statusFromThrowable( t ) );
+      return status;
+    }
+
     if( t instanceof InvocationTargetException )
       return statusFromThrowable( ((InvocationTargetException) t).getCause(), message );
     if( t instanceof CoreException )
@@ -198,18 +204,15 @@ public final class StatusUtilities
     String msg = t.getLocalizedMessage();
     if( msg == null )
     {
-      if( t.getCause() != null )
+      if( t.getCause() != null && t.getCause() != t )
         return statusFromThrowable( t.getCause(), message + "\n" + t.toString() );
 
-      // beser t.toString, weil manche Exceptions dann doch nich mehr verraten
+      // beser t.toString, weil manche Exceptions dann doch noch mehr verraten
       // z.B. ValidationException
       msg = t.toString();// "<Keine weitere Information vorhanden>";
     }
 
-    if( message != null )
-      msg = message + ". " + msg;
-
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, null );
   }
 
   /**
