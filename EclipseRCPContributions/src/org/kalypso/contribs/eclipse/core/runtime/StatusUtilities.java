@@ -91,7 +91,7 @@ public final class StatusUtilities
       sMainMessage = message;
 
     // Child ohne Message generieren, damit der MultiStatus auf jeden Fall über
-    // die severity informirt ist
+    // die severity informiert ist
     stati.add( new Status( severity, pluginId, code, "", null ) );
 
     final IStatus[] childStati = stati.toArray( new IStatus[stati.size()] );
