@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -214,17 +215,16 @@ public class CalcJobHandler
     }
     finally
     {
-      // try
-      // {
-      // calcService.disposeJob( job.getId() );
-      // }
-      // catch( final RemoteException e1 )
-      // {
-      // e1.printStackTrace();
-      //      
-      // throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-      // "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-      // }
+       try
+      {
+        m_calcService.disposeJob( m_jobID );
+      }
+      catch( final SimulationException e1 )
+      {
+        e1.printStackTrace();
+
+        throw new CoreException( StatusUtilities.statusFromThrowable(e1,"Kritischer Fehler bei Löschen des Rechen-Jobs") );
+       }
       monitor.done();
     }
   }
