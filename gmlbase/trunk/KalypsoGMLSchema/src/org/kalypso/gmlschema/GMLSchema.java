@@ -80,9 +80,9 @@ public class GMLSchema
 
   private final Hashtable<QName, Reference> m_refHash = new Hashtable<QName, Reference>();
 
-  final URL m_context;
+  private final URL m_context;
 
-  final UrlResolver m_urlResolver;
+  private final UrlResolver m_urlResolver;
 
   private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<String, GMLSchema>();
 
@@ -257,6 +257,11 @@ public class GMLSchema
   public SchemaDocument getSchema( )
   {
     return m_schemaDocument;
+  }
+  
+  public URL getContext( )
+  {
+    return m_context;
   }
 
   /**

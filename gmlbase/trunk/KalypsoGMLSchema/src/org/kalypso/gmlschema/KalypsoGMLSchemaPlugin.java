@@ -5,7 +5,6 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoGMLSchemaPlugin extends Plugin
 {
-
   // The shared instance.
   private static KalypsoGMLSchemaPlugin m_plugin;
 
@@ -21,7 +20,7 @@ public class KalypsoGMLSchemaPlugin extends Plugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -30,7 +29,7 @@ public class KalypsoGMLSchemaPlugin extends Plugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
     m_plugin = null;

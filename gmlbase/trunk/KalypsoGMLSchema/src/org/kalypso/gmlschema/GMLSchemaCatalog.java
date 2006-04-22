@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
@@ -21,6 +22,9 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
  */
 public final class GMLSchemaCatalog
 {
+  /** Temporary directory, used by the GMLSchemaCache */
+  private static final File TMP_DIR = new File( FileUtilities.TMP_DIR, GMLSchemaCatalog.class.getName() );
+
   private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
 
   private static GMLSchemaCache THE_CACHE;
@@ -29,6 +33,7 @@ public final class GMLSchemaCatalog
       "Schema-Katalog nicht initialisiert. Zuerst 'init' aufrufen!" );
 
   private static IUrlCatalog THE_CATALOG;
+
 
   private GMLSchemaCatalog()
   {
@@ -48,9 +53,19 @@ public final class GMLSchemaCatalog
     if( catalog == null )
       throw new NullPointerException();
 
-    THE_CACHE = new GMLSchemaCache( cacheDirectory );
+    // delete old tmp-dir
+    FileUtilities.deleteRecursive( TMP_DIR );
+    TMP_DIR.mkdirs();
+    
+    THE_CACHE = new GMLSchemaCache( cacheDirectory, TMP_DIR );
 
     LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
+  }
+  
+  /** Should be called when this cache is no more used. Releases all blocked resources.*/
+  public synchronized static void release()
+  {
+    FileUtilities.deleteRecursive( TMP_DIR );
   }
 
   /**
@@ -78,6 +93,7 @@ public final class GMLSchemaCatalog
     {
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
+      
       THE_CACHE.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
 
       return schema;

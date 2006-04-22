@@ -401,27 +401,35 @@ public class GMLSchemaUtilities
   {
     final File tmpBase = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
 
+    final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
+
+    createSchemaDir( schemaURL, schemaDocument, tmpBase );
+    
+    JarHelper helper = new JarHelper();
+    helper.jarDir( tmpBase, archiveFile );
+    
+    FileUtilities.deleteRecursive( tmpBase );
+  }
+  
+  /** Similiar to {@link #createSchemaArchive(URL, File), but the schema is already loaded and the files are not zipped but put simply into the given directory.  }*/
+  public static void createSchemaDir( final URL schemaURL, final SchemaDocument schemaDocument, final File archiveDir ) throws XmlException, IOException
+  {
     final UrlResolver resolver = new UrlResolver();
     final IUrlResolver2 resolver2 = new IUrlResolver2()
     {
-
       public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
       {
         return resolver.resolveURL( schemaURL, relativeOrAbsolute );
       }
-
     };
-    final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
+
     final Map<URL, String> map = new Hashtable<URL, String>();
     final String baseName = BASE_SCHEMA_IN_JAR;
     map.put( schemaURL, baseName );
-    serializeToArchiveDir( schemaDocument, tmpBase, baseName, resolver2, map );
-    JarHelper helper = new JarHelper();
-    helper.jarDir( tmpBase, archiveFile );
-    FileUtilities.deleteRecursive( tmpBase );
+    serializeToArchiveDir( schemaDocument, archiveDir, baseName, resolver2, map );
   }
 
-  private static void serializeToArchiveDir( SchemaDocument schemaDocument, File baseDir, String newSchemaLocation, IUrlResolver2 urlResolver, Map<URL, String> knownlocations ) throws XmlException, IOException
+  public static void serializeToArchiveDir( final SchemaDocument schemaDocument, final File baseDir, final String newSchemaLocation, final IUrlResolver2 urlResolver, final Map<URL, String> knownlocations ) throws XmlException, IOException
   {
     final UrlResolver resolver = new UrlResolver();
     final Include[] includeArray = schemaDocument.getSchema().getIncludeArray();
@@ -460,6 +468,8 @@ public class GMLSchemaUtilities
       // process included schema is not allready in archive
       if( doRecursive )
       {
+        // TODO: maybe the schema is already in the schema cache?
+        // wouldn't it be better to fetch it from there?
         final SchemaDocument includedSchemaDocument = SchemaDocument.Factory.parse( originalIncludeURL );
 
         final IUrlResolver2 newResolver = new IUrlResolver2()
@@ -508,4 +518,5 @@ public class GMLSchemaUtilities
   {
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toURL().toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
+
 }

@@ -63,7 +63,7 @@ public class AnnotationUtilities
   // // return new Annotation( "de", ft.getName(), ft.getName(), ft.getName() );
   // }
 
-  public static IAnnotation getAnnotation( Object object )
+  public static IAnnotation getAnnotation( final Object object )
   {
     if( object instanceof IAdaptable )
       return (IAnnotation) ((IAdaptable) object).getAdapter( IAnnotation.class );
