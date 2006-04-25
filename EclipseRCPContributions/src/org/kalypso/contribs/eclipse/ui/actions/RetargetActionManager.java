@@ -30,6 +30,8 @@ public class RetargetActionManager
   public static final String MENU_GROUP_RADIO = "radio";
 
   public static final String MENU_GROUP_CHECK = "check";
+  
+  public static final String MENU_GROUP_MENU = "menu";
 
   public static final class RetargetInfo
   {
@@ -150,6 +152,7 @@ public class RetargetActionManager
     toolBarManager.add( new Separator( MENU_GROUP_CHECK ) );
     toolBarManager.add( new Separator( MENU_GROUP_PUSH ) );
     toolBarManager.add( new Separator( MENU_GROUP_RADIO ) );
+    toolBarManager.add( new Separator( MENU_GROUP_MENU ) );
     toolBarManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
     for( final Map.Entry<String, RetargetInfo> entry : m_retargetMap.entrySet() )
@@ -215,6 +218,7 @@ public class RetargetActionManager
     manager.add( new Separator( MENU_GROUP_CHECK ) );
     manager.add( new Separator( MENU_GROUP_RADIO ) );
     manager.add( new Separator( MENU_GROUP_PUSH ) );
+    manager.add( new Separator( MENU_GROUP_MENU ) );
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
     for( final Map.Entry<String, RetargetInfo> entry : m_retargetMap.entrySet() )
@@ -238,6 +242,8 @@ public class RetargetActionManager
 
       case IAction.AS_RADIO_BUTTON:
         return MENU_GROUP_RADIO;
+      case IAction.AS_DROP_DOWN_MENU:
+        return MENU_GROUP_MENU;
     }
 
     return null;
