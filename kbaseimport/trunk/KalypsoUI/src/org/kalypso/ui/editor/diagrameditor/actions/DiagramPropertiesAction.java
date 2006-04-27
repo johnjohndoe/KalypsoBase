@@ -58,14 +58,10 @@ public class DiagramPropertiesAction extends AbstractEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    final DiagView diag = (DiagView)( (ObservationDiagramEditor)getEditor() ).getView();
-    
-    final DiagramPropertiesDialog dlg = new DiagramPropertiesDialog( getShell(), diag.getTitle(), diag.isShowLegend(), diag.getLegendName() );
+    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
+    final DiagView diag = (DiagView) editor.getView();
+    final DiagramPropertiesDialog dlg = new DiagramPropertiesDialog( getShell(), diag.getTitle(), diag.isShowLegend(), diag.getLegendName(), diag.getTimezone().getID() );
     if( dlg.open() == Window.OK )
-    {
-      diag.setTitle( dlg.getDiagramTitle() );
-      diag.setShowLegend( dlg.isShowLegend() );
-      diag.setLegendName( dlg.getLegendTitle() );
-    }
+      editor.postCommand( new ChangeDiagPropsCommand( diag, dlg.getDiagramTitle(), dlg.isShowLegend(), dlg.getLegendTitle(), dlg.getTimezoneName() ), null );
   }
 }
