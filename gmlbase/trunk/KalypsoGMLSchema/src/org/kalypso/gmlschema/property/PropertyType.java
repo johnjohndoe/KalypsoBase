@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -41,8 +42,8 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.Reference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
+import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
  * representation a the property definition from xml schema
@@ -78,6 +79,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final QName type = m_element.getType();
+        final SimpleType simpleType = m_element.getSimpleType();
         if( type != null )
         {
           final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -86,12 +88,12 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
             m_propertyContentType = new CustomPropertyContentType( type, typeHandler );
           else
           {
-            final Reference reference = m_gmlSchema.resolveReference( type );
+            final TypeReference reference = m_gmlSchema.resolveTypeReference( type );
             final GMLSchema schema = reference.getGMLSchema();
             if( reference instanceof SimpleTypeReference )
             {
-              final SimpleType simpleType = ((SimpleTypeReference) reference).getSimpleType();
-              m_propertyContentType = (IPropertyContentType) schema.getBuildedObjectFor( simpleType );
+              final SimpleType referencedSimpleType = ((SimpleTypeReference) reference).getSimpleType();
+              m_propertyContentType = (IPropertyContentType) schema.getBuildedObjectFor( referencedSimpleType );
             }
             else if( reference instanceof ComplexTypeReference )
             {
@@ -101,10 +103,18 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
             }
           }
         }
+        else if( simpleType != null )
+        {
+          m_propertyContentType = (IPropertyContentType) m_gmlSchema.getBuildedObjectFor( simpleType );
+        }
         else
         {
-          final SimpleType simpleType = m_element.getSimpleType();
-          m_propertyContentType = (IPropertyContentType) m_gmlSchema.getBuildedObjectFor( simpleType );
+          // no type definition -> xmlAnyType
+          final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+          final ITypeHandler typeHandler = marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.NS_XSD_SCHEMA, "anyType" ) );
+          final String localName = m_element.getName();
+          final QName qName = new QName( m_gmlSchema.getTargetNamespace(), localName );
+          m_propertyContentType = new CustomPropertyContentType( qName, typeHandler );
         }
         break;
     }

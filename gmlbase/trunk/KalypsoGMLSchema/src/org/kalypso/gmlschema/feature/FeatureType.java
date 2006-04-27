@@ -119,7 +119,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final QName substitutionGroup = m_element.getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = (ElementReference) m_gmlSchema.resolveReference( substitutionGroup );
+      final ElementReference substitutesReference = m_gmlSchema.resolveElementReference( substitutionGroup );
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
       final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );

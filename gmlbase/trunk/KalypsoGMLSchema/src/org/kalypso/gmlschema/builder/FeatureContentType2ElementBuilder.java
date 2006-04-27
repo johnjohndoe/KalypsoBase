@@ -29,13 +29,15 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import java.util.List;
+
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
@@ -48,20 +50,18 @@ public class FeatureContentType2ElementBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject )
   {
-    final FeatureContentType fct = (FeatureContentType)featureContentTypeObject;
-    final ExplicitGroup sequence = fct.getSequence();
-    if( sequence == null )
-      return new Object[0];
-    final Element[] elementArray = sequence.getElementArray();
-    return elementArray;
+    final FeatureContentType fct = (FeatureContentType) featureContentTypeObject;
+    final List<LocalElement> sequence = fct.getSequence();
+    return sequence.toArray( new Element[sequence.size()] );
   }
 
   /**
-   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object, java.lang.String)
+   * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
+   *      java.lang.String)
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    return object instanceof FeatureContentType ;
+    return object instanceof FeatureContentType;
   }
 
 }

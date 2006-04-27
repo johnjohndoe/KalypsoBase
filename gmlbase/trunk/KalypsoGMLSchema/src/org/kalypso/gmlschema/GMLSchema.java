@@ -45,6 +45,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.NamedGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelComplexType;
@@ -64,8 +65,9 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.Reference;
+import org.kalypso.gmlschema.xml.GroupReference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
+import org.kalypso.gmlschema.xml.TypeReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -78,7 +80,13 @@ public class GMLSchema
 {
   private final SchemaDocument m_schemaDocument;
 
-  private final Hashtable<QName, Reference> m_refHash = new Hashtable<QName, Reference>();
+  private final Hashtable<QName, ElementReference> m_refElementHash = new Hashtable<QName, ElementReference>();
+
+  private final Hashtable<QName, GroupReference> m_refGroupHash = new Hashtable<QName, GroupReference>();
+
+  private final Hashtable<QName, SimpleTypeReference> m_refSimpleTypeHash = new Hashtable<QName, SimpleTypeReference>();
+
+  private final Hashtable<QName, ComplexTypeReference> m_refComplexTypeHash = new Hashtable<QName, ComplexTypeReference>();
 
   private final URL m_context;
 
@@ -104,7 +112,22 @@ public class GMLSchema
 
   private HashMap<QName, IFeatureType> m_featuretypeMap = null;
 
+  /**
+   * we do not support circular imports at the moment, these are allowed from W3C, only circular element definitions are
+   * not allowed. Here is a buildin list of schemas that have circular imports and will be ignored at the moment <br>
+   * TODO implement support of circular schema imports: suggesting of concept: move time of import processing to after
+   * parsing but befoe initilazing ask doemming.
+   */
   private List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
+
+  private List<String> m_ignoreNameSpaces = new ArrayList<String>();
+  {
+    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" );
+    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/Language" );
+  }
+
+  /* list of schemas that are referenced by include and have allready been processed */
+  private List<URL> m_processedIncludeUrls = new ArrayList<URL>();
 
   public GMLSchema( SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
@@ -135,6 +158,7 @@ public class GMLSchema
     try
     {
       final Schema schema = schemaDocument.getSchema();
+      // complex types
       final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
       for( int i = 0; i < complexTypeArray.length; i++ )
       {
@@ -142,7 +166,16 @@ public class GMLSchema
 
         final QName key = new QName( getTargetNamespace(), complexType.getName() );
         final ComplexTypeReference ref = new ComplexTypeReference( this, complexType );
-        m_refHash.put( key, ref );
+        m_refComplexTypeHash.put( key, ref );
+      }
+      // groups
+      final NamedGroup[] groupArray = schema.getGroupArray();
+      for( int i = 0; i < groupArray.length; i++ )
+      {
+        final NamedGroup group = groupArray[i];
+        final QName key = new QName( getTargetNamespace(), group.getName() );
+        final GroupReference reference = new GroupReference( this, group );
+        m_refGroupHash.put( key, reference );
       }
       // simple types
       final TopLevelSimpleType[] simpleTypeArray = schema.getSimpleTypeArray();
@@ -152,7 +185,7 @@ public class GMLSchema
 
         final QName key = new QName( getTargetNamespace(), simpleType.getName() );
         final SimpleTypeReference reference = new SimpleTypeReference( this, simpleType );
-        m_refHash.put( key, reference );
+        m_refSimpleTypeHash.put( key, reference );
       }
 
       // elements
@@ -162,31 +195,35 @@ public class GMLSchema
         final TopLevelElement element = elementArray[i];
         final QName key = new QName( getTargetNamespace(), element.getName() );
         final ElementReference reference = new ElementReference( this, element );
-        m_refHash.put( key, reference );
+        m_refElementHash.put( key, reference );
       }
       // import
       final Import[] importArray = schema.getImportArray();
       for( int i = 0; i < importArray.length; i++ )
       {
         final ImportDocument.Import import_ = importArray[i];
-        String schemaLocation = import_.getSchemaLocation();
-        GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( import_.getNamespace() );
-        if( gmlSchema == null )
+        final String schemaLocation = import_.getSchemaLocation();
+        final String namespaceToImport = import_.getNamespace();
+        if( !m_ignoreNameSpaces.contains( namespaceToImport ) )
         {
-          final URL url;
-          try
+          GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport );
+          if( gmlSchema == null )
           {
-            url = m_urlResolver.resolveURL( m_context, schemaLocation );
+            final URL url;
+            try
+            {
+              url = m_urlResolver.resolveURL( m_context, schemaLocation );
+            }
+            catch( MalformedURLException e )
+            {
+              if( schemaLocation != null )
+                throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
+              throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
+            }
+            gmlSchema = GMLSchemaCatalog.getSchema( url );
           }
-          catch( MalformedURLException e )
-          {
-            if( schemaLocation != null )
-              throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
-            throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
-          }
-          gmlSchema = GMLSchemaCatalog.getSchema( url );
+          m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
         }
-        m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
       }
 
       // include
@@ -196,10 +233,13 @@ public class GMLSchema
       {
         final IncludeDocument.Include include = includeArray[i];
         final URL includeURL = m_urlResolver.resolveURL( m_context, include.getSchemaLocation() );
-        final SchemaDocument includedSchemaDocument = SchemaDocument.Factory.parse( includeURL );
-
-        m_includedSchemas.add( includedSchemaDocument );
-        init( includedSchemaDocument );
+        if( !m_processedIncludeUrls.contains( includeURL ) )
+        {
+          final SchemaDocument includedSchemaDocument = SchemaDocument.Factory.parse( includeURL );
+          m_processedIncludeUrls.add( includeURL );
+          m_includedSchemas.add( includedSchemaDocument );
+          init( includedSchemaDocument );
+        }
       }
     }
     catch( Exception e )
@@ -211,16 +251,69 @@ public class GMLSchema
     }
   }
 
-  /**
-   * @param qName
-   */
-  public Reference resolveReference( final QName qName )
+  public ElementReference resolveElementReference( final QName qName )
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
-      return m_refHash.get( qName );
+      return m_refElementHash.get( qName );
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    return gmlschema.resolveReference( qName );
+    if( gmlschema == null )
+    {
+      System.out.println( "could not resolve element reference to " + qName );
+      return null;
+    }
+    return gmlschema.resolveElementReference( qName );
+  }
+
+  public GroupReference resolveGroupReference( final QName qName )
+  {
+    final String namespaceURI = qName.getNamespaceURI();
+    if( getTargetNamespace().equals( namespaceURI ) )
+      return m_refGroupHash.get( qName );
+    final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
+    if( gmlschema == null )
+    {
+      System.out.println( "could not resolve group reference to " + qName );
+      return null;
+    }
+    return gmlschema.resolveGroupReference( qName );
+  }
+
+  public SimpleTypeReference resolveSimpleTypeReference( final QName qName )
+  {
+    final String namespaceURI = qName.getNamespaceURI();
+    if( getTargetNamespace().equals( namespaceURI ) )
+      return m_refSimpleTypeHash.get( qName );
+    final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
+    if( gmlschema == null )
+      return null;
+    return gmlschema.resolveSimpleTypeReference( qName );
+  }
+
+  public ComplexTypeReference resolveComplexTypeReference( final QName qName )
+  {
+    final String namespaceURI = qName.getNamespaceURI();
+    if( getTargetNamespace().equals( namespaceURI ) )
+      return m_refComplexTypeHash.get( qName );
+    final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
+    return gmlschema.resolveComplexTypeReference( qName );
+  }
+
+  /**
+   * @param qName
+   */
+  public TypeReference resolveTypeReference( final QName qName )
+  {
+    final SimpleTypeReference reference = resolveSimpleTypeReference( qName );
+    if( reference != null )
+      return reference;
+    return resolveComplexTypeReference( qName );
+    // final String namespaceURI = qName.getNamespaceURI();
+    // if( getTargetNamespace().equals( namespaceURI ) )
+    // return m_refHash.get( qName );
+    // final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
+    // // return gmlschema.resolveReference( qName );
+    // return null;
   }
 
   /**
@@ -258,7 +351,7 @@ public class GMLSchema
   {
     return m_schemaDocument;
   }
-  
+
   public URL getContext( )
   {
     return m_context;

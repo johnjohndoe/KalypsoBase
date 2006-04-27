@@ -71,7 +71,7 @@ public class ForcedRelationContentType implements IRelationContentType, IInitial
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-        final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( m_referencedQNameFeatureType );
+        final ElementReference reference = m_gmlSchema.resolveElementReference( m_referencedQNameFeatureType );
         final GMLSchema schema = reference.getGMLSchema();
         final Element element = reference.getElement();
         final Object buildedObject = schema.getBuildedObjectFor( element );

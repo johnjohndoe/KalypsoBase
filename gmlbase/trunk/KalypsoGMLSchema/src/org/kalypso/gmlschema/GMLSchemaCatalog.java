@@ -29,15 +29,14 @@ public final class GMLSchemaCatalog
 
   private static GMLSchemaCache THE_CACHE;
 
-  private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException(
+   private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException(
       "Schema-Katalog nicht initialisiert. Zuerst 'init' aufrufen!" );
 
   private static IUrlCatalog THE_CATALOG;
 
-
   private GMLSchemaCatalog()
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   /**
@@ -77,6 +76,13 @@ public final class GMLSchemaCatalog
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
     return getSchema( namespace, schemaURL );
+  }
+
+  public static IUrlCatalog getDefaultCatalog( )
+  {
+    if( THE_CATALOG == null )
+      throw NOT_INITIALIZED;
+    return THE_CATALOG;
   }
 
   /**

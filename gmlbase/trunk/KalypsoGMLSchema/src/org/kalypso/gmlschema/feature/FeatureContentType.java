@@ -30,13 +30,14 @@
 package org.kalypso.gmlschema.feature;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -79,7 +80,7 @@ public abstract class FeatureContentType implements IFeatureContentType
     return m_gmlSchema;
   }
 
-  public abstract ExplicitGroup getSequence( );
+  public abstract List<LocalElement> getSequence( );
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
@@ -90,30 +91,41 @@ public abstract class FeatureContentType implements IFeatureContentType
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
 
-        final ExplicitGroup sequence = getSequence();
         final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
-        // final List relationTypes = new ArrayList();
-        if( sequence != null )
-        {
-          final Element[] elementArray = sequence.getElementArray();
-          for( int i = 0; i < elementArray.length; i++ )
-          {
-            GMLSchema schema = getGMLSchema();
-            Object buildedObject = schema.getBuildedObjectFor( elementArray[i] );
 
-            final Element element;
-            if( buildedObject == null )
+        final List<LocalElement> sequence = getSequence();
+        for( Iterator<LocalElement> iter = sequence.iterator(); iter.hasNext(); )
+        {
+          GMLSchema schema = getGMLSchema();
+          final Element elementItem = iter.next();
+          Object buildedObject = schema.getBuildedObjectFor( elementItem );
+
+          final Element element;
+          if( buildedObject == null )
+          {
+            // everything should be registered for the local element, nothing for the referenced element
+            final QName ref = elementItem.getRef();
+            if( ref == null )
             {
-              // everything should be registered for the local element, nothing for the referenced element
-              final QName ref = elementArray[i].getRef();
-              final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
+              final String message = "no typeHandler for " + elementItem.getType();
+              System.out.println( message );
+              System.out.println();
+            }
+            // throw new UnsupportedOperationException( message );
+            else
+            {
+
+              final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
               element = reference.getElement();
               schema = reference.getGMLSchema();
               buildedObject = schema.getBuildedObjectFor( element );
             }
-            // why are alle buildedObjects of type IPropertyType ?
-            propertyTypes.add( (IPropertyType) buildedObject );
           }
+          // why are alle buildedObjects of type IPropertyType ?
+          if( buildedObject != null && buildedObject instanceof IPropertyType )
+            propertyTypes.add( (IPropertyType) buildedObject );
+          else
+            System.out.println( "no valid property found for " + elementItem );
         }
         m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
         break;

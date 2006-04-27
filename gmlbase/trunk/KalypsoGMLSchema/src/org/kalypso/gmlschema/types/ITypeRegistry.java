@@ -21,6 +21,10 @@ public interface ITypeRegistry
 
   public ITypeHandler getTypeHandlerForTypeName( final QName typeQName );
 
+  /**
+   * @deprecated use getTypehandlerForTypeName(QName qname) or getTypeHandlerFor(IPropertyType pt) there might be more
+   *             that one typehandler for a class
+   */
   public ITypeHandler getTypeHandlerForClassName( final Class clazz );
 
   public ITypeHandler getTypeHandlerFor( IPropertyType ftp );

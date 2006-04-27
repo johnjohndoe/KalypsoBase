@@ -56,7 +56,7 @@ public class Element2FeatureTypeBuilder implements IBuilder
     final QName ref = element.getRef();
     if( ref != null )
     {
-      final ElementReference reference = (ElementReference)gmlSchema.resolveReference( ref );
+      final ElementReference reference = gmlSchema.resolveElementReference( ref );
       return build( reference );
     }
     final FeatureType result = new FeatureType( gmlSchema, element );

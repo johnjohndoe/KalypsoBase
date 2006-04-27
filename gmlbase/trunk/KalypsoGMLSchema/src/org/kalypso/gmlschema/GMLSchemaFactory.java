@@ -46,7 +46,9 @@ import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
 import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
 import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
+import org.kalypso.gmlschema.builder.GML3_ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.GML3_ComplexType2RelationContentTypeBuilder;
+import org.kalypso.gmlschema.builder.GML3_Element2FeatureTypeBuilder;
 import org.kalypso.gmlschema.builder.GML3_FeaturePropertyType2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
@@ -107,11 +109,11 @@ public class GMLSchemaFactory
     builder31.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder() );// ok
 
     // complex type ...
-    builder31.registerBuilder( new ComplexType2FeatureContentTypeBuilder() );// OK
+    builder31.registerBuilder( new GML3_ComplexType2FeatureContentTypeBuilder() );// OK
     builder31.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
 
     // element ...
-    builder31.registerBuilder( new Element2FeatureTypeBuilder() ); // ok
+    builder31.registerBuilder( new GML3_Element2FeatureTypeBuilder() ); // ok
     builder31.registerBuilder( new FeatureType2ComplexTypeBuilder() );// ok
 
     // element ...
@@ -163,7 +165,9 @@ public class GMLSchemaFactory
 
   public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
+    // switch GML3 / GML2
+    final GMLSchemaBuilder builder = getBuilderForVersion( "2.1" );
+    // final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
     return builder.buildGMLSchema( inputStream, context );
   }
 

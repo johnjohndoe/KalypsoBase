@@ -77,18 +77,18 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   /**
    * @param isGeometry
-   * @param typeQName
+   * @param xmlTypeQName
    *          name of xmltype
-   * @param valueQName
-   *          name of entity that will occur in xml instance document
+   * @param xmlTagQName
+   *          name of entity that will occure in xml instance document
    */
-  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName typeQName, QName valueQName, Class valueClass, boolean isGeometry )
+  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry )
   {
     m_jaxbContext = jaxbContext;
-    m_valueQName = valueQName;
+    m_valueQName = xmlTagQName;
     m_valueClass = valueClass;
     m_isGeometry = isGeometry;
-    m_typeQName = typeQName;
+    m_typeQName = xmlTypeQName;
   }
 
   public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException

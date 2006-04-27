@@ -59,7 +59,7 @@ public Object[] build( GMLSchema gmlSchema, Object elementObject )
     // TODO if elements have Props they get lost here ....
     if( ref != null )
     {
-      final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
+      final ElementReference reference = gmlSchema.resolveElementReference( ref );
       final IRelationType rt= (IRelationType) build( reference )[0];
       final ReferencedRelationType result = new ReferencedRelationType(gmlSchema,element,rt);
       gmlSchema.register( element, result );

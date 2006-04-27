@@ -33,12 +33,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * representation of a complex type reference to a xml schema complex type
  * 
  * @author doemming
  */
-public class ComplexTypeReference extends Reference
+public class ComplexTypeReference extends TypeReference
 {
 
   private final ComplexType m_complexType;
@@ -49,7 +48,7 @@ public class ComplexTypeReference extends Reference
     m_complexType = complexType;
   }
 
-  public ComplexType getComplexType()
+  public ComplexType getComplexType( )
   {
     return m_complexType;
   }

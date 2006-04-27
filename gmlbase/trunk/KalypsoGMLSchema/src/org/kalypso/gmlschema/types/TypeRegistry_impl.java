@@ -35,12 +35,12 @@ public class TypeRegistry_impl implements ITypeRegistry
     if( m_typeMap.containsKey( typeName ) )
       throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
 
-    if( m_classMap.containsKey( className ) )
-      throw new TypeRegistryException( "Classname wurde bereits registriert: " + className );
-
     m_typeMap.put( typeName, typeHandler );
 
-    m_classMap.put( className, typeHandler );
+    // the getTypeHandlerForClassName is deprecated, but still supported so we return the first registered that is
+    // possible the most important
+    if( !m_classMap.containsKey( className ) )
+      m_classMap.put( className, typeHandler );
   }
 
   /**
@@ -54,7 +54,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForClassName(java.lang.String)
+   * @see org.kalypso.gmlschema.types.ITypeRegistry#getTypeHandlerForClassName(java.lang.Class)
    */
   public ITypeHandler getTypeHandlerForClassName( final Class className )
   {

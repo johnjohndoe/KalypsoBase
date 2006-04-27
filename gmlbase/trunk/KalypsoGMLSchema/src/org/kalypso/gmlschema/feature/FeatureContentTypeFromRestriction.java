@@ -29,12 +29,15 @@
  */
 package org.kalypso.gmlschema.feature;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -61,9 +64,9 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public ExplicitGroup getSequence( )
+  public List<LocalElement> getSequence( )
   {
-    return m_restriction.getSequence();
+    return GMLSchemaUtilities.collectElements( getGMLSchema(), m_restriction, null );
   }
 
   /**
@@ -77,7 +80,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final QName base = m_restriction.getBase();
-        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
         final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_restrictionBase = schema.getFeatureContentTypeFor( complexType );

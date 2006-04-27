@@ -29,12 +29,16 @@
  */
 package org.kalypso.gmlschema.feature;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -52,7 +56,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
 
   private IPropertyType[] m_fullProps = null;
 
-  public FeatureContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
+  public FeatureContentTypeFromExtension( final GMLSchema schema, final ComplexType complexType, final ExtensionType extension )
   {
     super( schema, complexType );
     m_extension = extension;
@@ -62,9 +66,9 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public ExplicitGroup getSequence( )
+  public List<LocalElement> getSequence( )
   {
-    return m_extension.getSequence();
+    return GMLSchemaUtilities.collectElements( getGMLSchema(), m_extension, null );
   }
 
   /**
@@ -77,7 +81,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
         final QName base = m_extension.getBase();
-        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
         final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_extensionBase = schema.getFeatureContentTypeFor( complexType );

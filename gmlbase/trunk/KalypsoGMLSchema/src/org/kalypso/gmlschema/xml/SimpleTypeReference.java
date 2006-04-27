@@ -39,7 +39,7 @@ import org.kalypso.gmlschema.GMLSchema;
  * 
  * @author doemming
  */
-public class SimpleTypeReference extends Reference
+public class SimpleTypeReference extends TypeReference
 {
 
   private final TopLevelSimpleType m_simpleType;

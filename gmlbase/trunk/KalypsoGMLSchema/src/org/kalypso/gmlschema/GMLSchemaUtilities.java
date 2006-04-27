@@ -42,23 +42,33 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.impl.common.JarHelper;
+import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.apache.xmlbeans.impl.xb.xsdschema.Group;
+import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.NamedGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleExtensionType;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleContentDocument.SimpleContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.UnionDocument.Union;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -69,8 +79,9 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.Reference;
+import org.kalypso.gmlschema.xml.GroupReference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
+import org.kalypso.gmlschema.xml.TypeReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -92,6 +103,10 @@ public class GMLSchemaUtilities
 
   private static final int CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE = 4;
 
+  private static final int CONSTRUCTION_ABSTRACT_ANYTYPE = 5;
+
+  private static final int CONSTRUCTION_ANYTYPE = 6;
+
   private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 
   /**
@@ -100,7 +115,8 @@ public class GMLSchemaUtilities
    */
   public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType )
   {
-    final ComplexContent complexContent = complexType.getComplexContent();
+    // if( "MeasureType".equals( complexType.getName() ) )
+    // System.out.println( "debug" );
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
 
@@ -117,31 +133,48 @@ public class GMLSchemaUtilities
     {
       return null;
     }
-    if( complexContent == null )
-      return null;
     // 2. check for base (extension or restriction)
-    // propably a typehanlder exists for this
-    final ExtensionType extension = complexContent.getExtension();
-    final ComplexRestrictionType restriction = complexContent.getRestriction();
     final QName base;
-    if( extension != null )
+    final SimpleContent simpleContent = complexType.getSimpleContent();
+    final ComplexContent complexContent = complexType.getComplexContent();
+    if( simpleContent != null )
     {
-      base = extension.getBase();
+      final SimpleExtensionType extension = simpleContent.getExtension();
+      final SimpleRestrictionType restriction = simpleContent.getRestriction();
+      if( extension != null )
+        base = extension.getBase();
+      else if( restriction != null )
+        base = restriction.getBase();
+      else
+        throw new UnsupportedOperationException( "unknown base type for " + simpleContent.toString() );
     }
-    else if( restriction != null )
+    else if( complexContent != null )
     {
-      base = restriction.getBase();
+
+      final ExtensionType extension = complexContent.getExtension();
+      final ComplexRestrictionType restriction = complexContent.getRestriction();
+      if( extension != null )
+        base = extension.getBase();
+      else if( restriction != null )
+        base = restriction.getBase();
+      else
+        throw new UnsupportedOperationException( "unknown base type for " + complexContent.toString() );
+      if( isXDSAnyType( base ) )
+        return null;
     }
     else
-      throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
-    if( isXDSAnyType( base ) )
+    {
+      System.out.println( "unknown type:" + complexType.getName() );
       return null;
+      // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
+    }
 
+    // propably a typehanlder exists for this
     if( isKnownType( base ) )
       return getKnownTypeFor( base );
 
     // 3. handle a reference
-    final Reference reference = gmlSchema.resolveReference( base );
+    final TypeReference reference = gmlSchema.resolveTypeReference( base );
     if( reference instanceof ComplexTypeReference )
       return findBaseType( (ComplexTypeReference) reference );
     else if( reference instanceof SimpleTypeReference )
@@ -183,16 +216,44 @@ public class GMLSchemaUtilities
     final Union union = simpleType.getUnion();
     if( union != null )
       return findBaseType( schema, union );
-
+    final org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list = simpleType.getList();
+    if( list != null )
+      return findBaseType( schema, list );
     // should never happen !
     throw new UnsupportedOperationException();
   }
 
+  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list )
+  {
+    // FIXME return something that acts as list
+    final LocalSimpleType simpleType = list.getSimpleType();
+    if( simpleType != null )
+      return findBaseType( schema, simpleType );
+    final QName itemType = list.getItemType();
+    if( isKnownType( itemType ) )
+      return getKnownTypeFor( itemType );
+    final SimpleTypeReference reference = schema.resolveSimpleTypeReference( itemType );
+    return findBaseType( reference );
+  }
+
   private static QName findBaseType( GMLSchema schema, Union union )
   {
+    // embeddded simple types
     final LocalSimpleType[] simpleTypeArray = union.getSimpleTypeArray();
-    // we do not support mixed types
-    return findBaseType( schema, simpleTypeArray[0] );
+    if( simpleTypeArray.length > 0 )
+      return findBaseType( schema, simpleTypeArray[0] ); // we do not support mixed types
+
+    // attribute membertypes
+    final List memberTypes = union.getMemberTypes();
+    QName typeQName = null;
+    if( memberTypes.size() == 1 )
+      typeQName = (QName) memberTypes.get( 0 );
+    else if( memberTypes.size() > 1 )
+      typeQName = (QName) memberTypes.get( 0 );// FIXME support others
+    if( isKnownType( typeQName ) )
+      return getKnownTypeFor( typeQName );
+    final SimpleTypeReference reference = schema.resolveSimpleTypeReference( typeQName );
+    return findBaseType( reference );
   }
 
   private static QName findBaseType( GMLSchema schema, Restriction restriction )
@@ -202,7 +263,8 @@ public class GMLSchemaUtilities
       return getKnownTypeFor( base );
 
     // 3. handle a reference
-    final ElementReference reference = (ElementReference) schema.resolveReference( base );
+    final TypeReference reference = schema.resolveTypeReference( base );
+    // final ElementReference reference = (ElementReference) resolveReference;
     return findBaseType( reference );
 
   }
@@ -210,7 +272,8 @@ public class GMLSchemaUtilities
   public static QName findBaseType( final GMLSchema schema, final Element element )
   {
     final QName qName;
-    switch( getConstructionType( element ) )
+    final int constructionType = getConstructionType( element );
+    switch( constructionType )
     {
       case CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE:
         final LocalSimpleType simpleType = element.getSimpleType();
@@ -223,23 +286,33 @@ public class GMLSchemaUtilities
         break;
       case CONSTRUCTION_NAMED_TYPE:
         qName = element.getType();
-        // if(qName.getLocalPart().startsWith("DIP"))
-        // System.out.println( "looking for" + qName );
         break;
+      case CONSTRUCTION_ABSTRACT_ANYTYPE:
+      case CONSTRUCTION_ANYTYPE:
+        return new QName( NS.NS_XSD_SCHEMA, "anyType" ); // no type
       default:
         throw new UnsupportedOperationException();
     }
+
     if( isKnownType( qName ) )
       return getKnownTypeFor( qName );
-    final Reference reference = schema.resolveReference( qName );
-    if( reference instanceof ComplexTypeReference )
-      return findBaseType( (ComplexTypeReference) reference );
-    else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference) reference );
-    else if( reference instanceof ElementReference )
-      return findBaseType( (ElementReference) reference );
-    else
-      throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
+
+    switch( constructionType )
+    {
+      case CONSTRUCTION_REFERENCED_TYPE:
+        final ElementReference elementReference = schema.resolveElementReference( qName );
+        if( elementReference == null )
+        {
+          System.out.println( "could not resolve element reference to " + qName );
+          return null;
+        }
+        return findBaseType( elementReference );
+      case CONSTRUCTION_NAMED_TYPE:
+        final TypeReference typeReference = schema.resolveTypeReference( qName );
+        return findBaseType( typeReference );
+      default:
+        throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
+    }
   }
 
   /**
@@ -261,7 +334,11 @@ public class GMLSchemaUtilities
     final LocalComplexType complexType = element.getComplexType();
     if( name != null && complexType != null )
       return CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE;
-    throw new UnsupportedOperationException( "unknown construction type:\n" + element.toString() );
+    // this element constructs nothing, perhaps it is an abstract head f a substitutiongroup
+    if( element.isSetAbstract() )
+      return CONSTRUCTION_ABSTRACT_ANYTYPE;
+    return CONSTRUCTION_ANYTYPE;
+    // throw new UnsupportedOperationException( "unknown construction type:\n" + element.toString() );
   }
 
   /**
@@ -270,6 +347,18 @@ public class GMLSchemaUtilities
   private static QName findBaseType( SimpleTypeReference reference )
   {
     return findBaseType( reference.getGMLSchema(), reference.getSimpleType() );
+  }
+
+  /**
+   * @param reference
+   */
+  private static QName findBaseType( TypeReference reference )
+  {
+    if( reference instanceof ComplexTypeReference )
+      return findBaseType( (ComplexTypeReference) reference );
+    else if( reference instanceof SimpleTypeReference )
+      return findBaseType( (SimpleTypeReference) reference );
+    throw new UnsupportedOperationException( "unknown refrence" );
   }
 
   /**
@@ -317,7 +406,10 @@ public class GMLSchemaUtilities
     {
       // if( "GeometryAssociationType".equals( localPart ) )
       // return result;
+      // FIXME use this for GML2
       if( "AbstractFeatureType".equals( localPart ) ) // -> build a FeatureType
+        return result;
+      if( "AbstractGMLType".equals( localPart ) ) // -> build a FeatureType also
         return result;
       else if( "FeatureAssociationType".equals( localPart ) ) // -> build a RelationType
         return result;
@@ -359,7 +451,7 @@ public class GMLSchemaUtilities
   {
     final QName type = element.getType();
     if( type != null )
-      return (ComplexTypeReference) gmlSchema.resolveReference( type );
+      return gmlSchema.resolveComplexTypeReference( type );
     final ComplexType complexType = element.getComplexType();
     return new ComplexTypeReference( gmlSchema, complexType );
   }
@@ -404,14 +496,17 @@ public class GMLSchemaUtilities
     final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
 
     createSchemaDir( schemaURL, schemaDocument, tmpBase );
-    
+
     JarHelper helper = new JarHelper();
     helper.jarDir( tmpBase, archiveFile );
-    
+
     FileUtilities.deleteRecursive( tmpBase );
   }
-  
-  /** Similiar to {@link #createSchemaArchive(URL, File), but the schema is already loaded and the files are not zipped but put simply into the given directory.  }*/
+
+  /**
+   * Similiar to
+   * {@link #createSchemaArchive(URL, File), but the schema is already loaded and the files are not zipped but put simply into the given directory.  }
+   */
   public static void createSchemaDir( final URL schemaURL, final SchemaDocument schemaDocument, final File archiveDir ) throws XmlException, IOException
   {
     final UrlResolver resolver = new UrlResolver();
@@ -432,6 +527,16 @@ public class GMLSchemaUtilities
   public static void serializeToArchiveDir( final SchemaDocument schemaDocument, final File baseDir, final String newSchemaLocation, final IUrlResolver2 urlResolver, final Map<URL, String> knownlocations ) throws XmlException, IOException
   {
     final UrlResolver resolver = new UrlResolver();
+    // imports
+    final Import[] importArray = schemaDocument.getSchema().getImportArray();
+    for( int i = 0; i < importArray.length; i++ )
+    {
+      final Import import_ = importArray[i];
+      final String oldSchemaLocation = import_.getSchemaLocation();
+      final URL absolteSchemaLocation = urlResolver.resolveURL( oldSchemaLocation );
+      import_.setSchemaLocation( absolteSchemaLocation.toString() );
+    }
+    // includes
     final Include[] includeArray = schemaDocument.getSchema().getIncludeArray();
     for( int i = 0; i < includeArray.length; i++ )
     {
@@ -514,9 +619,88 @@ public class GMLSchemaUtilities
     return result;
   }
 
-  public static URL getSchemaURLForArchive( final File schemaJarArchive ) throws MalformedURLException
+  public static URL getSchemaURLForArchive( final URL schemaJarArchive ) throws MalformedURLException
   {
-    return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toURL().toString() + "!/" ), BASE_SCHEMA_IN_JAR );
+    return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
+  }
+
+  public static List<LocalElement> collectElements( GMLSchema schema, ExtensionType extension, List<LocalElement> collector )
+  {
+    if( collector == null )
+      collector = new ArrayList<LocalElement>();
+    final ExplicitGroup sequence = extension.getSequence();
+    if( sequence != null )
+      collectElements( schema, sequence, collector );
+    final GroupRef group = extension.getGroup();
+    if( group != null )
+      collectElements( schema, group, collector );
+    return collector;
+  }
+
+  public static List<LocalElement> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<LocalElement> collector )
+  {
+    if( collector == null )
+      collector = new ArrayList<LocalElement>();
+    final ExplicitGroup sequence = restriction.getSequence();
+    if( sequence != null )
+      collectElements( schema, sequence, collector );
+    final GroupRef group = restriction.getGroup();
+    if( group != null )
+      collectElements( schema, group, collector );
+    return collector;
+  }
+
+  public static List<LocalElement> collectElements( GMLSchema schema, Group group, List<LocalElement> collector )
+  {
+    if( collector == null )
+      collector = new ArrayList<LocalElement>();
+    // elements
+    final LocalElement[] elementArray = group.getElementArray();
+    if( elementArray != null )
+    {
+      for( int i = 0; i < elementArray.length; i++ )
+        collector.add( elementArray[i] );
+    }
+    final ExplicitGroup[] sequenceArray = group.getSequenceArray();
+    // sequence
+    if( sequenceArray != null )
+    {
+      for( int i = 0; i < sequenceArray.length; i++ )
+      {
+        final ExplicitGroup group2 = sequenceArray[i];
+        collectElements( schema, group2, collector );
+      }
+    }
+    // all
+    final All[] allArray = group.getAllArray();
+    if( allArray != null )
+    {
+      for( int i = 0; i < allArray.length; i++ )
+      {
+        final All all = allArray[i];
+        collectElements( schema, all, collector );
+      }
+    }
+    // groups
+    final GroupRef[] groupArray = group.getGroupArray();
+    if( groupArray != null )
+    {
+      for( int i = 0; i < groupArray.length; i++ )
+      {
+        GroupRef ref = groupArray[i];
+        collectElements( schema, ref, collector );
+      }
+    }
+    // group reference
+    final QName ref = group.getRef();
+    if( ref != null )
+    {
+      final GroupReference reference = schema.resolveGroupReference( ref );
+      final NamedGroup refGroup = reference.getGroup();
+      final GMLSchema refSchema = reference.getGMLSchema();
+      return collectElements( refSchema, refGroup, collector );
+    }
+    return collector;
   }
 
 }

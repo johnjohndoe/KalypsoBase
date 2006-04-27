@@ -59,7 +59,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
     final QName ref = element.getRef();
     if( ref != null )
     {
-      final ElementReference reference = (ElementReference) gmlSchema.resolveReference( ref );
+      final ElementReference reference = gmlSchema.resolveElementReference( ref );
       final IValuePropertyType pt= (IValuePropertyType) build( reference )[0];
       
       final ReferencedPropertyType result = new ReferencedPropertyType(gmlSchema,element,pt);

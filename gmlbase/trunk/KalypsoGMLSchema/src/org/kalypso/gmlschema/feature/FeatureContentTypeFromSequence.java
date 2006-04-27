@@ -29,13 +29,16 @@
  */
 package org.kalypso.gmlschema.feature;
 
+import java.util.List;
+
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * 
  * representation of a feature content definition from a xml schema sequence fragment.
  * 
  * @author doemming
@@ -43,24 +46,24 @@ import org.kalypso.gmlschema.property.IPropertyType;
 public class FeatureContentTypeFromSequence extends FeatureContentType
 {
 
-  private final ExplicitGroup m_sequence;
+  private final List<LocalElement> m_elementList;
 
-  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
+  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<LocalElement> elementList )
   {
     super( gmlSchema, complexType );
-    m_sequence = sequence;
+    m_elementList = elementList;
   }
 
   @Override
-  public ExplicitGroup getSequence()
+  public List<LocalElement> getSequence( )
   {
-    return m_sequence;
+    return m_elementList;
   }
 
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
    */
-  public IPropertyType[] getProperties()
+  public IPropertyType[] getProperties( )
   {
     return m_pt;
   }
@@ -68,7 +71,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
-  public IFeatureContentType getBase()
+  public IFeatureContentType getBase( )
   {
     return null;
   }
@@ -76,7 +79,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDerivationType()
    */
-  public int getDerivationType()
+  public int getDerivationType( )
   {
     return DERIVATION_NONE;
   }
@@ -84,7 +87,7 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getDirectProperties()
    */
-  public IPropertyType[] getDirectProperties()
+  public IPropertyType[] getDirectProperties( )
   {
     return m_pt;
   }

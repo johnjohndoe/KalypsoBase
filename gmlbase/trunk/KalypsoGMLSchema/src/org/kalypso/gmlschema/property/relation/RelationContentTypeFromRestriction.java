@@ -74,7 +74,7 @@ public class RelationContentTypeFromRestriction extends RelationContentType
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
         final QName base = m_restriction.getBase();
-        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
         final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_restrictionBase = schema.getRelationContentTypeFor( complexType );

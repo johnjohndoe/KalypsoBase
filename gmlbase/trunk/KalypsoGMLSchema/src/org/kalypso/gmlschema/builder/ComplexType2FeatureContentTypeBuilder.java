@@ -29,12 +29,18 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
@@ -61,12 +67,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     FeatureContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
-    final ExplicitGroup sequence = complexType.getSequence();
-    if( sequence != null ) // no complex content
-    {
-      result = new FeatureContentTypeFromSequence( gmlSchema, complexType, sequence );
-    }
-    else
+    if( complexContent != null )
     {
       final ExtensionType extension = complexContent.getExtension();
       final ComplexRestrictionType restriction = complexContent.getRestriction();
@@ -77,13 +78,26 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
       else
         throw new UnsupportedOperationException();
     }
+    else
+    {
+      final List<LocalElement> collector = new ArrayList<LocalElement>();
+      final ExplicitGroup sequence = complexType.getSequence();
+      if( sequence != null )
+        GMLSchemaUtilities.collectElements( gmlSchema, sequence, collector );
+      final All all = complexType.getAll();
+      if( all != null )
+        GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
+      final GroupRef group = complexType.getGroup();
+      if( group != null )
+        GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
+      result = new FeatureContentTypeFromSequence( gmlSchema, complexType ,collector);
+    }
     if( result != null )
     {
       gmlSchema.register( complexTypeObject, result );
       return new Object[] { result };
     }
     return new Object[0];
-
   }
 
   /**

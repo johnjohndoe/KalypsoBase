@@ -94,7 +94,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
             }
             else
             {
-              final ElementReference reference = (ElementReference) m_gmlSchema.resolveReference( ref );
+              final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
               schema = reference.getGMLSchema();
               element = reference.getElement();
             }

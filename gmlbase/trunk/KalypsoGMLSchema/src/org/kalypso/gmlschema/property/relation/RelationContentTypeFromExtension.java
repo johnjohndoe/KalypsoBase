@@ -75,7 +75,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final QName base = m_extension.getBase();
-        final ComplexTypeReference reference = (ComplexTypeReference) getGMLSchema().resolveReference( base );
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
         final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_extensionBase = schema.getRelationContentTypeFor( complexType );
