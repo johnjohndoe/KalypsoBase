@@ -153,7 +153,7 @@ public class GMLSchema
    * 
    * @throws GMLSchemaException
    */
-  private void init( SchemaDocument schemaDocument ) throws GMLSchemaException
+  private void init( final SchemaDocument schemaDocument ) throws GMLSchemaException
   {
     try
     {
@@ -214,15 +214,18 @@ public class GMLSchema
             {
               url = m_urlResolver.resolveURL( m_context, schemaLocation );
             }
-            catch( MalformedURLException e )
+            catch( final MalformedURLException e )
             {
               if( schemaLocation != null )
                 throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
               throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
             }
             gmlSchema = GMLSchemaCatalog.getSchema( url );
+            // TODO gmlSchema may return with null, handle this
+            // maybe like this?: throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
           }
-          m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+          if( gmlSchema != null )
+            m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
         }
       }
 
