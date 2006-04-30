@@ -51,6 +51,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
+import ogc31.www.opengis.net.gml.LocationPropertyType;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.ContentHandler;
@@ -59,7 +62,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * a generic typehandler based on binding
+ * a generic typehandler based on binding<br>
  * 
  * @author doemming
  */
@@ -76,6 +79,18 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   private final QName m_valueQName;
 
   /**
+   * example: ( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class) <br>
+   * type is GML3:LocationPropertyType<br>
+   * xmlTagName is GML3:location<br>
+   * representation in gml is:<br>
+   * <em>
+   * <feature> 
+   *    <prop>
+   *      <location/>   // serialized by bindung for LocationPropertyType
+   *    </prop>
+   * </feature>
+   * </em>
+   * 
    * @param isGeometry
    * @param xmlTypeQName
    *          name of xmltype

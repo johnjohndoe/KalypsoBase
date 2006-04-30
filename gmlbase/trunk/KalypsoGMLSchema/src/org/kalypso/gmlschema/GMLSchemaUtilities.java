@@ -34,9 +34,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
@@ -71,6 +75,8 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.contribs.javax.xml.namespace.ListQName;
+import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -115,8 +121,6 @@ public class GMLSchemaUtilities
    */
   public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType )
   {
-    // if( "MeasureType".equals( complexType.getName() ) )
-    // System.out.println( "debug" );
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
 
@@ -225,35 +229,64 @@ public class GMLSchemaUtilities
 
   private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list )
   {
-    // FIXME return something that acts as list
     final LocalSimpleType simpleType = list.getSimpleType();
-    if( simpleType != null )
-      return findBaseType( schema, simpleType );
     final QName itemType = list.getItemType();
-    if( isKnownType( itemType ) )
-      return getKnownTypeFor( itemType );
-    final SimpleTypeReference reference = schema.resolveSimpleTypeReference( itemType );
-    return findBaseType( reference );
+
+    QName base = null;
+    if( simpleType != null )
+      base = findBaseType( schema, simpleType );
+    else if( itemType != null )
+    {
+      if( isKnownType( itemType ) )
+        base = getKnownTypeFor( itemType );
+      else
+      {
+        final SimpleTypeReference reference = schema.resolveSimpleTypeReference( itemType );
+        base = findBaseType( reference );
+      }
+    }
+    if( base == null )
+      return null;
+    return new ListQName( base );
   }
 
   private static QName findBaseType( GMLSchema schema, Union union )
   {
+    final Set<QName> mixedSet = new HashSet<QName>();
     // embeddded simple types
     final LocalSimpleType[] simpleTypeArray = union.getSimpleTypeArray();
     if( simpleTypeArray.length > 0 )
-      return findBaseType( schema, simpleTypeArray[0] ); // we do not support mixed types
-
+    {
+      for( int i = 0; i < simpleTypeArray.length; i++ )
+      {
+        final QName base = findBaseType( schema, simpleTypeArray[i] );
+        if( base != null )
+          mixedSet.add( base );
+      }
+    }
     // attribute membertypes
-    final List memberTypes = union.getMemberTypes();
-    QName typeQName = null;
-    if( memberTypes.size() == 1 )
-      typeQName = (QName) memberTypes.get( 0 );
-    else if( memberTypes.size() > 1 )
-      typeQName = (QName) memberTypes.get( 0 );// FIXME support others
-    if( isKnownType( typeQName ) )
-      return getKnownTypeFor( typeQName );
-    final SimpleTypeReference reference = schema.resolveSimpleTypeReference( typeQName );
-    return findBaseType( reference );
+    final List<QName> memberTypes = union.getMemberTypes();
+    if( memberTypes != null )
+    {
+      for( Iterator<QName> iter = memberTypes.iterator(); iter.hasNext(); )
+      {
+        final QName typeQName = iter.next();
+        if( isKnownType( typeQName ) )
+          mixedSet.add( getKnownTypeFor( typeQName ) );
+        else
+        {
+          final SimpleTypeReference reference = schema.resolveSimpleTypeReference( typeQName );
+          mixedSet.add( findBaseType( reference ) );
+        }
+      }
+    }
+    final QName[] bases = mixedSet.toArray( new QName[mixedSet.size()] );
+    if( bases.length == 0 )
+      return null;
+    else if( bases.length == 1 )
+      return bases[0];
+    else
+      return new MixedQName( bases );
   }
 
   private static QName findBaseType( GMLSchema schema, Restriction restriction )
@@ -400,13 +433,14 @@ public class GMLSchemaUtilities
     final QName result = qName;
     final String namespaceURI = qName.getNamespaceURI();
     final String localPart = qName.getLocalPart();
-    // if( GMLSchemaConstants.NS_XMLSCHEMA.equals( namespaceURI ) )
-    // return result;
     if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
     {
-      // if( "GeometryAssociationType".equals( localPart ) )
-      // return result;
-      // FIXME use this for GML2
+
+      // IMPORTANT:
+      // - AbstractFeatureType is here to support GML2-Schema, do not remove it !!
+      // - Do not change order of AbstractFeatureType and AbstractGMLType !!
+      // 1. AbstractFeatureType
+      // 2. AbstractGMLType
       if( "AbstractFeatureType".equals( localPart ) ) // -> build a FeatureType
         return result;
       if( "AbstractGMLType".equals( localPart ) ) // -> build a FeatureType also
@@ -415,30 +449,7 @@ public class GMLSchemaUtilities
         return result;
       else if( "FeaturePropertyType".equals( localPart ) ) // -> build a RelationType
         return result;
-      // else if( "AbstractGeometryType".equals( localPart ) )
-      // return result;
-      // else if( "PointType".equals( localPart ) )
-      // return result;
-      // else if( "LineStringType".equals( localPart ) )
-      // return result;
-      // else if( "PolygonType".equals( localPart ) )
-      // return result;
-      // else if( "MultiPointType".equals( localPart ) )
-      // return result;
-      // else if( "MultiLineStringType".equals( localPart ) )
-      // return result;
-      // else if( "MultiPolygonType".equals( localPart ) )
-      // return result;
-      // else if( "BoundingShapeType".equals( localPart ) )
-      // return result;
-      // else
-      // return null;
     }
-    // else if( GMLSchemaConstants.NS_OBSLINK.equals( namespaceURI ) )
-    // {
-    // if( "TimeseriesLinkType".equals( localPart ) )
-    // return result;
-    // }
     return null;
   }
 
