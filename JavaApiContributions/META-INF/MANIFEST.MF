@@ -20,7 +20,8 @@ Export-Package: org.kalypso.contribs.java,
  org.kalypso.contribs.java.util,
  org.kalypso.contribs.java.util.logging,
  org.kalypso.contribs.java.util.test,
- org.kalypso.contribs.java.xml
+ org.kalypso.contribs.java.xml,
+ org.kalypso.contribs.javax.xml.namespace
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.junit
 Eclipse-AutoStart: true
