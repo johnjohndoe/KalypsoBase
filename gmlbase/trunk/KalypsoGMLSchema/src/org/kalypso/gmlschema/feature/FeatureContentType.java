@@ -39,6 +39,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -85,7 +86,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -111,11 +112,12 @@ public abstract class FeatureContentType implements IFeatureContentType
               System.out.println( message );
               System.out.println();
             }
-            // throw new UnsupportedOperationException( message );
             else
             {
-
               final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
+              if( reference == null )
+                throw new GMLSchemaException( "Invalid reference: " + ref );
+              
               element = reference.getElement();
               schema = reference.getGMLSchema();
               buildedObject = schema.getBuildedObjectFor( element );

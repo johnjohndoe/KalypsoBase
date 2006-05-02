@@ -32,7 +32,6 @@ package org.kalypso.gmlschema.builder;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
@@ -76,15 +75,14 @@ public class GMLSchemaBuilder
 
   private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
-    for( Iterator iterator = m_registeredBuilders.iterator(); iterator.hasNext(); )
+    for( final IBuilder builder : m_registeredBuilders )
     {
-      final IBuilder builder = (IBuilder) iterator.next();
       try
       {
         if( builder.isBuilderFor( gmlSchema, object, null ) )
           return builder;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         // nothing
@@ -127,7 +125,7 @@ public class GMLSchemaBuilder
    * 
    * @param gmlSchema
    */
-  private void rInit( final GMLSchema gmlSchema )
+  private void rInit( final GMLSchema gmlSchema ) throws GMLSchemaException
   {
     for( int n = 0; n < IInitialize.INIT_ORDER.length; n++ )
     {

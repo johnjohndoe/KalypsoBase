@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -55,7 +56,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

@@ -29,6 +29,8 @@
  */
 package org.kalypso.gmlschema.basics;
 
+import org.kalypso.gmlschema.GMLSchemaException;
+
 /**
  * TODO: insert type comment here
  * 
@@ -92,6 +94,6 @@ public interface IInitialize
    * This is intended to be done here. <br>
    * as there may be initialize dependencies implementation should switch for initializeRuns
    */
-  public void init( int initializeRun );
+  public void init( int initializeRun ) throws GMLSchemaException;
 
 }

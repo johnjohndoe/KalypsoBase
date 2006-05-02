@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -75,7 +76,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
