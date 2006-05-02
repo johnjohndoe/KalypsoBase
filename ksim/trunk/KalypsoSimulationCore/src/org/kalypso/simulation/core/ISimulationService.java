@@ -44,10 +44,7 @@ import javax.activation.DataHandler;
 
 /**
  * <p>
- * Interface für ICalculationService
- * </p>
- * <p>
- * Der ICalculationService ist ein Dienst um Berechnungen auszuführen.
+ * Der {@link ISimulationService} ist ein Dienst um Berechnungen auszuführen.
  * </p>
  * <p>
  * Das ganze funktioniert ähnlich wie eine Druckerwarteschlange. Ein Auftrag wird gesendet und in eine Liste gestellt,
