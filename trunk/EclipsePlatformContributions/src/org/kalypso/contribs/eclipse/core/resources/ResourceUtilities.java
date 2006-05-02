@@ -138,7 +138,6 @@ public class ResourceUtilities
           return null;
         
         return new Path( array[1] );
-
       }
     }
 
