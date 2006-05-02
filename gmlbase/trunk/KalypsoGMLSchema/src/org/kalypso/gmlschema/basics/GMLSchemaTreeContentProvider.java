@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class GMLSchemaTreeContentProvider implements ITreeContentProvider
 {
-
   private boolean m_detailed;
 
   private GMLSchema m_context;
@@ -60,12 +59,12 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     m_detailed = detailed;
   }
 
-  public void setDetailed( boolean detailed )
+  public void setDetailed( final boolean detailed )
   {
     m_detailed = detailed;
   }
 
-  public void setContext( GMLSchema context )
+  public void setContext( final GMLSchema context )
   {
     m_context = context;
   }
@@ -73,7 +72,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parent )
+  public Object[] getChildren( final Object parent )
   {
     if( parent == null )
       return new Object[0];
@@ -81,8 +80,16 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       return ((LabelAndChildsProvider) parent).getChilds();
     if( parent instanceof GMLSchema )
     {
-      GMLSchema schema = (GMLSchema) parent;
-      return schema.getAllFeatureTypes();
+      final GMLSchema schema = (GMLSchema) parent;
+      
+      final GMLSchema[] importedSchemas = schema.getImports();
+      final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
+
+      final Object[] children = new Object[importedSchemas.length + featureTypes.length];
+      System.arraycopy( importedSchemas, 0, children, 0, importedSchemas.length );
+      System.arraycopy( featureTypes, 0, children, importedSchemas.length, featureTypes.length );
+      
+      return children;
     }
     if( !m_detailed )
     {
@@ -154,7 +161,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     // is not supported
     return null;
@@ -163,7 +170,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     return getChildren( element ).length > 0;
   }
@@ -171,14 +178,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     return getChildren( inputElement );
-    // if( inputElement instanceof GMLSchema )
-    // {
-    // return new Object[] { "String", inputElement };
-    // }
-    // return new Object[0];
   }
 
   /**
@@ -193,19 +195,20 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     setContext( (GMLSchema) newInput );
   }
 
-  public void accept( Object element, ITreeContentProviderVisitor visitor, int indent )
+  public void accept( final Object element, final ITreeContentProviderVisitor visitor, int indent )
   {
     if( visitor.visit( element, indent ) )
     {
-      final Object[] children = getChildren( element );
       indent++;
-      for( int i = 0; i < children.length; i++ )
-        accept( children[i], visitor, indent );
+
+      final Object[] children = getChildren( element );
+      for( final Object child : children )
+        accept( child, visitor, indent );
     }
   }
 }

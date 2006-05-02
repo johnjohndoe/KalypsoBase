@@ -530,10 +530,7 @@ public class GMLSchema
     }
   }
 
-  /**
-   * @return
-   */
-  private GMLSchema[] getImports( )
+  public GMLSchema[] getImports( )
   {
     final Collection<GMLSchema> collection = m_importedSchemasHash.values();
     return collection.toArray( new GMLSchema[collection.size()] );

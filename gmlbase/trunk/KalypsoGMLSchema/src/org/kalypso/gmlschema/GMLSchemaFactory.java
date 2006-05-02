@@ -32,7 +32,6 @@ package org.kalypso.gmlschema;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -138,7 +137,7 @@ public class GMLSchemaFactory
    * @param schemaLocationURL
    * @throws GMLSchemaException
    */
-  public static GMLSchema createGMLSchema( String urn, URL schemaLocationURL ) throws GMLSchemaException
+  public static GMLSchema createGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
   {
     final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
     return createGMLSchema( urlSchemaLocation );
@@ -173,9 +172,8 @@ public class GMLSchemaFactory
 
   private static GMLSchemaBuilder getBuilderForVersion( String gmlVersion )
   {
-    for( Iterator iter = m_register.iterator(); iter.hasNext(); )
+    for( final GMLSchemaBuilder builder : m_register )
     {
-      final GMLSchemaBuilder builder = (GMLSchemaBuilder) iter.next();
       if( gmlVersion == null || builder.getGMLVersion().startsWith( gmlVersion ) )
         return builder;
     }
