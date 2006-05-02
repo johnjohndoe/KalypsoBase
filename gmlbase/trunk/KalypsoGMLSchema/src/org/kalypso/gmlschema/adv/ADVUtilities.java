@@ -37,7 +37,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 
 /**
  * utilities to handle adv related stuff

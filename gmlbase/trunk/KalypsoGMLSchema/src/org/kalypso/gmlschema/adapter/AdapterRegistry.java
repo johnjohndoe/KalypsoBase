@@ -46,33 +46,31 @@ import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * @author doemming
- *
  */
 public class AdapterRegistry
 {
-  private static AdapterRegistry m_registry=null;
-  
-  public static AdapterRegistry getRegistry()
+  private static AdapterRegistry m_registry = null;
+
+  public static AdapterRegistry getRegistry( )
   {
-    if(m_registry==null)
+    if( m_registry == null )
     {
-      m_registry=new AdapterRegistry();
+      m_registry = new AdapterRegistry();
     }
     return m_registry;
   }
-  
-  final HashMap<Class, IAdaptable> m_adapters=new HashMap<Class, IAdaptable>();
-  
-  private AdapterRegistry()
+
+  final HashMap<Class, IAdaptable> m_adapters = new HashMap<Class, IAdaptable>();
+
+  private AdapterRegistry( )
   {
-      
-    
+
   }
 
   public void getGeneratorFor( Class adapter )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  
+
 }
