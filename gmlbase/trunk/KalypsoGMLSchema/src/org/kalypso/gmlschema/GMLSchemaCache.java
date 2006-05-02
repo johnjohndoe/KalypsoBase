@@ -54,12 +54,14 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.commons.cache.FileCache;
 import org.kalypso.commons.cache.StringValidityKey;
 import org.kalypso.commons.cache.StringValidityKeyFactory;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.serializer.ISerializer;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 
@@ -101,7 +103,7 @@ public class GMLSchemaCache
   }
 
   /**
-   * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
+   * Lädt das Schmea aus dieser URL und nimmt diesen id für den cache
    * 
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
@@ -115,11 +117,7 @@ public class GMLSchemaCache
     try
     {
       if( schemaURL != null )
-      {
-        final URLConnection connection = schemaURL.openConnection();
-        connection.connect();
-        validity = new Date( connection.getLastModified() );
-      }
+        validity = new Date( lastModified( schemaURL ) );
     }
     catch( final IOException e )
     {
@@ -173,6 +171,27 @@ public class GMLSchemaCache
       m_memCache.addObject( namespace, new GMLSchemaWrapper( schema, validity ) );
 
     return schema;
+  }
+
+  private long lastModified( final URL schemaURL ) throws IOException
+  {
+    final URLConnection connection = schemaURL.openConnection();
+    connection.connect();
+
+    final long lastModified = connection.getLastModified();
+    // BUGFIX: some URLConnection implementations (such as eclipse resource-protokoll)
+    // do not return lastModified correctly. If we have such a case, we try some more...
+    if( lastModified != 0 )
+      return lastModified;
+    else
+    {
+      final IPath path = ResourceUtilities.findPathFromURL( schemaURL );
+      if( path == null )
+        return 0;
+      
+      final File file = ResourceUtilities.makeFileFromPath(path);
+      return file.lastModified();
+    }
   }
 
   private static class GMLSchemaSerializer implements ISerializer<GMLSchema>

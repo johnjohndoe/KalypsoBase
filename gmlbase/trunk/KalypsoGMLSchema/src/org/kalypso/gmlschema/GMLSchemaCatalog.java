@@ -67,17 +67,6 @@ public final class GMLSchemaCatalog
     FileUtilities.deleteRecursive( TMP_DIR );
   }
 
-  /**
-   * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
-   */
-  public synchronized static GMLSchema getSchema( final String namespace )
-  {
-    final URL schemaURL = THE_CATALOG.getURL( namespace );
-    // auch versuchen aus dem Cache zu laden, wenn die url null ist;
-    // vielleicht ist der namespace ja noch im file-cache
-    return getSchema( namespace, schemaURL );
-  }
-
   public static IUrlCatalog getDefaultCatalog( )
   {
     if( THE_CATALOG == null )
@@ -112,11 +101,28 @@ public final class GMLSchemaCatalog
     }
   }
 
-  private synchronized static GMLSchema getSchema( final String namespace, final URL schemaUrl )
+  /**
+   * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
+   */
+  public synchronized static GMLSchema getSchema( final String namespace )
+  {
+    return getSchema( namespace, null );
+  }
+
+  /**
+   * Lädt ein (eventuell gecachetes) Schema. Ist das schema nicht bereits bekannt (=gecached), wird über den Katalog oder über die gegebene URL geladen.
+   * <p>Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.</p>
+   */
+  public synchronized static GMLSchema getSchema( final String namespace, final URL schemaLocation )
   {
     if( THE_CACHE == null )
       throw NOT_INITIALIZED;
 
+    final URL catalogUrl = THE_CATALOG.getURL( namespace );
+    final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
+
+    // auch versuchen aus dem Cache zu laden, wenn die url null ist;
+    // vielleicht ist der namespace ja noch im file-cache
     return THE_CACHE.getSchema( namespace, schemaUrl );
   }
 }

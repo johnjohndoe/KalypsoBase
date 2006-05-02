@@ -66,7 +66,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
-  public void unregisterTypeHandler( ITypeHandler typeHandler )
+  public void unregisterTypeHandler( final ITypeHandler typeHandler )
   {
     m_typeMap.remove( typeHandler.getTypeName() );
     m_classMap.remove( typeHandler.getValueClass() );

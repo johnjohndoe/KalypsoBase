@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public class RelationType2ComplexTypeBuilder implements IBuilder
 {
-
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */

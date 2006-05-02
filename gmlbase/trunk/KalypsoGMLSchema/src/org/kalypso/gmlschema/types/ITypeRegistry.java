@@ -17,6 +17,9 @@ public interface ITypeRegistry
 
   public boolean hasTypeName( final QName typeName );
 
+  /**
+   * TODO: also depcrecate? see getTypeHandlerForClassName
+   */
   public boolean hasClassName( final Class className );
 
   public ITypeHandler getTypeHandlerForTypeName( final QName typeQName );
@@ -25,6 +28,7 @@ public interface ITypeRegistry
    * @deprecated use getTypehandlerForTypeName(QName qname) or getTypeHandlerFor(IPropertyType pt) there might be more
    *             that one typehandler for a class
    */
+  @Deprecated
   public ITypeHandler getTypeHandlerForClassName( final Class clazz );
 
   public ITypeHandler getTypeHandlerFor( IPropertyType ftp );
