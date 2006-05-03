@@ -29,12 +29,15 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
@@ -45,7 +48,6 @@ import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestrictio
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
@@ -53,20 +55,29 @@ import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
 public class ComplexType2RelationContentTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public ComplexType2RelationContentTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
-   * 
    * @param gmlSchema
    * @param complexTypeObject
    */
   public Object[] build( GMLSchema gmlSchema, Object complexTypeObject )
   {
     RelationContentType result = null;
-    final ComplexType complexType = (ComplexType)complexTypeObject;
+    final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
     final ExplicitGroup sequence = complexType.getSequence();
 
     if( sequence != null )
-      result = new RelationContentTypeFromSequence( gmlSchema, complexType, sequence );
+    {
+      final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
+      result = new RelationContentTypeFromSequence( gmlSchema, complexType, collector );
+    }
     else
     {
       final ExtensionType extension = complexContent.getExtension();
@@ -81,8 +92,7 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
     if( result != null )
     {
       gmlSchema.register( complexTypeObject, result );
-      return new Object[]
-      { result };
+      return new Object[] { result };
     }
     return new Object[0];
 
@@ -94,9 +104,9 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof ComplexType ) )
+    if( !(object instanceof ComplexType) )
       return false;
-    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType)object );
+    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object , m_version);
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -105,6 +115,14 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    return "FeatureAssociationType".equals( localPart );
+    return GMLSchemaUtilities.getBaseOfRelationType(m_version).equals( localPart );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 }

@@ -47,6 +47,13 @@ import org.kalypso.gmlschema.GMLSchema;
 public class GMLSchema2SchemaBasicsBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public GMLSchema2SchemaBasicsBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -104,5 +111,13 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof GMLSchema;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 }

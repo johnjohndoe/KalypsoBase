@@ -45,6 +45,13 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
 public class FeatureType2ComplexTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public FeatureType2ComplexTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -67,6 +74,14 @@ public class FeatureType2ComplexTypeBuilder implements IBuilder
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof FeatureType;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 
 }

@@ -44,6 +44,13 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
 public class FeatureContentType2ElementBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public FeatureContentType2ElementBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -61,6 +68,14 @@ public class FeatureContentType2ElementBuilder implements IBuilder
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof FeatureContentType;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 
 }

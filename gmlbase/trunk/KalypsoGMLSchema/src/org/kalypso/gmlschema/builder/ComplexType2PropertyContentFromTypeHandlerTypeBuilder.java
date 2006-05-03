@@ -49,13 +49,20 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public ComplexType2PropertyContentFromTypeHandlerTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject )
   {
     final ITypeHandler typeHandler = getTypeHandler( gmlSchema, typeObject );
-    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler );
+    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler ,m_version);
     gmlSchema.register( typeObject, pct );
     return new Object[] { pct };
   }
@@ -73,14 +80,22 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   {
     final QName baseType;
     if( typeObject instanceof ComplexType )
-      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject );
+      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject , m_version);
     else if( typeObject instanceof SimpleType )
-      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject );
+      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject , m_version);
     else
       return null;
     if( baseType == null )
       return null;
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     return registry.getTypeHandlerForTypeName( baseType );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 }

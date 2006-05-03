@@ -115,12 +115,14 @@ public abstract class FeatureContentType implements IFeatureContentType
             else
             {
               final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
-              if( reference == null )
-                throw new GMLSchemaException( "Invalid reference: " + ref );
-              
-              element = reference.getElement();
-              schema = reference.getGMLSchema();
-              buildedObject = schema.getBuildedObjectFor( element );
+              if( reference != null )
+              {
+                element = reference.getElement();
+                schema = reference.getGMLSchema();
+                buildedObject = schema.getBuildedObjectFor( element );
+              }
+              else
+                System.out.println("debug");
             }
           }
           // why are alle buildedObjects of type IPropertyType ?

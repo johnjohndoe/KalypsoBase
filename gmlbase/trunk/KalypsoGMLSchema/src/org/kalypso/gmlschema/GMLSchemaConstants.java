@@ -57,4 +57,11 @@ public abstract class GMLSchemaConstants
 
   public static final int TYPE_PROP_LINK = 3;
 
+  public static final String GML2_FeatureTypeBaseType = "AbstractFeatureType";
+
+  public static final String GML3_FeatureTypeBaseType = "AbstractGMLType";
+
+  public static final String GML2_RelationBaseType = "FeatureAssociationType";
+
+  public static final String GML3_RelationBaseType = "FeaturePropertyType";
 }

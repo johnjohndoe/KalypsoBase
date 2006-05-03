@@ -58,6 +58,13 @@ import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
 public class ComplexType2FeatureContentTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public ComplexType2FeatureContentTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @param gmlSchema
    * @param complexTypeObject
@@ -90,7 +97,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
       final GroupRef group = complexType.getGroup();
       if( group != null )
         GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
-      result = new FeatureContentTypeFromSequence( gmlSchema, complexType ,collector);
+      result = new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
     }
     if( result != null )
     {
@@ -108,7 +115,10 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
   {
     if( !(object instanceof ComplexType) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object );
+    final ComplexType complexType = (ComplexType) object;
+    if( "AbstractGMLType".equals( complexType.getName() ) && GMLSchemaConstants.NS_GML2.equals( gmlSchema.getTargetNamespace() ) )
+      return true;
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType , m_version);
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -117,6 +127,15 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    return "AbstractFeatureType".equals( localPart );
+    
+    return GMLSchemaUtilities.getBaseOfFeatureType(m_version).equals( localPart );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 }

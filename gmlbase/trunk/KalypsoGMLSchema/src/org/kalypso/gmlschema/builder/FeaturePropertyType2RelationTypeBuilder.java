@@ -35,34 +35,54 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.adv.ADVUtilities;
+import org.kalypso.gmlschema.property.relation.AdvRelationType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
- * another builder
+ * a builder for references based on restrictions of FeaturePropertyType and ADV rules
  * 
  * @author doemming
  */
-public class GML3_Element2FeatureTypeBuilder implements IBuilder
+public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
 {
+
+  private final String m_gmlVersion;
+
+  public FeaturePropertyType2RelationTypeBuilder( String gmlVersion )
+  {
+    m_gmlVersion = gmlVersion;
+  }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
   public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element)elementObject;
+    final Element element = (Element) elementObject;
     final QName ref = element.getRef();
+    // TODO if elements have Props they get lost here ....
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      return build( reference );
+      final IRelationType rt = (IRelationType) build( reference )[0];
+      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, rt );
+      gmlSchema.register( element, result );
+      return new Object[] { result };
     }
-    final FeatureType result = new FeatureType( gmlSchema, element );
+
+    final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element );
+    if( advReferenziertesElement != null )
+    {
+      final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, advReferenziertesElement );
+      gmlSchema.register( element, advRelation );
+      return new Object[0];
+    }
+    final IRelationType result = new RelationType( gmlSchema, element );
     gmlSchema.register( element, result );
-    return new Object[]
-    { result };
+    return new Object[] { result };
   }
 
   /**
@@ -81,9 +101,9 @@ public class GML3_Element2FeatureTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof Element ) )
+    if( !(object instanceof Element) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element)object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object, m_gmlVersion );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -91,9 +111,15 @@ public class GML3_Element2FeatureTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    if( !"AbstractFeatureType".equals( localPart ) )
-      return false;
-    return true;
+    return GMLSchemaUtilities.getBaseOfRelationType( m_gmlVersion ).equals( localPart );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 
 }

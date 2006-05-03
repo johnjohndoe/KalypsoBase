@@ -29,12 +29,15 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
@@ -49,19 +52,22 @@ public class RelationContentTypeFromRestriction extends RelationContentType
 
   private RelationContentType m_restrictionBase = null;
 
+  private final List<LocalElement> m_elements;
+
   public RelationContentTypeFromRestriction( GMLSchema schema, ComplexType complexType, ComplexRestrictionType restriction )
   {
     super( schema, complexType );
     m_restriction = restriction;
+    m_elements = GMLSchemaUtilities.collectElements( schema, restriction, null );
   }
 
   /**
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public ExplicitGroup getSequence( )
+  public List<LocalElement> getSequence( )
   {
-    return m_restriction.getSequence();
+    return m_elements;
   }
 
   /**

@@ -32,7 +32,6 @@ package org.kalypso.gmlschema.builder;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -61,5 +60,13 @@ public interface IBuilder
    * @return true if builder can build something for this object
    */
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass );
+
+  /**
+   * This method is called, when two builder are concurrent for an object to build because both builders methodes
+   * isBuilderFor(GMLSchema, Object, String) return <code>true</code> for the same object to build.
+   * 
+   * @returns returns <code>true</code> if this builder replaces the other builder.
+   */
+  public boolean replaces( IBuilder other );
 
 }

@@ -40,7 +40,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
@@ -119,7 +118,7 @@ public class GMLSchemaUtilities
    * @param gmlSchema
    * @param complexType
    */
-  public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType )
+  public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType, String gmlVersion )
   {
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
@@ -129,8 +128,8 @@ public class GMLSchemaUtilities
     if( name != null )
     {
       final QName typeQName = new QName( gmlSchema.getTargetNamespace(), name );
-      if( isKnownType( typeQName ) )
-        return getKnownTypeFor( typeQName );
+      if( isKnownType( typeQName, gmlVersion ) )
+        return getKnownTypeFor( typeQName, gmlVersion );
     }
 
     if( sequence != null )
@@ -174,17 +173,12 @@ public class GMLSchemaUtilities
     }
 
     // propably a typehanlder exists for this
-    if( isKnownType( base ) )
-      return getKnownTypeFor( base );
+    if( isKnownType( base, gmlVersion ) )
+      return getKnownTypeFor( base, gmlVersion );
 
     // 3. handle a reference
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
-    if( reference instanceof ComplexTypeReference )
-      return findBaseType( (ComplexTypeReference) reference );
-    else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference) reference );
-    else
-      throw new UnsupportedOperationException();
+    return findBaseType( reference , gmlVersion );
   }
 
   private static boolean isXDSAnyType( QName base )
@@ -198,7 +192,7 @@ public class GMLSchemaUtilities
    * @param schema
    * @param simpleType
    */
-  public static QName findBaseType( GMLSchema schema, SimpleType simpleType )
+  public static QName findBaseType( GMLSchema schema, SimpleType simpleType, String gmlVersion )
   {
 
     // 1. check if it is a named type
@@ -207,42 +201,42 @@ public class GMLSchemaUtilities
     if( name != null )
     {
       final QName namedBase = new QName( schema.getTargetNamespace(), name );
-      if( isKnownType( namedBase ) )
-        return getKnownTypeFor( namedBase );
+      if( isKnownType( namedBase, gmlVersion ) )
+        return getKnownTypeFor( namedBase, gmlVersion );
     }
 
     // 2. check for base
     // propably a typehanlder exists for this
     final Restriction restriction = simpleType.getRestriction();
     if( restriction != null )
-      return findBaseType( schema, restriction );
+      return findBaseType( schema, restriction, gmlVersion );
 
     final Union union = simpleType.getUnion();
     if( union != null )
-      return findBaseType( schema, union );
+      return findBaseType( schema, union, gmlVersion );
     final org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list = simpleType.getList();
     if( list != null )
-      return findBaseType( schema, list );
+      return findBaseType( schema, list, gmlVersion );
     // should never happen !
     throw new UnsupportedOperationException();
   }
 
-  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list )
+  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list, String gmlVersion )
   {
     final LocalSimpleType simpleType = list.getSimpleType();
     final QName itemType = list.getItemType();
 
     QName base = null;
     if( simpleType != null )
-      base = findBaseType( schema, simpleType );
+      base = findBaseType( schema, simpleType, gmlVersion );
     else if( itemType != null )
     {
-      if( isKnownType( itemType ) )
-        base = getKnownTypeFor( itemType );
+      if( isKnownType( itemType, gmlVersion ) )
+        base = getKnownTypeFor( itemType, gmlVersion );
       else
       {
         final SimpleTypeReference reference = schema.resolveSimpleTypeReference( itemType );
-        base = findBaseType( reference );
+        base = findBaseType( reference, gmlVersion  );
       }
     }
     if( base == null )
@@ -250,7 +244,7 @@ public class GMLSchemaUtilities
     return new ListQName( base );
   }
 
-  private static QName findBaseType( GMLSchema schema, Union union )
+  private static QName findBaseType( GMLSchema schema, Union union, String gmlVersion )
   {
     final Set<QName> mixedSet = new HashSet<QName>();
     // embeddded simple types
@@ -259,7 +253,7 @@ public class GMLSchemaUtilities
     {
       for( int i = 0; i < simpleTypeArray.length; i++ )
       {
-        final QName base = findBaseType( schema, simpleTypeArray[i] );
+        final QName base = findBaseType( schema, simpleTypeArray[i], gmlVersion );
         if( base != null )
           mixedSet.add( base );
       }
@@ -271,12 +265,12 @@ public class GMLSchemaUtilities
       for( Iterator<QName> iter = memberTypes.iterator(); iter.hasNext(); )
       {
         final QName typeQName = iter.next();
-        if( isKnownType( typeQName ) )
-          mixedSet.add( getKnownTypeFor( typeQName ) );
+        if( isKnownType( typeQName, gmlVersion ) )
+          mixedSet.add( getKnownTypeFor( typeQName, gmlVersion ) );
         else
         {
           final SimpleTypeReference reference = schema.resolveSimpleTypeReference( typeQName );
-          mixedSet.add( findBaseType( reference ) );
+          mixedSet.add( findBaseType( reference , gmlVersion ) );
         }
       }
     }
@@ -289,20 +283,20 @@ public class GMLSchemaUtilities
       return new MixedQName( bases );
   }
 
-  private static QName findBaseType( GMLSchema schema, Restriction restriction )
+  private static QName findBaseType( GMLSchema schema, Restriction restriction, String gmlVersion )
   {
     final QName base = restriction.getBase();
-    if( isKnownType( base ) )
-      return getKnownTypeFor( base );
+    if( isKnownType( base, gmlVersion ) )
+      return getKnownTypeFor( base, gmlVersion );
 
     // 3. handle a reference
     final TypeReference reference = schema.resolveTypeReference( base );
     // final ElementReference reference = (ElementReference) resolveReference;
-    return findBaseType( reference );
+    return findBaseType( reference , gmlVersion );
 
   }
 
-  public static QName findBaseType( final GMLSchema schema, final Element element )
+  public static QName findBaseType( final GMLSchema schema, final Element element, String gmlVersion )
   {
     final QName qName;
     final int constructionType = getConstructionType( element );
@@ -310,10 +304,10 @@ public class GMLSchemaUtilities
     {
       case CONSTRUCTION_ANONYMOUS_SIMPLE_TYPE:
         final LocalSimpleType simpleType = element.getSimpleType();
-        return findBaseType( schema, simpleType );
+        return findBaseType( schema, simpleType, gmlVersion );
       case CONSTRUCTION_ANONYMOUS_COMPLEX_TYPE:
         final LocalComplexType complexType = element.getComplexType();
-        return findBaseType( schema, complexType );
+        return findBaseType( schema, complexType, gmlVersion );
       case CONSTRUCTION_REFERENCED_TYPE:
         qName = element.getRef();
         break;
@@ -327,8 +321,8 @@ public class GMLSchemaUtilities
         throw new UnsupportedOperationException();
     }
 
-    if( isKnownType( qName ) )
-      return getKnownTypeFor( qName );
+    if( isKnownType( qName, gmlVersion ) )
+      return getKnownTypeFor( qName, gmlVersion );
 
     switch( constructionType )
     {
@@ -339,10 +333,10 @@ public class GMLSchemaUtilities
           System.out.println( "could not resolve element reference to " + qName );
           return null;
         }
-        return findBaseType( elementReference );
+        return findBaseType( elementReference, gmlVersion );
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = schema.resolveTypeReference( qName );
-        return findBaseType( typeReference );
+        return findBaseType( typeReference, gmlVersion  );
       default:
         throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
     }
@@ -377,29 +371,29 @@ public class GMLSchemaUtilities
   /**
    * @param reference
    */
-  private static QName findBaseType( SimpleTypeReference reference )
+  private static QName findBaseType( SimpleTypeReference reference, String gmlVersion )
   {
-    return findBaseType( reference.getGMLSchema(), reference.getSimpleType() );
+    return findBaseType( reference.getGMLSchema(), reference.getSimpleType(), gmlVersion );
   }
 
   /**
    * @param reference
    */
-  private static QName findBaseType( TypeReference reference )
+  private static QName findBaseType( TypeReference reference, String gmlVersion )
   {
     if( reference instanceof ComplexTypeReference )
-      return findBaseType( (ComplexTypeReference) reference );
+      return findBaseType( (ComplexTypeReference) reference, gmlVersion );
     else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference) reference );
+      return findBaseType( (SimpleTypeReference) reference, gmlVersion  );
     throw new UnsupportedOperationException( "unknown refrence" );
   }
 
   /**
    * @param reference
    */
-  private static QName findBaseType( ComplexTypeReference reference )
+  private static QName findBaseType( ComplexTypeReference reference, String gmlVersion )
   {
-    return findBaseType( reference.getGMLSchema(), reference.getComplexType() );
+    return findBaseType( reference.getGMLSchema(), reference.getComplexType(), gmlVersion );
   }
 
   /**
@@ -408,22 +402,22 @@ public class GMLSchemaUtilities
    * @param qName
    * @return true is qName is a known type
    */
-  private static boolean isKnownType( final QName qName )
+  public static boolean isKnownType( final QName qName, String gmlVersion )
   {
-    return getKnownTypeFor( qName ) != null;
+    return getKnownTypeFor( qName, gmlVersion ) != null;
   }
 
-  private static QName findBaseType( final ElementReference reference )
+  private static QName findBaseType( final ElementReference reference, String gmlVersion )
   {
     final Element element = reference.getElement();
     final GMLSchema schema = reference.getGMLSchema();
-    return findBaseType( schema, element );
+    return findBaseType( schema, element, gmlVersion );
   }
 
   /**
    * @param qName
    */
-  private static QName getKnownTypeFor( final QName qName )
+  private static QName getKnownTypeFor( final QName qName, String gmlVersion )
   {
     final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qName );
@@ -436,19 +430,15 @@ public class GMLSchemaUtilities
     if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
     {
 
-      // IMPORTANT:
-      // - AbstractFeatureType is here to support GML2-Schema, do not remove it !!
-      // - Do not change order of AbstractFeatureType and AbstractGMLType !!
-      // 1. AbstractFeatureType
-      // 2. AbstractGMLType
-      if( "AbstractFeatureType".equals( localPart ) ) // -> build a FeatureType
+      if( GMLSchemaUtilities.getBaseOfFeatureType( gmlVersion ).equals( localPart ) )
         return result;
-      if( "AbstractGMLType".equals( localPart ) ) // -> build a FeatureType also
+
+      if( GMLSchemaUtilities.getBaseOfGeometriesType().equals( localPart ) )
         return result;
-      else if( "FeatureAssociationType".equals( localPart ) ) // -> build a RelationType
+
+      if( GMLSchemaUtilities.getBaseOfRelationType( gmlVersion ).equals( localPart ) )
         return result;
-      else if( "FeaturePropertyType".equals( localPart ) ) // -> build a RelationType
-        return result;
+
     }
     return null;
   }
@@ -639,12 +629,12 @@ public class GMLSchemaUtilities
   {
     if( collector == null )
       collector = new ArrayList<LocalElement>();
+    if( extension == null )
+      return collector;
     final ExplicitGroup sequence = extension.getSequence();
-    if( sequence != null )
-      collectElements( schema, sequence, collector );
+    collectElements( schema, sequence, collector );
     final GroupRef group = extension.getGroup();
-    if( group != null )
-      collectElements( schema, group, collector );
+    collectElements( schema, group, collector );
     return collector;
   }
 
@@ -652,12 +642,12 @@ public class GMLSchemaUtilities
   {
     if( collector == null )
       collector = new ArrayList<LocalElement>();
+    if( restriction == null )
+      return collector;
     final ExplicitGroup sequence = restriction.getSequence();
-    if( sequence != null )
-      collectElements( schema, sequence, collector );
+    collectElements( schema, sequence, collector );
     final GroupRef group = restriction.getGroup();
-    if( group != null )
-      collectElements( schema, group, collector );
+    collectElements( schema, group, collector );
     return collector;
   }
 
@@ -665,6 +655,8 @@ public class GMLSchemaUtilities
   {
     if( collector == null )
       collector = new ArrayList<LocalElement>();
+    if( group == null )
+      return collector;
     // elements
     final LocalElement[] elementArray = group.getElementArray();
     if( elementArray != null )
@@ -712,6 +704,29 @@ public class GMLSchemaUtilities
       return collectElements( refSchema, refGroup, collector );
     }
     return collector;
+  }
+
+  public static String getBaseOfFeatureType( final String gmlVersion )
+  {
+    if( gmlVersion.startsWith( "2" ) )
+      return GMLSchemaConstants.GML2_FeatureTypeBaseType;
+    if( gmlVersion.startsWith( "3" ) )
+      return GMLSchemaConstants.GML3_FeatureTypeBaseType;
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+  }
+
+  public static String getBaseOfRelationType( String gmlVersion )
+  {
+    if( gmlVersion.startsWith( "2" ) )
+      return GMLSchemaConstants.GML2_RelationBaseType;
+    if( gmlVersion.startsWith( "3" ) )
+      return GMLSchemaConstants.GML3_RelationBaseType;
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+  }
+
+  public static String getBaseOfGeometriesType( )
+  {
+    return "AbstractGeometryType";
   }
 
 }

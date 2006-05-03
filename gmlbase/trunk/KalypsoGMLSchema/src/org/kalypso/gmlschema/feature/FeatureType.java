@@ -37,6 +37,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -114,7 +115,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
-
+    if(m_featureContentType==null)
+      System.out.println("debug");
     // initialize substitution group
     final QName substitutionGroup = m_element.getSubstitutionGroup();
     if( substitutionGroup != null )
@@ -122,8 +124,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       final ElementReference substitutesReference = m_gmlSchema.resolveElementReference( substitutionGroup );
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
-      final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
-      m_substituteFT = ft;
+      if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
+        m_substituteFT = null;
+      else
+      {
+        final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
+        m_substituteFT = ft;
+      }
     }
     else
       m_substituteFT = null;

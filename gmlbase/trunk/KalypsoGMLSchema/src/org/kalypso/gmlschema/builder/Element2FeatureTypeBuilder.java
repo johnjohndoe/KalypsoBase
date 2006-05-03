@@ -39,7 +39,6 @@ import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
@@ -47,12 +46,19 @@ import org.kalypso.gmlschema.xml.ElementReference;
 public class Element2FeatureTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public Element2FeatureTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
   public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element)elementObject;
+    final Element element = (Element) elementObject;
     final QName ref = element.getRef();
     if( ref != null )
     {
@@ -61,8 +67,7 @@ public class Element2FeatureTypeBuilder implements IBuilder
     }
     final FeatureType result = new FeatureType( gmlSchema, element );
     gmlSchema.register( element, result );
-    return new Object[]
-    { result };
+    return new Object[] { result };
   }
 
   /**
@@ -81,9 +86,9 @@ public class Element2FeatureTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !( object instanceof Element ) )
+    if( !(object instanceof Element) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element)object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object ,m_version);
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -91,9 +96,15 @@ public class Element2FeatureTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    if( !"AbstractFeatureType".equals( localPart ) )
-      return false;
-    return true;
+    return GMLSchemaUtilities.getBaseOfFeatureType(m_version).equals( localPart );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 
 }

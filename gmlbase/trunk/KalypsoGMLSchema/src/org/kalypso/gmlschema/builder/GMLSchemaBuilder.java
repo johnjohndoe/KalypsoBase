@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
@@ -73,14 +74,28 @@ public class GMLSchemaBuilder
     m_registeredBuilders.add( builder );
   }
 
-  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
+  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
+    IBuilder result = null;
     for( final IBuilder builder : m_registeredBuilders )
     {
       try
       {
         if( builder.isBuilderFor( gmlSchema, object, null ) )
-          return builder;
+        {
+          // if allready a builder found, new one must replace the old one
+          if( result == null )
+            result = builder;
+          else if( builder.replaces( result ) )
+            result = builder;
+          else if( !result.replaces( builder ) )
+          {
+            System.out.println( "\n object to build:\n" + object );
+            System.out.println( "1 - " + builder.getClass().getName() );
+            System.out.println( "2 - " + result.getClass().getName() );
+            throw new GMLSchemaException( "concurrent builders available" );
+          }
+        }
       }
       catch( final Exception e )
       {
@@ -88,7 +103,7 @@ public class GMLSchemaBuilder
         // nothing
       }
     }
-    return null;
+    return result;
   }
 
   public GMLSchema buildGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
@@ -157,7 +172,7 @@ public class GMLSchemaBuilder
     }
   }
 
-  private void rBuild( GMLSchema gmlSchema, Object object )
+  private void rBuild( GMLSchema gmlSchema, Object object ) throws GMLSchemaException
   {
     final IBuilder builder = getBuilderFor( gmlSchema, object, null );
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
@@ -171,7 +186,7 @@ public class GMLSchemaBuilder
    * @param gmlSchema
    * @param objects
    */
-  private void rbuild( GMLSchema gmlSchema, Object[] objects )
+  private void rbuild( GMLSchema gmlSchema, Object[] objects ) throws GMLSchemaException
   {
     for( int i = 0; i < objects.length; i++ )
     {

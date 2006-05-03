@@ -43,6 +43,13 @@ import org.kalypso.gmlschema.property.PropertyType;
 public class PropertyType2SimpleTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public PropertyType2SimpleTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -62,5 +69,13 @@ public class PropertyType2SimpleTypeBuilder implements IBuilder
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof PropertyType;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 }

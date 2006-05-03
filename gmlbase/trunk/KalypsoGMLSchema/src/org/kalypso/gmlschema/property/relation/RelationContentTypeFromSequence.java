@@ -29,8 +29,10 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import java.util.List;
+
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
@@ -42,18 +44,18 @@ import org.kalypso.gmlschema.GMLSchema;
 public class RelationContentTypeFromSequence extends RelationContentType
 {
 
-  private final ExplicitGroup m_sequence;
+  private final List<LocalElement> m_elements;
 
-  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, ExplicitGroup sequence )
+  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<LocalElement> elements)
   {
     super( gmlSchema, complexType );
-    m_sequence = sequence;
+    m_elements = elements;
   }
 
   @Override
-  public ExplicitGroup getSequence()
+  public List<LocalElement> getSequence()
   {
-    return m_sequence;
+    return m_elements;
   }
 
  

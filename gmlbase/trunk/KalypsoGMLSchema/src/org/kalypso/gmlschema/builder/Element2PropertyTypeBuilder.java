@@ -50,6 +50,13 @@ import org.kalypso.gmlschema.xml.ElementReference;
 public class Element2PropertyTypeBuilder implements IBuilder
 {
 
+  private final String m_version;
+
+  public Element2PropertyTypeBuilder( String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -90,12 +97,20 @@ public class Element2PropertyTypeBuilder implements IBuilder
   {
     if( !(object instanceof Element) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object , m_version);
     if( baseType == null )
       return false;
     final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
     return typeHandler != null;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    return false;
   }
 
 }

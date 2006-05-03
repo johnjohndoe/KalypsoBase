@@ -29,7 +29,6 @@
  */
 package org.kalypso.gmlschema.builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -42,21 +41,29 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.FeatureContentType;
-import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
-import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
-import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
+import org.kalypso.gmlschema.property.relation.RelationContentType;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
+import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
 
 /**
- * a builder
+ * another builder
  * 
  * @author doemming
  */
-public class GML3_ComplexType2FeatureContentTypeBuilder implements IBuilder
+public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IBuilder
 {
+
+  private final String m_version;
+
+  public ComplexTypeDirectReference2RelationContentTypeBuilder( String version )
+  {
+    m_version = version;
+  }
 
   /**
    * @param gmlSchema
@@ -64,7 +71,7 @@ public class GML3_ComplexType2FeatureContentTypeBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object complexTypeObject )
   {
-    FeatureContentType result = null;
+    RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
     if( complexContent != null )
@@ -72,32 +79,19 @@ public class GML3_ComplexType2FeatureContentTypeBuilder implements IBuilder
       final ExtensionType extension = complexContent.getExtension();
       final ComplexRestrictionType restriction = complexContent.getRestriction();
       if( extension != null )
-        result = new FeatureContentTypeFromExtension( gmlSchema, complexType, extension );
+        result = new RelationContentTypeFromExtension( gmlSchema, complexType, extension );
       else if( restriction != null )
-        result = new FeatureContentTypeFromRestriction( gmlSchema, complexType, restriction );
+        result = new RelationContentTypeFromRestriction( gmlSchema, complexType, restriction );
       else
         throw new UnsupportedOperationException();
     }
     else
     {
-      final List<LocalElement> collector = new ArrayList<LocalElement>();
-      final ExplicitGroup sequence = complexType.getSequence();
-      if( sequence != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, sequence, collector );
-      final All all = complexType.getAll();
-      if( all != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
-      final GroupRef group = complexType.getGroup();
-      if( group != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
-      result = new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
+      final List<LocalElement> elements = findReferencedElements( gmlSchema, complexType );
+      result = new RelationContentTypeFromSequence( gmlSchema, complexType, elements );
     }
-    if( result != null )
-    {
-      gmlSchema.register( complexTypeObject, result );
-      return new Object[] { result };
-    }
-    return new Object[0];
+    gmlSchema.register( complexTypeObject, result );
+    return new Object[] { result };
   }
 
   /**
@@ -109,17 +103,49 @@ public class GML3_ComplexType2FeatureContentTypeBuilder implements IBuilder
     if( !(object instanceof ComplexType) )
       return false;
     final ComplexType complexType = (ComplexType) object;
-    if( "AbstractGMLType".equals( complexType.getName() ) && GMLSchemaConstants.NS_GML2.equals( gmlSchema.getTargetNamespace() ) )
+    // check if base is a RelationType
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
+    if( baseType != null//
+        && GMLSchemaConstants.NS_GML2.equals( baseType.getNamespaceURI() )//
+        && GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( baseType.getLocalPart() ) )
       return true;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType );
-    if( baseType == null )
+    // find referenced element (target)
+    final List<LocalElement> elements = findReferencedElements( gmlSchema, complexType );
+    if( elements.size() != 1 )
       return false;
-    final String namespaceURI = baseType.getNamespaceURI();
-    final String localPart = baseType.getLocalPart();
+    final LocalElement targetElement = elements.get( 0 );
+    // check if target is a feature
+    final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement, m_version );
+    if( baseQName == null )
+      return false;
+    if( !NS.GML2.equals( baseQName.getNamespaceURI() ) )
+      return false;
+    return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( baseQName.getLocalPart() );
+  }
 
-    // GML
-    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
-      return false;
-    return "AbstractFeatureType".equals( localPart );
+  private List<LocalElement> findReferencedElements( GMLSchema gmlSchema, ComplexType complexType )
+  {
+    final ExplicitGroup sequence = complexType.getSequence();
+    final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
+    final All all = complexType.getAll();
+    GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
+    final GroupRef group = complexType.getGroup();
+    GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
+    final ExplicitGroup choice = complexType.getChoice();
+    GMLSchemaUtilities.collectElements( gmlSchema, choice, collector );
+    return collector;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
+   */
+  public boolean replaces( IBuilder other )
+  {
+    if(
+    // other instanceof GML3_ComplexType2RelationContentTypeBuilder//
+    // ||
+    other instanceof ComplexType2RelationContentTypeBuilder )
+      return true;
+    return false;
   }
 }

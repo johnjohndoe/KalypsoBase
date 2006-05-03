@@ -56,22 +56,25 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 
   private final IRestriction[] m_valueRestriction;
 
-  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, ITypeHandler typeHandler )
+  private final String m_gmlVersion;
+
+  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, ITypeHandler typeHandler, String gmlVersion )
   {
     // TODO check for restriction
     m_gmlSchema = gmlSchema;
     m_typeObject = typeObject;
     m_typeHandler = typeHandler;
+    m_gmlVersion = gmlVersion;
 
     if( typeObject instanceof ComplexType )
     {
-      m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject );
+      m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject, m_gmlVersion );
       m_valueRestriction = new IRestriction[0];
     }
     else if( typeObject instanceof SimpleType )
     {
       final SimpleType simpleType = (SimpleType) typeObject;
-      m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, simpleType );
+      m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, simpleType, m_gmlVersion );
       if( simpleType.isSetRestriction() )
         m_valueRestriction = ContentRestrictionFactory.createRestrictions( simpleType.getRestriction() );
       else

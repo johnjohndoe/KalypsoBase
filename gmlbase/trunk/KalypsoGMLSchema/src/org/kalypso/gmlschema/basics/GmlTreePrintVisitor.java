@@ -52,7 +52,7 @@ implements ITreeContentProviderVisitor
 {
   private final ILabelProvider m_labelProvider;
 
-  private final StringBuffer m_buffer;
+  public final StringBuffer m_buffer;
 
   public GmlTreePrintVisitor( final ILabelProvider labelProvider, StringBuffer buffer )
   {

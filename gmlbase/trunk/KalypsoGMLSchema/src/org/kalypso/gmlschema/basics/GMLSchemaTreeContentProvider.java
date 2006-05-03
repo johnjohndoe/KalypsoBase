@@ -30,6 +30,7 @@
 package org.kalypso.gmlschema.basics;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -52,6 +53,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   private boolean m_detailed;
 
   private GMLSchema m_context;
+
+  // key=schema, value=parent of schown schemas
+  private Hashtable<GMLSchema, GMLSchema> m_importMap = new Hashtable<GMLSchema, GMLSchema>();
 
   public GMLSchemaTreeContentProvider( final GMLSchema context, boolean detailed )
   {
@@ -81,14 +85,27 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     if( parent instanceof GMLSchema )
     {
       final GMLSchema schema = (GMLSchema) parent;
-      
-      final GMLSchema[] importedSchemas = schema.getImports();
-      final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
 
-      final Object[] children = new Object[importedSchemas.length + featureTypes.length];
-      System.arraycopy( importedSchemas, 0, children, 0, importedSchemas.length );
-      System.arraycopy( featureTypes, 0, children, importedSchemas.length, featureTypes.length );
-      
+      final GMLSchema[] importedSchemas = schema.getImports();
+      final List<GMLSchema> schemasToShow = new ArrayList<GMLSchema>();
+      for( GMLSchema _import : importedSchemas )
+      {
+        if( !m_importMap.containsKey( _import ) )
+        {
+          schemasToShow.add( _import );
+          m_importMap.put( _import, schema );
+        }
+        else
+        {
+          // if called for the same position (e.g. update for a view)
+          if( m_importMap.get( _import ) == schema )
+            schemasToShow.add( _import );
+        }
+      }
+      final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
+      final Object[] children = new Object[schemasToShow.size() + featureTypes.length];
+      System.arraycopy( schemasToShow.toArray(), 0, children, 0, schemasToShow.size() );
+      System.arraycopy( featureTypes, 0, children, schemasToShow.size(), featureTypes.length );
       return children;
     }
     if( !m_detailed )
@@ -197,6 +214,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
+    m_importMap.clear();
     setContext( (GMLSchema) newInput );
   }
 
