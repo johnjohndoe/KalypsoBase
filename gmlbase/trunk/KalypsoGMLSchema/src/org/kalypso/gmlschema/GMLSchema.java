@@ -29,7 +29,6 @@
  */
 package org.kalypso.gmlschema;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -206,26 +205,23 @@ public class GMLSchema
         final String namespaceToImport = import_.getNamespace();
         if( !m_ignoreNameSpaces.contains( namespaceToImport ) )
         {
-          GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport );
-          if( gmlSchema == null )
+          final URL schemaLocationURL;
+          if( schemaLocation == null )
+            schemaLocationURL = null;
+          else
           {
-            final URL url;
-            try
-            {
-              url = m_urlResolver.resolveURL( m_context, schemaLocation );
-            }
-            catch( final MalformedURLException e )
-            {
-              if( schemaLocation != null )
-                throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
-              throw new GMLSchemaException( "could not import schema, no schemaLocation", e );
-            }
-            gmlSchema = GMLSchemaCatalog.getSchema( url );
-            // TODO gmlSchema may return with null, handle this
-            // maybe like this?: throw new GMLSchemaException( "could not import schema from " + schemaLocation, e );
+            // this may throw an MalformedURLException, but this is ok
+            // because no schema should contain a malformed url!
+            schemaLocationURL = m_urlResolver.resolveURL( m_context, schemaLocation );
           }
+
+          // always try to load with schemaLocation if present
+          final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport, schemaLocationURL );
+
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+          else
+            throw new GMLSchemaException( "Could not import schema: " + namespaceToImport + " with schemalocation: " + schemaLocation );
         }
       }
 

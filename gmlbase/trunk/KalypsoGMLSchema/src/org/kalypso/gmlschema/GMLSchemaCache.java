@@ -125,6 +125,11 @@ public class GMLSchemaCache
       // e.printStackTrace();
     }
 
+    // PROBLEM: we have a problem with imported schematas here.
+    // If an imported schema is updated, it will not be reloaded if
+    // the importing schema is still in memory.
+    // TODO: maybe create a validity from all imported schematas as well?
+    
     // if objekt already in memCache and is valid, just return it
     final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( namespace );
     if( sw != null && (validity == null || validity.compareTo( sw.getValidity() ) <= 0) )
@@ -276,5 +281,16 @@ public class GMLSchemaCache
     {
       return m_validity;
     }
+  }
+
+  /**
+   * Clears the cache. Schematas will be reloaded after this operation.
+   * @param onlyMemoryCache If true, only the memory cache is cleared. Else, file and memory cache are cleared.
+   */
+  public void clearCache( final boolean onlyMemoryCache )
+  {
+    m_memCache.clear();
+    if( !onlyMemoryCache )
+      m_fileCache.clear();
   }
 }

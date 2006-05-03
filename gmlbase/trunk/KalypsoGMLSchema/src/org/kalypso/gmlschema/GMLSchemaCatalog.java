@@ -29,12 +29,11 @@ public final class GMLSchemaCatalog
 
   private static GMLSchemaCache THE_CACHE;
 
-   private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException(
-      "Schema-Katalog nicht initialisiert. Zuerst 'init' aufrufen!" );
+  private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException( "Schema-Katalog nicht initialisiert. Zuerst 'init' aufrufen!" );
 
   private static IUrlCatalog THE_CATALOG;
 
-  private GMLSchemaCatalog()
+  private GMLSchemaCatalog( )
   {
     // wird nicht instantiiert
   }
@@ -55,14 +54,14 @@ public final class GMLSchemaCatalog
     // delete old tmp-dir
     FileUtilities.deleteRecursive( TMP_DIR );
     TMP_DIR.mkdirs();
-    
+
     THE_CACHE = new GMLSchemaCache( cacheDirectory, TMP_DIR );
 
     LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
   }
-  
-  /** Should be called when this cache is no more used. Releases all blocked resources.*/
-  public synchronized static void release()
+
+  /** Should be called when this cache is no more used. Releases all blocked resources. */
+  public synchronized static void release( )
   {
     FileUtilities.deleteRecursive( TMP_DIR );
   }
@@ -88,7 +87,7 @@ public final class GMLSchemaCatalog
     {
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
-      
+
       THE_CACHE.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
 
       return schema;
@@ -110,8 +109,11 @@ public final class GMLSchemaCatalog
   }
 
   /**
-   * Lädt ein (eventuell gecachetes) Schema. Ist das schema nicht bereits bekannt (=gecached), wird über den Katalog oder über die gegebene URL geladen.
-   * <p>Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.</p>
+   * Lädt ein (eventuell gecachetes) Schema. Ist das schema nicht bereits bekannt (=gecached), wird über den Katalog
+   * oder über die gegebene URL geladen.
+   * <p>
+   * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
+   * </p>
    */
   public synchronized static GMLSchema getSchema( final String namespace, final URL schemaLocation )
   {
@@ -124,5 +126,16 @@ public final class GMLSchemaCatalog
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
     return THE_CACHE.getSchema( namespace, schemaUrl );
+  }
+
+  /**
+   * Clears the cache. Schematas are reloaded after this operation.
+   * 
+   * @param onlyMemoryCache
+   *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
+   */
+  public static void clearCache( final boolean onlyMemoryCache )
+  {
+    THE_CACHE.clearCache( onlyMemoryCache );
   }
 }
