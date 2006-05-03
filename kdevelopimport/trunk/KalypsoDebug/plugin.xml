@@ -27,4 +27,39 @@
          point="org.kalypso.core.obsManipulator">
       <obsManipulator class="org.kalypso.debug.zml.SimpleWQTableObsManipulator"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Kommandos für die Behandlung von GML"
+            id="org.kalypso.debug.gml"
+            label="Kalypso GML Actions"
+            visible="false">
+         <menu
+               id="org.kalypso.gmlmenu"
+               label="GML"
+               path="additions">
+            <groupMarker name="cache"/>
+         </menu>
+         <menu
+               id="org.kalypso.debug.gmlactions.cachemenu"
+               label="Cache"
+               path="org.kalypso.gmlmenu/cache">
+            <groupMarker name="start"/>
+         </menu>
+         <action
+               class="org.kalypso.debug.gml.cache.ClearMemCacheActionDelegate"
+               id="org.kalypso.gml.cache.clearMemAction"
+               label="Speicher-Cache löschen"
+               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
+               style="push"
+               tooltip="Löscht alle Schemata aus dem Cache im Speicher"/>
+         <action
+               class="org.kalypso.debug.gml.cache.ClearFileCacheActionDelegate"
+               id="org.kalypso.gml.cache.clearFileAction"
+               label="Datei-Cache löschen"
+               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
+               style="push"
+               tooltip="Löscht alle Schemata aus dem Cache. Alle Schemata werden danach vollständig neu geladen."/>
+      </actionSet>
+   </extension>
 </plugin>
