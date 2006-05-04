@@ -744,4 +744,37 @@ public class GMLSchemaUtilities
     return "AbstractGeometryType";
   }
 
+  public static URL getSchemaURLFromSchemaLocation( final String schemaLocation, final URL context ) throws MalformedURLException
+  {
+    // get schema from schemalocation
+    final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
+    if( splittetSchemaLocation.length == 0 )
+      return null;
+
+    if( splittetSchemaLocation.length < 2 )
+      return null;
+    else
+    {
+      final String locationURI = splittetSchemaLocation[1];
+
+      if( context != null )
+        return new UrlResolver().resolveURL( context, locationURI );
+      else
+        return new URL( locationURI );
+    }
+  }
+
+  public static String getSchemaNamespaceFromSchemaLocation( final String schemaLocation )
+  {
+    // get schema from schemalocation
+    final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
+    if( splittetSchemaLocation.length == 0 )
+      return null;
+
+    if( splittetSchemaLocation.length < 1 )
+      return null;
+
+    return splittetSchemaLocation[0];
+  }
+
 }
