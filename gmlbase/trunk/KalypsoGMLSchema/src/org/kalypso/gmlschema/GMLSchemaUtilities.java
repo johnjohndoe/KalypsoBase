@@ -178,7 +178,7 @@ public class GMLSchemaUtilities
 
     // 3. handle a reference
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
-    return findBaseType( reference , gmlVersion );
+    return findBaseType( reference, gmlVersion );
   }
 
   private static boolean isXDSAnyType( QName base )
@@ -236,7 +236,7 @@ public class GMLSchemaUtilities
       else
       {
         final SimpleTypeReference reference = schema.resolveSimpleTypeReference( itemType );
-        base = findBaseType( reference, gmlVersion  );
+        base = findBaseType( reference, gmlVersion );
       }
     }
     if( base == null )
@@ -270,7 +270,7 @@ public class GMLSchemaUtilities
         else
         {
           final SimpleTypeReference reference = schema.resolveSimpleTypeReference( typeQName );
-          mixedSet.add( findBaseType( reference , gmlVersion ) );
+          mixedSet.add( findBaseType( reference, gmlVersion ) );
         }
       }
     }
@@ -292,7 +292,7 @@ public class GMLSchemaUtilities
     // 3. handle a reference
     final TypeReference reference = schema.resolveTypeReference( base );
     // final ElementReference reference = (ElementReference) resolveReference;
-    return findBaseType( reference , gmlVersion );
+    return findBaseType( reference, gmlVersion );
 
   }
 
@@ -336,7 +336,7 @@ public class GMLSchemaUtilities
         return findBaseType( elementReference, gmlVersion );
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = schema.resolveTypeReference( qName );
-        return findBaseType( typeReference, gmlVersion  );
+        return findBaseType( typeReference, gmlVersion );
       default:
         throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
     }
@@ -384,7 +384,7 @@ public class GMLSchemaUtilities
     if( reference instanceof ComplexTypeReference )
       return findBaseType( (ComplexTypeReference) reference, gmlVersion );
     else if( reference instanceof SimpleTypeReference )
-      return findBaseType( (SimpleTypeReference) reference, gmlVersion  );
+      return findBaseType( (SimpleTypeReference) reference, gmlVersion );
     throw new UnsupportedOperationException( "unknown refrence" );
   }
 
@@ -701,11 +701,26 @@ public class GMLSchemaUtilities
       final GroupReference reference = schema.resolveGroupReference( ref );
       final NamedGroup refGroup = reference.getGroup();
       final GMLSchema refSchema = reference.getGMLSchema();
-      return collectElements( refSchema, refGroup, collector );
+      collectElements( refSchema, refGroup, collector );
+    }
+    // TODO choices are now handled as sequence, this is not correct -> implement concept of validator or better chioce
+    // support
+
+    final ExplicitGroup[] choiceArray = group.getChoiceArray();
+    if( choiceArray != null )
+    {
+      for( int i = 0; i < choiceArray.length; i++ )
+      {
+        final ExplicitGroup choice = choiceArray[i];
+        collectElements( schema, choice, collector );
+      }
     }
     return collector;
   }
 
+  /**
+   * GML-Version switch
+   */
   public static String getBaseOfFeatureType( final String gmlVersion )
   {
     if( gmlVersion.startsWith( "2" ) )

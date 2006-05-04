@@ -515,13 +515,24 @@ public class GMLSchema
    */
   public void accept( final IGMLSchemaVisitor visitor )
   {
-    if( visitor.visit( this ) )
+    innerAccept( visitor, new ArrayList<GMLSchema>() );
+  }
+
+  /**
+   * @param schemasToIgnore
+   *          list of schemas not to visit
+   * @param visitor
+   */
+  private void innerAccept( final IGMLSchemaVisitor visitor, final List<GMLSchema> schemasToIgnore )
+  {
+    if( visitor.visit( this ) && !schemasToIgnore.contains( this ) )
     {
+      schemasToIgnore.add( this );
       final GMLSchema[] imports = getImports();
       for( int i = 0; i < imports.length; i++ )
       {
         final GMLSchema schema = imports[i];
-        schema.accept( visitor );
+        schema.innerAccept( visitor, schemasToIgnore );
       }
     }
   }

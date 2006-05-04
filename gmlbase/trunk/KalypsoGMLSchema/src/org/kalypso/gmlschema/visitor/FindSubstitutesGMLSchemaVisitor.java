@@ -54,12 +54,20 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 
   private final GMLSchema m_contextGMLSchema;
 
+  private final List<IFeatureType> m_path;
+
   public FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
+  {
+    this( contextGMLSchema, substitutionHeadFT, includeAbstract, includeThis, new ArrayList<IFeatureType>() );
+  }
+
+  private FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis, List<IFeatureType> path )
   {
     m_contextGMLSchema = contextGMLSchema;
     m_substitutionHeadFT = substitutionHeadFT;
     m_includeAbstract = includeAbstract;
     m_includeThis = includeThis;
+    m_path = path;
   }
 
   /**
@@ -96,7 +104,14 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     for( int i = 0; i < headFTs.length; i++ )
     {
       final IFeatureType ft = headFTs[i];
-      final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( m_contextGMLSchema, ft, m_includeAbstract, m_includeThis );
+      final List<IFeatureType> newPath = new ArrayList<IFeatureType>( m_path );
+      if( newPath.contains( ft ) )
+      {
+        System.out.println( "debug" + newPath );
+        throw new UnsupportedOperationException();
+      }
+      newPath.add( ft );
+      final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( m_contextGMLSchema, ft, m_includeAbstract, m_includeThis, newPath );
       m_contextGMLSchema.accept( visitor );
       final IFeatureType[] substitutes = visitor.getSubstitutes();
       for( int j = 0; j < substitutes.length; j++ )
