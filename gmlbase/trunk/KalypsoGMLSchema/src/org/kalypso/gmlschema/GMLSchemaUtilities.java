@@ -385,7 +385,7 @@ public class GMLSchemaUtilities
       return findBaseType( (ComplexTypeReference) reference, gmlVersion );
     else if( reference instanceof SimpleTypeReference )
       return findBaseType( (SimpleTypeReference) reference, gmlVersion );
-    throw new UnsupportedOperationException( "unknown refrence" );
+    throw new UnsupportedOperationException( "unknown reference" );
   }
 
   /**
