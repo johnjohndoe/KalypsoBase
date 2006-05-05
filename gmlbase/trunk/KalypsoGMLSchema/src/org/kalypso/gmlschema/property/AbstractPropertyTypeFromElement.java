@@ -29,12 +29,10 @@
  */
 package org.kalypso.gmlschema.property;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.basics.QualifiedElement;

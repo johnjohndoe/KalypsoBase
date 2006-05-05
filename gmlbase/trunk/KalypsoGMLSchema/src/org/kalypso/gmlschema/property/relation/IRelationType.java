@@ -43,11 +43,5 @@ public interface IRelationType extends IPropertyType
 
   public boolean isLinkAble( );
 
-  // @Andreas: would it not be better to have a mehtod like this:
-  // public IFeatureType getTargetType();
-  // to retrieve the target of this relation
-  // and instead of the next method, just ask first the trgetType and then
-  // ask the schema for its substitues?
-  // Gernot
   public IFeatureType getTargetFeatureType( );
 }
