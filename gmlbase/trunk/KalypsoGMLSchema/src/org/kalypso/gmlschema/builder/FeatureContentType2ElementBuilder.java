@@ -31,9 +31,8 @@ package org.kalypso.gmlschema.builder;
 
 import java.util.List;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 
 /**
@@ -57,8 +56,8 @@ public class FeatureContentType2ElementBuilder implements IBuilder
   public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject )
   {
     final FeatureContentType fct = (FeatureContentType) featureContentTypeObject;
-    final List<LocalElement> sequence = fct.getSequence();
-    return sequence.toArray( new Element[sequence.size()] );
+    final List<ElementWithOccurs> sequence = fct.getSequence();
+    return sequence.toArray( new ElementWithOccurs[sequence.size()] );
   }
 
   /**

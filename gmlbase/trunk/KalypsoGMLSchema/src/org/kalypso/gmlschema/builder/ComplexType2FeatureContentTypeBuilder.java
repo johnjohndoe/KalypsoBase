@@ -29,22 +29,18 @@
  */
 package org.kalypso.gmlschema.builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
@@ -87,16 +83,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     }
     else
     {
-      final List<LocalElement> collector = new ArrayList<LocalElement>();
-      final ExplicitGroup sequence = complexType.getSequence();
-      if( sequence != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, sequence, collector );
-      final All all = complexType.getAll();
-      if( all != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
-      final GroupRef group = complexType.getGroup();
-      if( group != null )
-        GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
+      final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
       result = new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
     }
     if( result != null )
@@ -118,7 +105,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     final ComplexType complexType = (ComplexType) object;
     if( "AbstractGMLType".equals( complexType.getName() ) && GMLSchemaConstants.NS_GML2.equals( gmlSchema.getTargetNamespace() ) )
       return true;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType , m_version);
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType, m_version );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -127,8 +114,8 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    
-    return GMLSchemaUtilities.getBaseOfFeatureType(m_version).equals( localPart );
+
+    return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( localPart );
   }
 
   /**

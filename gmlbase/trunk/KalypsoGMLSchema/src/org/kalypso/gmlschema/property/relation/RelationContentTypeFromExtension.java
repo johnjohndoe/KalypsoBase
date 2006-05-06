@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
@@ -49,23 +50,23 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
 public class RelationContentTypeFromExtension extends RelationContentType
 {
   private final ExtensionType m_extension;
-  private final List<LocalElement> m_elements;
+
+  private final List<ElementWithOccurs> m_elements;
 
   private RelationContentType m_extensionBase = null;
-
 
   public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
   {
     super( schema, complexType );
     m_extension = extension;
-    m_elements=GMLSchemaUtilities.collectElements(schema, extension, null);
+    m_elements = GMLSchemaUtilities.collectElements( schema, extension, null, null );
   }
 
   /**
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public List<LocalElement> getSequence( )
+  public List<ElementWithOccurs> getSequence( )
   {
     return m_elements;
   }
@@ -87,7 +88,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
         m_extensionBase = schema.getRelationContentTypeFor( complexType );
         break;
     }
-    super.init(initializeRun);
+    super.init( initializeRun );
   }
 
 }

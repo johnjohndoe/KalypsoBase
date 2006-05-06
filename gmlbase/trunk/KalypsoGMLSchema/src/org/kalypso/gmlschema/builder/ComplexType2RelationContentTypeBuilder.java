@@ -35,13 +35,12 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
@@ -71,23 +70,17 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
     RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
     final ComplexContent complexContent = complexType.getComplexContent();
-    final ExplicitGroup sequence = complexType.getSequence();
+    final ExtensionType extension = complexContent.getExtension();
+    final ComplexRestrictionType restriction = complexContent.getRestriction();
 
-    if( sequence != null )
-    {
-      final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
-      result = new RelationContentTypeFromSequence( gmlSchema, complexType, collector );
-    }
+    if( extension != null )
+      result = new RelationContentTypeFromExtension( gmlSchema, complexType, extension );
+    else if( restriction != null )
+      result = new RelationContentTypeFromRestriction( gmlSchema, complexType, restriction );
     else
     {
-      final ExtensionType extension = complexContent.getExtension();
-      final ComplexRestrictionType restriction = complexContent.getRestriction();
-      if( extension != null )
-        result = new RelationContentTypeFromExtension( gmlSchema, complexType, extension );
-      else if( restriction != null )
-        result = new RelationContentTypeFromRestriction( gmlSchema, complexType, restriction );
-      else
-        throw new UnsupportedOperationException();
+      final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
+      result = new RelationContentTypeFromSequence( gmlSchema, complexType, collector );
     }
     if( result != null )
     {
@@ -95,7 +88,6 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
       return new Object[] { result };
     }
     return new Object[0];
-
   }
 
   /**
@@ -106,7 +98,7 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
   {
     if( !(object instanceof ComplexType) )
       return false;
-    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object , m_version);
+    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -115,7 +107,7 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    return GMLSchemaUtilities.getBaseOfRelationType(m_version).equals( localPart );
+    return GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( localPart );
   }
 
   /**

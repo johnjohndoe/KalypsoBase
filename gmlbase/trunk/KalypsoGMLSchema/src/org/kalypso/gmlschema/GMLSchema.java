@@ -364,6 +364,10 @@ public class GMLSchema
     if( buildedObject == null )
       throw new UnsupportedOperationException( "can not register null-object" );
     m_buildedObjectHash.put( xmlObject, buildedObject );
+    if(xmlObject instanceof ElementWithOccurs)
+    {
+      throw new UnsupportedOperationException();
+    }
 
     // use QName as key:
     if( buildedObject instanceof FeatureType )

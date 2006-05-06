@@ -32,10 +32,10 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -57,16 +57,10 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   private IPropertyContentType m_propertyContentType = null;
 
-  // private QName m_valueQName = null;
-  //
-  // private Class m_valueClass = null;
 
-  public PropertyType( GMLSchema gmlSchema, Element element )
+  public PropertyType( GMLSchema gmlSchema, ElementWithOccurs element )
   {
     super( gmlSchema, element );
-    // final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element );
-    // final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    // m_typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
   }
 
   /**

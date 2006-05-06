@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -78,16 +79,16 @@ public abstract class RelationContentType implements IRelationContentType, IInit
       case IInitialize.INITIALIZE_RUN_FIRST:
 
         final List<FeatureType> result = new ArrayList<FeatureType>();
-        final List<LocalElement> localElements = getSequence();
-        final Element[] elementArray = localElements.toArray( new Element[localElements.size()] );
+        final List<ElementWithOccurs> localElements = getSequence();
+        final ElementWithOccurs[] elementArray = localElements.toArray( new ElementWithOccurs[localElements.size()] );
         for( int i = 0; i < elementArray.length; i++ )
         {
-          final QName ref = elementArray[i].getRef();
+          final QName ref = elementArray[i].getElement().getRef();
           final Element element;
           final GMLSchema schema;
           if( ref == null )
           {
-            element = elementArray[i];
+            element = elementArray[i].getElement();
             schema = getGMLSchema();
           }
           else
@@ -111,7 +112,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
 
   /**
    */
-  public abstract List<LocalElement> getSequence( );
+  public abstract List<ElementWithOccurs> getSequence( );
 
   /**
    */

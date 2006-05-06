@@ -112,6 +112,10 @@ public class GMLSchemaUtilities
 
   private static final int CONSTRUCTION_ANYTYPE = 6;
 
+  public static final boolean OCCURS_MIN = false;
+
+  public static final boolean OCCURS_MAX = true;
+
   private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 
   /**
@@ -625,74 +629,101 @@ public class GMLSchemaUtilities
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
 
-  public static List<LocalElement> collectElements( GMLSchema schema, ExtensionType extension, List<LocalElement> collector )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs )
   {
     if( collector == null )
-      collector = new ArrayList<LocalElement>();
+      collector = new ArrayList<ElementWithOccurs>();
+    if( occurs == null )
+      occurs = new Occurs( 1, 1 );
     if( extension == null )
       return collector;
     final ExplicitGroup sequence = extension.getSequence();
-    collectElements( schema, sequence, collector );
+    collectElements( schema, sequence, collector, occurs );
     final GroupRef group = extension.getGroup();
-    collectElements( schema, group, collector );
+    collectElements( schema, group, collector, occurs );
+    final ExplicitGroup choice = extension.getChoice();
+    collectElements( schema, choice, collector, occurs );
+    final All all = extension.getAll();
+    collectElements( schema, all, collector, occurs );
     return collector;
   }
 
-  public static List<LocalElement> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<LocalElement> collector )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs )
   {
     if( collector == null )
-      collector = new ArrayList<LocalElement>();
+      collector = new ArrayList<ElementWithOccurs>();
+    if( occurs == null )
+      occurs = new Occurs( 1, 1 );
+    if( complexType == null )
+      return collector;
+    final ExplicitGroup sequence = complexType.getSequence();
+    collectElements( schema, sequence, collector, occurs );
+    final GroupRef group = complexType.getGroup();
+    collectElements( schema, group, collector, occurs );
+    final ExplicitGroup choice = complexType.getChoice();
+    collectElements( schema, choice, collector, occurs );
+    final All all = complexType.getAll();
+    collectElements( schema, all, collector, occurs );
+    return collector;
+  }
+
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs )
+  {
+    if( collector == null )
+      collector = new ArrayList<ElementWithOccurs>();
+    if( occurs == null )
+      occurs = new Occurs( 1, 1 );
     if( restriction == null )
       return collector;
     final ExplicitGroup sequence = restriction.getSequence();
-    collectElements( schema, sequence, collector );
+    collectElements( schema, sequence, collector, occurs );
     final GroupRef group = restriction.getGroup();
-    collectElements( schema, group, collector );
+    collectElements( schema, group, collector, occurs );
+    final ExplicitGroup choice = restriction.getChoice();
+    collectElements( schema, choice, collector, occurs );
+    final All all = restriction.getAll();
+    collectElements( schema, all, collector, occurs );
+    
     return collector;
   }
 
-  public static List<LocalElement> collectElements( GMLSchema schema, Group group, List<LocalElement> collector )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, Group group, List<ElementWithOccurs> collector, Occurs occurs )
   {
     if( collector == null )
-      collector = new ArrayList<LocalElement>();
+      collector = new ArrayList<ElementWithOccurs>();
+    if( occurs == null )
+      occurs = new Occurs( 1, 1 );
     if( group == null )
       return collector;
+    occurs = getOccursFromGroup( group ).merge( occurs );
+
     // elements
     final LocalElement[] elementArray = group.getElementArray();
     if( elementArray != null )
     {
       for( int i = 0; i < elementArray.length; i++ )
-        collector.add( elementArray[i] );
+        collector.add( new ElementWithOccurs( elementArray[i], occurs ) );
     }
-    final ExplicitGroup[] sequenceArray = group.getSequenceArray();
     // sequence
+    final ExplicitGroup[] sequenceArray = group.getSequenceArray();
     if( sequenceArray != null )
     {
       for( int i = 0; i < sequenceArray.length; i++ )
-      {
-        final ExplicitGroup group2 = sequenceArray[i];
-        collectElements( schema, group2, collector );
-      }
+        collectElements( schema, sequenceArray[i], collector, occurs );
     }
     // all
     final All[] allArray = group.getAllArray();
     if( allArray != null )
     {
       for( int i = 0; i < allArray.length; i++ )
-      {
-        final All all = allArray[i];
-        collectElements( schema, all, collector );
-      }
+        collectElements( schema, allArray[i], collector, occurs );
     }
     // groups
     final GroupRef[] groupArray = group.getGroupArray();
     if( groupArray != null )
     {
       for( int i = 0; i < groupArray.length; i++ )
-      {
-        GroupRef ref = groupArray[i];
-        collectElements( schema, ref, collector );
-      }
+        collectElements( schema, groupArray[i], collector, occurs );
     }
     // group reference
     final QName ref = group.getRef();
@@ -701,19 +732,16 @@ public class GMLSchemaUtilities
       final GroupReference reference = schema.resolveGroupReference( ref );
       final NamedGroup refGroup = reference.getGroup();
       final GMLSchema refSchema = reference.getGMLSchema();
-      collectElements( refSchema, refGroup, collector );
+      collectElements( refSchema, refGroup, collector, occurs );
     }
-    // TODO choices are now handled as sequence, this is not correct -> implement concept of validator or better chioce
-    // support
+    // TODO choices are now handled as sequence, this is not correct -> implement better choice
+    // support or concept of validator
 
     final ExplicitGroup[] choiceArray = group.getChoiceArray();
     if( choiceArray != null )
     {
       for( int i = 0; i < choiceArray.length; i++ )
-      {
-        final ExplicitGroup choice = choiceArray[i];
-        collectElements( schema, choice, collector );
-      }
+        collectElements( schema, choiceArray[i], collector, occurs );
     }
     return collector;
   }
@@ -775,6 +803,48 @@ public class GMLSchemaUtilities
       return null;
 
     return splittetSchemaLocation[0];
+  }
+
+  public static Occurs getOccursFromElement( final Element element )
+  {
+    final int min;
+    final int max;
+    if( !element.isSetMinOccurs() )
+      min = 1;
+    else
+      min = getOccursFromObject( element.getMinOccurs() );
+    if( !element.isSetMaxOccurs() )
+      max = 1;
+    else
+      max = getOccursFromObject( element.getMaxOccurs() );
+    return new Occurs( min, max );
+  }
+
+  private static Occurs getOccursFromGroup( final Group group )
+  {
+    final int min;
+    final int max;
+    if( group.isSetMinOccurs() )
+      min = getOccursFromObject( group.getMinOccurs() );
+    else
+      min = 1;
+    if( group.isSetMaxOccurs() )
+      max = getOccursFromObject( group.getMaxOccurs() );
+    else
+      max = 1;
+    return new Occurs( min, max );
+
+  }
+
+  private static int getOccursFromObject( final Object occursValue )
+  {
+    if( occursValue == null )
+      return 1;
+    if( occursValue instanceof Number )
+      return ((Number) occursValue).intValue();
+    if( "unbounded".equals( occursValue ) )
+      return IPropertyType.UNBOUND_OCCURENCY;
+    throw new UnsupportedOperationException( "unknown occurency in schema: " + occursValue.toString() );
   }
 
 }

@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.builder;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -54,7 +55,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
 {
   private final IRelationType m_globalRT;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, Element element, IRelationType rt )
+  public ReferencedRelationType( final GMLSchema gmlSchema, ElementWithOccurs element, IRelationType rt )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
     super( gmlSchema, element, rt.getQName() );

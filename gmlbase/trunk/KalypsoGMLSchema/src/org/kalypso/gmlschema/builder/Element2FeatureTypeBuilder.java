@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -58,15 +59,15 @@ public class Element2FeatureTypeBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element) elementObject;
-    final QName ref = element.getRef();
+    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
+    final QName ref = element.getElement().getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       return build( reference );
     }
-    final FeatureType result = new FeatureType( gmlSchema, element );
-    gmlSchema.register( element, result );
+    final FeatureType result = new FeatureType( gmlSchema, element.getElement() );
+    gmlSchema.register( element.getElement(), result );
     return new Object[] { result };
   }
 
@@ -86,9 +87,10 @@ public class Element2FeatureTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !(object instanceof Element) )
+    if( !(object instanceof ElementWithOccurs) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object ,m_version);
+    final Element element = ((ElementWithOccurs) object).getElement();
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -96,7 +98,7 @@ public class Element2FeatureTypeBuilder implements IBuilder
     // GML
     if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
       return false;
-    return GMLSchemaUtilities.getBaseOfFeatureType(m_version).equals( localPart );
+    return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( localPart );
   }
 
   /**

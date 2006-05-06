@@ -33,6 +33,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -45,7 +46,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
 {
   private IRelationContentType m_relationContentType;
 
-  public RelationType( final GMLSchema gmlSchema, final Element element )
+  public RelationType( final GMLSchema gmlSchema, final ElementWithOccurs element )
   {
     super( gmlSchema, element );
   }

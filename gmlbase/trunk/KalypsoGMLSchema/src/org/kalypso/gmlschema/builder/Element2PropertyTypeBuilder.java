@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyType;
@@ -62,20 +63,20 @@ public class Element2PropertyTypeBuilder implements IBuilder
    */
   public Object[] build( final GMLSchema gmlSchema, final Object elementObject )
   {
-    final Element element = (Element) elementObject;
-    final QName ref = element.getRef();
+    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
+    final QName ref = element.getElement().getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final IValuePropertyType pt= (IValuePropertyType) build( reference )[0];
-      
-      final ReferencedPropertyType result = new ReferencedPropertyType(gmlSchema,element,pt);
-      gmlSchema.register( element, result );
-      return new Object[]{ result}; 
+      final IValuePropertyType pt = (IValuePropertyType) build( reference )[0];
+
+      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, pt );
+      gmlSchema.register( element.getElement(), result );
+      return new Object[] { result };
     }
     // final IPropertyType pt = new PropertyType( gmlSchema, element );
     final IPropertyType pt = new PropertyType( gmlSchema, element );
-    gmlSchema.register( element, pt );
+    gmlSchema.register( element.getElement(), pt );
     return new Object[] { pt };
   }
 
@@ -86,7 +87,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
   {
     final GMLSchema gmlSchema = reference.getGMLSchema();
     final Element element = reference.getElement();
-    return build( gmlSchema, element );
+    return build( gmlSchema, new ElementWithOccurs( element ) );
   }
 
   /**
@@ -95,9 +96,10 @@ public class Element2PropertyTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !(object instanceof Element) )
+    if( !(object instanceof ElementWithOccurs) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object , m_version);
+    final Element element = ((ElementWithOccurs) object).getElement();
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
     final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();

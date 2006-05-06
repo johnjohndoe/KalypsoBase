@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 
 /**
  * another builder
@@ -98,8 +99,8 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
     final TopLevelElement[] elementArray = schema.getElementArray();
     for( int i = 0; i < elementArray.length; i++ )
     {
-      TopLevelElement element = elementArray[i];
-      result.add( element );
+      final TopLevelElement element = elementArray[i];
+      result.add( new ElementWithOccurs( element ) );
     }
     return result;
   }

@@ -37,9 +37,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -81,7 +81,7 @@ public abstract class FeatureContentType implements IFeatureContentType
     return m_gmlSchema;
   }
 
-  public abstract List<LocalElement> getSequence( );
+  public abstract List<ElementWithOccurs> getSequence( );
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
@@ -94,11 +94,11 @@ public abstract class FeatureContentType implements IFeatureContentType
 
         final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
 
-        final List<LocalElement> sequence = getSequence();
-        for( Iterator<LocalElement> iter = sequence.iterator(); iter.hasNext(); )
+        final List<ElementWithOccurs> sequence = getSequence();
+        for( Iterator<ElementWithOccurs> iter = sequence.iterator(); iter.hasNext(); )
         {
           GMLSchema schema = getGMLSchema();
-          final Element elementItem = iter.next();
+          final Element elementItem = iter.next().getElement();
           Object buildedObject = schema.getBuildedObjectFor( elementItem );
 
           final Element element;
@@ -122,7 +122,7 @@ public abstract class FeatureContentType implements IFeatureContentType
                 buildedObject = schema.getBuildedObjectFor( element );
               }
               else
-                System.out.println("debug");
+                System.out.println( "debug" );
             }
           }
           // why are alle buildedObjects of type IPropertyType ?

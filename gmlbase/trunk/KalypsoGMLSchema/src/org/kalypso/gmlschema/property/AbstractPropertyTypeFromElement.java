@@ -29,12 +29,11 @@
  */
 package org.kalypso.gmlschema.property;
 
-import java.math.BigInteger;
-
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.Occurs;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
@@ -45,34 +44,28 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
 public abstract class AbstractPropertyTypeFromElement extends QualifiedElement implements IPropertyType
 {
 
-  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element, QName qName )
+  private final Occurs m_occurs;
+
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element, QName qName )
   {
-    super( gmlSchema, element ,qName);
+    super( gmlSchema, element.getElement(), qName );
+    m_occurs = element.getOccurs();
   }
-  
-  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, Element element )
+
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element )
   {
-    super( gmlSchema, element );
+    super( gmlSchema, element.getElement() );
+    m_occurs = element.getOccurs();
   }
 
   public int getMinOccurs( )
   {
-    if( !m_element.isSetMinOccurs() )
-      return 1;
-    final BigInteger minOccurs = m_element.getMinOccurs();
-    return minOccurs.intValue();
+    return m_occurs.getMin();
   }
 
   public int getMaxOccurs( )
   {
-    if( !m_element.isSetMaxOccurs() )
-      return 1;
-    final Object maxOccurs = m_element.getMaxOccurs();
-    if( maxOccurs instanceof Number )
-      return ((Number) maxOccurs).intValue();
-    if( "unbounded".equals( maxOccurs ) )
-      return IPropertyType.UNBOUND_OCCURENCY;
-    throw new UnsupportedOperationException( "unknown occurency in schema: " + maxOccurs.toString() );
+    return m_occurs.getMax();
   }
 
   /**

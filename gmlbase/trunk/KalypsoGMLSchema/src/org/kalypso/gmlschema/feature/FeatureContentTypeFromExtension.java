@@ -40,6 +40,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -67,9 +68,9 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public List<LocalElement> getSequence( )
+  public List<ElementWithOccurs> getSequence( )
   {
-    return GMLSchemaUtilities.collectElements( getGMLSchema(), m_extension, null );
+    return GMLSchemaUtilities.collectElements( getGMLSchema(), m_extension, null, null );
   }
 
   /**

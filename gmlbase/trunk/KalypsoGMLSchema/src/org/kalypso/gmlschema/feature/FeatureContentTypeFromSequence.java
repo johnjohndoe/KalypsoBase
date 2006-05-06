@@ -36,6 +36,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
@@ -46,16 +47,16 @@ import org.kalypso.gmlschema.property.IPropertyType;
 public class FeatureContentTypeFromSequence extends FeatureContentType
 {
 
-  private final List<LocalElement> m_elementList;
+  private final List<ElementWithOccurs> m_elementList;
 
-  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<LocalElement> elementList )
+  public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elementList )
   {
     super( gmlSchema, complexType );
     m_elementList = elementList;
   }
 
   @Override
-  public List<LocalElement> getSequence( )
+  public List<ElementWithOccurs> getSequence( )
   {
     return m_elementList;
   }

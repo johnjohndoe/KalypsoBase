@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
@@ -173,6 +174,8 @@ public class GMLSchemaBuilder
 
   private void rBuild( GMLSchema gmlSchema, Object object ) throws GMLSchemaException
   {
+    if( object instanceof Element )
+      System.out.println( "stop" );
     final IBuilder builder = getBuilderFor( gmlSchema, object, null );
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {

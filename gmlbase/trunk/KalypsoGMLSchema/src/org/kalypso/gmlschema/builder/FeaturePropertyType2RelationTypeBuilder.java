@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.adv.ADVUtilities;
 import org.kalypso.gmlschema.property.relation.AdvRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -61,19 +62,19 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element) elementObject;
-    final QName ref = element.getRef();
+    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
+    final QName ref = element.getElement().getRef();
     // TODO if elements have Props they get lost here ....
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       final IRelationType rt = (IRelationType) build( reference )[0];
       final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, rt );
-      gmlSchema.register( element, result );
+      gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
 
-    final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element );
+    final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element.getElement() );
     if( advReferenziertesElement != null )
     {
       final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, advReferenziertesElement );
@@ -81,7 +82,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
       return new Object[0];
     }
     final IRelationType result = new RelationType( gmlSchema, element );
-    gmlSchema.register( element, result );
+    gmlSchema.register( element.getElement(), result );
     return new Object[] { result };
   }
 
@@ -92,7 +93,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
   {
     final GMLSchema schema = reference.getGMLSchema();
     final Element element = reference.getElement();
-    return build( schema, element );
+    return build( schema, new ElementWithOccurs( element ) );
   }
 
   /**
@@ -101,9 +102,10 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !(object instanceof Element) )
+    if( !(object instanceof ElementWithOccurs) )
       return false;
-    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (Element) object, m_gmlVersion );
+    final Element element = ((ElementWithOccurs) object).getElement();
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_gmlVersion );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();

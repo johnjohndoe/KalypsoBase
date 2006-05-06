@@ -33,15 +33,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
-import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -75,20 +72,25 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
    */
   public Object[] build( GMLSchema gmlSchema, Object elementObject )
   {
-    final Element element = (Element) elementObject;
-    final QName ref = element.getRef();
+    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
+    return innerBuild( gmlSchema, element );
+  }
+
+  public Object[] innerBuild( GMLSchema gmlSchema, ElementWithOccurs element )
+  {
+    final QName ref = element.getElement().getRef();
 
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       final IRelationType rt = (IRelationType) build( reference )[0];
       final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, rt );
-      gmlSchema.register( element, result );
+      gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
 
     final IRelationType result = new RelationType( gmlSchema, element );
-    gmlSchema.register( element, result );
+    gmlSchema.register( element.getElement(), result );
     return new Object[] { result };
   }
 
@@ -99,7 +101,7 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
   {
     final GMLSchema schema = reference.getGMLSchema();
     final Element element = reference.getElement();
-    return build( schema, element );
+    return innerBuild( schema, new ElementWithOccurs( element ) );
   }
 
   /**
@@ -120,9 +122,9 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
    */
   public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
-    if( !(object instanceof Element) )
+    if( !(object instanceof ElementWithOccurs) )
       return false;
-    final Element element1 = (Element) object;
+    final Element element1 = ((ElementWithOccurs) object).getElement();
     final Element relationElement;
 
     // if element is a reference, follow it
@@ -157,21 +159,14 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
     if( complexType == null )
       return false;
     // find referenced element (target)
-    final ExplicitGroup sequence = complexType.getSequence();
-    final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
-    final All all = complexType.getAll();
-    GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
-    final GroupRef group = complexType.getGroup();
-    GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
-    final ExplicitGroup choice = complexType.getChoice();
-    GMLSchemaUtilities.collectElements( gmlSchema, choice, collector );
+    final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
 
     if( collector.size() != 1 )
       return false;
-    final LocalElement targetElement = collector.get( 0 );
+    final ElementWithOccurs targetElement = collector.get( 0 );
 
     // check if target is a feature
-    final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement, m_version );
+    final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement.getElement(), m_version );
     if( baseQName == null )
       return false;
     if( !NS.GML2.equals( baseQName.getNamespaceURI() ) )

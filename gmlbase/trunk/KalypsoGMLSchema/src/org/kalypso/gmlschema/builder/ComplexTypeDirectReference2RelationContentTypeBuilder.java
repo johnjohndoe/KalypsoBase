@@ -33,18 +33,15 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.ExplicitGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.GroupRef;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
@@ -87,7 +84,7 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IB
     }
     else
     {
-      final List<LocalElement> elements = findReferencedElements( gmlSchema, complexType );
+      final List<ElementWithOccurs> elements = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
       result = new RelationContentTypeFromSequence( gmlSchema, complexType, elements );
     }
     gmlSchema.register( complexTypeObject, result );
@@ -110,12 +107,12 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IB
         && GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( baseType.getLocalPart() ) )
       return true;
     // find referenced element (target)
-    final List<LocalElement> elements = findReferencedElements( gmlSchema, complexType );
+    final List<ElementWithOccurs> elements = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
     if( elements.size() != 1 )
       return false;
-    final LocalElement targetElement = elements.get( 0 );
+    final ElementWithOccurs targetElement = elements.get( 0 );
     // check if target is a feature
-    final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement, m_version );
+    final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement.getElement(), m_version );
     if( baseQName == null )
       return false;
     if( !NS.GML2.equals( baseQName.getNamespaceURI() ) )
@@ -123,18 +120,18 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IB
     return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( baseQName.getLocalPart() );
   }
 
-  private List<LocalElement> findReferencedElements( GMLSchema gmlSchema, ComplexType complexType )
-  {
-    final ExplicitGroup sequence = complexType.getSequence();
-    final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
-    final All all = complexType.getAll();
-    GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
-    final GroupRef group = complexType.getGroup();
-    GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
-    final ExplicitGroup choice = complexType.getChoice();
-    GMLSchemaUtilities.collectElements( gmlSchema, choice, collector );
-    return collector;
-  }
+  // private List<LocalElement> findReferencedElements( GMLSchema gmlSchema, ComplexType complexType )
+  // {
+  // final ExplicitGroup sequence = complexType.getSequence();
+  // final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
+  // final All all = complexType.getAll();
+  // GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
+  // final GroupRef group = complexType.getGroup();
+  // GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
+  // final ExplicitGroup choice = complexType.getChoice();
+  // GMLSchemaUtilities.collectElements( gmlSchema, choice, collector );
+  // return collector;
+  // }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)

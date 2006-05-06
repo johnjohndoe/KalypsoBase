@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -47,7 +48,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
 
   private final QName m_advReferenziertesElement;
 
-  public AdvRelationType( final GMLSchema gmlSchema, final Element element, final QName advReferenziertesElement )
+  public AdvRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName advReferenziertesElement )
   {
     super( gmlSchema, element );
     m_advReferenziertesElement = advReferenziertesElement;
@@ -88,7 +89,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
    * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType getTargetFeatureType()
+  public IFeatureType getTargetFeatureType( )
   {
     return m_relationContentType.getTargetFeatureType();
   }
