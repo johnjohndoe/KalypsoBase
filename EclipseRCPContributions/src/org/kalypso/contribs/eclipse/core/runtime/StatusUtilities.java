@@ -205,7 +205,7 @@ public final class StatusUtilities
     if( msg == null )
     {
       if( t.getCause() != null && t.getCause() != t )
-        return statusFromThrowable( t.getCause(), message + "\n" + t.toString() );
+        return statusFromThrowable( t.getCause(), t.toString() );
 
       // beser t.toString, weil manche Exceptions dann doch noch mehr verraten
       // z.B. ValidationException
