@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  */
 public class BindingUnmarshalingContentHandler implements ContentHandler
 {
-  private int m_level = 0;
+  private int m_level;
 
   private final ContentHandler m_unmarshallerHandler;
 
@@ -71,11 +71,13 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @param unmarshalResultEater
    *          will be feeded with the result of unmarshalling
    */
-  public BindingUnmarshalingContentHandler( ContentHandler unmarshallerHandler, UnmarshalResultProvider unmarshallResultProvider, UnMarshallResultEater unmarshalResultEater )
+  public BindingUnmarshalingContentHandler( ContentHandler unmarshallerHandler, UnmarshalResultProvider unmarshallResultProvider, UnMarshallResultEater unmarshalResultEater, boolean considerSurroundingElement )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
+    
+    m_level = considerSurroundingElement ? -1 : 0;
   }
 
   /**
