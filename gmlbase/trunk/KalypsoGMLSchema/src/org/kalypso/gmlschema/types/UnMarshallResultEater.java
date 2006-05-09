@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import org.kalypso.gmlschema.GMLSchemaException;
+
 /**
  * ResultEater used for unmarshalling<br>
  * unmarshalling processes can feed this with the unmarshalling result
@@ -51,5 +53,5 @@ public interface UnMarshallResultEater
   /**
    * implement here some processing with the result value from unmarshalling
    */
-  public void eat( Object value );
+  public void eat( Object value ) throws GMLSchemaException;
 }

@@ -35,8 +35,7 @@ import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * 
- * TODO: insert type comment here
+ * Representation of a feature content definition from xml schema 
  * 
  * @author doemming
  */
@@ -63,14 +62,7 @@ public interface IFeatureContentType extends IInitialize
    */
   public IPropertyType getProperty( QName name );
 
-  /**
-   * @return
-   */
   public IPropertyType[] getDirectProperties();
 
-  /**
-   * @return
-   */
   public QName getQName();
-
 }

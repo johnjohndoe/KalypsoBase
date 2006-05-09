@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import org.kalypso.gmlschema.GMLSchemaException;
+
 /**
  * returns the result of unmarshalling a feature property, this methode should not be called before the
  * contentTypeHandler reaches the endElememnt() call for this feature property
@@ -48,5 +50,5 @@ package org.kalypso.gmlschema.types;
  */
 public interface UnmarshalResultProvider
 {
-  public Object getResult( ) throws Exception;
+  public Object getResult( ) throws GMLSchemaException;
 }

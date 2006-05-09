@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -76,29 +77,41 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
     m_marshalResultEater = marshalResultEater;
   }
 
-  public void startElement( String uri, String local, String qname, Attributes atts )
+  public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
-    end();
+    try
+    {
+      end();
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new SAXException( e );
+    }
   }
 
-  public void endElement( String uri, String local, String qname )
+  public void endElement( String uri, String local, String qname ) throws SAXException
   {
-    end();
+    try
+    {
+      end();
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new SAXException( e );
+    }
   }
 
-  private void end( )
+  private void end( ) throws GMLSchemaException
   {
     Object value = null;
     try
     {
       value = m_result.getResult();
     }
-    catch( Exception e )
+    finally
     {
-      e.printStackTrace();
+      m_marshalResultEater.eat( value );
     }
-    m_marshalResultEater.eat( value );
-
   }
 
   public void characters( char[] ch, int start, int length ) throws SAXException

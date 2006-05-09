@@ -41,7 +41,6 @@
 package org.kalypso.gmlschema.types;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -51,13 +50,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.LocationPropertyType;
-
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -120,7 +116,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       marshaller.marshal( jaxElement, contentHandler );
       contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new TypeRegistryException( e );
     }
@@ -131,30 +127,28 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     // xml to memory
     try
     {
-      final Unmarshaller unmarshaller;
-      unmarshaller = m_jaxbContext.createUnmarshaller();
+      final Unmarshaller unmarshaller = m_jaxbContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final UnmarshalResultProvider provider = new UnmarshalResultProvider()
       {
-        public Object getResult( ) throws IllegalStateException, JAXBException
+        public Object getResult( ) throws GMLSchemaException
         {
           try
           {
             unmarshallerHandler.endDocument();
+            return unmarshallerHandler.getResult();
           }
-          catch( SAXException e )
+          catch( final Exception e )
           {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new GMLSchemaException( e );
           }
-          return unmarshallerHandler.getResult();
         }
       };
       final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater );
       tmpContentHandler.startDocument();
       xmlReader.setContentHandler( tmpContentHandler );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new TypeRegistryException( e );
     }
@@ -205,18 +199,16 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       marshaller.marshal( marshaller, unmarshallerHandler );
       return unmarshallerHandler.getResult();
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      throw new CloneNotSupportedException();
+      throw new CloneNotSupportedException( e.getLocalizedMessage() );
     }
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( String text ) throws ParseException
+  public Object parseType( String text )
   {
     throw new UnsupportedOperationException();
   }

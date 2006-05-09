@@ -42,17 +42,17 @@ package org.kalypso.gmlschema.types;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * a contentHandler used for unmarshalling oprocesses based on binding framework
+ * A contentHandler used for unmarshalling oprocesses based on binding framework
  * 
  * @author doemming
  */
-
 public class BindingUnmarshalingContentHandler implements ContentHandler
 {
   private int m_level = 0;
@@ -103,10 +103,9 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         else
           m_unmarshalResultEater.eat( null );
       }
-      catch( Exception e )
+      catch( GMLSchemaException e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new SAXException( e );
       }
     }
   }

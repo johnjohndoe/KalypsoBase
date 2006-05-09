@@ -87,7 +87,7 @@ public interface IInitialize
 
   /**
    * initialize builded object. <br>
-   * This methode is intended to be called only from org.kalypso.gmlschema.GMLSchemaBuilder. Implement here the linking
+   * This method is intended to be called only from org.kalypso.gmlschema.GMLSchemaBuilder. Implement here the linking
    * of the objects and other initialization stuff that can not be done in the contructor(e.g. because other objects
    * from the schema may not be builded at construction time). <br>
    * Assume that all objects are builded from the schema, but they may not be initialized or linked with each other.
@@ -95,5 +95,4 @@ public interface IInitialize
    * as there may be initialize dependencies implementation should switch for initializeRuns
    */
   public void init( int initializeRun ) throws GMLSchemaException;
-
 }

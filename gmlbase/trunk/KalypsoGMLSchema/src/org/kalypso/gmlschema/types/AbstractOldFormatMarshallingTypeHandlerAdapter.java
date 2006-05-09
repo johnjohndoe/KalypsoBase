@@ -53,6 +53,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -114,8 +115,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
     {
       final UnMarshallResultEater eater = new UnMarshallResultEater()
       {
-
-        public void eat( Object value )
+        public void eat( Object value ) throws GMLSchemaException
         {
           final Node node = (Node) value;
           if( node == null )
@@ -133,7 +133,6 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
             }
             marshalResultEater.eat( object );
           }
-
         }
       };
 
@@ -146,7 +145,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       domBuilderContentHandler.startElement( "propns", "prop", "p:prop", null );
       xmlReader.setContentHandler( domBuilderContentHandler );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new TypeRegistryException( e );
     }
@@ -169,5 +168,4 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    */
   @Deprecated
   public abstract void marshall( Object object, Node node, URL context ) throws TypeRegistryException;
-
 }
