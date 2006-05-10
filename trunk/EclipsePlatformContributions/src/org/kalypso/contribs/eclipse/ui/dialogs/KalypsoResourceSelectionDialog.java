@@ -37,9 +37,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   protected Label statusMessage;
 
-  protected ISelectionValidator validator;
-
-  protected ResourceSelectionValidator resourceValidator;
+  protected ISelectionValidator m_validator;
 
   private boolean m_showClosedProjects = true;
 
@@ -50,17 +48,16 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   /*
    * abgeleitet von ContainerSelectionDialog @author peiler
    */
-  public KalypsoResourceSelectionDialog( Shell parentShell, IResource initialSelection, String message,
-      String[] allowedResourceExtensions, IContainer inputContainer )
+  public KalypsoResourceSelectionDialog( final Shell parentShell, final IResource initialSelection, final String message, final String[] allowedResourceExtensions, final IContainer inputContainer, final ISelectionValidator validator )
   {
     super( parentShell );
-    
+
     // TODO: check if messages are still ok
     setTitle( IDEWorkbenchMessages.ResourceSelectionDialog_title );
     m_allowedResourceExtensions = allowedResourceExtensions;
     m_inputContainer = inputContainer;
     m_initialSelection = initialSelection;
-    resourceValidator = new ResourceSelectionValidator();
+    m_validator = validator;
     if( message != null )
       setMessage( message );
     else
@@ -72,15 +69,18 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   protected Control createDialogArea( Composite parent )
   {
     // create composite
-    Composite area = (Composite)super.createDialogArea( parent );
+    Composite area = (Composite) super.createDialogArea( parent );
 
     Listener listener = new Listener()
     {
       public void handleEvent( Event event )
       {
-        if( statusMessage != null && validator != null )
+        final IResource selectedResource = group.getSelectedResource();
+        getOkButton().setEnabled( false );
+
+        if( m_validator != null && selectedResource != null )
         {
-          String errorMsg = validator.isValid( group.getResourceFullPath() );
+          String errorMsg = m_validator.isValid( selectedResource );
           if( errorMsg == null || errorMsg.equals( "" ) ) { //$NON-NLS-1$
             statusMessage.setText( "" ); //$NON-NLS-1$
             getOkButton().setEnabled( true );
@@ -91,14 +91,16 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
             statusMessage.setText( errorMsg );
             getOkButton().setEnabled( false );
           }
-        }
-
-        if( statusMessage != null && resourceValidator != null )
-        {
-          if( resourceValidator.isValid( group.getSelectedResource() ) )
-            getOkButton().setEnabled( true );
-          else
-            getOkButton().setEnabled( false );
+          if( event.type == SWT.MouseDoubleClick )
+          {
+            if( errorMsg == null )
+              okPressed();
+            else
+            {
+              statusMessage.setText( errorMsg );
+              getOkButton().setEnabled( false );
+            }
+          }
         }
       }
     };
@@ -108,8 +110,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
     statusMessage.setFont( parent.getFont() );
 
     // container selection group
-    group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects,
-        m_allowedResourceExtensions, m_inputContainer );
+    group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects, m_allowedResourceExtensions, m_inputContainer );
 
     return dialogArea;
   }
@@ -117,7 +118,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   @Override
   protected Control createContents( Composite parent )
   {
-    //  create the top level composite for the dialog
+    // create the top level composite for the dialog
     Composite composite = new Composite( parent, 0 );
     GridLayout layout = new GridLayout();
     layout.marginHeight = 0;
@@ -144,7 +145,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    * the selected resource containers for later retrieval by the client and closes this dialog.
    */
   @Override
-  protected void okPressed()
+  protected void okPressed( )
   {
     final List<IPath> chosenResourcePathList = new ArrayList<IPath>();
     final IPath returnValue = group.getResourceFullPath();
@@ -162,7 +163,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    */
   public void setValidator( ISelectionValidator val )
   {
-    this.validator = val;
+    this.m_validator = val;
   }
 
   /**

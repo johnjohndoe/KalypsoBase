@@ -1,27 +1,39 @@
 package org.kalypso.contribs.eclipse.ui.browser;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.LocationAdapter;
-import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.BrowserViewer;
 import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 
+/**
+ * This abstract class is a facade for the eclipse
+ * 
+ * @see org.eclipse.ui.internal.browser.BrowserViewer Supports the IMemento for persistance and context for relative
+ *      references MementoWithUrlResolver.
+ * @author kuepfer
+ */
 public abstract class AbstractBrowserView extends ViewPart implements IBrowserViewerContainer
 {
   private IMemento m_memento;
@@ -40,23 +52,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   protected BrowserViewer m_viewer;
 
-  protected ILocationChangedHandler m_locationChangedHandler;
-  
   protected URL m_context = null;
-
-  private LocationListener m_locationListener = new LocationAdapter()
-  {
-    @Override
-    public void changed( final LocationEvent event )
-    {
-      // just let the handler do the work
-      final String href = event.location;
-      if( m_locationChangedHandler != null )
-        event.doit = m_locationChangedHandler.handleLocationChange( href );
-      else
-        event.doit = true;
-    }
-  };
 
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
@@ -65,28 +61,22 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     m_memento = memento;
   }
 
-  /** Set the handler which will react to location changed events. */
-  public void setLocationChangedHandler( final ILocationChangedHandler handler )
+  public void addLocationListener( LocationListener listener )
   {
-    m_locationChangedHandler = handler;
+    m_viewer.getBrowser().addLocationListener( listener );
   }
 
-  private void addBrowserListener( )
-  {
-    m_viewer.getBrowser().addLocationListener( m_locationListener );
-  }
-
-  private void removeLocationListener( )
+  public void removeLocationListener( LocationListener listener )
   {
     if( m_viewer.getBrowser().isDisposed() )
       return;
-    m_viewer.getBrowser().removeLocationListener( m_locationListener );
+    m_viewer.getBrowser().removeLocationListener( listener );
   }
 
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_viewer = new BrowserViewer( parent, SWT.NONE );// BrowserViewer.LOCATION_BAR
+    m_viewer = new BrowserViewer( parent, SWT.NONE ); // BrowserViewer.LOCATION_BAR);
     m_viewer.setContainer( this );
 
     // Delete IE Menu
@@ -96,7 +86,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     m_viewer.getBrowser().setMenu( contextMenu );
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
 
-    addBrowserListener();
+    // addBrowserListener();
     if( m_memento != null )
       restoreState( m_memento );
     m_memento = null;
@@ -105,7 +95,6 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   protected void restoreState( IMemento memento )
   {
     final String urlAsString = memento.getString( TAG_URL );
-    Runnable runnable = null;
     if( memento instanceof MementoWithUrlResolver )
     {
       try
@@ -114,76 +103,31 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         final URL url = m.getURLResolver().resolveURL( urlAsString );
         m_context = url;
         final String externalForm = url.toExternalForm();
-        runnable = new Runnable()
-        {
-
-          public void run( )
-          {
-            m_viewer.setURL( externalForm );
-            if( m_viewer.combo != null )
-              m_viewer.combo.setText( externalForm );
-            m_viewer.forward();
-          }
-        };
+        handleSetUrl( externalForm );
+        return;
       }
-      catch( Exception e )
+      catch( MalformedURLException e )
       {
         e.printStackTrace();
       }
     }
-    if( runnable == null )
+    try
     {
-      try
-      {
-        m_context = new URL( urlAsString );
-      }
-      catch( MalformedURLException e )
-      {
-        // nothing
-      }
-      runnable = new Runnable()
-      {
-
-        public void run( )
-        {
-          m_viewer.setURL( urlAsString );
-          if( m_viewer.combo != null )
-            m_viewer.combo.setText( urlAsString );
-          m_viewer.forward();
-        }
-      };
+      m_context = new URL( urlAsString );
+    }
+    catch( MalformedURLException e )
+    {
+      // nothing
     }
 
-    getSite().getShell().getDisplay().asyncExec( runnable );
-
-    IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
-    if( scrollbars == null )
-      return;
-    IMemento horizontal = scrollbars.getChild( TAG_HORIZONTAL_BAR );
-    if( horizontal != null )
+    try
     {
-      int hSelection = horizontal.getInteger( TAG_SELECTION ).intValue();
-      ScrollBar horizontalBar = m_viewer.getHorizontalBar();
-      if( horizontalBar != null )
-        horizontalBar.setSelection( hSelection );
+      handleSetUrl( urlAsString );
     }
-    IMemento vertical = scrollbars.getChild( TAG_VERTICAL_BAR );
-    if( vertical != null )
+    catch( MalformedURLException e )
     {
-      int vSelection = vertical.getInteger( TAG_SELECTION ).intValue();
-      ScrollBar verticalBar = m_viewer.getVerticalBar();
-      if( verticalBar != null )
-        verticalBar.setSelection( vSelection );
+      e.printStackTrace();
     }
-  }
-
-  protected void restoreStateOld( final IMemento memento )
-  {
-    final String url = memento.getString( TAG_URL );
-    // set the url of the browser
-    m_viewer.setURL( url );
-    if( m_viewer.combo != null )
-      m_viewer.combo.setText( url );
 
     IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
     if( scrollbars == null )
@@ -209,7 +153,6 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   @Override
   public void dispose( )
   {
-    removeLocationListener();
     if( m_viewer != null )
       m_viewer.dispose();
     super.dispose();
@@ -225,7 +168,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     if( m_viewer == null )
       return;
-    
+
     // BUGFIX: see bugfix below, this is also needed
     setHtml( "<html><body></body></html>" );
 
@@ -245,7 +188,15 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         {
           e.printStackTrace();
         }
-        m_viewer.setURL( url );
+        // set the url for the Browser
+        try
+        {
+          handleSetUrl( url );
+        }
+        catch( MalformedURLException e )
+        {
+          e.printStackTrace();
+        }
       }
     } );
   }
@@ -334,5 +285,60 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       IMemento vertical = scrollbarMemento.createChild( TAG_VERTICAL_BAR );
       vertical.putInteger( TAG_SELECTION, verticalBar.getSelection() );
     }
+  }
+
+  void handleSetUrl( final String url ) throws MalformedURLException
+  {
+    Runnable runnable = null;
+    if( url.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+    /*******************************************************************************************************************
+     * TODO: Damit der Browser auch resource strings versteht, weiss nicht ob das resolver machen sollte?? (kuepferle)
+     * 
+     * @see PlatformURLResourceConnection
+     ******************************************************************************************************************/
+    {
+      final URL realUrl = new URL( url );
+      final IPath path = ResourceUtilities.findPathFromURL( realUrl );
+      final File file = ResourceUtilities.makeFileFromPath( path );
+      final String fileAsString = file.toString();
+      runnable = new Runnable()
+      {
+
+        public void run( )
+        {
+          m_viewer.setURL( fileAsString );
+          if( m_viewer.combo != null )
+            m_viewer.combo.setText( fileAsString );
+          m_viewer.forward();
+        }
+      };
+    }
+    if( runnable == null )
+    {
+      runnable = new Runnable()
+      {
+
+        public void run( )
+        {
+          m_viewer.setURL( url );
+          if( m_viewer.combo != null )
+            m_viewer.combo.setText( url );
+          m_viewer.forward();
+        }
+      };
+    }
+    if( runnable == null )
+      return;
+    final IWorkbenchPartSite site = getSite();
+    if( site == null )
+      return;
+    final Shell shell = site.getShell();
+    if( shell == null )
+      return;
+    final Display display = shell.getDisplay();
+    if( display == null )
+      return;
+
+    display.asyncExec( runnable );
   }
 }
