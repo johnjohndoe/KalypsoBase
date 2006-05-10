@@ -54,8 +54,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
-import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 
