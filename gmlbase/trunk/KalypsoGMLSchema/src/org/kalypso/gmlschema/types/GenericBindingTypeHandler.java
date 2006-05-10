@@ -129,11 +129,14 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
-      contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+      // weg
+      // contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+
       final Marshaller marshaller = JaxbUtilities.createMarshaller( m_jaxbContext );
       final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_valueQName, (Class<Object>) value.getClass(), value );
       marshaller.marshal( jaxElement, contentHandler );
-      contentHandler.endElement( namespaceURI, localPart, qNameString );
+      // weg
+      // contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
     catch( final Exception e )
     {

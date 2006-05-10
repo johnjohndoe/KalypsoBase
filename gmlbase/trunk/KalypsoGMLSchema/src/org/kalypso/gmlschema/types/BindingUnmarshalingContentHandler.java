@@ -101,7 +101,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         final Object result = m_unmarshallResultProvider.getResult();
         final JAXBElement<Object> jaxBElement = (JAXBElement<Object>) result;
         if( jaxBElement != null )
-          m_unmarshalResultEater.eat( result );
+          m_unmarshalResultEater.eat( jaxBElement.getValue() );
         else
           m_unmarshalResultEater.eat( null );
       }
