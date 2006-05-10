@@ -135,7 +135,7 @@
 							</when>
 							<otherwise>
 								<attribute name="name">
-									<value-of select="$className" /></attribute>
+									<value-of select="$duplicate" /></attribute>
 							</otherwise>
 						</choose>
 					</otherwise>
