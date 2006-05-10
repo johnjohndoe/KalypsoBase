@@ -12,6 +12,7 @@
 
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
 		
+	
 	<target name="prepareSchemas">
 		<mkdir dir="${project}/etc/schemas/generated"/>
 		<delete>
@@ -20,7 +21,16 @@
 			</fileset>
 		</delete>
 		<xslt style="generateSchemas.xsl" destdir="generated" basedir="${project}/etc/schemas/original" extension=".xsd" >
-		    <include name="**/*.xsd"/>
+		    <include name="*.xsd"/>
+		    <include name="filter/**/*.xsd"/>
+		    <include name="gml/**/*.xsd"/>
+<!--		    <include name="iso19139/**/*.xsd"/> -->
+			<include name="ows/**/*.xsd"/>
+<!--			<include name="sweCommon/**/*.xsd"/> -->
+		    <include name="wfs/**/*.xsd"/>
+		    <include name="xlink/**/*.xsd"/>
+<!--		    <include name="xsd/**/*.xsd"/>-->
+
 		</xslt>
 		
 	</target>
