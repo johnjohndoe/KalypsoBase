@@ -31,7 +31,7 @@ package org.kalypso.gmlschema;
 
 /**
  * FIXME: use class NS !!
- * 
+ * FIXME: should be an interface
  * @author doemming
  */
 public abstract class GMLSchemaConstants
@@ -39,6 +39,8 @@ public abstract class GMLSchemaConstants
   public final static String NS_XMLSCHEMA = "http://www.w3.org/2001/XMLSchema";
 
   public static final String NS_GML2 = "http://www.opengis.net/gml";
+  
+  public static final String NS_GML3 = NS_GML2;
 
   public static final String NS_XLINK = "http://www.w3.org/1999/xlink";
 

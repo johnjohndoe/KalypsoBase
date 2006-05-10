@@ -55,7 +55,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
 {
   private final IRelationType m_globalRT;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, ElementWithOccurs element, IRelationType rt )
+  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, IRelationType rt )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
     super( gmlSchema, element, rt.getQName() );

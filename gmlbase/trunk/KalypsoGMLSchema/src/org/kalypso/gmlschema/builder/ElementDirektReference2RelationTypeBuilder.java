@@ -76,7 +76,7 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
     return innerBuild( gmlSchema, element );
   }
 
-  public Object[] innerBuild( GMLSchema gmlSchema, ElementWithOccurs element )
+  public Object[] innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs element )
   {
     final QName ref = element.getElement().getRef();
 
@@ -84,6 +84,8 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       final IRelationType rt = (IRelationType) build( reference )[0];
+      // TODO: drittes element durch 'reference' ersetzen 
+      // getBuildedObject
       final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, rt );
       gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
@@ -97,7 +99,7 @@ public class ElementDirektReference2RelationTypeBuilder implements IBuilder
   /**
    * @param reference
    */
-  private Object[] build( ElementReference reference )
+  private Object[] build( final ElementReference reference )
   {
     final GMLSchema schema = reference.getGMLSchema();
     final Element element = reference.getElement();
