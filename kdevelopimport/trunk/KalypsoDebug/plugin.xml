@@ -61,6 +61,24 @@
                style="push"
                tooltip="Löscht alle Schemata aus dem Cache. Alle Schemata werden danach vollständig neu geladen."/>
       </actionSet>
+      <actionSet
+            id="KalypsoDebug.config"
+            label="Kalypso Perspective Config "
+            visible="true">
+         <menu
+               id="KalypsoDebug.configmenu"
+               label="Perspective Config">
+            <groupMarker name="KalypsoDebug.configGroupMarker"/>
+         </menu>
+         <action
+               class="org.kalypso.debug.action.SavePerspectivePageAction"
+               id="KalypsoDebug.config.SavePerspectivePageAction"
+               label="&amp;Save Perspective"
+               menubarPath="KalypsoDebug.configmenu/KalypsoDebug.configGroupMarker"
+               style="push"
+               toolbarPath="KalypsoDebug.configGroupMarker"
+               tooltip="Save this Workbenchepage as Perspective (incl. all open Editors and Views)"/>
+      </actionSet>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
