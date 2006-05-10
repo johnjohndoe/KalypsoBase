@@ -14,11 +14,13 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.jface.wizard.view,
  org.kalypso.contribs.eclipse.ui,
  org.kalypso.contribs.eclipse.ui.browser,
+ org.kalypso.contribs.eclipse.ui.browser.commandable,
  org.kalypso.contribs.eclipse.ui.dialogs,
  org.kalypso.contribs.eclipse.ui.editorinput,
  org.kalypso.contribs.eclipse.ui.internal.decorators,
  org.kalypso.contribs.eclipse.ui.views.contentoutline,
- org.kalypso.contribs.eclipse.ui.views.propertysheet
+ org.kalypso.contribs.eclipse.ui.views.propertysheet,
+ org.kalypso.contribs.java.net
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.editors,
  org.eclipse.core.resources,
@@ -29,5 +31,5 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.help,
  org.eclipse.ui,
  org.kalypso.contribs.java,
- org.eclipse.ui.browser
+ org.eclipse.ui.browser;visibility:=reexport
 Eclipse-AutoStart: true

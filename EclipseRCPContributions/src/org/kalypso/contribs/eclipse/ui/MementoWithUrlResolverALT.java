@@ -40,57 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Map.Entry;
-
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.XMLMemento;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**
- * @author Christoph Kuepferle
+ * @author FlowsAd
  */
-public class MementoWithUrlResolver implements IMemento
+public class MementoWithUrlResolverALT implements IMemento
 {
   private final IMemento m_memento;
 
-  private final Properties m_props;
-
-  public final static String PATH_KEY = "PATH";
-
-  public final static String PROJECT_KEY = "PROJ";
-
   private final IUrlResolver2 m_resolver;
 
-  public MementoWithUrlResolver( final IMemento original, final MementoWithUrlResolver memento )
+  public MementoWithUrlResolverALT( IMemento memento, IUrlResolver2 resolver )
   {
-    m_memento = original;
-    m_props = memento.getPropetries();
-    m_resolver = memento.getURLResolver();
+    m_memento = memento;
+    m_resolver = resolver;
+  }
+
+  public MementoWithUrlResolverALT( IMemento memento, MementoWithUrlResolverALT mementoWithUrlResolver )
+  {
+    m_memento = memento;
+    m_resolver = mementoWithUrlResolver.getURLResolver();
   }
 
   public IUrlResolver2 getURLResolver( )
   {
     return m_resolver;
-  }
-
-  private Properties getPropetries( )
-  {
-    return m_props;
-  }
-
-  public MementoWithUrlResolver( final IMemento memento, final Properties propsTokenReplaecment, final IUrlResolver2 resolver )
-  {
-    m_memento = memento;
-    if( propsTokenReplaecment == null )
-      m_props = new Properties();
-    else
-      m_props = propsTokenReplaecment;
-    m_resolver = resolver;
   }
 
   /**
@@ -99,9 +75,9 @@ public class MementoWithUrlResolver implements IMemento
   public IMemento createChild( String type, String id )
   {
     final IMemento child = m_memento.createChild( type, id );
-    if( child == null )
+    if(child==null)
       return null;
-    return new MementoWithUrlResolver( child, this );
+    return new MementoWithUrlResolverALT( child, this );
   }
 
   /**
@@ -109,10 +85,10 @@ public class MementoWithUrlResolver implements IMemento
    */
   public IMemento createChild( String type )
   {
-    final IMemento child = m_memento.createChild( type );
-    if( child == null )
+    final IMemento child = m_memento.createChild( type);
+    if(child==null)
       return null;
-    return new MementoWithUrlResolver( child, this );
+    return new MementoWithUrlResolverALT( child, this );
   }
 
   /**
@@ -120,10 +96,10 @@ public class MementoWithUrlResolver implements IMemento
    */
   public IMemento getChild( String type )
   {
-    final IMemento child = m_memento.getChild( type );
-    if( child == null )
+    final IMemento child = m_memento.getChild( type);
+    if(child==null)
       return null;
-    return new MementoWithUrlResolver( child, this );
+    return new MementoWithUrlResolverALT( child, this );
   }
 
   /**
@@ -131,13 +107,13 @@ public class MementoWithUrlResolver implements IMemento
    */
   public IMemento[] getChildren( String type )
   {
-    final IMemento[] children = m_memento.getChildren( type );
-    if( children == null )
+    final IMemento[] children = m_memento.getChildren( type);
+    if(children==null)
       return null;
 
     final IMemento[] result = new IMemento[children.length];
     for( int i = 0; i < result.length; i++ )
-      result[i] = new MementoWithUrlResolver( children[i], this );
+      result[i] = new MementoWithUrlResolverALT( children[i], this );
     return result;
   }
 
@@ -170,7 +146,7 @@ public class MementoWithUrlResolver implements IMemento
    */
   public String getString( String key )
   {
-    return replace( m_memento.getString( key ) );
+    return m_memento.getString( key );
   }
 
   /**
@@ -178,7 +154,7 @@ public class MementoWithUrlResolver implements IMemento
    */
   public String getTextData( )
   {
-    return replace( m_memento.getTextData() );
+    return m_memento.getTextData();
   }
 
   /**
@@ -210,7 +186,7 @@ public class MementoWithUrlResolver implements IMemento
    */
   public void putString( String key, String value )
   {
-    m_memento.putString( key, replace( value ) );
+    m_memento.putString( key, value );
   }
 
   /**
@@ -218,37 +194,6 @@ public class MementoWithUrlResolver implements IMemento
    */
   public void putTextData( String data )
   {
-    m_memento.putTextData( replace( data ) );
+    m_memento.putTextData( data );
   }
-
-  private String replace( String toBeReplaced )
-  {
-
-    if( toBeReplaced == null )
-      return null;
-    // replace absolute file path with the project protocol
-    for( final Iterator iter = m_props.entrySet().iterator(); iter.hasNext(); )
-    {
-      final Map.Entry entry = (Entry) iter.next();
-      final String key = entry.getKey().toString();
-      final String value = entry.getValue().toString();
-
-      toBeReplaced = toBeReplaced.replaceAll( key, value );
-    }
-
-    return toBeReplaced;
-
-  }
-
-  public void save( Writer writer ) throws IOException, Exception
-  {
-    if( m_memento instanceof XMLMemento )
-    {
-      ((XMLMemento) m_memento).save( writer );
-    }
-    else
-      throw new Exception( "Das Memento muss eine XMLMemento Objekt sein!" );
-
-  }
-
 }

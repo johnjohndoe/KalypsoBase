@@ -47,7 +47,18 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IWorkbenchConstants;
+import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
+import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**
@@ -111,8 +122,54 @@ public class MementoUtils
     }
   }
 
-  public static MementoWithUrlResolver createMementoWithUrlResolver( IMemento memento, IUrlResolver2 resolver )
+  public static MementoWithUrlResolver createMementoWithUrlResolver( IMemento memento, Properties properties, IUrlResolver2 resolver )
   {
-    return new MementoWithUrlResolver( memento, resolver );
+    return new MementoWithUrlResolver( memento, properties, resolver );
+  }
+
+  public static void restoreWorkbenchPage( IMemento stateMemento )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
+    final IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
+    // get the actual size of the active Window
+    final Rectangle bounds = activeWindow.getShell().getDisplay().getBounds();
+    int heigth = bounds.height;
+    int width = bounds.width;
+    int x = bounds.x;
+    int y = bounds.y;
+
+    // do the memento business
+    final IMemento windowMemento = stateMemento.getChild( IWorkbenchConstants.TAG_WINDOW );
+    // HACK: to make sure that if the tag maximized is set true in the memento the size attributes must be
+    // adjusted to actual size of the current shell of the active workbench window.
+    if( windowMemento.getString( IWorkbenchConstants.TAG_MAXIMIZED ).equalsIgnoreCase( "true" ) )
+    {
+      windowMemento.putInteger( IWorkbenchConstants.TAG_HEIGHT, heigth );
+      windowMemento.putInteger( IWorkbenchConstants.TAG_WIDTH, width );
+      windowMemento.putInteger( IWorkbenchConstants.TAG_X, x );
+      windowMemento.putInteger( IWorkbenchConstants.TAG_Y, y );
+      System.out.println( "heigth: " + heigth + "\twidth: " + width + "\tx: " + x + "\ty: " + y );
+    }
+    final IMemento pageMemento = windowMemento.getChild( IWorkbenchConstants.TAG_PAGE );
+    final IMemento perspspectiveMemento = pageMemento.getChild( IWorkbenchConstants.TAG_PERSPECTIVES );
+    final IMemento singlePerspective = perspspectiveMemento.getChild( IWorkbenchConstants.TAG_PERSPECTIVE );
+    final IMemento descMemento = singlePerspective.getChild( IWorkbenchConstants.TAG_DESCRIPTOR );
+    final String perspectiveID = descMemento.getString( IWorkbenchConstants.TAG_ID );
+    final PerspectiveDescriptor realDesc = (PerspectiveDescriptor) registry.findPerspectiveWithId( perspectiveID );
+
+    WorkbenchWindow page = ((WorkbenchWindow) activeWindow);
+    final WorkbenchPage activePage = (WorkbenchPage) activeWindow.getActivePage();
+    if( activePage != null )
+    {
+      // DO NOT REMOVE: THIS IS A SWITCH
+      // This part of code does not change the size of the window before restoring but opens two
+      // activePage.closeAllPerspectives( false, false );
+      // activePage.restoreState( pageMemento, realDesc );
+      // activePage.resetPerspective();
+      activePage.closeAllPerspectives( false, true );
+      page.restoreState( windowMemento, realDesc );
+      page.getActivePage().resetPerspective();
+    }
   }
 }

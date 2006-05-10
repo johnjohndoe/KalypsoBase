@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -66,15 +67,12 @@ public class ResourceSelectionGroup extends Composite
   /*
    * übernommen von ContainerSelectionGroup und leicht verändert @author peiler
    */
-  public ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewContainerName, String message,
-      boolean showClosedProjects, String[] allowedResourceExtensions, IContainer inputContainer )
+  public ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewContainerName, String message, boolean showClosedProjects, String[] allowedResourceExtensions, IContainer inputContainer )
   {
-    this( parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
-        allowedResourceExtensions, inputContainer );
+    this( parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT, allowedResourceExtensions, inputContainer );
   }
 
-  ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewResourceName, String message,
-      boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions, IContainer inputContainer )
+  ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewResourceName, String message, boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions, IContainer inputContainer )
   {
     super( parent, SWT.NONE );
     m_listener = listener;
@@ -103,10 +101,15 @@ public class ResourceSelectionGroup extends Composite
     }
 
     // fire an event so the parent can update its controls
+    fireEvent( SWT.Selection );
+  }
+
+  void fireEvent( int type )
+  {
     if( m_listener != null )
     {
       Event changeEvent = new Event();
-      changeEvent.type = SWT.Selection;
+      changeEvent.type = type;
       changeEvent.widget = this;
       m_listener.handleEvent( changeEvent );
     }
@@ -142,7 +145,7 @@ public class ResourceSelectionGroup extends Composite
       resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
       resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       // TODO: add listener to control user input
-      //resourceNameField.addListener( SWT.DefaultSelection, m_listener );
+      // resourceNameField.addListener( SWT.DefaultSelection, m_listener );
       resourceNameField.setFont( this.getFont() );
     }
     else
@@ -159,8 +162,7 @@ public class ResourceSelectionGroup extends Composite
   {
     // Create drill down.
     DrillDownComposite drillDown = new DrillDownComposite( this, SWT.BORDER );
-    GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL
-        | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL );
+    GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL );
     spec.widthHint = SIZING_SELECTION_PANE_WIDTH;
     spec.heightHint = heightHint;
     drillDown.setLayoutData( spec );
@@ -177,8 +179,8 @@ public class ResourceSelectionGroup extends Composite
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
-        IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-        resourceSelectionChanged( (IResource)selection.getFirstElement() ); // allow
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        resourceSelectionChanged( (IResource) selection.getFirstElement() ); // allow
         // null
       }
     } );
@@ -189,21 +191,22 @@ public class ResourceSelectionGroup extends Composite
         ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          Object item = ( (IStructuredSelection)selection ).getFirstElement();
+          Object item = ((IStructuredSelection) selection).getFirstElement();
           if( treeViewer.getExpandedState( item ) )
             treeViewer.collapseToLevel( item, 1 );
           else
             treeViewer.expandToLevel( item, 1 );
         }
+        fireEvent( SWT.MouseDoubleClick );
       }
     } );
 
     // This has to be done after the viewer has been laid out
-    //treeViewer.setInput( ResourcesPlugin.getWorkspace() );
+    // treeViewer.setInput( ResourcesPlugin.getWorkspace() );
     treeViewer.setInput( m_inputContainer );
   }
 
-  public IPath getResourceFullPath()
+  public IPath getResourceFullPath( )
   {
     IPath resourcePath = null;
     if( m_allowNewResourceName )
@@ -215,8 +218,8 @@ public class ResourceSelectionGroup extends Composite
       }
       else
       {
-        //The user may not have made this absolute so do it for them
-        resourcePath = ( new Path( pathName ) ).makeAbsolute();
+        // The user may not have made this absolute so do it for them
+        resourcePath = (new Path( pathName )).makeAbsolute();
       }
     }
     else
@@ -234,7 +237,7 @@ public class ResourceSelectionGroup extends Composite
   /**
    * Gives focus to one of the widgets in the group, as determined by the group.
    */
-  public void setInitialFocus()
+  public void setInitialFocus( )
   {
     if( m_allowNewResourceName )
       resourceNameField.setFocus();
@@ -249,7 +252,7 @@ public class ResourceSelectionGroup extends Composite
   {
     selectedResource = resource;
 
-    //expand to and select the specified container
+    // expand to and select the specified container
     final List<IContainer> itemsToExpand = new ArrayList<IContainer>();
     IContainer parent = resource.getParent();
     while( parent != null )
@@ -261,7 +264,7 @@ public class ResourceSelectionGroup extends Composite
     treeViewer.setSelection( new StructuredSelection( resource ), true );
   }
 
-  public IResource getSelectedResource()
+  public IResource getSelectedResource( )
   {
     return selectedResource;
   }

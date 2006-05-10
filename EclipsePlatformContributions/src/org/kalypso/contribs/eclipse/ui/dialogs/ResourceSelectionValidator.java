@@ -9,27 +9,24 @@ package org.kalypso.contribs.eclipse.ui.dialogs;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.ui.dialogs.ISelectionValidator;
 
-public class ResourceSelectionValidator
+public class ResourceSelectionValidator implements ISelectionValidator
 {
 
-  public ResourceSelectionValidator()
-  {
-    super();
-  }
+  public static final String ERROR_MESSAGE = "Bitte wählen sie eine Datei aus..";
 
   /**
    * @see org.eclipse.ui.dialogs.ISelectionValidator#isValid(java.lang.Object)
    */
-  public boolean isValid( Object selection )
+  public String isValid( Object selection )
   {
-    boolean valid = false;
     if( selection != null && selection instanceof IResource )
     {
       if( selection instanceof IFile )
-        valid = true;
+        return null;
     }
-    return valid;
+    return ERROR_MESSAGE;
   }
 
 }
