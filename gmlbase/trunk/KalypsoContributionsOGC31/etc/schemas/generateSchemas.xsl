@@ -122,15 +122,22 @@
 					</when>
 					<otherwise>
 						<variable name="duplicate">
+							<!-- make first character uppercase -->
 							<value-of
 								select="translate(substring($className,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
 							<value-of select="substring($className,2)" />
 						</variable>
-						<if
-							test="/xsd:schema/xsd:element/@name=$duplicate or /xsd:schema/xsd:complexType/@name=$duplicate">
-							<attribute name="name">
-								<value-of select="$className" />2</attribute>
-						</if>
+						<choose>
+							<when
+ 								test="/xsd:schema/xsd:element/@name=$duplicate or /xsd:schema/xsd:complexType/@name=$duplicate">
+								<attribute name="name">
+									<value-of select="$className" />2</attribute>
+							</when>
+							<otherwise>
+								<attribute name="name">
+									<value-of select="$className" /></attribute>
+							</otherwise>
+						</choose>
 					</otherwise>
 				</choose>
 			</element>
