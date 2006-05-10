@@ -53,7 +53,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
-import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
