@@ -60,6 +60,13 @@
                menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
                style="push"
                tooltip="Löscht alle Schemata aus dem Cache. Alle Schemata werden danach vollständig neu geladen."/>
+         <action
+               class="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryActionDelegate"
+               id="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryAction"
+               label="Type-Registry erneut laden"
+               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
+               style="push"
+               tooltip="Clears the type handler registry and reloads the defined types"/>
       </actionSet>
       <actionSet
             id="KalypsoDebug.config"
