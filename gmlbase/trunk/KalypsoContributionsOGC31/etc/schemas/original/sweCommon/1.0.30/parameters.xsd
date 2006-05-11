@@ -22,8 +22,8 @@
 	<!--============================-->
 	<!--  Main Substitution Groups  -->
 	<!--============================-->
-	<xs:element name="_DataGroup" type="swe:_GroupBaseType" abstract="true"/>
-	<xs:element name="_DataArray" type="swe:_ArrayBaseType" abstract="true"/>
+	<xs:element name="Main_DataGroup" type="swe:_GroupBaseType" abstract="true"/>
+	<xs:element name="Main_DataArray" type="swe:_ArrayBaseType" abstract="true"/>
 	<!--==========================-->
 	<!--  Simple Data Components  -->
 	<!--==========================-->
@@ -78,7 +78,7 @@
 	<!--===========================-->
 	<!--  Complex Data Components  -->
 	<!--===========================-->
-	<xs:element name="DataGroup" substitutionGroup="swe:_DataGroup">
+	<xs:element name="DataGroup" substitutionGroup="swe:Main_DataGroup">
 		<xs:annotation>
 			<xs:documentation>Group of other data components</xs:documentation>
 		</xs:annotation>
@@ -98,7 +98,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="DataArray" substitutionGroup="swe:_DataArray">
+	<xs:element name="DataArray" substitutionGroup="swe:Main_DataArray">
 		<xs:annotation>
 			<xs:documentation>Array of other data components with a size</xs:documentation>
 		</xs:annotation>
@@ -127,7 +127,7 @@
 			<xs:list itemType="swe:tupleType"/>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="Curve" substitutionGroup="swe:_DataArray">
+	<xs:element name="Curve" substitutionGroup="swe:Main_DataArray">
 		<xs:annotation>
 			<xs:documentation>Curve describing variations of a parameter vs. another quantity</xs:documentation>
 		</xs:annotation>
@@ -137,8 +137,8 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ConditionalValue" type="swe:ConditionalValueType" substitutionGroup="swe:_DataGroup"/>
-	<xs:element name="NormalizedCurve" type="swe:NormalizedCurveType" substitutionGroup="swe:_DataGroup"/>
+	<xs:element name="ConditionalValue" type="swe:ConditionalValueType" substitutionGroup="swe:Main_DataGroup"/>
+	<xs:element name="NormalizedCurve" type="swe:NormalizedCurveType" substitutionGroup="swe:Main_DataGroup"/>
 	<xs:complexType name="CurveType">
 		<xs:complexContent>
 			<xs:extension base="swe:_ArrayBaseType">
@@ -501,8 +501,8 @@
 			<xs:group ref="swe:AnyScalar"/>
 			<xs:element ref="swe:QuantityRange"/>
 			<xs:element ref="swe:CountRange"/>
-			<xs:element ref="swe:_DataGroup"/>
-			<xs:element ref="swe:_DataArray"/>
+			<xs:element ref="swe:Main_DataGroup"/>
+			<xs:element ref="swe:Main_DataArray"/>
 		</xs:choice>
 	</xs:group>
 	<xs:group name="Time">

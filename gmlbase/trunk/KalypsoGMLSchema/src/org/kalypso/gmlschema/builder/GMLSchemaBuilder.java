@@ -37,8 +37,8 @@ import java.util.Set;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureContentType;
@@ -205,9 +205,9 @@ public class GMLSchemaBuilder
   public static URL getSchemaLocationForURN( String urn, URL schemaLocationURL )
   {
     // TODO use url catalog
-    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_GML2 ) )
+    if( urn.equalsIgnoreCase( NS.GML2 ) )
       return GMLSchemaBuilder.class.getResource( "../resources/feature.xsd" );
-    if( urn.equalsIgnoreCase( GMLSchemaConstants.NS_XLINK ) )
+    if( urn.equalsIgnoreCase( NS.XLINK ) )
       return GMLSchemaBuilder.class.getResource( "../resources/xlinks.xsd" );
     return schemaLocationURL;
   }

@@ -48,6 +48,9 @@ public class TypeRegistry_impl implements ITypeRegistry
    */
   public ITypeHandler getTypeHandlerForTypeName( final QName typeName )
   {
+    if( typeName.getLocalPart().contains("etaData"))
+      System.out.println();
+    
     if( !hasTypeName( typeName ) )
       return null;
     return m_typeMap.get( typeName );
@@ -104,5 +107,14 @@ public class TypeRegistry_impl implements ITypeRegistry
   public ITypeHandler[] getRegisteredTypeHandler( )
   {
     return m_classMap.values().toArray( new ITypeHandler[m_classMap.size()] );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeRegistry#clearRegistry()
+   */
+  public void clearRegistry( )
+  {
+    m_classMap.clear();
+    m_typeMap.clear();
   }
 }

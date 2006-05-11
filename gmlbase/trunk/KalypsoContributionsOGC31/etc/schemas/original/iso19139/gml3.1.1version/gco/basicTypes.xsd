@@ -122,7 +122,10 @@
 	</xs:complexType>
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
-	<xs:element name="Length" type="gml:LengthType" substitutionGroup="gco:Measure"/>
+	<!-- TODO modification by Marc:
+	type modified, was gml:LengthType
+	-->
+	<xs:element name="Length" type="gml:MeasureType" substitutionGroup="gco:Measure"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="Length_PropertyType">
 		<xs:sequence>
@@ -132,7 +135,10 @@
 	</xs:complexType>
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
-	<xs:element name="Angle" type="gml:AngleType" substitutionGroup="gco:Measure"/>
+	<!-- TODO modification by Marc:
+		type modified, was gml:AngleType
+	-->
+	<xs:element name="Angle" type="gml:MeasureType" substitutionGroup="gco:Measure"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="Angle_PropertyType">
 		<xs:sequence>
@@ -142,7 +148,10 @@
 	</xs:complexType>
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
-	<xs:element name="Scale" type="gml:ScaleType" substitutionGroup="gco:Measure"/>
+	<!-- TODO modification by Marc:
+		type modified, was gml:ScaleType
+	-->
+	<xs:element name="Scale" type="gml:MeasureType" substitutionGroup="gco:Measure"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="Scale_PropertyType">
 		<xs:sequence>
@@ -152,7 +161,10 @@
 	</xs:complexType>
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
-	<xs:element name="Distance" type="gml:LengthType" substitutionGroup="gco:Length"/>
+	<!-- TODO modification by Marc:
+		type modified, was gml:LengthType
+	-->	
+	<xs:element name="Distance" type="gml:MeasureType" substitutionGroup="gco:Length"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="Distance_PropertyType">
 		<xs:sequence>
@@ -214,9 +226,13 @@
 	<!-- ============================= UOM ========================================= -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->		
 	<xs:complexType name="UomAngle_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -224,9 +240,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomLength_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -234,9 +254,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomScale_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -244,9 +268,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UnitOfMeasure_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -254,9 +282,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomArea_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -264,9 +296,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomVelocity_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -274,9 +310,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomTime_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
@@ -284,9 +324,13 @@
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->
 	<!-- ........................................................................ -->
+	<!-- TODO modification by Marc:
+		replaced UnitDefinition element
+	-->	
 	<xs:complexType name="UomVolume_PropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:UnitDefinition" minOccurs="0"/>
+			<!--xs:element ref="gml:UnitDefinition" minOccurs="0"/-->
+			<xs:element name="UnitDefinition" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>

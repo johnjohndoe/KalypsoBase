@@ -18,7 +18,8 @@
 	<xs:complexType name="SC_CRS_PropertyType">
 		<xs:sequence>
 			<!-- <xs:element ref="gml:AbstractCRS" minOccurs="0"/> -->
-			<xs:element ref="gml:_CRS" minOccurs="0"/>
+			<!--xs:element ref="gml:_CRS" minOccurs="0"/-->
+			<xs:element name="_CRS" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>

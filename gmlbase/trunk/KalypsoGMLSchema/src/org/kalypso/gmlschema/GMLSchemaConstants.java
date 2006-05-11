@@ -36,22 +36,6 @@ package org.kalypso.gmlschema;
  */
 public abstract class GMLSchemaConstants
 {
-  public final static String NS_XMLSCHEMA = "http://www.w3.org/2001/XMLSchema";
-
-  public static final String NS_GML2 = "http://www.opengis.net/gml";
-
-  public static final String NS_GML3 = NS_GML2;
-
-  public static final String NS_XLINK = "http://www.w3.org/1999/xlink";
-
-  public static final String NS_WFS = "http://www.opengis.net/wfs";
-
-  public static final String NS_SWE = "http://www.opengis.net/swe";
-
-  public static final String NS_OM = "http://www.opengis.net/om";
-
-  public static final String NS_OBSLINK = "obslink.zml.kalypso.org";
-
   public static final String ELEMENTS_TO_PASS = "ELEMENTS_TO_PASS";
 
   /*

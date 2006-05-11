@@ -87,7 +87,16 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
     m_level++;
-    m_unmarshallerHandler.startElement( uri, local, qname, atts );
+    try
+    {
+      m_unmarshallerHandler.startElement( uri, local, qname, atts );
+    }
+    catch( final NullPointerException e )
+    {
+      e.printStackTrace();
+      
+      throw new SAXException( "Element could not be processed: " + qname );
+    }
   }
 
   public void endElement( String uri, String local, String qname ) throws SAXException

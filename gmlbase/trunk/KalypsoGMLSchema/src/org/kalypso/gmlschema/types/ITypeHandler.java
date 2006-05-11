@@ -55,5 +55,6 @@ public interface ITypeHandler
   /** Der XML-Typname */
   public QName getTypeName();
   
+  /** TODO describe what that really means */
   public boolean isGeometry();
 }

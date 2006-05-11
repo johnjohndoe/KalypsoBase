@@ -105,7 +105,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         {
           // no type definition -> xmlAnyType
           final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-          final ITypeHandler typeHandler = marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.NS_XSD_SCHEMA, "anyType" ) );
+          final ITypeHandler typeHandler = marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "anyType" ) );
           final String localName = getElement().getName();
           final QName qName = new QName( getGMLSchema().getTargetNamespace(), localName );
           m_propertyContentType = new CustomPropertyContentType( qName, typeHandler );

@@ -38,11 +38,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
@@ -104,7 +103,7 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IB
     // check if base is a RelationType
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
     if( baseType != null//
-        && GMLSchemaConstants.NS_GML2.equals( baseType.getNamespaceURI() )//
+        && NS.GML2.equals( baseType.getNamespaceURI() )//
         && GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( baseType.getLocalPart() ) )
       return true;
     // find referenced element (target)

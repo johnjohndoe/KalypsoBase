@@ -32,11 +32,11 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -97,7 +97,7 @@ public class Element2FeatureTypeBuilder implements IBuilder
     final String namespaceURI = baseType.getNamespaceURI();
     final String localPart = baseType.getLocalPart();
     // GML
-    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    if( !NS.GML2.equals( namespaceURI ) )
       return false;
     return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( localPart );
   }

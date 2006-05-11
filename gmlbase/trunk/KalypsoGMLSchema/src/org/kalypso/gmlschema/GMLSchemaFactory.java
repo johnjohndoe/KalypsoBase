@@ -153,7 +153,6 @@ public class GMLSchemaFactory
 //     final GMLSchemaBuilder builder = getBuilderForVersion( "2.1" );
     final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
     return builder.buildGMLSchema( inputStream, context );
-
   }
 
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )

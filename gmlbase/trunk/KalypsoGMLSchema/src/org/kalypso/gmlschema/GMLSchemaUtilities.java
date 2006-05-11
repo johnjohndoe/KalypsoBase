@@ -193,7 +193,7 @@ public class GMLSchemaUtilities
 
   private static boolean isXDSAnyType( QName base )
   {
-    if( !base.getNamespaceURI().equals( GMLSchemaConstants.NS_XMLSCHEMA ) )
+    if( !base.getNamespaceURI().equals( NS.XSD_SCHEMA ) )
       return false;
     return base.getLocalPart().equals( "anyType" );
   }
@@ -204,7 +204,6 @@ public class GMLSchemaUtilities
    */
   public static QName findBaseType( GMLSchema schema, SimpleType simpleType, String gmlVersion ) throws GMLSchemaException
   {
-
     // 1. check if it is a named type
     // propably a typehanlder exists for this
     final String name = simpleType.getName();
@@ -326,7 +325,7 @@ public class GMLSchemaUtilities
         break;
       case CONSTRUCTION_ABSTRACT_ANYTYPE:
       case CONSTRUCTION_ANYTYPE:
-        return new QName( NS.NS_XSD_SCHEMA, "anyType" ); // no type
+        return new QName( NS.XSD_SCHEMA, "anyType" ); // no type
       default:
         throw new UnsupportedOperationException();
     }
@@ -439,7 +438,7 @@ public class GMLSchemaUtilities
     final QName result = qName;
     final String namespaceURI = qName.getNamespaceURI();
     final String localPart = qName.getLocalPart();
-    if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    if( NS.GML2.equals( namespaceURI ) )
     {
       if( GMLSchemaUtilities.getBaseOfFeatureType( gmlVersion ).equals( localPart ) )
         return result;
@@ -449,7 +448,6 @@ public class GMLSchemaUtilities
 
       if( GMLSchemaUtilities.getBaseOfRelationType( gmlVersion ).equals( localPart ) )
         return result;
-
     }
     return null;
   }

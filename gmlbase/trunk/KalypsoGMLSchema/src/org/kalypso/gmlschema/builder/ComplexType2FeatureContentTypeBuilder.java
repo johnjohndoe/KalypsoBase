@@ -37,11 +37,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
@@ -104,7 +104,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     if( !(object instanceof ComplexType) )
       return false;
     final ComplexType complexType = (ComplexType) object;
-    if( "AbstractGMLType".equals( complexType.getName() ) && GMLSchemaConstants.NS_GML2.equals( gmlSchema.getTargetNamespace() ) )
+    if( "AbstractGMLType".equals( complexType.getName() ) && NS.GML2.equals( gmlSchema.getTargetNamespace() ) )
       return true;
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType, m_version );
     if( baseType == null )
@@ -113,7 +113,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
     final String localPart = baseType.getLocalPart();
 
     // GML
-    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    if( !NS.GML2.equals( namespaceURI ) )
       return false;
 
     return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( localPart );

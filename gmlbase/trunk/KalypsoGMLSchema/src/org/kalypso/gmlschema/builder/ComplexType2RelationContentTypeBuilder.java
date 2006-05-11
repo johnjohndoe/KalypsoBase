@@ -37,11 +37,11 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
@@ -106,7 +106,7 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
     final String localPart = baseType.getLocalPart();
 
     // GML
-    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    if( !NS.GML2.equals( namespaceURI ) )
       return false;
     return GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( localPart );
   }

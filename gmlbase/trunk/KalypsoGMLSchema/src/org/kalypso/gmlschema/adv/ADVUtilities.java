@@ -52,13 +52,13 @@ public class ADVUtilities
   static
   {
     NSPrefixProvider provider = NSUtilities.getNSProvider();
-    advPrefix = provider.getPreferredPrefix( NS.NS_ADV, "adv" );
-    xsPrefix = provider.getPreferredPrefix( NS.NS_XSD_SCHEMA, "xsd" );
+    advPrefix = provider.getPreferredPrefix( NS.ADV, "adv" );
+    xsPrefix = provider.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" );
   }
 
   // public static final String NS_ADV =
   // NS.NS_ADV;
-  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.NS_XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.NS_ADV + "' ";
+  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.ADV + "' ";
 
   /**
    * @param element

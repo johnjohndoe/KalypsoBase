@@ -32,11 +32,11 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.adv.ADVUtilities;
 import org.kalypso.gmlschema.property.relation.AdvRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
 {
-
   private final String m_gmlVersion;
 
   public FeaturePropertyType2RelationTypeBuilder( String gmlVersion )
@@ -101,7 +100,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
     final String namespaceURI = baseType.getNamespaceURI();
     final String localPart = baseType.getLocalPart();
     // GML
-    if( !GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
+    if( !NS.GML2.equals( namespaceURI ) )
       return false;
     return GMLSchemaUtilities.getBaseOfRelationType( m_gmlVersion ).equals( localPart );
   }

@@ -11,6 +11,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
  */
 public interface ITypeRegistry
 {
+  /** Removes every entry from the registry */
+  public void clearRegistry();
+  
   public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException;
 
   public void unregisterTypeHandler( final ITypeHandler typeHandler );

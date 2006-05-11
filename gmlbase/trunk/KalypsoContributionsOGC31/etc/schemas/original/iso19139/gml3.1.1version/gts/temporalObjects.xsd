@@ -18,7 +18,8 @@
 	<xs:complexType name="TM_Primitive_PropertyType">
 		<xs:sequence>
 			<!-- <xs:element ref="gml:AbstractTimePrimitive" minOccurs="0"/> -->
-			<xs:element ref="gml:_TimePrimitive" minOccurs="0"/>
+			<!--xs:element ref="gml:_TimePrimitive" minOccurs="0"/-->
+			<xs:element name="_TimePrimitive" type="xs:anyType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>

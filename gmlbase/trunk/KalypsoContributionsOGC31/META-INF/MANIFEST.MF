@@ -8,8 +8,15 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp
 Eclipse-AutoStart: true
 Bundle-ClassPath: kalypsoContribsOGC31.jar
-Export-Package: ogc31.org.w3.smil20,
+Export-Package: au.csiro.seegrid.xml.st,
+ net.opengis.swe,
+ ogc31.org.w3.smil20,
  ogc31.www.opengis.net.gml,
  ogc31.www.opengis.net.ogc,
  ogc31.www.opengis.net.ows,
+ org.isotc211._2005.gco,
+ org.isotc211._2005.gmd,
+ org.isotc211._2005.gsr,
+ org.isotc211._2005.gss,
+ org.isotc211._2005.gts,
  org.w3._2001.smil20.language

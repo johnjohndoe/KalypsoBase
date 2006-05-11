@@ -43,7 +43,6 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
  */
 public class FeatureContentType2ElementBuilder implements IBuilder
 {
-
   private final String m_version;
 
   public FeatureContentType2ElementBuilder( String version )

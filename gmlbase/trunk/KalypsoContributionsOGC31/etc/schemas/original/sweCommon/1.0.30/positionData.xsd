@@ -12,7 +12,7 @@
 	<!--=======================-->
 	<!--  Substitution Groups  -->
 	<!--=======================-->
-	<xs:element name="PositionData" type="swe:_PositionType" abstract="false" substitutionGroup="swe:_DataGroup">
+	<xs:element name="PositionData" type="swe:_PositionType" abstract="false" substitutionGroup="swe:Main_DataGroup">
 		<xs:annotation>
 			<xs:documentation>Head of substitution Group for Composite Position Data</xs:documentation>
 		</xs:annotation>

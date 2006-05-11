@@ -6,7 +6,7 @@
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
-	<xs:include schemaLocation="../gmd/identification.xsd"/>
+	<!--xs:include schemaLocation="../gmd/identification.xsd"/-->
 	<!-- add include because refactor lost transistive via citation -->
 	<!-- SJDC 20060114 -->
 	<xs:include schemaLocation="../gmd/referenceSystem.xsd"/>
@@ -43,10 +43,12 @@
 			<xs:extension base="gco:AbstractObject_Type">
 				<xs:sequence>
 					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
-					<xs:element name="scaleDenominator" type="gmd:MD_RepresentativeFraction_PropertyType" minOccurs="0"/>
+					<!--xs:element name="scaleDenominator" type="gmd:MD_RepresentativeFraction_PropertyType" minOccurs="0"/-->
+					<xs:element name="scaleDenominator" type="xs:anyType" minOccurs="0"/>
 					<xs:element name="sourceReferenceSystem" type="gmd:MD_ReferenceSystem_PropertyType" minOccurs="0"/>
 					<xs:element name="sourceCitation" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
-					<xs:element name="sourceExtent" type="gmd:EX_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<!--xs:element name="sourceExtent" type="gmd:EX_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded"/-->
+					<xs:element name="sourceExtent" type="xs:anyType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="sourceStep" type="gmd:LI_ProcessStep_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -527,9 +529,12 @@
 		<xs:complexContent>
 			<xs:extension base="gco:AbstractObject_Type">
 				<xs:sequence>
-					<xs:element name="level" type="gmd:MD_ScopeCode_PropertyType"/>
-					<xs:element name="extent" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
-					<xs:element name="levelDescription" type="gmd:MD_ScopeDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<!--xs:element name="level" type="gmd:MD_ScopeCode_PropertyType"/-->
+					<xs:element name="level" type="xs:anyType"/>
+					<!--xs:element name="extent" type="gmd:EX_Extent_PropertyType" minOccurs="0"/-->
+					<xs:element name="extent" type="xs:anyType" minOccurs="0"/>
+					<!--xs:element name="levelDescription" type="gmd:MD_ScopeDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/-->
+					<xs:element name="levelDescription" type="xs:anyType" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
