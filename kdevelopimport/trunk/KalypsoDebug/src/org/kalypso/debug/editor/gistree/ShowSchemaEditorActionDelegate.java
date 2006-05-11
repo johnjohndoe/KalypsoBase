@@ -41,6 +41,7 @@
 package org.kalypso.debug.editor.gistree;
 
 import java.net.URL;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
@@ -88,8 +89,8 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
 
     try
     {
-      final URL url = GMLSchemaUtilities.getSchemaURLFromSchemaLocation( schemaLocationString, workspace.getContext() );
-      final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, url );
+      final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, workspace.getContext() );
+      final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, namespaces.get( schemaNamespace ) );
       activePage.openEditor( input, "org.kalypso.ogc.gml.editor.GMLSchemaEditor" );
     }
     catch( final Exception e )
