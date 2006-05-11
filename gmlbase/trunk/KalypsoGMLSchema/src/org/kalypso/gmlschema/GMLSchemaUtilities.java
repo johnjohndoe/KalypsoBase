@@ -122,7 +122,7 @@ public class GMLSchemaUtilities
    * @param gmlSchema
    * @param complexType
    */
-  public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType, String gmlVersion )
+  public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType, String gmlVersion ) throws GMLSchemaException
   {
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
@@ -176,12 +176,18 @@ public class GMLSchemaUtilities
       // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
     }
 
-    // propably a typehanlder exists for this
+    // propably a typehandler exists for this
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 
     // 3. handle a reference
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
+    if( reference == null )
+    {
+      System.out.println( "unknown name: " + base );
+      return null;
+    }
+    
     return findBaseType( reference, gmlVersion );
   }
 
@@ -196,7 +202,7 @@ public class GMLSchemaUtilities
    * @param schema
    * @param simpleType
    */
-  public static QName findBaseType( GMLSchema schema, SimpleType simpleType, String gmlVersion )
+  public static QName findBaseType( GMLSchema schema, SimpleType simpleType, String gmlVersion ) throws GMLSchemaException
   {
 
     // 1. check if it is a named type
@@ -225,7 +231,7 @@ public class GMLSchemaUtilities
     throw new UnsupportedOperationException();
   }
 
-  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list, String gmlVersion )
+  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list, String gmlVersion ) throws GMLSchemaException
   {
     final LocalSimpleType simpleType = list.getSimpleType();
     final QName itemType = list.getItemType();
@@ -248,7 +254,7 @@ public class GMLSchemaUtilities
     return new ListQName( base );
   }
 
-  private static QName findBaseType( GMLSchema schema, Union union, String gmlVersion )
+  private static QName findBaseType( GMLSchema schema, Union union, String gmlVersion ) throws GMLSchemaException
   {
     final Set<QName> mixedSet = new HashSet<QName>();
     // embeddded simple types
@@ -287,7 +293,7 @@ public class GMLSchemaUtilities
       return new MixedQName( bases );
   }
 
-  private static QName findBaseType( GMLSchema schema, Restriction restriction, String gmlVersion )
+  private static QName findBaseType( GMLSchema schema, Restriction restriction, String gmlVersion ) throws GMLSchemaException
   {
     final QName base = restriction.getBase();
     if( isKnownType( base, gmlVersion ) )
@@ -300,7 +306,7 @@ public class GMLSchemaUtilities
 
   }
 
-  public static QName findBaseType( final GMLSchema schema, final Element element, String gmlVersion )
+  public static QName findBaseType( final GMLSchema schema, final Element element, String gmlVersion ) throws GMLSchemaException
   {
     final QName qName;
     final int constructionType = getConstructionType( element );
@@ -340,9 +346,11 @@ public class GMLSchemaUtilities
         return findBaseType( elementReference, gmlVersion );
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = schema.resolveTypeReference( qName );
+        if( typeReference == null )
+          throw new GMLSchemaException( "Could not find type reference for: " + qName );
         return findBaseType( typeReference, gmlVersion );
       default:
-        throw new UnsupportedOperationException( "unknown base type for " + element.toString() );
+        throw new GMLSchemaException( "Unknown base type for " + element.toString() );
     }
   }
 
@@ -375,7 +383,7 @@ public class GMLSchemaUtilities
   /**
    * @param reference
    */
-  private static QName findBaseType( SimpleTypeReference reference, String gmlVersion )
+  private static QName findBaseType( SimpleTypeReference reference, String gmlVersion ) throws GMLSchemaException
   {
     return findBaseType( reference.getGMLSchema(), reference.getSimpleType(), gmlVersion );
   }
@@ -383,19 +391,19 @@ public class GMLSchemaUtilities
   /**
    * @param reference
    */
-  private static QName findBaseType( TypeReference reference, String gmlVersion )
+  private static QName findBaseType( final TypeReference reference, final String gmlVersion ) throws GMLSchemaException
   {
     if( reference instanceof ComplexTypeReference )
       return findBaseType( (ComplexTypeReference) reference, gmlVersion );
     else if( reference instanceof SimpleTypeReference )
       return findBaseType( (SimpleTypeReference) reference, gmlVersion );
-    throw new UnsupportedOperationException( "unknown reference" );
+    throw new UnsupportedOperationException( "unknown reference: " + reference.getGMLSchema() + " - Version: " + gmlVersion );
   }
 
   /**
    * @param reference
    */
-  private static QName findBaseType( ComplexTypeReference reference, String gmlVersion )
+  private static QName findBaseType( ComplexTypeReference reference, String gmlVersion ) throws GMLSchemaException
   {
     return findBaseType( reference.getGMLSchema(), reference.getComplexType(), gmlVersion );
   }
@@ -411,7 +419,7 @@ public class GMLSchemaUtilities
     return getKnownTypeFor( qName, gmlVersion ) != null;
   }
 
-  private static QName findBaseType( final ElementReference reference, String gmlVersion )
+  private static QName findBaseType( final ElementReference reference, String gmlVersion ) throws GMLSchemaException
   {
     final Element element = reference.getElement();
     final GMLSchema schema = reference.getGMLSchema();
@@ -433,7 +441,6 @@ public class GMLSchemaUtilities
     final String localPart = qName.getLocalPart();
     if( GMLSchemaConstants.NS_GML2.equals( namespaceURI ) )
     {
-
       if( GMLSchemaUtilities.getBaseOfFeatureType( gmlVersion ).equals( localPart ) )
         return result;
 
@@ -452,7 +459,7 @@ public class GMLSchemaUtilities
    * @param element
    * @return complextype
    */
-  public static ComplexTypeReference getComplexTypeReferenceFor( final GMLSchema gmlSchema, final Element element )
+  public static ComplexTypeReference getComplexTypeReferenceFor( final GMLSchema gmlSchema, final Element element ) throws GMLSchemaException
   {
     final QName type = element.getType();
     if( type != null )
@@ -629,7 +636,7 @@ public class GMLSchemaUtilities
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
 
-  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -648,7 +655,7 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -667,7 +674,7 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -687,7 +694,7 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( GMLSchema schema, Group group, List<ElementWithOccurs> collector, Occurs occurs )
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, Group group, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();

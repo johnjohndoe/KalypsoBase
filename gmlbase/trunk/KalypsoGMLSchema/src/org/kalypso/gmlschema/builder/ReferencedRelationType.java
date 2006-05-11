@@ -43,23 +43,34 @@ package org.kalypso.gmlschema.builder;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * @author doemming
  */
 public class ReferencedRelationType extends AbstractPropertyTypeFromElement implements IRelationType
 {
-  private final IRelationType m_globalRT;
+  private IRelationType m_globalRT = null;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, IRelationType rt )
+  private final ElementReference m_reference;
+
+  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, rt.getQName() );
-    m_globalRT = rt;
+    super( gmlSchema, element, element.getElement().getRef() );
+
+    m_reference = reference;
+  }
+
+  private void checkState( )
+  {
+    if( m_globalRT == null )
+      throw new IllegalStateException( "Not yet initialized: " + this );
   }
 
   /**
@@ -68,6 +79,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public IFeatureType getTargetFeatureType( )
   {
+    checkState();
+
     // global knows content
     return m_globalRT.getTargetFeatureType();
   }
@@ -77,6 +90,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isInlineAble( )
   {
+    checkState();
+
     // global knows content
     return m_globalRT.isInlineAble();
   }
@@ -86,6 +101,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isLinkAble( )
   {
+    checkState();
+
     // global knows content
     return m_globalRT.isLinkAble();
   }
@@ -93,9 +110,21 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
-    // nothing to init
+    // find referenced relation type, it should also be build by now
+    switch( initializeRun )
+    {
+      case INITIALIZE_RUN_FIRST:
+        m_globalRT = (IRelationType) m_reference.getGMLSchema().getBuildedObjectFor( m_reference.getElement() );
+        if( m_globalRT == null )
+          throw new GMLSchemaException( "Unable to finde referenced IRelationType for: " + getQName() );
+
+        break;
+
+      default:
+        break;
+    }
   }
 
   /**
@@ -104,6 +133,12 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   @Override
   public Element getElement( )
   {
+//    checkState();
+    
+    // HACK: while building, this is used by RelationType2ComplexTypeBuilder
+    if( m_globalRT == null )
+      return m_reference.getElement();
+
     // allways return the one that known content
     // TODO for other usage implement AppinfoProvider
     return ((QualifiedElement) m_globalRT).getElement();

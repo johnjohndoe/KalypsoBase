@@ -30,6 +30,7 @@
 package org.kalypso.gmlschema.builder;
 
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 
 /**
  * TODO: insert type comment here
@@ -45,7 +46,7 @@ public interface IBuilder
    * @param typeObject
    * @return array of objects that will be build in next turn if neccessary
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject );
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException;;
 
   /**
    * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in
@@ -59,7 +60,7 @@ public interface IBuilder
    *          name of the current build run
    * @return true if builder can build something for this object
    */
-  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass );
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException;
 
   /**
    * This method is called, when two builder are concurrent for an object to build because both builders methodes
@@ -67,6 +68,6 @@ public interface IBuilder
    * 
    * @returns returns <code>true</code> if this builder replaces the other builder.
    */
-  public boolean replaces( IBuilder other );
+  public boolean replaces( final IBuilder other );
 
 }

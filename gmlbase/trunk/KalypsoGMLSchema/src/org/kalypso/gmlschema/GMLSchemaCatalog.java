@@ -1,6 +1,7 @@
 package org.kalypso.gmlschema;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
 import java.util.logging.Level;
@@ -103,7 +104,7 @@ public final class GMLSchemaCatalog
   /**
    * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
    */
-  public synchronized static GMLSchema getSchema( final String namespace )
+  public synchronized static GMLSchema getSchema( final String namespace ) throws InvocationTargetException
   {
     return getSchema( namespace, null );
   }
@@ -115,7 +116,7 @@ public final class GMLSchemaCatalog
    * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
    * </p>
    */
-  public synchronized static GMLSchema getSchema( final String namespace, final URL schemaLocation )
+  public synchronized static GMLSchema getSchema( final String namespace, final URL schemaLocation ) throws InvocationTargetException
   {
     if( THE_CACHE == null )
       throw NOT_INITIALIZED;

@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.builder;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -47,7 +48,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
 {
   private final String m_version;
 
-  public RelationType2ComplexTypeBuilder( String version )
+  public RelationType2ComplexTypeBuilder( final String version )
   {
     m_version = version;
   }
@@ -55,7 +56,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject ) throws GMLSchemaException
   {
     final QualifiedElement qe = (QualifiedElement) relationTypeObject;
     final Element element = qe.getElement();

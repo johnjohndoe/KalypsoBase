@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 
 /**
@@ -53,7 +54,7 @@ public class FeatureContentType2ElementBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject )
+  public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject ) throws GMLSchemaException
   {
     final FeatureContentType fct = (FeatureContentType) featureContentTypeObject;
     final List<ElementWithOccurs> sequence = fct.getSequence();

@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyContentTypeFormTypeHandler;
@@ -59,7 +60,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final ITypeHandler typeHandler = getTypeHandler( gmlSchema, typeObject );
     final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler ,m_version);
@@ -71,12 +72,12 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass ) throws GMLSchemaException
   {
     return getTypeHandler( gmlSchema, object ) != null;
   }
 
-  private ITypeHandler getTypeHandler( GMLSchema gmlSchema, Object typeObject )
+  private ITypeHandler getTypeHandler( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final QName baseType;
     if( typeObject instanceof ComplexType )

@@ -65,7 +65,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
    * @see org.kalypso.gmlschema.feature.FeatureContentType#getSequence()
    */
   @Override
-  public List<ElementWithOccurs> getSequence( )
+  public List<ElementWithOccurs> getSequence( ) throws GMLSchemaException
   {
     return GMLSchemaUtilities.collectElements( getGMLSchema(), m_restriction, null, null );
   }

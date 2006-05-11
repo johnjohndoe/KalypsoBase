@@ -31,10 +31,9 @@ package org.kalypso.gmlschema.property.relation;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -62,7 +61,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-        m_relationContentType = new ForcedRelationContentType( m_gmlSchema, m_advReferenziertesElement );
+        m_relationContentType = new ForcedRelationContentType( getGMLSchema(), m_advReferenziertesElement );
         break;
     }
     if( m_relationContentType != null )

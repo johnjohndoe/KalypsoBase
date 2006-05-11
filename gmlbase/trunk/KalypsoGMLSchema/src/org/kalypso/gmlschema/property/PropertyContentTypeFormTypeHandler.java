@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -58,7 +59,7 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 
   private final String m_gmlVersion;
 
-  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, ITypeHandler typeHandler, String gmlVersion )
+  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, ITypeHandler typeHandler, String gmlVersion ) throws GMLSchemaException
   {
     // TODO check for restriction
     m_gmlSchema = gmlSchema;

@@ -38,15 +38,14 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public abstract class Reference
 {
-
   private final GMLSchema m_gmlSchema;
 
-  public Reference( GMLSchema gmlSchema )
+  public Reference( final GMLSchema gmlSchema )
   {
     m_gmlSchema = gmlSchema;
   }
 
-  public GMLSchema getGMLSchema()
+  public GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }

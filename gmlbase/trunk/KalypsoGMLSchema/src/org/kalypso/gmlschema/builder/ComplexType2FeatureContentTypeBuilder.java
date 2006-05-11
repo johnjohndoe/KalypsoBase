@@ -39,6 +39,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.feature.FeatureContentType;
@@ -65,7 +66,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
    * @param gmlSchema
    * @param complexTypeObject
    */
-  public Object[] build( GMLSchema gmlSchema, Object complexTypeObject )
+  public Object[] build( GMLSchema gmlSchema, Object complexTypeObject ) throws GMLSchemaException
   {
     FeatureContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
@@ -98,7 +99,7 @@ public class ComplexType2FeatureContentTypeBuilder implements IBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )
       return false;

@@ -36,9 +36,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -72,7 +72,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

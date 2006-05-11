@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.builder;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -44,10 +45,9 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public class FeatureType2ComplexTypeBuilder implements IBuilder
 {
-
   private final String m_version;
 
-  public FeatureType2ComplexTypeBuilder( String version )
+  public FeatureType2ComplexTypeBuilder( final String version )
   {
     m_version = version;
   }
@@ -55,7 +55,7 @@ public class FeatureType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object featureTypeObject )
+  public Object[] build( GMLSchema gmlSchema, Object featureTypeObject ) throws GMLSchemaException
   {
     final FeatureType ft = (FeatureType)featureTypeObject;
     final Element element = ft.getElement();

@@ -44,7 +44,7 @@ import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 
@@ -74,7 +74,7 @@ public class GMLSchemaBuilder
     m_registeredBuilders.add( builder );
   }
 
-  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
+  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object )
   {
     IBuilder result = null;
     for( final IBuilder builder : m_registeredBuilders )
@@ -154,7 +154,7 @@ public class GMLSchemaBuilder
       for( int i = 0; i < featureTypes.length; i++ )
         featureTypes[i].init( initRun );
 
-      final PropertyType[] propertyTypes = gmlSchema.getAllPropertyTypes();
+      final IPropertyType[] propertyTypes = gmlSchema.getAllPropertyTypes();
       for( int i = 0; i < propertyTypes.length; i++ )
         propertyTypes[i].init( initRun );
 
@@ -162,6 +162,7 @@ public class GMLSchemaBuilder
       for( int i = 0; i < propertyContentTypes.length; i++ )
         propertyContentTypes[i].init( initRun );
 
+      // TODO: ther will be no relationContentType, bceause the are no more registered
       final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
       for( int i = 0; i < relationContentTypes.length; i++ )
         relationContentTypes[i].init( initRun );
@@ -176,7 +177,7 @@ public class GMLSchemaBuilder
   {
     if( object instanceof Element )
       System.out.println( "stop" );
-    final IBuilder builder = getBuilderFor( gmlSchema, object, null );
+    final IBuilder builder = getBuilderFor( gmlSchema, object );
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {
       final Object[] buildedObjects = builder.build( gmlSchema, object );

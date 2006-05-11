@@ -39,6 +39,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.basics.QualifiedElement;
@@ -79,7 +80,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -109,19 +110,19 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     }
   }
 
-  private void initFirst( )
+  private void initFirst( ) throws GMLSchemaException
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema, m_element );
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
     if(m_featureContentType==null)
       System.out.println("debug");
     // initialize substitution group
-    final QName substitutionGroup = m_element.getSubstitutionGroup();
+    final QName substitutionGroup = getElement().getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = m_gmlSchema.resolveElementReference( substitutionGroup );
+      final ElementReference substitutesReference = getGMLSchema().resolveElementReference( substitutionGroup );
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
       if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
@@ -193,7 +194,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   public boolean isAbstract( )
   {
-    return m_element.isSetAbstract();
+    return getElement().isSetAbstract();
   }
 
   /**
@@ -251,7 +252,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return m_defaultGeometryPosition;
   }
 
-  public int getPropertyPosition( IPropertyType propertyType )
+  public int getPropertyPosition( final IPropertyType propertyType )
   {
     return m_positionMap.get( propertyType ).intValue();
   }

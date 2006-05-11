@@ -41,7 +41,6 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public class ElementReference extends Reference
 {
-
   private final TopLevelElement m_element;
 
   public ElementReference( final GMLSchema schema, final TopLevelElement element )

@@ -81,7 +81,7 @@ public abstract class FeatureContentType implements IFeatureContentType
     return m_gmlSchema;
   }
 
-  public abstract List<ElementWithOccurs> getSequence( );
+  public abstract List<ElementWithOccurs> getSequence( ) throws GMLSchemaException;
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)

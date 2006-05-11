@@ -32,9 +32,8 @@ package org.kalypso.gmlschema.property.relation;
 import java.util.List;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
 
 /**
  * 
@@ -44,7 +43,6 @@ import org.kalypso.gmlschema.ElementWithOccurs;
  */
 public class RelationContentTypeFromSequence extends RelationContentType
 {
-
   private final List<ElementWithOccurs> m_elements;
 
   public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elements)
@@ -58,7 +56,4 @@ public class RelationContentTypeFromSequence extends RelationContentType
   {
     return m_elements;
   }
-
- 
-
 }

@@ -36,6 +36,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -57,7 +58,6 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   private IPropertyContentType m_propertyContentType = null;
 
-
   public PropertyType( GMLSchema gmlSchema, ElementWithOccurs element )
   {
     super( gmlSchema, element );
@@ -66,14 +66,14 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
 
-        final QName type = m_element.getType();
-        final SimpleType simpleType = m_element.getSimpleType();
+        final QName type = getElement().getType();
+        final SimpleType simpleType = getElement().getSimpleType();
         if( type != null )
         {
           final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -82,7 +82,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
             m_propertyContentType = new CustomPropertyContentType( type, typeHandler );
           else
           {
-            final TypeReference reference = m_gmlSchema.resolveTypeReference( type );
+            final TypeReference reference = getGMLSchema().resolveTypeReference( type );
             final GMLSchema schema = reference.getGMLSchema();
             if( reference instanceof SimpleTypeReference )
             {
@@ -99,15 +99,15 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         }
         else if( simpleType != null )
         {
-          m_propertyContentType = (IPropertyContentType) m_gmlSchema.getBuildedObjectFor( simpleType );
+          m_propertyContentType = (IPropertyContentType) getGMLSchema().getBuildedObjectFor( simpleType );
         }
         else
         {
           // no type definition -> xmlAnyType
           final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
           final ITypeHandler typeHandler = marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.NS_XSD_SCHEMA, "anyType" ) );
-          final String localName = m_element.getName();
-          final QName qName = new QName( m_gmlSchema.getTargetNamespace(), localName );
+          final String localName = getElement().getName();
+          final QName qName = new QName( getGMLSchema().getTargetNamespace(), localName );
           m_propertyContentType = new CustomPropertyContentType( qName, typeHandler );
         }
         break;
@@ -147,7 +147,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public boolean isFixed( )
   {
-    return m_element.isSetFixed();
+    return getElement().isSetFixed();
   }
 
   /**
@@ -155,7 +155,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public String getFixed( )
   {
-    return m_element.getFixed();
+    return getElement().getFixed();
   }
 
   /**
@@ -163,7 +163,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public boolean hasDefault( )
   {
-    return m_element.isSetDefault();
+    return getElement().isSetDefault();
   }
 
   /**
@@ -171,12 +171,12 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public String getDefault( )
   {
-    return m_element.getDefault();
+    return getElement().getDefault();
   }
 
   public boolean isNullable( )
   {
-    return m_element.isSetNillable();
+    return getElement().isSetNillable();
   }
 
   /**
@@ -186,7 +186,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   @Override
   public String getName( )
   {
-    return m_qName.getLocalPart();
+    return getQName().getLocalPart();
   }
 
   /**

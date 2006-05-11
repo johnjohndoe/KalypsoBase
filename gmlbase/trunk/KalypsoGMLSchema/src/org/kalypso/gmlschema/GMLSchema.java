@@ -29,12 +29,12 @@
  */
 package org.kalypso.gmlschema;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +58,7 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
@@ -97,7 +97,7 @@ public class GMLSchema
 
   private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
 
-  private final List<PropertyType> m_propertyTypeList = new ArrayList<PropertyType>();
+  private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
   private final List<IRelationType> m_relationTypeList = new ArrayList<IRelationType>();
 
@@ -128,7 +128,7 @@ public class GMLSchema
   /* list of schemas that are referenced by include and have allready been processed */
   private List<URL> m_processedIncludeUrls = new ArrayList<URL>();
 
-  public GMLSchema( SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
+  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
     m_schemaDocument = schemaDocument;
@@ -250,7 +250,7 @@ public class GMLSchema
     }
   }
 
-  public ElementReference resolveElementReference( final QName qName )
+  public ElementReference resolveElementReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
@@ -264,7 +264,7 @@ public class GMLSchema
     return gmlschema.resolveElementReference( qName );
   }
 
-  public GroupReference resolveGroupReference( final QName qName )
+  public GroupReference resolveGroupReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
@@ -278,7 +278,7 @@ public class GMLSchema
     return gmlschema.resolveGroupReference( qName );
   }
 
-  public SimpleTypeReference resolveSimpleTypeReference( final QName qName )
+  public SimpleTypeReference resolveSimpleTypeReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
@@ -289,7 +289,7 @@ public class GMLSchema
     return gmlschema.resolveSimpleTypeReference( qName );
   }
 
-  public ComplexTypeReference resolveComplexTypeReference( final QName qName )
+  public ComplexTypeReference resolveComplexTypeReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
     if( getTargetNamespace().equals( namespaceURI ) )
@@ -301,7 +301,7 @@ public class GMLSchema
   /**
    * @param qName
    */
-  public TypeReference resolveTypeReference( final QName qName )
+  public TypeReference resolveTypeReference( final QName qName ) throws GMLSchemaException
   {
     final SimpleTypeReference reference = resolveSimpleTypeReference( qName );
     if( reference != null )
@@ -319,7 +319,7 @@ public class GMLSchema
    * @param namespaceURI
    * @return gmlschema
    */
-  private GMLSchema getGMLSchemaForNamespaceURI( String namespaceURI )
+  private GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
     // TODO make a nice visitor
     // first level ?
@@ -329,16 +329,21 @@ public class GMLSchema
       return m_importedSchemasHash.get( namespaceURI );
     // other level....
 
-    final Collection collection = m_importedSchemasHash.values();
-    for( Iterator iter = collection.iterator(); iter.hasNext(); )
+    for( final GMLSchema gmlSchema : m_importedSchemasHash.values() )
     {
-      final GMLSchema gmlSchema = (GMLSchema) iter.next();
       final GMLSchema schemaForNamespaceURI = gmlSchema.getGMLSchemaForNamespaceURI( namespaceURI );
       if( schemaForNamespaceURI != null )
         return schemaForNamespaceURI;
     }
     // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
-    return GMLSchemaCatalog.getSchema( namespaceURI );
+    try
+    {
+      return GMLSchemaCatalog.getSchema( namespaceURI );
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw new GMLSchemaException( "Unable to load schema: " + namespaceURI, e.getTargetException() );
+    }
   }
 
   public String getTargetNamespace( )
@@ -384,9 +389,9 @@ public class GMLSchema
       final IRelationType rt = (IRelationType) buildedObject;
       m_relationTypeList.add( rt );
     }
-    else if( buildedObject instanceof PropertyType )
+    else if( buildedObject instanceof IPropertyType )
     {
-      final PropertyType pt = (PropertyType) buildedObject;
+      final IPropertyType pt = (IPropertyType) buildedObject;
       m_propertyTypeList.add( pt );
     }
     // use type as key
@@ -472,12 +477,9 @@ public class GMLSchema
     return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
   }
 
-  /**
-   * 
-   */
-  public PropertyType[] getAllPropertyTypes( )
+  public IPropertyType[] getAllPropertyTypes( )
   {
-    return m_propertyTypeList.toArray( new PropertyType[m_propertyTypeList.size()] );
+    return m_propertyTypeList.toArray( new IPropertyType[m_propertyTypeList.size()] );
   }
 
   /**
@@ -577,7 +579,19 @@ public class GMLSchema
       return m_featuretypeMap.get( qName );
     else
     {
-      final GMLSchema schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
+      final GMLSchema schemaForNamespaceURI;
+      try
+      {
+        schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
+      }
+      catch( final GMLSchemaException e )
+      {
+        e.printStackTrace();
+        
+        // odl behaviour, but it should not happen anyway? because the schema should all 
+        // be loadd by now
+        return null;
+      }
       return schemaForNamespaceURI.getFeatureType( qName );
     }
   }

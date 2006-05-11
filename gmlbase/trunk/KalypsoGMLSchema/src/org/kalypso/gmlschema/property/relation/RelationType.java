@@ -32,6 +32,7 @@ package org.kalypso.gmlschema.property.relation;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -53,13 +54,13 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
 
-        final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( m_gmlSchema, m_element );
+        final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
         final ComplexType complexType = complexTypeReference.getComplexType();
         final GMLSchema schema = complexTypeReference.getGMLSchema();
         m_relationContentType = (RelationContentType) schema.getBuildedObjectFor( complexType );

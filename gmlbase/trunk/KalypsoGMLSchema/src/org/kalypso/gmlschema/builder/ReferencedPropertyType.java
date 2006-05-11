@@ -43,35 +43,57 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * @author doemming
  */
 public class ReferencedPropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
 {
-  private final IValuePropertyType m_globalPT;
+  private IValuePropertyType m_globalPT = null;
+  private final ElementReference m_reference;
 
-  public ReferencedPropertyType( final GMLSchema gmlSchema, ElementWithOccurs element, IValuePropertyType pt )
+  public ReferencedPropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, pt.getQName() );
-    m_globalPT = pt;
+    super( gmlSchema, element, element.getElement().getRef() );
+
+    m_reference = reference;
+  }
+  
+  private void checkState( )
+  {
+    if( m_globalPT == null )
+      throw new IllegalStateException( "Not yet initialized: " + this );
   }
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
-    // nothing to init
+    // find referenced relation type, it should also be build by now
+    switch( initializeRun )
+    {
+      case INITIALIZE_RUN_FIRST:
+        m_globalPT = (IValuePropertyType) m_reference.getGMLSchema().getBuildedObjectFor( m_reference.getElement() );
+        if( m_globalPT == null )
+          throw new GMLSchemaException( "Unable to finde referenced IValuePropertyType for: " + getQName() );
+
+        break;
+
+      default:
+        break;
+    }
   }
 
   /**
@@ -80,6 +102,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   @Override
   public Element getElement( )
   {
+    checkState( );
+    
     // witch one to return, please list here the use cases and hints for discussion/implementation
     // 1. provide appinfo -> local element
     // we need a appinfoprovider, that can collect them !
@@ -94,6 +118,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public IPropertyContentType getPropertyContentType( )
   {
+    checkState( );
+    
     // gloab knows content
     return m_globalPT.getPropertyContentType();
   }
@@ -103,6 +129,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public boolean hasRestriction( )
   {
+    checkState( );
+    
     // global knows content...
     return m_globalPT.hasRestriction();
   }
@@ -112,6 +140,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public IRestriction[] getRestriction( )
   {
+    checkState( );
+    
     // global knows content...
     return m_globalPT.getRestriction();
   }
@@ -121,8 +151,10 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isFixed( )
   {
+    checkState( );
+    
     // both can be fixed
-    return m_globalPT.isFixed() || m_element.isSetFixed();
+    return m_globalPT.isFixed() || getElement().isSetFixed();
   }
 
   /**
@@ -130,11 +162,13 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public String getFixed( )
   {
+    checkState( );
+    
     // one can be fixed, or both for the same value
-    if( m_element.isSetFixed() )
-      return m_element.getFixed();
-    else
-      return m_globalPT.getFixed();
+    if( getElement().isSetFixed() )
+      return getElement().getFixed();
+
+    return m_globalPT.getFixed();
   }
 
   /**
@@ -142,6 +176,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isNullable( )
   {
+    checkState( );
+
     // nil-able for references is not allowed
     return m_globalPT.isNullable();
   }
@@ -151,8 +187,10 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public boolean hasDefault( )
   {
+    checkState( );
+
     // both can have default:
-    return m_element.isSetDefault() || m_globalPT.hasDefault();
+    return getElement().isSetDefault() || m_globalPT.hasDefault();
   }
 
   /**
@@ -160,9 +198,12 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public String getDefault( )
   {
+    checkState( );
+
     // the more specialized value is more relevant
-    if( m_element.isSetDefault() )
-      return m_element.getDefault();
+    if( getElement().isSetDefault() )
+      return getElement().getDefault();
+    
     return m_globalPT.getDefault();
   }
 
@@ -171,6 +212,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public boolean isGeometry( )
   {
+    checkState( );
+
     // global element knows content...
     return m_globalPT.isGeometry();
   }
@@ -180,6 +223,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public Class getValueClass( )
   {
+    checkState( );
+
     // global element knows content...
     return m_globalPT.getValueClass();
   }
@@ -189,6 +234,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public ITypeHandler getTypeHandler( )
   {
+    checkState( );
+
     // global element knows content...
     return m_globalPT.getTypeHandler();
   }
@@ -198,6 +245,8 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
    */
   public QName getValueQName( )
   {
+    checkState( );
+
     // global element knows content...
     return m_globalPT.getValueQName();
   }

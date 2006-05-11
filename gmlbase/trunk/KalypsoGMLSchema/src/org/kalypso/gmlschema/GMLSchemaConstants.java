@@ -30,8 +30,8 @@
 package org.kalypso.gmlschema;
 
 /**
- * FIXME: use class NS !!
- * FIXME: should be an interface
+ * FIXME: use class NS !! FIXME: should be an interface
+ * 
  * @author doemming
  */
 public abstract class GMLSchemaConstants
@@ -39,10 +39,16 @@ public abstract class GMLSchemaConstants
   public final static String NS_XMLSCHEMA = "http://www.w3.org/2001/XMLSchema";
 
   public static final String NS_GML2 = "http://www.opengis.net/gml";
-  
+
   public static final String NS_GML3 = NS_GML2;
 
   public static final String NS_XLINK = "http://www.w3.org/1999/xlink";
+
+  public static final String NS_WFS = "http://www.opengis.net/wfs";
+
+  public static final String NS_SWE = "http://www.opengis.net/swe";
+
+  public static final String NS_OM = "http://www.opengis.net/om";
 
   public static final String NS_OBSLINK = "obslink.zml.kalypso.org";
 
@@ -66,4 +72,5 @@ public abstract class GMLSchemaConstants
   public static final String GML2_RelationBaseType = "FeatureAssociationType";
 
   public static final String GML3_RelationBaseType = "FeaturePropertyType";
+
 }

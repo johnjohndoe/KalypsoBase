@@ -35,10 +35,10 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalElement;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
@@ -55,7 +55,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
 
   private RelationContentType m_extensionBase = null;
 
-  public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension )
+  public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension ) throws GMLSchemaException
   {
     super( schema, complexType );
     m_extension = extension;
@@ -75,7 +75,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

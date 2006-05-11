@@ -42,11 +42,11 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public class QualifiedElement implements IAdaptable
 {
-  protected final GMLSchema m_gmlSchema;
+  private final GMLSchema m_gmlSchema;
 
-  protected final Element m_element;
+  private final Element m_element;
 
-  protected final QName m_qName;
+  private final QName m_qName;
 
   public QualifiedElement( GMLSchema gmlSchema, Element element )
   {

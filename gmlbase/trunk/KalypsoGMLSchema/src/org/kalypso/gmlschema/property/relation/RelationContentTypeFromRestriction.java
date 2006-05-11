@@ -36,6 +36,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -54,7 +55,7 @@ public class RelationContentTypeFromRestriction extends RelationContentType
 
   private final List<ElementWithOccurs> m_elements;
 
-  public RelationContentTypeFromRestriction( GMLSchema schema, ComplexType complexType, ComplexRestrictionType restriction )
+  public RelationContentTypeFromRestriction( final GMLSchema schema, final ComplexType complexType, final ComplexRestrictionType restriction ) throws GMLSchemaException
   {
     super( schema, complexType );
     m_restriction = restriction;
@@ -74,7 +75,7 @@ public class RelationContentTypeFromRestriction extends RelationContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun )
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaConstants;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.adv.ADVUtilities;
@@ -60,7 +61,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object elementObject )
+  public Object[] build( GMLSchema gmlSchema, Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
     final QName ref = element.getElement().getRef();
@@ -68,8 +69,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final IRelationType rt = (IRelationType) build( reference )[0];
-      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, rt );
+      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, reference );
       gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
@@ -87,20 +87,10 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
   }
 
   /**
-   * @param reference
-   */
-  private Object[] build( ElementReference reference )
-  {
-    final GMLSchema schema = reference.getGMLSchema();
-    final Element element = reference.getElement();
-    return build( schema, new ElementWithOccurs( element ) );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ElementWithOccurs) )
       return false;

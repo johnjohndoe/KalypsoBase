@@ -43,15 +43,14 @@ package org.kalypso.gmlschema.xml;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
+ * QUESTION: what is the difference to Reference?
+ * 
  * @author doemming
- *
  */
-public abstract class TypeReference  extends Reference
+public abstract class TypeReference extends Reference
 {
-
-  public TypeReference( GMLSchema gmlSchema )
+  public TypeReference( final GMLSchema gmlSchema )
   {
-    super(gmlSchema);
+    super( gmlSchema );
   }
-
 }

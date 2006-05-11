@@ -88,7 +88,7 @@ public class GMLSchemaCache
   public GMLSchemaCache( final File cacheDirectory, final File tmpDir )
   {
     m_baseTmpDir = tmpDir;
-    
+
     m_memCache = new LfuCacheFactory().newInstance( "gml.schemas", TIMEOUT, SIZE );
     m_fileCache = new FileCache<StringValidityKey, GMLSchema>( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(), new GMLSchemaSerializer( tmpDir ), cacheDirectory );
   }
@@ -108,7 +108,7 @@ public class GMLSchemaCache
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
-  public GMLSchema getSchema( final String namespace, final URL schemaURL )
+  public GMLSchema getSchema( final String namespace, final URL schemaURL ) throws InvocationTargetException
   {
     if( namespace == null )
       throw new NullPointerException( "Namespace darf nicht null sein" );
@@ -129,7 +129,7 @@ public class GMLSchemaCache
     // If an imported schema is updated, it will not be reloaded if
     // the importing schema is still in memory.
     // TODO: maybe create a validity from all imported schematas as well?
-    
+
     // if objekt already in memCache and is valid, just return it
     final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( namespace );
     if( sw != null && (validity == null || validity.compareTo( sw.getValidity() ) <= 0) )
@@ -193,8 +193,8 @@ public class GMLSchemaCache
       final IPath path = ResourceUtilities.findPathFromURL( schemaURL );
       if( path == null )
         return 0;
-      
-      final File file = ResourceUtilities.makeFileFromPath(path);
+
+      final File file = ResourceUtilities.makeFileFromPath( path );
       return file.lastModified();
     }
   }
@@ -202,13 +202,13 @@ public class GMLSchemaCache
   private static class GMLSchemaSerializer implements ISerializer<GMLSchema>
   {
     private final File m_baseTmpDir;
-    
+
     public GMLSchemaSerializer( final File baseTmpDir )
     {
       m_baseTmpDir = baseTmpDir;
     }
-    
-    public GMLSchema read( final InputStream ins ) throws InvocationTargetException
+
+    public GMLSchema read( final InputStream ins ) throws InvocationTargetException, IOException
     {
       OutputStream fos = null;
       File tmpDir = null;
@@ -224,10 +224,8 @@ public class GMLSchemaCache
 
         return GMLSchemaFactory.createGMLSchema( schemaURL );
       }
-      catch( final Exception e )
+      catch( final GMLSchemaException e )
       {
-        e.printStackTrace();
-
         throw new InvocationTargetException( e );
       }
       finally
@@ -238,7 +236,7 @@ public class GMLSchemaCache
       }
     }
 
-    public void write( final GMLSchema schema, final OutputStream os ) throws InvocationTargetException
+    public void write( final GMLSchema schema, final OutputStream os ) throws InvocationTargetException, IOException
     {
       // write schema into tmp dir
       // TODO: check if this really works with included schemata
@@ -246,14 +244,10 @@ public class GMLSchemaCache
       try
       {
         GMLSchemaUtilities.createSchemaDir( schema.getContext(), schema.getSchema(), archiveDir );
-        
+
         ZipUtilities.zip( new ZipOutputStream( os ), archiveDir );
       }
       catch( final XmlException e )
-      {
-        throw new InvocationTargetException( e );
-      }
-      catch( final IOException e )
       {
         throw new InvocationTargetException( e );
       }
@@ -285,7 +279,9 @@ public class GMLSchemaCache
 
   /**
    * Clears the cache. Schematas will be reloaded after this operation.
-   * @param onlyMemoryCache If true, only the memory cache is cleared. Else, file and memory cache are cleared.
+   * 
+   * @param onlyMemoryCache
+   *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
   public void clearCache( final boolean onlyMemoryCache )
   {

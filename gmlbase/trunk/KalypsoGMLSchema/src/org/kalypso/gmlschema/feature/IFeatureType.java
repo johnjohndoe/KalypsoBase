@@ -86,8 +86,10 @@ public interface IFeatureType extends IInitialize, IAdaptable
   @Deprecated
   public String getNamespace( );
 
+  // TODO: remove this method from interface, declare it private in implementation
   public int getDefaultGeometryPropertyPosition( );
 
+  // TODO: remove this method from interface, declare it private in implementation
   public int getPropertyPosition( final IPropertyType propertyType );
 
   public IValuePropertyType[] getAllGeomteryProperties( );
