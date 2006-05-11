@@ -48,36 +48,13 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author belger
  *
  */
-public class TuhhReach implements IWspmConstants
+public class TuhhReach extends WspmReach implements IWspmConstants
 {
-  private final Feature m_reach;
-
   public TuhhReach( final Feature reach )
   {
+    super( reach );
+    
     if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
       throw new IllegalStateException( "Feature is of wrong type: " + reach );
-
-    m_reach = reach;
   }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( m_reach );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
 }
