@@ -468,12 +468,8 @@ public class GMLSchema
     return m_propertyContentTypes.get( simpleType );
   }
 
-  /**
-   * 
-   */
   public IFeatureType[] getAllFeatureTypes( )
   {
-
     return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
   }
 
@@ -482,35 +478,24 @@ public class GMLSchema
     return m_propertyTypeList.toArray( new IPropertyType[m_propertyTypeList.size()] );
   }
 
-  /**
-   * 
-   */
   public FeatureContentType[] getAllFeatureContentTypes( )
   {
     final Collection<FeatureContentType> collection = m_featureContentTypes.values();
     return collection.toArray( new FeatureContentType[collection.size()] );
   }
 
-  /**
-   * 
-   */
   public IPropertyContentType[] getAllPropertyContentTypes( )
   {
     final Collection<IPropertyContentType> collection = m_propertyContentTypes.values();
     return collection.toArray( new IPropertyContentType[collection.size()] );
   }
 
-  /**
-   */
   public RelationContentType[] getAllRelationContentTypes( )
   {
     final Collection<RelationContentType> collection = m_relationContentTypes.values();
     return collection.toArray( new RelationContentType[collection.size()] );
   }
 
-  /**
-   * 
-   */
   public IRelationType[] getAllRelationTypes( )
   {
     return m_relationTypeList.toArray( new IRelationType[m_relationTypeList.size()] );

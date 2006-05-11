@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -187,7 +188,7 @@ public class GMLSchemaUtilities
       System.out.println( "unknown name: " + base );
       return null;
     }
-    
+
     return findBaseType( reference, gmlVersion );
   }
 
@@ -688,7 +689,7 @@ public class GMLSchemaUtilities
     collectElements( schema, choice, collector, occurs );
     final All all = restriction.getAll();
     collectElements( schema, all, collector, occurs );
-    
+
     return collector;
   }
 
@@ -777,37 +778,33 @@ public class GMLSchemaUtilities
     return "AbstractGeometryType";
   }
 
-  public static URL getSchemaURLFromSchemaLocation( final String schemaLocation, final URL context ) throws MalformedURLException
+  public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context ) throws GMLSchemaException
   {
-    // get schema from schemalocation
     final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
-    if( splittetSchemaLocation.length == 0 )
-      return null;
 
-    if( splittetSchemaLocation.length < 2 )
-      return null;
-    else
+    final Map<String, URL> map = new HashMap<String, URL>( schemaLocation.length() / 2 + 1 );
+    for( int i = 0; i < splittetSchemaLocation.length; i++ )
     {
-      final String locationURI = splittetSchemaLocation[1];
-
-      if( context != null )
-        return new UrlResolver().resolveURL( context, locationURI );
+      final String namespace = splittetSchemaLocation[i];
+      i++;
+      if( i < splittetSchemaLocation.length )
+      {
+        final String location = splittetSchemaLocation[i];
+        try
+        {
+          final URL url = new URL( context, location );
+          map.put( namespace, url );
+        }
+        catch( final MalformedURLException e )
+        {
+          throw new GMLSchemaException( "Error in schemaLocation. This is no URL: " + location, e );
+        }
+      }
       else
-        return new URL( locationURI );
+        throw new GMLSchemaException( "Syntax error in schemaLocation, must be pairs of namespace-url: " + schemaLocation );
     }
-  }
 
-  public static String getSchemaNamespaceFromSchemaLocation( final String schemaLocation )
-  {
-    // get schema from schemalocation
-    final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
-    if( splittetSchemaLocation.length == 0 )
-      return null;
-
-    if( splittetSchemaLocation.length < 1 )
-      return null;
-
-    return splittetSchemaLocation[0];
+    return map;
   }
 
   public static Occurs getOccursFromElement( final Element element )
