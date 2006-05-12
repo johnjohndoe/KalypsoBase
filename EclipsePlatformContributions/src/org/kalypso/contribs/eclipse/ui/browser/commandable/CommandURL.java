@@ -68,7 +68,6 @@ import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -117,6 +116,8 @@ public class CommandURL implements ICommandURL
 
   private static final String SHOW_MESSAGE = "showmessage";
 
+  private static final String NAVIGATE = "navigate"; //$NON-NLS-1$
+
   /**
    * Constants that represent valid runAction and openView keys.
    */
@@ -126,17 +127,29 @@ public class CommandURL implements ICommandURL
 
   protected static final String KEY_DECODE = "decode"; //$NON-NLS-1$
 
-  protected static final String KEY_URL = "url"; //$NON-NLS-1$
-
-  protected static final String VALUE_TRUE = "true"; //$NON-NLS-1$
-
-  protected static final String VALUE_FALSE = "false"; //$NON-NLS-1$
+  public static final String KEY_URL = "url"; //$NON-NLS-1$
 
   protected static final String KEY_PART_ID = "partId";
 
   protected static final String KEY_ACTIVE_PART_ID = "activePartId";//$NON-NLS-1$
 
   protected static final String KEY_MESSAGE = "message";
+
+  protected static final String KEY_DIRECTION = "direction"; //$NON-NLS-1$
+
+  /**
+   * Constants that represent valid values for predefined action
+   */
+
+  protected static final String VALUE_TRUE = "true"; //$NON-NLS-1$
+
+  protected static final String VALUE_FALSE = "false"; //$NON-NLS-1$
+
+  public static final String VALUE_BACKWARD = "backward"; //$NON-NLS-1$
+
+  public static final String VALUE_FORWARD = "forward"; //$NON-NLS-1$
+
+  public static final String VALUE_HOME = "home"; //$NON-NLS-1$
 
   private String m_action = null;
 
@@ -196,6 +209,8 @@ public class CommandURL implements ICommandURL
     {
       return showMessage( getParameter( KEY_MESSAGE ) );
     }
+    else if( m_action.equalsIgnoreCase( NAVIGATE ) )
+      return navigate( getParameter( KEY_DIRECTION ) );
 
     return false;
   }
@@ -208,14 +223,19 @@ public class CommandURL implements ICommandURL
     final Display display = Display.getCurrent();
     final Shell shell = display.getActiveShell();
     MessageDialog.openInformation( shell, title, message );
+    if( m_listener != null )
+    {
+      Event event = new Event();
+      event.type = SWT.OK;
+      event.data = getParameter( KEY_URL );
+      m_listener.handleEvent( event );
+    }
     return true;
   }
 
   private boolean closeView( final String viewId )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow activeWBWindow = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage activePage = activeWBWindow.getActivePage();
+    final IWorkbenchPage activePage = getActivePage();
     final IViewPart viewPart = activePage.findView( viewId );
     if( viewPart != null )
     {
@@ -410,19 +430,29 @@ public class CommandURL implements ICommandURL
     return true;
   }
 
-  private boolean navigate( String value )
+  /**
+   * sends a naviagation event to the listener
+   */
+  private boolean navigate( String direction )
   {
 
-//    if( m_listener != null )
-//    {
-//      if( value.equalsIgnoreCase( KEY_NAVIGATE_BACK ) )
-//      {
-//        Event event = new Event();
-//        event.type = AbstractBrowserView.BACK;
-//        m_listener.handleEvent( );
-//      }
-//    }
-      return true;
+    Event event = new Event();
+    if( m_listener != null )
+    {
+      if( direction.equalsIgnoreCase( VALUE_BACKWARD ) )
+      {
+        event.type = AbstractBrowserView.BACKWARD;
+        m_listener.handleEvent( event );
+        return true;
+      }
+      else if( direction.equalsIgnoreCase( VALUE_FORWARD ) )
+      {
+        event.type = AbstractBrowserView.FORWARD;
+        m_listener.handleEvent( event );
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

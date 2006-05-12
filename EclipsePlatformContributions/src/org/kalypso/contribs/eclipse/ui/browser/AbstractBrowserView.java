@@ -50,6 +50,12 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   private static final String TAG_SELECTION = "selection";
 
+  public static final int BACKWARD = -1;
+
+  public static final int FORWARD = 1;
+
+  public static final int HOME = 0;
+
   protected BrowserViewer m_viewer;
 
   protected URL m_context = null;

@@ -78,8 +78,11 @@ public abstract class AbstractCommandURLAction implements ICommandURLAction
     m_listener.remove( listner );
   }
 
-  protected void fireEvent( Event event )
+  protected void fireEvent( final int type, final Object data )
   {
+    Event event = new Event();
+    event.type = type;
+    event.data = data;
     Iterator it = m_listener.iterator();
     while( it.hasNext() )
     {

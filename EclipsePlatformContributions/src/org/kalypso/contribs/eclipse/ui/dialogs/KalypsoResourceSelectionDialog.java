@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -147,6 +148,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   @Override
   protected void okPressed( )
   {
+
     final List<IPath> chosenResourcePathList = new ArrayList<IPath>();
     final IPath returnValue = group.getResourceFullPath();
     if( returnValue != null )
