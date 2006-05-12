@@ -45,10 +45,10 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author belger
- *
  */
 public abstract class WspmReach implements IWspmConstants
 {
@@ -57,8 +57,8 @@ public abstract class WspmReach implements IWspmConstants
   public WspmReach( final Feature reach )
   {
     // dont check, we are abstract; maybe check if qname substitutes?
-//    if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-//      throw new IllegalStateException( "Feature is of wrong type: " + reach );
+    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
+    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
 
     m_reach = reach;
   }
@@ -88,11 +88,22 @@ public abstract class WspmReach implements IWspmConstants
     final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
     m_reach.setProperty( waterProp, body.getFeature().getId() );
   }
-  
-  public WspmWaterBody getWaterBody(  )
+
+  public WspmWaterBody getWaterBody( )
   {
-    return new WspmWaterBody( (Feature) m_reach.getProperty( new QName( NS_WSPM, "waterBodyMember" ) ) );
+    final Object body = m_reach.getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
+    if( body instanceof Feature )
+      return new WspmWaterBody( (Feature) body );
+    else
+    {
+      final Feature feature = m_reach.getWorkspace().getFeature( (String) body );
+      return new WspmWaterBody( feature );
+    }
   }
 
+  protected FeatureList getReachSegmentList( )
+  {
+    return (FeatureList) m_reach.getProperty( new QName( NS_WSPM, "reachSegmentMember" ) );
+  }
 
 }

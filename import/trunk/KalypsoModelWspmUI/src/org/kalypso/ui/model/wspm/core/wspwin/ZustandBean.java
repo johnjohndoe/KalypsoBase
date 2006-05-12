@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.core.wspwin;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
+
+import org.kalypso.commons.java.io.FileUtilities;
 
 public class ZustandBean
 {
@@ -94,5 +99,18 @@ public class ZustandBean
   public String getWaterName( )
   {
     return m_waterName;
+  }
+
+  public ZustandContentBean readZustand( final File profDir ) throws IOException, ParseException
+  {
+    return ZustandContentBean.read( new File( profDir, getFileName() ) );
+  }
+
+  public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
+  {
+    final String strFileName = getFileName();
+    final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
+    final File qwtFile = new File( profDir, strBaseName + ".qwt" );
+    return RunOffEventBean.read( qwtFile );
   }
 }
