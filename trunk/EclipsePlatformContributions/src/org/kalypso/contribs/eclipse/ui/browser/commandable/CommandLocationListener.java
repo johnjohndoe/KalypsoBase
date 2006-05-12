@@ -43,12 +43,14 @@ package org.kalypso.contribs.eclipse.ui.browser.commandable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 
 /**
@@ -62,8 +64,6 @@ public class CommandLocationListener implements LocationListener, Listener
 {
 
   private CommandURLBrowserView m_browserView;
-
-  private String m_nextPageURL;
 
   private URL m_context;
 
@@ -89,10 +89,10 @@ public class CommandLocationListener implements LocationListener, Listener
       event.doit = false;
       // execute the action embedded in the IntroURL
       final CommandURL browserURL = parser.getCommandURL();
-      m_nextPageURL = browserURL.getParameter( CommandURL.KEY_URL );
       m_context = m_browserView.getContext();
       browserURL.execute( m_context, this );
     }
+    m_browserView.updateNavigationActionsState();
   }
 
   /**
@@ -135,6 +135,7 @@ public class CommandLocationListener implements LocationListener, Listener
       flagStartOfFrameNavigation();
       flagStoredTempUrl();
     }
+    m_browserView.updateNavigationActionsState();
   }
 
   public void flagStartOfFrameNavigation( )
@@ -176,17 +177,31 @@ public class CommandLocationListener implements LocationListener, Listener
       {
         // when ever there is a url in the parameter set it is interpeted as
         // the next page to display in the browser
-        if( m_nextPageURL != null )
+        String nextPageURL = null;
+        if( event.data instanceof String )
+          nextPageURL = (String) event.data;
+        if( nextPageURL != null )
         {
-          final URL nextPage = UrlResolverSingleton.resolveUrl( m_context, m_nextPageURL );
+          final URL nextPage = UrlResolverSingleton.resolveUrl( m_context, nextPageURL );
           m_browserView.setURL( nextPage.toString() );
         }
       }
       catch( MalformedURLException e )
       {
         e.printStackTrace();
+        MessageDialog.openError( null, "Konfigurationsfehler", "Die nächste Seite URL ist ungültig:" + e.getMessage() );
       }
     }
+    else if( event.type == AbstractBrowserView.BACKWARD )
+    {
+      m_browserView.navigateBack();
+    }
+    else if( event.type == AbstractBrowserView.FORWARD )
+    {
+      m_browserView.navigateForward();
+
+    }
+    m_browserView.updateNavigationActionsState();
 
   }
 
