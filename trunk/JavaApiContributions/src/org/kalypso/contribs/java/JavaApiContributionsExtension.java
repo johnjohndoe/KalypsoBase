@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 
 /**
  * @author kuepfer
@@ -48,7 +49,7 @@ public class JavaApiContributionsExtension
 
   private static Map<Object, IUrlCatalog> m_catalogs;
 
-  private static synchronized void initRegistry() throws CoreException
+  private static synchronized void initRegistry( ) throws CoreException
   {
     m_catalogs = new HashMap<Object, IUrlCatalog>();
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -61,21 +62,21 @@ public class JavaApiContributionsExtension
     {
       final IConfigurationElement element = configurationElements[i];
       String id = element.getAttribute( "id" );
-      IUrlCatalog catalog = (IUrlCatalog)element.createExecutableExtension( "class" );
+      IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
       m_catalogs.put( id, catalog );
     }
   }
 
-  public static synchronized IUrlCatalog[] getRegistredCatalogs() throws CoreException
+  public static IUrlCatalog getAllRegisteredCatalogs( ) throws CoreException
+  {
+    return new MultiUrlCatalog( getRegistredCatalogs() );
+  }
+
+  private static synchronized IUrlCatalog[] getRegistredCatalogs( ) throws CoreException
   {
     if( m_catalogs == null )
       initRegistry();
     return m_catalogs.values().toArray( new IUrlCatalog[m_catalogs.size()] );
-  }
-
-  public static IUrlCatalog getCatalog( Object id )
-  {
-    return m_catalogs.get( id );
   }
 
   public static synchronized void registerCatalog( final Object id, final IUrlCatalog catalog ) throws Exception

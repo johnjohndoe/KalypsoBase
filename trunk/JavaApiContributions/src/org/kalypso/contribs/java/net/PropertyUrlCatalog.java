@@ -51,7 +51,7 @@ import java.util.Map.Entry;
 /**
  * A {@link PropertyUrlCatalog}based on a properties-hash.
  * 
- * @author gernot
+ * @author belger
  */
 public class PropertyUrlCatalog implements IUrlCatalog
 {
@@ -94,5 +94,13 @@ public class PropertyUrlCatalog implements IUrlCatalog
   public Map<String, URL> getCatalog()
   {
     return m_catalog;
+  }
+
+  /**
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
+   */
+  public String getPreferedNamespacePrefix( final String namespace )
+  {
+    return null;
   }
 }

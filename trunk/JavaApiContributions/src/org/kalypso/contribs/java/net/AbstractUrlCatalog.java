@@ -51,19 +51,21 @@ import java.util.Map;
  */
 public abstract class AbstractUrlCatalog implements IUrlCatalog
 {
-  private final HashMap<String, URL> m_catalog = new HashMap<String, URL>();
+  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
 
-  public AbstractUrlCatalog()
+  private final Map<String, String> m_prefixes = new HashMap<String, String>();
+
+  public AbstractUrlCatalog( )
   {
-    fillCatalog( getClass(), m_catalog );
+    fillCatalog( getClass(), m_catalog, m_prefixes );
   }
 
-  protected abstract void fillCatalog( final Class myClass, final Map<String, URL> catalog );
+  protected abstract void fillCatalog( final Class myClass, final Map<String, URL> catalog, final Map<String, String> prefixes );
 
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
-  public final Map<String, URL> getCatalog()
+  public final Map<String, URL> getCatalog( )
   {
     return m_catalog;
   }
@@ -74,5 +76,15 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
   public final URL getURL( final String namespace )
   {
     return m_catalog.get( namespace );
+  }
+
+  /**
+   * Default implementation returns null.
+   * 
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
+   */
+  public String getPreferedNamespacePrefix( final String namespace )
+  {
+    return m_prefixes.get( namespace );
   }
 }

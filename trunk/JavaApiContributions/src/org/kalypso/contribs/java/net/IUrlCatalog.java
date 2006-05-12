@@ -57,6 +57,13 @@ public interface IUrlCatalog
   public URL getURL( final String namespace );
 
   /**
+   * Returns the preferred prefix for the given namespace.
+   * 
+   * @return may return null
+   */
+  public String getPreferedNamespacePrefix( final String namespace );
+
+  /**
    * Gibt den Katalog als Map zurück.
    */
   public Map<String, URL> getCatalog( );
