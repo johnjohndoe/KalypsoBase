@@ -81,7 +81,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   public void run( final IAction action )
   {
     final GMLWorkspace workspace = m_targetEditor.getTreeView().getWorkspace();
-    final String schemaNamespace = workspace.getSchemaNamespace();
+    final String schemaNamespace = workspace.getGMLSchema().getTargetNamespace();
     final String schemaLocationString = workspace.getSchemaLocationString();
 
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
