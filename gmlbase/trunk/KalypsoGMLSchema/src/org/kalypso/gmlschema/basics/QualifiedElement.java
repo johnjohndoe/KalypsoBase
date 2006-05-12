@@ -31,6 +31,8 @@ package org.kalypso.gmlschema.basics;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterManager;
@@ -99,9 +101,6 @@ public class QualifiedElement implements IAdaptable
     return m_qName.getNamespaceURI();
   }
 
-  /**
-   *  
-   */
   public Element getElement( )
   {
     return m_element;
@@ -111,6 +110,34 @@ public class QualifiedElement implements IAdaptable
   public String toString( )
   {
     return m_qName.toString();
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof QualifiedElement == false )
+      return false;
+
+    if( this == obj )
+      return true;
+
+    final QualifiedElement rhs = (QualifiedElement) obj;
+    return new EqualsBuilder().append( m_qName, rhs.m_qName ).isEquals();
+
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    // you pick a hard-coded, randomly chosen, non-zero, odd number
+    // ideally different for each class
+    return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
   }
 
   /**

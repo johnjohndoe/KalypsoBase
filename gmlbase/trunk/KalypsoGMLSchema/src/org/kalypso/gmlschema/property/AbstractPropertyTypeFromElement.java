@@ -31,8 +31,8 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.Occurs;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 
@@ -43,7 +43,6 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
  */
 public abstract class AbstractPropertyTypeFromElement extends QualifiedElement implements IPropertyType
 {
-
   private final Occurs m_occurs;
 
   public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element, QName qName )
