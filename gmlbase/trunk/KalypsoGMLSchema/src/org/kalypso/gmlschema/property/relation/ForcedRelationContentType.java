@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -59,7 +60,7 @@ public class ForcedRelationContentType implements IRelationContentType, IInitial
     m_referencedQNameFeatureType = referencedQNameFeatureType;
   }
 
-  public GMLSchema getGMLSchema( )
+  public IGMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }

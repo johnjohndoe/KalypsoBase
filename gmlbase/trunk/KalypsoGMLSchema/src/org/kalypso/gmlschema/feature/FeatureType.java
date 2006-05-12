@@ -41,6 +41,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -168,7 +169,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return m_featureContentType;
   }
 
-  public IFeatureType[] getSubstituts( GMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
+  public IFeatureType[] getSubstituts( IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
   {
     // TODO check
     if( m_substituteFT == null ) // no substitutiongroup

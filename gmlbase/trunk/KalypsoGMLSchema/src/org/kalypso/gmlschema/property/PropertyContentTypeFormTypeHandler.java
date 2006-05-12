@@ -36,6 +36,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -47,7 +48,7 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 {
-  private final GMLSchema m_gmlSchema;
+  private final IGMLSchema m_gmlSchema;
 
   private final Object m_typeObject;
 
@@ -102,7 +103,7 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
     }
   }
 
-  public GMLSchema getGMLSchema( )
+  public IGMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }

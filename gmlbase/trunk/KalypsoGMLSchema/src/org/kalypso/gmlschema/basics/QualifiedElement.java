@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 
 /**
  * @author doemming
@@ -53,7 +54,7 @@ public class QualifiedElement implements IAdaptable
     this( gmlSchema, element, createQName( gmlSchema, element ) );
   }
 
-  private static QName createQName( GMLSchema gmlSchema, Element element )
+  private static QName createQName( IGMLSchema gmlSchema, Element element )
   {
     final String targetNamespace = gmlSchema.getTargetNamespace();
     final String name = element.getName();

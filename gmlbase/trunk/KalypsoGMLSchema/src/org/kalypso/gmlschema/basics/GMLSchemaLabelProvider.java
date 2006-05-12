@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -75,7 +76,7 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     if( element instanceof String )
       return (String) element;
     if( element instanceof GMLSchema )
-      return "GMLSchema: " + ((GMLSchema) element).getTargetNamespace();
+      return "GMLSchema: " + ((IGMLSchema) element).getTargetNamespace();
     if( element instanceof IFeatureType )
       return "Feature: " + ((IFeatureType) element).getQName();
 

@@ -32,7 +32,7 @@ package org.kalypso.gmlschema.visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
@@ -43,7 +43,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 {
-
   private final IFeatureType m_substitutionHeadFT;
 
   private final boolean m_includeAbstract;
@@ -52,16 +51,16 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 
   private final List<IFeatureType> m_result = new ArrayList<IFeatureType>();
 
-  private final GMLSchema m_contextGMLSchema;
+  private final IGMLSchema m_contextGMLSchema;
 
   private final List<IFeatureType> m_path;
 
-  public FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
+  public FindSubstitutesGMLSchemaVisitor( final IGMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
   {
     this( contextGMLSchema, substitutionHeadFT, includeAbstract, includeThis, new ArrayList<IFeatureType>() );
   }
 
-  private FindSubstitutesGMLSchemaVisitor( final GMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis, List<IFeatureType> path )
+  private FindSubstitutesGMLSchemaVisitor( final IGMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis, List<IFeatureType> path )
   {
     m_contextGMLSchema = contextGMLSchema;
     m_substitutionHeadFT = substitutionHeadFT;
@@ -73,14 +72,14 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
   /**
    * @see org.kalypso.gmlschema.visitor.IGMLSchemaVisitor#visit(org.kalypso.gmlschema.GMLSchema)
    */
-  public boolean visit( final GMLSchema gmlSchema )
+  public boolean visit( final IGMLSchema gmlSchema )
   {
     final List<IFeatureType> rHeads = step1( gmlSchema );
     step2( rHeads );
     return true;
   }
 
-  private List<IFeatureType> step1( GMLSchema gmlSchema )
+  private List<IFeatureType> step1( IGMLSchema gmlSchema )
   {
     // step 1
     final List<IFeatureType> rheads = new ArrayList<IFeatureType>();

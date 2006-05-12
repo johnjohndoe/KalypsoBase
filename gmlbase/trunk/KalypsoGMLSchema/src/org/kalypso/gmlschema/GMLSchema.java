@@ -75,7 +75,7 @@ import org.w3c.dom.Node;
  * 
  * @author doemming
  */
-public class GMLSchema
+public class GMLSchema implements IGMLSchema
 {
   private final SchemaDocument m_schemaDocument;
 
@@ -564,7 +564,7 @@ public class GMLSchema
       return m_featuretypeMap.get( qName );
     else
     {
-      final GMLSchema schemaForNamespaceURI;
+      final IGMLSchema schemaForNamespaceURI;
       try
       {
         schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );

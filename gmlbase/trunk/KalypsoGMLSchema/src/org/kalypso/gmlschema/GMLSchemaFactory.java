@@ -120,7 +120,7 @@ public class GMLSchemaFactory
    * @param schemaLocationURL
    * @throws GMLSchemaException
    */
-  public static GMLSchema createGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
+  public static IGMLSchema createGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
   {
     final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
     return createGMLSchema( urlSchemaLocation );
@@ -157,7 +157,7 @@ public class GMLSchemaFactory
 
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
   {
-    return new CustomFeatureType( qName, properties );
+    return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
 
   public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final ITypeHandler typeHandler, final int minOccurs, final int maxOccurs )

@@ -32,7 +32,7 @@ package org.kalypso.gmlschema.feature;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -49,6 +49,8 @@ public interface IFeatureType extends IInitialize, IAdaptable
   @Deprecated
   public String getName( );
 
+  public IGMLSchema getGMLSchema();
+  
   /**
    * returns the properties of this feature type
    */
@@ -75,7 +77,7 @@ public interface IFeatureType extends IInitialize, IAdaptable
 
   public IFeatureType getSubstitutionGroupFT( );
 
-  public IFeatureType[] getSubstituts( final GMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis );
+  public IFeatureType[] getSubstituts( final IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis );
 
   public QName getQName( );
 

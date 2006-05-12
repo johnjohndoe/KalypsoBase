@@ -467,7 +467,7 @@ public class GMLSchemaUtilities
     return new ComplexTypeReference( gmlSchema, complexType );
   }
 
-  public static String[] createFeaturePathes( final GMLSchema gmlSchma, final String pathToHere, IFeatureType featureType )
+  public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, IFeatureType featureType )
   {
     final List<String> result = new ArrayList<String>();
     if( featureType.getAllGeomteryProperties().length > 0 )
@@ -773,6 +773,19 @@ public class GMLSchemaUtilities
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 
+  public static QName getIdAttribute( final String gmlVersion )
+  {
+    if( gmlVersion.startsWith( "2" ) )
+      return new QName( "", "fid" );
+    
+    if( gmlVersion.startsWith( "3" ) )
+      return new QName( NS.GML3, "id" );
+    
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+  }
+
+
+  
   public static String getBaseOfGeometriesType( )
   {
     return "AbstractGeometryType";

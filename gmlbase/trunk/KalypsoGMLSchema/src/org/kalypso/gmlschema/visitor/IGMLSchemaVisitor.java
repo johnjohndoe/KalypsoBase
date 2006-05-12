@@ -36,19 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
---------------------------------------------------------------------------------------------------- */
+ 
+ --------------------------------------------------------------------------------------------------- */
 package org.kalypso.gmlschema.visitor;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 
 /**
- *
  * TODO: insert type comment here
- *
+ * 
  * @author doemming
  */
 public interface IGMLSchemaVisitor
 {
-  public boolean visit(final GMLSchema schema);
+  public boolean visit( final IGMLSchema schema );
 }

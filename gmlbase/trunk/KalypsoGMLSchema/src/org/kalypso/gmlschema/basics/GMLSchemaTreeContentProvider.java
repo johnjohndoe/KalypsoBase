@@ -36,6 +36,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IDetailedFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -52,12 +53,12 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
 {
   private boolean m_detailed;
 
-  private GMLSchema m_context;
+  private IGMLSchema m_context;
 
   // key=schema, value=parent of schown schemas
   private Hashtable<GMLSchema, GMLSchema> m_importMap = new Hashtable<GMLSchema, GMLSchema>();
 
-  public GMLSchemaTreeContentProvider( final GMLSchema context, boolean detailed )
+  public GMLSchemaTreeContentProvider( final IGMLSchema context, boolean detailed )
   {
     m_context = context;
     m_detailed = detailed;
@@ -68,7 +69,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     m_detailed = detailed;
   }
 
-  public void setContext( final GMLSchema context )
+  public void setContext( final IGMLSchema context )
   {
     m_context = context;
   }
@@ -82,7 +83,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       return new Object[0];
     if( parent instanceof LabelAndChildsProvider )
       return ((LabelAndChildsProvider) parent).getChilds();
-    if( parent instanceof GMLSchema )
+    if( parent instanceof IGMLSchema )
     {
       final GMLSchema schema = (GMLSchema) parent;
 
@@ -215,7 +216,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_importMap.clear();
-    setContext( (GMLSchema) newInput );
+    setContext( (IGMLSchema) newInput );
   }
 
   public void accept( final Object element, final ITreeContentProviderVisitor visitor, int indent )

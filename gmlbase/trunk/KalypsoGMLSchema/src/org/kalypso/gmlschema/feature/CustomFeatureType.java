@@ -47,7 +47,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 
@@ -70,8 +70,11 @@ public class CustomFeatureType implements IFeatureType
 
   private final int m_defaultGeometryPosition;
 
-  public CustomFeatureType( final QName qName, final IPropertyType[] pts )
+  private final IGMLSchema m_schema;
+
+  public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
+    m_schema = schema;
     m_qName = qName;
     int geoPos = -1;
     final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
@@ -164,7 +167,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstituts(org.kalypso.gmlschema.GMLSchema, boolean, boolean)
    */
-  public IFeatureType[] getSubstituts( GMLSchema contextSchema, boolean includeAbstract, boolean inclusiveThis )
+  public IFeatureType[] getSubstituts( IGMLSchema contextSchema, boolean includeAbstract, boolean inclusiveThis )
   {
     if( inclusiveThis )
       return new IFeatureType[] { this };
@@ -235,4 +238,11 @@ public class CustomFeatureType implements IFeatureType
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
 
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getGMLSchema()
+   */
+  public IGMLSchema getGMLSchema( )
+  {
+    return m_schema;
+  }
 }

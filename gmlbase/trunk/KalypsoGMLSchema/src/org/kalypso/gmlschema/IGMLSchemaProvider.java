@@ -45,5 +45,5 @@ package org.kalypso.gmlschema;
  */
 public interface IGMLSchemaProvider
 {
-  public GMLSchema getGMLSchema( );
+  public IGMLSchema getGMLSchema( );
 }
