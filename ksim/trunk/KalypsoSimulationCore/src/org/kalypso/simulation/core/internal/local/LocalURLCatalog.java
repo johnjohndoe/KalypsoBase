@@ -79,6 +79,14 @@ public class LocalURLCatalog implements IUrlCatalog
   }
 
   /**
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferedNamespacePrefix(java.lang.String)
+   */
+  public String getPreferedNamespacePrefix( final String namespace )
+  {
+    return m_catalog.getPreferedNamespacePrefix( namespace );
+  }
+
+  /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
   public Map<String, URL> getCatalog( )
