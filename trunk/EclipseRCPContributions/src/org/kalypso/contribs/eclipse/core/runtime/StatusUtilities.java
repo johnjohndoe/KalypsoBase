@@ -212,7 +212,7 @@ public final class StatusUtilities
       msg = t.toString();// "<Keine weitere Information vorhanden>";
     }
 
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, null );
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
   }
 
   /**
@@ -329,5 +329,17 @@ public final class StatusUtilities
     }
 
     return newStatus;
+  }
+
+  /** Prints the stack trace of a status (iv available) and of all of its children. */
+  public static void printStackTraces( final IStatus status )
+  {
+    final Throwable exception = status.getException();
+    if( exception != null )
+      exception.printStackTrace();
+
+    final IStatus[] children = status.getChildren();
+    for( final IStatus child : children )
+      printStackTraces( child );
   }
 }
