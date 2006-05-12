@@ -96,4 +96,9 @@ public class PluginUtilities
     return Platform.find( bundle, new Path( pluginRelativePath ) );
   }
 
+  public static String id( final Plugin plugin )
+  {
+    return plugin.getBundle().getSymbolicName();
+  }
+
 }

@@ -55,12 +55,18 @@ public class MultiUrlCatalog implements IUrlCatalog
 {
   private final Map<String, URL> m_catalog = new HashMap<String, URL>();
 
+  private final Map<String, String> m_prefixCatalog = new HashMap<String, String>();
+
   public MultiUrlCatalog( final IUrlCatalog[] catalogs )
   {
     for( int i = 0; i < catalogs.length; i++ )
     {
       final IUrlCatalog catalog = catalogs[i];
-      m_catalog.putAll( catalog.getCatalog() );
+      final Map<String, URL> entries = catalog.getCatalog();
+      for( final String namespace : entries.keySet() )
+        m_prefixCatalog.put( namespace, catalog.getPreferedNamespacePrefix( namespace ) );
+
+      m_catalog.putAll( entries );
     }
   }
 
@@ -75,15 +81,23 @@ public class MultiUrlCatalog implements IUrlCatalog
   }
 
   /**
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
+   */
+  public String getPreferedNamespacePrefix( final String namespace )
+  {
+    return m_prefixCatalog.get( namespace );
+  }
+
+  /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
-  public Map<String, URL> getCatalog()
+  public Map<String, URL> getCatalog( )
   {
     return m_catalog;
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     final StringBuffer result = new StringBuffer();
     final Set set = m_catalog.keySet();
@@ -92,7 +106,7 @@ public class MultiUrlCatalog implements IUrlCatalog
     {
       final Object key = iterator.next();
       final Object value = m_catalog.get( key );
-      result.append( "\n").append(key.toString() ).append( " = " ).append( value.toString() ).append( "\n" );
+      result.append( "\n" ).append( key.toString() ).append( " = " ).append( value.toString() ).append( "\n" );
     }
     return result.toString();
   }

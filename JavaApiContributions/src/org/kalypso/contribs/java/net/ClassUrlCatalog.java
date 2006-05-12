@@ -59,8 +59,11 @@ public class ClassUrlCatalog implements IUrlCatalog
 {
   private IUrlCatalog m_catalog;
 
-  /** Closes the stream  
-   * @throws IOException*/
+  /**
+   * Closes the stream
+   * 
+   * @throws IOException
+   */
   private static Properties loadProperties( final InputStream stream ) throws IOException
   {
     final Properties props = new Properties();
@@ -78,6 +81,7 @@ public class ClassUrlCatalog implements IUrlCatalog
 
   /**
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert.
+   * 
    * @throws IOException
    */
   public ClassUrlCatalog( final File propertyFile ) throws IOException
@@ -85,8 +89,9 @@ public class ClassUrlCatalog implements IUrlCatalog
     this( loadProperties( new FileInputStream( propertyFile ) ) );
   }
 
-    /**
+  /**
    * Die Classennamen werden aus den 'values' der URL gelesen. Die 'keys' werden ignoriert.
+   * 
    * @throws IOException
    */
   public ClassUrlCatalog( final URL propertyURL ) throws IOException
@@ -108,7 +113,7 @@ public class ClassUrlCatalog implements IUrlCatalog
       {
         final Class clazz = Class.forName( classNames[i] );
         final Constructor constructor = clazz.getConstructor( new Class[] {} );
-        catalogs[i] = (IUrlCatalog)constructor.newInstance( new Object[] {} );
+        catalogs[i] = (IUrlCatalog) constructor.newInstance( new Object[] {} );
       }
 
       m_catalog = new MultiUrlCatalog( catalogs );
@@ -135,9 +140,20 @@ public class ClassUrlCatalog implements IUrlCatalog
   }
 
   /**
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
+   */
+  public String getPreferedNamespacePrefix( final String namespace )
+  {
+    if( m_catalog != null )
+      return m_catalog.getPreferedNamespacePrefix( namespace );
+
+    return null;
+  }
+
+  /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
-  public Map<String, URL> getCatalog()
+  public Map<String, URL> getCatalog( )
   {
     return m_catalog.getCatalog();
   }
