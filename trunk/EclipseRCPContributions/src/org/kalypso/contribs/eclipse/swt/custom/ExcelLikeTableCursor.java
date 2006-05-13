@@ -362,7 +362,11 @@ public class ExcelLikeTableCursor extends TableCursor
     if( m_viewer == null )
       return false;
 
-    final String property = m_viewer.getColumnProperties()[column].toString();
+    final Object[] columnProperties = m_viewer.getColumnProperties();
+    if( columnProperties == null )
+      return false;
+    
+    final String property = columnProperties[column].toString();
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
       return false;
