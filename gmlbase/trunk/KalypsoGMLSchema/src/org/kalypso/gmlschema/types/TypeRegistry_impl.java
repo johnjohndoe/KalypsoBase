@@ -27,13 +27,13 @@ public class TypeRegistry_impl implements ITypeRegistry
    * @throws TypeRegistryException
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
-  public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException
+  public void registerTypeHandler( final ITypeHandler typeHandler )
   {
     final QName typeName = typeHandler.getTypeName();
     final Class className = typeHandler.getValueClass();
 
-    if( m_typeMap.containsKey( typeName ) )
-      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
+//    if( m_typeMap.containsKey( typeName ) )
+//      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
 
     m_typeMap.put( typeName, typeHandler );
 

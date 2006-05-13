@@ -777,25 +777,29 @@ public class GMLSchemaUtilities
   {
     if( gmlVersion.startsWith( "2" ) )
       return new QName( "", "fid" );
-    
+
     if( gmlVersion.startsWith( "3" ) )
       return new QName( NS.GML3, "id" );
-    
+
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 
-
-  
   public static String getBaseOfGeometriesType( )
   {
     return "AbstractGeometryType";
   }
 
-  public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context ) throws GMLSchemaException
+  /** Splitts a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignores. */
+  public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context )
   {
+    final int schemaCount = schemaLocation == null ? 0 : schemaLocation.length() / 2 + 1;
+    final Map<String, URL> map = new HashMap<String, URL>( schemaCount );
+
+    if( schemaLocation == null )
+      return map;
+
     final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
 
-    final Map<String, URL> map = new HashMap<String, URL>( schemaLocation.length() / 2 + 1 );
     for( int i = 0; i < splittetSchemaLocation.length; i++ )
     {
       final String namespace = splittetSchemaLocation[i];
@@ -808,13 +812,16 @@ public class GMLSchemaUtilities
           final URL url = new URL( context, location );
           map.put( namespace, url );
         }
-        catch( final MalformedURLException e )
+        catch( final MalformedURLException ignores )
         {
-          throw new GMLSchemaException( "Error in schemaLocation. This is no URL: " + location, e );
+          // do not check for parse errors, ust ignore them for backwards compability
+          // throw new GMLSchemaException( "Error in schemaLocation. This is no URL: " + location, e );
         }
       }
-      else
-        throw new GMLSchemaException( "Syntax error in schemaLocation, must be pairs of namespace-url: " + schemaLocation );
+      // do not check for parse errors, ust ignore them for backwards compability
+      // else
+      // throw new GMLSchemaException( "Syntax error in schemaLocation, must be pairs of namespace-url: " +
+      // schemaLocation );
     }
 
     return map;
