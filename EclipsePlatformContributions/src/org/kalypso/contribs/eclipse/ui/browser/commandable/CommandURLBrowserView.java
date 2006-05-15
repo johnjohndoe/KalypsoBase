@@ -1,5 +1,6 @@
 package org.kalypso.contribs.eclipse.ui.browser.commandable;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.action.Action;
@@ -109,12 +110,28 @@ public class CommandURLBrowserView extends AbstractBrowserView
   protected void navigateBack( )
   {
     m_viewer.back();
+    try
+    {
+      m_context =  new URL ( m_viewer.getURL() );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
     updateNavigationActionsState();
   }
 
   protected void navigateForward( )
   {
     m_viewer.forward();
+    try
+    {
+      m_context =  new URL ( m_viewer.getURL() );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
     updateNavigationActionsState();
   }
 }
