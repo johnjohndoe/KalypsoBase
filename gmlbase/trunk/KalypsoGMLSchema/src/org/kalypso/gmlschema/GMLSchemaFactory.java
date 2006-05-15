@@ -149,8 +149,8 @@ public class GMLSchemaFactory
   {
     // let cvs point to GML2 !
     // switch GML3 / GML2
-    final String version = "2.1";
-    //final String version = "3.1";
+//    final String version = "2.1";
+    final String version = "3.1";
 
     System.out.println( "USING GML VERSION: " + version );
 
