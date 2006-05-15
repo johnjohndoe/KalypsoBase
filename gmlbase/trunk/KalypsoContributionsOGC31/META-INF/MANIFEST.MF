@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.kalypso.contribs.ogc31
 Bundle-Version: 1.0.0
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.jwsdp
+Require-Bundle: org.kalypso.jwsdp,
+ org.junit
 Eclipse-AutoStart: true
 Bundle-ClassPath: kalypsoContribsOGC31.jar
 Export-Package: au.csiro.seegrid.xml.st,
@@ -19,4 +20,6 @@ Export-Package: au.csiro.seegrid.xml.st,
  org.isotc211._2005.gsr,
  org.isotc211._2005.gss,
  org.isotc211._2005.gts,
+ org.kalypso.contribs.ogc31,
  org.w3._2001.smil20.language
+Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin
