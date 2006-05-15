@@ -47,7 +47,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPerspectiveRegistry;
@@ -58,7 +57,6 @@ import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
-import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**

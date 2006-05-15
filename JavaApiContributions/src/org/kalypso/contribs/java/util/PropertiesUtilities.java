@@ -38,22 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.ui.browser.commandable;
+package org.kalypso.contribs.java.util;
 
 import java.util.Properties;
 
-import org.eclipse.swt.widgets.Listener;
-
 /**
- * interface representing an action in a CommandURL is based on the key/values pairs
- * 
- * @author kuepfer
+ * @author doemming
  */
-public interface ICommandURLAction
+public class PropertiesUtilities
 {
-  public void run( final Properties keyValuePair );
+  /**
+   * @param query
+   *          string to collect properties from
+   * @param propSeparator
+   *          example "&"
+   * @param allocationgString
+   *          example "="
+   * @param collector
+   */
+  public static Properties collectProperties( final String query, final String propSeparator, final String allocationString, Properties collector )
+  {
+    if( collector == null )
+      collector = new Properties();
+    if( query == null )
+      return collector;
 
-  public void addListener( final Listener listener );
-
-  public void removeListener( final Listener listner );
+    // now extract the key/value pairs from the query.
+    String[] params = query.split( propSeparator ); //$NON-NLS-1$
+    for( int i = 0; i < params.length; i++ )
+    {
+      final String[] keyValuePair = params[i].split( allocationString ); //$NON-NLS-1$
+      if( keyValuePair.length != 2 )
+        continue;
+      collector.setProperty( keyValuePair[0], keyValuePair[1] );
+    }
+    return collector;
+  }
 }

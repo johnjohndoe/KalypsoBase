@@ -38,28 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.ui.browser.commandable;
+package org.kalypso.contribs.java.util.regex;
+
+import java.util.regex.Matcher;
 
 /**
- * @author kuepfer
+ * @author doemming
  */
-public final class CommandURLFactory
+public class RegexpUtilities
 {
-  /**
-   * Non-instantiable.
-   */
-  private CommandURLFactory( )
+
+  public static String toGroupInfoString( final Matcher matcher )
   {
-    // do nothing
+    final int groupCount = matcher.groupCount();
+    if( groupCount == 1 )
+      return "no match";
+    final StringBuffer result = new StringBuffer();
+    for( int i = 1; i <= groupCount; i++ )
+    {
+      if( i > 1 )
+        result.append( "\n" );
+      result.append( i + ". match: " + matcher.group( i ) );
+    }
+    return result.toString();
   }
 
-  public static ICommandURL createIntroURL( String url )
-  {
-    final CommandURLParser parser = new CommandURLParser( url );
-    if( parser.hasCommandUrl() )
-    {
-      return parser.getCommandURL();
-    }
-    return null;
-  }
 }

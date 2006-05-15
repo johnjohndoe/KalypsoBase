@@ -51,9 +51,9 @@ import org.eclipse.core.runtime.Path;
  */
 public class ResourceUtilities
 {
-  private ResourceUtilities()
+  private ResourceUtilities( )
   {
-  // do not instanciate
+    // do not instanciate
   }
 
   /**
@@ -83,7 +83,7 @@ public class ResourceUtilities
     final File rootFile = rootLocation.toFile();
     return new File( rootFile, resource.toString() );
   }
-  
+
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
@@ -111,7 +111,7 @@ public class ResourceUtilities
       final Path path2 = new Path( path );
       return path2;
     }
-    //Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
+    // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
     // to an eclipse path
     // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
     // especially, if we are working with pathes into the .metadata section we get bugs
@@ -131,12 +131,12 @@ public class ResourceUtilities
       }
       if( urlpath.matches( url.toString() + ".+" ) )
       {
-        //split the string at the common part (path to workspace) and always take the second
-        //part as the relative eclipse workspace path
+        // split the string at the common part (path to workspace) and always take the second
+        // part as the relative eclipse workspace path
         final String[] array = urlpath.split( url.toString() );
         if( array[1].startsWith( ".metadata" ) )
           return null;
-        
+
         return new Path( array[1] );
       }
     }
@@ -162,7 +162,6 @@ public class ResourceUtilities
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
    * 
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
-   * 
    * @param resource
    * @return platform URL
    * @throws MalformedURLException
@@ -187,4 +186,12 @@ public class ResourceUtilities
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
   }
+
+  public static File findFileFromURL2( URL url )
+  {
+    final IPath path = findPathFromURL( url );
+    final File file = makeFileFromPath( path );
+    return file;
+  }
+
 }

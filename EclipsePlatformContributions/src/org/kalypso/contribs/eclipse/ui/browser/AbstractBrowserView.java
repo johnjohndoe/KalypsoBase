@@ -58,7 +58,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   protected BrowserViewer m_viewer;
 
-  protected URL m_context = null;
+  private URL m_browserContext = null;
 
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
@@ -84,7 +84,6 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     m_viewer = new BrowserViewer( parent, SWT.NONE ); // BrowserViewer.LOCATION_BAR);
     m_viewer.setContainer( this );
-
     // Delete IE Menu
     final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     menuManager.setRemoveAllWhenShown( true );
@@ -107,7 +106,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       {
         final MementoWithUrlResolver m = (MementoWithUrlResolver) memento;
         final URL url = m.getURLResolver().resolveURL( urlAsString );
-        m_context = url;
+        changeContext( url );
         final String externalForm = url.toExternalForm();
         handleSetUrl( externalForm );
       }
@@ -116,7 +115,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         e.printStackTrace();
       }
     }
-    else
+   else
       try
       {
         handleSetUrl( urlAsString );
@@ -287,6 +286,8 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   void handleSetUrl( final String url ) throws MalformedURLException
   {
     Runnable runnable = null;
+    if( url == null )
+      return;
     if( url.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     /*******************************************************************************************************************
      * TODO: Damit der Browser auch resource strings versteht, weiss nicht ob das resolver machen sollte?? (kuepferle)
@@ -298,7 +299,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       final IPath path = ResourceUtilities.findPathFromURL( realUrl );
       final File file = ResourceUtilities.makeFileFromPath( path );
       final String fileAsString = file.toString();
-      m_context = file.toURL();
+      changeContext(file.toURL());
       runnable = new Runnable()
       {
 
@@ -315,7 +316,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     {
       try
       {
-        m_context = new URL( url );
+        changeContext(new URL( url ));
       }
       catch( MalformedURLException e )
       {
@@ -346,5 +347,16 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       return;
 
     display.asyncExec( runnable );
+  }
+
+  public void changeContext( URL context )
+  {
+    m_browserContext = context;
+  }
+
+  public URL getContext( )
+  {
+    String url = m_viewer.getURL();
+    return m_browserContext;
   }
 }
