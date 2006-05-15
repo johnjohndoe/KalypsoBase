@@ -18,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/sax.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xalan.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xercesImpl.jar"/>
-	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb1-impl.jar"/>
+	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb1-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/jaxp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/jsr173_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/sjsxp.jar"/>

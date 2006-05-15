@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jwsdp;
 
+import java.util.Arrays;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -47,6 +49,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.xml.NSPrefixProvider;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
@@ -61,25 +64,26 @@ public final class JaxbUtilities
     // never instantiate
   }
 
-  /**
-   * 
-   */
   public static JAXBContext createQuiet( final Class... objectFactoryClasses )
   {
+    final String classesString = Arrays.toString( objectFactoryClasses );
+    final TimeLogger logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
     try
     {
-      // final Map<String, Object> map = new HashMap<String, Object>();
-      // map.put( JAXBRIContext.DEFAULT_NAMESPACE_REMAP, "gistreeview.template.kalypso.org");
-      //
       // TODO Performanzproblem hier:
       // Ursache ist Zeile 210 von javax.xml.bind.ContextFinder
       // die Reflection API wird benutzt und dort dauert das instanzieren so lange...
+    
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
       return null;
+    }
+    finally
+    {
+      logger.showElapsedTime( "JAXBContext was loaded for: " + classesString );
     }
   }
 
