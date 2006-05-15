@@ -77,7 +77,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
     if( advReferenziertesElement != null )
     {
       final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, advReferenziertesElement );
-      gmlSchema.register( element, advRelation );
+      gmlSchema.register( element.getElement(), advRelation );
       return new Object[0];
     }
     final IRelationType result = new RelationType( gmlSchema, element );

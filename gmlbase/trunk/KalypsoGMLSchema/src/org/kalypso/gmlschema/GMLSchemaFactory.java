@@ -150,8 +150,8 @@ public class GMLSchemaFactory
     // let cvs point to GML2 !
 
     // switch GML3 / GML2
-//    final GMLSchemaBuilder builder = getBuilderForVersion( "2.1" );
-    final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
+    final GMLSchemaBuilder builder = getBuilderForVersion( "2.1" );
+//    final GMLSchemaBuilder builder = getBuilderForVersion( "3.1" );
     return builder.buildGMLSchema( inputStream, context );
   }
 
