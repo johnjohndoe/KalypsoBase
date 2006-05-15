@@ -74,7 +74,7 @@ public class GMLSchemaBuilder
     m_registeredBuilders.add( builder );
   }
 
-  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object )
+  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
   {
     IBuilder result = null;
     for( final IBuilder builder : m_registeredBuilders )
@@ -103,6 +103,7 @@ public class GMLSchemaBuilder
         // nothing
       }
     }
+    
     return result;
   }
 
@@ -113,10 +114,11 @@ public class GMLSchemaBuilder
     {
       schemaDocument = SchemaDocument.Factory.parse( inputStream );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
     }
+    
     final Schema schema = schemaDocument.getSchema();
     if( schema == null )
     {
@@ -127,6 +129,7 @@ public class GMLSchemaBuilder
       // TODO use a schema-validator to report
       throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
+    
     final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion );
     // I Step build the objects
     rBuild( gmlSchema, gmlSchema );

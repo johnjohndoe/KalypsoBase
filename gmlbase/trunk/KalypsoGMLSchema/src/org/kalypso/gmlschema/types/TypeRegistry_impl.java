@@ -48,9 +48,6 @@ public class TypeRegistry_impl implements ITypeRegistry
    */
   public ITypeHandler getTypeHandlerForTypeName( final QName typeName )
   {
-    if( typeName.getLocalPart().contains("etaData"))
-      System.out.println();
-    
     if( !hasTypeName( typeName ) )
       return null;
     return m_typeMap.get( typeName );

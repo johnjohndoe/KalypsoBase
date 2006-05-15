@@ -95,7 +95,7 @@ public class GMLSchema implements IGMLSchema
 
   private final Hashtable<Object, Object> m_buildedObjectHash = new Hashtable<Object, Object>();
 
-  private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
+  //private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
 
   private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
@@ -109,7 +109,7 @@ public class GMLSchema implements IGMLSchema
 
   private final String m_gmlVersion;
 
-  private HashMap<QName, IFeatureType> m_featuretypeMap = null;
+  private final Map<QName, IFeatureType> m_featureTypeMap = new HashMap<QName, IFeatureType>();
 
   /**
    * we do not support circular imports at the moment, these are allowed from W3C, only circular element definitions are
@@ -368,22 +368,18 @@ public class GMLSchema implements IGMLSchema
   {
     if( buildedObject == null )
       throw new UnsupportedOperationException( "can not register null-object" );
+    
     m_buildedObjectHash.put( xmlObject, buildedObject );
-
-    if( xmlObject instanceof ElementWithOccurs )
-    {
+    
+    if(xmlObject instanceof ElementWithOccurs)
       throw new UnsupportedOperationException();
-    }
 
     // use QName as key:
     if( buildedObject instanceof FeatureType )
     {
       final FeatureType ft = (FeatureType) buildedObject;
-      if( ft == null )
-      {
-        System.out.println( "debug " + getClass() );
-      }
-      m_featureTypesList.add( ft );
+      //m_featureTypesList.add( ft );
+      m_featureTypeMap.put( ft.getQName(), ft );
     }
     else if( buildedObject instanceof IRelationType )
     {
@@ -471,7 +467,8 @@ public class GMLSchema implements IGMLSchema
 
   public IFeatureType[] getAllFeatureTypes( )
   {
-    return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
+    //return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
+    return m_featureTypeMap.values().toArray( new IFeatureType[m_featureTypeMap.size()] );
   }
 
   public IPropertyType[] getAllPropertyTypes( )
@@ -549,20 +546,9 @@ public class GMLSchema implements IGMLSchema
 
   public IFeatureType getFeatureType( final QName qName )
   {
-    if( m_featuretypeMap == null )
-    {
-      // TODO move this to a init methode
-      m_featuretypeMap = new HashMap<QName, IFeatureType>();
-      final IFeatureType[] allFeatureTypes = getAllFeatureTypes();
-      for( int i = 0; i < allFeatureTypes.length; i++ )
-      {
-        final IFeatureType ft = allFeatureTypes[i];
-        m_featuretypeMap.put( ft.getQName(), ft );
-      }
-    }
     final String namespaceURI = qName.getNamespaceURI();
     if( namespaceURI == null || namespaceURI.equals( getTargetNamespace() ) )
-      return m_featuretypeMap.get( qName );
+      return m_featureTypeMap.get( qName );
     else
     {
       final IGMLSchema schemaForNamespaceURI;
@@ -573,9 +559,9 @@ public class GMLSchema implements IGMLSchema
       catch( final GMLSchemaException e )
       {
         e.printStackTrace();
-
-        // odl behaviour, but it should not happen anyway? because the schema should all
-        // be loadd by now
+        
+        // odl behaviour, but it should not happen anyway? because the schema should all 
+        // be loaded by now
         return null;
       }
       return schemaForNamespaceURI.getFeatureType( qName );
