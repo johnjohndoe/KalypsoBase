@@ -47,7 +47,6 @@ import org.kalypso.gmlschema.ElementWithOccurs;
  */
 public class GMLSchema2SchemaBasicsBuilder implements IBuilder
 {
-
   private final String m_version;
 
   public GMLSchema2SchemaBasicsBuilder( String version )

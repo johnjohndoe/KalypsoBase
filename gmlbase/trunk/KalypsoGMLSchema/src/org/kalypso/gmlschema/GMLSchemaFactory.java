@@ -37,16 +37,18 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
-import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
-import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
-import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
-import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexTypeDirectReference2RelationContentTypeBuilder;
 import org.kalypso.gmlschema.builder.Element2FeatureTypeBuilder;
+import org.kalypso.gmlschema.builder.Element2PropertyTypeBuilder;
 import org.kalypso.gmlschema.builder.ElementDirektReference2RelationTypeBuilder;
+import org.kalypso.gmlschema.builder.FeatureContentType2ElementBuilder;
 import org.kalypso.gmlschema.builder.FeaturePropertyType2RelationTypeBuilder;
+import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
 import org.kalypso.gmlschema.builder.PropertyType2SimpleTypeBuilder;
@@ -147,15 +149,43 @@ public class GMLSchemaFactory
 
   public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    // let cvs point to GML2 !
-    // switch GML3 / GML2
-//    final String version = "2.1";
-    final String version = "3.1";
+    // @ANDREAS: moved loading of SchemaDocument here, because now
+    // we can determine the schema version before creating the builder
+    // TODO: please remove this comment after reading
+    SchemaDocument schemaDocument;
+    try
+    {
+      schemaDocument = SchemaDocument.Factory.parse( inputStream );
+    }
+    catch( final Exception e )
+    {
+      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+    }
 
+    final Schema schema = schemaDocument.getSchema();
+    if( schema == null )
+    {
+      // this is crap, apache catches the exception and keeps it :-(
+      // TODO send bugreport/featurerequest to apache
+      // documentation of errors:
+      // - namespace not set (e.g. xmlns:adv="...")
+      // TODO use a schema-validator to report
+      throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
+    }
+    // TODO: read schema version from schemadocument
+    // it would be nice to do something like that:
+    // schema.selectAttribute( "", "version" ).getDomNode().getNodeValue();
+    // but this is the version of the loaded schema, not the version of the gml schema...
+    // maybe put a processing instruction there??
+    // this could also be used to later load the right GML schema
+
+    // switch GML3 / GML2
+    // final String version = "2.1";
+    final String version = "3.1";
     System.out.println( "USING GML VERSION: " + version );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );
-    return builder.buildGMLSchema( inputStream, context );
+    return builder.buildGMLSchema( schemaDocument, context );
   }
 
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )

@@ -29,14 +29,12 @@
  */
 package org.kalypso.gmlschema.builder;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
-import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -74,7 +72,7 @@ public class GMLSchemaBuilder
     m_registeredBuilders.add( builder );
   }
 
-  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
+  private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object )
   {
     IBuilder result = null;
     for( final IBuilder builder : m_registeredBuilders )
@@ -107,29 +105,8 @@ public class GMLSchemaBuilder
     return result;
   }
 
-  public GMLSchema buildGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
+  public GMLSchema buildGMLSchema( final SchemaDocument schemaDocument, final URL context ) throws GMLSchemaException
   {
-    SchemaDocument schemaDocument;
-    try
-    {
-      schemaDocument = SchemaDocument.Factory.parse( inputStream );
-    }
-    catch( final Exception e )
-    {
-      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
-    }
-    
-    final Schema schema = schemaDocument.getSchema();
-    if( schema == null )
-    {
-      // this is crap, apache catches the exception and keeps it :-(
-      // TODO send bugreport/featurerequest to apache
-      // documentation of errors:
-      // - namespace not set (e.g. xmlns:adv="...")
-      // TODO use a schema-validator to report
-      throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
-    }
-    
     final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion );
     // I Step build the objects
     rBuild( gmlSchema, gmlSchema );
@@ -165,7 +142,7 @@ public class GMLSchemaBuilder
       for( int i = 0; i < propertyContentTypes.length; i++ )
         propertyContentTypes[i].init( initRun );
 
-      // TODO: ther will be no relationContentType, bceause the are no more registered
+      // TODO: ther will be no relationContentType, bceause they are no more registered
       final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
       for( int i = 0; i < relationContentTypes.length; i++ )
         relationContentTypes[i].init( initRun );
