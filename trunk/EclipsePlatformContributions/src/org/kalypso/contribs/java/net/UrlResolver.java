@@ -69,6 +69,7 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * <p>
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
+ * 
  * TODO: untersuchen warum es auch org.kalypso.contribs.java.net.UrlUtilities gibt??? Marc.
  * 
  * @author belger
@@ -109,48 +110,49 @@ public class UrlResolver implements IUrlResolver
       final String relPath = relativeURL.substring( "project:".length() + 1 );
       return new URL( projectURL + "/" + relPath );
     }
-    else if( baseURL.getProtocol().equals( "http" ) || baseURL.getProtocol().equals( "file" ) )
-    {
-      String base = baseURL.toString();
-      String path = baseURL.getPath();
-      String[] baseSplit = path.split( "/" );
-      String[] relativeSplit = relativeURL.split( "/" );
-      int i = 0;
-      int upDirCounter = 0;
-      boolean match = false;
+    
+    //else if( baseURL.getProtocol().equals( "http" ) || baseURL.getProtocol().equals( "file" ) )
+//    {
+//      String base = baseURL.toString();
+//      String path = baseURL.getPath();
+//      String[] baseSplit = path.split( "/" );
+//      String[] relativeSplit = relativeURL.split( "/" );
+//      int i = 0;
+//      int upDirCounter = 0;
+//      boolean match = false;
 
-      for( int j = 0; j < relativeSplit.length; j++ )
-      {
-        if( relativeSplit[j].equals( ".." ) )
-          upDirCounter = j + 1;
-        else
-          break;
-      }
-      if( relativeSplit.length == 1 || upDirCounter > 0 )
-        i = baseSplit.length - 1;
-      else
-      {
-        for( i = 0; i < baseSplit.length; i++ )
-        {
-          for( int j = 0; j < relativeSplit.length; j++ )
-          {
-            if( relativeSplit[j].equals( baseSplit[i] ) )
-            {
-              match = true;
-              break;
-            }
-          }
-          if( match )
-            break;
-        }
-      }
-      int baseIndex = base.indexOf( baseSplit[i - upDirCounter] );
-      int relativeIndex = relativeURL.lastIndexOf( ".." );
-      if( relativeIndex == -1 )
-        relativeIndex = -3;
-      path = base.substring( 0, baseIndex ).concat( relativeURL.substring( relativeIndex + 3, relativeURL.length() ) );
-      return new URL( path );
-    }
+//      for( int j = 0; j < relativeSplit.length; j++ )
+//      {
+//        if( relativeSplit[j].equals( ".." ) )
+//          upDirCounter = j + 1;
+//        else
+//          break;
+//      }
+//      if( relativeSplit.length == 1 || upDirCounter > 0 )
+//        i = baseSplit.length - 1;
+//      else
+//      {
+//        for( i = 0; i < baseSplit.length; i++ )
+//        {
+//          for( int j = 0; j < relativeSplit.length; j++ )
+//          {
+//            if( relativeSplit[j].equals( baseSplit[i] ) )
+//            {
+//              match = true;
+//              break;
+//            }
+//          }
+//          if( match )
+//            break;
+//        }
+//      }
+//      int baseIndex = base.indexOf( baseSplit[i - upDirCounter] );
+//      int relativeIndex = relativeURL.lastIndexOf( ".." );
+//      if( relativeIndex == -1 )
+//        relativeIndex = -3;
+//      path = base.substring( 0, baseIndex ).concat( relativeURL.substring( relativeIndex + 3, relativeURL.length() ) );
+//      return new URL( path );
+//    }
 
     return new URL( baseURL, relativeURL );
   }
@@ -158,7 +160,7 @@ public class UrlResolver implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
-  public final Iterator getReplaceEntries( )
+  public final Iterator getReplaceEntries()
   {
     return m_replaceTokenMap.entrySet().iterator();
   }
@@ -193,7 +195,7 @@ public class UrlResolver implements IUrlResolver
 
         final Runnable runnable = new Runnable()
         {
-          public void run( )
+          public void run()
           {
             try
             {
@@ -223,7 +225,8 @@ public class UrlResolver implements IUrlResolver
           charset = null;
         }
 
-        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os, charset );
+        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os,
+            charset );
         return osw;
       }
 
