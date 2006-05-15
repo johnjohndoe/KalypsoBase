@@ -70,6 +70,10 @@ public final class JaxbUtilities
     {
       // final Map<String, Object> map = new HashMap<String, Object>();
       // map.put( JAXBRIContext.DEFAULT_NAMESPACE_REMAP, "gistreeview.template.kalypso.org");
+      //
+      // TODO Performanzproblem hier:
+      // Ursache ist Zeile 210 von javax.xml.bind.ContextFinder
+      // die Reflection API wird benutzt und dort dauert das instanzieren so lange...
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
