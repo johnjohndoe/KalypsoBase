@@ -42,6 +42,7 @@ package org.kalypso.contribs.ogc31;
 
 import javax.xml.bind.JAXBContext;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.jwsdp.JAXBContextLoaderJob;
 import org.osgi.framework.BundleContext;
@@ -101,6 +102,21 @@ public class KalypsoOGC31Plugin extends Plugin
    */
   public static KalypsoOGC31Plugin getDefault( )
   {
+    // HACK: because this class is also used in non Platform mode, we may instantiate this class ourselfs
+    if( !Platform.isRunning() )
+    {
+      m_plugin = new KalypsoOGC31Plugin();
+      // we can use null context, because we know that it ins't used.
+      try
+      {
+        m_plugin.start(null);
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    
     return m_plugin;
   }
 
