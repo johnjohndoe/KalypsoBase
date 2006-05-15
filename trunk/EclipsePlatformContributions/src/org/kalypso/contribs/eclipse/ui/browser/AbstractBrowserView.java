@@ -110,30 +110,21 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         m_context = url;
         final String externalForm = url.toExternalForm();
         handleSetUrl( externalForm );
-        return;
       }
       catch( MalformedURLException e )
       {
         e.printStackTrace();
       }
     }
-    try
-    {
-      m_context = new URL( urlAsString );
-    }
-    catch( MalformedURLException e )
-    {
-      // nothing
-    }
-
-    try
-    {
-      handleSetUrl( urlAsString );
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
+    else
+      try
+      {
+        handleSetUrl( urlAsString );
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
 
     IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
     if( scrollbars == null )
@@ -307,6 +298,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       final IPath path = ResourceUtilities.findPathFromURL( realUrl );
       final File file = ResourceUtilities.makeFileFromPath( path );
       final String fileAsString = file.toString();
+      m_context = file.toURL();
       runnable = new Runnable()
       {
 
@@ -321,6 +313,14 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     }
     if( runnable == null )
     {
+      try
+      {
+        m_context = new URL( url );
+      }
+      catch( MalformedURLException e )
+      {
+        // nothing
+      }
       runnable = new Runnable()
       {
 
