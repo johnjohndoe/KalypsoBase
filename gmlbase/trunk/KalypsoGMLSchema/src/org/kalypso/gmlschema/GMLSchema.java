@@ -369,7 +369,8 @@ public class GMLSchema implements IGMLSchema
     if( buildedObject == null )
       throw new UnsupportedOperationException( "can not register null-object" );
     m_buildedObjectHash.put( xmlObject, buildedObject );
-    if(xmlObject instanceof ElementWithOccurs)
+
+    if( xmlObject instanceof ElementWithOccurs )
     {
       throw new UnsupportedOperationException();
     }
@@ -572,8 +573,8 @@ public class GMLSchema implements IGMLSchema
       catch( final GMLSchemaException e )
       {
         e.printStackTrace();
-        
-        // odl behaviour, but it should not happen anyway? because the schema should all 
+
+        // odl behaviour, but it should not happen anyway? because the schema should all
         // be loadd by now
         return null;
       }
