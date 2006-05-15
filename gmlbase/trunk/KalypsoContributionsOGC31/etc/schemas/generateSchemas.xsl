@@ -51,8 +51,8 @@
 	generates binding customization into schemas to resolve conflicts
 -->
 <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform"
-	extension-element-prefixes="gml http://www.opengis.net/gml"
-	xmlns:abc="http://www.opengis.net/gml"
+	extension-element-prefixes="gml"
+	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:jxb="http://java.sun.com/xml/ns/jaxb" version="1.0">
 	<output method='xml' indent='yes' media-type="text/xml"
