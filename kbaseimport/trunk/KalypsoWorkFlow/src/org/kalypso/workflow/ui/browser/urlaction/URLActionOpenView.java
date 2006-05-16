@@ -69,8 +69,10 @@ public class URLActionOpenView extends AbstractURLAction
     String viewID = commandURL.getParameter( PARAM_PART_ID );
     try
     {
-      // @christoph warum zwei und die propNamen passen nicht
-//      activePage.showView( activePartID );
+      // activate the appropriate view (select the folder), where the new View will be relative to and
+      // shown in
+      if( activePartID != null && activePartID.length() > 1 )
+        activePage.showView( activePartID );
       activePage.showView( viewID );
     }
     catch( PartInitException e )
@@ -80,7 +82,6 @@ public class URLActionOpenView extends AbstractURLAction
     }
     return true;
   }
-
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()

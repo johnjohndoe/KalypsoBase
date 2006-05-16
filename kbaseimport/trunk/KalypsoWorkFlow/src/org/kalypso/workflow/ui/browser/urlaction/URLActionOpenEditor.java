@@ -96,12 +96,14 @@ public class URLActionOpenEditor extends AbstractURLAction
       else
         defaultDefaultDescriptor = editorRegistry.getDefaultEditor( inputURL.toString() );
       final IFile file = ResourceUtilities.findFileFromURL( inputURL );
+      
       final FileEditorInput input = new FileEditorInput( file );
       activePage.openEditor( input, defaultDefaultDescriptor.getId(), activateEditor );
     }
     catch( Exception e )
     {
       e.printStackTrace();
+      return false;
     }
     return true;
   }
