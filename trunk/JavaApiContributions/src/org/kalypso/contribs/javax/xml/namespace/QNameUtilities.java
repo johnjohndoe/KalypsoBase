@@ -44,8 +44,8 @@ import javax.xml.namespace.QName;
 
 /**
  * Helper class for { }
+ * 
  * @author belger
- *
  */
 public class QNameUtilities
 {
@@ -53,9 +53,27 @@ public class QNameUtilities
   {
     // never instantiate
   }
-  
+
   public static boolean equals( final QName qname, final String namespace, final String localPart )
   {
     return qname.equals( new QName( namespace, localPart ) );
+  }
+
+  /**
+   * syntax of fragmentedFullQName :
+   * 
+   * <pre>
+   *  &lt;namespace&gt;#&lt;localpart&gt;
+   * <br>
+   * </pre>
+   * 
+   * example: fragmentedFullQName = www.w3c.org#index.html
+   * 
+   * @return qname from fragmentedFullQName
+   */
+  public static QName createQName( String fragmentedFullQName )
+  {
+    final String[] parts = fragmentedFullQName.split( "#" );
+    return new QName( parts[0], parts[1] );
   }
 }
