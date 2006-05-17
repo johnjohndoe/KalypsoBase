@@ -3,9 +3,9 @@
      xsi:schemaLocation="
      http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd"
      xmlns:gml="http://www.opengis.net/gml" gml:id="uom">
-
+     
      <gml:name>Einheiten in KALYPSO</gml:name>
-
+     
      <gml:dictionaryEntry>
           <gml:BaseUnit gml:id="mNN">
                <gml:name>Meter über Normalnull</gml:name>
@@ -33,7 +33,7 @@
      <gml:dictionaryEntry>
           <gml:ConventionalUnit gml:id="mm">
                <gml:name>Millimeter</gml:name>
-               <gml:quantityType>Länge</gml:quantityType>
+               <gml:quantityType>Laenge</gml:quantityType>
                <gml:conversionToPreferredUnit uom="#m">
                     <gml:factor>1000</gml:factor>
                </gml:conversionToPreferredUnit>
@@ -47,6 +47,14 @@
                <gml:derivationUnitTerm uom="#m" exponent="3"/>
                <gml:derivationUnitTerm uom="#s" exponent="-1"/>
           </gml:DerivedUnit>
+     </gml:dictionaryEntry>
+     
+     <gml:dictionaryEntry>
+          <gml:BaseUnit gml:id="foo">
+               <gml:name>Centimeter am Pegel</gml:name>
+               <gml:quantityType>Länge</gml:quantityType>
+               <gml:unitsSystem/>
+          </gml:BaseUnit>
      </gml:dictionaryEntry>
      
 </gml:Dictionary>
