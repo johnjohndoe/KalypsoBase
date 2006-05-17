@@ -60,6 +60,7 @@ public interface NS
 
   public static final String SWE = "http://www.opengis.net/swe";
   public static final String OM = "http://www.opengis.net/om";
+  public static final String XST = "http://www.seegrid.csiro.au/xml/st";
   
   public static final String GMD = "http://www.isotc211.org/2005/gmd";
 
