@@ -149,7 +149,7 @@ public class SimpleDOMTypeHandler implements IMarshallingTypeHandler
           {
             try
             {
-              final Object object = internalUnmarshall( node, null, urlResolver );
+              final Object object = internalUnmarshall( node, urlResolver );
               marshalResultEater.eat( object );
             }
             catch( TypeRegistryException e )
@@ -182,9 +182,9 @@ public class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * Subclasses may extend
    */
   @SuppressWarnings("unused")
-  protected Object internalUnmarshall( Node node, Object object, IUrlResolver urlResolver ) throws TypeRegistryException
+  protected Object internalUnmarshall( Node node, IUrlResolver urlResolver ) throws TypeRegistryException
   {
-    return object;
+    return node;
   }
 
   /**

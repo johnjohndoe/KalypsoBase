@@ -120,10 +120,27 @@ public class GMLSchemaUtilities
   private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 
   /**
+   * @param substitueeName
+   *          Name of the type which may or may not be substituted by type
+   */
+  public static boolean substitutes( final IFeatureType type, final QName substitueeName )
+  {
+    // everyone is substituing itself
+    if( type.getQName().equals( substitueeName ) )
+      return true;
+
+    final IFeatureType substitutionGroupFT = type.getSubstitutionGroupFT();
+    if( substitutionGroupFT == null )
+      return false;
+
+    return substitutes( substitutionGroupFT, substitueeName );
+  }
+
+  /**
    * @param gmlSchema
    * @param complexType
    */
-  public static QName findBaseType( GMLSchema gmlSchema, ComplexType complexType, String gmlVersion ) throws GMLSchemaException
+  public static QName findBaseType( final GMLSchema gmlSchema, ComplexType complexType, String gmlVersion ) throws GMLSchemaException
   {
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();

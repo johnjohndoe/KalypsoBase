@@ -7,6 +7,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 /**
  * Die Type - Registry dient dazu, neue Typen im System anzumelden und die entsprechende Handler zu finden.
  * 
+ * TODO use generics?
+ * 
  * @author belger
  */
 public interface ITypeRegistry

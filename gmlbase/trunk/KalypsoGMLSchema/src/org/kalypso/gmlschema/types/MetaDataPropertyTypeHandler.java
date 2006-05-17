@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.w3c.dom.Node;
 
 /**
  * For serializing the gml type MetaDataPropertyType.
@@ -70,5 +76,19 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
   public MetaDataPropertyTypeHandler()
   {
     super( "metaDataProperty", QNAME, false );
+  }
+  
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalUnmarshall(org.w3c.dom.Node, java.lang.Object, org.kalypso.contribs.java.net.IUrlResolver)
+   */
+  @Override
+  protected Object internalUnmarshall( Node node, IUrlResolver urlResolver ) throws TypeRegistryException
+  {
+    // TODO Node --> MetadataObject(s)
+    
+    final List<MetadataObject> list = new ArrayList<MetadataObject>();
+    list.add( new MetadataObject() );
+    
+    return list;
   }
 }

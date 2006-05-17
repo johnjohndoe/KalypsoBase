@@ -38,32 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gmlschema.types;
-
-import java.net.URL;
+package org.kalypso.ogc.swe;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.w3c.dom.Element;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.w3c.dom.Node;
 
 /**
  * @author schlienger
  */
-public class SweRepresentationTypeHandler extends SimpleDOMTypeHandler
+public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 {
-  public SweRepresentationTypeHandler(  )
+  public RepresentationTypeHandler(  )
   {
     super( "representation", new QName( NS.SWE, "RepresentationType"), false );
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Element, java.net.URL)
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalUnmarshall(org.w3c.dom.Node, java.lang.Object, org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
-  protected void internalMarshall( Object value, Element element, URL context ) throws TypeRegistryException
+  protected Object internalUnmarshall( final Node node, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
-    System.out.println( element );
-    System.out.println( value );
+    try
+    {
+      return RepresentationTypeUtilities.unmarshalRepresentationType( node );
+    }
+    catch( final GMLSchemaException e )
+    {
+      e.printStackTrace();
+      
+      throw new TypeRegistryException( e );
+    }
   }
 }
