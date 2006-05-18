@@ -67,15 +67,17 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 {
   private final JAXBContext m_jaxbContext;
 
-  private final QName m_typeQName;
+  private final QName m_xmlTypeQName;
 
   private final Class m_valueClass;
 
   private final boolean m_isGeometry;
 
-  private final QName m_valueQName;
+  private final QName m_xmlTagQName;
 
   private final boolean m_considerSurroundingElement;
+
+  private final boolean m_forceElementTagOnMarshall;
 
   private Attributes m_atts = null;
 
@@ -84,7 +86,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    */
   public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry )
   {
-    this( jaxbContext, xmlTypeQName, xmlTagQName, valueClass, isGeometry, false );
+    this( jaxbContext, xmlTypeQName, xmlTagQName, valueClass, isGeometry, false, false );
   }
 
   /**
@@ -110,14 +112,15 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    *          explicitely calling startElement on the binding unmarshaller. It allows to parse complex types which are
    *          not subtypes of PropertyType.
    */
-  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry, boolean considerSurroundingElement )
+  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry, boolean considerSurroundingElement, boolean forceElementTagOnMarshall )
   {
     m_jaxbContext = jaxbContext;
-    m_valueQName = xmlTagQName;
+    m_xmlTagQName = xmlTagQName;
     m_valueClass = valueClass;
     m_isGeometry = isGeometry;
-    m_typeQName = xmlTypeQName;
+    m_xmlTypeQName = xmlTypeQName;
     m_considerSurroundingElement = considerSurroundingElement;
+    m_forceElementTagOnMarshall = forceElementTagOnMarshall;
   }
 
   public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
@@ -125,18 +128,23 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     // memory to xml
     try
     {
+
+//      if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
+//        System.out.println( "debug" );
       // TODO check if marshalling works now that there is the concept of "considerSurroundingElement"
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
-      // weg
-      // contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+
+      if( m_forceElementTagOnMarshall )
+        contentHandler.startElement( namespaceURI, localPart, qNameString, null );
 
       final Marshaller marshaller = JaxbUtilities.createMarshaller( m_jaxbContext );
-      final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_valueQName, (Class<Object>) value.getClass(), value );
+      final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_xmlTagQName, (Class<Object>) value.getClass(), value );
       marshaller.marshal( jaxElement, contentHandler );
-      // weg
-      // contentHandler.endElement( namespaceURI, localPart, qNameString );
+
+      if( m_forceElementTagOnMarshall )
+        contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
     catch( final Exception e )
     {
@@ -146,6 +154,8 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
   {
+    if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
+      System.out.println( "debug" );
     // xml to memory
     try
     {
@@ -172,7 +182,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
       // simulate start of element since SAX Parser is already one element too deep
       if( m_considerSurroundingElement )
-        tmpContentHandler.startElement( m_valueQName.getNamespaceURI(), m_valueQName.getLocalPart(), m_valueQName.toString(), m_atts );
+        tmpContentHandler.startElement( m_xmlTagQName.getNamespaceURI(), m_xmlTagQName.getLocalPart(), m_xmlTagQName.toString(), m_atts );
     }
     catch( final Exception e )
     {
@@ -193,7 +203,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    */
   public QName getTypeName( )
   {
-    return m_typeQName;
+    return m_xmlTypeQName;
   }
 
   /**
@@ -209,7 +219,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    */
   public String getShortname( )
   {
-    return m_typeQName.getLocalPart();
+    return m_xmlTypeQName.getLocalPart();
   }
 
   /**

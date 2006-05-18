@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.types;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -76,7 +77,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
-    
+
     m_level = considerSurroundingElement ? -1 : 0;
   }
 
@@ -87,6 +88,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
     m_level++;
+//    System.out.println( indent() + "<" + qname + ">" );
     try
     {
       m_unmarshallerHandler.startElement( uri, local, qname, atts );
@@ -94,15 +96,24 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     catch( final NullPointerException e )
     {
       e.printStackTrace();
-      
+
       throw new SAXException( "Element could not be processed: " + qname );
     }
   }
 
+  private String indent( )
+  {
+    if( m_level > 0 )
+      return StringUtils.repeat( " ", m_level );
+    return "?";
+  }
+
   public void endElement( String uri, String local, String qname ) throws SAXException
   {
+//    System.out.println( indent() + "</" + qname + ">" );
     m_level--;
     m_unmarshallerHandler.endElement( uri, local, qname );
+
     if( m_level < 0 )
     {
       try

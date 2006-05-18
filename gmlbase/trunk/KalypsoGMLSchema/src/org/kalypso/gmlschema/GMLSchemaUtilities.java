@@ -793,7 +793,7 @@ public class GMLSchemaUtilities
   public static QName getIdAttribute( final String gmlVersion )
   {
     if( gmlVersion.startsWith( "2" ) )
-      return new QName( "", "fid" );
+      return new QName( NS.GML3, "fid" );
 
     if( gmlVersion.startsWith( "3" ) )
       return new QName( NS.GML3, "id" );
