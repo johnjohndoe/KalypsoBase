@@ -57,6 +57,8 @@ public class KalypsoOGC31Plugin extends Plugin
 
   private JAXBContextLoaderJob m_contextLoaderJob;
 
+  private JAXBContext m_context;
+
   public KalypsoOGC31Plugin( )
   {
     super();
@@ -82,9 +84,10 @@ public class KalypsoOGC31Plugin extends Plugin
     final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
 
     // create the context on all of these factories else the binding won't work
-    m_contextLoaderJob = new JAXBContextLoaderJob( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-    m_contextLoaderJob.setSystem( true );
-    m_contextLoaderJob.schedule( 100 );
+    m_context = JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
+    // m_contextLoaderJob = new JAXBContextLoaderJob( CL_GML3, CL_SWE, CL_GMD, CL_ST );
+    // m_contextLoaderJob.setSystem( true );
+    // m_contextLoaderJob.schedule();
   }
 
   /**
@@ -109,32 +112,33 @@ public class KalypsoOGC31Plugin extends Plugin
       // we can use null context, because we know that it ins't used.
       try
       {
-        m_plugin.start(null);
+        m_plugin.start( null );
       }
       catch( Exception e )
       {
         e.printStackTrace();
       }
     }
-    
     return m_plugin;
   }
 
   public JAXBContext getGMLContext( )
   {
-    if( m_contextLoaderJob.getResult() == null )
-    {
-      try
-      {
-        m_contextLoaderJob.join();
-      }
-      catch( final InterruptedException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return m_contextLoaderJob.getContext();
+    return m_context;
   }
+  // if( m_contextLoaderJob.getResult() == null )
+  // {
+  // try
+  // {
+  // System.out.println( m_contextLoaderJob.getState() );
+  // m_contextLoaderJob.join();
+  // }
+  // catch( final InterruptedException e )
+  // {
+  // e.printStackTrace();
+  // }
+  //
+  // return m_contextLoaderJob.getContext();
+  // }
 
 }
