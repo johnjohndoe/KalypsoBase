@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import org.kalypso.observation.IObservation;
+
 /**
  * @author Gernot
  */
@@ -55,5 +57,11 @@ public class WspmRunOffEventReference
   public String getHref( )
   {
     return m_href;
+  }
+
+  public void writeObservation( final IObservation runOffObs )
+  {
+    // TODO Auto-generated method stub
+    
   }
 }
