@@ -115,7 +115,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         e.printStackTrace();
       }
     }
-   else
+    else
       try
       {
         handleSetUrl( urlAsString );
@@ -299,7 +299,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       final IPath path = ResourceUtilities.findPathFromURL( realUrl );
       final File file = ResourceUtilities.makeFileFromPath( path );
       final String fileAsString = file.toString();
-      changeContext(file.toURL());
+      changeContext( file.toURL() );
       runnable = new Runnable()
       {
 
@@ -316,7 +316,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     {
       try
       {
-        changeContext(new URL( url ));
+        changeContext( new URL( url ) );
       }
       catch( MalformedURLException e )
       {
