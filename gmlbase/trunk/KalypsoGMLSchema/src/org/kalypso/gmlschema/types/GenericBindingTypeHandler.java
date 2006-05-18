@@ -154,8 +154,8 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
   {
-    if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
-      System.out.println( "debug" );
+//    if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
+//      System.out.println( "debug" );
     // xml to memory
     try
     {
