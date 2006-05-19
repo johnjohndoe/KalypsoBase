@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -54,7 +55,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionActivateTheme extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "digitize";
+  private final static String COMMAND_NAME = "activateTheme";
 
   /**
    * optional
@@ -84,7 +85,7 @@ public class URLActionActivateTheme extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
-    final IWorkbenchPage activePage = getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IEditorPart activePage = getActiveEditor();
     String theme = commandURL.getParameter( PARAM_THEME );
     if( activePage instanceof GisMapEditor )
     {

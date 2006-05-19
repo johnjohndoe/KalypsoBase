@@ -42,6 +42,7 @@ package org.kalypso.workflow.ui.browser;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -81,6 +82,11 @@ public abstract class AbstractURLAction implements IURLAction
   protected IWorkspaceRoot getWorkspaceRoot( )
   {
     return ResourcesPlugin.getWorkspace().getRoot();
+  }
+
+  protected IEditorPart getActiveEditor( )
+  {
+    return getActivePage().getActiveEditor();
   }
 
 }
