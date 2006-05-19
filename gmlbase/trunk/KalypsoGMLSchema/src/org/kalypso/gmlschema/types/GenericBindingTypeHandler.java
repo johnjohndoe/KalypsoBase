@@ -57,6 +57,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * a generic typehandler based on binding<br>
@@ -129,15 +130,15 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     try
     {
 
-//      if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
-//        System.out.println( "debug" );
+      // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
+      // System.out.println( "debug" );
       // TODO check if marshalling works now that there is the concept of "considerSurroundingElement"
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
 
       if( m_forceElementTagOnMarshall )
-        contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+        contentHandler.startElement( namespaceURI, localPart, qNameString, new AttributesImpl() );
 
       final Marshaller marshaller = JaxbUtilities.createMarshaller( m_jaxbContext );
       final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_xmlTagQName, (Class<Object>) value.getClass(), value );
@@ -154,8 +155,8 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
   {
-//    if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
-//      System.out.println( "debug" );
+    // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
+    // System.out.println( "debug" );
     // xml to memory
     try
     {
