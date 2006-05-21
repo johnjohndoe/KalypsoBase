@@ -52,7 +52,6 @@ import java.util.NoSuchElementException;
 
 import javax.activation.DataHandler;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -154,7 +153,7 @@ public class JarSimulationcDataProvider implements ISimulationDataProvider
         m_jarfile.deleteOnExit();
 
         jarstream = new FileOutputStream( m_jarfile );
-        CopyUtils.copy( handlerStream, jarstream );
+        IOUtils.copy( handlerStream, jarstream );
       }
       finally
       {
