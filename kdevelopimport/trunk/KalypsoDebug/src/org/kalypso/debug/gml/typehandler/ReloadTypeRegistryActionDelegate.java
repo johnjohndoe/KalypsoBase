@@ -44,9 +44,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -77,12 +79,12 @@ public class ReloadTypeRegistryActionDelegate implements IWorkbenchWindowActionD
    */
   public void run( IAction action )
   {
-    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+
     marshallingRegistry.clearRegistry();
     guiRegistry.clearRegistry();
-    
+
     KalypsoGisPlugin.registerTypeHandler( marshallingRegistry, guiRegistry );
   }
 
