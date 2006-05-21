@@ -5,20 +5,19 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * Die Type - Registry dient dazu, neue Typen im System anzumelden und die entsprechende Handler zu finden.
- * 
- * TODO use generics?
+ * Die Type - Registry dient dazu, neue Typen im System anzumelden und die entsprechende Handler zu finden. TODO use
+ * generics?
  * 
  * @author belger
  */
-public interface ITypeRegistry
+public interface ITypeRegistry<H extends ITypeHandler>
 {
   /** Removes every entry from the registry */
-  public void clearRegistry();
-  
-  public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException;
+  public void clearRegistry( );
 
-  public void unregisterTypeHandler( final ITypeHandler typeHandler );
+  public void registerTypeHandler( final H typeHandler ) throws TypeRegistryException;
+
+  public void unregisterTypeHandler( final H typeHandler );
 
   public boolean hasTypeName( final QName typeName );
 
@@ -27,16 +26,20 @@ public interface ITypeRegistry
    */
   public boolean hasClassName( final Class className );
 
-  public ITypeHandler getTypeHandlerForTypeName( final QName typeQName );
+  public H getTypeHandlerForTypeName( final QName typeQName );
 
   /**
    * @deprecated use getTypehandlerForTypeName(QName qname) or getTypeHandlerFor(IPropertyType pt) there might be more
-   *             that one typehandler for a class
+   *             than one typehandler for a class
    */
   @Deprecated
-  public ITypeHandler getTypeHandlerForClassName( final Class clazz );
+  public H getTypeHandlerForClassName( final Class clazz );
 
-  public ITypeHandler getTypeHandlerFor( IPropertyType ftp );
+  public H getTypeHandlerFor( final IPropertyType ftp );
 
-  public ITypeHandler[] getRegisteredTypeHandler( );
+  /**
+   * @param a
+   * @see java.util.Collection#toArray(T[])
+   */
+  public H[] getRegisteredTypeHandler( final H[] a );
 }

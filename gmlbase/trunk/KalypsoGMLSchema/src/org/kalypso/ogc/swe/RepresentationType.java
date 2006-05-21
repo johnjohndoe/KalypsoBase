@@ -19,7 +19,7 @@ public class RepresentationType
 
   public IMarshallingTypeHandler getTypeHandler( )
   {
-    return (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( m_valueTypeName );
+    return MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( m_valueTypeName );
   }
   
   public KIND getKind( )

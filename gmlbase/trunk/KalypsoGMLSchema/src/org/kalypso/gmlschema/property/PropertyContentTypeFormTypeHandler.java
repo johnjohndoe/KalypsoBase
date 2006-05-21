@@ -50,8 +50,6 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 {
   private final IGMLSchema m_gmlSchema;
 
-  private final Object m_typeObject;
-
   private QName m_valueQName;
 
   private final ITypeHandler m_typeHandler;
@@ -60,11 +58,10 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 
   private final String m_gmlVersion;
 
-  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, ITypeHandler typeHandler, String gmlVersion ) throws GMLSchemaException
+  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final ITypeHandler typeHandler, final String gmlVersion ) throws GMLSchemaException
   {
     // TODO check for restriction
     m_gmlSchema = gmlSchema;
-    m_typeObject = typeObject;
     m_typeHandler = typeHandler;
     m_gmlVersion = gmlVersion;
 

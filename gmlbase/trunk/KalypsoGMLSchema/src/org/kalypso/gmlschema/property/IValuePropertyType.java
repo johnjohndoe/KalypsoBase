@@ -74,6 +74,8 @@ public interface IValuePropertyType extends IPropertyType
    */
   public Class getValueClass( );
 
+  // TODO: which one is it? the gui or marshalling type handler??
+  // is this really necessary? we still have ITypeRegistry.getTypeHandlerFor( IPropertyType )
   public ITypeHandler getTypeHandler( );
 
   /**

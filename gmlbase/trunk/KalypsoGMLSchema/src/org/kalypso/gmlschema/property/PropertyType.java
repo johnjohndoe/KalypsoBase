@@ -34,11 +34,12 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -76,8 +77,8 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         final SimpleType simpleType = getElement().getSimpleType();
         if( type != null )
         {
-          final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-          final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( type );
+          final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+          final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( type );
           if( typeHandler != null )
             m_propertyContentType = new CustomPropertyContentType( type, typeHandler );
           else

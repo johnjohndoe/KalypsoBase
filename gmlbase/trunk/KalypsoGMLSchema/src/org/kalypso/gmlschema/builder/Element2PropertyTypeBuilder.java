@@ -38,7 +38,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -90,8 +90,8 @@ public class Element2PropertyTypeBuilder implements IBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
-    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
     return typeHandler != null;
   }
 

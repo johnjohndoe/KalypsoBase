@@ -38,6 +38,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.PropertyContentTypeFormTypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -63,7 +64,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final ITypeHandler typeHandler = getTypeHandler( gmlSchema, typeObject );
-    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler ,m_version);
+    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler, m_version );
     gmlSchema.register( typeObject, pct );
     return new Object[] { pct };
   }
@@ -81,14 +82,14 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   {
     final QName baseType;
     if( typeObject instanceof ComplexType )
-      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject , m_version);
+      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject, m_version );
     else if( typeObject instanceof SimpleType )
-      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject , m_version);
+      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject, m_version );
     else
       return null;
     if( baseType == null )
       return null;
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     return registry.getTypeHandlerForTypeName( baseType );
   }
 

@@ -13,13 +13,13 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
  * 
  * @author belger
  */
-public class TypeRegistry_impl implements ITypeRegistry
+public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<H>
 {
   /** typeName -> handler */
-  private Map<QName, ITypeHandler> m_typeMap = new HashMap<QName, ITypeHandler>();
+  private Map<QName, H> m_typeMap = new HashMap<QName, H>();
 
   /** className -> handler */
-  private Map<Class, ITypeHandler> m_classMap = new HashMap<Class, ITypeHandler>();
+  private Map<Class, H> m_classMap = new HashMap<Class, H>();
 
   /**
    * Falls TypeName oder ClassName bereits belegt sind
@@ -27,7 +27,7 @@ public class TypeRegistry_impl implements ITypeRegistry
    * @throws TypeRegistryException
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
-  public void registerTypeHandler( final ITypeHandler typeHandler )
+  public void registerTypeHandler( final H typeHandler )
   {
     final QName typeName = typeHandler.getTypeName();
     final Class className = typeHandler.getValueClass();
@@ -46,7 +46,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
    */
-  public ITypeHandler getTypeHandlerForTypeName( final QName typeName )
+  public H getTypeHandlerForTypeName( final QName typeName )
   {
     if( !hasTypeName( typeName ) )
       return null;
@@ -56,7 +56,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#getTypeHandlerForClassName(java.lang.Class)
    */
-  public ITypeHandler getTypeHandlerForClassName( final Class className )
+  public H getTypeHandlerForClassName( final Class className )
   {
     if( !hasClassName( className ) )
       return null;
@@ -66,7 +66,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
-  public void unregisterTypeHandler( final ITypeHandler typeHandler )
+  public void unregisterTypeHandler( final H typeHandler )
   {
     m_typeMap.remove( typeHandler.getTypeName() );
     m_classMap.remove( typeHandler.getValueClass() );
@@ -91,7 +91,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerFor(org.kalypso.gmlschema.property.IPropertyType)
    */
-  public ITypeHandler getTypeHandlerFor( final IPropertyType pt )
+  public H getTypeHandlerFor( final IPropertyType pt )
   {
     if( !(pt instanceof IValuePropertyType) )
       throw new UnsupportedOperationException();
@@ -101,9 +101,9 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#getRegisteredTypeHandler()
    */
-  public ITypeHandler[] getRegisteredTypeHandler( )
+  public H[] getRegisteredTypeHandler( final H[] a )
   {
-    return m_classMap.values().toArray( new ITypeHandler[m_classMap.size()] );
+    return m_classMap.values().toArray( a );
   }
 
   /**

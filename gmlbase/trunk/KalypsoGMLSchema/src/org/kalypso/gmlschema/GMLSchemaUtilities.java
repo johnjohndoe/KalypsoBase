@@ -80,7 +80,7 @@ import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -448,8 +448,8 @@ public class GMLSchemaUtilities
    */
   private static QName getKnownTypeFor( final QName qName, String gmlVersion )
   {
-    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qName );
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qName );
     if( typeHandler != null )
       return qName;
 
