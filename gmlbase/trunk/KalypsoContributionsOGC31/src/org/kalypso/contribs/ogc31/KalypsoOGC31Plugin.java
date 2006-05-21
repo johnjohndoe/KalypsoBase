@@ -55,7 +55,7 @@ public class KalypsoOGC31Plugin extends Plugin
   // The shared instance.
   private static KalypsoOGC31Plugin m_plugin;
 
-  private JAXBContextLoaderJob m_contextLoaderJob;
+//  private JAXBContextLoaderJob m_contextLoaderJob;
 
   private JAXBContext m_context;
 
