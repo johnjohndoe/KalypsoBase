@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.swe;
 
+import java.net.URL;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
@@ -47,6 +49,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -75,5 +78,14 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
       
       throw new TypeRegistryException( e );
     }
+  }
+  
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Element, java.net.URL)
+   */
+  @Override
+  protected void internalMarshall( Object value, Element element, URL context ) throws TypeRegistryException
+  {
+    RepresentationTypeUtilities.marshalRepresentationType( (RepresentationType) value, element );
   }
 }

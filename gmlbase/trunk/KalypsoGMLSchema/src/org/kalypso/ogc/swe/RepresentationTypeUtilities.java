@@ -87,15 +87,21 @@ public class RepresentationTypeUtilities
         base = "string";
 
       // TODO: parse unitOfMeasure
-      
+
       // TODO: parse frame (i.e. timezone information for dates)
-      
+
       // TODO: parse restrictions
 
       // from qname we can get the type handler via the registry
       return new RepresentationType( RepresentationType.KIND.valueOf( localName ), new QName( NS.XSD_SCHEMA, base ) );
     }
 
-    throw new GMLSchemaException("Empty or non-existent representation: cannot create RepresentationType instance");
+    throw new GMLSchemaException( "Empty or non-existent representation: cannot create RepresentationType instance" );
+  }
+
+  public static Node marshalRepresentationType( final RepresentationType type, final Element element )
+  {
+    // TODO [marc]
+    return null;
   }
 }

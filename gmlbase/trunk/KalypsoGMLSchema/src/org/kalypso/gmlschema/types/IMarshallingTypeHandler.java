@@ -18,8 +18,6 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   /**
    * Serialize object to xml inclusive the propertynode
    * 
-   * @param node
-   *          serialize the object into this node
    * @param context
    *          use this context for relative url
    * @param object
@@ -32,8 +30,6 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   /**
    * creates an object of type {@link #getClassName()}from node.
    * 
-   * @param node
-   *          unmnarshall this node to an object of type {@link #getClassName()}
    * @param context
    *          use this context for relative url
    */
