@@ -81,12 +81,12 @@ public class JAXBContextLoaderJob extends Job
     monitor.beginTask( "Loading JAXBContext for classes: " + classesString, 1000 );
 
     final TimeLogger logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
-    
+
     try
     {
       m_context = JAXBContext.newInstance( m_classes );
     }
-    catch( final JAXBException e )
+    catch( final Throwable e )
     {
       return StatusUtilities.statusFromThrowable( e, "Failed to create JAXContext for: " + classesString );
     }
