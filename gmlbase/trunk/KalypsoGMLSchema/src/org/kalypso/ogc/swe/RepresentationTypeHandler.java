@@ -46,49 +46,153 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author schlienger
  */
 public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 {
-  public RepresentationTypeHandler(  )
+  public RepresentationTypeHandler( )
   {
-    super( "representation", new QName( NS.SWE, "RepresentationType"), false );
+    super( "representation", new QName( NS.SWE, "RepresentationType" ), false );
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalUnmarshall(org.w3c.dom.Node, java.lang.Object, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalUnmarshall(org.w3c.dom.Node, java.lang.Object,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
   protected Object internalUnmarshall( final Node node, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
-    try
+    if( node != null && node.hasChildNodes() )
     {
-      return RepresentationTypeUtilities.unmarshalRepresentationType( node );
+      final Element typeElt = (Element) node.getChildNodes().item( 0 );
+
+      // read base-attribute of restriction
+      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
+      Element restrictionElt = null;
+      if( elementsByTagName.getLength() == 1 )
+        restrictionElt = (Element) elementsByTagName.item( 0 );
+
+      final String localName = typeElt.getLocalName();
+      final String base;
+      if( "SimpleType".equals( localName ) )
+      {
+        if( restrictionElt != null )
+          base = restrictionElt.getAttribute( "base" );
+        else
+          // error handling?
+          base = "string";
+      }
+      else if( "Number".equals( localName ) )
+        base = "double";
+      else if( "Word".equals( localName ) )
+        base = "string";
+      else if( "Boolean".equals( localName ) )
+        base = "boolean";
+      else
+        base = "string";
+
+      // parse unitOfMeasure
+      final NodeList nlUom = typeElt.getElementsByTagNameNS( NS.GML3, "unitOfMeasure" );
+      Element uomElt = null;
+      if( nlUom.getLength() == 1 )
+        uomElt = (Element) nlUom.item( 0 );
+
+      String unit = "";
+      if( uomElt != null )
+        unit = uomElt.getAttribute( "uom" );
+
+      // parse frame (i.e. timezone information for dates)
+      final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.SWE, "frame" );
+      Element frameElt = null;
+      if( nlFrame.getLength() == 1 )
+        frameElt = (Element) nlFrame.item( 0 );
+
+      String frame = "";
+      if( frameElt != null )
+        frame = frameElt.getAttributeNS( NS.XLINK, "href" );
+
+      // TODO: parse classification
+      String classification = "";
+
+      // TODO: parse restrictions
+
+      // from qname we can get the type handler via the registry
+      return new RepresentationType( RepresentationType.KIND.valueOf( localName ), new QName( NS.XSD_SCHEMA, base ), unit, frame, classification );
     }
-    catch( final GMLSchemaException e )
-    {
-      e.printStackTrace();
-      
-      throw new TypeRegistryException( e );
-    }
+    else
+      throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" );
   }
-  
+
   /**
-   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Element, java.net.URL)
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Element,
+   *      java.net.URL)
    */
   @Override
-  protected void internalMarshall( Object value, Element element, URL context ) throws TypeRegistryException
+  protected void internalMarshall( Object value, Element element, URL context )
   {
-    RepresentationTypeUtilities.marshalRepresentationType( (RepresentationType) value, element );
+    final RepresentationType type = (RepresentationType) value;
+    final Document doc = element.getOwnerDocument();
+
+    switch( type.getKind() )
+    {
+      case Boolean:
+      {
+        final Element eltBoolean = doc.createElementNS( NS.SWE, "Boolean" );
+
+        element.appendChild( eltBoolean );
+        break;
+      }
+
+      case Word:
+      {
+        final Element eltWord = doc.createElementNS( NS.SWE, "Word" );
+
+        if( type.getClassification().length() > 0 )
+        {
+          final Element eltClassification = doc.createElementNS( NS.SWE, "classification" );
+          eltWord.appendChild( eltClassification );
+        }
+
+        element.appendChild( eltWord );
+        break;
+      }
+
+      case Number:
+      {
+        final Element eltNumber = doc.createElementNS( NS.SWE, "Number" );
+
+        handleUnit( type, doc, eltNumber );
+        handleFrame( type, doc, eltNumber );
+
+        element.appendChild( eltNumber );
+        break;
+      }
+
+      case SimpleType:
+      {
+        final Element eltSimpleType = doc.createElementNS( NS.SWE, "SimpleType" );
+
+        final Element eltRestriction = doc.createElementNS( NS.XST, "restriction" );
+        eltRestriction.setAttributeNS( NS.XST, "base", type.getValueTypeName().getLocalPart() );
+        eltSimpleType.appendChild( eltRestriction );
+
+        handleUnit( type, doc, eltSimpleType );
+        handleFrame( type, doc, eltSimpleType );
+
+        element.appendChild( eltSimpleType );
+        break;
+      }
+    }
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#getValueClass()
    */
@@ -96,5 +200,27 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   public Class getValueClass( )
   {
     return RepresentationType.class;
+  }
+
+  private static void handleUnit( final RepresentationType type, final Document doc, final Element elt )
+  {
+    if( type.getUnit().length() > 0 )
+    {
+      final Element eltUom = doc.createElementNS( NS.GML3, "unitOfMeasure" );
+      eltUom.setAttributeNS( NS.GML3, "uom", type.getUnit() );
+
+      elt.appendChild( eltUom );
+    }
+  }
+
+  private static void handleFrame( final RepresentationType type, final Document doc, final Element elt )
+  {
+    if( type.getFrame().length() > 0 )
+    {
+      final Element eltFrame = doc.createElementNS( NS.SWE, "frame" );
+      eltFrame.setAttributeNS( NS.SWE, "frame", type.getFrame() );
+
+      elt.appendChild( eltFrame );
+    }
   }
 }

@@ -8,7 +8,7 @@
      <xs:import namespace="http://www.opengis.net/swe" schemaLocation="../sweCommon/1.0.30/swe.xsd"/>
      <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/1.0.0/xlinks.xsd"/>
 
-     <xs:element name="MetaData" type="ksp:MetaDataType"/>
+     <xs:element name="metaData" type="ksp:MetaDataType"/>
 
      <xs:complexType name="MetaDataType">
           <xs:sequence>

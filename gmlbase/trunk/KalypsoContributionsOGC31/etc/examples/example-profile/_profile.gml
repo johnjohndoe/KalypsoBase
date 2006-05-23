@@ -12,19 +12,20 @@
      xmlns:swe="http://www.opengis.net/swe">
 
      <gml:metaDataProperty>
-          <kom:MetaDataList>
-               <kom:MetaData>
-                    <name>Kommentar</name>
-                    <value>
-                         <![CDATA[
+          <kom:metaData>
+               <name>Kommentar</name>
+               <value>
+                    <![CDATA[
 Henneberger Wehr
 ]]>
-                    </value>
-               </kom:MetaData>
-               <kom:MetaData>
-                    <name>Header</name>
-                    <value type="WSPWIN_Header">
-                         <![CDATA[
+               </value>
+          </kom:metaData>
+     </gml:metaDataProperty>
+     <gml:metaDataProperty>
+          <kom:metaData>
+               <name>Header</name>
+               <value type="WSPWIN_Header">
+                    <![CDATA[
 L:\ug_werr3\vermessung\050725\Prof184_50_66.d66
                                      
                                         wehr
@@ -39,9 +40,8 @@ STATION KM 223.2694
 B-1 0 0 0 0 0 0    
  
 ]]>
-                    </value>
-               </kom:MetaData>
-          </kom:MetaDataList>
+               </value>
+          </kom:metaData>
      </gml:metaDataProperty>
      <gml:name>Querprofil Station KM 223.2694</gml:name>
      <om:time>
@@ -49,7 +49,8 @@ B-1 0 0 0 0 0 0
                <gml:timePosition>2000-01-01T00:00:00Z</gml:timePosition>
           </gml:TimeInstant>
      </om:time>
-     <om:procedure xlink:href="dict_procedure.xml#querprofil"/><!-- die Information richtet sich an den Benutzer -->
+     <om:procedure xlink:href="dict_procedure.xml#querprofil"/>
+     <!-- die Information richtet sich an den Benutzer -->
      <om:observedProperty xlink:href="dict_phenomenon.xml#querprofil_pasche"/>
      <om:featureOfInterest/>
      <om:resultDefinition>
@@ -98,13 +99,11 @@ B-1 0 0 0 0 0 0
           <om:Observation>
                <gml:name>Maulprofil</gml:name>
                <om:time/>
-               <om:procedure></om:procedure>
-               <om:observedProperty></om:observedProperty>
+               <om:procedure/>
+               <om:observedProperty/>
                <om:featureOfInterest/>
                <om:resultDefinition xlink:href="dict_resultdef.xml#maulprofil"/>
-               <om:result>
-                    3.2233 4.2342 5.2344 6.2344 8.2342 9.1234 34.2342
-               </om:result>
+               <om:result> 3.2233 4.2342 5.2344 6.2344 8.2342 9.1234 34.2342 </om:result>
           </om:Observation>
      </profileMember>
 </kom:profile>

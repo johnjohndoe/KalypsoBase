@@ -11,10 +11,39 @@ public class RepresentationType
 
   private final QName m_valueTypeName;
 
-  public RepresentationType( final KIND kind, final QName valueTypeName )
+  private final String m_unit;
+
+  private final String m_frame;
+
+  private final String m_classification;
+
+  public RepresentationType( final KIND kind, final QName valueTypeName, final String unit, final String frame, final String classification )
   {
     m_kind = kind;
     m_valueTypeName = valueTypeName;
+    m_unit = unit;
+    m_frame = frame;
+    m_classification = classification;
+  }
+  
+  public QName getValueTypeName( )
+  {
+    return m_valueTypeName;
+  }
+
+  public String getUnit( )
+  {
+    return m_unit;
+  }
+  
+  public String getFrame( )
+  {
+    return m_frame;
+  }
+
+  public String getClassification( )
+  {
+    return m_classification;
   }
 
   public IMarshallingTypeHandler getTypeHandler( )
