@@ -91,4 +91,15 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
     
     return list;
   }
+
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#getValueClass()
+   */
+  @Override
+  public Class getValueClass( )
+  {
+    return List.class;
+  }
+  
+  
 }

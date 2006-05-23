@@ -68,7 +68,7 @@ import org.xml.sax.ext.LexicalHandler;
  * 
  * @author schlienger
  */
-public class SimpleDOMTypeHandler implements IMarshallingTypeHandler
+public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 {
   private String m_shortName;
 
@@ -215,10 +215,7 @@ public class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class getValueClass( )
-  {
-    return Node.class;
-  }
+  public abstract Class getValueClass( );
 
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()

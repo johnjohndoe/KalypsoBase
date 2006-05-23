@@ -88,4 +88,13 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   {
     RepresentationTypeUtilities.marshalRepresentationType( (RepresentationType) value, element );
   }
+  
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#getValueClass()
+   */
+  @Override
+  public Class getValueClass( )
+  {
+    return RepresentationType.class;
+  }
 }
