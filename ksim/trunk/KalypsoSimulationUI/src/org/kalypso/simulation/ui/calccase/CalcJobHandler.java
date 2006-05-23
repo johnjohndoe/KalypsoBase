@@ -217,7 +217,7 @@ public class CalcJobHandler
       {
         if( m_jobID != null )
         {
-          if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationTmp" ) ) )
+          if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationFiles" ) ) )
             m_calcService.disposeJob( m_jobID );
         }
       }
