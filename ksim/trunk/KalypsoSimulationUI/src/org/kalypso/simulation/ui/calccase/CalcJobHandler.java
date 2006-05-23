@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
@@ -205,24 +206,20 @@ public class CalcJobHandler
         }
       }
     }
-    catch( final SimulationException e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) );
-    }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
-    catch( final IOException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Zurückladen der Ergebnisse" ) );
     }
     finally
     {
       try
       {
-        m_calcService.disposeJob( m_jobID );
+        if( m_jobID != null )
+        {
+          if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationTmp" ) ) )
+            m_calcService.disposeJob( m_jobID );
+        }
       }
       catch( final SimulationException e1 )
       {

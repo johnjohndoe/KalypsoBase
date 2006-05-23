@@ -40,10 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -55,6 +54,8 @@ import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.model.xml.DataType;
@@ -66,7 +67,7 @@ import org.kalypso.simulation.core.internal.queued.ModelspecData;
 /**
  * @author belger
  */
-public class JarSimulationcDataProvider implements ISimulationDataProvider
+public class UnzippedJarSimulationDataProvider implements ISimulationDataProvider
 {
   private final UrlUtilities m_urlUtitilies = new UrlUtilities();
 
@@ -76,7 +77,7 @@ public class JarSimulationcDataProvider implements ISimulationDataProvider
 
   private URL m_baseURL;
 
-  private File m_jarfile;
+  private File m_tmpdir;
 
   private static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
 
@@ -87,7 +88,7 @@ public class JarSimulationcDataProvider implements ISimulationDataProvider
    *          The modelspec of the simulation. Used to determine the type of each input. If null, the default type is
    *          URL for backwards compability.
    */
-  public JarSimulationcDataProvider( final DataHandler zipHandler, final ModelspecData modelspec, final SimulationDataPath[] input )
+  public UnzippedJarSimulationDataProvider( final DataHandler zipHandler, final ModelspecData modelspec, final SimulationDataPath[] input )
   {
     m_zipHandler = zipHandler;
     m_modelspec = modelspec;
@@ -98,9 +99,8 @@ public class JarSimulationcDataProvider implements ISimulationDataProvider
 
   public void dispose( )
   {
-    if( m_jarfile != null )
-      m_jarfile.delete();
-
+    if( m_tmpdir != null )
+      FileUtilities.deleteRecursive( m_tmpdir );
   }
 
   /** Parse the input data and put it into the hash. */
@@ -168,39 +168,43 @@ public class JarSimulationcDataProvider implements ISimulationDataProvider
   {
     if( m_baseURL == null )
     {
-      final File jarfile = getJarFile();
-      if( jarfile == null )
+      final File tmpdir = getTmpDir();
+      if( tmpdir == null )
         return null;
 
-      m_baseURL = new URL( "jar:" + jarfile.toURL().toString() + "!/" );
+      m_baseURL = tmpdir.toURL();
     }
 
     return m_baseURL;
   }
 
-  private File getJarFile( ) throws IOException
+  private File getTmpDir( ) throws IOException
   {
-    if( m_jarfile == null )
+    if( m_tmpdir == null )
     {
-      FileOutputStream jarstream = null;
-      InputStream handlerStream = null;
+      BufferedInputStream handlerStream = null;
       try
       {
-        handlerStream = m_zipHandler.getInputStream();
-        m_jarfile = File.createTempFile( "CalcJobInputData", ".jar" );
-        m_jarfile.deleteOnExit();
+        handlerStream = new BufferedInputStream( m_zipHandler.getInputStream() );
 
-        jarstream = new FileOutputStream( m_jarfile );
-        IOUtils.copy( handlerStream, jarstream );
+        m_tmpdir = FileUtilities.createNewTempDir( "CalcJobInputData" );
+
+        ZipUtilities.unzip( handlerStream, m_tmpdir );
+      }
+      catch( final IOException e )
+      {
+        // reset tmpdir on any error
+        m_tmpdir = null;
+        
+        throw e;
       }
       finally
       {
-        IOUtils.closeQuietly( jarstream );
         IOUtils.closeQuietly( handlerStream );
       }
     }
 
-    return m_jarfile;
+    return m_tmpdir;
   }
 
   /**

@@ -52,12 +52,12 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
-import org.kalypso.simulation.core.util.JarSimulationcDataProvider;
+import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
 final class SimulationThread extends Thread
 {
-  private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() ); 
-  
+  private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() );
+
   private final ISimulation m_job;
 
   private final SimulationInfo m_jobBean;
@@ -68,34 +68,33 @@ final class SimulationThread extends Thread
 
   private final File m_tmpDir;
 
-  public SimulationThread( final String id, final String description, final String typeID, final ISimulation job,
-      final ModelspecData modelspec, final DataHandler zipHandler, final SimulationDataPath[] input,
-      final SimulationDataPath[] output, final File tmpDir ) throws SimulationException
+  public SimulationThread( final String id, final String description, final String typeID, final ISimulation job, final ModelspecData modelspec, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output, final File tmpDir ) throws SimulationException
   {
     m_job = job;
     m_tmpDir = tmpDir;
 
     m_jobBean = new SimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
-    
-    m_inputData = new JarSimulationcDataProvider( zipHandler, modelspec, input );
-    
+
+    m_inputData = new UnzippedJarSimulationDataProvider( zipHandler, modelspec, input );
+
     m_resultPacker = new DefaultCalcResultEater( modelspec, output );
 
     modelspec.checkInput( m_inputData );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_resultPacker.disposeFiles();
     FileUtilities.deleteRecursive( m_tmpDir );
+    m_inputData.dispose();
   }
 
-  public ISimulation getJob()
+  public ISimulation getJob( )
   {
     return m_job;
   }
 
-  public SimulationInfo getJobBean()
+  public SimulationInfo getJobBean( )
   {
     m_jobBean.setCurrentResults( m_resultPacker.getCurrentResults() );
 
@@ -106,7 +105,7 @@ final class SimulationThread extends Thread
    * @see java.lang.Thread#run()
    */
   @Override
-  public void run()
+  public void run( )
   {
     m_jobBean.setState( ISimulationConstants.STATE.RUNNING );
 
@@ -139,12 +138,12 @@ final class SimulationThread extends Thread
     }
   }
 
-  public DataHandler packCurrentResults() throws SimulationException
+  public DataHandler packCurrentResults( ) throws SimulationException
   {
     return m_resultPacker.packCurrentResults();
   }
 
-  public String[] getCurrentResults()
+  public String[] getCurrentResults( )
   {
     return m_resultPacker.getCurrentResults();
   }

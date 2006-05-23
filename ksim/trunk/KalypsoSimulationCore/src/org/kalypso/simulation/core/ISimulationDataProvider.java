@@ -55,4 +55,6 @@ public interface ISimulationDataProvider
   public Object getInputForID( final String id ) throws SimulationException;
 
   public boolean hasID( final String id );
+
+  public void dispose( );
 }

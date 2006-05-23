@@ -87,7 +87,6 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
    *          Die ID für die Bean
    * @param file
    *          Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
-   * 
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
    */
@@ -100,13 +99,16 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
     if( clientBean == null )
       throw new SimulationException( "Vom Client unerwartete Ausgabe mit ID: " + id, null );
 
-    m_results.add( new SimulationResult( id, clientBean.getPath(), file ) );
+    final String clientPath = clientBean.getPath();
+    // only add results with a valid path, because null path will later lead to a NullPointerException
+    if( clientPath != null )
+      m_results.add( new SimulationResult( id, clientPath, file ) );
   }
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcResultPacker#getCurrentResults()
    */
-  public String[] getCurrentResults()
+  public String[] getCurrentResults( )
   {
     final String[] results = new String[m_results.size()];
     for( int i = 0; i < results.length; i++ )
@@ -122,7 +124,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.job.ICalcResultPacker#packCurrentResults()
    */
-  public DataHandler packCurrentResults() throws SimulationException
+  public DataHandler packCurrentResults( ) throws SimulationException
   {
 
     ZipOutputStream zos = null;
@@ -137,12 +139,16 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
 
       for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
       {
-        final SimulationResult result = (SimulationResult)iter.next();
+        final SimulationResult result = (SimulationResult) iter.next();
 
         final File file = result.getFile();
         final String path = result.getPath();
 
-        zipper.setBasePattern( file.getAbsolutePath() );
+        if( file.isFile() )
+          zipper.setBasePattern( file.getParentFile().getAbsolutePath() );
+        else
+          zipper.setBasePattern( file.getAbsolutePath() );
+
         zipper.setBaseReplace( path );
 
         FileUtilities.accept( file, zipper, true );
@@ -170,11 +176,11 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
   /**
    * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird auch der Inhalt rekursiv gelöscht.
    */
-  public void disposeFiles()
+  public void disposeFiles( )
   {
     for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
     {
-      final File file = (File)iter.next();
+      final File file = (File) iter.next();
       FileUtilities.deleteRecursive( file );
     }
   }

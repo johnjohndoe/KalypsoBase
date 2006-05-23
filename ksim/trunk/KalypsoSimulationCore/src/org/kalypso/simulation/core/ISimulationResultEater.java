@@ -56,7 +56,7 @@ public interface ISimulationResultEater
    *          Eine ID aus der Model-Spec
    * @param file
    *          Eine beliebige Datei oder ein Verzeichnis. Wenns ein Verzeichnis ist, wird der gesamte Inhalt (auch
-   *          rekursiv) zum Client zurückgeshrieben
+   *          rekursiv) zum Client zurückgeschrieben
    */
   public void addResult( final String id, final File file ) throws SimulationException;
 }
