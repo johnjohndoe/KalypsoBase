@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
-import java.net.URL;
 
 /**
  * Stellt dem {@link org.kalypso.services.calculation.job.ICalcJob}die Daten über die ID zur Verfügung.
@@ -49,7 +48,11 @@ import java.net.URL;
  */
 public interface ISimulationDataProvider
 {
-  public URL getURLForID( final String id ) throws SimulationException;
+  /**
+   * Returns the value of the input with the given id. The type of the returned object depends on the specification in
+   * the modelspec.xml. If none is given, it defaults to URL. 
+   */
+  public Object getInputForID( final String id ) throws SimulationException;
 
   public boolean hasID( final String id );
 }

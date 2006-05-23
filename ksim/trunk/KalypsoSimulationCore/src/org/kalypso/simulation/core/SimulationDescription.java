@@ -42,6 +42,8 @@ package org.kalypso.simulation.core;
 
 import java.io.Serializable;
 
+import javax.xml.namespace.QName;
+
 /**
  * Bean um vom Rechendienst abzufragen, welches Input/Output Verhalten er hat.
  * 
@@ -53,9 +55,11 @@ public class SimulationDescription implements Serializable
 
   private String m_description;
 
-  public SimulationDescription()
+  private QName m_type;
+
+  public SimulationDescription( )
   {
-  // nur für wspcompile
+    // nur für wspcompile
   }
 
   /**
@@ -63,15 +67,15 @@ public class SimulationDescription implements Serializable
    *          ID dieses Datenobjekts
    * @param description
    *          Beschreibung der Daten
-   *  
    */
-  public SimulationDescription( final String id, final String description )
+  public SimulationDescription( final String id, final String description, final QName type )
   {
     m_id = id;
     m_description = description;
+    m_type = type;
   }
 
-  public final String getId()
+  public final String getId( )
   {
     return m_id;
   }
@@ -81,7 +85,7 @@ public class SimulationDescription implements Serializable
     m_id = id;
   }
 
-  public final String getDescription()
+  public final String getDescription( )
   {
     return m_description;
   }
@@ -91,11 +95,21 @@ public class SimulationDescription implements Serializable
     m_description = description;
   }
 
+  public QName getType( )
+  {
+    return m_type;
+  }
+
+  public void setType( final QName type )
+  {
+    m_type = type;
+  }
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return super.toString() + "\n ID: " + m_id + "\n Description: " + m_description;
   }

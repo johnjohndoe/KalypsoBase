@@ -76,7 +76,9 @@ final class SimulationThread extends Thread
     m_tmpDir = tmpDir;
 
     m_jobBean = new SimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
-    m_inputData = new JarSimulationcDataProvider( zipHandler, input );
+    
+    m_inputData = new JarSimulationcDataProvider( zipHandler, modelspec, input );
+    
     m_resultPacker = new DefaultCalcResultEater( modelspec, output );
 
     modelspec.checkInput( m_inputData );

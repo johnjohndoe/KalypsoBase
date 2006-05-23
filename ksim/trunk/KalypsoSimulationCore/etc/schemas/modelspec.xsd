@@ -18,6 +18,15 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="type" type="xs:QName" use="optional"
+			default="xs:anyURI">
+			<xs:annotation>
+				<xs:documentation>
+					Typ der Daten. Das 'path' Attribut unten wird anhand dieses Typs geparst. 
+					Nur der Typ 'xs:uri' wird als url geparst, für die Rückwärtskompabilität. 
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="optional" type="xs:boolean" use="optional"
 			default="false">
 			<xs:annotation>
@@ -73,7 +82,7 @@
 							</xs:annotation>
 						</xs:attribute>
 						<xs:attribute name="relativeToCalcCase"
-							type="xs:boolean" use="required">
+							type="xs:boolean" use="optional" default="true">
 							<xs:annotation>
 								<xs:documentation>
 									Falls true, wird der Pfad relativ

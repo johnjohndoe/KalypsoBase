@@ -46,12 +46,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -65,11 +68,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.Modeldata.ClearAfterCalc;
+import org.kalypso.model.xml.Modeldata.Input;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -214,7 +220,7 @@ public class CalcJobHandler
     }
     finally
     {
-       try
+      try
       {
         m_calcService.disposeJob( m_jobID );
       }
@@ -222,8 +228,8 @@ public class CalcJobHandler
       {
         e1.printStackTrace();
 
-        throw new CoreException( StatusUtilities.statusFromThrowable(e1,"Kritischer Fehler bei Löschen des Rechen-Jobs") );
-       }
+        throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler bei Löschen des Rechen-Jobs" ) );
+      }
       monitor.done();
     }
   }
@@ -258,14 +264,16 @@ public class CalcJobHandler
   {
     try
     {
-      final List inputList = m_modelspec.getInput();
+      final List<Modeldata.Input> inputList = m_modelspec.getInput();
       monitor.beginTask( "Eingangsdaten für Berechnungsdienst vorbereiten", inputList.size() );
+
+      final SimulationDescription[] inputDescription = m_calcService.getRequiredInput( m_modelspec.getTypeID() );
 
       // write files to zip
       final File zipFile = File.createTempFile( "CalcJobData_", ".zip" );
       zipFile.deleteOnExit();
 
-      final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputList, zipFile );
+      final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputDescription, inputList, zipFile );
       final SimulationDataPath[] output = createOutputBeans( calcCaseFolder );
 
       final DataSource jarSource = new FileDataSource( zipFile );
@@ -307,8 +315,14 @@ public class CalcJobHandler
     return output;
   }
 
-  private SimulationDataPath[] zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor, final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
+  private SimulationDataPath[] zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor, final SimulationDescription[] inputDescription, final List<Modeldata.Input> inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
   {
+    // hash input description
+    final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+    final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
+    for( final SimulationDescription desc : inputDescription )
+      inputdescriptionMap.put( desc.getId(), desc );
+
     ZipResourceVisitor zipper = null;
     try
     {
@@ -317,26 +331,39 @@ public class CalcJobHandler
       final IProject project = calcCaseFolder.getProject();
 
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
-      for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
+      for( final Input input : inputList )
       {
-        final Modeldata.Input input = (Modeldata.Input) iter.next();
         final String inputPath = input.getPath();
+        final String inputId = input.getId();
+        final SimulationDescription description = inputdescriptionMap.get( inputId );
+        final QName inputType = description == null ? QNAME_ANY_URI : description.getType();
 
-        // alles relativ zum Projekt auflösen!
-        final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-        final IResource inputResource = baseresource.findMember( inputPath );
-        if( inputResource == null )
+        final String beanValue;
+
+        if( inputType.equals( QNAME_ANY_URI ) )
         {
-          if( input.isOptional() )
-            continue;
+          // if the type is a uri, put the content as fiel into the zip
 
-          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+          // alles relativ zum Projekt auflösen!
+          final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+          final IResource inputResource = baseresource.findMember( inputPath );
+          if( inputResource == null )
+          {
+            if( input.isOptional() )
+              continue;
+
+            throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+          }
+
+          final IPath projectRelativePath = inputResource.getProjectRelativePath();
+          inputResource.accept( zipper );
+          beanValue = projectRelativePath.toString();
         }
+        else
+          // just put the value into the bean
+          beanValue = inputPath;
 
-        final IPath projectRelativePath = inputResource.getProjectRelativePath();
-        inputResource.accept( zipper );
-
-        final SimulationDataPath calcJobDataBean = new SimulationDataPath( input.getId(), projectRelativePath.toString() );
+        final SimulationDataPath calcJobDataBean = new SimulationDataPath( inputId, beanValue );
         inputBeanList.add( calcJobDataBean );
 
         monitor.worked( 1 );

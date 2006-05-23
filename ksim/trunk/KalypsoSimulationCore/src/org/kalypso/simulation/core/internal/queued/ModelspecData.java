@@ -63,9 +63,9 @@ public class ModelspecData
 {
   private final Modelspec m_modelspec;
 
-  private final Map m_inputHash;
+  private final Map<String, DataType> m_inputHash;
 
-  private final Map m_outputHash;
+  private final Map<String, DataType> m_outputHash;
 
   public ModelspecData( final URL modelspecUrl, final Unmarshaller unmarshaller ) throws SimulationException
   {
@@ -82,13 +82,18 @@ public class ModelspecData
     }
   }
 
-  private Map createHash( final List<DataType> list )
+  private Map<String, DataType> createHash( final List<DataType> list )
   {
     final HashMap<String, DataType> map = new HashMap<String, DataType>( list.size() );
     for( final DataType data : list )
       map.put( data.getId(), data );
 
     return map;
+  }
+
+  public DataType getInput( final String id )
+  {
+    return m_inputHash.get( id );
   }
 
   /**
@@ -118,15 +123,12 @@ public class ModelspecData
     return toDescription( m_outputHash.values() );
   }
 
-  private SimulationDescription[] toDescription( final Collection values )
+  private SimulationDescription[] toDescription( final Collection<DataType> values )
   {
     final SimulationDescription[] beans = new SimulationDescription[values.size()];
     int count = 0;
-    for( final Iterator iter = values.iterator(); iter.hasNext(); )
-    {
-      final DataType data = (DataType) iter.next();
-      beans[count++] = new SimulationDescription( data.getId(), data.getDescription() );
-    }
+    for( final DataType data : values )
+      beans[count++] = new SimulationDescription( data.getId(), data.getDescription(), data.getType() );
 
     return beans;
   }
