@@ -71,14 +71,14 @@ import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.xml.Modeldata;
-import org.kalypso.model.xml.Modeldata.ClearAfterCalc;
-import org.kalypso.model.xml.Modeldata.Input;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**

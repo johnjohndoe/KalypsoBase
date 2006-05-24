@@ -43,12 +43,11 @@ package org.kalypso.simulation.core;
 import javax.xml.bind.JAXBContext;
 
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.model.xml.ObjectFactory;
 
 /**
  * @author Belger
  */
 public class KalypsoSimulationCoreJaxb
 {
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
 }

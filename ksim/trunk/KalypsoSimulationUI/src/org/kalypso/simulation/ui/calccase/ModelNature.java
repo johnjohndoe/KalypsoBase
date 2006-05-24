@@ -65,6 +65,7 @@ import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.internal.variables.ValueVariable;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -104,12 +105,11 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.CalcCaseConfig;
-import org.kalypso.model.xml.Modeldata;
-import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
@@ -124,7 +124,10 @@ import org.xml.sax.InputSource;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
+  public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
+  public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
+  
 
   private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
 
@@ -312,7 +315,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return "???";
   }
 
-  public static boolean isCalcCalseFolder( final IFolder folder )
+  public static boolean isCalcCalseFolder( final IContainer folder )
   {
     final IResource calcFile = folder.findMember( CONTROL_NAME );
     return (calcFile != null && calcFile.exists() && calcFile instanceof IFile);
@@ -328,7 +331,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       configureReplaceTokensForCalcCase( folder, replaceReader );
 
-      return (CalcCaseConfig) JC.createUnmarshaller().unmarshal( new InputSource( replaceReader ) );
+      return (CalcCaseConfig) JC_TRANSFORM.createUnmarshaller().unmarshal( new InputSource( replaceReader ) );
     }
     catch( final UnsupportedEncodingException e )
     {
@@ -350,9 +353,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return tranformerConfigFile;
   }
 
-  public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IContainer folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( progressText, 5000 );
+    monitor.beginTask( progressText, IProgressMonitor.UNKNOWN );
 
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
@@ -364,6 +367,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 
       final IFile launchFile = getLaunchFile( launchName );
+      
+      monitor.subTask( "Starte Launch-Datei '" + launchName + "'" );
+      
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
@@ -379,15 +385,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.worked( 1000 );
 
       // TODO prüfen ob der launch überhaupt asynchron laufen kann?
-      final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 3000 ) );
+      final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
 
       // TODO: timeout konfigurierbar machen?
-      final int minutes = 4;
+      final int minutes = 5;
+      monitor.subTask( "warte auf Ende der Berechnung..." );
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( launch.isTerminated() )
         {
           final String[] arguments = ExternalToolsUtil.getArguments( lc );
+          if( arguments == null )
+            return Status.OK_STATUS;
+          
           for( int j = 0; j < arguments.length; j++ )
           {
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
@@ -399,6 +409,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           return Status.OK_STATUS;
         }
         Thread.sleep( 1000 );
+        monitor.worked( 1000 );
       }
 
       // TODO better ask for termination, but continue task in background
@@ -410,7 +421,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
       // sollte eigentlich nie auftreten
-      return StatusUtilities.statusFromThrowable( e, "Operation konnte nicht durchgef[hrt werden." );
+      return StatusUtilities.statusFromThrowable( e, "Operation konnte nicht durchgeführt werden." );
     }
     finally
     {
@@ -455,7 +466,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return variables;
   }
 
-  private Properties createVariablesForAntLaunch( final IFolder folder ) throws CoreException
+  private Properties createVariablesForAntLaunch( final IContainer folder ) throws CoreException
   {
     final Properties attributes = new Properties();
     final IProject project = folder.getProject();
@@ -727,7 +738,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( !file.exists() )
         return null;
 
-      final Unmarshaller unmarshaller = JC.createUnmarshaller();
+      final Unmarshaller unmarshaller = JC_SPEC.createUnmarshaller();
       return (Modeldata) unmarshaller.unmarshal( file.getContents() );
     }
     catch( final JAXBException e )
@@ -743,7 +754,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return loadOrCreateControl( null );
   }
 
-  public GMLWorkspace loadOrCreateControl( final IFolder folder ) throws CoreException
+  public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException
   {
     try
     {
@@ -752,11 +763,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       if( folder != null )
       {
-        final IFile controlFile = folder.getFile( CONTROL_NAME );
+        final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
         if( controlFile.exists() )
           gmlPath = controlFile.getFullPath().toString();
       }
-
+      
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
 
       final IUrlResolver urlResolver = configureTokensForcontrol();
@@ -771,6 +782,35 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
+  /** Loads the .claculation from the given folder, returns null if not existent.*/
+  public GMLWorkspace loadControl( final IContainer folder ) throws CoreException
+  {
+    try
+    {
+      if( folder == null )
+        return null;
+      
+        final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
+        if( !controlFile.exists() )
+          return null; 
+          
+          final String gmlPath = controlFile.getFullPath().toString();
+      
+      final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
+
+      final IUrlResolver urlResolver = configureTokensForcontrol();
+
+      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+    }
+  }
+
+  
   public IUrlResolver configureTokensForcontrol( ) throws CoreException
   {
     final IUrlResolver urlResolver = new UrlResolver();
@@ -861,18 +901,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return runCalculation( calcCaseFolder, monitor, modelspec );
   }
 
-  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
+  // TODO: move this one to simulation plugins
+  public IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
     monitor.beginTask( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
 
     try
     {
-      if( !isCalcCalseFolder( calcCaseFolder ) )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Verzeichnis ist keine Rechenvariante:" + calcCaseFolder.getName() ) );
-
       final String typeID = modelspec.getTypeID();
       final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-
+      monitor.worked( 500 );
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
     }
@@ -885,7 +923,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * Returns the scenario for the given calcCase
    */
-  public IScenario getScenario( final IFolder calcCase ) throws CoreException
+  public IScenario getScenario( final IContainer calcCase ) throws CoreException
   {
     final Object result = loadCalculationAndReadProperty( calcCase, "scenarioId" );
     final String scenarioId = result == null ? "" : result.toString();
@@ -905,10 +943,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    *          name of the property to read value for
    * @return value of the property to read
    */
-  public Object loadCalculationAndReadProperty( final IFolder calcCase, final String propertyName ) throws CoreException
+  public Object loadCalculationAndReadProperty( final IContainer calcCase, final String propertyName ) throws CoreException
   {
-    // load .calculation
-    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
+    // load .calculation, dont create one if not existent
+    final GMLWorkspace workspace = loadControl( calcCase );
+    if( workspace == null )
+      return null;
+    
     final Feature rootFeature = workspace.getRootFeature();
 
     final FindPropertyByNameVisitor vis = new FindPropertyByNameVisitor( propertyName );

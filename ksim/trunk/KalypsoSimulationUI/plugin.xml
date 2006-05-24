@@ -179,7 +179,7 @@
       <antTask
             eclipseRuntime="true"
             class="org.kalypso.simulation.ui.ant.RunCalculationTask"
-            library="lib/simulationUIAnt.jar"
+            library="lib/anttasks.jar"
             headless="false"
             name="kalypso.runCalculation"/>
    </extension>

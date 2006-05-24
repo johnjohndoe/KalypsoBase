@@ -58,11 +58,11 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.model.xml.DataType;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.simspec.DataType;
 
 /**
  * @author belger

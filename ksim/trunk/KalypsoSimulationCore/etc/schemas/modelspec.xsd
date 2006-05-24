@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="xml.model.kalypso.org"
-	targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified"
+	xmlns="simspec.core.simulation.kalypso.org"
+	targetNamespace="simspec.core.simulation.kalypso.org" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 	<xs:complexType name="DataType">
 		<xs:attribute name="id" type="xs:string" use="required">
