@@ -38,39 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.javax.xml.namespace;
+package org.kalypso.contribs.eclipse.ui.actionfilters;
 
-import javax.xml.namespace.QName;
+import org.eclipse.ui.IActionFilter;
 
 /**
- * @author belger
+ * An extension of IActionFilter that is more speaky about himself.
+ * 
+ * @author schlienger
  */
-public class QNameUtilities
+public interface IActionFilterEx extends IActionFilter
 {
-  private QNameUtilities( )
-  {
-    // never instantiate
-  }
-
-  public static boolean equals( final QName qname, final String namespace, final String localPart )
-  {
-    return qname.equals( new QName( namespace, localPart ) );
-  }
-
   /**
-   * syntax of fragmentedFullQName :
-   * 
-   * <pre>
-   *  &lt;namespace&gt;#&lt;localpart&gt;
-   * </pre>
-   * 
-   * example: fragmentedFullQName = www.w3c.org#index.html
-   * 
-   * @return qname from fragmentedFullQName
+   * Returns the list of attribute names which will be understood by this action filter
    */
-  public static QName createQName( String fragmentedFullQName )
-  {
-    final String[] parts = fragmentedFullQName.split( "#" );
-    return new QName( parts[0], parts[1] );
-  }
+  public String[] getNames( );
 }
