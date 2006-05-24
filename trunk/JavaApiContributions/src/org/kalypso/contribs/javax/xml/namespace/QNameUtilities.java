@@ -43,8 +43,6 @@ package org.kalypso.contribs.javax.xml.namespace;
 import javax.xml.namespace.QName;
 
 /**
- * Helper class for { }
- * 
  * @author belger
  */
 public class QNameUtilities
@@ -64,7 +62,6 @@ public class QNameUtilities
    * 
    * <pre>
    *  &lt;namespace&gt;#&lt;localpart&gt;
-   * <br>
    * </pre>
    * 
    * example: fragmentedFullQName = www.w3c.org#index.html

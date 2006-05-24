@@ -22,6 +22,7 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.swt.graphics,
  org.kalypso.contribs.eclipse.swt.widgets,
  org.kalypso.contribs.eclipse.ui,
+ org.kalypso.contribs.eclipse.ui.actionfilters,
  org.kalypso.contribs.eclipse.ui.actions,
  org.kalypso.contribs.eclipse.ui.controls
 Require-Bundle: org.eclipse.ui,
