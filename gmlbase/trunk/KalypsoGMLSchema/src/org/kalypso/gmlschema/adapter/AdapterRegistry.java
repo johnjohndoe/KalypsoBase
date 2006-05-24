@@ -45,6 +45,8 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.IAdaptable;
 
 /**
+ * TODO [Andreas] löschen?
+ * 
  * @author doemming
  */
 public class AdapterRegistry
