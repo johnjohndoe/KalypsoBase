@@ -42,7 +42,14 @@ package org.kalypso.contribs.java.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Date utilities.
@@ -52,17 +59,18 @@ import java.util.TimeZone;
 public final class DateUtilities
 {
   private static Calendar calSrc = Calendar.getInstance();
+
   private static Calendar calDest = Calendar.getInstance();
 
-  private DateUtilities()
+  private DateUtilities( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
    * @return the minimum Date that the Calendar can deliver.
    */
-  public final static Date getMinimum()
+  public final static Date getMinimum( )
   {
     final Calendar cal = Calendar.getInstance();
 
@@ -90,9 +98,22 @@ public final class DateUtilities
     calSrc.setTimeInMillis( d.getTime() );
 
     calDest.clear();
-    calDest.set( calSrc.get( Calendar.YEAR ), calSrc.get( Calendar.MONTH ), calSrc.get( Calendar.DAY_OF_MONTH ), calSrc
-        .get( Calendar.HOUR_OF_DAY ), calSrc.get( Calendar.MINUTE ), calSrc.get( Calendar.SECOND ) );
-    
+    calDest.set( calSrc.get( Calendar.YEAR ), calSrc.get( Calendar.MONTH ), calSrc.get( Calendar.DAY_OF_MONTH ), calSrc.get( Calendar.HOUR_OF_DAY ), calSrc.get( Calendar.MINUTE ), calSrc.get( Calendar.SECOND ) );
+
     return calDest.getTime();
+  }
+
+  public static Date toDate( XMLGregorianCalendar xmlGregorianCalendar )
+  {
+    final GregorianCalendar greg = xmlGregorianCalendar.toGregorianCalendar();
+    return greg.getTime();
+  }
+
+  public static XMLGregorianCalendar toXMLGregorianCalendar( final Date date ) throws DatatypeConfigurationException
+  {
+    final DatatypeFactory factory = DatatypeFactory.newInstance();
+    final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+    calendar.setTime( date );
+    return factory.newXMLGregorianCalendar( calendar );
   }
 }
