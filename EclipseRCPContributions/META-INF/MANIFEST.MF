@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclipseRCPContribution Plug-in
-Bundle-SymbolicName: org.kalypso.contribs.eclipsercp
+Bundle-SymbolicName: org.kalypso.contribs.eclipsercp; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: EclipseRCPContribution.jar
 Bundle-Activator: org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin

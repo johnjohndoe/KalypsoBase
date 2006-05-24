@@ -45,8 +45,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IActionFilter;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * A registry of IActionFilterEx instances which are configured for a specific object type. This registry is itself an
@@ -57,7 +60,13 @@ import org.eclipse.ui.IActionFilter;
  */
 public class ActionFilterRegistry implements IActionFilter
 {
-  public final static String ID = "org.kalypso.contribs.eclipse.actionFilters";
+  public final static String ID = "org.kalypso.contribs.eclipsercp.actionFilters";
+
+  private static final String ATT_TARGET_TYPE = "targetType";
+
+  private static final String ATT_TARGET_CLASS = "class";
+
+  private static final String ATT_TARGET_ID = "id";
 
   private List<IActionFilterEx> m_list = null;
 
@@ -92,11 +101,24 @@ public class ActionFilterRegistry implements IActionFilter
     m_list = new ArrayList<IActionFilterEx>();
 
     final IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor( ID );
-    for( int i = 0; i < elements.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      // elements[i].get
+      final String targetType = element.getAttribute( ATT_TARGET_TYPE );
+      final String id = element.getAttribute( ATT_TARGET_ID );
+      if( targetType.equals( m_className ) )
+      {
+        try
+        {
+          m_list.add( (IActionFilterEx) element.createExecutableExtension( ATT_TARGET_CLASS ) );
+        }
+        catch( final Throwable e )
+        {
+          // beware of other peaple's code, catch everything
+          final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to instantiate actionFilter with id: " + id );
 
-      // TODO fill list
+          EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
+        }
+      }
     }
 
     return m_list;
