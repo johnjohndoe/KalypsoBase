@@ -357,6 +357,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     monitor.beginTask( progressText, IProgressMonitor.UNKNOWN );
 
+    // TODO: check, if already another ant-task is running in the platform
+    // if yes, wait until it has finished
+    
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
 
