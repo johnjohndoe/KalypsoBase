@@ -57,6 +57,15 @@ public class URLActionOpenView extends AbstractURLAction
 
   private final static String PARAM_PART_ID = "partId";
 
+  /**
+   * optional: If the view is allows multiple views
+   */
+  private final static String PARAM_SECONDARY_PART_ID = "secondaryPartId";
+
+  /**
+   * optional: the id of the part (container) to which the new View is relative toF
+   */
+
   private final static String PARAM_ACTIVE_PART_ID = "activePartId";
 
   /**
@@ -65,15 +74,20 @@ public class URLActionOpenView extends AbstractURLAction
   public boolean run( ICommandURL commandURL )
   {
     final IWorkbenchPage activePage = getActivePage();
-    String activePartID = commandURL.getParameter( PARAM_ACTIVE_PART_ID );
-    String viewID = commandURL.getParameter( PARAM_PART_ID );
+    final String activePartID = commandURL.getParameter( PARAM_ACTIVE_PART_ID );
+    final String viewID = commandURL.getParameter( PARAM_PART_ID );
+    final String secondaryViewID = commandURL.getParameter( PARAM_SECONDARY_PART_ID );
+
     try
     {
       // activate the appropriate view (select the folder), where the new View will be relative to and
       // shown in
       if( activePartID != null && activePartID.length() > 1 )
         activePage.showView( activePartID );
-      activePage.showView( viewID );
+      if( secondaryViewID != null )
+        activePage.showView( viewID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
+      else
+        activePage.showView( viewID );
     }
     catch( PartInitException e )
     {
