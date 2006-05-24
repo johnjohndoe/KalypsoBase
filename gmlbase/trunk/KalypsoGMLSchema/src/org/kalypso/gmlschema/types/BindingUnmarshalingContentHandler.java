@@ -43,6 +43,7 @@ package org.kalypso.gmlschema.types;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -87,8 +88,20 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    */
   public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
+    // double hack - do not remove
+    // 1. hack:
+    // deegree-bug gazetteer provides gml:box instead of gml:Box
+    // 2. hack
+    // GML3.1 is not compatible to GML2 gml:Box -> gml:Envelope
+    // we use GML3-binding for geometries, so simulate a GML3-Envelope instead of gml:Box
+    // any questions ? ask me (v.doemming).
+    if( NS.GML2.equals( uri ) && "box".equalsIgnoreCase( local ) )
+    {
+      local = "Envelope";
+      qname = qname.replaceFirst( "(b|B)ox", "Envelope" );
+    }
     m_level++;
-//    System.out.println( indent() + "<" + qname + ">" );
+    // System.out.println( indent() + "<" + qname + ">" );
     try
     {
       m_unmarshallerHandler.startElement( uri, local, qname, atts );
@@ -110,7 +123,13 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
 
   public void endElement( String uri, String local, String qname ) throws SAXException
   {
-//    System.out.println( indent() + "</" + qname + ">" );
+    // hack, see comment in startElement
+    if( NS.GML2.equals( uri ) && "box".equalsIgnoreCase( local ) )
+    {
+      local = "Envelope";
+      qname = qname.replaceFirst( "(b|B)ox", "Envelope" );
+    }
+    // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
     m_unmarshallerHandler.endElement( uri, local, qname );
 
