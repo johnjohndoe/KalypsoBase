@@ -149,9 +149,6 @@ public class GMLSchemaFactory
 
   public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
   {
-    // @ANDREAS: moved loading of SchemaDocument here, because now
-    // we can determine the schema version before creating the builder
-    // TODO: please remove this comment after reading
     SchemaDocument schemaDocument;
     try
     {
@@ -170,6 +167,8 @@ public class GMLSchemaFactory
       // documentation of errors:
       // - namespace not set (e.g. xmlns:adv="...")
       // TODO use a schema-validator to report
+      // REMARK:
+      // DID you have a look at XMLOptions#setErrorListener ?
       throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
     // TODO: read schema version from schemadocument
@@ -180,7 +179,7 @@ public class GMLSchemaFactory
     // this could also be used to later load the right GML schema
 
     // switch GML3 / GML2
-    // final String version = "2.1";
+//     final String version = "2.1";
     final String version = "3.1";
     System.out.println( "USING GML VERSION: " + version );
 

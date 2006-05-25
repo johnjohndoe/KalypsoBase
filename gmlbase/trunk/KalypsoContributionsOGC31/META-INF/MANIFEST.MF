@@ -10,16 +10,17 @@ Require-Bundle: org.kalypso.jwsdp,
 Eclipse-AutoStart: true
 Bundle-ClassPath: kalypsoContribsOGC31.jar
 Export-Package: au.csiro.seegrid.xml.st,
- net.opengis.swe,
  ogc31.org.w3.smil20,
+ ogc31.www.isotc211.org.gco,
+ ogc31.www.isotc211.org.gmd,
+ ogc31.www.isotc211.org.gsr,
+ ogc31.www.isotc211.org.gss,
+ ogc31.www.isotc211.org.gts,
  ogc31.www.opengis.net.gml,
  ogc31.www.opengis.net.ogc,
  ogc31.www.opengis.net.ows,
- org.isotc211._2005.gco,
- org.isotc211._2005.gmd,
- org.isotc211._2005.gsr,
- org.isotc211._2005.gss,
- org.isotc211._2005.gts,
+ ogc31.www.opengis.net.swe,
  org.kalypso.contribs.ogc31,
+ org.kalypso.contribs.ogc31.test,
  org.w3._2001.smil20.language
 Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin

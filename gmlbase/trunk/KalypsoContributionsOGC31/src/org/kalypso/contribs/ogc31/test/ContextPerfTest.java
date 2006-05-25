@@ -48,6 +48,9 @@ import junit.framework.TestCase;
 import org.kalypso.commons.performance.TimeLogger;
 
 /**
+ * Running: > 5400 ms
+ * Debugging: > 25000 ms
+ * 
  * @author Gernot
  */
 public class ContextPerfTest extends TestCase
@@ -57,8 +60,8 @@ public class ContextPerfTest extends TestCase
     final TimeLogger logger = new TimeLogger( "Start loading JAXBContext" );
 
     final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-    final Class CL_SWE = net.opengis.swe.ObjectFactory.class;
-    final Class CL_GMD = org.isotc211._2005.gmd.ObjectFactory.class;
+    final Class CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
+    final Class CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
     final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
 
     JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
