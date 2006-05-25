@@ -43,7 +43,6 @@ package org.kalypso.jwsdp;
 import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
