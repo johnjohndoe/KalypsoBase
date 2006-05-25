@@ -144,9 +144,9 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
         final File file = result.getFile();
         final String path = result.getPath();
 
-        if( file.isFile() )
-          zipper.setBasePattern( file.getParentFile().getAbsolutePath() );
-        else
+//        if( file.isFile() )
+//          zipper.setBasePattern( file.getParentFile().getAbsolutePath() );
+//        else
           zipper.setBasePattern( file.getAbsolutePath() );
 
         zipper.setBaseReplace( path );
