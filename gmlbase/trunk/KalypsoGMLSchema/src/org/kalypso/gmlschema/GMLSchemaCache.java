@@ -103,7 +103,7 @@ public class GMLSchemaCache
   }
 
   /**
-   * Lädt das Schmea aus dieser URL und nimmt diesen id für den cache
+   * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
    * 
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt

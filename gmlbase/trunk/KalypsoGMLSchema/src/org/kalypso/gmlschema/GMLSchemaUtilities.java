@@ -806,7 +806,7 @@ public class GMLSchemaUtilities
     return "AbstractGeometryType";
   }
 
-  /** Splitts a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignores. */
+  /** Splitts a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
   public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context )
   {
     final int schemaCount = schemaLocation == null ? 0 : schemaLocation.length() / 2 + 1;

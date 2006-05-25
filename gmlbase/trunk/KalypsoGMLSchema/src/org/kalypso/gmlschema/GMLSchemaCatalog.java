@@ -110,7 +110,7 @@ public final class GMLSchemaCatalog
   }
 
   /**
-   * Lädt ein (eventuell gecachetes) Schema. Ist das schema nicht bereits bekannt (=gecached), wird über den Katalog
+   * Lädt ein (eventuell gecachetes) Schema. Ist das Schema nicht bereits bekannt (=gecached), wird über den Katalog
    * oder über die gegebene URL geladen.
    * <p>
    * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
