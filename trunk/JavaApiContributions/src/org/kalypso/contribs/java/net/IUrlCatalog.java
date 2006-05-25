@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * Interface for URL Catalogs. Provides {@link java.net.URL}s for a string keys.
+ * Interface for URL Catalogs. Provides {@link java.net.URL}s for string keys.
  * 
  * @author belger
  */
