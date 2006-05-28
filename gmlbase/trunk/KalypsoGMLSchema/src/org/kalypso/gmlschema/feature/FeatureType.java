@@ -117,8 +117,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
-    if(m_featureContentType==null)
-      System.out.println("debug");
+    if( m_featureContentType == null )
+      System.out.println( "debug" );
     // initialize substitution group
     final QName substitutionGroup = getElement().getSubstitutionGroup();
     if( substitutionGroup != null )
