@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
@@ -79,14 +80,14 @@ public final class GMLSchemaCatalog
    * 
    * @return null, wenn schema nicht geladen werden konnte
    */
-  public synchronized static GMLSchema getSchema( final URL schemaLocation )
+  public synchronized static GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
   {
     if( THE_CACHE == null )
       throw NOT_INITIALIZED;
 
     try
     {
-      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
+      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
       THE_CACHE.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
@@ -104,9 +105,9 @@ public final class GMLSchemaCatalog
   /**
    * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
    */
-  public synchronized static GMLSchema getSchema( final String namespace ) throws InvocationTargetException
+  public synchronized static GMLSchema getSchema( final String namespace, final String gmlVersion ) throws InvocationTargetException
   {
-    return getSchema( namespace, null );
+    return getSchema( namespace, gmlVersion, null );
   }
 
   /**
@@ -116,17 +117,29 @@ public final class GMLSchemaCatalog
    * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
    * </p>
    */
-  public synchronized static GMLSchema getSchema( final String namespace, final URL schemaLocation ) throws InvocationTargetException
+  public synchronized static GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
   {
     if( THE_CACHE == null )
       throw NOT_INITIALIZED;
 
-    final URL catalogUrl = THE_CATALOG.getURL( namespace );
+    // HACK: if we are looking for the gml namespace
+    // tweak it and add the version number
+    final URL catalogUrl;
+    if( namespace.equals( NS.GML2 ) )
+    {
+      if( gmlVersion != null )
+        catalogUrl = THE_CATALOG.getURL( namespace + "#" + gmlVersion.charAt( 0 ) );
+      else
+        throw new UnsupportedOperationException( "Never load the gml namespace without version information." );
+    }
+    else
+      catalogUrl = THE_CATALOG.getURL( namespace );
+
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
 
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
-    return THE_CACHE.getSchema( namespace, schemaUrl );
+    return THE_CACHE.getSchema( namespace, gmlVersion, schemaUrl );
   }
 
   /**

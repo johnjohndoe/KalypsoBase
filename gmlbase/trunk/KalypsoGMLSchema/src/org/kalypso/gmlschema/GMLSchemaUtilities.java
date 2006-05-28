@@ -45,7 +45,9 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.common.JarHelper;
+import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
@@ -521,14 +523,19 @@ public class GMLSchemaUtilities
   {
     final File tmpBase = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
 
-    final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
+    try
+    {
+      final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
 
-    createSchemaDir( schemaURL, schemaDocument, tmpBase );
+      createSchemaDir( schemaURL, schemaDocument, tmpBase );
 
-    JarHelper helper = new JarHelper();
-    helper.jarDir( tmpBase, archiveFile );
-
-    FileUtilities.deleteRecursive( tmpBase );
+      JarHelper helper = new JarHelper();
+      helper.jarDir( tmpBase, archiveFile );
+    }
+    finally
+    {
+      FileUtilities.deleteRecursive( tmpBase );
+    }
   }
 
   /**
@@ -884,6 +891,42 @@ public class GMLSchemaUtilities
     if( "unbounded".equals( occursValue ) )
       return IPropertyType.UNBOUND_OCCURENCY;
     throw new UnsupportedOperationException( "unknown occurency in schema: " + occursValue.toString() );
+  }
+
+  /**
+   * Reads the Gml-Version from the annotation of the schema document
+   * <p>
+   * <code>
+   * <xs:annotation>
+   *   <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+   *     <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+   *   </xs:appinfo>
+   * </xs:annotation>
+   * </code>
+   * </p>
+   */
+  public static String parseGmlVersion( final SchemaDocument schemaDocument )
+  {
+    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='org.kalypso.appinfo' ";
+    final String xpath = "xs:schema/xs:annotation/xs:appinfo/kapp:gmlVersion";
+
+    final String fullXpath = namespaceDecl + xpath;
+
+    final XmlObject[] xmlObjects = schemaDocument.selectPath( fullXpath );
+    
+    switch( xmlObjects.length )
+    {
+      case 0:
+        return null;
+        
+      case 1:
+        final XmlAnyTypeImpl anyType = (XmlAnyTypeImpl) xmlObjects[0];
+        return anyType.stringValue();
+        
+      default:
+        throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() );
+    }
+
   }
 
 }

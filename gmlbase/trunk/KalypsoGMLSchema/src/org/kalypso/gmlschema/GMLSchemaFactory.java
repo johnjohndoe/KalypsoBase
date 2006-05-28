@@ -122,19 +122,19 @@ public class GMLSchemaFactory
    * @param schemaLocationURL
    * @throws GMLSchemaException
    */
-  public static IGMLSchema createGMLSchema( final String urn, final URL schemaLocationURL ) throws GMLSchemaException
+  public static IGMLSchema createGMLSchema( final String urn, final String gmlVersion, final URL schemaLocationURL ) throws GMLSchemaException
   {
     final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
-    return createGMLSchema( urlSchemaLocation );
+    return createGMLSchema( gmlVersion, urlSchemaLocation );
   }
 
-  public static GMLSchema createGMLSchema( final URL schemaLocationURL ) throws GMLSchemaException
+  public static GMLSchema createGMLSchema( final String gmlVersion, final URL schemaLocationURL ) throws GMLSchemaException
   {
     InputStream inputStream = null;
     try
     {
       inputStream = schemaLocationURL.openStream();
-      return createGMLSchema( inputStream, schemaLocationURL );
+      return createGMLSchema( inputStream, gmlVersion, schemaLocationURL );
     }
     catch( final Exception e )
     {
@@ -147,7 +147,7 @@ public class GMLSchemaFactory
     }
   }
 
-  public static GMLSchema createGMLSchema( final InputStream inputStream, final URL context ) throws GMLSchemaException
+  public static GMLSchema createGMLSchema( final InputStream inputStream, final String gmlVersion, final URL context ) throws GMLSchemaException
   {
     SchemaDocument schemaDocument;
     try
@@ -179,8 +179,22 @@ public class GMLSchemaFactory
     // this could also be used to later load the right GML schema
 
     // switch GML3 / GML2
-//     final String version = "2.1";
-    final String version = "3.1";
+    final String version;
+    if( gmlVersion == null )
+    {
+//    final String version = "2.1";
+//    final String version = "3.1";
+
+      final String parsedGmlVersion = GMLSchemaUtilities.parseGmlVersion( schemaDocument );
+      
+      // we must decide for the first schema, which gml version it is
+      // if we have no appinfo, default to gml2?
+      
+      version = parsedGmlVersion == null ? "2.1" : parsedGmlVersion;
+    }
+    else
+      version = gmlVersion;
+    
     System.out.println( "USING GML VERSION: " + version );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );

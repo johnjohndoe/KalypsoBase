@@ -216,7 +216,7 @@ public class GMLSchema implements IGMLSchema
           }
 
           // always try to load with schemaLocation if present
-          final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport, schemaLocationURL );
+          final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport, getGMLVersion(), schemaLocationURL );
 
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
@@ -338,7 +338,8 @@ public class GMLSchema implements IGMLSchema
     // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
     try
     {
-      return GMLSchemaCatalog.getSchema( namespaceURI );
+      // load all imported schema with same gml version
+      return GMLSchemaCatalog.getSchema( namespaceURI, getGMLVersion() );
     }
     catch( final InvocationTargetException e )
     {

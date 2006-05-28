@@ -52,8 +52,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.impl.common.JarHelper;
+import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.commons.cache.FileCache;
 import org.kalypso.commons.cache.StringValidityKey;
@@ -98,8 +101,11 @@ public class GMLSchemaCache
    */
   public void addSchema( final String namespace, final GMLSchemaWrapper schemaWrapper )
   {
-    m_memCache.addObject( namespace, schemaWrapper );
-    m_fileCache.addObject( new StringValidityKey( namespace, schemaWrapper.getValidity() ), schemaWrapper.getSchema() );
+    final String version = schemaWrapper.getSchema().getGMLVersion();
+    final String publicId = namespace + "#" + version;
+
+    m_memCache.addObject( publicId, schemaWrapper );
+    m_fileCache.addObject( new StringValidityKey( publicId, schemaWrapper.getValidity() ), schemaWrapper.getSchema() );
   }
 
   /**
@@ -108,10 +114,12 @@ public class GMLSchemaCache
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
-  public GMLSchema getSchema( final String namespace, final URL schemaURL ) throws InvocationTargetException
+  public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
   {
     if( namespace == null )
-      throw new NullPointerException( "Namespace darf nicht null sein" );
+      throw new NullPointerException( "Namespace oder Version darf nicht null sein" );
+
+    final String publicId = namespace + "#" + gmlVersion;
 
     Date validity = null;
     try
@@ -131,14 +139,14 @@ public class GMLSchemaCache
     // TODO: maybe create a validity from all imported schematas as well?
 
     // if objekt already in memCache and is valid, just return it
-    final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( namespace );
+    final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( publicId );
     if( sw != null && (validity == null || validity.compareTo( sw.getValidity() ) <= 0) )
       return sw.getSchema();
 
     // else, try to get it from file cache
     GMLSchema schema = null;
 
-    final StringValidityKey key = new StringValidityKey( namespace, validity );
+    final StringValidityKey key = new StringValidityKey( publicId, validity );
     final StringValidityKey realKey = m_fileCache.getRealKey( key );
 
     if( validity != null && (realKey == null || realKey.getValidity().before( validity )) )
@@ -150,10 +158,23 @@ public class GMLSchemaCache
         return null;
 
       File tmpFile = null;
+      File archiveDir = null;
       try
       {
         tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip", m_baseTmpDir );
-        GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpFile );
+
+        archiveDir = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
+
+        final SchemaDocument schemaDocument = SchemaDocument.Factory.parse( schemaURL );
+
+        GMLSchemaUtilities.createSchemaDir( schemaURL, schemaDocument, archiveDir );
+        FileUtils.writeStringToFile( new File( archiveDir, ".version" ), gmlVersion, "UTF-8" );
+
+        final JarHelper helper = new JarHelper();
+        helper.jarDir( archiveDir, tmpFile );
+
+        FileUtilities.deleteRecursive( archiveDir );
+
         // put it into cache as file
         m_fileCache.addFile( key, tmpFile );
       }
@@ -165,6 +186,9 @@ public class GMLSchemaCache
       {
         if( tmpFile != null )
           tmpFile.delete();
+
+        if( archiveDir != null )
+          FileUtilities.deleteRecursive( archiveDir );
       }
     }
 
@@ -173,7 +197,7 @@ public class GMLSchemaCache
       schema = m_fileCache.getObject( key );
 
     if( schema != null )
-      m_memCache.addObject( namespace, new GMLSchemaWrapper( schema, validity ) );
+      m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
 
     return schema;
   }
@@ -219,10 +243,20 @@ public class GMLSchemaCache
         // we unzip because of the problem of deleting zip files, once accessed via a zip-url-stream
         ZipUtilities.unzip( ins, tmpDir );
 
+        final File versionFile = new File( tmpDir, ".version" );
+        final String gmlVersion;
+        if( versionFile.exists() )
+        {
+          final String content = FileUtils.readFileToString( versionFile, "UTF-8" );
+          gmlVersion = content.trim().length() == 0 ? null : content.trim();
+        }
+        else
+          gmlVersion = null;
+
         final URL url = tmpDir.toURL();
         final URL schemaURL = new URL( url, GMLSchemaUtilities.BASE_SCHEMA_IN_JAR );
 
-        return GMLSchemaFactory.createGMLSchema( schemaURL );
+        return GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
       }
       catch( final GMLSchemaException e )
       {
@@ -244,8 +278,9 @@ public class GMLSchemaCache
       try
       {
         GMLSchemaUtilities.createSchemaDir( schema.getContext(), schema.getSchema(), archiveDir );
-
+        FileUtils.writeStringToFile( new File( archiveDir, ".version" ), schema.getGMLVersion(), "UTF-8" );
         ZipUtilities.zip( new ZipOutputStream( os ), archiveDir );
+        FileUtilities.deleteRecursive( archiveDir );
       }
       catch( final XmlException e )
       {
