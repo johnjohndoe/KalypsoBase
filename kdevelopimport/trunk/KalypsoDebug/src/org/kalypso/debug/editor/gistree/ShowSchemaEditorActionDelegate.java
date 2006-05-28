@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.schemaeditor.GmlSchemaEditorInput;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -81,7 +82,9 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   public void run( final IAction action )
   {
     final GMLWorkspace workspace = m_targetEditor.getTreeView().getWorkspace();
-    final String schemaNamespace = workspace.getGMLSchema().getTargetNamespace();
+    final IGMLSchema schema = workspace.getGMLSchema();
+    final String version = schema.getGMLVersion();
+    final String schemaNamespace = schema.getTargetNamespace();
     final String schemaLocationString = workspace.getSchemaLocationString();
 
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -90,7 +93,8 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
     try
     {
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, workspace.getContext() );
-      final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, namespaces.get( schemaNamespace ) );
+      
+      final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, version, namespaces.get( schemaNamespace ) );
       activePage.openEditor( input, "org.kalypso.ogc.gml.editor.GMLSchemaEditor" );
     }
     catch( final Exception e )
