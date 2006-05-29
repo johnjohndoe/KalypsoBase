@@ -94,6 +94,8 @@ public class CalcJobHandler
 
   private final ISimulationService m_calcService;
 
+  private File m_zipFile = null;
+
   public CalcJobHandler( final Modeldata modelspec, final ISimulationService calcService )
   {
     m_modelspec = modelspec;
@@ -218,7 +220,12 @@ public class CalcJobHandler
         if( m_jobID != null )
         {
           if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationFiles" ) ) )
+          {
             m_calcService.disposeJob( m_jobID );
+            
+            if( m_zipFile != null )
+              m_zipFile.delete();
+          }
         }
       }
       catch( final SimulationException e1 )
@@ -266,14 +273,13 @@ public class CalcJobHandler
 
       final SimulationDescription[] inputDescription = m_calcService.getRequiredInput( m_modelspec.getTypeID() );
 
-      // write files to zip
-      final File zipFile = File.createTempFile( "CalcJobData_", ".zip" );
-      zipFile.deleteOnExit();
+      m_zipFile = File.createTempFile( "CalcJobData_", ".zip" );
+      m_zipFile.deleteOnExit();
 
-      final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputDescription, inputList, zipFile );
+      final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputDescription, inputList, m_zipFile );
       final SimulationDataPath[] output = createOutputBeans( calcCaseFolder );
 
-      final DataSource jarSource = new FileDataSource( zipFile );
+      final DataSource jarSource = new FileDataSource( m_zipFile );
       final DataHandler jarHandler = new DataHandler( jarSource );
 
       final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description", jarHandler, input, output );
