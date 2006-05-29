@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31;
 
-import javax.xml.bind.JAXBContext;
-
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
 
 /**
  * @author Gernot Belger
@@ -54,10 +50,6 @@ public class KalypsoOGC31Plugin extends Plugin
   // The shared instance.
   private static KalypsoOGC31Plugin m_plugin;
 
-//  private JAXBContextLoaderJob m_contextLoaderJob;
-
-  private JAXBContext m_context;
-
   public KalypsoOGC31Plugin( )
   {
     super();
@@ -65,79 +57,10 @@ public class KalypsoOGC31Plugin extends Plugin
   }
 
   /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void start( final BundleContext context ) throws Exception
-  {
-    // PERFORMANCE HACK: the creating of the jaxb context for the gml classes
-    // takes veeery long (about 12 sec). So we immidiately start to load it in
-    // a job, so while the user is still wondering what to do
-    // the context already gets loaded
-    // PROBLEM: this only works, if this plugin is really startet immediately after
-    // starting the workbench, but: how to do this?
-
-    final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-    final Class CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
-    final Class CL_GMD =  ogc31.www.isotc211.org.gmd.ObjectFactory.class;
-    final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
-
-    // create the context on all of these factories else the binding won't work
-    m_context = JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-    // m_contextLoaderJob = new JAXBContextLoaderJob( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-    // m_contextLoaderJob.setSystem( true );
-    // m_contextLoaderJob.schedule();
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void stop( final BundleContext context ) throws Exception
-  {
-    super.stop( context );
-    m_plugin = null;
-  }
-
-  /**
    * Returns the shared instance.
    */
   public static KalypsoOGC31Plugin getDefault( )
   {
-    // HACK: because this class is also used in non Platform mode, we may instantiate this class ourselfs
-    if( !Platform.isRunning() )
-    {
-      m_plugin = new KalypsoOGC31Plugin();
-      // we can use null context, because we know that it ins't used.
-      try
-      {
-        m_plugin.start( null );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
     return m_plugin;
   }
-
-  public JAXBContext getGMLContext( )
-  {
-    return m_context;
-  }
-  // if( m_contextLoaderJob.getResult() == null )
-  // {
-  // try
-  // {
-  // System.out.println( m_contextLoaderJob.getState() );
-  // m_contextLoaderJob.join();
-  // }
-  // catch( final InterruptedException e )
-  // {
-  // e.printStackTrace();
-  // }
-  //
-  // return m_contextLoaderJob.getContext();
-  // }
-
 }

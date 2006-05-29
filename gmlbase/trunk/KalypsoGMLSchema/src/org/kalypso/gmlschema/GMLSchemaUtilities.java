@@ -897,11 +897,11 @@ public class GMLSchemaUtilities
    * Reads the Gml-Version from the annotation of the schema document
    * <p>
    * <code>
-   * <xs:annotation>
-   *   <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-   *     <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-   *   </xs:appinfo>
-   * </xs:annotation>
+   * &lt;xs:annotation&gt;
+   *   &lt;xs:appinfo xmlns:kapp="org.kalypso.appinfo"&gt;
+   *     &lt;kapp:gmlVersion>3.1.1&lt;/kapp:gmlVersion&gt;
+   *   &lt;/xs:appinfo&gt;
+   * &lt;/xs:annotation&gt;
    * </code>
    * </p>
    */
@@ -926,7 +926,5 @@ public class GMLSchemaUtilities
       default:
         throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() );
     }
-
   }
-
 }

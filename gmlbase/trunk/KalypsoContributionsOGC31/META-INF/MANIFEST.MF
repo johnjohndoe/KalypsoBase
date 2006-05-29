@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions Plug-in
-Bundle-SymbolicName: org.kalypso.contribs.ogc31
+Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin

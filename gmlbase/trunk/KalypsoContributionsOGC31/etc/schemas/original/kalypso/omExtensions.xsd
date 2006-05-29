@@ -3,6 +3,13 @@
      xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" xmlns:xlink="http://www.w3.org/1999/xlink"
      targetNamespace="http://www.ksp.org/om">
+    
+     <xs:annotation>
+          <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+               <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+          </xs:appinfo>
+     </xs:annotation>
+    
      <xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gml/3.1.1/base/gml.xsd"/>
      <xs:import namespace="http://www.opengis.net/om" schemaLocation="../om/1.0.30/om.xsd"/>
      <xs:import namespace="http://www.opengis.net/swe" schemaLocation="../sweCommon/1.0.30/swe.xsd"/>
