@@ -41,6 +41,7 @@
 package org.kalypso.jwsdp;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -73,7 +74,7 @@ public final class JaxbUtilities
       // TODO Performanzproblem hier:
       // Ursache ist Zeile 210 von javax.xml.bind.ContextFinder
       // die Reflection API wird benutzt und dort dauert das instanzieren so lange...
-    
+
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
@@ -102,26 +103,71 @@ public final class JaxbUtilities
     };
   }
 
+  private static NamespacePrefixMapper getNSPrefixMapper( final Map<String, String> specialPrefixMapping )
+  {
+    return new NamespacePrefixMapper()
+    {
+      @Override
+      public String getPreferredPrefix( final String namespace, final String suggestion, final boolean required )
+      {
+        if( specialPrefixMapping.containsKey( namespace ) )
+          return specialPrefixMapping.get( namespace );
+
+        // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
+        // at methode createMarshaller()
+        final NSPrefixProvider nsProvider = NSPrefixProvider.getInstance();
+        return nsProvider.getPreferredPrefix( namespace, suggestion );
+      }
+    };
+  }
+
+  /**
+   * Same as {@link  #createMarshaller(JAXBContext, true, null)}
+   */
+  public static Marshaller createMarshaller( final JAXBContext context ) throws JAXBException
+  {
+    return createMarshaller( context, false );
+  }
+
+  /**
+   * Same as {@link  #createMarshaller(JAXBContext, boolean, null)}
+   */
+  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput ) throws JAXBException
+  {
+    return createMarshaller( context, formatOutput, null );
+  }
+
   /**
    * create marshaller with namespace prefixmapping<br>
    * use this methode to avoid bug in jaxb-implementation when prefixing attributes with defaultnamespace like this:
    * <code><element xmlns="www.xlink..." :href="test"/></code> instead if
    * <code><element xmlns:xlink="blabla" xlink:href="test"/></code>.
+   * 
+   * @param formaOutput
+   *          if true, output is nicely formatted.
+   * @param specialPrefixes
+   *          if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
+   *          namespaces are mapped into the same namespace.
    */
-  public static Marshaller createMarshaller( final JAXBContext context ) throws JAXBException
+  public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final Map<String, String> specialPrefixes ) throws JAXBException
   {
     final Marshaller marshaller = context.createMarshaller();
-    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper() );
+    if( specialPrefixes == null )
+      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper() );
+    else
+      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper( specialPrefixes ) );
+    if( formatOutput )
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     return marshaller;
   }
-  
+
   public static Validator createValidator( final JAXBContext context ) throws JAXBException
   {
     final Unmarshaller unmarshaller = context.createUnmarshaller();
     final Schema schema = unmarshaller.getSchema();
     if( schema == null )
       return null;
-    
+
     return schema.newValidator();
   }
 }
