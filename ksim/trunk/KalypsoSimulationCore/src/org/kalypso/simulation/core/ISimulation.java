@@ -48,9 +48,18 @@ import java.net.URL;
  */
 public interface ISimulation
 {
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
-      final ISimulationMonitor monitor ) throws SimulationException;
+  /**
+   * @param tmpdir
+   *          directory that can be used by the calcjob for anything
+   * @param inputProvider
+   *          provides the input data
+   * @param resultEater
+   *          reciever for results
+   * @param monitor
+   *          for progressbar
+   */
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException;
 
   /** Gibt den Ort der Spezifikation (XML) zurück. */
-  public URL getSpezifikation();
+  public URL getSpezifikation( );
 }
