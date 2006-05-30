@@ -395,6 +395,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.subTask( "warte auf Ende der Berechnung..." );
       for( int i = 0; i < 60 * minutes; i++ )
       {
+        if( monitor.isCanceled() )
+        {
+          launch.terminate();
+          return Status.CANCEL_STATUS;
+        }
+        
         if( launch.isTerminated() )
         {
           final String[] arguments = ExternalToolsUtil.getArguments( lc );
