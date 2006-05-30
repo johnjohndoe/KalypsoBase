@@ -107,9 +107,23 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
       if( eltValue.getFirstChild() != null )
         value = DomHelper.collectChildrenAsString( eltValue );
       final String type = eltValue.getAttribute( "type" );
-
+      final String[] strings = type.split(":");
+      final QName qnType;
+      if( strings.length == 1 )
+      {
+        final String namespace = eltValue.getNamespaceURI();
+        qnType = new QName( namespace, strings[1] );
+      }
+      else if( strings.length == 2 )
+      {
+        final String namespace = eltValue.lookupNamespaceURI( strings[0] );
+        qnType = new QName( namespace, strings[1] );
+      }
+      else // should never happen, because this is not valid according to the kom-Schema
+        qnType = MetadataObject.DEFAULT_TYPE;
+      
       final List<MetadataObject> list = new ArrayList<MetadataObject>();
-      list.add( new MetadataObject( name, value, type ) );
+      list.add( new MetadataObject( name, value, qnType ) );
 
       return list;
     }
@@ -144,8 +158,8 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
 
     final Element eltValue = doc.createElementNS( NS.KALYPSO_OM, "value" );
     eltMd.appendChild( eltValue );
-    if( md.getType().length() > 0 )
-      eltValue.setAttribute( "type", md.getType() );
+    
+    eltValue.setAttribute( "type", element.lookupPrefix( md.getType().getNamespaceURI() ) + ":" + md.getType().getLocalPart() );
     if( md.getValue() != null )
     {
       // TODO: see also above concerning the remark on the type

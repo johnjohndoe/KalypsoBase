@@ -24,7 +24,7 @@
                     <xs:complexType>
                          <xs:complexContent>
                               <xs:extension base="xs:anyType">
-                                   <xs:attribute name="type" use="optional">
+                                   <xs:attribute name="type" use="optional" type="xs:QName" default="xs:string">
                                         <xs:annotation>
                                              <xs:documentation>Wenn kein type angegeben wird, wird
                                                   der value-Inhalt als String
