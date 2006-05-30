@@ -41,11 +41,26 @@
 package org.kalypso.observation.result;
 
 /**
+ * A record holds the values for the components of a tuple result.
+ * 
  * @author schlienger
  */
 public interface IRecord
 {
+  /**
+   * @return the <code>TupleResult</code> that owns this record
+   */
+  public TupleResult getOwner();
+
+  /**
+   * @return the value for the given component (can be null)
+   * @throws IllegalArgumentException if the component is unknown to this record
+   */
   public Object getValue( IComponent comp );
 
+  /**
+   * Sets the value for the given component
+   * @throws IllegalArgumentException if the component is unknown to this record
+   */
   public void setValue( IComponent comp, Object value );
 }
