@@ -41,9 +41,15 @@
 package org.kalypso.contribs.java.xml;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import com.sun.org.apache.xml.internal.utils.NameSpace;
+
+import sun.jdbc.odbc.ee.CommonDataSource;
 
 /**
  * @author doemming, schlienger
@@ -110,5 +116,31 @@ public final class XMLUtilities
       node.appendChild( text );
     }
 
+  }
+
+  public static String getNameSpaceForPrefix( final Element context, final String prefix )
+  {
+    final String prefixDeclarationNamespace = "http://www.w3.org/2000/xmlns/";
+    if( prefix.equals( context.getPrefix() ) )
+      return context.getNamespaceURI();
+    final String namespace = context.getAttributeNS( prefixDeclarationNamespace, prefix );
+    if( namespace != null && namespace.length()>0)
+      return namespace;
+    // test
+//    final NamedNodeMap attributes = context.getAttributes();
+//    int length = attributes.getLength();
+//    for( int i = 0; i < length; i++ )
+//    {
+//      final Node node = attributes.item( i );
+//      String prefix2 = node.getPrefix();
+//      String namespaceURI = node.getNamespaceURI();
+//      String nodeName = node.getNodeName();
+//      String nodeValue = node.getNodeValue();
+//      System.out.println( prefix2 + ":" + nodeName + " {" + namespaceURI + "}=" + nodeValue );
+//    }
+    final Node parentNode = context.getParentNode();
+    if( parentNode != null && parentNode instanceof Element )
+      return getNameSpaceForPrefix( (Element) parentNode, prefix );
+    return null;
   }
 }
