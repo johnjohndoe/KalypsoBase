@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar"/>
-	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
@@ -18,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/sax.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xalan.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xercesImpl.jar"/>
-	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb1-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb1-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/jaxp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/jsr173_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/sjsxp.jar"/>
