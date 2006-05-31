@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actions;
 
-import java.util.ArrayList;
-
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.RetargetAction;
@@ -54,22 +52,14 @@ import org.eclipse.ui.actions.RetargetAction;
 public class DropDownMenuCreator implements IMenuCreator
 {
 
-  private Menu m_controlMenu = null;
-
-  private ArrayList<ActionContributionItem> m_actionContributionItems = new ArrayList<ActionContributionItem>();
+  private MenuManager m_menuManager = new MenuManager();
 
   /**
    * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
    */
   public Menu getMenu( final Control parent )
   {
-    if( m_controlMenu != null )
-      return m_controlMenu;
-
-    m_controlMenu = new Menu( parent );
-    for( final ActionContributionItem aci : m_actionContributionItems )
-      aci.fill( m_controlMenu, -1 );
-    return m_controlMenu;
+    return m_menuManager.createContextMenu( parent );
   }
 
   /**
@@ -81,19 +71,9 @@ public class DropDownMenuCreator implements IMenuCreator
 
   }
 
-  public void clearItems( )
+  public void addAction( final RetargetAction retargetAction )
   {
-    m_actionContributionItems.clear();
-  }
-
-  public ActionContributionItem addAction( final RetargetAction retargetAction )
-  {
-
-    if( retargetAction == null )
-      return null;
-
-    final ActionContributionItem item = new ActionContributionItem( retargetAction );
-    return m_actionContributionItems.add( item ) ? item : null;
+    m_menuManager.add( retargetAction );
   }
 
   /**
@@ -101,8 +81,8 @@ public class DropDownMenuCreator implements IMenuCreator
    */
   public void dispose( )
   {
-    if( m_controlMenu != null && !m_controlMenu.isDisposed() )
-      m_controlMenu.dispose();
+    // TODO Auto-generated method stub
+
   }
 
 }

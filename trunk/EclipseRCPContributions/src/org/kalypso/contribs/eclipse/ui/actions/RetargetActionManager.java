@@ -69,7 +69,7 @@ public class RetargetActionManager
       {
         m_retargetAction.setMenuCreator( new DropDownMenuCreator() );
       }
-      
+
     }
 
     public String getMenuGroup( )
@@ -143,12 +143,6 @@ public class RetargetActionManager
 
   private List<RetargetInfo> m_sortedRetargetinfo = new ArrayList<RetargetInfo>();
 
-  public RetargetActionManager( )
-  {
-    super();
-    // TODO Auto-generated constructor stub
-  }
-
   public RetargetInfo addRetargetInfo( final RetargetInfo info )
   {
     m_retargetMap.put( info.getID(), info );
@@ -191,11 +185,6 @@ public class RetargetActionManager
 
   public void contributeToToolBar( final IToolBarManager toolBarManager )
   {
-    toolBarManager.add( new Separator( MENU_GROUP_CHECK ) );
-    toolBarManager.add( new Separator( MENU_GROUP_PUSH ) );
-    toolBarManager.add( new Separator( MENU_GROUP_RADIO ) );
-    toolBarManager.add( new Separator( MENU_GROUP_MENU ) );
-    toolBarManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
     for( final RetargetInfo info : m_sortedRetargetinfo )
     {
@@ -226,7 +215,6 @@ public class RetargetActionManager
 
   public void contributeToMenu( final IMenuManager menuManager )
   {
-
     for( RetargetInfo info : m_sortedRetargetinfo )
     {
       final String menuGroup = info.getMenuGroup();
@@ -280,11 +268,6 @@ public class RetargetActionManager
 
   public void fillContextMenu( final IMenuManager manager )
   {
-    manager.add( new Separator( MENU_GROUP_CHECK ) );
-    manager.add( new Separator( MENU_GROUP_RADIO ) );
-    manager.add( new Separator( MENU_GROUP_PUSH ) );
-    manager.add( new Separator( MENU_GROUP_MENU ) );
-    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
     for( RetargetInfo info : m_sortedRetargetinfo )
     {
