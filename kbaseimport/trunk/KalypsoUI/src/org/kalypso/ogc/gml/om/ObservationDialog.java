@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.table.TupleResultTableViewer;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -75,7 +76,7 @@ public class ObservationDialog extends ResizableDialog
 
     panel.getShell().setText( m_obs.getName() );
 
-    final ObservationTableViewer viewer = new ObservationTableViewer( panel );
+    final TupleResultTableViewer viewer = new TupleResultTableViewer( panel );
     viewer.setInput( m_obs.getResult() );
     
     viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );

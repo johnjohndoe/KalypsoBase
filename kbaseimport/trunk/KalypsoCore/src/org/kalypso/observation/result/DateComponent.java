@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import java.util.TimeZone;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -48,6 +50,11 @@ import javax.xml.namespace.QName;
 public class DateComponent extends Component
 {
   private final String m_timezoneName;
+  
+  public DateComponent( final String name, final String description, final QName valueTypeName )
+  {
+    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
+  }
   
   public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
   {
