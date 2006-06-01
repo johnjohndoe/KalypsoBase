@@ -37,40 +37,4 @@
                </xs:element>
           </xs:sequence>
      </xs:complexType>
-
-     <xs:element name="profile" type="ksp:ProfileType" substitutionGroup="om:AbstractObservation"/>
-
-     <xs:complexType name="ProfileType">
-          <xs:annotation>
-               <xs:documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit
-                    wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird
-                    konsequent benutzt um Querprofil zu bearbeiten. Wir packen deswegen diese
-                    Information als Element und nicht als Metadata. Ein Querprofil leitet von
-                    CommonObservation ab und beinhaltet also die Tupeln. Sie werden anhand von
-                    resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise
-                    und Trapezen wird das Element member definiert.</xs:documentation>
-          </xs:annotation>
-          <xs:complexContent>
-               <xs:extension base="om:ObservationType">
-                    <xs:sequence>
-                         <xs:element name="profileStation" type="swe:RelativeMeasureType"
-                              minOccurs="1" maxOccurs="1">
-                              <xs:annotation>
-                                   <xs:documentation>Die Profilstationierung, wichtiger Bestandteil
-                                        für die Bearbeitung von Querprofile.</xs:documentation>
-                              </xs:annotation>
-                         </xs:element>
-                         <xs:element name="profileMember" type="om:AbstractObservationPropertyType"
-                              minOccurs="0" maxOccurs="unbounded">
-                              <xs:annotation>
-                                   <xs:documentation>Die Liste der zusätzliche Observations: z.B.
-                                        Durchlässe, Maulprofile, Kreise und Trapezen können hiermit
-                                        abgebildet werden.</xs:documentation>
-                              </xs:annotation>
-                         </xs:element>
-                    </xs:sequence>
-               </xs:extension>
-          </xs:complexContent>
-     </xs:complexType>
-
 </xs:schema>

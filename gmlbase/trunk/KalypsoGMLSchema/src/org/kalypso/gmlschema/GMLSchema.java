@@ -256,7 +256,8 @@ public class GMLSchema implements IGMLSchema
     if( getTargetNamespace().equals( namespaceURI ) )
       return m_refElementHash.get( qName );
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    if( gmlschema == null )
+    // beware of recursion
+    if( gmlschema == null || gmlschema == this )
     {
       System.out.println( "could not resolve element reference to " + qName );
       return null;
@@ -270,7 +271,8 @@ public class GMLSchema implements IGMLSchema
     if( getTargetNamespace().equals( namespaceURI ) )
       return m_refGroupHash.get( qName );
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    if( gmlschema == null )
+    // beware of recursion
+    if( gmlschema == null || gmlschema == this )
     {
       System.out.println( "could not resolve group reference to " + qName );
       return null;
@@ -284,7 +286,8 @@ public class GMLSchema implements IGMLSchema
     if( getTargetNamespace().equals( namespaceURI ) )
       return m_refSimpleTypeHash.get( qName );
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    if( gmlschema == null )
+    // beware of recursion
+    if( gmlschema == null || gmlschema == this )
       return null;
     return gmlschema.resolveSimpleTypeReference( qName );
   }

@@ -107,10 +107,10 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
       String unit = "";
       if( uomElt != null )
-        unit = uomElt.getAttribute( "uom" );
+        unit = uomElt.getAttributeNS( NS.GML3, "uom" );
 
       // parse frame (i.e. timezone information for dates)
-      final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.SWE, "frame" );
+      final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.GML3, "frame" );
       Element frameElt = null;
       if( nlFrame.getLength() == 1 )
         frameElt = (Element) nlFrame.item( 0 );

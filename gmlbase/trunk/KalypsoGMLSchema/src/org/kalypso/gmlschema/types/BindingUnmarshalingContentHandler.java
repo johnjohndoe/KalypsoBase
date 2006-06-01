@@ -73,7 +73,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @param unmarshalResultEater
    *          will be feeded with the result of unmarshalling
    */
-  public BindingUnmarshalingContentHandler( ContentHandler unmarshallerHandler, UnmarshalResultProvider unmarshallResultProvider, UnMarshallResultEater unmarshalResultEater, boolean considerSurroundingElement )
+  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnMarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
