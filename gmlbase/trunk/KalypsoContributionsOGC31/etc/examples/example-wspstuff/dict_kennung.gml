@@ -23,7 +23,7 @@
      
      <gml:dictionaryEntry>
           <gml:Definition gml:id="b">
-               <gml:name>BrÃ¼cke</gml:name>
+               <gml:name>Brücke</gml:name>
           </gml:Definition>
      </gml:dictionaryEntry>
 

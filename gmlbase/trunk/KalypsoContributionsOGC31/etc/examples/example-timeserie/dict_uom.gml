@@ -24,7 +24,7 @@
      
      <gml:dictionaryEntry>
           <gml:BaseUnit gml:id="cmaP">
-               <gml:name>Centimeter am Pegel</gml:name>
+               <gml:name>Zentimeter am Pegel</gml:name>
                <gml:quantityType>Länge</gml:quantityType>
                <gml:unitsSystem/>
           </gml:BaseUnit>
@@ -33,9 +33,19 @@
      <gml:dictionaryEntry>
           <gml:ConventionalUnit gml:id="mm">
                <gml:name>Millimeter</gml:name>
-               <gml:quantityType>Laenge</gml:quantityType>
+               <gml:quantityType>Länge</gml:quantityType>
                <gml:conversionToPreferredUnit uom="#m">
                     <gml:factor>1000</gml:factor>
+               </gml:conversionToPreferredUnit>
+          </gml:ConventionalUnit>
+     </gml:dictionaryEntry>
+     
+     <gml:dictionaryEntry>
+          <gml:ConventionalUnit gml:id="km">
+               <gml:name>Millimeter</gml:name>
+               <gml:quantityType>Länge</gml:quantityType>
+               <gml:conversionToPreferredUnit uom="#m">
+                    <gml:factor>0.001</gml:factor>
                </gml:conversionToPreferredUnit>
           </gml:ConventionalUnit>
      </gml:dictionaryEntry>
@@ -46,6 +56,32 @@
                <gml:quantityType/>
                <gml:derivationUnitTerm uom="#m" exponent="3"/>
                <gml:derivationUnitTerm uom="#s" exponent="-1"/>
+          </gml:DerivedUnit>
+     </gml:dictionaryEntry>   
+     
+     <gml:dictionaryEntry>
+          <gml:DerivedUnit gml:id="m_s">
+               <gml:name/>
+               <gml:quantityType/>
+               <gml:derivationUnitTerm uom="#m" exponent="1"/>
+               <gml:derivationUnitTerm uom="#s" exponent="-1"/>
+          </gml:DerivedUnit>
+     </gml:dictionaryEntry>
+     
+     <gml:dictionaryEntry>
+          <gml:DerivedUnit gml:id="N_m2">
+               <gml:name/>
+               <gml:quantityType/>
+               <gml:derivationUnitTerm uom="#N" exponent="1"/>
+               <gml:derivationUnitTerm uom="#m" exponent="-2"/>
+          </gml:DerivedUnit>
+     </gml:dictionaryEntry>
+     
+     <gml:dictionaryEntry>
+          <gml:DerivedUnit gml:id="m2">
+               <gml:name/>
+               <gml:quantityType/>
+               <gml:derivationUnitTerm uom="#m" exponent="2"/>
           </gml:DerivedUnit>
      </gml:dictionaryEntry>
      

@@ -6,18 +6,53 @@
      http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
      http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
      http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
-     xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
-     xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+     xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" gml:id="components">
-
-     <gml:description>Ein Dictionary für die Modellierung von
-     Längsschnitte</gml:description>
+     <gml:description>Ein Dictionary für die Modellierung von Längsschnitten</gml:description>
      <gml:name>LS-komponente</gml:name>
-
-
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="stat">
+          <swe:ItemDefinition gml:id="Stat">
                <gml:name>Station</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-stat">
+                         <gml:name>Stationierung</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Kenn">
+               <gml:name>Kennung</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-kenn">
+                         <gml:name>Kennung</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Word>
+                         <swe:restriction>
+                              <st:pattern value="n|b|w|t|k|e|m|i"/>
+                         </swe:restriction>
+                         <swe:classification>foo</swe:classification>
+                    </swe:Word>
+                    <!--swe:Word>
+                         <swe:classification gml:remoteSchema="dict_kennung.xml"/>
+                    </swe:Word-->
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Abfluss">
+               <gml:name>Abfluss</gml:name>
                <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
@@ -25,24 +60,11 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m3s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-     
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="kenn">
-               <gml:name>Kennung</gml:name>
-               <swe:property/>
-               <swe:representation>
-                    <swe:Word>
-                         <swe:classification gml:remoteSchema="dict_kennung.xml"/>
-                    </swe:Word>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Sohle">
                <gml:name>Sohlhöhe</gml:name>
@@ -51,99 +73,343 @@
                     <swe:SimpleType>
                          <st:restriction base="decimal">
                               <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
+                              <st:fractionDigits value="3"/>
                          </st:restriction>
                          <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-     
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="h_WSP">
                <gml:name>Höhe WSP</gml:name>
-               <swe:property />
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="hen">
+               <gml:name>???</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="h_BV">
+               <gml:name>Bordvoll Höhe</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Boe_li">
+               <gml:name>Böschung links</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Boe_re">
+               <gml:name>Böschung rechts</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="v_m">
+               <gml:name>Mittlere Geschwindigkeit</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m_s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="tau_fl">
+               <gml:name>Sohlschubspannung (Flussschlauch)</gml:name>
+               <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
                          <st:restriction base="decimal">
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="2"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#N_m2"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="lamb_li">
+               <gml:name>lambda (links)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="lamb_fl">
+               <gml:name>lambda (Flussschlauch)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="lamb_re">
+               <gml:name>lambda (Flussschlauch)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="f_li">
+               <gml:name>Fläche (links)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="f_fl">
+               <gml:name>Fläche (Flussschlauch)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="f_re">
+               <gml:name>Fläche (rechts)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="br_li">
+               <gml:name>Breite (links)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
                          </st:restriction>
                          <gml:unitOfMeasure uom="dict_uom.xml#m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="Boe_li">
-               <gml:name>Böchung Links</gml:name>
-               <swe:property />
+          <swe:ItemDefinition gml:id="br_fl">
+               <gml:name>Breite (Flussschlauch)</gml:name>
+               <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
                          <st:restriction base="decimal">
                               <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="br_re">
+               <gml:name>Breite (rechts)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="WehrOK">
+               <gml:name>Wehr (Oberkante)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="-1000.0"/>
+                              <st:fractionDigits value="3"/>
                          </st:restriction>
                          <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="Boe_re">
-               <gml:name>Böchung Rechts</gml:name>
-               <swe:property />
+          <swe:ItemDefinition gml:id="BrueckOK">
+               <gml:name>Brücke (Oberkante)</gml:name>
+               <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
                          <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
+                              <st:minInclusive value="-1000.0"/>
+                              <st:fractionDigits value="3"/>
                          </st:restriction>
                          <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-     
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="v_m">
-               <gml:name>Mittlere Geschwindigkeit</gml:name>
-               <swe:property />
+          <swe:ItemDefinition gml:id="BrueckUK">
+               <gml:name>Brücke (Unterkante)</gml:name>
+               <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
                          <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
-                         </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m/s"/>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-     
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="h_BV">
-               <gml:name>Bordvoll Höhe</gml:name>
-               <swe:property />
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
+                              <st:minInclusive value="-1000.0"/>
+                              <st:fractionDigits value="3"/>
                          </st:restriction>
                          <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-     
-<!-- TODO ergänzen für:
-
-     hen               tau_fl lamb_li lamb_fl lamb_re      f_li      f_fl      f_re     br_li     br_fl     br_re    WehrOK  BrueckOK  BrueckUK   BrueckB    RohrDN
-     mNN                N/m^2       -       -       -       m^2       m^2         m         m         m         m       mNN       mNN       mNN         m         m
-
- -->
-
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="BrueckB">
+               <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="-1000.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="RohrDN">
+               <gml:name>Rohrdurchmesser</gml:name>
+               <swe:property/>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="-1000.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
 </gml:Dictionary>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
