@@ -112,7 +112,7 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
       if( strings.length == 1 )
       {
         final String namespace = eltValue.getNamespaceURI();
-        qnType = new QName( namespace, strings[1] );
+        qnType = new QName( namespace, strings[0] );
       }
       else if( strings.length == 2 )
       {
