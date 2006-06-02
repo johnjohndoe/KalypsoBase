@@ -49,12 +49,19 @@ import org.kalypso.observation.result.IComponent;
 public abstract class MTRMColumn extends SimpleColumnKey
 {
   private final IComponent m_keyComponent;
+  private final int m_position;
 
-  public MTRMColumn( final String name, final IComponent keyComponent, final Class<?> valueClass )
+  public MTRMColumn( final int position, final String name, final IComponent keyComponent, final Class<?> valueClass )
   {
     super( name, valueClass );
+    m_position = position;
     
     m_keyComponent = keyComponent;
+  }
+  
+  public int getPosition( )
+  {
+    return m_position;
   }
 
   public IComponent getKeyComponent( )
