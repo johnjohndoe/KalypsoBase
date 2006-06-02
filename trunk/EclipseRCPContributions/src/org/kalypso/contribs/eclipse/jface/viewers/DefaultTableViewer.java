@@ -94,9 +94,10 @@ public class DefaultTableViewer extends TableViewer
 
   public void removeAllColumns( )
   {
-    getTable().removeAll();
+    if( !getTable().isDisposed() )
+      getTable().removeAll();
   }
-  
+
   /**
    * Refreshes the column properties according to the current list of columns
    * 
