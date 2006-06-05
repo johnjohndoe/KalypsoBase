@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -659,6 +661,16 @@ public class GMLSchemaUtilities
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
 
+  /** Collects all known types in the context of the given schema. */
+  public static void collectTypes( final IGMLSchema gmlSchema, final Collection<IFeatureType> types )
+  {
+    final Collection<IGMLSchema> allSchemas = new ArrayList<IGMLSchema>(  );
+    gmlSchema.collectSchemas( allSchemas );
+    
+    for( final IGMLSchema schema : allSchemas )
+      types.addAll( Arrays.asList( schema.getAllFeatureTypes() ) );
+  }
+
   public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
@@ -913,16 +925,16 @@ public class GMLSchemaUtilities
     final String fullXpath = namespaceDecl + xpath;
 
     final XmlObject[] xmlObjects = schemaDocument.selectPath( fullXpath );
-    
+
     switch( xmlObjects.length )
     {
       case 0:
         return null;
-        
+
       case 1:
         final XmlAnyTypeImpl anyType = (XmlAnyTypeImpl) xmlObjects[0];
         return anyType.stringValue();
-        
+
       default:
         throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() );
     }

@@ -195,7 +195,7 @@ public class GMLSchemaFactory
     else
       version = gmlVersion;
     
-    System.out.println( "USING GML VERSION: " + version );
+    System.out.println( "USING GML VERSION " + version + " on Schema: " + schemaDocument.getSchema().getTargetNamespace() );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );
     return builder.buildGMLSchema( schemaDocument, context );

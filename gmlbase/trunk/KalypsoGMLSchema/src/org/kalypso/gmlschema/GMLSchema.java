@@ -95,7 +95,7 @@ public class GMLSchema implements IGMLSchema
 
   private final Hashtable<Object, Object> m_buildedObjectHash = new Hashtable<Object, Object>();
 
-  //private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
+  // private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
 
   private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
@@ -118,6 +118,15 @@ public class GMLSchema implements IGMLSchema
    * parsing but befoe initilazing ask doemming.
    */
   private List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
+
+  /**
+   * Additional schemas, which are not known as imported schemas. They are loaded implicitly while searching for certain
+   * namespaces. This happens probably only, if the gml instance contains some substituting types.
+   * <p>
+   * We need to remeber these schemas, to resolve substituting feature types.
+   * </p>
+   */
+  private Map<String, GMLSchema> m_additonalSchemas = new HashMap<String, GMLSchema>();
 
   private List<String> m_ignoreNameSpaces = new ArrayList<String>();
   {
@@ -330,6 +339,10 @@ public class GMLSchema implements IGMLSchema
       return this;
     if( m_importedSchemasHash.containsKey( namespaceURI ) )
       return m_importedSchemasHash.get( namespaceURI );
+
+    if( m_additonalSchemas.containsKey( namespaceURI ) )
+      return m_additonalSchemas.get( namespaceURI );
+
     // other level....
 
     for( final GMLSchema gmlSchema : m_importedSchemasHash.values() )
@@ -342,7 +355,14 @@ public class GMLSchema implements IGMLSchema
     try
     {
       // load all imported schema with same gml version
-      return GMLSchemaCatalog.getSchema( namespaceURI, getGMLVersion() );
+      final GMLSchema schema = GMLSchemaCatalog.getSchema( namespaceURI, getGMLVersion() );
+      if( schema != null )
+        m_additonalSchemas.put( namespaceURI, schema );
+
+      // TODO: we load schemas here, which are not known as imported schemes
+      // They are probably used by the gml instance via substitution
+      // We need to remember those schemes for later (e.g. for substitution resolution)
+      return schema;
     }
     catch( final InvocationTargetException e )
     {
@@ -372,17 +392,17 @@ public class GMLSchema implements IGMLSchema
   {
     if( buildedObject == null )
       throw new UnsupportedOperationException( "can not register null-object" );
-    
+
     m_buildedObjectHash.put( xmlObject, buildedObject );
-    
-    if(xmlObject instanceof ElementWithOccurs)
+
+    if( xmlObject instanceof ElementWithOccurs )
       throw new UnsupportedOperationException();
 
     // use QName as key:
     if( buildedObject instanceof FeatureType )
     {
       final FeatureType ft = (FeatureType) buildedObject;
-      //m_featureTypesList.add( ft );
+      // m_featureTypesList.add( ft );
       m_featureTypeMap.put( ft.getQName(), ft );
     }
     else if( buildedObject instanceof IRelationType )
@@ -471,7 +491,7 @@ public class GMLSchema implements IGMLSchema
 
   public IFeatureType[] getAllFeatureTypes( )
   {
-    //return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
+    // return m_featureTypesList.toArray( new IFeatureType[m_featureTypesList.size()] );
     return m_featureTypeMap.values().toArray( new IFeatureType[m_featureTypeMap.size()] );
   }
 
@@ -530,6 +550,11 @@ public class GMLSchema implements IGMLSchema
     }
   }
 
+  private GMLSchema[] getAdditionalSchemas( )
+  {
+    return m_additonalSchemas.values().toArray( new GMLSchema[m_additonalSchemas.values().size()] );
+  }
+
   public GMLSchema[] getImports( )
   {
     final Collection<GMLSchema> collection = m_importedSchemasHash.values();
@@ -563,8 +588,8 @@ public class GMLSchema implements IGMLSchema
       catch( final GMLSchemaException e )
       {
         e.printStackTrace();
-        
-        // odl behaviour, but it should not happen anyway? because the schema should all 
+
+        // odl behaviour, but it should not happen anyway? because the schema should all
         // be loaded by now
         return null;
       }
@@ -594,6 +619,25 @@ public class GMLSchema implements IGMLSchema
   public SchemaDocument[] getIncludedSchemas( )
   {
     return m_includedSchemas.toArray( new SchemaDocument[m_includedSchemas.size()] );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#collectSchemas(java.util.Collection)
+   */
+  public void collectSchemas( final Collection<IGMLSchema> schemas )
+  {
+    // beware of recursion
+    if( schemas.contains( this ) )
+      return;
+
+    schemas.add( this );
+
+    final GMLSchema[] imports = getImports();
+    for( final GMLSchema schema : imports )
+      schema.collectSchemas( schemas );
+    final GMLSchema[] additionSchemas = getAdditionalSchemas();
+    for( final GMLSchema schema : additionSchemas )
+      schema.collectSchemas( schemas );
   }
 
 }

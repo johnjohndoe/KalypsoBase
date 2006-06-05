@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
+import java.util.Collection;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -89,6 +91,15 @@ public class EmptyGMLSchema implements IGMLSchema
   public IFeatureType[] getAllFeatureTypes( )
   {
     return new IFeatureType[] {};
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#collectSchemas(java.util.Collection)
+   */
+  public void collectSchemas( Collection<IGMLSchema> allSchemas )
+  {
+    // i do know only myself
+    allSchemas.add( this );
   }
 
 }

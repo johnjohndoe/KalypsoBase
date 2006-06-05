@@ -30,8 +30,10 @@
 package org.kalypso.gmlschema.visitor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -82,8 +84,14 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
   private List<IFeatureType> step1( IGMLSchema gmlSchema )
   {
     // step 1
+    // BUGFIX: use ALL types of ALL known schemas in this context.
+    final Collection<IFeatureType> allTypes = new ArrayList<IFeatureType>( 100 );
+    GMLSchemaUtilities.collectTypes( gmlSchema, allTypes );
+    final IFeatureType[] allFeatureTypes = allTypes.toArray( new IFeatureType[allTypes.size()] );
+
+    // final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
+
     final List<IFeatureType> rheads = new ArrayList<IFeatureType>();
-    final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
     for( int i = 0; i < allFeatureTypes.length; i++ )
     {
       final IFeatureType ft = allFeatureTypes[i];
@@ -93,6 +101,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
         rheads.add( ft );
       }
     }
+
     return rheads;
   }
 
@@ -142,7 +151,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
   /**
    * @param ft
    */
-  private boolean isRequested( IFeatureType ft )
+  private boolean isRequested( final IFeatureType ft )
   {
     // abstract behaviour
     if( !m_includeAbstract && ft.isAbstract() )
