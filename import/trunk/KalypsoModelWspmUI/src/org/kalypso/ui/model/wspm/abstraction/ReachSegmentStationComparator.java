@@ -46,7 +46,7 @@ import java.util.Comparator;
 /**
  * @author thuel2
  */
-public class ReachSegmentStationComparator implements Comparator<TuhhReachProfileSegment>
+public class ReachSegmentStationComparator implements Comparator<WspmReachProfileSegment>
 {
   private final boolean m_isDirectionUpstreams;
 
@@ -58,7 +58,7 @@ public class ReachSegmentStationComparator implements Comparator<TuhhReachProfil
   /**
    * @see java.util.Comparator#compare(T, T)
    */
-  public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
+  public int compare( final WspmReachProfileSegment o1, final WspmReachProfileSegment o2 )
   {
     final BigDecimal s1 = o1.getStation();
     final BigDecimal s2 = o2.getStation();
