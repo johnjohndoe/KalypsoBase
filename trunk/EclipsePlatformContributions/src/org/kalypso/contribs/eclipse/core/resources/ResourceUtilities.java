@@ -36,10 +36,12 @@ import java.net.URL;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -74,6 +76,21 @@ public class ResourceUtilities
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFile( path );
+  }
+
+  public static IFolder findFolderFromURL( final URL url )
+  {
+    final IPath path = findPathFromURL( url );
+    if( path == null )
+      return null;
+    return findFolderFromPath( path );
+  }
+
+  public static IFolder findFolderFromPath( IPath path )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    return root.getFolder( path );
+
   }
 
   public static File makeFileFromPath( final IPath resource )
@@ -194,4 +211,20 @@ public class ResourceUtilities
     return file;
   }
 
+  /**
+   * Tries to get the parent project of this container.
+   * 
+   * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
+   *         is a Project.
+   */
+  public static IProject findParentProject( IContainer start ) throws CoreException
+  {
+    if( start instanceof IWorkspaceRoot )
+      return null;
+    else if( start.getType() == IResource.PROJECT )
+      return (IProject) start;
+    final FindParentProjectVisitor visitor = new FindParentProjectVisitor();
+    start.accept( visitor );
+    return visitor.getParentProject();
+  }
 }

@@ -289,11 +289,6 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     if( url == null )
       return;
     if( url.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
-    /*******************************************************************************************************************
-     * TODO: Damit der Browser auch resource strings versteht, weiss nicht ob das resolver machen sollte?? (kuepferle)
-     * 
-     * @see PlatformURLResourceConnection
-     ******************************************************************************************************************/
     {
       final URL realUrl = new URL( url );
       final IPath path = ResourceUtilities.findPathFromURL( realUrl );
