@@ -79,6 +79,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     super.init( workbench, currentSelection );
@@ -89,6 +90,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
+  @Override
   public void addPages()
   {
     super.addPages();
@@ -104,6 +106,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     // zuerst die Grunddaten erzeugen erzeugen
@@ -125,6 +128,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
     WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
+      @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         try
@@ -248,6 +252,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPageControls( final Composite pageContainer )
   {
   // nichts tun, die Seiten sollen lazy initialisiert werden
