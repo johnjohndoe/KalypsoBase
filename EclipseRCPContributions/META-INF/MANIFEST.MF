@@ -24,7 +24,8 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui,
  org.kalypso.contribs.eclipse.ui.actionfilters,
  org.kalypso.contribs.eclipse.ui.actions,
- org.kalypso.contribs.eclipse.ui.controls
+ org.kalypso.contribs.eclipse.ui.controls,
+ org.kalypso.contribs.eclipse.ui.plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
