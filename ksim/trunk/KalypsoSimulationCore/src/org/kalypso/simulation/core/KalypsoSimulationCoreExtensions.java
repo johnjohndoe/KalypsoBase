@@ -117,7 +117,7 @@ public class KalypsoSimulationCoreExtensions
   public static IStatus createCatalogs( final List<IUrlCatalog> catalogs )
   {
     final Map<String, IConfigurationElement> elements = readSimulations();
-    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, "Ein ider mehrere Schema-Kataloge wurden nicht richtig initialisiert.", null );
+    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, "Ein oder mehrere Schema-Kataloge wurden nicht richtig initialisiert.", null );
     // final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>( elements.size() );
     for( final IConfigurationElement element : elements.values() )
     {
@@ -128,6 +128,7 @@ public class KalypsoSimulationCoreExtensions
       }
       catch( final CoreException e )
       {
+//        element.getAttribute( "id" );
         status.add( e.getStatus() );
       }
     }
