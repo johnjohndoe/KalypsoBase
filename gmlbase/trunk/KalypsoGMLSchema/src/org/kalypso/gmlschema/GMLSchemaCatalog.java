@@ -150,6 +150,7 @@ public final class GMLSchemaCatalog
    */
   public static void clearCache( final boolean onlyMemoryCache )
   {
-    THE_CACHE.clearCache( onlyMemoryCache );
+    if( THE_CACHE != null )
+      THE_CACHE.clearCache( onlyMemoryCache );
   }
 }
