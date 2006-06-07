@@ -42,11 +42,9 @@ package org.kalypso.gmlschema.adapter;
 
 /**
  * @author doemming
- *
  */
 public interface IAnnotation
 {
-
   public abstract String getDescription( );
 
   public abstract String getLabel( );
