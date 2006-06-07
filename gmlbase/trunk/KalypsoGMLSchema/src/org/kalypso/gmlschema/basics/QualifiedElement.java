@@ -143,13 +143,12 @@ public class QualifiedElement implements IAdaptable
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapterClass )
+  public Object getAdapter( final Class adapterClass )
   {
     if( !Platform.isRunning() )
       return null;
     final IAdapterManager adapterManager = Platform.getAdapterManager();
-    final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
-    return adapter;
+    return adapterManager.loadAdapter( this, adapterClass.getName() );
     // return adapterManager.getAdapter( this, adapter );
   }
 }
