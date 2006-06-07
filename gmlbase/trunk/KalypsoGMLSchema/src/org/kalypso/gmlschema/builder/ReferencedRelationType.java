@@ -127,6 +127,11 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
     }
   }
 
+  public Element getReferencingElement( )
+  {
+    return super.getElement();
+  }
+  
   /**
    * @see org.kalypso.gmlschema.basics.QualifiedElement#getElement()
    */

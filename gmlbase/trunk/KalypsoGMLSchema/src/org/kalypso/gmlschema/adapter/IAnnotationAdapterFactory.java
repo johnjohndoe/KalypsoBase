@@ -6,6 +6,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.builder.ReferencedRelationType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,18 +18,33 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
   {
     final String platformLang = getPlatformLang();
 
-    if( adapterType == IAnnotation.class && adaptableObject instanceof QualifiedElement )
+    if( adapterType == IAnnotation.class )
     {
-      final Element xsdElement = ((QualifiedElement) adaptableObject).getElement();
-      return annotationForElement( platformLang, xsdElement.getAnnotation(), xsdElement.getName() );
-    }
+      // BUGFIX: if it is a referenced element, first try to get the annotation from the
+      // referencing element. Only if we get nothing there, return the annotation of the referenced element.
+      if( adaptableObject instanceof ReferencedRelationType )
+      {
+        final ReferencedRelationType relType = (ReferencedRelationType) adaptableObject;
+        final Element xsdElement = relType.getReferencingElement();
+        final IAnnotation annotation = annotationForElement( platformLang, xsdElement.getAnnotation(), xsdElement.getName(), false );
+        if( annotation != null )
+          return annotation;
 
-    if( adapterType == IAnnotation.class && adaptableObject instanceof IPropertyType )
-    {
-      IPropertyType pt = (IPropertyType) adaptableObject;
-      return createDefaultAnnotation( platformLang, pt.getQName().getLocalPart() );
-    }
+        // else fall through, try to get the annotation from the referenced element
+      }
 
+      if( adaptableObject instanceof QualifiedElement )
+      {
+        final Element xsdElement = ((QualifiedElement) adaptableObject).getElement();
+        return annotationForElement( platformLang, xsdElement.getAnnotation(), xsdElement.getName() );
+      }
+
+      if( adaptableObject instanceof IPropertyType )
+      {
+        final IPropertyType pt = (IPropertyType) adaptableObject;
+        return createDefaultAnnotation( platformLang, pt.getQName().getLocalPart(), true );
+      }
+    }
     return null;
   }
 
@@ -45,13 +61,26 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
     return nl;
   }
 
+  /**
+   * Same as {@link #annotationForElement(String, Annotation, String, true)}.
+   */
   public static IAnnotation annotationForElement( final String platformLang, final Annotation xsdAnnotation, final String defaultName )
   {
+    return annotationForElement( platformLang, xsdAnnotation, defaultName, true );
+  }
+
+  /**
+   * @param createDefaultAnnotation
+   *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if
+   *          false it returns null in this case.
+   */
+  public static IAnnotation annotationForElement( final String platformLang, final Annotation xsdAnnotation, final String defaultName, final boolean createDefaultAnnotation )
+  {
     if( xsdAnnotation == null )
-      return createDefaultAnnotation( platformLang, defaultName );
+      return createDefaultAnnotation( platformLang, defaultName, createDefaultAnnotation );
     final Documentation[] documentationArray = xsdAnnotation.getDocumentationArray();
     if( documentationArray == null )
-      return createDefaultAnnotation( platformLang, defaultName );
+      return createDefaultAnnotation( platformLang, defaultName, createDefaultAnnotation );
 
     for( int i = 0; i < documentationArray.length; i++ )
     {
@@ -93,16 +122,22 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
     }
     String elementName = defaultName;
     if( elementName != null )
-      return createDefaultAnnotation( platformLang, elementName );
+      return createDefaultAnnotation( platformLang, elementName, createDefaultAnnotation );
     else
-      return createDefaultAnnotation( platformLang, "?" );
+      return createDefaultAnnotation( platformLang, "?", createDefaultAnnotation );
   }
 
-  private static IAnnotation createDefaultAnnotation( final String lang, final String defaultName )
+  /**
+   * @param createDefaultAnnotation
+   *          If false, return null.
+   */
+  private static IAnnotation createDefaultAnnotation( final String lang, final String defaultName, final boolean createDefaultAnnotation )
   {
+    if( !createDefaultAnnotation )
+      return null;
+
     return new IAnnotation()
     {
-
       public String getLang( )
       {
         return lang;
@@ -122,9 +157,7 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
       {
         return defaultName;
       }
-
     };
-
   }
 
   public Class[] getAdapterList( )
