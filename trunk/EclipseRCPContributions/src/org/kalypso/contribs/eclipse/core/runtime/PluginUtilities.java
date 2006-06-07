@@ -47,7 +47,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.internal.util.BundleUtility;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 
 /**
@@ -73,6 +75,23 @@ public class PluginUtilities
   {
     final IStatus status = new Status( severity, plugin.getBundle().getSymbolicName(), 0, messsage, t );
     plugin.getLog().log( status );
+  }
+
+  /** Log information to given plugin. <p>Formats message wirth args</p>*/
+  public static void logInfo( final Plugin plugin, final String message, final Object... args )
+  {
+    final String msg = String.format( message, args );
+    plugin.getLog().log( new Status( IStatus.INFO, id( plugin ), 0, msg, null ) );
+  }
+
+  public static IDialogSettings getDialogSettings( final AbstractUIPlugin plugin, final String sectionName )
+  {
+    final IDialogSettings workbenchSettings = plugin.getDialogSettings();
+    final IDialogSettings section = workbenchSettings.getSection( sectionName );
+    if( section == null )
+      return workbenchSettings.addNewSection( sectionName );
+
+    return section;
   }
 
   /**
