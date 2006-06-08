@@ -172,16 +172,17 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   public IFeatureType[] getSubstituts( IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
   {
     // TODO check
-    if( m_substituteFT == null ) // no substitutiongroup
-    {
-      if( inclusiveThis ) // return this ?
-      {
-        if( !includeAbstract && isAbstract() ) // abstract-behaviour ?
-          return new FeatureType[0];
-        return new FeatureType[] { this };
-      }
-      return new FeatureType[0];
-    }
+    // wird das noch gebraucht, bitte kommentar warum (doemming)
+//    if( m_substituteFT == null ) // no substitutiongroup
+//    {
+//      if( inclusiveThis ) // return this ?
+//      {
+//        if( !includeAbstract && isAbstract() ) // abstract-behaviour ?
+//          return new FeatureType[0];
+//        return new FeatureType[] { this };
+//      }
+//      return new FeatureType[0];
+//    }
     if( contextSchema == null )
       contextSchema = getGMLSchema();
     // query for it

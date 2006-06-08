@@ -159,7 +159,8 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
 
   protected void output( Node node ) throws SAXException
   {
-    if( m_contextNode == null )
+    short nodeType = node.getNodeType();
+    if( m_contextNode == null || nodeType == Node.DOCUMENT_NODE )
     {
       m_contextNode = node;
     }
@@ -193,9 +194,9 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
   {
     if( m_buffer == null || m_buffer.length() == 0 )
       return;
-    
+
     String text = new String( m_buffer );
-    
+
     try
     {
       if( m_inCdata )
@@ -207,7 +208,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     {
       throw new SAXException( e );
     }
-    
+
     m_buffer.setLength( 0 );
   }
 

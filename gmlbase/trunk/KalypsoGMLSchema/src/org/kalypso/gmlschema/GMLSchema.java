@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -576,8 +577,19 @@ public class GMLSchema implements IGMLSchema
   public IFeatureType getFeatureType( final QName qName )
   {
     final String namespaceURI = qName.getNamespaceURI();
-    if( namespaceURI == null || namespaceURI.equals( getTargetNamespace() ) )
-      return m_featureTypeMap.get( qName );
+    if( namespaceURI == null || "".equals( namespaceURI ) || namespaceURI.equals( getTargetNamespace() ) )
+    {
+      final IFeatureType ft = m_featureTypeMap.get( qName );
+      if( ft != null )
+        return ft;
+      // test for unqualified name
+      for( final QName ftQName : m_featureTypeMap.keySet() )
+      {
+        if( qName.getLocalPart().equals( ftQName.getLocalPart() ) )
+          return m_featureTypeMap.get( ftQName );
+      }
+      return null;
+    }
     else
     {
       final IGMLSchema schemaForNamespaceURI;
