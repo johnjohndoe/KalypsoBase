@@ -68,7 +68,7 @@ import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
