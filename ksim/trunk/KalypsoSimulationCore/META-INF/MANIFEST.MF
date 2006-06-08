@@ -12,6 +12,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.simulation.core,
+ org.kalypso.simulation.core.internal,
+ org.kalypso.simulation.core.internal.local,
+ org.kalypso.simulation.core.internal.queued,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util
 Bundle-ClassPath: kalypsoSimulationCore.jar
