@@ -233,7 +233,10 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       final Unmarshaller unmarshaller = m_jaxbContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final Marshaller marshaller = m_jaxbContext.createMarshaller();
-      marshaller.marshal( marshaller, unmarshallerHandler );
+      
+      final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_xmlTagQName, (Class<Object>) objectToClone.getClass(), objectToClone );
+      marshaller.marshal( jaxElement, unmarshallerHandler );
+      
       return unmarshallerHandler.getResult();
     }
     catch( final JAXBException e )
