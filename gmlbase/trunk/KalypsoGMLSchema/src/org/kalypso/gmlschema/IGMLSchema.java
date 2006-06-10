@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
-import java.util.Collection;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -57,20 +55,12 @@ public interface IGMLSchema
    */
   public String getGMLVersion( );
 
-  
   public String getTargetNamespace( );
 
+  /** Visits this, all imported and all additionally loaded schema. */
   public void accept( final IGMLSchemaVisitor visitor );
 
   public IFeatureType getFeatureType( final QName qName );
 
   public IFeatureType[] getAllFeatureTypes( );
-
-  /**
-   * Collects all schemaswhich are known in the context of the given schema.
-   * <p>
-   * Implementors should do this by recursively adding all imported and additional schemas to the given collection.
-   * </p>
-   */
-  public void collectSchemas( final Collection<IGMLSchema> allSchemas );
 }

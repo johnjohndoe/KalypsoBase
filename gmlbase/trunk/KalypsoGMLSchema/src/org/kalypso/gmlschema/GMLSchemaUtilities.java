@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -87,6 +85,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.GroupReference;
@@ -503,7 +502,7 @@ public class GMLSchemaUtilities
         final String newPath = pathToHere + "/" + rt.getQName().getLocalPart();
 
         final IFeatureType targetFeatureType = rt.getTargetFeatureType();
-        final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( gmlSchma, true, true );
+        final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, gmlSchma, true, true );
 
         for( int j = 0; j < targetFeatureTypes.length; j++ )
         {
@@ -659,16 +658,6 @@ public class GMLSchemaUtilities
   public static URL getSchemaURLForArchive( final URL schemaJarArchive ) throws MalformedURLException
   {
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
-  }
-
-  /** Collects all known types in the context of the given schema. */
-  public static void collectTypes( final IGMLSchema gmlSchema, final Collection<IFeatureType> types )
-  {
-    final Collection<IGMLSchema> allSchemas = new ArrayList<IGMLSchema>(  );
-    gmlSchema.collectSchemas( allSchemas );
-    
-    for( final IGMLSchema schema : allSchemas )
-      types.addAll( Arrays.asList( schema.getAllFeatureTypes() ) );
   }
 
   public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
@@ -939,4 +928,16 @@ public class GMLSchemaUtilities
         throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() );
     }
   }
+
+  public static IFeatureType[] getSubstituts( final IFeatureType ft, IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
+  {
+    if( contextSchema == null )
+      contextSchema = ft.getGMLSchema();
+
+    // query for it
+    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( ft, includeAbstract, inclusiveThis );
+    contextSchema.accept( visitor );
+    return visitor.getSubstitutes();
+  }
+
 }

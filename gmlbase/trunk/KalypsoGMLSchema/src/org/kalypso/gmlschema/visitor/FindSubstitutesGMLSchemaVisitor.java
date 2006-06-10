@@ -30,8 +30,9 @@
 package org.kalypso.gmlschema.visitor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -45,30 +46,22 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 {
-  private final IFeatureType m_substitutionHeadFT;
-
   private final boolean m_includeAbstract;
 
   private final boolean m_includeThis;
 
   private final List<IFeatureType> m_result = new ArrayList<IFeatureType>();
 
-  private final IGMLSchema m_contextGMLSchema;
+  private final QName m_subsHeadQName;
 
-  private final List<IFeatureType> m_path;
+  private final IFeatureType m_substitutionHeadFT;
 
-  public FindSubstitutesGMLSchemaVisitor( final IGMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
+  public FindSubstitutesGMLSchemaVisitor( final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
   {
-    this( contextGMLSchema, substitutionHeadFT, includeAbstract, includeThis, new ArrayList<IFeatureType>() );
-  }
-
-  private FindSubstitutesGMLSchemaVisitor( final IGMLSchema contextGMLSchema, final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis, List<IFeatureType> path )
-  {
-    m_contextGMLSchema = contextGMLSchema;
     m_substitutionHeadFT = substitutionHeadFT;
     m_includeAbstract = includeAbstract;
     m_includeThis = includeThis;
-    m_path = path;
+    m_subsHeadQName = substitutionHeadFT.getQName();
   }
 
   /**
@@ -76,63 +69,17 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
    */
   public boolean visit( final IGMLSchema gmlSchema )
   {
-    final List<IFeatureType> rHeads = step1( gmlSchema );
-    step2( rHeads );
+    final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
+    for( final IFeatureType ft : allFeatureTypes )
+    {
+      if( GMLSchemaUtilities.substitutes( ft, m_subsHeadQName ) )
+      {
+        m_result.add( ft );
+      }
+    }
     return true;
   }
 
-  private List<IFeatureType> step1( IGMLSchema gmlSchema )
-  {
-    // step 1
-    // BUGFIX: use ALL types of ALL known schemas in this context.
-    final Collection<IFeatureType> allTypes = new ArrayList<IFeatureType>( 100 );
-    GMLSchemaUtilities.collectTypes( gmlSchema, allTypes );
-    final IFeatureType[] allFeatureTypes = allTypes.toArray( new IFeatureType[allTypes.size()] );
-
-    // final IFeatureType[] allFeatureTypes = gmlSchema.getAllFeatureTypes();
-
-    final List<IFeatureType> rheads = new ArrayList<IFeatureType>();
-    for( int i = 0; i < allFeatureTypes.length; i++ )
-    {
-      final IFeatureType ft = allFeatureTypes[i];
-      if( ft.getSubstitutionGroupFT() == m_substitutionHeadFT )
-      {
-        m_result.add( ft );
-        rheads.add( ft );
-      }
-    }
-
-    return rheads;
-  }
-
-  private void step2( final List<IFeatureType> heads )
-  {
-    // step 2 check also for sub-substitutionGroups
-    final IFeatureType[] headFTs = heads.toArray( new IFeatureType[heads.size()] );
-    for( int i = 0; i < headFTs.length; i++ )
-    {
-      final IFeatureType ft = headFTs[i];
-      final List<IFeatureType> newPath = new ArrayList<IFeatureType>( m_path );
-      if( newPath.contains( ft ) )
-      {
-        System.out.println( "debug" + newPath );
-        throw new UnsupportedOperationException();
-      }
-      newPath.add( ft );
-      final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( m_contextGMLSchema, ft, m_includeAbstract, m_includeThis, newPath );
-      m_contextGMLSchema.accept( visitor );
-      final IFeatureType[] substitutes = visitor.getSubstitutes();
-      for( int j = 0; j < substitutes.length; j++ )
-      {
-        final IFeatureType ft2 = substitutes[j];
-        m_result.add( ft2 );
-      }
-    }
-  }
-
-  /**
-   * @return
-   */
   public IFeatureType[] getSubstitutes( )
   {
     final List<IFeatureType> result = new ArrayList<IFeatureType>();
@@ -148,9 +95,6 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     return result.toArray( new FeatureType[result.size()] );
   }
 
-  /**
-   * @param ft
-   */
   private boolean isRequested( final IFeatureType ft )
   {
     // abstract behaviour

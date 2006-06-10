@@ -77,8 +77,6 @@ public interface IFeatureType extends IInitialize, IAdaptable
 
   public IFeatureType getSubstitutionGroupFT( );
 
-  public IFeatureType[] getSubstituts( final IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis );
-
   public QName getQName( );
 
   /**

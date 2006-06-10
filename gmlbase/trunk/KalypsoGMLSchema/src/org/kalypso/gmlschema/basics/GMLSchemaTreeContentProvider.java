@@ -36,6 +36,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IDetailedFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
@@ -152,7 +153,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     {
       final IRelationType relationType = (IRelationType) parent;
       final IFeatureType targetFeatureType = relationType.getTargetFeatureType();
-      final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( m_context, true, true );
+      final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, m_context, true, true );
 
       final List<String> result = new ArrayList<String>();
       for( int i = 0; i < targetFeatureTypes.length; i++ )

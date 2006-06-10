@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -542,12 +541,10 @@ public class GMLSchema implements IGMLSchema
     if( visitor.visit( this ) && !schemasToIgnore.contains( this ) )
     {
       schemasToIgnore.add( this );
-      final GMLSchema[] imports = getImports();
-      for( int i = 0; i < imports.length; i++ )
-      {
-        final GMLSchema schema = imports[i];
+      for( final GMLSchema schema : getImports() )
         schema.innerAccept( visitor, schemasToIgnore );
-      }
+      for( final GMLSchema schema : getAdditionalSchemas() )
+        schema.innerAccept( visitor, schemasToIgnore );
     }
   }
 
@@ -632,24 +629,4 @@ public class GMLSchema implements IGMLSchema
   {
     return m_includedSchemas.toArray( new SchemaDocument[m_includedSchemas.size()] );
   }
-
-  /**
-   * @see org.kalypso.gmlschema.IGMLSchema#collectSchemas(java.util.Collection)
-   */
-  public void collectSchemas( final Collection<IGMLSchema> schemas )
-  {
-    // beware of recursion
-    if( schemas.contains( this ) )
-      return;
-
-    schemas.add( this );
-
-    final GMLSchema[] imports = getImports();
-    for( final GMLSchema schema : imports )
-      schema.collectSchemas( schemas );
-    final GMLSchema[] additionSchemas = getAdditionalSchemas();
-    for( final GMLSchema schema : additionSchemas )
-      schema.collectSchemas( schemas );
-  }
-
 }

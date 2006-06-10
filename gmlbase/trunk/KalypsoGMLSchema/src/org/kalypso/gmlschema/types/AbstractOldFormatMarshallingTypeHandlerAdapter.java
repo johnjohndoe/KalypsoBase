@@ -90,11 +90,17 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       IOUtils.closeQuietly( writer );
       // value is encoded in string
       final String xmlString = writer.toString();
+      
+      
       final InputSource input = new InputSource( new StringReader( xmlString ) );
+      
+      input.setEncoding( "UTF-8" );
+      
       final SAXParserFactory saxFac = SAXParserFactory.newInstance();
       saxFac.setNamespaceAware( true );
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
+      
       xmlReader.setContentHandler( contentHandler );
       xmlReader.parse( input );
     }

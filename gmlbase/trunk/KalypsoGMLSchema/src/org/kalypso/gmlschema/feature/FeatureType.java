@@ -41,12 +41,10 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -167,28 +165,6 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   public IFeatureContentType getFeatureContentType( )
   {
     return m_featureContentType;
-  }
-
-  public IFeatureType[] getSubstituts( IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
-  {
-    // TODO check
-    // wird das noch gebraucht, bitte kommentar warum (doemming)
-//    if( m_substituteFT == null ) // no substitutiongroup
-//    {
-//      if( inclusiveThis ) // return this ?
-//      {
-//        if( !includeAbstract && isAbstract() ) // abstract-behaviour ?
-//          return new FeatureType[0];
-//        return new FeatureType[] { this };
-//      }
-//      return new FeatureType[0];
-//    }
-    if( contextSchema == null )
-      contextSchema = getGMLSchema();
-    // query for it
-    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( contextSchema, this, includeAbstract, inclusiveThis );
-    contextSchema.accept( visitor );
-    return visitor.getSubstitutes();
   }
 
   /**
