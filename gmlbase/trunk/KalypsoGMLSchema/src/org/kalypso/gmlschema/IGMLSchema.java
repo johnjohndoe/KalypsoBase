@@ -52,8 +52,12 @@ import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
  */
 public interface IGMLSchema
 {
+  /**
+   * @return version of GML e.g. "2.2.1", "3.1."
+   */
   public String getGMLVersion( );
 
+  
   public String getTargetNamespace( );
 
   public void accept( final IGMLSchemaVisitor visitor );

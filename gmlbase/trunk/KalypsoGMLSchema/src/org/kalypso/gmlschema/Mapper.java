@@ -1,6 +1,7 @@
 package org.kalypso.gmlschema;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -109,6 +110,9 @@ public class Mapper
 
   public static Object defaultValueforJavaType( IValuePropertyType ftp, boolean createGeometry )
   {
+    if( ftp.isList())
+      return new ArrayList();
+    
     return defaultValueforJavaType( ftp.getClass(), createGeometry );
   }
 
