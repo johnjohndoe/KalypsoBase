@@ -71,7 +71,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
-import org.kalypso.contribs.eclipse.ui.PartAdapter2;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 
