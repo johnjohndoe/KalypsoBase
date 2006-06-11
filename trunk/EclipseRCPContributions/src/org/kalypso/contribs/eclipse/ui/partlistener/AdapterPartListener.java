@@ -203,4 +203,9 @@ public class AdapterPartListener implements IPartListener2
 
     m_adapterEater.setAdapter( adapter );
   }
+
+  public IWorkbenchPart getPart( )
+  {
+    return m_part;
+  }
 }
