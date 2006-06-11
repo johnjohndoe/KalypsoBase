@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.ui;
+package org.kalypso.contribs.eclipse.ui.partlistener;
 
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPartReference;
