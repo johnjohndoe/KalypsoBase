@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.jface,
 Bundle-ClassPath: lib/xbean.jar,
  lib/schiftone/shiftone-cache.jar,
  kalypsogmlschema.jar
-Bundle-Vendor: kalypso-org
+Bundle-Vendor: kalypso.org
 Export-Package: javax.xml.namespace,
  org.apache.xmlbeans,
  org.apache.xmlbeans.impl.common,
