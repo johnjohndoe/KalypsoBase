@@ -45,7 +45,7 @@ import java.util.Comparator;
 /**
  * @author belger
  */
-public class DoubleComparator implements Comparator
+public class DoubleComparator implements Comparator<Number>
 {
   private double m_delta = 0.0;
 
@@ -57,10 +57,10 @@ public class DoubleComparator implements Comparator
   /**
    * @see java.util.Comparator#compare(Object, Object)
    */
-  public int compare( Object o1, Object o2 )
+  public int compare( Number o1, Number o2 )
   {
-    double d1 = ( (Number)o1 ).doubleValue();
-    double d2 = ( (Number)o2 ).doubleValue();
+    double d1 = o1.doubleValue();
+    double d2 = o2.doubleValue();
 
     return compare( d1, d2 );
   }
