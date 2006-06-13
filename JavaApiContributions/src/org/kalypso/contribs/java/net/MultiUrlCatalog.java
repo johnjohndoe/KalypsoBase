@@ -53,21 +53,16 @@ import java.util.Set;
  */
 public class MultiUrlCatalog implements IUrlCatalog
 {
-  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
+  private final IUrlCatalog[] m_catalogs;
 
-  private final Map<String, String> m_prefixCatalog = new HashMap<String, String>();
+  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
 
   public MultiUrlCatalog( final IUrlCatalog[] catalogs )
   {
-    for( int i = 0; i < catalogs.length; i++ )
-    {
-      final IUrlCatalog catalog = catalogs[i];
-      final Map<String, URL> entries = catalog.getCatalog();
-      for( final String namespace : entries.keySet() )
-        m_prefixCatalog.put( namespace, catalog.getPreferedNamespacePrefix( namespace ) );
+    m_catalogs = catalogs;
 
-      m_catalog.putAll( entries );
-    }
+    for( final IUrlCatalog catalog : catalogs )
+      m_catalog.putAll( catalog.getCatalog() );
   }
 
   /**
@@ -85,7 +80,14 @@ public class MultiUrlCatalog implements IUrlCatalog
    */
   public String getPreferedNamespacePrefix( final String namespace )
   {
-    return m_prefixCatalog.get( namespace );
+    for( final IUrlCatalog catalog : m_catalogs )
+    {
+      final String prefix = catalog.getPreferedNamespacePrefix( namespace );
+      if( prefix != null )
+        return prefix;
+    }
+
+    return null;
   }
 
   /**
