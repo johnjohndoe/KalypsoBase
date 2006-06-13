@@ -41,7 +41,6 @@
 package org.kalypso.gmlschema.types;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -98,16 +97,16 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
       final String name = eltName.getFirstChild().getTextContent();
 
       final Element eltValue = (Element) elt.getElementsByTagName( "value" ).item( 0 );
-      
+
       // TODO currently value is a string. Better would be to make a type handler
-      // concept for metadataobject, according to the type attribute of the 
+      // concept for metadataobject, according to the type attribute of the
       // value element, one would use a specific type handler to serialize
       // the value.
       String value = null;
       if( eltValue.getFirstChild() != null )
         value = DomHelper.collectChildrenAsString( eltValue );
       final String type = eltValue.getAttribute( "type" );
-      final String[] strings = type.split(":");
+      final String[] strings = type.split( ":" );
       final QName qnType;
       if( strings.length == 1 )
       {
@@ -119,13 +118,15 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
         final String namespace = eltValue.lookupNamespaceURI( strings[0] );
         qnType = new QName( namespace, strings[1] );
       }
-      else // should never happen, because this is not valid according to the kom-Schema
+      else
+        // should never happen, because this is not valid according to the kom-Schema
         qnType = MetadataObject.DEFAULT_TYPE;
-      
-      final List<MetadataObject> list = new ArrayList<MetadataObject>();
-      list.add( new MetadataObject( name, value, qnType ) );
 
-      return list;
+//      final List<MetadataObject> list = new ArrayList<MetadataObject>();
+//      list.add( new MetadataObject( name, value, qnType ) );
+      return  new MetadataObject( name, value, qnType );
+
+//      return list;
     }
     else
       throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" );
@@ -136,17 +137,19 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
    *      java.net.URL)
    */
   @Override
-  protected void internalMarshall( final Object value, final Element element, final URL context ) throws TypeRegistryException
+  protected void internalMarshall( final Object value, final Element element, final URL context )
   {
-    final List<MetadataObject> list = (List<MetadataObject>) value;
+    // final List<MetadataObject> list = (List<MetadataObject>) value;
+    //
+    // if( list.size() == 0 )
+    // return;
+    //
+    // if( list.size() > 1 )
+    // throw new TypeRegistryException( "List is too big. Metadata property can only contain one list item." );
 
-    if( list.size() == 0 )
-      return;
+    // final MetadataObject md = list.get( 0 );
+    final MetadataObject md = (MetadataObject) value;
 
-    if( list.size() > 1 )
-      throw new TypeRegistryException( "List is too big. Metadata property can only contain one list item." );
-
-    final MetadataObject md = list.get( 0 );
     final Document doc = element.getOwnerDocument();
 
     final Element eltMd = doc.createElementNS( NS.KALYPSO_OM, "metaData" );
@@ -158,8 +161,11 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
 
     final Element eltValue = doc.createElementNS( NS.KALYPSO_OM, "value" );
     eltMd.appendChild( eltValue );
-    
-    eltValue.setAttribute( "type", element.lookupPrefix( md.getType().getNamespaceURI() ) + ":" + md.getType().getLocalPart() );
+
+    final String prefix = element.lookupPrefix( md.getType().getNamespaceURI() );
+    // TODO: this is probably null here, because the prefix 'xs' is not yet known
+    // How can we tell the element that xs maps to the schema namespace?
+    eltValue.setAttribute( "type", prefix + ":" + md.getType().getLocalPart() );
     if( md.getValue() != null )
     {
       // TODO: see also above concerning the remark on the type
