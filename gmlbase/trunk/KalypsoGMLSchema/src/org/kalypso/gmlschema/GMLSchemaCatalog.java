@@ -127,10 +127,16 @@ public final class GMLSchemaCatalog
     final URL catalogUrl;
     if( namespace.equals( NS.GML2 ) )
     {
-      if( gmlVersion != null )
-        catalogUrl = THE_CATALOG.getURL( namespace + "#" + gmlVersion.charAt( 0 ) );
+      final String version;
+      if( gmlVersion == null )
+        // if we get here and don't know the version number, we are probably loading
+        // a gml whichs schema is the gml schema directly.
+        // This is only possible for gml3 documents.
+        version = "3.1";
       else
-        throw new UnsupportedOperationException( "Never load the gml namespace without version information." );
+        version = gmlVersion;
+
+      catalogUrl = THE_CATALOG.getURL( namespace + "#" + version.charAt( 0 ) );
     }
     else
       catalogUrl = THE_CATALOG.getURL( namespace );
