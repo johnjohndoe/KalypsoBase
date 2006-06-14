@@ -53,17 +53,33 @@ public final class KalypsoOGC31JAXBcontext
 {
   private static JAXBContext m_context = null;
 
+  private static Class[] m_contextClass = null;
+
+  /**
+   * methode is intended to be used by parts that generate JAXB-contexts with many classes and need to collect them
+   * 
+   * @return classes needed for binding context
+   */
+  public static Class[] getContextClasses( )
+  {
+
+    if( m_contextClass == null )
+    {
+      m_contextClass = new Class[] {//  
+      ogc31.www.opengis.net.gml.ObjectFactory.class// 
+          , ogc31.www.opengis.net.swe.ObjectFactory.class//
+          , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
+          , au.csiro.seegrid.xml.st.ObjectFactory.class };
+    }
+    return m_contextClass;
+  }
+
   public static JAXBContext getContext( )
   {
     if( m_context == null )
     {
-      final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-      final Class CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
-      final Class CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
-      final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
-
       // create the context on all of these factories else the binding won't work
-      m_context = JaxbUtilities.createQuiet( CL_GML3, CL_SWE, CL_GMD, CL_ST );
+      m_context = JaxbUtilities.createQuiet( getContextClasses() );
     }
 
     return m_context;

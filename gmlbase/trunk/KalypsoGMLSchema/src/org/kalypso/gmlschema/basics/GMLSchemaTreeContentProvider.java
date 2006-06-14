@@ -30,8 +30,10 @@
 package org.kalypso.gmlschema.basics;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -154,17 +156,39 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       final IRelationType relationType = (IRelationType) parent;
       final IFeatureType targetFeatureType = relationType.getTargetFeatureType();
       final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, m_context, true, true );
+      final TreeSet<IFeatureType> sortedFTs = new TreeSet<IFeatureType>( new Comparator<IFeatureType>()
+      {
+        public int compare( IFeatureType ft1, IFeatureType ft2 )
+        {
+          String ns1 = ft1.getQName().getNamespaceURI();
+          String ns2 = ft2.getQName().getNamespaceURI();
+          if( ns1 == null )
+            ns1 = "";
+          if( ns2 == null )
+            ns2 = "";
+          if( ns1.equals( ns2 ) )
+          {
+            final String lp1 = ft1.getQName().getLocalPart();
+            final String lp2 = ft2.getQName().getLocalPart();
+            return lp1.compareTo( lp2 );
+          }
+          return ns1.compareTo( ns2 );
+        }
+      } );
+      for( final IFeatureType ft : targetFeatureTypes )
+      {
+        sortedFTs.add( ft );
+      }
 
       final List<String> result = new ArrayList<String>();
-      for( int i = 0; i < targetFeatureTypes.length; i++ )
+      for( final IFeatureType ft : sortedFTs )
       {
-        final IFeatureType type = targetFeatureTypes[i];
         final String isAbstract;
-        if( type.isAbstract() )
+        if( ft.isAbstract() )
           isAbstract = "\t  [x] abstract";
         else
           isAbstract = "";
-        result.add( " -> " + type.getQName() + isAbstract );
+        result.add( " -> " + ft.getQName() + isAbstract );
       }
       return result.toArray();
     }

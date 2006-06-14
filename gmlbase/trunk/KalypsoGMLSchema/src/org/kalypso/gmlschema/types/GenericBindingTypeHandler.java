@@ -52,6 +52,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -66,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 {
-  private final JAXBContext m_jaxbContext;
+  private final JAXBContextProvider m_jaxbContextProvider;
 
   private final QName m_xmlTypeQName;
 
@@ -85,9 +86,9 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see #GenericBindingTypeHandler(JAXBContext, QName, QName, Class, boolean, false)
    */
-  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry )
+  public GenericBindingTypeHandler( JAXBContextProvider jaxbContextProvider, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry )
   {
-    this( jaxbContext, xmlTypeQName, xmlTagQName, valueClass, isGeometry, false, false );
+    this( jaxbContextProvider, xmlTypeQName, xmlTagQName, valueClass, isGeometry, false, false );
   }
 
   /**
@@ -113,9 +114,9 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    *          explicitely calling startElement on the binding unmarshaller. It allows to parse complex types which are
    *          not subtypes of PropertyType.
    */
-  public GenericBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry, boolean considerSurroundingElement, boolean forceElementTagOnMarshall )
+  public GenericBindingTypeHandler( JAXBContextProvider jaxbContextProvider, QName xmlTypeQName, QName xmlTagQName, Class valueClass, boolean isGeometry, boolean considerSurroundingElement, boolean forceElementTagOnMarshall )
   {
-    m_jaxbContext = jaxbContext;
+    m_jaxbContextProvider = jaxbContextProvider;
     m_xmlTagQName = xmlTagQName;
     m_valueClass = valueClass;
     m_isGeometry = isGeometry;
@@ -124,15 +125,13 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     m_forceElementTagOnMarshall = forceElementTagOnMarshall;
   }
 
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
     // memory to xml
     try
     {
-
       // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
       // System.out.println( "debug" );
-      // TODO check if marshalling works now that there is the concept of "considerSurroundingElement"
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
@@ -140,7 +139,8 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       if( m_forceElementTagOnMarshall )
         contentHandler.startElement( namespaceURI, localPart, qNameString, new AttributesImpl() );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( m_jaxbContext );
+      final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
       final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_xmlTagQName, (Class<Object>) value.getClass(), value );
       marshaller.marshal( jaxElement, contentHandler );
 
@@ -153,14 +153,15 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     }
   }
 
-  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
     // System.out.println( "debug" );
     // xml to memory
     try
     {
-      final Unmarshaller unmarshaller = m_jaxbContext.createUnmarshaller();
+      final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
+      final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final UnmarshalResultProvider provider = new UnmarshalResultProvider()
       {
@@ -230,13 +231,14 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   {
     try
     {
-      final Unmarshaller unmarshaller = m_jaxbContext.createUnmarshaller();
+      final JAXBContext jaxBContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( null );
+      final Unmarshaller unmarshaller = jaxBContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
-      final Marshaller marshaller = m_jaxbContext.createMarshaller();
-      
+      final Marshaller marshaller = jaxBContext.createMarshaller();
+
       final JAXBElement<Object> jaxElement = new JAXBElement<Object>( m_xmlTagQName, (Class<Object>) objectToClone.getClass(), objectToClone );
       marshaller.marshal( jaxElement, unmarshallerHandler );
-      
+
       return unmarshallerHandler.getResult();
     }
     catch( final JAXBException e )

@@ -23,7 +23,10 @@ public interface ITypeRegistry<H extends ITypeHandler>
 
   /**
    * TODO: also depcrecate? see getTypeHandlerForClassName
+   * 
+   * @deprecated see {@link #getTypeHandlerForClassName(Class)}
    */
+  @Deprecated
   public boolean hasClassName( final Class className );
 
   public H getTypeHandlerForTypeName( final QName typeQName );

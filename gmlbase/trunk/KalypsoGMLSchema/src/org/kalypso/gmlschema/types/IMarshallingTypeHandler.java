@@ -25,7 +25,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param propQName
    *          name of the propertynode, must be full prefixed !!
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, final URL context ) throws TypeRegistryException;
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException;
 
   /**
    * creates an object of type {@link #getClassName()}from node.
@@ -33,7 +33,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param context
    *          use this context for relative url
    */
-  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException;
+  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname( );

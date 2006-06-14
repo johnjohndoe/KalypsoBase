@@ -73,7 +73,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
     // memory to xml
     try
@@ -90,17 +90,16 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       IOUtils.closeQuietly( writer );
       // value is encoded in string
       final String xmlString = writer.toString();
-      
-      
+
       final InputSource input = new InputSource( new StringReader( xmlString ) );
-      
+
       input.setEncoding( "UTF-8" );
-      
+
       final SAXParserFactory saxFac = SAXParserFactory.newInstance();
       saxFac.setNamespaceAware( true );
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
-      
+
       xmlReader.setContentHandler( contentHandler );
       xmlReader.parse( input );
     }
@@ -114,7 +113,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
     try
