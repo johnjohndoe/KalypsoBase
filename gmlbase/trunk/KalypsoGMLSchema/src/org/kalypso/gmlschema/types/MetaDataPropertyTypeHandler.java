@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.java.xml.DomHelper;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -87,7 +86,7 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
-  protected Object internalUnmarshall( final Node node, final IUrlResolver urlResolver ) throws TypeRegistryException
+  protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
     if( node != null && node.hasChildNodes() )
     {

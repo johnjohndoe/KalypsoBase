@@ -52,6 +52,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Document;
@@ -113,7 +114,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
     try
@@ -130,7 +131,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
             Object object = null;
             try
             {
-              object = unmarshall( node, null, urlResolver );
+              object = unmarshall( node, context, UrlResolverSingleton.getDefault() );
             }
             catch( TypeRegistryException e )
             {

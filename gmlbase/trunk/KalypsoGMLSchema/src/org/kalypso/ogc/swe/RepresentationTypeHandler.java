@@ -45,7 +45,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.w3c.dom.Document;
@@ -68,7 +67,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
-  protected Object internalUnmarshall( final Node node, final IUrlResolver urlResolver ) throws TypeRegistryException
+  protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
     if( node != null && node.hasChildNodes() )
     {

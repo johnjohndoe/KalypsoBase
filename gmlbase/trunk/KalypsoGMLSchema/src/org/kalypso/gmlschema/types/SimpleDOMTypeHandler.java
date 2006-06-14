@@ -134,7 +134,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.UnMarshallResultEater)
    */
-  public void unmarshal( final XMLReader xmlReader, final IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -149,7 +149,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
           {
             try
             {
-              final Object object = internalUnmarshall( node, urlResolver );
+              final Object object = internalUnmarshall( node );
               marshalResultEater.eat( object );
             }
             catch( TypeRegistryException e )
@@ -182,7 +182,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * Subclasses may extend
    */
   @SuppressWarnings("unused")
-  protected Object internalUnmarshall( Node node, IUrlResolver urlResolver ) throws TypeRegistryException
+  protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
     return node;
   }

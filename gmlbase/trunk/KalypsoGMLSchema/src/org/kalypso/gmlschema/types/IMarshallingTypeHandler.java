@@ -5,7 +5,6 @@ import java.text.ParseException;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
@@ -33,7 +32,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param context
    *          use this context for relative url
    */
-  public void unmarshal( XMLReader xmlReader, final IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
+  public void unmarshal( final XMLReader xmlReader, final URL context, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname( );

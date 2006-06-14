@@ -50,7 +50,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -153,7 +152,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     }
   }
 
-  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, URL context, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
     // System.out.println( "debug" );
