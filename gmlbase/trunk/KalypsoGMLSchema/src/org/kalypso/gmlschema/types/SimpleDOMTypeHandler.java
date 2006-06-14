@@ -52,7 +52,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Document;
@@ -198,7 +197,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }

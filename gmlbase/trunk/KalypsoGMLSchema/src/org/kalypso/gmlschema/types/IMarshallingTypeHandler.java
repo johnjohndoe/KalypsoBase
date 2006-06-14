@@ -37,7 +37,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname( );
 
-  public Object cloneObject( final Object objectToClone ) throws CloneNotSupportedException;
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException;
 
   /** Creates an instance of my type from a string */
   public Object parseType( final String text ) throws ParseException;

@@ -226,11 +226,11 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     try
     {
-      final JAXBContext jaxBContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( null );
+      final JAXBContext jaxBContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Unmarshaller unmarshaller = jaxBContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final Marshaller marshaller = jaxBContext.createMarshaller();
