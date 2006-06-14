@@ -422,9 +422,9 @@
 					<element name="profileMember" type="om:AbstractObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???profileMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Profile</label>
+								<tooltip>Profile</tooltip>
+								<description>Profile</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -481,9 +481,9 @@
 						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???profileMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Profile</label>
+								<tooltip>Profile</tooltip>
+								<description>Profile</description>
 							</documentation>
 						</annotation>
 					</element>
