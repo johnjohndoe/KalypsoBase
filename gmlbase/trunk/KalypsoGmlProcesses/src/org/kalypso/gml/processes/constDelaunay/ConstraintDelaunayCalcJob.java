@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -73,6 +74,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
   {
     final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" );
     final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" );
+    final Double qualityMinAngle = (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" );
 
     final long lTimeout = PROCESS_TIMEOUT;
 
@@ -128,13 +130,21 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       // ATTENTION triangle.exe must be found via PATH
       // TODO: in case security manager is used, catalina.policy must be adapted to allow access to cmd.exe (or even
       // more...)
-      final String sCmd = "cmd /c triangle.exe -c -p -q10 " + polyfile.getName();
+      final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
+      if( qualityMinAngle != null )
+      {
+        cmd.append( "-q" );
+        cmd.append( qualityMinAngle.doubleValue() );
+      }
+
+      cmd.append( ' ' );
+      cmd.append( polyfile.getName() );
 
       monitor.setProgress( 20 );
       monitor.setMessage( "Executing triangle.exe" );
 
       // start calculation
-      ProcessHelper.startProcess( sCmd, null, tmpdir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
+      ProcessHelper.startProcess( cmd.toString(), null, tmpdir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
 
       // load results + copy to result folder
       monitor.setProgress( 60 );
@@ -145,7 +155,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       final File eleFile = new File( tmpdir, "input.1.ele" );
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
-      
+
       final GMLWorkspace elementWorkspace = readElements( nodeReader, eleReader, crs );
       writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
 
@@ -172,6 +182,8 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
   private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, CS_CoordinateSystem crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
   {
+    final TimeLogger logger = new TimeLogger( "Start reading mesh points" );
+
     // ignore first line, we don't check the file format
     final String firstLine = nodeReader.readLine();
     final StringTokenizer firstTokenizer = new StringTokenizer( firstLine );
@@ -198,10 +210,17 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       points[id] = position;
     }
 
+    logger.showElapsedTime( "Nodes read." );
+
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( GmlProcessesUrlCatalog.NS_MESH, new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ) );
     final Feature rootFeature = workspace.getRootFeature();
+    final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" );
+    final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );
+
+    logger.showElapsedTime( "Start reading elements." );
 
     eleReader.readLine(); // ignore first line
+    final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
     while( eleReader.ready() )
     {
       final String string = eleReader.readLine();
@@ -221,9 +240,12 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       final GM_Surface surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
 
-      final Feature feature = FeatureHelper.addFeature( rootFeature, new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" ), new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ) );
-      feature.setProperty( new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ), surface );
+      final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
+      
+      newFeature.setProperty( geomName, surface );
     }
+
+    logger.showElapsedTime( "Elements read." );
 
     return workspace;
   }
@@ -236,9 +258,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
     int totalPointCount = 0;
     int totalSegmentCount = 0;
-    
+
     CS_CoordinateSystem crs = null;
-    
+
     for( final Object geoObject : list )
     {
       if( geoObject instanceof GM_Curve )
@@ -246,10 +268,10 @@ public class ConstraintDelaunayCalcJob implements ISimulation
         try
         {
           final GM_Curve curve = (GM_Curve) geoObject;
-          
+
           if( crs == null )
             crs = curve.getCoordinateSystem();
-          
+
           final GM_LineString lineString;
           lineString = curve.getAsLineString();
           breaklines.add( lineString );
@@ -314,7 +336,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     writer.println( "" );
 
     writer.flush();
-    
+
     return crs;
   }
 

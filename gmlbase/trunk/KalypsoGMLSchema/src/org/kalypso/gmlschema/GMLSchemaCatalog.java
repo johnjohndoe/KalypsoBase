@@ -125,9 +125,9 @@ public final class GMLSchemaCatalog
     // HACK: if we are looking for the gml namespace
     // tweak it and add the version number
     final URL catalogUrl;
+    final String version;
     if( namespace.equals( NS.GML2 ) )
     {
-      final String version;
       if( gmlVersion == null )
         // if we get here and don't know the version number, we are probably loading
         // a gml whichs schema is the gml schema directly.
@@ -139,13 +139,16 @@ public final class GMLSchemaCatalog
       catalogUrl = THE_CATALOG.getURL( namespace + "#" + version.charAt( 0 ) );
     }
     else
+    {
       catalogUrl = THE_CATALOG.getURL( namespace );
+      version = gmlVersion;
+    }
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
 
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
-    return THE_CACHE.getSchema( namespace, gmlVersion, schemaUrl );
+    return THE_CACHE.getSchema( namespace, version, schemaUrl );
   }
 
   /**

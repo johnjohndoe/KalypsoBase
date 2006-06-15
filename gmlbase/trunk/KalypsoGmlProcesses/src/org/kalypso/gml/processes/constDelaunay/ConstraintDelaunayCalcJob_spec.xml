@@ -5,6 +5,7 @@
         Dateien relativ zur Rechenvariante  -->
     <input id="BREAKLINES_GML" description="GML-Datei, die Bruchkanten enthält"/>
     <input id="BREAKLINES_PATH" type="xs:string" description="Feature-Path auf Bruchkanten in Bruchkanten-GML"/>
+    <input id="QUALITY_MIN_ANGLE" type="xs:double" optional="true" description="Minimaler Winkel der Dreiecksvermaschung"/>
     <!-- 
     Ergebniss -->
     <output id="ResultFilePoly" optional="true" description="result from TRIANGLE"/>

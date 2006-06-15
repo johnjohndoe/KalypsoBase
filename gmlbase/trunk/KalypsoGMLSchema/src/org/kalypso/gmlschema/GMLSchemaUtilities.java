@@ -128,7 +128,7 @@ public class GMLSchemaUtilities
    */
   public static boolean substitutes( final IFeatureType type, final QName substitueeName )
   {
-    // everyone is substituing itself
+    // everyone is substituting himself
     if( type.getQName().equals( substitueeName ) )
       return true;
 
