@@ -11,9 +11,8 @@ import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapte
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
