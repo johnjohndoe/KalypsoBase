@@ -154,11 +154,11 @@ public class UnzippedJarSimulationDataProvider implements ISimulationDataProvide
       if( "string".equals( localPart ) )
         return DatatypeConverter.parseString( path );
       else if( "int".equals( localPart ) )
-        DatatypeConverter.parseInt( path );
+        return DatatypeConverter.parseInt( path );
       else if( "double".equals( localPart ) )
-        DatatypeConverter.parseDouble( path );
+        return DatatypeConverter.parseDouble( path );
       else if( "boolean".equals( localPart ) )
-        DatatypeConverter.parseBoolean( path );
+        return DatatypeConverter.parseBoolean( path );
     }
 
     throw new SimulationException( "Unbekannter Typ für 'path':" + type, null );
