@@ -291,6 +291,7 @@ public class CalcJobHandler
     }
     catch( final IOException e )
     {
+      e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Eingangsdaten konnten nicht erzeugt werden." ) );
     }
     finally
