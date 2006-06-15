@@ -3,12 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoGmlProcesses Plug-in
 Bundle-SymbolicName: org.kalypso.gml.processes; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: org.kalypso.gml.processes/
+Bundle-ClassPath: org.kalypso.gml.processes/,
+ lib/jargs.jar
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.simulation.core,
  org.kalypso.deegree,
- org.kalypso.core
+ org.kalypso.core,
+ org.junit
 Eclipse-AutoStart: true

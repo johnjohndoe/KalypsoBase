@@ -1,0 +1,114 @@
+package com.bce.gis.operation.hmo2fli;
+
+import java.util.List;
+import java.util.Vector;
+
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.algorithm.PointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
+
+/**
+ * <p>
+ * Diese Operation sucht zu einer Coordinate alle überdeckenden Ringe einer Geometry raus.
+ * </p>
+ * <p>
+ * Ist die Geometry keine Collection, wird die gleiche Geometry zurückgegeben, wenn sie die Coordinate enthält und ein
+ * LinearRing ist
+ * </p>
+ * <p>
+ * Ist die Geometry eine Collection, werden alle LinearRing's zurückgegeben, die die Coordinate enthalten
+ * </p>
+ * 
+ * @author belger
+ */
+public class TriangleDoubleProvider implements DoubleProvider
+{
+  // private final SpatialIndex m_index;
+
+  private FeatureList m_triangleList;
+
+  public TriangleDoubleProvider( final FeatureList triangleList )
+  {
+    m_triangleList = triangleList;
+
+    // m_index = new STRtree( );
+    //
+    // final int num = lrs.length;
+    //
+    // if( pm != null )
+    // pm.reset( 0, num );
+    //			
+    // for( int i = 0; i < num; i++ )
+    // {
+    // m_index.insert( lrs[i].getEnvelopeInternal(), lrs[i] );
+    //					
+    // if( pm != null )
+    // pm.setCurrent( i );
+    // }
+    //
+    // // den Index abschliessen, kann sehr lange dauern
+    // ((STRtree)m_index).build();
+  }
+
+  private final LinearRing[] getAllContaining( final Coordinate c ) throws GM_Exception
+  {
+    final Vector<LinearRing> results = new Vector<LinearRing>();
+
+    final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
+    final List<GM_Surface> list = m_triangleList.query( position, null );
+
+    for( final GM_Surface surface : list )
+    {
+      final Geometry geometry = JTSAdapter.export( surface );
+      if( geometry instanceof Polygon )
+      {
+        final Polygon poly = (Polygon) geometry;
+        final LinearRing exteriorRing = (LinearRing) poly.getExteriorRing();
+
+        final PointInRing pir = new SimplePointInRing( exteriorRing );
+        if( pir.isInside( c ) )
+          results.add( exteriorRing );
+
+        results.add( exteriorRing );
+      }
+    }
+
+    // final List envs = m_index.query( new Envelope( c ) );
+    //
+    // for( final Iterator it = envs.iterator(); it.hasNext(); )
+    // {
+    // final LinearRing lr = (LinearRing) it.next();
+    // final PointInRing pir = new SimplePointInRing( lr );
+    //
+    // if( pir.isInside( c ) )
+    // results.add( lr );
+    // }
+
+    return results.toArray( new LinearRing[results.size()] );
+  }
+
+  public final double getDouble( final Coordinate c )
+  {
+    try
+    {
+      final LinearRing[] rings = getAllContaining( c );
+      return rings.length == 0 ? Double.NaN : new HeightFromTriangle( rings[0] ).getHeight( c );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      return Double.NaN;
+    }
+  }
+}
