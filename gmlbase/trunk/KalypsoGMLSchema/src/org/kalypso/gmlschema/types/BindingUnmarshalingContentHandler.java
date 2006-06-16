@@ -42,7 +42,6 @@ package org.kalypso.gmlschema.types;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
@@ -88,17 +87,13 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    */
   public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
-    // double hack - do not remove
-    // 1. hack:
+    // hack:
     // deegree-bug gazetteer provides gml:box instead of gml:Box
-    // 2. hack
-    // GML3.1 is not compatible to GML2 gml:Box -> gml:Envelope
-    // we use GML3-binding for geometries, so simulate a GML3-Envelope instead of gml:Box
-    // any questions ? ask me (v.doemming).
-    if( NS.GML2.equals( uri ) && "box".equalsIgnoreCase( local ) )
+    // (doemming)
+    if( NS.GML2.equals( uri ) && "box".equals( local ) )
     {
-      local = "Envelope";
-      qname = qname.replaceFirst( "(b|B)ox", "Envelope" );
+      local = "Box";
+      qname = qname.replaceFirst( "box", "Box" );
     }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
@@ -114,20 +109,20 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
   }
 
-  private String indent( )
-  {
-    if( m_level > 0 )
-      return StringUtils.repeat( " ", m_level );
-    return "?";
-  }
+//  private String indent( )
+//  {
+//    if( m_level > 0 )
+//      return StringUtils.repeat( " ", m_level );
+//    return "?";
+//  }
 
   public void endElement( String uri, String local, String qname ) throws SAXException
   {
     // hack, see comment in startElement
-    if( NS.GML2.equals( uri ) && "box".equalsIgnoreCase( local ) )
+    if( NS.GML2.equals( uri ) && "box".equals( local ) )
     {
-      local = "Envelope";
-      qname = qname.replaceFirst( "(b|B)ox", "Envelope" );
+      local = "Box";
+      qname = qname.replaceFirst( "box", "Box" );
     }
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;

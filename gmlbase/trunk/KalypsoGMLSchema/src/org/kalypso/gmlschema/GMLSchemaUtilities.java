@@ -509,7 +509,11 @@ public class GMLSchemaUtilities
           final IFeatureType type = targetFeatureTypes[j];
           if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
             result.add( newPath + "[" + type.getQName().getLocalPart() + "]" );
-          createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
+          String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
+//          for( String string : strings )
+//          {
+//           // TODO complete 
+//          }
         }
       }
     }

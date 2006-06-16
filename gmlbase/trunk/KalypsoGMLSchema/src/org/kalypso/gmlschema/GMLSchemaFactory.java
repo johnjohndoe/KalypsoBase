@@ -179,22 +179,21 @@ public class GMLSchemaFactory
     // this could also be used to later load the right GML schema
 
     // switch GML3 / GML2
-    final String version;
+    String version;
     if( gmlVersion == null )
     {
-//    final String version = "2.1";
-//    final String version = "3.1";
+      // final String version = "2.1";
+      // final String version = "3.1";
 
       final String parsedGmlVersion = GMLSchemaUtilities.parseGmlVersion( schemaDocument );
-      
+
       // we must decide for the first schema, which gml version it is
       // if we have no appinfo, default to gml2?
-      
+
       version = parsedGmlVersion == null ? "2.1" : parsedGmlVersion;
     }
     else
       version = gmlVersion;
-    
     System.out.println( "USING GML VERSION " + version + " on Schema: " + schemaDocument.getSchema().getTargetNamespace() );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );
