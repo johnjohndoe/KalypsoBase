@@ -108,27 +108,35 @@ public class XMLHelper
 
   public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os ) throws TransformerException
   {
-    writeDOM( xmlDOM, charset, new StreamResult( os ) );
+    writeDOM( xmlDOM, charset, new StreamResult( os ), true  );
   }
 
   public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
+  {
+    writeDOM( xmlDOM, charset, writer, true );
+  }
+
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer, final boolean indent ) throws TransformerException
   {
     // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
     // da sonst Mist rauskommt
     if( charset == null )
       throw new NullPointerException( "charset is null" );
 
-    writeDOM( xmlDOM, charset, new StreamResult( writer ) );
+    writeDOM( xmlDOM, charset, new StreamResult( writer ), indent );
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult, final boolean indent ) throws TransformerException
   {
     final TransformerFactory tFactory = TransformerFactory.newInstance();
 
     final Transformer t = tFactory.newTransformer();
 
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    if( indent )
+    {
+      t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+      t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    }
     if( charset != null )
       t.setOutputProperty( OutputKeys.ENCODING, charset );
 
