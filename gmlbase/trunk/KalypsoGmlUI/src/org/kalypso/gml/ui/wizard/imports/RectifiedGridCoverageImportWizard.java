@@ -139,7 +139,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Creating " + gmlFileName, 3 );
+        monitor.beginTask( "Creating " + gmlFileName, 4 );
 
         try
         {
@@ -164,7 +164,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           //
           // TODO: get crs from user via wizard page
           final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
-          
+
           final WorldFile worldFile = new WorldFileReader().readWorldFileForImageFile( importFile );
 
           final RenderedOp image = JAI.create( "fileload", inputFilePath );
@@ -175,7 +175,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( worldFile.getUlcx(), worldFile.getUlcy() + (height * worldFile.getDx()), worldFile.getUlcx() + (width * worldFile.getDx()), worldFile.getUlcy() );
 
           final double[] lows = new double[] { 0, 0 };
-          final double[] highs = new double[] { width, height};
+          final double[] highs = new double[] { width, height };
 
           final GridRange gridRange = new GridRange_Impl( lows, highs );
 
@@ -201,13 +201,11 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           final RangeSetType rangeSet = GML3_FAC.createRangeSetType();
           rangeSet.setFile( rangeSetFile );
 
-          // final GM_Envelope envelope = GeometryFactory.createGM_Envelope( 0, 0, 100, 100 );
-
           final Feature rgcFeature = workspace.getRootFeature();
-          // rgcFeature.setProperty( new QName( NS.GML3, "boundedBy" ), envelope );
+          // TODO: uncomment, as soon as we are able to serialize GM_Envelopes 
+//          rgcFeature.setProperty( new QName( NS.GML3, "boundedBy" ), domain.getGM_Envelope( crs ) );
           rgcFeature.setProperty( new QName( NS.GML3, "description" ), "Imported via Kalypso from " + inputFilePath );
           rgcFeature.setProperty( new QName( NS.GML3, "rectifiedGridDomain" ), domain );
-          // TODO: shoudn't we set the file set directly here?
           rgcFeature.setProperty( new QName( NS.GML3, "rangeSet" ), rangeSet );
 
           monitor.worked( 1 );

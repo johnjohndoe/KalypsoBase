@@ -49,22 +49,15 @@ import com.vividsolutions.jts.geom.Coordinate;
 public abstract class AbstractDoubleRaster implements DoubleRaster
 {
   /**
-   * @return Midpoint of Rasterposition x,y
+   * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
    */
-  public final Coordinate calcMid( final int x, final int y, final Coordinate c )
+  public final Coordinate calcCoordinate( final int x, final int y, final Coordinate c )
   {
-    return createCoordinate( getOrigin().x + x * getRasterSize() + (getRasterSize() / 2), getOrigin().y + y * getRasterSize() + (getRasterSize() / 2), getValueChecked( x, y ), c );
-  }
+    final Coordinate coordinate = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, c );
 
-  private final static Coordinate createCoordinate( final double x, final double y, final double z, final Coordinate c )
-  {
-    final Coordinate newC = c == null ? new Coordinate() : c;
-
-    newC.x = x;
-    newC.y = y;
-    newC.z = z;
-
-    return newC;
+    final double value = getValueChecked( x, y );
+    coordinate.z = value;
+    return coordinate;
   }
 
   public final Object walk( final DoubleRasterWalker pwo, final Progressable pable ) throws DoubleRasterException
@@ -81,7 +74,7 @@ public abstract class AbstractDoubleRaster implements DoubleRaster
     for( int y = sizeY - 1; y >= -1; y-- )
     {
       for( int x = 0; x < sizeX; x++ )
-        pwo.operate( x, y, calcMid( x, y, tmpCrd ) );
+        pwo.operate( x, y, calcCoordinate( x, y, tmpCrd ) );
 
       if( pable != null )
         pable.setCurrent( sizeY - y );

@@ -74,7 +74,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
   {
     final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" );
     final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" );
-    final Double qualityMinAngle = (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" );
+    final Double qualityMinAngle = inputProvider.hasID( "QUALITY_MIN_ANGLE" ) ? (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" ) : null;
 
     final long lTimeout = PROCESS_TIMEOUT;
 
@@ -241,7 +241,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       final GM_Surface surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
 
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
-      
+
       newFeature.setProperty( geomName, surface );
     }
 

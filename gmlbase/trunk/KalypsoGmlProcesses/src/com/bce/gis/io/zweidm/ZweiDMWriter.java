@@ -17,87 +17,86 @@ import com.vividsolutions.jts.geom.LinearRing;
  * Writes a set of linear rings into a 2dm mesh file.
  * </p>
  * <p>
- * Each linear ring must be a closed triangle, which will be oriented counter
- * clock wise before writing.
+ * Each linear ring must be a closed triangle, which will be oriented counter clock wise before writing.
  * </p>
  * 
  * @author belger
  */
 public class ZweiDMWriter
 {
-	private final LinearRing[] m_rings;
+  private final LinearRing[] m_rings;
 
-	public ZweiDMWriter( final LinearRing[] rings )
-	{
-		m_rings = rings;
-	}
+  public ZweiDMWriter( final LinearRing[] rings )
+  {
+    m_rings = rings;
+  }
 
-	public void write( final Writer w )
-	{
-		final PrintWriter pw = new PrintWriter( w );
+  public void write( final Writer w )
+  {
+    final PrintWriter pw = new PrintWriter( w );
 
-		// write head
-		pw.println( "MESH2D" );
-		pw.println( "T1" );
-		pw.println( "T2" );
-		pw.println( "T3" );
+    // write head
+    pw.println( "MESH2D" );
+    pw.println( "T1" );
+    pw.println( "T2" );
+    pw.println( "T3" );
 
-		final RobustCGAlgorithms robustCGAlgorithms = new RobustCGAlgorithms();
+    final RobustCGAlgorithms robustCGAlgorithms = new RobustCGAlgorithms();
 
-		// write triangles
-		// IMPORTANT: use linked hashmap, so the orering of insertion stays the same
-		final LinkedHashMap<Coordinate, Integer> crdSet = new LinkedHashMap<Coordinate, Integer>( m_rings.length * 3 );
-		for( int i = 0; i < m_rings.length; i++ )
-		{
-			final LinearRing ring = m_rings[i];
+    // write triangles
+    // IMPORTANT: use linked hashmap, so the orering of insertion stays the same
+    final LinkedHashMap<Coordinate, Integer> crdSet = new LinkedHashMap<Coordinate, Integer>( m_rings.length * 3 );
+    for( int i = 0; i < m_rings.length; i++ )
+    {
+      final LinearRing ring = m_rings[i];
 
-			pw.print( "E3T " );
-			pw.print( i + 1 );
-			pw.print( " " );
+      pw.print( "E3T " );
+      pw.print( i + 1 );
+      pw.print( " " );
 
-			final Coordinate[] coordinates = ring.getCoordinates();
-			if( coordinates == null || coordinates.length != 4 )
-				throw new IllegalArgumentException( "Ring with wrong number of coordinates.\nMust be a closed ring with 4 coordinates.\n" + ring );
+      final Coordinate[] coordinates = ring.getCoordinates();
+      if( coordinates == null || coordinates.length != 4 )
+        throw new IllegalArgumentException( "Ring with wrong number of coordinates.\nMust be a closed ring with 4 coordinates.\n" + ring );
 
-			if( !robustCGAlgorithms.isCCW( coordinates ) )
-				ArrayUtils.reverse( coordinates );
+      if( !robustCGAlgorithms.isCCW( coordinates ) )
+        ArrayUtils.reverse( coordinates );
 
-			for( int j = 0; j < coordinates.length - 1; j++ )
-			{
-				final Coordinate crd = coordinates[j];
+      for( int j = 0; j < coordinates.length - 1; j++ )
+      {
+        final Coordinate crd = coordinates[j];
 
-				final int nodeIndex;
-				if( crdSet.containsKey( crd ) )
-					nodeIndex = crdSet.get( crd );
-				else
-				{
-					nodeIndex = crdSet.size() + 1;
-					crdSet.put( crd, nodeIndex );
-				}
+        final int nodeIndex;
+        if( crdSet.containsKey( crd ) )
+          nodeIndex = crdSet.get( crd );
+        else
+        {
+          nodeIndex = crdSet.size() + 1;
+          crdSet.put( crd, nodeIndex );
+        }
 
-				pw.print( nodeIndex );
-				pw.print( " " );
-			}
+        pw.print( nodeIndex );
+        pw.print( " " );
+      }
 
-			pw.println( "1" );
-		}
+      pw.println( "1" );
+    }
 
-		// write nodes
-		for( final Map.Entry<Coordinate, Integer> entry : crdSet.entrySet() )
-		{
-			final Coordinate crd = entry.getKey();
-			final int nodeIndex = entry.getValue();
+    // write nodes
+    for( final Map.Entry<Coordinate, Integer> entry : crdSet.entrySet() )
+    {
+      final Coordinate crd = entry.getKey();
+      final int nodeIndex = entry.getValue();
 
-			pw.print( "ND " );
-			pw.print( nodeIndex );
-			pw.print( " " );
-			pw.printf( Locale.ENGLISH, "%.3f", crd.x );
-			pw.print( " " );
-			pw.printf( Locale.ENGLISH, "%.3f", crd.y );
-			pw.print( " " );
-			pw.printf( Locale.ENGLISH, "%.2f", crd.z );
-			pw.println();
-		}
-	}
+      pw.print( "ND " );
+      pw.print( nodeIndex );
+      pw.print( " " );
+      pw.printf( Locale.ENGLISH, "%.3f", crd.x );
+      pw.print( " " );
+      pw.printf( Locale.ENGLISH, "%.3f", crd.y );
+      pw.print( " " );
+      pw.printf( Locale.ENGLISH, "%.2f", crd.z );
+      pw.println();
+    }
+  }
 
 }

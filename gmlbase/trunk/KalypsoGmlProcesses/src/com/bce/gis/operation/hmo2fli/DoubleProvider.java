@@ -9,5 +9,5 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public interface DoubleProvider
 {
-	public double getDouble( final Coordinate crd );
+  public double getDouble( final Coordinate crd );
 }

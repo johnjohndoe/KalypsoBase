@@ -14,60 +14,66 @@ import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
 
 /**
- * <p>Diese Operation sucht zu einer Coordinate alle überdeckenden Ringe einer Geometry raus.</p>
- * 
- * <p>Ist die Geometry keine Collection, wird die gleiche Geometry zurückgegeben, wenn sie die Coordinate enthält und ein LinearRing ist</p>
- * <p>Ist die Geometry eine Collection, werden alle LinearRing's zurückgegeben, die die Coordinate enthalten</p>
+ * <p>
+ * Diese Operation sucht zu einer Coordinate alle überdeckenden Ringe einer Geometry raus.
+ * </p>
+ * <p>
+ * Ist die Geometry keine Collection, wird die gleiche Geometry zurückgegeben, wenn sie die Coordinate enthält und ein
+ * LinearRing ist
+ * </p>
+ * <p>
+ * Ist die Geometry eine Collection, werden alle LinearRing's zurückgegeben, die die Coordinate enthalten
+ * </p>
  * 
  * @author belger
  */
 public class GetRingsOperation implements DoubleProvider
 {
-	private final SpatialIndex m_index;
-	
-	public GetRingsOperation( final LinearRing[] lrs, final Progressable pm )
-	{
-		m_index = new STRtree( );
+  private final SpatialIndex m_index;
 
-		final int num = lrs.length;
+  public GetRingsOperation( final LinearRing[] lrs, final Progressable pm )
+  {
+    m_index = new STRtree();
 
-		if( pm != null )
-			pm.reset( 0, num );
-			
-		for( int i = 0; i < num; i++ )
-		{
-				m_index.insert( lrs[i].getEnvelopeInternal(), lrs[i] );
-					
-				if( pm != null )
-					pm.setCurrent( i );
-		}
+    final int num = lrs.length;
 
-		// den Index abschliessen, kann sehr lange dauern
-		((STRtree)m_index).build();		
-	}			
-		
-	@SuppressWarnings("unchecked")
-	public final LinearRing[] getAllContaining( final Coordinate c )
-	{
-		final Vector<LinearRing> results = new Vector<LinearRing>();
-		
-		final List envs = m_index.query( new Envelope( c ) );
+    if( pm != null )
+      pm.reset( 0, num );
 
-		for( final Iterator it = envs.iterator(); it.hasNext(); )
-		{
-			final LinearRing lr = (LinearRing)it.next();
-			final PointInRing pir = new SimplePointInRing( lr );
-		
-			if( pir.isInside( c ) )
-				results.add( lr );
-		}
-		
-		return results.toArray( new LinearRing[results.size()] );
-	}
+    for( int i = 0; i < num; i++ )
+    {
+      m_index.insert( lrs[i].getEnvelopeInternal(), lrs[i] );
 
-	public final double getDouble( final Coordinate c )
-	{
-		final LinearRing[] rings = getAllContaining( c );
-		return rings.length == 0 ? Double.NaN : new HeightFromTriangle( rings[0] ).getHeight( c );
-	}
+      if( pm != null )
+        pm.setCurrent( i );
+    }
+
+    // den Index abschliessen, kann sehr lange dauern
+    ((STRtree) m_index).build();
+  }
+
+  @SuppressWarnings("unchecked")
+  public final LinearRing[] getAllContaining( final Coordinate c )
+  {
+    final Vector<LinearRing> results = new Vector<LinearRing>();
+
+    final List envs = m_index.query( new Envelope( c ) );
+
+    for( final Iterator it = envs.iterator(); it.hasNext(); )
+    {
+      final LinearRing lr = (LinearRing) it.next();
+      final PointInRing pir = new SimplePointInRing( lr );
+
+      if( pir.isInside( c ) )
+        results.add( lr );
+    }
+
+    return results.toArray( new LinearRing[results.size()] );
+  }
+
+  public final double getDouble( final Coordinate c )
+  {
+    final LinearRing[] rings = getAllContaining( c );
+    return rings.length == 0 ? Double.NaN : new HeightFromTriangle( rings[0] ).getHeight( c );
+  }
 }

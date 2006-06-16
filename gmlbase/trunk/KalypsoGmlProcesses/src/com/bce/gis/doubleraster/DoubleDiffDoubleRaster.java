@@ -63,7 +63,7 @@ public class DoubleDiffDoubleRaster extends AbstractDoubleRaster implements Doub
    */
   public double getValue( final int x, final int y )
   {
-    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y );
+    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, null );
 
     final double rasterValue = m_raster.getValue( x, y );
 
@@ -77,7 +77,7 @@ public class DoubleDiffDoubleRaster extends AbstractDoubleRaster implements Doub
    */
   public double getValueChecked( int x, int y )
   {
-    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y );
+    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, null );
 
     final double rasterValue = m_raster.getValueChecked( x, y );
 
@@ -95,14 +95,6 @@ public class DoubleDiffDoubleRaster extends AbstractDoubleRaster implements Doub
   }
 
   /**
-   * @see com.bce.gis.doubleraster.DoubleRaster#getRasterSize()
-   */
-  public double getRasterSize( )
-  {
-    return m_raster.getRasterSize();
-  }
-
-  /**
    * @see com.bce.gis.doubleraster.DoubleRaster#getSizeX()
    */
   public int getSizeX( )
@@ -116,5 +108,21 @@ public class DoubleDiffDoubleRaster extends AbstractDoubleRaster implements Doub
   public int getSizeY( )
   {
     return m_raster.getSizeY();
+  }
+
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRaster#getOffsetX()
+   */
+  public Coordinate getOffsetX( )
+  {
+    return m_raster.getOffsetX();
+  }
+
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRaster#getOffsetY()
+   */
+  public Coordinate getOffsetY( )
+  {
+    return m_raster.getOffsetY();
   }
 }

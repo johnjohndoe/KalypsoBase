@@ -87,14 +87,16 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       marshall( value, element, context );
       // value is encoded in xml in document object
       final StringWriter writer = new StringWriter();
-      XMLHelper.writeDOM( document, "UTF-8", writer );
+      // REMARK: we do not write the dom formatted here (argument false), because later the
+      // content handler will probably do the formatting (IndentContentHandler). If we format here, we will get empty
+      // lines later.
+      XMLHelper.writeDOM( document, "UTF-8", writer, false );
       IOUtils.closeQuietly( writer );
       // value is encoded in string
       final String xmlString = writer.toString();
 
       final InputSource input = new InputSource( new StringReader( xmlString ) );
-
-      input.setEncoding( "UTF-8" );
+      // input.setEncoding( "UTF-8" );
 
       final SAXParserFactory saxFac = SAXParserFactory.newInstance();
       saxFac.setNamespaceAware( true );

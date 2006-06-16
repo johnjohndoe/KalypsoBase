@@ -3,6 +3,10 @@ package com.bce.gis.operation.hmo2fli;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -36,10 +40,12 @@ public class TriangleDoubleProvider implements DoubleProvider
   // private final SpatialIndex m_index;
 
   private FeatureList m_triangleList;
+  public final QName QN_GEOM_TRIANGLE;
 
   public TriangleDoubleProvider( final FeatureList triangleList )
   {
     m_triangleList = triangleList;
+    QN_GEOM_TRIANGLE = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
 
     // m_index = new STRtree( );
     //
@@ -65,10 +71,13 @@ public class TriangleDoubleProvider implements DoubleProvider
     final Vector<LinearRing> results = new Vector<LinearRing>();
 
     final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
-    final List<GM_Surface> list = m_triangleList.query( position, null );
-
-    for( final GM_Surface surface : list )
+    final List list = m_triangleList.query( position, null );
+    
+    for( final Object listItem : list )
     {
+      final Feature feature = (Feature) listItem;
+      final GM_Surface surface = (GM_Surface) feature.getProperty( QN_GEOM_TRIANGLE );
+      
       final Geometry geometry = JTSAdapter.export( surface );
       if( geometry instanceof Polygon )
       {
@@ -78,8 +87,6 @@ public class TriangleDoubleProvider implements DoubleProvider
         final PointInRing pir = new SimplePointInRing( exteriorRing );
         if( pir.isInside( c ) )
           results.add( exteriorRing );
-
-        results.add( exteriorRing );
       }
     }
 
@@ -107,7 +114,7 @@ public class TriangleDoubleProvider implements DoubleProvider
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       return Double.NaN;
     }
   }

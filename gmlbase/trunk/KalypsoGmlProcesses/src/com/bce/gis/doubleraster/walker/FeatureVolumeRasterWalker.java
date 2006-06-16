@@ -18,93 +18,93 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class FeatureVolumeRasterWalker implements DoubleRasterWalker
 {
-	private final FeatureFactory m_featureFactory = new FeatureFactory();
+  private final FeatureFactory m_featureFactory = new FeatureFactory();
 
-	private final String m_volumeProperty;
+  private final String m_volumeProperty;
 
-	private final FeatureCollectionIndex m_featureIndex;
+  private final FeatureCollectionIndex m_featureIndex;
 
-	private double m_cellArea = 0.0;
+  private double m_cellArea = 0.0;
 
-	private int m_count = 0;
+  private int m_count = 0;
 
-	private GeometryFactory m_geometryFactory = new GeometryFactory();
+  private GeometryFactory m_geometryFactory = new GeometryFactory();
 
-	/**
-	 * @param featureIndex
-	 */
-	public FeatureVolumeRasterWalker( final FeatureCollectionIndex featureIndex, final String volumeProperty )
-	{
-		m_featureIndex = featureIndex;
-		m_volumeProperty = volumeProperty;
-	}
+  /**
+   * @param featureIndex
+   */
+  public FeatureVolumeRasterWalker( final FeatureCollectionIndex featureIndex, final String volumeProperty )
+  {
+    m_featureIndex = featureIndex;
+    m_volumeProperty = volumeProperty;
+  }
 
-	/**
-	 * @see com.bce.gis.doubleraster.DoubleRasterWalker#start(com.bce.gis.doubleraster.DoubleRaster)
-	 */
-	public void start( final DoubleRaster r )
-	{
-		final double rasterSize = r.getRasterSize();
-		m_cellArea = rasterSize * rasterSize;
-	}
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRasterWalker#start(com.bce.gis.doubleraster.DoubleRaster)
+   */
+  public void start( final DoubleRaster r )
+  {
+    final Coordinate offsetX = r.getOffsetX();
+    final Coordinate offsetY = r.getOffsetY();
+    m_cellArea = offsetX.x * offsetY.y - offsetX.y * offsetY.x;
+  }
 
-	/**
-	 * @see com.bce.gis.doubleraster.DoubleRasterWalker#operate(int, int,
-	 *      com.vividsolutions.jts.geom.Coordinate)
-	 */
-	public void operate( final int x, final int y, final Coordinate c )
-	{
-		final double cellVolume = m_cellArea * c.z;
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
+   */
+  public void operate( final int x, final int y, final Coordinate c )
+  {
+    final double cellVolume = m_cellArea * c.z;
 
-		if( !Double.isNaN( cellVolume ) )
-		{
-			final GM_Position position = m_geometryFactory.createGM_Position( c.x, c.y );
-			final Feature[] features = m_featureIndex.query( position );
+    if( !Double.isNaN( cellVolume ) )
+    {
+      final GM_Position position = m_geometryFactory.createGM_Position( c.x, c.y );
+      final Feature[] features = m_featureIndex.query( position );
 
-			for( int i = 0; i < features.length; i++ )
-			{
-				final Feature f = features[i];
-				if( f.getDefaultGeometryProperty().contains( position ) )
-				{
-					final Object oldVolumeObj = f.getProperty( m_volumeProperty );
-					if( oldVolumeObj instanceof Double )
-					{
-						final double oldVolume = (Double)oldVolumeObj;
+      for( int i = 0; i < features.length; i++ )
+      {
+        final Feature f = features[i];
+        if( f.getDefaultGeometryProperty().contains( position ) )
+        {
+          final Object oldVolumeObj = f.getProperty( m_volumeProperty );
+          if( oldVolumeObj instanceof Double )
+          {
+            final double oldVolume = (Double) oldVolumeObj;
 
-						final Double newVolume;
-						if( Double.isNaN( oldVolume ) )
-							newVolume = new Double( cellVolume );
-						else 
-						{
-							if( Math.signum( oldVolume ) != Math.signum( cellVolume ) )
-							{
-								m_count++;
-							}
+            final Double newVolume;
+            if( Double.isNaN( oldVolume ) )
+              newVolume = new Double( cellVolume );
+            else
+            {
+              if( Math.signum( oldVolume ) != Math.signum( cellVolume ) )
+              {
+                m_count++;
+              }
 
-							newVolume = new Double( oldVolume + cellVolume );
-						}
+              newVolume = new Double( oldVolume + cellVolume );
+            }
 
-						final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
-						f.setProperty( fp );
-					}
-				}
-			}
-		}
-	}
+            final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
+            f.setProperty( fp );
+          }
+        }
+      }
+    }
+  }
 
-	/**
-	 * @see com.bce.gis.doubleraster.DoubleRasterWalker#afterLine(int)
-	 */
-	public void afterLine( final int y )
-	{
-		// nichts zu tun
-	}
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRasterWalker#afterLine(int)
+   */
+  public void afterLine( final int y )
+  {
+    // nichts zu tun
+  }
 
-	/**
-	 * @see com.bce.gis.doubleraster.DoubleRasterWalker#getResult()
-	 */
-	public Object getResult()
-	{
-		return null;
-	}
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRasterWalker#getResult()
+   */
+  public Object getResult( )
+  {
+    return null;
+  }
 }

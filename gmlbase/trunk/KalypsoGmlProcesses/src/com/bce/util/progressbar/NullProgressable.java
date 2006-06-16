@@ -42,7 +42,6 @@ package com.bce.util.progressbar;
 
 /**
  * @author belger
- *
  */
 public class NullProgressable implements Progressable
 {

@@ -23,32 +23,29 @@ public class DoubleFakeRaster extends AbstractDoubleRaster implements DoubleRast
 
   private final Coordinate m_origin;
 
-  private final double m_rasterSize;
+  private final Coordinate m_rasterOffsetX;
 
-  public DoubleFakeRaster( final int sizeX, final int sizeY, final Coordinate origin, final double rasterSize, final DoubleProvider dp )
+  private final Coordinate m_rasterOffsetY;
+
+  public DoubleFakeRaster( final int sizeX, final int sizeY, final Coordinate origin, final Coordinate rasterOffsetX, final Coordinate rasterOffsetY, final DoubleProvider dp )
   {
     m_sizeX = sizeX;
     m_sizeY = sizeY;
     m_origin = origin;
-    m_rasterSize = rasterSize;
+    m_rasterOffsetX = rasterOffsetX;
+    m_rasterOffsetY = rasterOffsetY;
     m_doubleProvider = dp;
   }
 
   public final double getValue( final int x, final int y )
   {
-    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y );
-
+    final Coordinate c = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, null );
     return m_doubleProvider.getDouble( c );
   }
 
   public Coordinate getOrigin( )
   {
     return m_origin;
-  }
-
-  public double getRasterSize( )
-  {
-    return m_rasterSize;
   }
 
   public int getSizeX( )
@@ -70,5 +67,21 @@ public class DoubleFakeRaster extends AbstractDoubleRaster implements DoubleRast
       return Double.NaN;
 
     return getValue( x, y );
+  }
+
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRaster#getOffsetX()
+   */
+  public Coordinate getOffsetX( )
+  {
+    return m_rasterOffsetX;
+  }
+
+  /**
+   * @see com.bce.gis.doubleraster.DoubleRaster#getOffsetY()
+   */
+  public Coordinate getOffsetY( )
+  {
+    return m_rasterOffsetY;
   }
 }

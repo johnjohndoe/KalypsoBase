@@ -7,8 +7,8 @@ package com.bce.gis.doubleraster;
  */
 public class DoubleRasterException extends Exception
 {
-	public DoubleRasterException( final String message, final Throwable cause )
-	{
-		super( message, cause );
-	}
+  public DoubleRasterException( final String message, final Throwable cause )
+  {
+    super( message, cause );
+  }
 }

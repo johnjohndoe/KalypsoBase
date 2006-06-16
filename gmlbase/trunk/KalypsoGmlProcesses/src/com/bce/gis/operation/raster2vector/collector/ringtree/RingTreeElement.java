@@ -17,84 +17,84 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class RingTreeElement
 {
-	public final int index;
+  public final int index;
 
-	public final LinearRing linearRing;
+  public final LinearRing linearRing;
 
-	public final PointInRing pir;
+  public final PointInRing pir;
 
-	public final Coordinate innerCrd;
+  public final Coordinate innerCrd;
 
-	private final Collection<RingTreeElement> m_children = new ArrayList<RingTreeElement>();
-	
-	private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
+  private final Collection<RingTreeElement> m_children = new ArrayList<RingTreeElement>();
 
-	public RingTreeElement( final LinearRing lr, final int index, final Coordinate innerCrd )
-	{
-		this.linearRing = lr;
-		this.index = index;
-		this.innerCrd = innerCrd;
+  private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
 
-		this.pir = ( lr == null ) ? null : new SIRtreePointInRing( lr );
-	}
+  public RingTreeElement( final LinearRing lr, final int index, final Coordinate innerCrd )
+  {
+    this.linearRing = lr;
+    this.index = index;
+    this.innerCrd = innerCrd;
 
-	public void addChild( final RingTreeElement rte )
-	{
-		m_children.add( rte );
-	}
+    this.pir = (lr == null) ? null : new SIRtreePointInRing( lr );
+  }
 
-	public void removeChild( final RingTreeElement rte )
-	{
-		m_children.remove( rte );
-	}
+  public void addChild( final RingTreeElement rte )
+  {
+    m_children.add( rte );
+  }
 
-	public Collection<RingTreeElement> children()
-	{
-		return m_unmodChildren;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return "[" + index + ", " + linearRing + "]";
-	}
+  public void removeChild( final RingTreeElement rte )
+  {
+    m_children.remove( rte );
+  }
 
-	public Polygon getAsPolygon( final GeometryFactory gf )
-	{
-		// die Löcher finden
-		final ArrayList<LinearRing> holes = new ArrayList<LinearRing>();
-		for( final RingTreeElement child : m_children )
-		{
-			final Coordinate[] holeCrd = child.linearRing.getCoordinates();
-			final Coordinate[] newHoleCrds = new Coordinate[holeCrd.length];
-			System.arraycopy( holeCrd, 0, newHoleCrds, 0, holeCrd.length );
-			CoordinateArrays.reverse( newHoleCrds );
+  public Collection<RingTreeElement> children( )
+  {
+    return m_unmodChildren;
+  }
 
-			holes.add( gf.createLinearRing( newHoleCrds ) );
-		}
+  @Override
+  public String toString( )
+  {
+    return "[" + index + ", " + linearRing + "]";
+  }
 
-		return gf.createPolygon( linearRing, holes.toArray( new LinearRing[holes.size()] ) );
-	}
+  public Polygon getAsPolygon( final GeometryFactory gf )
+  {
+    // die Löcher finden
+    final ArrayList<LinearRing> holes = new ArrayList<LinearRing>();
+    for( final RingTreeElement child : m_children )
+    {
+      final Coordinate[] holeCrd = child.linearRing.getCoordinates();
+      final Coordinate[] newHoleCrds = new Coordinate[holeCrd.length];
+      System.arraycopy( holeCrd, 0, newHoleCrds, 0, holeCrd.length );
+      CoordinateArrays.reverse( newHoleCrds );
 
-	public boolean hasChildren()
-	{
-		return !m_children.isEmpty();
-	}
+      holes.add( gf.createLinearRing( newHoleCrds ) );
+    }
 
-	public RingTreeElement getFirstChild()
-	{
-		return m_children.iterator().next();
-	}
+    return gf.createPolygon( linearRing, holes.toArray( new LinearRing[holes.size()] ) );
+  }
 
-	public boolean contains( final RingTreeElement element )
-	{
-		for( int i = 0; i < element.linearRing.getNumPoints(); i++ )
-		{
-			if( !pir.isInside( element.linearRing.getCoordinateN( i ) ) )
-				return false;
-		}
+  public boolean hasChildren( )
+  {
+    return !m_children.isEmpty();
+  }
 
-		return true;
-	}
+  public RingTreeElement getFirstChild( )
+  {
+    return m_children.iterator().next();
+  }
+
+  public boolean contains( final RingTreeElement element )
+  {
+    for( int i = 0; i < element.linearRing.getNumPoints(); i++ )
+    {
+      if( !pir.isInside( element.linearRing.getCoordinateN( i ) ) )
+        return false;
+    }
+
+    return true;
+  }
 
 }

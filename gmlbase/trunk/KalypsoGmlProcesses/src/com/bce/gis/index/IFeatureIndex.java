@@ -7,10 +7,9 @@ import org.deegree.model.geometry.GM_Position;
  * Index über eine FeatureCollection
  * 
  * @author belger
- *
  */
 public interface IFeatureIndex
 {
-	/** Return all feature, which geometry contains this point */
-	public Feature[] query( final GM_Position point );
+  /** Return all feature, which geometry contains this point */
+  public Feature[] query( final GM_Position point );
 }

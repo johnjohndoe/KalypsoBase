@@ -51,14 +51,29 @@ public class DoubleRasterUtilities
   {
   }
 
-  public static Coordinate rasterCellToCoordinate( final DoubleRaster raster, final int x, final int y )
+  /**
+   * @param If
+   *          c is null, a new coordinate is returned, else its values are changed.
+   */
+  public static Coordinate rasterCellToCoordinate( final DoubleRaster raster, final int x, final int y, final Coordinate c )
   {
-    final double rasterSize = raster.getRasterSize();
     final Coordinate origin = raster.getOrigin();
 
-    final double cx = origin.x + x * rasterSize + (rasterSize / 2);
-    final double cy = origin.y + y * rasterSize + (rasterSize / 2);
-    return new Coordinate( cx, cy );
+    // final double rasterSize = raster.getRasterSize();
+    final Coordinate offsetX = raster.getOffsetX();
+    final Coordinate offsetY = raster.getOffsetY();
+
+    final double cx = origin.x + x * offsetX.x + y * offsetY.x;
+    final double cy = origin.y + x * offsetX.y + y * offsetY.y;
+    // final double cx = origin.x + x * rasterSize + (rasterSize / 2);
+    // final double cy = origin.y + y * rasterSize + (rasterSize / 2);
+
+    if( c == null )
+      return new Coordinate( cx, cy );
+
+    c.x = cx;
+    c.y = cy;
+    return c;
   }
 
 }

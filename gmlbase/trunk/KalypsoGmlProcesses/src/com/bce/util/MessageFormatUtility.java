@@ -9,8 +9,8 @@ import java.text.MessageFormat;
  */
 public class MessageFormatUtility
 {
-	public final static String formatMessage( final String formatString, int lineNumber )
-	{
-		return MessageFormat.format( formatString, new Object[] { new Integer( lineNumber ) }  );		
-	}
+  public final static String formatMessage( final String formatString, int lineNumber )
+  {
+    return MessageFormat.format( formatString, new Object[] { new Integer( lineNumber ) } );
+  }
 }

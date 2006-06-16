@@ -7,36 +7,36 @@ import javax.swing.JFrame;
  */
 public class StaticFrame extends JFrame
 {
-	private static JFrame THE_FRAME = new StaticFrame();
+  private static JFrame THE_FRAME = new StaticFrame();
 
-	public static JFrame getStaticFrame()
-	{
-		return THE_FRAME;
-	}
+  public static JFrame getStaticFrame( )
+  {
+    return THE_FRAME;
+  }
 
-	private StaticFrame()
-	{
-		// singleton
-	}
+  private StaticFrame( )
+  {
+    // singleton
+  }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void show()
-	{
-		// This frame will never be shown
-	}
+  @SuppressWarnings("deprecation")
+  @Override
+  public void show( )
+  {
+    // This frame will never be shown
+  }
 
-	@Override
-	public synchronized void dispose()
-	{
-		try
-		{
-			getToolkit().getSystemEventQueue();
-			super.dispose();
-		}
-		catch( final Exception e )
-		{
-			// untrusted code not allowed to dispose
-		}
-	}
+  @Override
+  public synchronized void dispose( )
+  {
+    try
+    {
+      getToolkit().getSystemEventQueue();
+      super.dispose();
+    }
+    catch( final Exception e )
+    {
+      // untrusted code not allowed to dispose
+    }
+  }
 }

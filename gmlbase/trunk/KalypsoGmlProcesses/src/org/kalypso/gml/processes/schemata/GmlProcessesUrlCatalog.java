@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
-public class GmlProcessesUrlCatalog extends AbstractUrlCatalog 
+public class GmlProcessesUrlCatalog extends AbstractUrlCatalog
 {
   public static final String NS_MESH = "org.kalypso.gml.processes.mesh";
 

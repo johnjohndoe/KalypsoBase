@@ -9,11 +9,13 @@
     <input id="DTM_RASTER" description="Unteres Höhenmodell - Rasterdaten"/>
     <!-- 
     Ergebniss -->
-    <output id="ResultFileGML" optional="true" description="GML file containing flood depths"/>
+    <output id="ResultShapeShp" optional="false" description="Shape file containing flood depths"/>
+    <output id="ResultShapeShx" optional="false" description="Shape file containing flood depths"/>
+    <output id="ResultShapeDbf" optional="false" description="Shape file containing flood depths"/>
 
     <!-- 
     Output des CalcJobs -->
-    <output id="SimulationLog" optional="true" description="Log of the simulation job"/>
-    <output id="KernelLog" optional="true" description="Output stream of the triangle.exe"/>
-    <output id="KernelErr" optional="true" description="Error stream of the simulation job"/>
+    <!--output id="SimulationLog" optional="true" description="Log of the simulation job"/-->
+    <!--output id="KernelLog" optional="true" description="Output stream of the triangle.exe"/-->
+    <!--output id="KernelErr" optional="true" description="Error stream of the simulation job"/-->
 </modelspec>

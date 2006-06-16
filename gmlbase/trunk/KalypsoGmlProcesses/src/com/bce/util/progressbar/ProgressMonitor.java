@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -15,32 +14,34 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
-
 /**
  * Eine alternative zum javax.swing.ProgressMonitor
- *
+ * 
  * @author belger
  */
 public class ProgressMonitor implements Progressable
 {
   private boolean m_canceled = false;
+
   private JDialog m_dialog;
-  private JProgressBar m_progressBar = new JProgressBar(  );
-  private JLabel m_noteField = new JLabel(  );
+
+  private JProgressBar m_progressBar = new JProgressBar();
+
+  private JLabel m_noteField = new JLabel();
+
   private JOptionPane m_optionPane;
+
   private static final String CANCEL = "Abbrechen";
 
   /**
    * -
-   *
+   * 
    * @param parent -
    * @param title -
    */
   public ProgressMonitor( final Component parent, final String title )
   {
-    m_optionPane = new JOptionPane( new Object[] { m_noteField, m_progressBar },
-                                    JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null,
-                                    new String[] { CANCEL }, null );
+    m_optionPane = new JOptionPane( new Object[] { m_noteField, m_progressBar }, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new String[] { CANCEL }, null );
 
     m_dialog = createDialog( parent, title, m_optionPane );
     m_dialog.setVisible( true );
@@ -48,56 +49,52 @@ public class ProgressMonitor implements Progressable
 
   /**
    * -
-   *
+   * 
    * @param parentComponent -
    * @param title -
    * @param op -
-   *
    * @return -
    */
-  public JDialog createDialog( final Component parentComponent, final String title,
-                               final JOptionPane op )
+  public JDialog createDialog( final Component parentComponent, final String title, final JOptionPane op )
   {
     Frame frame = JOptionPane.getFrameForComponent( parentComponent );
     final JDialog dialog = new JDialog( frame, title, false );
-    Container contentPane = dialog.getContentPane(  );
+    Container contentPane = dialog.getContentPane();
 
-    contentPane.setLayout( new BorderLayout(  ) );
+    contentPane.setLayout( new BorderLayout() );
     contentPane.add( m_optionPane, BorderLayout.CENTER );
-    dialog.pack(  );
+    dialog.pack();
     dialog.setLocationRelativeTo( parentComponent );
-    dialog.addWindowListener( new WindowAdapter(  )
+    dialog.addWindowListener( new WindowAdapter()
+    {
+      boolean gotFocus = false;
+
+      @Override
+      public void windowClosing( WindowEvent we )
       {
-        boolean gotFocus = false;
+        op.setValue( CANCEL );
+      }
 
-        @Override
-				public void windowClosing( WindowEvent we )
-        {
-          op.setValue( CANCEL );
-        }
-
-        @Override
-				public void windowActivated( WindowEvent we )
-        {
-          // Once window gets focus, set initial focus
-          if( !gotFocus )
-          {
-            op.selectInitialValue(  );
-            gotFocus = true;
-          }
-        }
-      } );
-
-    m_optionPane.addPropertyChangeListener( new PropertyChangeListener(  )
+      @Override
+      public void windowActivated( WindowEvent we )
       {
-        public void propertyChange( PropertyChangeEvent event )
+        // Once window gets focus, set initial focus
+        if( !gotFocus )
         {
-          if( dialog.isVisible(  ) && event.getSource(  ) == op &&
-              ( event.getPropertyName(  ).equals( JOptionPane.VALUE_PROPERTY ) ||
-              event.getPropertyName(  ).equals( JOptionPane.INPUT_VALUE_PROPERTY ) ) )
-            cancel(  );
+          op.selectInitialValue();
+          gotFocus = true;
         }
-      } );
+      }
+    } );
+
+    m_optionPane.addPropertyChangeListener( new PropertyChangeListener()
+    {
+      public void propertyChange( PropertyChangeEvent event )
+      {
+        if( dialog.isVisible() && event.getSource() == op && (event.getPropertyName().equals( JOptionPane.VALUE_PROPERTY ) || event.getPropertyName().equals( JOptionPane.INPUT_VALUE_PROPERTY )) )
+          cancel();
+      }
+    } );
 
     return dialog;
   }
@@ -108,17 +105,17 @@ public class ProgressMonitor implements Progressable
   public void setNote( final String note )
   {
     m_noteField.setText( note );
-    //m_dialog.pack();
+    // m_dialog.pack();
   }
-  
+
   /**
    * @see com.bce.util.progressbar.Progressable#reset(int, int)
    */
   public void reset( final int min, final int max )
   {
-  	m_progressBar.setMinimum( min );
-  	m_progressBar.setMaximum( max );
-  	m_progressBar.setValue( 0 );
+    m_progressBar.setMinimum( min );
+    m_progressBar.setMaximum( max );
+    m_progressBar.setValue( 0 );
   }
 
   /**
@@ -132,7 +129,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#isCanceled()
    */
-  public boolean isCanceled(  )
+  public boolean isCanceled( )
   {
     return m_canceled;
   }
@@ -140,11 +137,11 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#cancel()
    */
-  public void cancel(  )
+  public void cancel( )
   {
     m_canceled = true;
     m_dialog.setVisible( false );
-    m_dialog.dispose(  );
+    m_dialog.dispose();
     m_dialog = null;
   }
 }

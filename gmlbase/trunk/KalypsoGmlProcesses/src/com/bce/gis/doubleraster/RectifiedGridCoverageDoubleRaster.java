@@ -9,10 +9,10 @@ import javax.media.jai.TiledImage;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.FileType;
+import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -33,9 +33,11 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
 
   private final Coordinate m_origin;
 
-  private final double m_rasterSize;
+  private final Coordinate m_offsetX;
 
-  private Object m_rangeSet;
+  private final Coordinate m_offsetY;
+
+  private RangeSetType m_rangeSet;
 
   private URL m_context;
 
@@ -45,14 +47,13 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
   {
     m_context = rgcFeature.getWorkspace().getContext();
     final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
-    m_rangeSet = rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
+    m_rangeSet = (RangeSetType) rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
     final GM_Point origin = domain.getOrigin( null );
     m_origin = new Coordinate( origin.getX(), origin.getY() );
     final CS_CoordinateSystem crs = origin.getCoordinateSystem();
-    final GM_Envelope envelope = domain.getGM_Envelope( crs );
-    final int[] gridExtent = domain.getGridExtent( envelope, crs );
-    // TODO: Refactor DoubleRaster to support rasterSize.x and risterSize.y
-    m_rasterSize = domain.getOffset()[0];
+    // TODO: Refactor RectifiedGridDomain to support vector offsets
+    m_offsetX = new Coordinate( domain.getOffsetX( crs ), 0 );
+    m_offsetY = new Coordinate( 0, domain.getOffsetY( crs ) );
 
     m_sizeX = domain.getNumColumns();
     m_sizeY = domain.getNumRows();
@@ -63,7 +64,7 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
     final TiledImage image = getTiledImage();
     if( image == null )
       return Double.NaN;
-    
+
     return image.getSampleDouble( x, y, 0 ) / 1000.0;
   }
 
@@ -71,16 +72,17 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
   {
     if( m_tiledImage == null )
     {
-      // TODO: we assume that we have a range set based on a file
-      if( m_rangeSet instanceof FileType )
+      final FileType file = m_rangeSet.getFile();
+      // TODO: only supported type now is 'File', support other types
+      if( file != null )
       {
-        final FileType file = (FileType) m_rangeSet;
         try
         {
+          // TODO: we assume that mime-type is image; support other types as well
           final String fileName = file.getFileName();
           final URL url = new URL( m_context, fileName );
 
-          final RenderedOp image = JAI.create( "fileload", url );
+          final RenderedOp image = JAI.create( "url", url );
           m_tiledImage = new TiledImage( image, true );
           m_sizeX = m_tiledImage.getWidth();
           m_sizeY = m_tiledImage.getHeight();
@@ -98,11 +100,6 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
   public Coordinate getOrigin( )
   {
     return m_origin;
-  }
-
-  public double getRasterSize( )
-  {
-    return m_rasterSize;
   }
 
   public int getSizeX( )
@@ -124,6 +121,16 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
       return Double.NaN;
 
     return getValue( x, y );
+  }
+
+  public Coordinate getOffsetX( )
+  {
+    return m_offsetX;
+  }
+
+  public Coordinate getOffsetY( )
+  {
+    return m_offsetY;
   }
 
 }

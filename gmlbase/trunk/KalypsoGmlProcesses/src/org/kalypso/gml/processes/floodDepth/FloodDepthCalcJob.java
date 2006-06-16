@@ -43,7 +43,6 @@ package org.kalypso.gml.processes.floodDepth;
 import java.io.File;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.logging.Level;
 
 import javax.xml.namespace.QName;
 
@@ -69,7 +68,6 @@ import com.bce.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
 import com.bce.gis.doubleraster.walker.FeatureVolumeRasterWalker;
 import com.bce.gis.index.FeatureCollectionIndex;
 import com.bce.gis.operation.hmo2fli.DoubleProvider;
-import com.bce.gis.operation.hmo2fli.Hmo2Fli;
 import com.bce.gis.operation.hmo2fli.TriangleDoubleProvider;
 import com.bce.gis.operation.raster2vector.Raster2Lines;
 import com.bce.gis.operation.raster2vector.SegmentCollector;
@@ -128,10 +126,12 @@ public class FloodDepthCalcJob implements ISimulation
 
       final DoubleRaster diffRaster = new DoubleDiffDoubleRaster( raster, triangleProvider );
 
-      final boolean bIsolines = true;
+      // TODO: retrieve parameters from user via process input
+      final boolean bIsolines = false;
       final boolean calcVolume = false;
       final boolean bSimple = false;
-      final double[] grenzen = new double[] { -1, 0, 1, 2, 3, 4, 5, 6 };
+//      final double[] grenzen = new double[] { -1, 0, 1, 2, 3, 4, 5, 6 };
+      final double[] grenzen = new double[] { 0 };
 
       final GeometryFactory GF = new GeometryFactory();
 
@@ -147,48 +147,48 @@ public class FloodDepthCalcJob implements ISimulation
       numberInstance.setGroupingUsed( true );
       numberInstance.setMinimumFractionDigits( 1 );
       numberInstance.setMaximumFractionDigits( 1 );
-      final double volumen = r2l.getSum();
+//      final double volumen = r2l.getSum();
       // LOG.info( "Total volume of flooded area is: " + numberInstance.format( volumen ) + " [m³]" );
 
       // Shape schreiben
       final FeatureCollection fc = gc.getFeatures();
       if( fc.getSize() == 0 )
       {
-//        LOG.log( Level.WARNING, "No features created" );
+        // LOG.log( Level.WARNING, "No features created" );
       }
       else
       {
         if( gc instanceof PolygonCollector && calcVolume )
         {
-//          if( pable != null )
-//            pable.setNote( "Volumen wird ermittelt" );
-//          LOG.info( "Start calculation of shape volumes" );
+          // if( pable != null )
+          // pable.setNote( "Volumen wird ermittelt" );
+          // LOG.info( "Start calculation of shape volumes" );
           final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
           final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( featureIndex, PolygonCollector.VOLUME_PROP.getName() );
           raster.walk( volumeWalker, new NullProgressable() );
-//          LOG.info( "Finished calculation of shape volumes" );
+          // LOG.info( "Finished calculation of shape volumes" );
         }
 
-//        LOG.info( "Start writing shape: " + shapeBase );
+        // LOG.info( "Start writing shape: " + shapeBase );
         // transform geometries to shapes and write it
-        
+
         final File file = new File( tmpdir, "outshape" );
         final String shapeBase = FileUtilities.nameWithoutExtension( file.getAbsolutePath() );
-        
+
         final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
         sf.writeShape( fc );
         sf.close();
-//        LOG.info( "Finished writing shape: " + shapeBase );
-        
-//        resultEater.addResult( "", shapeBase + ".shp");
-//        resultEater.addResult( "", shapeBase + ".shp");
-//        resultEater.addResult( "", shapeBase + ".shp");
+        // LOG.info( "Finished writing shape: " + shapeBase );
+
+         resultEater.addResult( "ResultShapeShp", new File( tmpdir, "outshape.shp" ));
+         resultEater.addResult( "ResultShapeShx", new File( tmpdir, "outshape.shx" ));
+         resultEater.addResult( "ResultShapeDbf", new File( tmpdir, "outshape.dbf" ));
       }
 
-//      if( pable != null )
-//        pable.cancel();
+      // if( pable != null )
+      // pable.cancel();
 
-//      LOG.exiting( Hmo2Fli.class.getName(), "transform" );
+      // LOG.exiting( Hmo2Fli.class.getName(), "transform" );
 
     }
     catch( final Exception e )
