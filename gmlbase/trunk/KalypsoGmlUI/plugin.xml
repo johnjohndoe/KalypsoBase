@@ -8,5 +8,11 @@
             id="KalypsoGmlUI.wizard1"
             name="RectifiedGridCoverage Import"/>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.gml.ui.sld.GmlFeatureTypeStyleCatalogContribution"
+            name="GML Style Catalog"/>
+   </extension>
 
 </plugin>
