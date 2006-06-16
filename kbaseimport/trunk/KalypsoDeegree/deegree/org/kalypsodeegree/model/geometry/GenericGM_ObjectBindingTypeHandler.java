@@ -105,13 +105,12 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
   @Override
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( QName propQName, Object geometry, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
-    final GM_Object geometry = (GM_Object) value;
     try
     {
       final AdapterValueToGMLBinding valueToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
-      final Object bindingObject = valueToGMLBindingAdapter.wrapToBinding( geometry );
+      final Object bindingObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Object) geometry );
       // final AbstractGeometryType wrappedValue = GMLBindingGM_ObjectAdapter_GML31.createBindingGeometryType(
       // gmlVersion, geometry );
       super.marshal( propQName, bindingObject, contentHandler, lexicalHandler, context, gmlVersion );
