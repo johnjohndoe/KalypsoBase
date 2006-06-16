@@ -48,9 +48,6 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 
 /**
- * SimplePropertySheetViewer
- * <p>
- * 
  * @author schlienger (24.05.2005)
  */
 public class SimplePropertySheetViewer extends Viewer

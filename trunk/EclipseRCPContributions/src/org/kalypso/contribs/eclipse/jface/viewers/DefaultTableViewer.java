@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.jface.viewers;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -59,6 +60,12 @@ public class DefaultTableViewer extends TableViewer
 
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
+  /**
+   * true when this viewer is being disposed. This information is held so that removeAllColumns does not remove the
+   * columns if this viewer is being disposed, it else leads to conflicts with SWT
+   */
+  private boolean m_disposing = false;
+
   public DefaultTableViewer( final Composite parent )
   {
     super( parent );
@@ -75,13 +82,25 @@ public class DefaultTableViewer extends TableViewer
   }
 
   /**
+   * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+   */
+  @Override
+  protected void handleDispose( DisposeEvent event )
+  {
+    m_disposing = true;
+
+    super.handleDispose( event );
+  }
+
+  /**
    * Adds a column to the underlying table control.
    */
   public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable )
   {
-    final Table table = getTable();
+    if( m_disposing )
+      throw new IllegalStateException();
 
-    final TableColumn tc = new TableColumn( table, SWT.CENTER );
+    final TableColumn tc = new TableColumn( getTable(), SWT.CENTER );
     tc.setData( COLUMN_PROP_NAME, name );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
@@ -94,8 +113,15 @@ public class DefaultTableViewer extends TableViewer
 
   public void removeAllColumns( )
   {
-    if( !getTable().isDisposed() )
-      getTable().removeAll();
+    final Table table = getTable();
+    if( m_disposing || table.isDisposed() )
+      return;
+
+    final TableColumn[] columns = table.getColumns();
+    for( int i = 0; i < columns.length; i++ )
+      columns[i].dispose();
+
+    refreshColumnProperties();
   }
 
   /**
