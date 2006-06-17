@@ -64,6 +64,8 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
 
   private final UnmarshalResultProvider m_unmarshallResultProvider;
 
+  private final String m_gmlVersion;
+
   /**
    * @param unmarshallerHandler
    *          the real binding unmarshalling content handler that will be wrapped
@@ -72,11 +74,12 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @param unmarshalResultEater
    *          will be feeded with the result of unmarshalling
    */
-  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnMarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement )
+  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnMarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement, final String gmlVersion )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
+    m_gmlVersion = gmlVersion;
 
     m_level = considerSurroundingElement ? -1 : 0;
   }
@@ -95,6 +98,18 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
       local = "Box";
       qname = qname.replaceFirst( "box", "Box" );
     }
+    // hack for loading invalid gml2 polygons, do not remove (doemming)
+    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "exterior".equals( local ) )
+    {
+      local = "outerBoundaryIs";
+      qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+    }
+    // hack for loading invalid gml2 polygons, do not remove (doemming)
+    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "interior".equals( local ) )
+    {
+      local = "innerBoundaryIs";
+      qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+    }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
     try
@@ -109,12 +124,12 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
   }
 
-//  private String indent( )
-//  {
-//    if( m_level > 0 )
-//      return StringUtils.repeat( " ", m_level );
-//    return "?";
-//  }
+  // private String indent( )
+  // {
+  // if( m_level > 0 )
+  // return StringUtils.repeat( " ", m_level );
+  // return "?";
+  // }
 
   public void endElement( String uri, String local, String qname ) throws SAXException
   {
@@ -124,6 +139,19 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
       local = "Box";
       qname = qname.replaceFirst( "box", "Box" );
     }
+    // hack for loading invalid gml2 polygons, do not remove (doemming)
+    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "exterior".equals( local ) )
+    {
+      local = "outerBoundaryIs";
+      qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+    }
+    // hack for loading invalid gml2 polygons, do not remove (doemming)
+    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "interior".equals( local ) )
+    {
+      local = "innerBoundaryIs";
+      qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+    }
+
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
     m_unmarshallerHandler.endElement( uri, local, qname );

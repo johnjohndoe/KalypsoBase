@@ -174,7 +174,7 @@ public abstract class AbstractGM_EnvelopeBindingTypeHandler implements IMarshall
           }
         }
       };
-      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater, m_considerSurroundingElement );
+      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater, m_considerSurroundingElement,gmlVersion );
       tmpContentHandler.startDocument();
       xmlReader.setContentHandler( tmpContentHandler );
 
