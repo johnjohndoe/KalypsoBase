@@ -55,7 +55,6 @@ import org.xml.sax.SAXException;
 
 public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
 {
-
   private final ContentHandler m_unmarshallerHandler;
 
   private final UnMarshallResultEater m_marshalResultEater;
