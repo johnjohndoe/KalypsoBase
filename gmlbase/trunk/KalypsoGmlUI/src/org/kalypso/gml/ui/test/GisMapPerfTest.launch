@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+<stringAttribute key="product" value="com.bce.profil.wspprofilapp.profileditor"/>
+<stringAttribute key="bootstrap" value=""/>
+<booleanAttribute key="useProduct" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_SET" value="org.eclipse.hyades.defaultProfilingSets.execution"/>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
+<intAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_LIMIT_INVOCATIONS_NUM" value="10000"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_FILE" value="C:\tmp\profile_workbench.trcxml"/>
+<booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+<booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_LIMIT_SECONDS" value="false"/>
+<intAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_LIMIT_SECONDS_NUM" value="5"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<booleanAttribute key="includeFragments" value="false"/>
+<booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILE_TO_FILE" value="true"/>
+<stringAttribute key="application" value="org.eclipse.pde.junit.runtime.coretestapplication"/>
+<booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_LIMIT_INVOCATIONS" value="false"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_MONITOR" value="DefaultMonitor"/>
+<booleanAttribute key="clearws" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.kalypso.gml.ui.test.GisMapPerfTest"/>
+<booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_AUTO_MONITORING" value="false"/>
+<stringAttribute key="location1" value="C:\Eclipse\junit-workbench-workspace"/>
+<booleanAttribute key="default" value="false"/>
+<stringAttribute key="vmargs" value="-Xmx512m"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<stringAttribute key="extplugins" value="org.apache.ant;org.eclipse.ant.core;org.eclipse.compare;org.eclipse.core.commands;org.eclipse.core.expressions;org.eclipse.core.filebuffers;org.eclipse.core.resources;org.eclipse.core.runtime;org.eclipse.core.runtime.compatibility;org.eclipse.core.variables;org.eclipse.help;org.eclipse.jface;org.eclipse.jface.text;org.eclipse.osgi;org.eclipse.swt;org.eclipse.swt.win32.win32.x86;org.eclipse.text;org.eclipse.ui;org.eclipse.ui.browser;org.eclipse.ui.editors;org.eclipse.ui.forms;org.eclipse.ui.ide;org.eclipse.ui.views;org.eclipse.ui.workbench;org.eclipse.ui.workbench.texteditor;org.eclipse.update.configurator;org.eclipse.update.core;org.eclipse.update.ui;org.junit;"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_FILTER_SET" value="org.eclipse.hyades.trace.ui.filterSet.default"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<stringAttribute key="progargs" value=""/>
+<stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="KalypsoGmlUI"/>
+<stringAttribute key="wsproject" value="org.kalypso.services.user.client;org.kalypso.wspwin.core;org.kalypso.services.user;org.kalypso.model.wspm.tuhh.ui;org.kalypso.test;org.kalypso.saale;org.kalypso.tubig;org.kalypso.product;de.belger.swtchart.core;org.kalypso.services.metadoc;org.kalypso.grid.interpolation;org.kalypso.ui.observationimport;org.kalypso.ui.rrm;org.kalypso.model.wspm.schema;com.bce.profil.wspprofilapp;org.kalypso.bsf.core;org.kalypso.debug;org.kalypso.ant;org.kalypso.raster.import;org.kalypso.dcadapter;org.kalypso.portal;org.kalypso.bsf.ui;org.kalypso.model.wspm.tuhh.core;org.kalypso.workflow;org.kalypso.featureview;org.kalypso.dss;org.kalypso.services.metadoc.client;org.kalypso.dwd;org.kalypso.optimize;org.kalypso.services.core;com.bce.eind.prf;org.kalypso.model.spree;org.kalypso.metaproject;org.kalypso.simulation.ui;com.bce.profil.resources;org.kalypso.wizard.CreateFloodRiskProject;org.kalypso.model.wspm.core;org.kalypso.rrm.kalininmiljukov;org.kalypso.model.wspm.tuhh.schema;org.kalypso.services.observation.client;org.kalypso.adapter.robotron;org.kalypso.floodrisk;org.kalypso.test.na;org.kalypso.services.observation;org.kalypso.bsf.groovy;org.kalypso.wiskiadapter;org.kalypso.informdss;org.kalypso.Model2D;org.kalypso.model.wspm.ui;org.kalypso.NACalcJob;org.kalypso.bsf.test;org.kalypso.wizard;org.kalypso.model.KalypsoModelFlows;org.kalypso.bsf.jruby;org.kalypso.psicompactadapter;org.kalypso.psicompactimpl;org.kalypso.ui.addlayer;"/>
+<booleanAttribute key="askclear" value="false"/>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="PATH" value="C:\Programme\eclipse_3.1\tptp_agents\bin"/>
+</mapAttribute>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_PROJECT" value="ProfileProject"/>
+<stringAttribute key="location0" value="C:\Eclipse\junit-workbench-workspace"/>
+</launchConfiguration>
