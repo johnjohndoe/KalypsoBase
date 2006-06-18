@@ -413,7 +413,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagView.dispose();
 
     if( m_mapPanel != null )
+    {
       m_mapPanel.removeSelectionChangedListener( this );
+      m_mapPanel.dispose();
+    }
   }
 
   public Arguments getArguments()
