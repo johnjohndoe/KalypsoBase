@@ -93,22 +93,16 @@ public class URLActionActivateTheme extends AbstractURLAction
       if( mapPanel != null )
       {
         final IMapModell mapModell = mapPanel.getMapModell();
-        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme == null )
-          return false;
-        final String themeName = activeTheme.getName();
-        if( themeName != theme )
+
+        IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+        for( int i = 0; i < allThemes.length; i++ )
         {
-          IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-          for( int i = 0; i < allThemes.length; i++ )
+          IKalypsoTheme layer = allThemes[i];
+          String name = layer.getName();
+          if( name.equals( theme ) )
           {
-            IKalypsoTheme layer = allThemes[i];
-            String name = layer.getName();
-            if( name.equals( theme ) )
-            {
-              mapModell.activateTheme( layer );
-              return true;
-            }
+            mapModell.activateTheme( layer );
+            return true;
           }
         }
       }
