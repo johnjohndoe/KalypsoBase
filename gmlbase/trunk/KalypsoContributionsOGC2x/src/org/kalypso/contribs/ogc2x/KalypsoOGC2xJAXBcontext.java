@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package ork.kalypso.contribs.ogc2x;
+package org.kalypso.contribs.ogc2x;
 
 import javax.xml.bind.JAXBContext;
 
