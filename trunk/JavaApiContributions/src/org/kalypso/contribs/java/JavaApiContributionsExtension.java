@@ -64,6 +64,8 @@ public class JavaApiContributionsExtension
       String id = element.getAttribute( "id" );
       IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
       m_catalogs.put( id, catalog );
+      
+      System.out.println("Loading extension urlCatalog " + id );
     }
   }
 
@@ -87,5 +89,4 @@ public class JavaApiContributionsExtension
       throw new Exception( "key: " + id + " already has an asocciated value: " + catalog );
     m_catalogs.put( id, catalog );
   }
-
 }
