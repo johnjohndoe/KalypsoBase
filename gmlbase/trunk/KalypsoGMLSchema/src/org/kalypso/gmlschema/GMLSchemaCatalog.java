@@ -126,6 +126,7 @@ public final class GMLSchemaCatalog
     // tweak it and add the version number
     final URL catalogUrl;
     final String version;
+    
     if( namespace.equals( NS.GML2 ) )
     {
       if( gmlVersion == null )

@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
@@ -57,15 +56,11 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    final String pluginid = PluginUtilities.id( KalypsoOGC31Plugin.getDefault() );
-    final URL sweUrl = PluginUtilities.findResource( pluginid, "etc/schemas/original/sweCommon/1.0.30/swe.xsd"  );
-    final URL omUrl = PluginUtilities.findResource( pluginid, "etc/schemas/original/om/1.0.30/observation.xsd"  );
-    
     // SWE & OM things
-    catalog.put( NS.SWE, sweUrl );
+    catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) );
     prefixes.put( NS.SWE, "swe" );
 
-    catalog.put( NS.OM, omUrl );
+    catalog.put( NS.OM, myClass.getResource("schemata/om/1.0.30/observation.xsd") );
     prefixes.put( NS.OM, "om" );
   }
 }

@@ -19,7 +19,7 @@
     			<include name="**/*.xsd"/>
 			</fileset>
 		</delete>
-		<xslt style="generateSchemas.xsl" destdir="generated" basedir="${project}/etc/schemas/original" extension=".xsd" >
+		<xslt style="generateSchemas.xsl" destdir="generated" basedir="${project}/src/org/kalypso/contribs/ogc31/schemata" extension=".xsd" >
 		    <include name="*.xsd"/>
 		    <include name="filter/**/*.xsd"/>
 		    <include name="gml/**/*.xsd"/>
@@ -35,4 +35,3 @@
 		
 	</target>
 </project>
-
