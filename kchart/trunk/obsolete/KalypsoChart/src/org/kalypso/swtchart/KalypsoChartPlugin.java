@@ -7,48 +7,54 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoChartPlugin extends AbstractUIPlugin {
+public class KalypsoChartPlugin extends AbstractUIPlugin
+{
 
-	//The shared instance.
-	private static KalypsoChartPlugin plugin;
-	
-	/**
-	 * The constructor.
-	 */
-	public KalypsoChartPlugin() {
-		plugin = this;
-	}
+  // The shared instance.
+  private static KalypsoChartPlugin plugin;
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+  /**
+   * The constructor.
+   */
+  public KalypsoChartPlugin( )
+  {
+    plugin = this;
+  }
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-	}
+  /**
+   * This method is called upon plug-in activation
+   */
+  public void start( BundleContext context ) throws Exception
+  {
+    super.start( context );
+  }
 
-	/**
-	 * Returns the shared instance.
-	 */
-	public static KalypsoChartPlugin getDefault() {
-		return plugin;
-	}
+  /**
+   * This method is called when the plug-in is stopped
+   */
+  public void stop( BundleContext context ) throws Exception
+  {
+    super.stop( context );
+    plugin = null;
+  }
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.kalypso.chart", path);
-	}
+  /**
+   * Returns the shared instance.
+   */
+  public static KalypsoChartPlugin getDefault( )
+  {
+    return plugin;
+  }
+
+  /**
+   * Returns an image descriptor for the image file at the given plug-in relative path.
+   * 
+   * @param path
+   *          the path
+   * @return the image descriptor
+   */
+  public static ImageDescriptor getImageDescriptor( String path )
+  {
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.chart", path );
+  }
 }
