@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoChart Plug-in
+Bundle-SymbolicName: org.kalypso.chart
+Bundle-Version: 1.0.0
+Bundle-Activator: kalypsoChart.KalypsoChartPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.contribs.eclipsercp,
+ org.kalypso.commons
+Eclipse-AutoStart: true
+Export-Package: org.kalypso.swtchart,
+ org.kalypso.swtchart.axis,
+ org.kalypso.swtchart.axis.component,
+ org.kalypso.swtchart.axis.registry,
+ org.kalypso.swtchart.axis.renderer,
+ org.kalypso.swtchart.layer,
+ org.kalypso.swtchart.layer.impl,
+ org.kalypso.swtchart.legend,
+ org.kalypso.swtchart.styles,
+ org.kalypso.swtchart.util,
+ org.kalypso.swtchart.view
