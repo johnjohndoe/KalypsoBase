@@ -40,12 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
  * example: <br>
- * kalypso://closeAllEditors?exceptThese=org.eclipse.TestEditor1#org.eclipse.TestEditor2#...#...;
+ * kalypso://closeAllEditors?exceptThese=org.eclipse.TestEditor1#org.eclipse.TestEditor2&separator=*&doSave=true;
  * 
  * @author kuepfer
  */
@@ -55,6 +61,8 @@ public class URLActionCloseAllEditors extends AbstractURLAction
   private final static String COMMAND_NAME = "closeAllEditors";
 
   private final static String PARAM_DO_NOT_CLOSE = "exceptThese";
+
+  private final static String PARAM_DOSAVE = "doSave";
 
   private final static String PARAM_SEPERATOR = "sparator";
 
@@ -74,15 +82,30 @@ public class URLActionCloseAllEditors extends AbstractURLAction
   public boolean run( ICommandURL commandURL )
   {
     final String separator = commandURL.getParameter( PARAM_SEPERATOR );
+    final boolean doSave = Boolean.parseBoolean( commandURL.getParameter( PARAM_DOSAVE ) );
     final String[] doNotCloseList;
     final String separatedList = commandURL.getParameter( PARAM_DO_NOT_CLOSE );
-    if( separator != null )
-      doNotCloseList = separatedList.split( separator );
+    final IWorkbenchPage activePage = getActivePage();
+
+    final List<IEditorReference> doClose = new ArrayList<IEditorReference>();
+    if( separatedList != null && separatedList.length() > 0 )
+    {
+      if( separator != null )
+        doNotCloseList = separatedList.split( separator );
+      else
+        doNotCloseList = separatedList.split( DEFAULT_SEPARATOR );
+    }
     else
-      doNotCloseList = separatedList.split( DEFAULT_SEPARATOR );
-
-    getActivePage().getEditorReferences();
-    return false;
+      doNotCloseList = new String[0];
+    final IEditorReference[] editorReferences = activePage.getEditorReferences();
+    for( IEditorReference reference : editorReferences )
+    {
+      final String editorId = reference.getId();
+      if( ArrayUtils.contains( doNotCloseList, editorId ) )
+        continue;
+      doClose.add( reference );
+    }
+    activePage.closeEditors( doClose.toArray( new IEditorReference[doClose.size()] ), doSave );
+    return true;
   }
-
 }
