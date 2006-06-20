@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoChart Plug-in
 Bundle-SymbolicName: org.kalypso.chart
 Bundle-Version: 1.0.0
-Bundle-Activator: kalypsoChart.KalypsoChartPlugin
+Bundle-Activator: org.kalypso.swtchart.KalypsoChartPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
