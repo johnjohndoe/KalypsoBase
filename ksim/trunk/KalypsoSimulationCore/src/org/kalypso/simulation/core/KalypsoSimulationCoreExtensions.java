@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -121,16 +122,21 @@ public class KalypsoSimulationCoreExtensions
     // final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>( elements.size() );
     for( final IConfigurationElement element : elements.values() )
     {
-      try
+      if( element.getAttribute( EXT_ATTRIB_CATALOGCLASS ) != null )
       {
-        final IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( EXT_ATTRIB_CATALOGCLASS );
-        catalogs.add( catalog );
-      }
-      catch( final CoreException e )
-      {
+        try
+        {
+          final IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( EXT_ATTRIB_CATALOGCLASS );
+          catalogs.add( catalog );
+        }
+        catch( final CoreException e )
+        {
 //        element.getAttribute( "id" );
-        status.add( e.getStatus() );
+          status.add( e.getStatus() );
+        }
       }
+      else
+        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: " + element.getValueAsIs() );
     }
 
     return status;
