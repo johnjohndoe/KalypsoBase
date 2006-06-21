@@ -207,7 +207,6 @@ public class ModelSynchronizer
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Daten" ) );
     }
-
   }
 
   public void commitProject() throws CoreException
@@ -262,6 +261,5 @@ public class ModelSynchronizer
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Datenvom Server " ) );
     }
-
   }
 }
