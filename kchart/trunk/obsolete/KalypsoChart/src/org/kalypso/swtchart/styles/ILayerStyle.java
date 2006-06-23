@@ -45,5 +45,6 @@ package org.kalypso.swtchart.styles;
  */
 public interface ILayerStyle
 {
-
+  
+  
 }

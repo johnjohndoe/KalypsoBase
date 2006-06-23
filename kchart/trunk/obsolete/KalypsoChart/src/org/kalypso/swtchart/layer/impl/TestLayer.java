@@ -42,6 +42,7 @@ package org.kalypso.swtchart.layer.impl;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.axis.IAxis;
@@ -49,6 +50,7 @@ import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
+import org.kalypso.swtchart.styles.StyledLine;
 
 /**
  * @author schlienger
@@ -66,7 +68,8 @@ public class TestLayer implements IChartLayer
     m_domAxis = domAxis;
     m_valAxis = valAxis;
 
-    m_doubles = SampleData.createRandomPoints( 20 );
+    m_doubles = SampleData.createRandomPoints( 25 );
+  //  m_doubles = SampleData.createSinusPoints( 20 );
   }
 
   /**
@@ -125,6 +128,7 @@ public class TestLayer implements IChartLayer
     return true;
   }
 
+  
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
    */
@@ -146,6 +150,10 @@ public class TestLayer implements IChartLayer
   public void paint( GCWrapper gc, Device dev )
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
+    StyledLine line=new StyledLine(gc, dev);
+    
+    Point[] points=new Point[m_doubles.length];
+    int[] path=new int[2*(m_doubles.length-1)];
     
     for( int i = 0, j = 1; j < m_doubles.length; i++, j++ )
     {
@@ -155,8 +163,13 @@ public class TestLayer implements IChartLayer
       int x2 = m_domAxis.logicalToScreen( m_doubles[j][0] );
       int y2 = m_valAxis.logicalToScreen( m_doubles[j][1] );
 
-      gc.drawLine( x1, y1, x2, y2 );
+      //gc.drawLine( x1, y1, x2, y2 );
+      points[i]=new Point(x1, y1);
+      path[2*i]=x1;
+      path[2*i+1]=y2;
     }
+    line.setPath(path);
+    line.paint();
   }
 
   /**

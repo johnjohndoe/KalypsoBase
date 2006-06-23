@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -56,6 +58,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
@@ -378,4 +381,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   {
     return m_layers;
   }
+
+
 }

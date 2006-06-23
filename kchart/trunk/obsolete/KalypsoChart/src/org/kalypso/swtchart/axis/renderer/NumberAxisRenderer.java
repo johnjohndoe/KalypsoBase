@@ -41,6 +41,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   private final Color m_background;
 
   private final int m_gap;
+  
+  private Point m_maxTickLabelExtent = new Point(0,0);
 
   /**
    * @param foreground
@@ -170,6 +172,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         gc.drawText( label, tickPos - tickExtent.x / 2, y2 + m_tickLabelInsets.top );
+        
+        if (m_maxTickLabelExtent.x < tickExtent.x)
+           m_maxTickLabelExtent.x=tickExtent.x;
+        if (m_maxTickLabelExtent.y < tickExtent.y)
+          m_maxTickLabelExtent.y=tickExtent.y;
+        
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -281,7 +289,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       int x = 0;
       int y = 0;
 
-      Transform tr = null;
+      Transform tr =  new Transform( dev );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -290,40 +298,46 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
           y = y1;
 
           if( axis.getPosition() == POSITION.TOP )
-            y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top + textExtent.y;
+            y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top +  m_labelInsets.bottom +  2*textExtent.y;
           else
-            y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top + textExtent.y;
+            y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top +  m_labelInsets.bottom +  textExtent.y;
         }
         else
         {
           x = x1;
           y = Math.abs( y2 - y1 ) / 2;
-
-          tr = new Transform( dev );
+          
+         
+          int rotation=0;
+          
+          
+          
+          
           if( axis.getPosition() == POSITION.LEFT )
           {
-            tr.rotate( -90 );
-            x -= m_labelInsets.top + textExtent.y;
+            rotation=-90;
+            x -= m_lineWidth + m_tickLength +  m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left +m_labelInsets.bottom  + textExtent.y ;
             y += textExtent.x / 2;
           }
           else
           {
-            tr.rotate( 90 );
-            x += m_labelInsets.top + textExtent.y;
+            rotation=90;
+            x += m_lineWidth + m_tickLength +  m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left +m_labelInsets.bottom  + textExtent.y ;
             y -= textExtent.x / 2;
           }
+          tr.translate(x,y);
+          tr.rotate(rotation);
+          tr.translate(-x,-y);
+            
         }
-
         if( tr != null )
         {
           gc.setTransform( tr );
-
           System.out.println( "Using Transform: " + tr );
         }
+        gc.drawText( axis.getLabel(), x, y );
 
         System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
-
-        gc.drawText( axis.getLabel(), x, y );
       }
       finally
       {

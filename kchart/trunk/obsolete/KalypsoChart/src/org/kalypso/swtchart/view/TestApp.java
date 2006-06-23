@@ -57,6 +57,7 @@ import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
 import org.kalypso.swtchart.layer.impl.TestLayer;
+import org.kalypso.swtchart.layer.impl.TestStackLayer;
 
 /**
  * @author schlienger
@@ -120,7 +121,7 @@ public class TestApp
     chart.getAxisRegistry().addAxis( ar2 );
 
     chart.addLayer( new TestLayer( ab, al ) );
-    chart.addLayer( new TestLayer( ab2, al2 ) );
+    chart.addLayer( new TestStackLayer( ab2, al2 ) );
     chart.addLayer( new TestLayer( ab, ar ) );
     
     chart.setAutoscale( true );
