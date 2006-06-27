@@ -3,6 +3,7 @@ package org.kalypso.swtchart.axis.renderer;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
@@ -39,6 +40,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   private final Color m_foreground;
 
   private final Color m_background;
+  
+  private Collection<Number> m_ticks;
 
   private final int m_gap;
   
@@ -100,8 +103,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     assert coords != null && coords.length == 4;
     drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
-    final Collection<Number> ticks = calcTicks( gc, axis );
-    drawTicks( gc, axis, coords[0], coords[1], coords[2], coords[3], ticks );
+    //final Collection<Number> ticks = calcTicks( gc, axis );
+    m_ticks=calcTicks(gc, axis);
+    drawTicks( gc, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
     drawAxisLabel( gc, dev, axis, coords[0], coords[1], coords[2], coords[3] );
   }
@@ -242,7 +246,10 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     return ihelper;
   }
 
-  private Collection<Number> calcTicks( final GCWrapper gc, final IAxis<Number> axis )
+  /**
+   * TODO: testweise auf public gesetzt - für das GridLayer
+   */
+  public Collection<Number> calcTicks( final GCWrapper gc, final IAxis<Number> axis )
   {
     final Point ticklabelSize = calcTickLabelSize( gc, axis );
 
@@ -347,21 +354,20 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     }
   }
 
-  // public void drawGridLine( final GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
-  // {
-  // if( m_gridcolor != null )
-  // {
-  // gc.setLineWidth( 1 );
-  // gc.setLineStyle( SWT.LINE_DOT );
-  // gc.setForeground( m_gridcolor );
-  //
-  // gc.drawLine( x1, y1, x2, y2 );
-  // }
-  // }
 
   private Point getTextExtent( final GCWrapper gc, final double value )
   {
     final String label = m_nf.format( value );
     return gc.textExtent( label );
   }
+
+  /**
+   * @see org.kalypso.swtchart.axis.renderer.IAxisRenderer#getAxisWidth(org.kalypso.swtchart.axis.IAxis)
+   */
+  public int getAxisWidth( IAxis<Date> axis )
+  {
+    return m_maxTickLabelExtent.x;
+  }
+
+
 }

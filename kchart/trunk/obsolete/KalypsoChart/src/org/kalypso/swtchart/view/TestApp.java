@@ -41,6 +41,7 @@
 package org.kalypso.swtchart.view;
 
 import java.awt.Insets;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -49,15 +50,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.swtchart.Chart;
+import org.kalypso.swtchart.axis.DateAxis;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.NumberAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
+import org.kalypso.swtchart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
+import org.kalypso.swtchart.layer.impl.GridLayer;
+import org.kalypso.swtchart.layer.impl.TestDateLayer;
 import org.kalypso.swtchart.layer.impl.TestLayer;
 import org.kalypso.swtchart.layer.impl.TestStackLayer;
+import org.kalypso.swtchart.util.DateComparator;
 
 /**
  * @author schlienger
@@ -77,13 +83,14 @@ public class TestApp
 
     shell.open();
 
-    // Double[][] doubles = SampleData.createRandomPoints( 6 );
-    final IAxis<Number> al = new NumberAxis( "al", "Left Axis", PROPERTY.CONTINUOUS, POSITION.LEFT, DIRECTION.POSITIVE, new DoubleComparator( 0.001 ) );
+    final IAxis<Number> al = new NumberAxis( "al", "Left Axis", PROPERTY.CONTINUOUS, POSITION.LEFT, DIRECTION.NEGATIVE, new DoubleComparator( 0.001 ) );
     al.setFrom( 0 );
     al.setTo( 100 );
-    final IAxis<Number> al2 = new NumberAxis( "al2", "Left Axis 2", PROPERTY.CONTINUOUS, POSITION.LEFT, DIRECTION.NEGATIVE, new DoubleComparator( 0.001 ) );
-    al2.setFrom( 0 );
-    al2.setTo( 100 );
+    final IAxis<Date> al2 = new DateAxis( "al2", "Left Axis 2", PROPERTY.CONTINUOUS, POSITION.RIGHT, new DateComparator(),  DIRECTION.POSITIVE);
+    //Start: 100 Tage vor jetzt
+    al2.setFrom( new Date (System.currentTimeMillis()- 100*1000*60*60*24) );
+    //Ende: Jetzt
+    al2.setTo( new Date(System.currentTimeMillis()) );
 
     final IAxis<Number> ab = new NumberAxis( "ab", "Bottom Axis", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, new DoubleComparator( 0.001 ) );
     ab.setFrom( 0 );
@@ -108,24 +115,31 @@ public class TestApp
 
     final Color colorFg = display.getSystemColor( SWT.COLOR_DARK_GRAY );
     final Color colorBg = display.getSystemColor( SWT.COLOR_WHITE );
+
+    //NumberAxisRenderer in der Registry bekannt machen 
     final IAxisRenderer r1 = new NumberAxisRenderer( colorFg, colorBg, 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 5 );
     chart.getAxisRegistry().setRenderer( Number.class, r1 );
+  
+    //DateAxisRenderer in der Registry bekannt machen 
+    final IAxisRenderer r2 = new DateAxisRenderer( colorFg, colorBg, 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 5 );
+    chart.getAxisRegistry().setRenderer( Date.class, r2 );
 
     chart.getAxisRegistry().addAxis( al );
     chart.getAxisRegistry().addAxis( al2 );
     chart.getAxisRegistry().addAxis( ab );
     chart.getAxisRegistry().addAxis( ab2 );
     chart.getAxisRegistry().addAxis( at );
-    chart.getAxisRegistry().addAxis( at2 );
+  //  chart.getAxisRegistry().addAxis( at2 );
     chart.getAxisRegistry().addAxis( ar );
     chart.getAxisRegistry().addAxis( ar2 );
 
-    chart.addLayer( new TestLayer( ab, al ) );
-    chart.addLayer( new TestStackLayer( ab2, al2 ) );
-    chart.addLayer( new TestLayer( ab, ar ) );
-    
+   // chart.addLayer( new TestStackLayer( al, ab ) );
+   // chart.addLayer( new TestStackLayer( ab2, ar ) );
+ //   chart.addLayer( new GridLayer( al2, at ) );
+    chart.addLayer( new TestDateLayer( al2, at ) );
+
     chart.setAutoscale( true );
-    //chart.setHideUnusedAxes( true );
+    chart.setHideUnusedAxes( true );
   
     while( !shell.isDisposed() )
     {

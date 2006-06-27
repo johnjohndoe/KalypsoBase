@@ -41,6 +41,7 @@
 package org.kalypso.swtchart.styles;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -55,6 +56,9 @@ public class StyledLine
   GCWrapper m_gc;
   Device m_dev;
   int[] m_path;
+  
+  int m_width=2;
+  int m_borderWidth=0;
   
   
   public StyledLine(GCWrapper gc, Device dev)
@@ -72,38 +76,19 @@ public class StyledLine
   {
     m_gc.m_gc.setAntialias(SWT.ON);
     
-    m_gc.setForeground(m_dev.getSystemColor(SWT.COLOR_BLACK));      
+    m_gc.setForeground(new Color(m_dev, 0,0,0));      
     m_gc.setBackground(m_dev.getSystemColor(SWT.COLOR_GREEN));
-    m_gc.setLineWidth(5);
-    m_gc.drawPolyline(m_path);
+    if (m_borderWidth>0)
+    {
+      m_gc.setLineWidth(m_width+2*m_borderWidth);
+      m_gc.drawPolyline(m_path);
+    }
     
-    m_gc.setForeground(m_dev.getSystemColor(SWT.COLOR_RED));      
-    m_gc.setLineWidth(3);
+    m_gc.setForeground(new Color(m_dev, 255,0,0));      
+    m_gc.setLineWidth(m_width);
     m_gc.drawPolyline(m_path);
 
-    m_gc.setForeground(m_dev.getSystemColor(SWT.COLOR_YELLOW));      
-    m_gc.setLineWidth(1);
-    m_gc.drawPolyline(m_path);
-    /*
-     int count=0;
-    Point start=new Point(0,0);
-    Point end=new Point(0,0);
-    for (int i=0; i<m_path.length;i+=2)
-    {
-      end=point;
-      
-      if (count>0)
-      {
-        if (start!=null && end !=null)
-        {
-          m_gc.drawLine(start.x, start.y, end.x, end.y);
-            
-        }
-      }
-      start=end;
-      count++;
-    }
-    */
+   
   }
   
   

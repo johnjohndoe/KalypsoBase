@@ -43,17 +43,21 @@ package org.kalypso.swtchart.layer.impl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.axis.IAxis;
+import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
 import org.kalypso.swtchart.styles.StyledLine;
 
+import sun.java2d.loops.FillRect;
+
 /**
- * @author schlienger
+ * @author alibu
  */
 public class TestStackLayer implements IChartLayer
 {
@@ -69,7 +73,7 @@ public class TestStackLayer implements IChartLayer
     m_valAxis = valAxis;
 
   //  m_doubles = SampleData.createRandomPoints( 20 );
-    m_doubles = SampleData.createSinusPoints( 20 );
+    m_doubles = SampleData.createSinusPoints( 80 );
   }
 
   /**
@@ -166,15 +170,53 @@ public class TestStackLayer implements IChartLayer
     gc.setLineWidth(2);
     gc.setAlpha(80);
     
+   
+    IAxis hAxis, vAxis;
+    
+    
     for( int i = 0; i < m_doubles.length; i++)
     {
-      int y0 = m_valAxis.logicalToScreen(0);
+      int x0=0, y0=0, x1=0, y1=0;
+      //horizontale und vertikale Achse bestimmen 
+      if (m_domAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+      {
+          hAxis=m_domAxis;
+          vAxis=m_valAxis;
+          if (halfStackWidth>0)
+          {
+            x0 = hAxis.logicalToScreen( m_doubles[i][0] )- halfStackWidth;
+            x1 = hAxis.logicalToScreen( m_doubles[i][0] )+ halfStackWidth;
+          }
+          else
+          {
+            x0 = hAxis.logicalToScreen(m_doubles[i][0]);
+            x1 = x0+1;
+          }
+          y0 = vAxis.logicalToScreen(0);      
+          y1 = vAxis.logicalToScreen( m_doubles[i][1] );
+      }
+      else
+      {
+          vAxis=m_domAxis;
+          hAxis=m_valAxis;
+          y0=0;
+          y1=0;
+          if (halfStackWidth>0)
+          {
+            y0 = vAxis.logicalToScreen( m_doubles[i][0] )- halfStackWidth;
+            y1 = vAxis.logicalToScreen( m_doubles[i][0] )+ halfStackWidth;
+          }
+          else
+          {
+            y0 = vAxis.logicalToScreen(m_doubles[i][0]);
+            y1 = y0+1;
+          }
+          x0 = hAxis.logicalToScreen(0);      
+          x1 = hAxis.logicalToScreen( m_doubles[i][1] );
+      } 
       
-      int x0 = m_domAxis.logicalToScreen( m_doubles[i][0] )- halfStackWidth;
-      int x1 = m_domAxis.logicalToScreen( m_doubles[i][0] )+ halfStackWidth;
-      int y1 = m_valAxis.logicalToScreen( m_doubles[i][1] );
-
-      gc.fillRectangle(x0, y0, x1-x0, y1-y0);
+      Rectangle fillrect=new Rectangle(x0, y0, x1-x0, y1-y0);
+      gc.fillRectangle(fillrect);
 
      
     }

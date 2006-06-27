@@ -43,6 +43,7 @@ package org.kalypso.swtchart.axis.component;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -51,6 +52,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.ChartUtilities;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
+import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 
 /**
  * @author schlienger
@@ -83,11 +85,25 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   /**
    * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
+   * TODO: im Moment gibt die Funktion noch einen Standardwert zurück - die wirklichen Ausmaße 
+   * sollen aber berechnet werden
    */
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
   {
     return new Point( 50, 50 );
+    /*
+    IAxisRenderer ar=m_axis.getRenderer();
+    Point p=new Point(0,0);
+    if (ar!=null)
+    {
+      int width=ar.getAxisWidth(m_axis);
+      p.x=width;
+      p.y=width;
+    }
+    return p;
+    */
+    
   }
 
   /**
@@ -105,7 +121,9 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
     System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
 
-    m_axis.getRenderer().paint( gc, dev, m_axis, b );
+    IAxisRenderer renderer = m_axis.getRenderer();
+    if (renderer != null)
+      renderer.paint( gc, dev, m_axis, b );
   }
 
   public int normalizedToScreen( double normValue )

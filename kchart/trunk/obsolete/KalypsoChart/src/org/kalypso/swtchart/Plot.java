@@ -42,6 +42,7 @@ package org.kalypso.swtchart;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Canvas;
@@ -82,7 +83,13 @@ public class Plot extends Canvas implements PaintListener
   {
     final GCWrapper gcw = new GCWrapper( e.gc );
     final List<IChartLayer> layers = m_chart.getLayers();
+    //Antialiasing setzen
+    gcw.m_gc.setAntialias(SWT.ON);
+    
     for( final IChartLayer layer : layers )
+    {
+      ChartUtilities.resetGC(gcw.m_gc, e.display);
       layer.paint( gcw, e.display );
+    }
   }
 }

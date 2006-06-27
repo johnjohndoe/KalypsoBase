@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
@@ -64,4 +67,16 @@ public class ChartUtilities
 
     return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir == DIRECTION.NEGATIVE;
   }
+  
+  
+  public static void resetGC(GC gc, Device dev)
+  {
+    gc.setForeground(dev.getSystemColor(SWT.COLOR_BLACK));
+    gc.setBackground(dev.getSystemColor(SWT.COLOR_WHITE));
+    gc.setLineWidth(1);
+    gc.setLineStyle(SWT.LINE_SOLID);
+    gc.setAlpha(255);
+  }
+  
+  
 }

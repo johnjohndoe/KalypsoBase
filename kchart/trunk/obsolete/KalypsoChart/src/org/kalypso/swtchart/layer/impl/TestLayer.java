@@ -45,11 +45,14 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.swtchart.ChartUtilities;
 import org.kalypso.swtchart.axis.IAxis;
+import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
+import org.kalypso.swtchart.styles.StyledOval;
 import org.kalypso.swtchart.styles.StyledLine;
 
 /**
@@ -151,22 +154,35 @@ public class TestLayer implements IChartLayer
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
     StyledLine line=new StyledLine(gc, dev);
+    StyledOval oval=new StyledOval(gc, dev);
     
     Point[] points=new Point[m_doubles.length];
-    int[] path=new int[2*(m_doubles.length-1)];
+    int[] path=new int[2*(m_doubles.length)];
     
-    for( int i = 0, j = 1; j < m_doubles.length; i++, j++ )
+    //horizontale und vertikale Achse bestimmen Achse
+    IAxis hAxis, vAxis;
+    if (m_domAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
     {
-      int x1 = m_domAxis.logicalToScreen( m_doubles[i][0] );
-      int y1 = m_valAxis.logicalToScreen( m_doubles[i][1] );
+        hAxis=m_domAxis;
+        vAxis=m_valAxis;
+    }
+    else
+    {
+      vAxis=m_domAxis;
+      hAxis=m_valAxis;
+    }
+    
+    for( int i = 0; i < m_doubles.length; i++ )
+    {
+      int x1 = hAxis.logicalToScreen( m_doubles[i][0] );
+      int y1 = vAxis.logicalToScreen( m_doubles[i][1] );
 
-      int x2 = m_domAxis.logicalToScreen( m_doubles[j][0] );
-      int y2 = m_valAxis.logicalToScreen( m_doubles[j][1] );
 
-      //gc.drawLine( x1, y1, x2, y2 );
       points[i]=new Point(x1, y1);
       path[2*i]=x1;
-      path[2*i+1]=y2;
+      path[2*i+1]=y1;
+      oval.setCenter(new Point(x1,y1));
+      oval.paint();
     }
     line.setPath(path);
     line.paint();
