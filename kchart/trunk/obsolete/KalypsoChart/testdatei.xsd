@@ -3,5 +3,12 @@
      targetNamespace="http://www.openali.org/k-chart/viewer_configuration"
      xmlns:kcvc="http://www.kalypso.org/k-chart/viewerConfiguration">
      
-     
+<element name="test">
+<simpleType>
+<restriction base='string'>
+<enumeration value="äöü!'§$%&/()=?"/>
+<enumeration value=";:_>'*"/>
+</restriction>
+</simpleType>
+</element>
 </schema>
