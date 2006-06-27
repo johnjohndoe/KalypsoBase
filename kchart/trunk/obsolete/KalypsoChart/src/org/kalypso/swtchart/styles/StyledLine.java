@@ -59,7 +59,7 @@ public class StyledLine
   
   int m_width=2;
   int m_borderWidth=0;
-  
+  Color m_borderColor=new Color(null, 0, 0, 0);
   
   public StyledLine(GCWrapper gc, Device dev)
   {
@@ -74,19 +74,17 @@ public class StyledLine
   
   public void paint()
   {
-    m_gc.m_gc.setAntialias(SWT.ON);
-    
-    m_gc.setForeground(new Color(m_dev, 0,0,0));      
-    m_gc.setBackground(m_dev.getSystemColor(SWT.COLOR_GREEN));
-    if (m_borderWidth>0)
-    {
-      m_gc.setLineWidth(m_width+2*m_borderWidth);
+      m_gc.setForeground(m_borderColor);      
+      m_gc.setBackground(m_dev.getSystemColor(SWT.COLOR_GREEN));
+      if (m_borderWidth>0)
+      {
+        m_gc.setLineWidth(m_width+2*m_borderWidth);
+        m_gc.drawPolyline(m_path);
+      }
+      
+     // m_gc.setForeground(new Color(m_dev, 255,0,0));      
+      m_gc.setLineWidth(m_width);
       m_gc.drawPolyline(m_path);
-    }
-    
-    m_gc.setForeground(new Color(m_dev, 255,0,0));      
-    m_gc.setLineWidth(m_width);
-    m_gc.drawPolyline(m_path);
 
    
   }

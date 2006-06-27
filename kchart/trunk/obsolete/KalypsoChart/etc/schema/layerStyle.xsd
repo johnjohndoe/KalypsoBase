@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://www.openali.org/k-chart/layerStyle"
+     xmlns:kcls="http://www.kalypso.org/k-chart/layerStyle">
+
+
+
+
+
+
+
+     <xs:element name="Style">
+          <xs:annotation>
+               <xs:documentation> Ein Style beschreibt die elementaren Zeicheneinheiten, aus denen
+                    ein Layer besteht. Von jedem Element können mehrere Instanzen angegeben werden;
+                    diese werden dann vom Layer auf die eigene Art interpretiert. Meist hat man es
+                    pro Typ nur mit höchstens einer Ausprägung zu tun - dann wird eben nur die "im
+                    Style-Dokument oberste" Version betrachtet. </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="kcls:Point" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="kcls:Line" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="kcls:Font" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="kcls:Polygon" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+               <xs:attribute name="id" type="xs:string" use="required">
+                    <xs:annotation>
+                         <xs:documentation> Eindeutiger Bezeichner innerhalb des Dokuments; wird zur
+                              Referenzierung durch die LayerStyleConnection benötigt.
+                         </xs:documentation>
+                    </xs:annotation>
+               </xs:attribute>
+          </xs:complexType>
+     </xs:element>
+
+     <xs:element name="Point" type="kcls:PointType"/>
+
+     <xs:element name="BorderPoint" type="kcls:BorderPointType" substitutionGroup="kcls:Point"/>
+
+
+     <xs:complexType name="PointType">
+          <xs:sequence>
+               <xs:element name="width" type="xs:int" minOccurs="1" maxOccurs="1"/>
+               <xs:element name="height" type="xs:int" minOccurs="1" maxOccurs="1"/>
+          </xs:sequence>
+     </xs:complexType>
+
+     <xs:complexType name="FilledPointType">
+          <xs:complexContent>
+               <xs:extension base="kcls:PointType">
+                    <xs:sequence>
+                         <xs:element name="FillColor" type="kcls:ColorType" minOccurs="1"
+                              maxOccurs="1"/>
+                    </xs:sequence>
+               </xs:extension>
+          </xs:complexContent>
+     </xs:complexType>
+
+     <xs:complexType name="ImagePointType">
+          <xs:annotation>
+               <xs:documentation> Definiert eine Grafik, die anstelle eines Punktes angezeigt werden
+                    soll </xs:documentation>
+          </xs:annotation>
+          <xs:complexContent>
+               <xs:extension base="kcls:PointType">
+                    <xs:sequence>
+                         <xs:element name="src" type="xs:anyURI">
+                              <xs:annotation>
+                                   <xs:documentation> anyURI trifft es nicht genau, ist aber besser
+                                        als string; hier soll der Dateipfad oder die URL der
+                                        Bilddatei rein. </xs:documentation>
+                              </xs:annotation>
+                         </xs:element>
+                    </xs:sequence>
+               </xs:extension>
+          </xs:complexContent>
+     </xs:complexType>
+
+
+     <xs:complexType name="BorderPointType">
+          <xs:annotation>
+               <xs:documentation> Da muss erst noch überprüft werden, ob solch komplexe Punkte
+                    überhaupt benötigt werden (und funktionieren); </xs:documentation>
+          </xs:annotation>
+          <xs:complexContent>
+               <xs:extension base="kcls:FilledPointType">
+                    <xs:sequence>
+                         <xs:element name="Border" type="kcls:LineType" minOccurs="1" maxOccurs="1"
+                         />
+                    </xs:sequence>
+               </xs:extension>
+          </xs:complexContent>
+     </xs:complexType>
+
+     <xs:element name="Line" type="kcls:LineType"/>
+
+     <xs:complexType name="LineType">
+          <xs:annotation>
+               <xs:documentation>repräsentiert eine Linie</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+               <xs:element name="Width" type="xs:int" minOccurs="1" maxOccurs="1"/>
+               <xs:element name="Style" type="kcls:LineStyleType"/>
+               <xs:element name="Color" type="kcls:ColorType"/>
+          </xs:sequence>
+     </xs:complexType>
+
+     <xs:element name="BorderLine" substitutionGroup="kcls:Line" type="kcls:BorderLineType"/>
+
+     <xs:complexType name="BorderLineType">
+          <xs:annotation>
+               <xs:documentation> Erweitert die Standard-Linie um eine Rahmenlinie; es stellt sich
+                    noch die Frage, ob eine solche Linie benötigt wird; durch die Kombination
+                    mehrerer Linien wird die gezeichniete Linie von Haus aus recht dick - damit wird
+                    die Grafik ungenau </xs:documentation>
+          </xs:annotation>
+          <xs:complexContent>
+               <xs:extension base="kcls:LineType">
+                    <xs:sequence>
+                         <xs:element name="Border" type="kcls:LineStyleType"/>
+                    </xs:sequence>
+               </xs:extension>
+          </xs:complexContent>
+     </xs:complexType>
+
+     <xs:simpleType name="LineStyleType">
+          <xs:annotation>
+               <xs:documentation> beschreibt die Art, wie eine Linie gezeichnet wird; durchgezogen,
+                    gepunktet, gestrichelt; die Enumeration entspricht den Möglichkeiten von SWT
+               </xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+               <xs:enumeration value="solid"/>
+               <xs:enumeration value="dot"/>
+               <xs:enumeration value="dash"/>
+               <xs:enumeration value="dashdot"/>
+               <xs:enumeration value="dashdotdot"/>
+          </xs:restriction>
+     </xs:simpleType>
+
+     <xs:complexType name="ColorType">
+          <xs:sequence>
+               <xs:element name="r" type="kcls:ColorChannelType"/>
+               <xs:element name="g" type="kcls:ColorChannelType"/>
+               <xs:element name="b" type="kcls:ColorChannelType"/>
+               <xs:element name="alpha" type="kcls:ColorChannelType"/>
+          </xs:sequence>
+     </xs:complexType>
+
+
+     <xs:simpleType name="ColorChannelType">
+          <xs:restriction base="xs:int">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="255"/>
+          </xs:restriction>
+
+     </xs:simpleType>
+
+
+     <xs:element name="Font" type="kcls:FontType"/>
+     <xs:complexType name="FontType">
+          <xs:sequence>
+               <xs:element name="Family" type="xs:string" minOccurs="1" maxOccurs="unbounded">
+                    <xs:annotation>
+                         <xs:documentation> Darf beliebig oft vorkommen; wenn die erste Schriftart
+                              nicht gefunden wird, wird einfach dir nächste verwendet
+                         </xs:documentation>
+                    </xs:annotation>
+               </xs:element>
+               <xs:element name="Color" type="kcls:ColorType"/>
+               <xs:element name="Size" type="xs:int"/>
+               <xs:element name="Style" type="kcls:FontStyleType"/>
+          </xs:sequence>
+     </xs:complexType>
+
+     <xs:simpleType name="FontStyleType">
+          <xs:annotation>
+               <xs:documentation> orientiert sich an den FontData-Styles von SWT </xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+               <xs:enumeration value="normal"/>
+               <xs:enumeration value="bold"/>
+               <xs:enumeration value="italic"/>
+          </xs:restriction>
+     </xs:simpleType>
+
+     <xs:element name="Polygon" type="kcls:PolygonType"/>
+     <xs:complexType name="PolygonType">
+          <xs:complexContent>
+               <xs:extension base="kcls:LineType">
+                    <xs:sequence>
+                         <xs:element name="FillColor" type="kcls:ColorType"/>
+                    </xs:sequence>
+               </xs:extension>
+          </xs:complexContent>
+     </xs:complexType>
+
+</xs:schema>

@@ -79,10 +79,8 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
   }
 
-  /**
-   * TODO: auf public gesetzt, um von Component.computeSize darauf zuzugreifen 
-   */
-  public Point calcTickLabelSize( final GCWrapper gc, final IAxis<Date> axis )
+
+  private Point calcTickLabelSize( final GCWrapper gc, final IAxis<Date> axis )
   {
     final Date logicalfrom = axis.getFrom();
     final Date logicalto = axis.getTo();

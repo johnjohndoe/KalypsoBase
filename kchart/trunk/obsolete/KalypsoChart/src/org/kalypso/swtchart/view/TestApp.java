@@ -86,7 +86,7 @@ public class TestApp
     final IAxis<Number> al = new NumberAxis( "al", "Left Axis", PROPERTY.CONTINUOUS, POSITION.LEFT, DIRECTION.NEGATIVE, new DoubleComparator( 0.001 ) );
     al.setFrom( 0 );
     al.setTo( 100 );
-    final IAxis<Date> al2 = new DateAxis( "al2", "Left Axis 2", PROPERTY.CONTINUOUS, POSITION.RIGHT, new DateComparator(),  DIRECTION.POSITIVE);
+    final IAxis<Date> al2 = new DateAxis( "al2", "Left Axis 2 (Date)", PROPERTY.CONTINUOUS, POSITION.LEFT, new DateComparator(),  DIRECTION.POSITIVE);
     //Start: 100 Tage vor jetzt
     al2.setFrom( new Date (System.currentTimeMillis()- 100*1000*60*60*24) );
     //Ende: Jetzt
@@ -129,13 +129,15 @@ public class TestApp
     chart.getAxisRegistry().addAxis( ab );
     chart.getAxisRegistry().addAxis( ab2 );
     chart.getAxisRegistry().addAxis( at );
-  //  chart.getAxisRegistry().addAxis( at2 );
+    chart.getAxisRegistry().addAxis( at2 );
     chart.getAxisRegistry().addAxis( ar );
     chart.getAxisRegistry().addAxis( ar2 );
 
-   // chart.addLayer( new TestStackLayer( al, ab ) );
-   // chart.addLayer( new TestStackLayer( ab2, ar ) );
- //   chart.addLayer( new GridLayer( al2, at ) );
+    chart.addLayer( new TestStackLayer( al, ab ) );
+    chart.addLayer( new TestLayer( at2, al ) );
+    chart.addLayer( new TestStackLayer( ab2, ar ) );
+    chart.addLayer( new GridLayer( al2, at ) );
+    chart.addLayer( new GridLayer( al, at2 ) );
     chart.addLayer( new TestDateLayer( al2, at ) );
 
     chart.setAutoscale( true );

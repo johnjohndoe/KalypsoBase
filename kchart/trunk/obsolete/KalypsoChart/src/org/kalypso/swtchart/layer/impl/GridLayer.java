@@ -49,6 +49,7 @@ import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
+import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
@@ -162,7 +163,7 @@ public class GridLayer implements IChartLayer
     //Der Typ der  calcTicks-Collection ist aber der gleiche, der auch für logicalToScreen verwendet wird
     for (Object n:ticks)
     {
-      if (m_domAxis.getPosition()==POSITION.TOP || m_domAxis.getPosition()==POSITION.BOTTOM)
+      if (m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
         int x1=m_domAxis.logicalToScreen(n);
         int y1=m_valAxis.logicalToScreen(m_valAxis.getFrom());
@@ -183,7 +184,7 @@ public class GridLayer implements IChartLayer
     ticks=m_valAxis.getRenderer().calcTicks(gc, m_valAxis);
     for (Object n:ticks)
     {
-      if (m_valAxis.getPosition()==POSITION.TOP || m_valAxis.getPosition()==POSITION.BOTTOM)
+      if (m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL)
       {
         int x1=m_valAxis.logicalToScreen(n);
         int y1=m_domAxis.logicalToScreen(m_domAxis.getFrom());

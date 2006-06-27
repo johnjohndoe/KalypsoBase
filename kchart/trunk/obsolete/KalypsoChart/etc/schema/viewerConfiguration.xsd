@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://www.openali.org/k-chart/viewer_configuration"
+     xmlns:kcvc="http://www.kalypso.org/k-chart/viewerConfiguration">
+
+     <import namespace="http://www.opengis.net/gml" schemaLocation="./layerStyle.xsd"/>
+
+     <element name="Configuration">
+          <complexType>
+               <sequence>
+                    <element ref="kcvc:Layer" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="kcvc:Axis" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="kcvc:Legend" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="kcls:Style" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="kcvc:LayerProvider" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="kcvc:DataSource" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+          </complexType>
+     </element>
+
+     <element name="Layer" type="kcvc:LayerType"/>
+
+     <complexType name="LayerType">
+          <sequence>
+               <element name="Visible" type="boolean">
+                    <annotation>
+                         <documentation> Gibt die Sichtbarkeit des Layers im Diagramm an.
+                         </documentation>
+                    </annotation>
+               </element>
+               <element name="Active" type="boolean">
+                    <annotation>
+                         <documentation> Es kann genau ein Layer aktiv sein - dessen Style kann dann
+                              beispielsweise vom Benutzer verändert werden. Ist nur für die GUI
+                              interessant. </documentation>
+                    </annotation>
+               </element>
+               <element name="Z-Index" type="int">
+                    <annotation>
+                         <documentation> Z-Position des Layers im Diagramm </documentation>
+                    </annotation>
+               </element>
+               <element name="Name" type="string">
+                    <annotation>
+                         <documentation> Eine Benamsung, die der Benutzer dem Layer geben kann. Wird
+                              dann für die Legende verwendet. </documentation>
+                    </annotation>
+               </element>
+               <element name="Source" type="kcvc:DataSourceType">
+                    <annotation>
+                         <documentation> Die Quelle (URL oder Dateiname) der dem Layer zugrunde
+                              liegenden Observation. </documentation>
+                    </annotation>
+               </element>
+               <element name="LayerProvider" type="kcvc:LayerProvideType">
+                    <annotation>
+                         <documentation> Erlaubt die Angabe eines LayerProviders; da eine
+                              Source-Datei (oder URL) auch mehrere Layer erzeugen kann, erlaubt die
+                              Angabe eines LayerProviders, dass wirklich nur auf (höchstens) ein
+                              Layer Bezug genommen werden kann. </documentation>
+                    </annotation>
+               </element>
+               <element name="Domain Axis" type="kcvc:AxisType">
+                    <annotation>
+                         <documentation> Die zugehörige DomainAxis - auf die sollte per href
+                              verwiesen werden </documentation>
+                    </annotation>
+               </element>
+               <element name="Target Axis" type="kcvc:AxisType">
+                    <annotation>
+                         <documentation> Die zugehörige TargetAxis - auf die sollte per href
+                              verwiesen werden </documentation>
+                    </annotation>
+               </element>
+          </sequence>
+          <attribute name="id" use="required">
+               <annotation>
+                    <documentation> Eindeutiger Bezeichner innerhalb des Dokuments; wird zur
+                         Referenzierung durch die LayerStyleConnection benötigt. </documentation>
+               </annotation>
+          </attribute>
+     </complexType>
+
+
+
+     <complexType name="AxisType">
+          <annotation>
+               <documentation>
+                    Da muss noch ein Data-Type rein
+               </documentation>
+          </annotation>
+          <sequence>
+               <element name="direction" type="kcvc:AxisDirectionType" minOccurs="1" maxOccurs="1"/>
+               <element name="position" type="kcvc:AxisPositionType" minOccurs="1" maxOccurs="1"/>
+          </sequence>
+          <attribute name="id" use="required"/>
+     </complexType>
+
+
+
+
+     <simpleType name="AxisDirectionType">
+          <annotation>
+               <documentation> Direction gibt die Richtung an, in die die Werte angetrage werden:
+                    POSITIVE: von links nach rechts; bzw. von unten nach oben (wie in kart.
+                    Koordinatensystem NEGATIVE: von rechts nach links, btw. von oben nach unten
+               </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="POSITIVE"/>
+               <enumeration value="NEGATIVE"/>
+          </restriction>
+     </simpleType>
+
+     <simpleType name="AxisPositionType">
+          <annotation>
+               <documentation> Position der Achse, vom Plot (also der Mitte) aus gesehen; es ist
+                    wichtig, dass der Konfigurator selbst darauf achtet, dass von den bis zu 2
+                    Achsen pro Layer höchstens eine horizontal, die andere vertikal verläuft
+               </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="LEFT"/>
+               <enumeration value="RIGHT"/>
+               <enumeration value="TOP"/>
+               <enumeration value="BOTTOM"/>
+          </restriction>
+     </simpleType>
+
+</schema>

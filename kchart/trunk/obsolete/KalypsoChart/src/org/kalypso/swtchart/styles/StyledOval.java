@@ -90,10 +90,10 @@ public class StyledOval
   {
       m_foreground=m_dev.getSystemColor(SWT.COLOR_BLUE);
       m_background=m_dev.getSystemColor(SWT.COLOR_MAGENTA);
-     m_gc.drawOval(m_leftTop.x, m_leftTop.y, m_width, m_height);
+      m_gc.drawOval(m_leftTop.x, m_leftTop.y, m_width, m_height);
   }
   
-  public void centerToLeftTop()
+  private void centerToLeftTop()
   {
     m_leftTop=new Point(m_center.x-( (int) Math.round(0.5*m_width)), m_center.y-( (int) Math.round(0.5*m_height)));
   }
