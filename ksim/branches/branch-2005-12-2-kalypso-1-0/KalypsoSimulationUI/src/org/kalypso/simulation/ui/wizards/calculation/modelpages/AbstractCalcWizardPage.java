@@ -266,6 +266,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * Argument: (optional) an integer which indicates an amount of columns up from which the table does not resize
    * automatically. This can be used for instance when the amount of columns is important and you want a horizontal
    * scrollbar.
+   * 
+   * @deprecated observation table has now a view port and key column is always displayed
    */
   private final static String PROP_ZMLTABLE_THRESHOLD_RESIZEOFF = "zmlTableThresholdResizeOff";
 
@@ -723,9 +725,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       m_table = new ObservationTable( m_tableView );
 
-      final String threshold = m_arguments.getProperty( PROP_ZMLTABLE_THRESHOLD_RESIZEOFF, null );
-      if( threshold != null )
-        m_table.setThresholdColumnsAutoResizeModeOff( Integer.valueOf( threshold ).intValue() );
+//      final String threshold = m_arguments.getProperty( PROP_ZMLTABLE_THRESHOLD_RESIZEOFF, null );
+//      if( threshold != null )
+//        m_table.setThresholdColumnsAutoResizeModeOff( Integer.valueOf( threshold ).intValue() );
 
       // set alphasort flag according to arguments (NOTE: might override setting of the template)
       final String alphaSort = m_arguments.getProperty( PROP_ZMLTABLE_ALPHA_SORT, null );
@@ -740,11 +742,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       m_table.setVisible( true );
 
-      final JScrollPane pane = new JScrollPane( m_table );
+      //final JScrollPane pane = new JScrollPane( m_table );
 
       m_tableFrame.setVisible( true );
       m_table.setVisible( true );
-      m_tableFrame.add( pane );
+      m_tableFrame.add( m_table );
 
       return composite;
     }
