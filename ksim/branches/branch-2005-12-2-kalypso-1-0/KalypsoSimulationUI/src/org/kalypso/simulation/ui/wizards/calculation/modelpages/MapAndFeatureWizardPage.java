@@ -375,5 +375,4 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       }
     }
   }
-
 }

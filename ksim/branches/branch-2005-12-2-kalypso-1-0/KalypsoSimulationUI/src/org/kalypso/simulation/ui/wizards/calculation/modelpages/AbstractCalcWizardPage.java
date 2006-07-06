@@ -57,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -144,7 +143,6 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -261,15 +259,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * Argument: applies only, if {@link #PROP_ZMLTABLE_SHOW}is set to 'template'
    */
   private final static String PROP_ZMLTABLE_TEMPLATE = "zmlTableTemplate";
-
-  /**
-   * Argument: (optional) an integer which indicates an amount of columns up from which the table does not resize
-   * automatically. This can be used for instance when the amount of columns is important and you want a horizontal
-   * scrollbar.
-   * 
-   * @deprecated observation table has now a view port and key column is always displayed
-   */
-  private final static String PROP_ZMLTABLE_THRESHOLD_RESIZEOFF = "zmlTableThresholdResizeOff";
 
   /**
    * Argument: (optional) a boolean which indicates whether the table should be sorted according to the alphabetical
@@ -413,7 +402,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_mapPanel != null )
       m_mapPanel.removeSelectionChangedListener( this );
-    
+
     super.dispose();
   }
 
@@ -725,10 +714,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       m_table = new ObservationTable( m_tableView );
 
-//      final String threshold = m_arguments.getProperty( PROP_ZMLTABLE_THRESHOLD_RESIZEOFF, null );
-//      if( threshold != null )
-//        m_table.setThresholdColumnsAutoResizeModeOff( Integer.valueOf( threshold ).intValue() );
-
       // set alphasort flag according to arguments (NOTE: might override setting of the template)
       final String alphaSort = m_arguments.getProperty( PROP_ZMLTABLE_ALPHA_SORT, null );
       if( alphaSort != null )
@@ -741,11 +726,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
-
-      //final JScrollPane pane = new JScrollPane( m_table );
-
       m_tableFrame.setVisible( true );
-      m_table.setVisible( true );
       m_tableFrame.add( m_table );
 
       return composite;
@@ -1138,13 +1119,18 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
           if( kft != null && panToFid != null )
           {
-            final GMLWorkspace workspace = kft.getWorkspace();
+            final CommandableWorkspace workspace = kft.getWorkspace();
             final Feature feature = workspace.getFeature( panToFid );
             if( feature != null )
             {
               GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
               GM_Point centroid = defaultGeometryProperty.getCentroid();
               m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
+
+              // FIX: damit überhaupt was selektiert wird, sonst passiert nichts
+              final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+              selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[]
+              { new EasyFeatureWrapper( workspace, feature, null, null ) } );
             }
           }
 

@@ -148,9 +148,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
    * arguments, they must be followed by some arbitrary string.
-   * <p>
-   * For the sustained arguments, @see MultiExporter
-   * </p>
    */
   private static final String PROP_EXPORTER = "exporter";
 
@@ -168,6 +165,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
   /** Argument: */
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
+
+  /**
+   * Argument: boolean (true|false) der sagt ob der Knopf "Export Prognose" sichtbar ist oder nicht. Der Default Wert
+   * ist true.
+   * <p>
+   * Example: &lt;arg name="visibleExportPrognose" value="false"/&gt;
+   */
+  private static final String PROP_VISIBLE_EXPORT_PROGNOSE = "visibleExportPrognose";
 
   protected Object[] m_checkedElements;
 
@@ -212,14 +217,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      {
-          mainWeight,
-          100 - mainWeight } );
+      { mainWeight, 100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      {
-          rightWeight,
-          100 - rightWeight } );
+      { rightWeight, 100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -283,20 +284,23 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     buttonGroup.setText( "Datenablagen" );
     buttonGroup.setLayout( new GridLayout() );
 
-    final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
-    exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
-    exportPrognosesButton.setToolTipText( "Exportiert die Vorhersagen der aktuellen Rechenvariante" );
-    exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    exportPrognosesButton.addSelectionListener( new SelectionAdapter()
+    final boolean visExpProg = Boolean.valueOf( getArguments().getProperty( PROP_VISIBLE_EXPORT_PROGNOSE, "true" ) )
+        .booleanValue();
+
+    if( visExpProg )
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
+      final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
+      exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
+      exportPrognosesButton.setToolTipText( "Exportiert die Vorhersagen der aktuellen Rechenvariante" );
+      exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      exportPrognosesButton.addSelectionListener( new SelectionAdapter()
       {
-        exportPrognoseTimeseries();
-      }
-    } );
+        public void widgetSelected( SelectionEvent e )
+        {
+          exportPrognoseTimeseries();
+        }
+      } );
+    }
 
     final Button berichtsablageButton = new Button( buttonGroup, SWT.PUSH );
     berichtsablageButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -304,9 +308,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     berichtsablageButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
     berichtsablageButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       public void widgetSelected( SelectionEvent e )
       {
         exportSelectedDocuments();
@@ -324,9 +325,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     archiveButton.setToolTipText( "Archiviert die aktuelle Rechenvariante auf dem Server." );
     archiveButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       public void widgetSelected( SelectionEvent e )
       {
         archiveCalcCase();
@@ -382,10 +380,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final String scenarioId = nature.getScenario( currentCalcCase ).getId();
       target.setProperty( "currentScenarioId", scenarioId );
       target.setProperty( "calcCaseName", currentCalcCase.getName() );
-      target.setProperty( "calcCaseDescription", (String)nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
+      target.setProperty( "calcCaseDescription", (String)nature.loadCalculationAndReadProperty( currentCalcCase,
+          "description" ) );
       target.setProperty( "projectName", currentCalcCase.getProject().getName() );
       target.setProperty( "autor", KalypsoAuthPlugin.getDefault().getCurrentUser().getUserName() );
-      
+
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
@@ -435,7 +434,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         return new ExporterSupplier( args );
       }
     };
-    
+
     final Collection exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
 
     if( stati.size() > 0 )
@@ -457,7 +456,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final URL context = ResourceUtilities.createURL( calcCase );
       final FeatureList featureList = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
       final Feature[] features = featureList.toFeatures();
-      
+
       final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty,
           context );
       // view it!
@@ -472,7 +471,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
       // features sortieren
       Arrays.sort( features, new FeatureComparator( nameProperty ) );
-      
+
       final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
       final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
           new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
@@ -484,8 +483,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final Object[] result = dialog.getResult();
       final Feature[] resultFeatures = (Feature[])org.kalypso.contribs.java.util.Arrays.castArray( result,
           new Feature[result.length] );
-      return FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList.getParentFeatureTypeProperty(),
-          resultFeatures );
+      return FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList
+          .getParentFeatureTypeProperty(), resultFeatures );
     }
     catch( final MalformedURLException e )
     {
@@ -688,7 +687,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       // This is used by the MultiExporter.
       if( request instanceof Arguments )
         return new ExporterSupplier( (Arguments)request );
-      
+
       Logger.getLogger( getClass().getName() ).warning(
           "Supplier asked for " + request.toString() + " but request could not be satisfied" );
 
