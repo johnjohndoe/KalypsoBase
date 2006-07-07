@@ -283,10 +283,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     // if the featureToSelect property is set, we use the map!
     final String[] fid = getFeaturesToSelect();
-//    if( fid.length > 0 )
     {
-      selectFeaturesInMap( fid, true );
-//      return;
+      final boolean forceSelectionInMap = !m_templateviewer.hasAdditionalDataObject();
+      selectFeaturesInMap( fid, true, forceSelectionInMap );
     }
 
     // else we show the feature defined in the feature-template

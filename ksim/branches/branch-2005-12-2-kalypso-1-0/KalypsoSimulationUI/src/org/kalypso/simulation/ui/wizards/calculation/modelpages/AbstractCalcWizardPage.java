@@ -806,20 +806,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IKalypsoTheme activeTheme;
     switch( m_selectSource )
     {
-      case SELECT_FROM_MAPVIEW:
-        final IMapModell mapModell = getMapModell();
-        if( mapModell == null )
-          return FeatureFactory.createFeatureList( null, null );
-        activeTheme = mapModell.getActiveTheme();
-        break;
-      case SELECT_FROM_TABLEVIEW:
-        activeTheme = m_gisTableViewer.getTheme();
-        break;
-      case SELECT_FROM_FEATUREVIEW:
-        activeTheme = null;
-        break;
-      default:
-        activeTheme = null;
+    case SELECT_FROM_MAPVIEW:
+      final IMapModell mapModell = getMapModell();
+      if( mapModell == null )
+        return FeatureFactory.createFeatureList( null, null );
+      activeTheme = mapModell.getActiveTheme();
+      break;
+    case SELECT_FROM_TABLEVIEW:
+      activeTheme = m_gisTableViewer.getTheme();
+      break;
+    case SELECT_FROM_FEATUREVIEW:
+      activeTheme = null;
+      break;
+    default:
+      activeTheme = null;
     }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList( null, null );
@@ -1086,10 +1086,23 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void selectFeaturesInMap( final String[] fids )
   {
-    selectFeaturesInMap( fids, false );
+    selectFeaturesInMap( fids, false, true );
   }
 
-  protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection )
+  /**
+   * @param forceSelectFeatureFromMap
+   *          BUGFIX: if this option is set, a feature of the map will be selected. If it is false, so such thing
+   *          happens. This is needed to distinguish beetween deploy in Sachsen and Sachsen-Anhalt. This prevents bugs
+   *          in the MapAndFeatureWizardPage concerning display of the .gft.
+   *          <p>
+   *          Option is true: used in Sachsen-Anhalt: Saale
+   *          </p>
+   *          <p>
+   *          Option is false: used in Sachsen: Weisse-Elster
+   *          </p>
+   */
+  protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection,
+      final boolean forceSelectFeatureFromMap )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
     final IMapModell mapModell = getMapModell();
@@ -1127,10 +1140,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               GM_Point centroid = defaultGeometryProperty.getCentroid();
               m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
 
-              // FIX: damit überhaupt was selektiert wird, sonst passiert nichts
-              final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-              selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[]
-              { new EasyFeatureWrapper( workspace, feature, null, null ) } );
+              if( forceSelectFeatureFromMap )
+              {
+                // FIX: damit überhaupt was selektiert wird, sonst passiert nichts
+                // see also comment on parameter 'forceSelectFeatureFromMap'
+                final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+                selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[]
+                { new EasyFeatureWrapper( workspace, feature, null, null ) } );
+              }
             }
           }
 
