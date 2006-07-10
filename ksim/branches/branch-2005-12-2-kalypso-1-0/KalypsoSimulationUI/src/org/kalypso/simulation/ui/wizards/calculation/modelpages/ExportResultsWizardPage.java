@@ -284,23 +284,20 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     buttonGroup.setText( "Datenablagen" );
     buttonGroup.setLayout( new GridLayout() );
 
+    final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
+    exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
+    exportPrognosesButton.setToolTipText( "Exportiert die Vorhersagen der aktuellen Rechenvariante" );
+    exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    exportPrognosesButton.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        exportPrognoseTimeseries();
+      }
+    } );
     final boolean visExpProg = Boolean.valueOf( getArguments().getProperty( PROP_VISIBLE_EXPORT_PROGNOSE, "true" ) )
         .booleanValue();
-
-    if( visExpProg )
-    {
-      final Button exportPrognosesButton = new Button( buttonGroup, SWT.PUSH );
-      exportPrognosesButton.setText( STR_EXPORT_PROGNOSEN );
-      exportPrognosesButton.setToolTipText( "Exportiert die Vorhersagen der aktuellen Rechenvariante" );
-      exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-      exportPrognosesButton.addSelectionListener( new SelectionAdapter()
-      {
-        public void widgetSelected( SelectionEvent e )
-        {
-          exportPrognoseTimeseries();
-        }
-      } );
-    }
+    exportPrognosesButton.setEnabled( visExpProg );
 
     final Button berichtsablageButton = new Button( buttonGroup, SWT.PUSH );
     berichtsablageButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );

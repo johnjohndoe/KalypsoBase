@@ -122,6 +122,15 @@ public class SteuerparameterWizardPage extends WizardPage
     
     m_projectProvider = pp;
   }
+  
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+   */
+  public void dispose()
+  {
+    if( m_featureComposite != null )
+      m_featureComposite.dispose();
+  }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
