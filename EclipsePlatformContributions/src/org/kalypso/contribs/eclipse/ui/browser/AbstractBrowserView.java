@@ -351,7 +351,6 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   public URL getContext( )
   {
-    String url = m_viewer.getURL();
     return m_browserContext;
   }
 }
