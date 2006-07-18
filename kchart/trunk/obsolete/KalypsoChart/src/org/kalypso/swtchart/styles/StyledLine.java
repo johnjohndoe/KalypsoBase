@@ -40,55 +40,85 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.styles;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.swtchart.ChartUtilities;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_LINESTYLE;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
  *
  */
-public class StyledLine
+public class StyledLine implements IStyledElement
 {
-  GCWrapper m_gc;
-  Device m_dev;
-  int[] m_path;
+  ArrayList<Point> m_path;
   
-  int m_width=2;
-  int m_borderWidth=0;
-  Color m_borderColor=new Color(null, 0, 0, 0);
+  private int m_width=0;
+  private SE_LINESTYLE m_style;
+  private int m_swtStyle;
+
+  private RGB m_lineColor;
+
+  private int m_alpha;
   
-  public StyledLine(GCWrapper gc, Device dev)
+  
+  public StyledLine(int width, RGB lineColor, SE_LINESTYLE style, int alpha)
   {
-    m_gc=gc;
-    m_dev=dev;
+    m_width=width;
+    m_path=new ArrayList<Point>();
+    m_lineColor=lineColor;
+    m_style=style;
+    m_swtStyle=StyleHelper.linestyleToSWT(m_style);
+    m_alpha=alpha;
   }
 
-  public void setPath(int[] path)
+  public void setPath(ArrayList<Point> path)
   {
     m_path=path;
   }
   
-  public void paint()
-  {
-      m_gc.setForeground(m_borderColor);      
-      m_gc.setBackground(m_dev.getSystemColor(SWT.COLOR_GREEN));
-      if (m_borderWidth>0)
-      {
-        m_gc.setLineWidth(m_width+2*m_borderWidth);
-        m_gc.drawPolyline(m_path);
-      }
-      
-     // m_gc.setForeground(new Color(m_dev, 255,0,0));      
-      m_gc.setLineWidth(m_width);
-      m_gc.drawPolyline(m_path);
 
-   
+
+
+  /**
+   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   */
+  public void paint( GCWrapper gcw, Device dev )
+  {
+    ChartUtilities.resetGC(gcw.m_gc, dev);
+    gcw.setAlpha(m_alpha);
+    Color lineColor=new Color(dev, m_lineColor);
+    
+    int[] intPath=StyleHelper.pointListToIntArray(m_path);
+    gcw.setForeground(lineColor);      
+    gcw.setLineWidth(m_width);
+    gcw.setLineStyle(m_swtStyle);
+    gcw.drawPolyline(intPath);
+    
+    lineColor.dispose(); 
+    
   }
-  
+
+  /**
+   * @see org.kalypso.swtchart.styles.IStyledElement#getType()
+   */
+  public SE_TYPE getType( )
+  {
+    return SE_TYPE.LINE;
+  }
+
+
+
+
   
   
   

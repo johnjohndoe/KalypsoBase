@@ -58,9 +58,12 @@ import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.StyledOval;
+import org.kalypso.swtchart.styles.IStyleConstants;
+import org.kalypso.swtchart.styles.IStyledElement;
+import org.kalypso.swtchart.styles.StyledPoint;
 import org.kalypso.swtchart.styles.StyledLine;
-import org.kalypso.swtchart.util.DateComparator;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.util.AliComparator;
 
 /**
  * @author alibu
@@ -72,12 +75,13 @@ public class TestDateLayer implements IChartLayer
   private final IAxis m_valAxis;
 
   private final TreeMap<Date, Double> m_values;
+  
+  private final ILayerStyle m_style=null;
 
   public TestDateLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
     m_valAxis = valAxis;
-
     m_values = SampleData.createRandomDatePoints( 25 );
   }
 
@@ -159,9 +163,11 @@ public class TestDateLayer implements IChartLayer
   public void paint( GCWrapper gc, Device dev )
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
-    StyledLine line=new StyledLine(gc, dev);
-    StyledOval oval=new StyledOval(gc, dev);
-    
+    if (m_style!=null)
+    {
+      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
+      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+    }
     
     
     
@@ -210,7 +216,7 @@ public class TestDateLayer implements IChartLayer
     Set<Date> keys=m_values.keySet();
     Iterator<Date> keyIt=keys.iterator();
     
-    DateComparator dc=new DateComparator();
+    AliComparator dc=new AliComparator();
     
     while(keyIt.hasNext())
     {

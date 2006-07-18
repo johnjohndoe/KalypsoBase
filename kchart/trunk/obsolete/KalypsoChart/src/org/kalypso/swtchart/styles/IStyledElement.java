@@ -40,67 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.styles;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
  *
  */
-public class StyledOval
+public interface IStyledElement
 {
-  GCWrapper m_gc;
-  Device m_dev;
-  Point m_center;
-  Point m_leftTop;
-  
-  int m_width=5;
-  int m_height=7;
-  int m_lineWidth=2;
-  
-  Color m_foreground;
-  Color m_background;
-  
-  
-  
 
   
-  public StyledOval(GCWrapper gc, Device dev)
-  {
-    m_gc=gc;
-    m_dev=dev;
-  }
+  public void setPath(ArrayList<Point> path);
+  
+  public void paint(GCWrapper gc, Device dev);
+  
+  public SE_TYPE getType();
 
-  public void setCenter(Point p)
-  {
-    m_center=p;
-    centerToLeftTop();
-  }
-
-  public void setLeftTop(Point p)
-  {
-    m_leftTop=p;
-  }
-  
-  public void paint()
-  {
-      m_foreground=m_dev.getSystemColor(SWT.COLOR_BLUE);
-      m_background=m_dev.getSystemColor(SWT.COLOR_MAGENTA);
-      m_gc.drawOval(m_leftTop.x, m_leftTop.y, m_width, m_height);
-  }
-  
-  private void centerToLeftTop()
-  {
-    m_leftTop=new Point(m_center.x-( (int) Math.round(0.5*m_width)), m_center.y-( (int) Math.round(0.5*m_height)));
-  }
-  
-  
-  
-  
   
   
 }

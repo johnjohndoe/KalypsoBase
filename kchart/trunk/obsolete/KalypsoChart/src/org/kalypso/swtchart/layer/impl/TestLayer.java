@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.layer.impl;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
@@ -52,8 +54,10 @@ import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.StyledOval;
+import org.kalypso.swtchart.styles.IStyledElement;
+import org.kalypso.swtchart.styles.StyledPoint;
 import org.kalypso.swtchart.styles.StyledLine;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author schlienger
@@ -65,6 +69,10 @@ public class TestLayer implements IChartLayer
   private final IAxis m_valAxis;
 
   private final Double[][] m_doubles;
+
+  private ILayerStyle m_style;
+
+  private ArrayList<Point> m_screenPoints;
 
   public TestLayer( IAxis domAxis, IAxis valAxis )
   {
@@ -137,7 +145,7 @@ public class TestLayer implements IChartLayer
    */
   public ILayerStyle getStyle( )
   {
-    return null;
+    return m_style;
   }
 
   /**
@@ -145,6 +153,7 @@ public class TestLayer implements IChartLayer
    */
   public void setStyle( ILayerStyle style )
   {
+    m_style=style;
   }
 
   /**
@@ -152,12 +161,51 @@ public class TestLayer implements IChartLayer
    */
   public void paint( GCWrapper gc, Device dev )
   {
-    gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
-    StyledLine line=new StyledLine(gc, dev);
-    StyledOval oval=new StyledOval(gc, dev);
-    
-    Point[] points=new Point[m_doubles.length];
-    int[] path=new int[2*(m_doubles.length)];
+     ChartUtilities.resetGC(gc.m_gc, dev);
+     
+     // gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
+      if (m_style!=null)
+      {
+        IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
+        IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+      
+        /*
+         * TODO: muss derzeit von Hand angestossen werden 
+         * wenn der Layer ein Listener auf die Achse ist,
+         * dann soll das automatisch geschehen
+         */
+        calcScreenPoints();
+        ArrayList<Point> screenPoints=getScreenPoints();
+       
+        if (point!=null)
+        {
+          point.setPath(screenPoints);
+          point.paint(gc, dev);
+        }
+        if (line!=null)
+        {
+          line.setPath(screenPoints);
+          line.paint(gc, dev);
+        }
+    }
+  }
+
+  /**
+   * Gibt die Bildschirmkoordinaten der Datenpunkte als ArrayList von Point zurück
+   */
+  public ArrayList<Point> getScreenPoints()
+  {
+    if (m_screenPoints==null)
+      calcScreenPoints();
+    return m_screenPoints;
+  }
+  
+  /**
+   * berechnet die ScreenKoordinaten der Datenpunkte und speichert sie in der Klassenvariable m_screenPoints
+   */
+  private void calcScreenPoints()
+  {
+    ArrayList<Point> points=new ArrayList<Point>();
     
     //horizontale und vertikale Achse bestimmen Achse
     IAxis hAxis, vAxis;
@@ -176,18 +224,12 @@ public class TestLayer implements IChartLayer
     {
       int x1 = hAxis.logicalToScreen( m_doubles[i][0] );
       int y1 = vAxis.logicalToScreen( m_doubles[i][1] );
-
-
-      points[i]=new Point(x1, y1);
-      path[2*i]=x1;
-      path[2*i+1]=y1;
-      oval.setCenter(new Point(x1,y1));
-      oval.paint();
+      points.add(new Point(x1, y1));
     }
-    line.setPath(path);
-    line.paint();
+    m_screenPoints= points;
   }
-
+  
+  
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getDomainRange()
    */

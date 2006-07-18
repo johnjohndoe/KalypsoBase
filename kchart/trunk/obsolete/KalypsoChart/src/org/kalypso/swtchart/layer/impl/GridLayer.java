@@ -55,7 +55,7 @@ import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.legend.ILegendItem;
 import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.StyledOval;
+import org.kalypso.swtchart.styles.StyledPoint;
 import org.kalypso.swtchart.styles.StyledLine;
 
 /**
@@ -184,7 +184,7 @@ public class GridLayer implements IChartLayer
     ticks=m_valAxis.getRenderer().calcTicks(gc, m_valAxis);
     for (Object n:ticks)
     {
-      if (m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL)
+      if (m_domAxis.getPosition().getOrientation() != ORIENTATION.HORIZONTAL)
       {
         int x1=m_valAxis.logicalToScreen(n);
         int y1=m_domAxis.logicalToScreen(m_domAxis.getFrom());

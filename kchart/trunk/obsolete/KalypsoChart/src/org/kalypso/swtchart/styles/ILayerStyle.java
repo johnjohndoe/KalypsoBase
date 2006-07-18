@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.styles;
 
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
+
 /**
  * @author schlienger
  */
 public interface ILayerStyle
 {
-  
-  
+    public IStyledElement getElement(SE_TYPE type, int pos);    
 }

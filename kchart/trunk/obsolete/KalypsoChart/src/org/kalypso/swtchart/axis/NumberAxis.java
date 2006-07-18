@@ -49,6 +49,7 @@ import org.kalypso.swtchart.axis.component.IAxisComponent;
 
 /**
  * @author schlienger
+ * @author alibu
  */
 public class NumberAxis extends AbstractAxis<Number>
 {

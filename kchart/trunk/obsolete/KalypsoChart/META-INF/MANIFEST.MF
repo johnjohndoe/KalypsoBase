@@ -9,17 +9,21 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.commons
+ org.kalypso.commons,
+ org.kalypso.jwsdp
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.axis,
  org.kalypso.swtchart.axis.component,
  org.kalypso.swtchart.axis.registry,
  org.kalypso.swtchart.axis.renderer,
+ org.kalypso.swtchart.configuration,
  org.kalypso.swtchart.layer,
  org.kalypso.swtchart.layer.impl,
  org.kalypso.swtchart.legend,
  org.kalypso.swtchart.styles,
  org.kalypso.swtchart.util,
- org.kalypso.swtchart.view
+ org.kalypso.swtchart.view,
+ org.ksp.chart.layerstyle,
+ org.ksp.chart.viewerconfiguration
 Bundle-ClassPath: kalypsoChart.jar

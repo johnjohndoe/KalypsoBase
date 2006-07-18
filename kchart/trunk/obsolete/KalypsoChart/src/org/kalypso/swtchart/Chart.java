@@ -48,6 +48,7 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -70,6 +71,7 @@ import org.kalypso.swtchart.axis.registry.IAxisRegistryEventListener;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.IDataRange;
 import org.kalypso.swtchart.layer.ILayerManager;
+import org.kalypso.swtchart.layer.impl.DataRange;
 
 /**
  * @author schlienger
@@ -96,16 +98,25 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /** Buffer Image containing the plot */
   private Image m_buffer = null;
+  
+  private final Color m_white;
+  private final Color m_black;
+
 
   public Chart( Composite parent, int style )
   {
     super( parent, style );
-
+    m_white=new Color(null, 255, 255, 255);
+    m_black=new Color(null, 0, 0, 0);
+    setBackground(m_white);
     createControl( this );
-
+    
     addListener( SWT.Resize, this );
     m_axisRegistry.addAxisRegistryEventListener( this );
   }
+  
+
+  
 
   private final void createControl( final Composite parent )
   {
@@ -183,6 +194,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     super.dispose();
 
+    m_white.dispose();
+    m_black.dispose();
     if( m_buffer != null )
     {
       m_buffer.dispose();
@@ -214,7 +227,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     final Composite parent = m_axisPlaces.get( axis.getPosition() );
     final AxisComponent component = new AxisComponent( axis, parent, SWT.NONE );
     m_axisRegistry.setComponent( axis, component );
-
+    
     layout();
   }
 
@@ -279,6 +292,28 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       // axis-components must be visible
       m_axisRegistry.getComponent( layer.getDomainAxis() ).setVisible( true );
       m_axisRegistry.getComponent( layer.getValueAxis() ).setVisible( true );
+      
+      /**
+       * TODO: das sollte an einem besseren Ort passieren;  ausserdem ist das ein HACK,
+       * weil immer nur das aktuelle Layer betrachtet wird
+       */
+      
+      IDataRange[] dr= new DataRange[1];
+      dr[0]=layer.getDomainRange();
+      IDataRange[] vr= new DataRange[1];
+      vr[0]=layer.getValueRange();
+
+      
+      /*
+      layer.getDomainAxis().setTo(layer.getDomainRange().getMin());
+      layer.getDomainAxis().setFrom(layer.getDomainRange().getMax());
+      layer.getValueAxis().setFrom(layer.getValueRange().getMin());
+      layer.getValueAxis().setTo(layer.getValueRange().getMax());
+      layout();
+      redraw();
+      */
+      
+      
     }
     else
     {
@@ -381,6 +416,33 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   {
     return m_layers;
   }
+  
+  public Canvas getPlot()
+  {
+    return m_plot;
+  }
+  
+ 
+  /**
+   * TODO: Vordergrund und Hintergrundfarbe sind im Moment noch Hartcodiert
+   */
+  
+  /**
+   * Gibt die VordergrundFarbe des Charts zurück
+   */
+  public Color getFGColor()
+  {
+      return m_black;
+  }
+  
+  /**
+   * Gibt die HintergrundFarbe des Charts zurück
+   */
+  public Color getBGColor()
+  {
+      return m_white;
+  }
+  
 
 
 }

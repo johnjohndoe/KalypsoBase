@@ -44,6 +44,7 @@ import java.text.DateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.eclipse.swt.events.MouseEvent;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
@@ -72,7 +73,7 @@ public class DateAxis extends AbstractAxis<Date>
     
     //Die rechte Seite muss unbedingt nach double gecastet werden, da sonst auf die Werte 0 oder 1 gerundet wird.
     final double norm = ( (double) (value.getTime() - getFrom().getTime())) / r;
-    System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from: "+getFrom().getTime()+ " to: "+getTo().getTime());
+    //System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from: "+getFrom().getTime()+ " to: "+getTo().getTime());
     return norm;
   }
 
@@ -114,4 +115,6 @@ public class DateAxis extends AbstractAxis<Date>
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
+
+
 }

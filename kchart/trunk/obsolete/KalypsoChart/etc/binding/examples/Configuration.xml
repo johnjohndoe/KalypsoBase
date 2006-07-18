@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="http://www.ksp.org/chart/viewerConfiguration"
+     xmlns:kcls="http://www.ksp.org/chart/layerStyle"
+     xs:schemaLocation="
+          http://www.ksp.org/chart/viewerConfiguration ../conf/viewerConfiguration.xsd 
+          http://www.ksp.org/chart/layerStyle ../style/layerStyle.xsd
+          ">
+     <Chart title="Test">
+          <LayerProvider name="org.ksp.observation.layerProvider.Test.Line">
+               <DataSource>
+                    <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Width_Axis" equation="Breite"/>
+                         <Value axisLink="Height_Axis" equation="Hoehe"/>
+                    </AxisMapping>
+                    <StyleLink ref="Line_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <LayerProvider name="org.ksp.observation.layerProvider.Test.Bar">
+               <DataSource>
+                    <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Width_Axis" equation="Breite"/>
+                         <Value axisLink="Height_Axis" equation="Hoehe"/>
+                    </AxisMapping>
+                    <StyleLink ref="Bar_Style_Red"/>
+               </ChartElement>
+          </LayerProvider>
+          <LayerProvider name="org.ksp.observation.layerProvider.Test.Bar">
+               <DataSource>
+                    <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Width_Axis" equation="Breite"/>
+                         <Value axisLink="Precipitation_Axis" equation="Hoehe"/>
+                    </AxisMapping>
+                    <StyleLink ref="Bar_Style_Blue"/>
+               </ChartElement>
+          </LayerProvider>
+
+          <DoubleAxis id="Width_Axis">
+               <Name>Breite</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>0.0</MinVal>
+               <MaxVal>100.0</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Height_Axis">
+               <Name>Höhe</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>-5.0</MinVal>
+               <MaxVal>10.0</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Precipitation_Axis">
+               <Name>Höhe</Name>
+               <Direction>NEGATIVE</Direction>
+               <Position>RIGHT</Position>
+               <MinVal>-1.0</MinVal>
+               <MaxVal>1.0</MaxVal>
+          </DoubleAxis>
+          <!--
+          <DateAxis id="Test_Axis">
+               <Name>Test</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>TOP</Position>
+               <MinVal>2006-07-01</MinVal>
+               <MaxVal>2006-07-20</MaxVal>
+          </DateAxis>
+          -->
+     </Chart>
+
+     <Chart title="WasserstandEtc">
+          <LayerProvider name="org.ksp.observation.layerProvider.Wasserstand">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Datum_Axis" equation="Datum"/>
+                         <Value axisLink="Wasserstand_Axis" equation="Wasserstand"/>
+                    </AxisMapping>
+                    <StyleLink ref="Wasserstand_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <LayerProvider name="org.ksp.observation.layerProvider.WQTabelle">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Abfluss_Axis" equation="Abfluss"/>
+                         <Value axisLink="Wasserstand_Axis" equation="Wasserstand"/>
+                    </AxisMapping>
+                    <StyleLink ref="WQTabelle_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <LayerProvider name="org.ksp.observation.layerProvider.Alarmstufe">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Value axisLink="Wasserstand_Axis" equation=""/>
+                    </AxisMapping>
+                    <StyleLink ref="Alarmstufen_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <DateAxis id="Datum_Axis">
+               <Name>Datum</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>2004-04-18</MinVal>
+               <MaxVal>2004-04-25</MaxVal>
+          </DateAxis>
+          <DoubleAxis id="Wasserstand_Axis">
+               <Name>Wasserstand</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>0.0</MinVal>
+               <MaxVal>180.0</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Abfluss_Axis">
+               <Name>Abfluss</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>-100</MinVal>
+               <MaxVal>0</MaxVal>
+          </DoubleAxis>
+     </Chart>
+
+     <kcls:Style id="Wasserstand_Style">
+          <kcls:Line>
+               <kcls:LineWidth>2</kcls:LineWidth>
+               <kcls:LineStyle>SOLID</kcls:LineStyle>
+               <kcls:LineColor>0000ff</kcls:LineColor>
+          </kcls:Line>
+
+     </kcls:Style>
+     <kcls:Style id="WQTabelle_Style">
+          <kcls:Line>
+               
+               <kcls:LineWidth>2</kcls:LineWidth>
+               <kcls:LineStyle>SOLID</kcls:LineStyle>
+               <kcls:LineColor>00ff00</kcls:LineColor>
+          </kcls:Line>
+
+     </kcls:Style>
+     <kcls:Style id="Alarmstufen_Style">
+          <kcls:Line>
+               <kcls:LineWidth>1</kcls:LineWidth>
+               <kcls:LineStyle>DOT</kcls:LineStyle>
+               <kcls:LineColor>bbbbbb</kcls:LineColor>
+          </kcls:Line>
+     </kcls:Style>
+
+
+     <kcls:Style id="Line_Style">
+          <kcls:Point>
+               <kcls:PointWidth>5</kcls:PointWidth>
+                    <kcls:PointHeight>5</kcls:PointHeight>
+                         <kcls:Border>
+                              <kcls:BorderWidth>1</kcls:BorderWidth>
+                              <kcls:BorderColor>00ff00</kcls:BorderColor>
+                         </kcls:Border>
+               <kcls:Color>ffffff</kcls:Color>
+          </kcls:Point>
+          <kcls:Line>
+               <kcls:LineWidth>1</kcls:LineWidth>
+               <kcls:LineStyle>DASH</kcls:LineStyle>
+               <kcls:LineColor>ff00ff</kcls:LineColor>
+          </kcls:Line>
+     </kcls:Style>
+     <kcls:Style id="Bar_Style_Red">
+          <kcls:Polygon>
+               <kcls:FillColor>ff0000</kcls:FillColor>
+          </kcls:Polygon>
+     </kcls:Style>
+     <kcls:Style id="Bar_Style_Blue">
+          <kcls:Polygon>
+               <kcls:Alpha>25</kcls:Alpha>
+               <kcls:FillColor>0000ff</kcls:FillColor>
+               <kcls:Border>
+                    <kcls:BorderWidth>3</kcls:BorderWidth>
+                    <kcls:BorderColor>000000</kcls:BorderColor>
+               </kcls:Border>
+          </kcls:Polygon>
+     </kcls:Style>
+</Configuration>

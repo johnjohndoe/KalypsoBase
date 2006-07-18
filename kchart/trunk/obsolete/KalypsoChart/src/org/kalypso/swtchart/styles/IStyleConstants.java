@@ -38,38 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.util;
-
-import java.util.Comparator;
-import java.util.Date;
-
+package org.kalypso.swtchart.styles;
 
 /**
  * @author alibu
  *
  */
-public class DateComparator implements Comparator<Date>
+public interface IStyleConstants
 {
-
-  /**
-   * @see java.util.Comparator#compare(T, T)
-   */
-  public int compare( Date o1, Date o2 )
-  {
-    return compare(o1.getTime(), o2.getTime());
-  }
   
   /**
-   * Vergleicht zwei long-Werte
-   * @return -1, 0, 1 - je nachdem ob erstes Argument kleiner, gleich oder größer Argument2 ist.
+   * Die verschiedenen Typen der StyledElements
+   * @author alibu
+   *
    */
-  public int compare(long time1, long time2)
+  public enum SE_TYPE
   {
-    if (time1<time2)
-      return -1;
-    else if (time1>time2)
-       return 1;
-    return 0;
+    POINT,
+    LINE,
+    POLYGON,
+    FONT;
   }
+
+  /**
+   * Verschiedene Stysles, in denen eine Linie geezeichnet werden kann (durchgezogen, gestrichelt, gepunktet,...)
+   * das sind genau die Linien-Styles von SWT
+   * @author alibu
+   *
+   */
+  public enum SE_LINESTYLE
+  {
+    SOLID,
+    DOT,
+    DASH,
+    DASHDOT, 
+    DASHDOTDOT;
+  }
+  
 
 }

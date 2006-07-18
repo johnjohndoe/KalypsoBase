@@ -3,6 +3,8 @@ package org.kalypso.swtchart.axis.renderer;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,6 +12,8 @@ import java.util.LinkedList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
@@ -26,7 +30,7 @@ import org.kalypso.swtchart.util.InsetsHelper;
  */
 public class DateAxisRenderer implements IAxisRenderer<Date>
 {
-  private final DateFormat m_df = DateFormat.getInstance();
+  private final SimpleDateFormat m_df;
 
   protected final int m_tickLength;
 
@@ -66,7 +70,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
    * @param gap
    *          space between axis and component border
    */
-  public DateAxisRenderer( final Color foreground, final Color background, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap )
+  public DateAxisRenderer( final Color foreground, final Color background, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final SimpleDateFormat df )
   {
     m_foreground = foreground;
     m_background = background;
@@ -76,7 +80,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     m_labelInsets = labelInsets;
     m_maxDigits = maxDigits;
     m_gap = gap;
-
+    m_df=df;
   }
 
 
@@ -96,19 +100,36 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     return new Point( x, y );
   }
   
-
   public void paint( final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen )
   {
+    /*
+     * TODO: Buffer bringt hier nix
+     */
+    Image img=paintBuffered(null, dev, axis, screen);
+    gc.drawImage(img, 0,0);
+    img.dispose();
+    
+  }
+
+  public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen)
+  {
+    Image bufImg=new Image(dev, dev.getBounds());
+    GC bufGc=new GC(bufImg);
+    GCWrapper bufGcw=new GCWrapper(bufGc);
     // paint axis line
     int[] coords = createAxisSegment( axis, screen );
     assert coords != null && coords.length == 4;
-    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
+    drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
     //final Collection<Number> ticks = calcTicks( gc, axis );
-    m_ticks=calcTicks(gc, axis);
-    drawTicks( gc, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
+    m_ticks=calcTicks(bufGcw, axis);
+    drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
-    drawAxisLabel( gc, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+    drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+    bufGc.dispose();
+    bufGcw.dispose();
+    
+    return bufImg;
   }
 
   private int[] createAxisSegment( final IAxis<Date> axis, final Rectangle screen )
@@ -163,6 +184,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setForeground( m_foreground );
+   
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
@@ -172,7 +194,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
       for( final Date value : ticks )
       {        
         final int tickPos = axis.logicalToScreen( value );
-        final String label = m_df.format( value );
+        final String label = m_df.format( value.getTime() );
         final Point tickExtent = gc.textExtent( label );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
@@ -259,7 +281,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
     long logicalInterval =   Math.abs( axis.screenToLogical( screenInterval * 2 ).getTime() - axis.screenToLogical( screenInterval ).getTime() ) ;
     logicalInterval = (long) ( MathUtils.round( logicalInterval, MathUtils.RoundMethod.UP )) ;
-    System.out.println( "Logical Interval= " + logicalInterval );
+ //   System.out.println( "Logical Interval= " + logicalInterval );
 
     final int digits = Math.min( MathUtils.scale( logicalInterval ), m_maxDigits );
 
@@ -273,7 +295,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
       for( long tickValue = (long) MathUtils.setScale( axis.getFrom().getTime(), digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().getTime(); tickValue += ticklength )
       {
         ticks.add( new Date( tickValue ) );
-        System.out.println("DateAxisTick: "+m_df.format(tickValue));
+     //   System.out.println("DateAxisTick: "+m_df.format(tickValue));
       }
     }
     return ticks;
@@ -344,11 +366,11 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
         if( tr != null )
         {
           gc.setTransform( tr );
-          System.out.println( "Using Transform: " + tr );
+        //  System.out.println( "Using Transform: " + tr );
         }
         gc.drawText( axis.getLabel(), x, y );
 
-        System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
+       // System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
       }
       finally
       {

@@ -40,53 +40,141 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.styles;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.swtchart.ChartUtilities;
+import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
  *
  */
-public class StyledPolygon
+public class StyledPolygon implements IStyledElement
 {
-  GCWrapper m_gc;
-  Device m_dev;
-  int[] m_path;
+  ArrayList<Point> m_path;
   
-  int m_width=2;
-  int m_borderWidth=0;
-  Color m_borderColor=new Color(null, 0,0,0);
-  Color m_fillColor;
+  private int m_borderWidth;
+  private RGB m_borderColor;
+  private RGB m_fillColor;
+
+  private final int m_alpha;
   
   
-  public StyledPolygon(GCWrapper gc, Device dev)
+  public StyledPolygon(RGB fillColor, int borderWidth, RGB borderColor, int alpha)
   {
-    m_gc=gc;
-    m_dev=dev;
+    m_alpha = alpha;
+    m_path=new ArrayList<Point>();
+    m_borderWidth=borderWidth;
+    m_borderColor=borderColor;
+    m_fillColor=fillColor;
   }
 
-  public void setPath(int[] path)
+  public void setPath(ArrayList<Point> path)
   {
     m_path=path;
   }
-  
-  public void paint()
-  {
 
+
+
+  /**
+   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   */
+  public void paint( GCWrapper gc, Device dev )
+  {
+      ChartUtilities.resetGC(gc.m_gc, dev);
+      gc.setAlpha(m_alpha);
+      Color fillColor=new Color(dev, m_fillColor);
+      Color borderColor=null;
+      if (m_borderColor!=null && m_borderWidth>0)
+      {
+        borderColor=new Color(dev, m_borderColor);
+      }
+      
+      int[] intPath=StyleHelper.pointListToIntArray(m_path);
+      
+      //Linienbreite, die verwendet wird, falls alle Punkt auf einer Achsenparallelen oder einem Punkt liegen
+      int lineWidth=m_borderWidth;
+      if (lineWidth==0)
+      {
+        lineWidth=1;
+      }
+       if (borderColor!=null)
+         gc.setForeground(borderColor);      
+       gc.setBackground(fillColor);
+       
+       /*
+        * Punkte durchlaufen, um zu überprüfen, ob alle x oder alle y Werte gleich sind. Sollte das der
+        * Fall sein, so muss eine Linie bzw. ein Punkt gezeichnet werden, um die Daten dennoch anzuzeigen
+        * 
+        */
+       boolean xsEqual=true;
+       boolean ysEqual=true;
+       //Hier werden die ersten Werte des Pfads gespeichert
+       int eqX=0;int eqY=0;
+       for (int i=0;i<m_path.size();i++)
+       {
+         Point p=m_path.get(i);
+         //erster Punkt: Werte initialisieren
+         if (i==0)
+         {
+           eqX=p.x;
+           eqY=p.y;
+         }
+         //Sonst: Vergleichen
+         else
+         {
+           //bei Abweichung wird Equal auf false gesetz;
+           if (eqX!=p.x)
+             xsEqual=false;
+           if (eqY!=p.y)
+             ysEqual=false;
+           //Wen beide verschieden sind, kann abgebrochen werden
+           if (!xsEqual && !ysEqual)
+             break;
+         }
+       }
+       //alle Punkte gleich => Punkt zeichnen
+       if (xsEqual & ysEqual)
+       {
+         gc.fillOval(eqX, eqY, lineWidth, lineWidth);
+       }
+       else
+       {
+           if (xsEqual || ysEqual)
+           {
+             //Linienfarbe wird auf Füllfarbe des Polygons gesetzt
+             gc.setForeground(fillColor);
+             gc.setLineWidth(lineWidth);
+             gc.drawPolyline(intPath);
+           }
+           else
+             gc.fillPolygon(intPath);
+       }
+       
+       if (m_borderWidth>0)
+       {
+         gc.setLineWidth(m_borderWidth);
+         gc.drawPolygon(intPath);
+       }
+       
+       fillColor.dispose();
+       if (borderColor!=null && !borderColor.isDisposed())
+         borderColor.dispose();
     
-    m_gc.setForeground(m_borderColor);      
- //   m_gc.setForeground(new Color(m_dev, 0,0,0));      
-    
-    m_gc.setBackground(m_dev.getSystemColor(SWT.COLOR_GREEN));
-    
-    m_gc.setForeground(new Color(m_dev, 255,0,0));      
-    m_gc.setLineWidth(m_width);
-    m_gc.fillPolygon(m_path);
-   
+  }
+
+  /**
+   * @see org.kalypso.swtchart.styles.IStyledElement#getType()
+   */
+  public SE_TYPE getType( )
+  {
+    return SE_TYPE.POLYGON;
   }
   
   

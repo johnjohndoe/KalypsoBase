@@ -40,11 +40,99 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.axis;
 
+import java.awt.Insets;
+import java.util.Date;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.swtchart.Chart;
+import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
+import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
+import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
+import org.kalypso.swtchart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
+import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
+import org.kalypso.swtchart.util.AliComparator;
+import org.kalypso.swtchart.util.Recalc;
+import org.ksp.chart.viewerconfiguration.AbstractAxisType;
+import org.ksp.chart.viewerconfiguration.DateAxisType;
+import org.ksp.chart.viewerconfiguration.DoubleAxisType;
+
 /**
  * @author schlienger
  *
  */
 public class AxisFactory
 {
+      
+  /**
+   * Static-Methode zum hinzufügen einer Achse aus der Configuration zu einem Chart
+   */
+      public static void addConfigAxis(Chart chart, AbstractAxisType a)
+      {
+        IAxisRegistry ar = chart.getAxisRegistry();
+        
+        
+        //Richtung
+        DIRECTION dir=DIRECTION.POSITIVE;
+        String direction = a.getDirection().value();
+        if (direction.compareTo("NEGATIVE")==0)
+          dir=DIRECTION.NEGATIVE;
+        
+        
+        //Position
+        POSITION pos=null;
+        String position=a.getPosition().value();
+        if (position.compareTo("BOTTOM")==0)
+           pos=POSITION.BOTTOM;
+        else if (position.compareTo("TOP")==0)
+          pos=POSITION.TOP;
+        else if (position.compareTo("RIGHT")==0)
+          pos=POSITION.RIGHT;
+        else if (position.compareTo("LEFT")==0)
+          pos=POSITION.LEFT;
+            
+        /**
+         * TODO: mit dem DoubleComparator muss ich mir noch was einfallen lassen:
+         * Wie soll die Genauigkeit festgelegt werden? 
+         *      * in der Config
+         *      * automatisch
+         */
+        
+        /**
+         * TODO: Insgesamt ist hier alles noch ein wenig hart reincodiert: Label insets, MaxDigits, etc.
+         */
 
+        
+        if (a instanceof DoubleAxisType) 
+        {
+          DoubleAxisType da=(DoubleAxisType) a;
+          IAxis<Number> axis = new NumberAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, dir, new DoubleComparator( 0.001 ) );
+          axis.setFrom(da.getMinVal());
+          axis.setTo(da.getMaxVal());
+          ar.addAxis(axis);
+          System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
+        }
+        else if (a instanceof DateAxisType) 
+        {
+          DateAxisType da=(DateAxisType) a;
+          IAxis<Date> axis = new DateAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, new AliComparator( ), dir );
+          
+          axis.setFrom(new Date(Recalc.XMLGregToMillis(da.getMinVal())));
+          axis.setTo(new Date(Recalc.XMLGregToMillis(da.getMaxVal())));
+          ar.addAxis(axis);
+          System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
+        }
+        else
+        {
+          System.out.println("AxisFactory: Unbekannter Achsentyp: "+a.getClass().getName());
+          
+        }
+        
+           
+            
+        
+        
+      }
 }

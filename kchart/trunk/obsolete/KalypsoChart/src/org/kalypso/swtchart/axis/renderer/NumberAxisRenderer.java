@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
@@ -80,6 +82,10 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     m_nf.setMaximumFractionDigits( maxDigits );
   }
 
+  /**
+   * Berechnet die Größe des größten Tick-Labels; dabei wird davon ausgegangen, dass sich die Labelgröße
+   * monoton verhält, also entweder der kleinste oder der größte Achsenwert das größte Label bekommt 
+   */
   private Point calcTickLabelSize( final GCWrapper gc, final IAxis<Number> axis )
   {
     final double logicalfrom = axis.getFrom().doubleValue();
@@ -98,18 +104,35 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
   public void paint( final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen )
   {
-    // paint axis line
-    int[] coords = createAxisSegment( axis, screen );
-    assert coords != null && coords.length == 4;
-    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
-
-    //final Collection<Number> ticks = calcTicks( gc, axis );
-    m_ticks=calcTicks(gc, axis);
-    drawTicks( gc, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
-
-    drawAxisLabel( gc, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+    
+    Image img=paintBuffered(null, dev, axis, screen);
+    gc.drawImage(img, 0,0);
+    img.dispose();
+    
   }
 
+  public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen)
+  {
+    Image bufImg=new Image(dev, dev.getBounds());
+    GC bufGc=new GC(bufImg);
+    GCWrapper bufGcw=new GCWrapper(bufGc);
+    //  paint axis line
+    int[] coords = createAxisSegment( axis, screen );
+    assert coords != null && coords.length == 4;
+    drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
+
+    //final Collection<Number> ticks = calcTicks( gc, axis );
+    m_ticks=calcTicks(bufGcw, axis);
+    drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
+
+    drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+    
+    bufGc.dispose();
+    bufGcw.dispose();
+    return bufImg;
+  }
+  
+  
   private int[] createAxisSegment( final IAxis<Number> axis, final Rectangle screen )
   {
     int startX;
@@ -247,21 +270,32 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   }
 
   /**
+   * Berechnet die Ticks, die für eine Achse angezeigt werden
    * TODO: testweise auf public gesetzt - für das GridLayer
    */
   public Collection<Number> calcTicks( final GCWrapper gc, final IAxis<Number> axis )
   {
+    
+    //größtes Tick<-Label berechnen
     final Point ticklabelSize = calcTickLabelSize( gc, axis );
 
-    // + 2 wegen Rundungsfehlern beim positionieren
-    final int screenInterval = 2 + ticklabelSize.x;
+    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
+    final int minScreenInterval;
+    if (axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+      minScreenInterval = 2 + ticklabelSize.x;
+    else
+      minScreenInterval = 2 + ticklabelSize.y;
 
-    double logicalInterval = Math.abs( axis.screenToLogical( screenInterval * 2 ).doubleValue() - axis.screenToLogical( screenInterval ).doubleValue() );
+    //logischen Abstand anhand des Screen-Abstands berechnen
+    double logicalInterval = Math.abs( axis.screenToLogical( minScreenInterval * 2 ).doubleValue() - axis.screenToLogical( minScreenInterval ).doubleValue() );
+    //Und jetzt nochmal auf einen mehr oder weniger sinnvollen Wert runden
     logicalInterval = MathUtils.round( logicalInterval, MathUtils.RoundMethod.UP );
+   
     System.out.println( "Logical Interval= " + logicalInterval );
 
+    //Anzahl der "relevanten" Nachkommastelle herausfinden - das ist die ersten Stelle der Zahl, die ungleich 0 ist 
     final int digits = Math.min( MathUtils.scale( logicalInterval ), m_maxDigits );
-
+     
     final double ticklength = Math.abs( MathUtils.setScale( logicalInterval, digits, MathUtils.RoundMethod.UP ) );
 
     final Collection<Number> ticks = new LinkedList<Number>();
@@ -368,6 +402,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   {
     return m_maxTickLabelExtent.x;
   }
+
+
+
 
 
 }

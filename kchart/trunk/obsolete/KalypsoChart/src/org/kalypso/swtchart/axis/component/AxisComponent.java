@@ -40,14 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.axis.component;
 
+import org.eclipse.swt.accessibility.Accessible;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.ChartUtilities;
 import org.kalypso.swtchart.axis.IAxis;
@@ -60,13 +65,16 @@ import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComponent<T>
 {
   private final IAxis<T> m_axis;
+  private Point m_mousePos;
+  private final Color m_white;
 
   // private int space = 5;
 
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
-
+    m_white = new Color(null, 255, 255, 255);
+    setBackground(m_white);
     m_axis = axis;
 
     addPaintListener( this );
@@ -79,7 +87,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   public void dispose( )
   {
     removePaintListener( this );
-
+    m_white.dispose();
     super.dispose();
   }
 
@@ -116,6 +124,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private void paint( final GCWrapper gc, final Device dev )
   {
+    
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
 
@@ -164,4 +173,6 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
       range = bounds.height; // vertical
     return range;
   }
+  
+    
 }
