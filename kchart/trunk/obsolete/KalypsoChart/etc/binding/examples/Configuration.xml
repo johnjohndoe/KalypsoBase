@@ -65,21 +65,21 @@
                <MinVal>-1.0</MinVal>
                <MaxVal>1.0</MaxVal>
           </DoubleAxis>
-          <!--
+          
           <DateAxis id="Test_Axis">
                <Name>Test</Name>
                <Direction>POSITIVE</Direction>
-               <Position>TOP</Position>
+               <Position>BOTTOM</Position>
                <MinVal>2006-07-01</MinVal>
-               <MaxVal>2006-07-20</MaxVal>
+               <MaxVal>2007-07-20</MaxVal>
           </DateAxis>
-          -->
+          
      </Chart>
 
      <Chart title="WasserstandEtc">
           <LayerProvider name="org.ksp.observation.layerProvider.Wasserstand">
                <DataSource>
-                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+                    <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
@@ -91,19 +91,31 @@
           </LayerProvider>
           <LayerProvider name="org.ksp.observation.layerProvider.WQTabelle">
                <DataSource>
-                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+                    <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
-                         <Domain axisLink="Abfluss_Axis" equation="Abfluss"/>
-                         <Value axisLink="Wasserstand_Axis" equation="Wasserstand"/>
+                         <Domain axisLink="WasserstandNN_Axis" equation="Wasserstand"/>
+                         <Value axisLink="Abfluss_Axis" equation="Abfluss"/>
                     </AxisMapping>
                     <StyleLink ref="WQTabelle_Style"/>
                </ChartElement>
           </LayerProvider>
+          <LayerProvider name="org.ksp.observation.layerProvider.Niederschlag">
+               <DataSource>
+                    <Url>http://localhost/kalypso/timeseries.gml</Url>
+               </DataSource>
+               <ChartElement name="DEFAULT">
+                    <AxisMapping>
+                         <Domain axisLink="Datum_Axis" equation="Datum"/>
+                         <Value axisLink="Niederschlag_Axis" equation="Wasserstand"/>
+                    </AxisMapping>
+                    <StyleLink ref="Niederschlag_Style"/>
+               </ChartElement>
+          </LayerProvider>
           <LayerProvider name="org.ksp.observation.layerProvider.Alarmstufe">
                <DataSource>
-                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+                    <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
@@ -112,44 +124,78 @@
                     <StyleLink ref="Alarmstufen_Style"/>
                </ChartElement>
           </LayerProvider>
-          <DateAxis id="Datum_Axis">
-               <Name>Datum</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>BOTTOM</Position>
-               <MinVal>2004-04-18</MinVal>
-               <MaxVal>2004-04-25</MaxVal>
-          </DateAxis>
+          
           <DoubleAxis id="Wasserstand_Axis">
                <Name>Wasserstand</Name>
                <Direction>POSITIVE</Direction>
                <Position>LEFT</Position>
-               <MinVal>0.0</MinVal>
-               <MaxVal>180.0</MaxVal>
+               <MinVal>140</MinVal>
+               <MaxVal>250</MaxVal>
           </DoubleAxis>
-          <DoubleAxis id="Abfluss_Axis">
-               <Name>Abfluss</Name>
+          <DoubleAxis id="WasserstandNN_Axis">
+               <Name>Wasserstand (mNN)</Name>
                <Direction>POSITIVE</Direction>
                <Position>BOTTOM</Position>
-               <MinVal>-100</MinVal>
-               <MaxVal>0</MaxVal>
+               <MinVal>-70</MinVal>
+               <MaxVal>-50</MaxVal>
           </DoubleAxis>
+          <DoubleAxis id="Niederschlag_Axis">
+               <Name>Niederschlag (mm)</Name>
+               <Direction>NEGATIVE</Direction>
+               <Position>RIGHT</Position>
+               <MinVal>0</MinVal>
+               <MaxVal>100</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Abfluss_Axis">
+               <Name>Abfluss (m³/s)</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>-0.0100001</MinVal>
+               <MaxVal>0.0100001</MaxVal>
+          </DoubleAxis>
+          <DateAxis id="Datum_Axis">
+               <Name>Datum</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>2004-04-15</MinVal>
+               <MaxVal>2004-05-15</MaxVal>
+          </DateAxis>
      </Chart>
 
      <kcls:Style id="Wasserstand_Style">
+          
           <kcls:Line>
                <kcls:LineWidth>2</kcls:LineWidth>
-               <kcls:LineStyle>SOLID</kcls:LineStyle>
+               <kcls:LineStyle>DASH</kcls:LineStyle>
                <kcls:LineColor>0000ff</kcls:LineColor>
           </kcls:Line>
-
+     </kcls:Style>
+     <kcls:Style id="Niederschlag_Style">
+          <kcls:Polygon>
+               <kcls:Alpha>100</kcls:Alpha>
+               <kcls:FillColor>ff0000</kcls:FillColor>
+               <kcls:Border>
+                    <kcls:BorderWidth>1</kcls:BorderWidth>
+                    <kcls:BorderColor>ffff00</kcls:BorderColor>
+               </kcls:Border>
+          </kcls:Polygon>
      </kcls:Style>
      <kcls:Style id="WQTabelle_Style">
+          <kcls:Point>
+               <kcls:PointWidth>3</kcls:PointWidth>
+               <kcls:PointHeight>3</kcls:PointHeight>
+               <kcls:Border>
+                    <kcls:BorderWidth>0</kcls:BorderWidth>
+                    <kcls:BorderColor>000000</kcls:BorderColor>
+               </kcls:Border>
+               <kcls:Color>0000ff</kcls:Color>
+          </kcls:Point>
           <kcls:Line>
-               
-               <kcls:LineWidth>2</kcls:LineWidth>
-               <kcls:LineStyle>SOLID</kcls:LineStyle>
+               <kcls:LineWidth>1</kcls:LineWidth>
+               <kcls:LineStyle>DASHDOTDOT</kcls:LineStyle>
                <kcls:LineColor>00ff00</kcls:LineColor>
           </kcls:Line>
+          
 
      </kcls:Style>
      <kcls:Style id="Alarmstufen_Style">
