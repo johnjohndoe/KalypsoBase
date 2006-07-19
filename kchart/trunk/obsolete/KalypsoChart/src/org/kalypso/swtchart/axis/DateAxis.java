@@ -45,6 +45,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
@@ -114,6 +115,15 @@ public class DateAxis extends AbstractAxis<Date>
       return null;
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
+  }
+
+  /**
+   * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
+   */
+  public Point logicalToScreenInterval( Date value, Date fixedPoint, double intervalSize )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 

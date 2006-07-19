@@ -22,6 +22,8 @@ import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.util.InsetsHelper;
 
+import sun.security.action.GetBooleanAction;
+
 /**
  * @author schlienger
  */
@@ -104,11 +106,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
   public void paint( final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen )
   {
-    
     Image img=paintBuffered(null, dev, axis, screen);
     gc.drawImage(img, 0,0);
     img.dispose();
-    
   }
 
   public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen)
@@ -164,9 +164,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
-        startX = screen.x + m_gap;
+        startX = screen.x + m_gap ;
       else
-        startX = screen.x + screen.width - m_gap;
+        startX = screen.x + screen.width -1 - m_gap;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -398,7 +398,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   /**
    * @see org.kalypso.swtchart.axis.renderer.IAxisRenderer#getAxisWidth(org.kalypso.swtchart.axis.IAxis)
    */
-  public int getAxisWidth( IAxis<Date> axis )
+  public int getAxisWidth( IAxis<Number> axis )
   {
     return m_maxTickLabelExtent.x;
   }

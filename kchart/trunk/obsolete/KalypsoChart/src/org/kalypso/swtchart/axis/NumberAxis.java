@@ -42,6 +42,7 @@ package org.kalypso.swtchart.axis;
 
 import java.util.Comparator;
 
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
@@ -105,5 +106,14 @@ public class NumberAxis extends AbstractAxis<Number>
       return Double.NaN;
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
+  }
+
+  /**
+   * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
+   */
+  public Point logicalToScreenInterval( Number value, Number fixedPoint, double intervalSize )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

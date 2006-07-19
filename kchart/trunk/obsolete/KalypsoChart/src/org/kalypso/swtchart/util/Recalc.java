@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.util;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 import sun.util.calendar.Gregorian;
 
@@ -68,6 +71,37 @@ public class Recalc
     long millis=gc.getTimeInMillis();
     return millis;
   }
+  
+  
+  /**
+   * erzeugt ein GregorianCalendar-Objekt aus einem XMLGregorianCalendar
+   */
+  public static XMLGregorianCalendar gregCalToXMLGregCal(GregorianCalendar gc)
+  {
+    XMLGregorianCalendarImpl xgc=new XMLGregorianCalendarImpl();
+    xgc.setYear(gc.get(GregorianCalendar.YEAR));
+    //GregCal-Monate laufen von 0 - 11
+    xgc.setMonth(gc.get(GregorianCalendar.MONTH)+1);
+    xgc.setDay(gc.get(GregorianCalendar.DAY_OF_MONTH));
+    xgc.setHour(gc.get(GregorianCalendar.HOUR));
+    xgc.setMinute(gc.get(GregorianCalendar.MINUTE));
+    xgc.setSecond(gc.get(GregorianCalendar.SECOND));
+    xgc.setMillisecond(gc.get(GregorianCalendar.MILLISECOND));
+    return xgc;
+  }
+  
+  
+  /**
+   * erzeugt ein GregorianCalendar-Objekt anhand einer Millisekunden-Zeit
+   */
+  public static GregorianCalendar gregCalFromTimeMillis(long tm)
+  {
+    GregorianCalendar gc=new GregorianCalendar();
+    gc.setTime(new Date(tm));
+    return gc;
+  }
+  
+  
   
   /**
    * Wandelt einen HexString in eine Dezimalzahl um

@@ -111,8 +111,8 @@ public class TestApp implements KeyListener
     
     
     
-    ChartLoader cl=new ChartLoader("/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
-    cl.createChart(m_chart, "Test");
+    ChartLoader cl=new ChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
+    cl.createChart("Test");
     
     //Es sollen Start- und Entwerte aus der Konfiguration verwendet werden
     m_chart.setAutoscale( false );

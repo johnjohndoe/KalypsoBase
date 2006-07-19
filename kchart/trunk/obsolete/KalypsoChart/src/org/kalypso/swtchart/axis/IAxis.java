@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.axis;
 
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.layer.IDataRange;
@@ -76,6 +77,16 @@ public interface IAxis<T>
   public void autorange( IDataRange<T>[] ranges );
 
   public int logicalToScreen( T value );
+  
+  /**
+   * Gibt ein Intervall von Bildschrimkoordinaten mit der logischen Breite zurück, in dem der übergebene 
+   * Wert liegt
+   * @param value ein Wert, der im zurückgegebenen Intervall liegt
+   * @param fixedPoint ein fixer Punkt auf der Achse, von dem aus die Intervallegemessen werden 
+   * @param intervalSize Die Größe des Intervalls; die muss von einzelnen Implementationen entsprechend 
+   *            Interpretiert werden;
+   */
+  public Point logicalToScreenInterval(T value, T fixedPoint, double intervalSize);
 
   public T screenToLogical( int value );
   

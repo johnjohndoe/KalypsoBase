@@ -77,10 +77,12 @@ public class ChartLoader
   
   
   private String m_configPath;
-  private ConfigurationType m_config;
+  protected ConfigurationType m_config;
+  protected final Chart m_chart;
 
-  public ChartLoader(String path)
+  public ChartLoader(Chart chart, String path)
   {
+      m_chart = chart;
       m_configPath=path;
       System.out.println("ChartConfiguration: Constructor");
       loadFile();
@@ -119,7 +121,7 @@ public class ChartLoader
    * @param chart Das Chart-Objekt, das mit Leben gefüllt wird
    * @param configChartTitle Der Titel der ChartConfiguration, die verwendet werden soll
    */
-  public Chart createChart(Chart chart, String configChartTitle)
+  public Chart createChart(String configChartTitle)
   {
     ChartType configChart=null;
     
@@ -137,14 +139,7 @@ public class ChartLoader
       }
     }
     
-    /**
-     * TODO: die AxisRenderer sollten sich an den tatsächlichen Achsen orintieren und nicht hart-codiert 
-     * sein.
-     */
-    IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 5 );
-    chart.getAxisRegistry().setRenderer(Number.class, numberAxisRenderer);
-    IAxisRenderer<Date> dateAxisRenderer = new DateAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 5, new SimpleDateFormat("dd.MM.yy") );
-    chart.getAxisRegistry().setRenderer(Date.class, dateAxisRenderer);
+
     
     
     if (configChart!=null)
@@ -155,7 +150,7 @@ public class ChartLoader
         for( JAXBElement< ? extends AbstractAxisType> element : jaxbAxes )
         {
             AbstractAxisType abstractAxis=element.getValue();
-            AxisFactory.addConfigAxis(chart, abstractAxis);
+            AxisFactory.addConfigAxis(m_chart, abstractAxis);
         }
         
         
@@ -172,12 +167,12 @@ public class ChartLoader
                   || lpname.compareTo("org.ksp.observation.layerProvider.Test.Bar")==0  
               )
             {
-              DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider(lp, chart);
+              DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider(lp, m_chart);
               IChartLayer[] icl=ddlp.getLayers();
               for( IChartLayer layer : icl )
               {
                 System.out.println("Adding Layer "+layer.getName());
-                chart.addLayer(layer);
+                m_chart.addLayer(layer);
               }
             }
             else if (lpname.compareTo("org.ksp.observation.layerProvider.Wasserstand")==0)
@@ -195,10 +190,8 @@ public class ChartLoader
             }
         }
     }
-    return chart;
+    return m_chart;
   }
-  
-  
 
 
   

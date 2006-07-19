@@ -41,6 +41,7 @@
 package org.kalypso.swtchart.axis;
 
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -51,8 +52,10 @@ import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
+import org.kalypso.swtchart.axis.renderer.XMLGregorianCalendarAxisRenderer;
 import org.kalypso.swtchart.util.AliComparator;
 import org.kalypso.swtchart.util.Recalc;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
@@ -103,7 +106,6 @@ public class AxisFactory
         /**
          * TODO: Insgesamt ist hier alles noch ein wenig hart reincodiert: Label insets, MaxDigits, etc.
          */
-
         
         if (a instanceof DoubleAxisType) 
         {
@@ -112,16 +114,31 @@ public class AxisFactory
           axis.setFrom(da.getMinVal());
           axis.setTo(da.getMaxVal());
           ar.addAxis(axis);
+          if (ar.getRenderer(axis)==null)
+          {
+            IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 0 );
+            ar.setRenderer(Number.class, numberAxisRenderer);
+          }
           System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
         }
         else if (a instanceof DateAxisType) 
         {
           DateAxisType da=(DateAxisType) a;
-          IAxis<Date> axis = new DateAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, new AliComparator( ), dir );
-          
-          axis.setFrom(new Date(Recalc.XMLGregToMillis(da.getMinVal())));
-          axis.setTo(new Date(Recalc.XMLGregToMillis(da.getMaxVal())));
+          AliComparator ac=new AliComparator( );
+          IAxis<XMLGregorianCalendar> axis = new XMLGregorianCalendarAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, ac, dir );
+          axis.setFrom(da.getMinVal());
+          axis.setTo(da.getMaxVal());
           ar.addAxis(axis);
+          if (ar.getRenderer(axis)==null)
+          {
+            IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 0, new SimpleDateFormat("dd.MM.yy") );
+            //ar.setRenderer(Date.class, dateAxisRenderer);
+            ar.setRenderer(XMLGregorianCalendar.class, xgcAxisRenderer);
+            if (ar.getRenderer(axis)!=null)
+                System.out.println("DateAxisRenderer hinzugefügt");
+            else
+              System.out.println("DateAxisRenderer nicht hinzugefügt");
+          }
           System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
         }
         else

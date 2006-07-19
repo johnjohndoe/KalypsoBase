@@ -17,5 +17,5 @@ public interface IAxisRenderer<T>
   
   public void paint( GCWrapper gc, Device dev, IAxis<T> axis, Rectangle screenArea );
   
-  public int getAxisWidth ( IAxis<Date> axis );
+  public int getAxisWidth ( IAxis<T> axis );
 }

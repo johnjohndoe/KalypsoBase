@@ -66,12 +66,28 @@ public class AliComparator extends ComparableComparator
 
   public int compare( Object o1, Object o2 )
   {
-    if (o1 instanceof XMLGregorianCalendar && o2 instanceof XMLGregorianCalendar)
-      return compare(( (XMLGregorianCalendar) o1).toGregorianCalendar(), ( (XMLGregorianCalendar) o2).toGregorianCalendar()); 
-    else if (o1 instanceof XMLGregorianCalendarImpl && o2 instanceof XMLGregorianCalendarImpl)
-      return compare(( (XMLGregorianCalendarImpl) o1).toGregorianCalendar(), ( (XMLGregorianCalendarImpl) o2).toGregorianCalendar()); 
-    else 
-      return super.compare(o1, o2);
+    if( o1 instanceof XMLGregorianCalendar )
+    {
+      if( o2 instanceof XMLGregorianCalendar )
+        return compare( ((XMLGregorianCalendar) o1).toGregorianCalendar(), ((XMLGregorianCalendar) o2).toGregorianCalendar() );
+      else
+      {
+        System.out.println("o1 hat andere Klasse als o2: "+o1.getClass().getName()+" "+o2.getClass().getName());
+        return 0;
+      }
+    }
+    else if( o1 instanceof XMLGregorianCalendarImpl )
+    {
+      if( o2 instanceof XMLGregorianCalendarImpl )
+        return compare( ((XMLGregorianCalendarImpl) o1).toGregorianCalendar(), ((XMLGregorianCalendarImpl) o2).toGregorianCalendar() );
+      else
+      { 
+         System.out.println("o1 hat andere Klasse als o2: "+o1.getClass().getName()+" "+o2.getClass().getName());
+         return 0;
+      }
+    }
+    else
+      return super.compare( o1, o2 );
   }
   
   
