@@ -151,7 +151,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     long start=fixedMillis;
     long end=fixedMillis;
     System.out.println("Axis ("+getIdentifier()+"): starting IntervalCalculation");
-    if (start>fixedMillis)
+    if (start>=valueMillis)
     {
       while (start>valueMillis)
         start-=intervalMillis;
@@ -167,12 +167,12 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     
     //Start-Zeitpunkt des Wert-Intervalls
     GregorianCalendar startCal=new GregorianCalendar();
-    startCal.setTime(new Date(start));
+    startCal.setTimeInMillis(start);
     XMLGregorianCalendar startXMLCal=Recalc.gregCalToXMLGregCal(startCal);
 
     //End-Zeitpunkt des Wert-Intervalls
     GregorianCalendar endCal=new GregorianCalendar();
-    endCal.setTime(new Date(end));
+    endCal.setTimeInMillis(end);
     XMLGregorianCalendar endXMLCal=Recalc.gregCalToXMLGregCal(endCal);
     
     final IAxisComponent comp = m_registry.getComponent( this );

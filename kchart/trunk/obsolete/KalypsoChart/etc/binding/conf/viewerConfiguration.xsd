@@ -48,12 +48,21 @@
 
      <complexType name="LayerProviderType">
           <sequence>
-               <element ref="kcvc:DataSource" minOccurs="0" maxOccurs="unbounded"/>
-               <element ref="kcvc:ChartElement" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcvc:DataSource" minOccurs="1" maxOccurs="unbounded"/>
+               <element ref="kcvc:Parameter" minOccurs="0" maxOccurs="unbounded"></element>
+               <element ref="kcvc:ChartElement" minOccurs="1" maxOccurs="unbounded"/>
           </sequence>
           <attribute name="name" type="string" use="required"> </attribute>
      </complexType>
 
+     <element name="Parameter" type="kcvc:ParameterType"></element>
+     
+     
+     <complexType name="ParameterType">
+          <attribute name="name" type="string" use="required"></attribute>
+          <attribute name="value" type="string" use="required"></attribute>
+     </complexType>
+     
      <element name="ChartElement" type="kcvc:ChartElementType">
           <annotation>
                <documentation> Ein ChartElement ist ein im Chart sichtbarer Datensatz,

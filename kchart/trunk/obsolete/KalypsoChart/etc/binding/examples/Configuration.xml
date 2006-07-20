@@ -105,6 +105,10 @@
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
+               <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
+               <Parameter name="fixedPoint" value="2004-01-01T00:00:00Z"/>
+               <!-- Die Breite eines Bars in Millisekunden -->
+               <Parameter name="barInterval" value="43200000"/>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
                          <Domain axisLink="Datum_Axis" equation="Datum"/>
@@ -137,7 +141,7 @@
                <Direction>POSITIVE</Direction>
                <Position>BOTTOM</Position>
                <MinVal>-70</MinVal>
-               <MaxVal>-50</MaxVal>
+               <MaxVal>-48</MaxVal>
           </DoubleAxis>
           <DoubleAxis id="Niederschlag_Axis">
                <Name>Niederschlag (mm)</Name>
