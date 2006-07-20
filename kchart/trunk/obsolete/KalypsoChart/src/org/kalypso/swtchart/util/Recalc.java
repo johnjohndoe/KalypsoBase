@@ -79,11 +79,15 @@ public class Recalc
   public static XMLGregorianCalendar gregCalToXMLGregCal(GregorianCalendar gc)
   {
     XMLGregorianCalendarImpl xgc=new XMLGregorianCalendarImpl();
+    //Zeitzone setzen
+    int tzOffset=(gc.getTimeZone().getRawOffset())/(1000*60) ;
+    xgc.setTimezone(tzOffset);
     xgc.setYear(gc.get(GregorianCalendar.YEAR));
     //GregCal-Monate laufen von 0 - 11
     xgc.setMonth(gc.get(GregorianCalendar.MONTH)+1);
     xgc.setDay(gc.get(GregorianCalendar.DAY_OF_MONTH));
-    xgc.setHour(gc.get(GregorianCalendar.HOUR));
+    //INFO:  hier muss HOUR_OF_DAY verwendet werden, weil HOUR nur eine Zahl zwischen 1 und 12 zurückgibt 
+    xgc.setHour(gc.get(GregorianCalendar.HOUR_OF_DAY));
     xgc.setMinute(gc.get(GregorianCalendar.MINUTE));
     xgc.setSecond(gc.get(GregorianCalendar.SECOND));
     xgc.setMillisecond(gc.get(GregorianCalendar.MILLISECOND));
