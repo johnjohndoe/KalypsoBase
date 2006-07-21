@@ -71,11 +71,11 @@ public class DoubleDataLayerProvider implements ILayerProvider
   private Chart m_chart;
 
 
-  public DoubleDataLayerProvider(LayerProviderType lpt, Chart chart)
+  public DoubleDataLayerProvider()
   {
-    m_lpt=lpt;
-    m_chart=chart;
+   
   }
+  
   
   
   /**
@@ -137,5 +137,17 @@ public class DoubleDataLayerProvider implements ILayerProvider
     }
     return icl;
   }
+
+  /**
+   * @see org.kalypso.swtchart.layer.ILayerProvider#init(org.kalypso.swtchart.Chart, org.ksp.chart.viewerconfiguration.LayerProviderType)
+   */
+  public void init( Chart chart, LayerProviderType lpt )
+  {
+    m_chart=chart;
+    m_lpt=lpt;
+  }
+
+
+
 
 }

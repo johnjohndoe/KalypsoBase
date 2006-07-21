@@ -108,7 +108,7 @@
                <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
                <Parameter name="fixedPoint" value="2004-01-01T00:00:00Z"/>
                <!-- Die Breite eines Bars in Millisekunden -->
-               <Parameter name="barInterval" value="43200000"/>
+               <Parameter name="barInterval" value="86400000"/>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
                          <Domain axisLink="Datum_Axis" equation="Datum"/>
@@ -165,6 +165,63 @@
                <MaxVal>2004-05-15</MaxVal>
           </DateAxis>
      </Chart>
+     
+     <Chart title="AliTest">
+          <!-- Das ist ein nicht-funktionierender Testeintrag zum Testen des Extension-Points -->
+          <LayerProvider name="org.kalypso.chart.layerprovider.AliLayerProvider">
+               <DataSource>
+                    <Url></Url>
+               </DataSource>
+               <ChartElement>
+                    <AxisMapping>
+                         <Domain axisLink="Ali_Axis1" equation="Lala"/>
+                         <Value axisLink="Ali_Axis2" equation="Lulu"/>
+                    </AxisMapping>
+                    <StyleLink ref="Bar_Style_Red"/>
+               </ChartElement>
+          </LayerProvider>
+          <LayerProvider name="org.kalypso.chart.layerprovider.AliLayerProvider">
+               <DataSource>
+                    <Url></Url>
+               </DataSource>
+               <ChartElement>
+                    <AxisMapping>
+                         <Domain axisLink="Ali_Axis3" equation="Lala"/>
+                         <Value axisLink="Ali_Axis4" equation="Lulu"/>
+                    </AxisMapping>
+                    <StyleLink ref="Bar_Style_Blue"/>
+               </ChartElement>
+          </LayerProvider>
+         
+          <DoubleAxis id="Ali_Axis1">
+               <Name>Achse unten</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>-20</MinVal>
+               <MaxVal>120</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Ali_Axis2">
+               <Name>Achse links</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>-2</MinVal>
+               <MaxVal>+2</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Ali_Axis4">
+               <Name>Achse unten</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>TOP</Position>
+               <MinVal>-2</MinVal>
+               <MaxVal>+2</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Ali_Axis3">
+               <Name>Achse links</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>RIGHT</Position>
+               <MinVal>-20</MinVal>
+               <MaxVal>+120</MaxVal>
+          </DoubleAxis>
+     </Chart>
 
      <kcls:Style id="Wasserstand_Style">
           
@@ -180,7 +237,7 @@
                <kcls:FillColor>ff0000</kcls:FillColor>
                <kcls:Border>
                     <kcls:BorderWidth>1</kcls:BorderWidth>
-                    <kcls:BorderColor>ffff00</kcls:BorderColor>
+                    <kcls:BorderColor>aa0000</kcls:BorderColor>
                </kcls:Border>
           </kcls:Polygon>
      </kcls:Style>
@@ -229,15 +286,16 @@
      </kcls:Style>
      <kcls:Style id="Bar_Style_Red">
           <kcls:Polygon>
+               <kcls:Alpha>100</kcls:Alpha>
                <kcls:FillColor>ff0000</kcls:FillColor>
           </kcls:Polygon>
      </kcls:Style>
      <kcls:Style id="Bar_Style_Blue">
           <kcls:Polygon>
-               <kcls:Alpha>25</kcls:Alpha>
+               <kcls:Alpha>127</kcls:Alpha>
                <kcls:FillColor>0000ff</kcls:FillColor>
                <kcls:Border>
-                    <kcls:BorderWidth>3</kcls:BorderWidth>
+                    <kcls:BorderWidth>1</kcls:BorderWidth>
                     <kcls:BorderColor>000000</kcls:BorderColor>
                </kcls:Border>
           </kcls:Polygon>

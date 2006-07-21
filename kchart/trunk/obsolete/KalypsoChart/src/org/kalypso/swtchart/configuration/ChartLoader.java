@@ -50,19 +50,28 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.swtchart.Chart;
+import org.kalypso.swtchart.KalypsoChartExtensions;
 import org.kalypso.swtchart.axis.AxisFactory;
 import org.kalypso.swtchart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
 import org.kalypso.swtchart.layer.IChartLayer;
+import org.kalypso.swtchart.layer.ILayerProvider;
 import org.kalypso.swtchart.layer.impl.DoubleDataLayerProvider;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ObjectFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 
 
 /**
@@ -167,7 +176,8 @@ public class ChartLoader
                   || lpname.compareTo("org.ksp.observation.layerProvider.Test.Bar")==0  
               )
             {
-              DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider(lp, m_chart);
+              DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider();
+              ddlp.init(m_chart, lp);
               IChartLayer[] icl=ddlp.getLayers();
               for( IChartLayer layer : icl )
               {
@@ -187,6 +197,31 @@ public class ChartLoader
             else if (lpname.compareTo("org.ksp.observation.layerProvider.Alarmstufen")==0)
             {
               System.out.println("LayerProvider: Alarmstufen");
+            }
+            else
+            {
+              try
+              {
+                final ILayerProvider provider = KalypsoChartExtensions.createProvider( lpname );
+                if (provider!=null)
+                {
+                  provider.init(m_chart, lp);
+                  IChartLayer[] icl=provider.getLayers();
+                  for( IChartLayer layer : icl )
+                  {
+                    System.out.println("Adding Layer "+layer.getName());
+                    m_chart.addLayer(layer);
+                  }
+                }
+                else
+                {
+                  System.out.println("No LayerProvider for "+lpname);
+                }
+              }
+              catch( CoreException e )
+              {
+                e.printStackTrace();
+              }
             }
         }
     }

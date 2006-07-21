@@ -303,15 +303,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       IDataRange[] vr= new DataRange[1];
       vr[0]=layer.getValueRange();
 
-      
-      /*
-      layer.getDomainAxis().setTo(layer.getDomainRange().getMin());
-      layer.getDomainAxis().setFrom(layer.getDomainRange().getMax());
-      layer.getValueAxis().setFrom(layer.getValueRange().getMin());
-      layer.getValueAxis().setTo(layer.getValueRange().getMax());
-      layout();
-      redraw();
-      */
+   
       
       
     }

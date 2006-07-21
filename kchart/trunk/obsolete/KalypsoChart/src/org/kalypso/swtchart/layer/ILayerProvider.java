@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.layer;
 
+import org.kalypso.swtchart.Chart;
+import org.ksp.chart.viewerconfiguration.LayerProviderType;
+
 /**
  * @author schlienger
  */
 public interface ILayerProvider
 {
   public IChartLayer[] getLayers( );
+  
+  public void init(Chart chart, LayerProviderType lpt);
+  
 }

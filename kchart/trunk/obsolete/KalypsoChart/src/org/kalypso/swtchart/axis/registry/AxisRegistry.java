@@ -89,14 +89,18 @@ public class AxisRegistry implements IAxisRegistry
    */
   public void addAxis( IAxis axis )
   {
+    //TODO: Exception wieder rein und else raus
     if( m_axes.containsKey( axis.getIdentifier() ) )
-      throw new IllegalArgumentException( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
-
-    axis.setRegistry( this );
-
-    m_axes.put( axis.getIdentifier(), axis );
-
-    m_handler.fireAxisAdded( axis );
+      System.out.println("Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
+      //throw new IllegalArgumentException( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
+    else
+    {
+      axis.setRegistry( this );
+  
+      m_axes.put( axis.getIdentifier(), axis );
+  
+      m_handler.fireAxisAdded( axis );
+    }
   }
 
   /**

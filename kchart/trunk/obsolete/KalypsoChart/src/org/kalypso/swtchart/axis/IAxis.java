@@ -85,6 +85,7 @@ public interface IAxis<T>
    * @param fixedPoint ein fixer Punkt auf der Achse, von dem aus die Intervallegemessen werden 
    * @param intervalSize Die Größe des Intervalls; die muss von einzelnen Implementationen entsprechend 
    *            Interpretiert werden;
+   * @return Point, dessen x/y-Werte den Anfang- und Endwert des Intervalls auf der Achse zurückgeben 
    */
   public Point logicalToScreenInterval(T value, T fixedPoint, double intervalSize);
 

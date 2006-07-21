@@ -34,7 +34,7 @@ O		VERSION=0.0.1
 M		SERVICE=WDS
 M		REQUEST=GetCapabilities
 O		FORMAT=MIME_type (text/xml)
-O		UPDATESEQUENCE)=string
+O		UPDATESEQUENCE=string
 
 
 
@@ -53,28 +53,31 @@ O		UPDATESEQUENCE)=string
 	Thorsten sagt, er würde das gerne auf 2 Operationen verteilen - richtig so!
 	)
 	
-	getDiagram		Gibt Grafik  zurück
-		imgtype 	(nur bei IMAGE) Typ der Grafikausgabe: PNG; JPEG; GIF
-		width		(nur bei IMAGE) Breite der Ausgabegrafik
-		height		(nur bei IMAGE) Höhe der Ausgabegrafik
-		name		Name eines vordefinierten Datensatzes
+	getChart		Gibt Grafik  zurück
+		imgtype 	Typ der Grafikausgabe: PNG; JPEG; GIF
+		width		Breite der Ausgabegrafik
+		height		Höhe der Ausgabegrafik
+		name		Name eines vordefinierten Charts
 		(Kennzeichen) 
-	#	style		Komma-getrennte Liste von Styles, die auf die Layer angewendet werden
+	#	style		Komma-getrennte Liste von Styles, die auf die Layer angewendet werden; nicht benötigt <
+					der Benutzer muss sich mit dem vorgegebenen Style zugrieden geben
 		layer		alle darzustellenden Layer in einer bestimmten Reihenfolge; bezieht sich auf die Layer, 
 					die zum per title angesprochenen Diagramm gehören; hier können nur die Reihenfolge
 					der Layer und das auslassen eines Layers durch Nicht-nennung bestimmt werden - der Inhalt
 					an sich ist bereits vorgegeben
-					
-	
+		includeLegend: Boolscher Wert, der besagt, ob die Legende im Diagramm eingebettet werden soll (true)
+					oder nicht (False); bei Bedarf kann man sich eine externe gerenderte Legende über die 
+					Operation "getLegend" zurückgeben lassen	
+		
 	getHTMLTable:	Gibt HTML-Tabelle zurück
 	
+	getLegend:		Gibt Legende zurück
+		name		Name des Charts, für das die Legende erstellt werden soll
+		imgtype
 	
 	
-	Width: Breite der Ausgabegrafik
-	Height: Höhe der Ausgabegrafik
-	Type:	Typ der Ausgabe (JPEG, PNG, GIF bei Grafik, HMTLTable für Tabelle)
 
-
+	Chart-Config (nicht mehr aktuell, da nicht mehr Layer, sondern LAyerProvider angegeben werden)
 	Layer (nur für Grafikausgabe):
 		URL: Pfad zu einer Observation; SOS-String oder Dateiname
 		Column:	1 oder 2 Spalten, die verwendet werden sollen

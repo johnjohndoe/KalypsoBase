@@ -148,7 +148,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       if( axis.getPosition() == POSITION.BOTTOM )
         startY = screen.y + m_gap;
       else
-        startY = screen.y + screen.height - m_gap;
+        startY = screen.y + screen.height -1 - m_gap;
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
