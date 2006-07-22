@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoServicesODS Plug-in
+Bundle-SymbolicName: org.kalypso.services.ods;singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: org.kalypso.swt.servlet/
+Bundle-Activator: org.kalypso.services.ods.Activator
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.equinox.http.registry,
+ org.eclipse.swt
+Eclipse-LazyStart: true
+Import-Package: javax.servlet;version="2.3.0",
+ javax.servlet.http;version="2.3.0"
