@@ -593,6 +593,11 @@ public class GMLSchema implements IGMLSchema
       try
       {
         schemaForNamespaceURI = getGMLSchemaForNamespaceURI( namespaceURI );
+        // beware for recursion
+        // if we get this, don't search again
+        if( schemaForNamespaceURI == this )
+          return null;
+        
       }
       catch( final GMLSchemaException e )
       {
