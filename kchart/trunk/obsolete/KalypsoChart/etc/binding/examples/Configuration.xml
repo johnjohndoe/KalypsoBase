@@ -77,7 +77,7 @@
      </Chart>
 
      <Chart title="WasserstandEtc">
-          <LayerProvider name="org.ksp.observation.layerProvider.Wasserstand">
+          <LayerProvider name="org.kalypso.layerprovider.Wasserstand">
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
@@ -89,7 +89,7 @@
                     <StyleLink ref="Wasserstand_Style"/>
                </ChartElement>
           </LayerProvider>
-          <LayerProvider name="org.ksp.observation.layerProvider.WQTabelle">
+          <LayerProvider name="org.kalypso.layerprovider.WQTabelle">
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
@@ -101,7 +101,7 @@
                     <StyleLink ref="WQTabelle_Style"/>
                </ChartElement>
           </LayerProvider>
-          <LayerProvider name="org.ksp.observation.layerProvider.Niederschlag">
+          <LayerProvider name="org.kalypso.layerprovider.Niederschlag">
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
@@ -117,7 +117,7 @@
                     <StyleLink ref="Niederschlag_Style"/>
                </ChartElement>
           </LayerProvider>
-          <LayerProvider name="org.ksp.observation.layerProvider.Alarmstufe">
+          <LayerProvider name="org.kalypso.layerprovider.Alarmstufen">
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
                </DataSource>
@@ -190,6 +190,19 @@
                          <Value axisLink="Ali_Axis4" equation="Lulu"/>
                     </AxisMapping>
                     <StyleLink ref="Bar_Style_Blue"/>
+               </ChartElement>
+          </LayerProvider>
+
+          <LayerProvider name="TotallyNewLP.provider">
+               <DataSource>
+                    <Url></Url>
+               </DataSource>
+               <ChartElement>
+                    <AxisMapping>
+                         <Domain axisLink="Ali_Axis3" equation="Lala"/>
+                         <Value axisLink="Ali_Axis4" equation="Lulu"/>
+                    </AxisMapping>
+                    <StyleLink ref="Line_Style"/>
                </ChartElement>
           </LayerProvider>
          

@@ -185,19 +185,6 @@ public class ChartLoader
                 m_chart.addLayer(layer);
               }
             }
-            else if (lpname.compareTo("org.ksp.observation.layerProvider.Wasserstand")==0)
-            {
-               System.out.println("LayerProvider: Wasserstand");
-               
-            }
-            else if (lpname.compareTo("org.ksp.observation.layerProvider.WQTabelle")==0)
-            {
-              System.out.println("LayerProvider: WQTabelle");
-            }
-            else if (lpname.compareTo("org.ksp.observation.layerProvider.Alarmstufen")==0)
-            {
-              System.out.println("LayerProvider: Alarmstufen");
-            }
             else
             {
               try
@@ -207,10 +194,13 @@ public class ChartLoader
                 {
                   provider.init(m_chart, lp);
                   IChartLayer[] icl=provider.getLayers();
-                  for( IChartLayer layer : icl )
+                  if (icl!=null)
                   {
-                    System.out.println("Adding Layer "+layer.getName());
-                    m_chart.addLayer(layer);
+                    for( IChartLayer layer : icl )
+                    {
+                      System.out.println("Adding Layer "+layer.getName());
+                      m_chart.addLayer(layer);
+                    }
                   }
                 }
                 else

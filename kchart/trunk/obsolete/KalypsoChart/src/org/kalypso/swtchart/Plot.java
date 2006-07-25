@@ -41,9 +41,7 @@
 package org.kalypso.swtchart;
 
 import java.util.List;
-import java.util.ListIterator;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -52,25 +50,19 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.axis.IAxis;
 import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
-import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.component.AxisComponent;
-import org.kalypso.swtchart.axis.registry.AxisRegistry;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.layer.IChartLayer;
 
@@ -83,10 +75,9 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
   
   private Point m_mouseDragStart;
   private Point m_mouseDragEnd;
-  private boolean m_mousePressed=false;;
+  private boolean m_mousePressed=false;
   private Rectangle m_mouseDragRect;
 
-  private Image m_bufferedPlot=null;
   private Image m_bufferImg=null;
 
   public Plot( Chart chart, Composite parent, int style )
@@ -108,14 +99,9 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
   public void dispose( )
   {
     removePaintListener( this );
-    if (m_bufferedPlot!=null)
-    {
-      m_bufferedPlot.dispose();
-      m_bufferedPlot=null;
-    }
     if (m_bufferImg!=null)
     {
-      m_bufferedPlot.dispose();
+      m_bufferImg.dispose();
       m_bufferImg=null;
     }
     super.dispose();
@@ -133,19 +119,6 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
     
     //Antialiasing setzen
     gcw.m_gc.setAntialias(SWT.ON);
-    
-    /*
-    //das PufferBild erzeugen - aber nur, wenn nicht gerade eine MausGeste gemacht wird
-    if (m_mouseDragRect==null && !m_mousePressed)
-    {
-      paintBuffered(gcw, e.display);
-    }
-    if (m_bufferedPlot!=null)
-    {
-      gcw.drawImage(m_bufferedPlot, 0,0);
-      
-    }
-    */
 
     final Rectangle screenArea = getClientArea();
     
@@ -221,44 +194,6 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
     redraw();
   }
 
-  private void paintBuffered( GCWrapper gcw, Device dev )
-  {
-    /*
-     * Dummerweise braucht man ein Display, um das PufferImage zu erzeugen - und das geht nur innerhalb
-     * des paintcontrol-Zweigs.
-     * Das führt aber dazu, dass man stets das alte Image disposen und neu erzeugen muss - das kostet
-     * ziemlich rechenleistung
-     */
-    
-
-    Rectangle sizeRect=getBounds();
-    /*
-     * >TODO: was hat gernot im SWTChart zum DoubleBuff.. gemacht
-     */
-    if (m_bufferedPlot!=null)
-      m_bufferedPlot.dispose();
-    m_bufferedPlot=new Image(dev, sizeRect);
-   
-    
-    GC imgGc=new GC(m_bufferedPlot);
-    GCWrapper imgGcw=new GCWrapper(imgGc);
-    
-    
-    final List<IChartLayer> layers = m_chart.getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      ChartUtilities.resetGC(imgGcw.m_gc, dev);
-      layer.paint( imgGcw, dev );
-    }
-
-    imgGc.dispose();
-    imgGcw.dispose();
-      
-  }
-  
-  
-  
-  
 
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
@@ -429,6 +364,14 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
   {
     repaint();
     
+  }
+  
+  /**
+   * Gibt das Bildchen, das zum Puffern verwendet wird, zurück
+   */
+  public Image getBufferImg()
+  {
+    return m_bufferImg;
   }
 
  
