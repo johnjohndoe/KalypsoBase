@@ -42,14 +42,9 @@ package org.kalypso.contribs.java.xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import com.sun.org.apache.xml.internal.utils.NameSpace;
-
-import sun.jdbc.odbc.ee.CommonDataSource;
 
 /**
  * @author doemming, schlienger
