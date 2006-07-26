@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
  */
 public class NodeList_Impl implements NodeList
 {
-  private final List nodes = new ArrayList();
+  private final List<Node> nodes = new ArrayList<Node>();
 
   public NodeList_Impl()
   {
@@ -42,6 +42,6 @@ public class NodeList_Impl implements NodeList
 
   public Node item( int pos )
   {
-    return (Node)nodes.get( pos );
+    return nodes.get( pos );
   }
 }

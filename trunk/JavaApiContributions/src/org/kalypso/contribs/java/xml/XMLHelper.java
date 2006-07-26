@@ -44,11 +44,13 @@ public class XMLHelper
   /**
    * @deprecated Use {@link NS.XSD_SCHEMA} instead.
    */
+  @Deprecated
   public static final String XMLSCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 
   /**
    * @deprecated Use {@link NS.GML3} instead.
    */
+  @Deprecated
   public static final String GMLSCHEMA_NS = "http://www.opengis.net/gml";
 
   public static final String DEFAULT_ENCODING = "UTF-8";
