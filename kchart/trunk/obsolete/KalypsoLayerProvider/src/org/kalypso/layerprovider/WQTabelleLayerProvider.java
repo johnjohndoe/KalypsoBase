@@ -54,7 +54,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.configuration.StyleLoader;
+import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypsodeegree.model.feature.Feature;

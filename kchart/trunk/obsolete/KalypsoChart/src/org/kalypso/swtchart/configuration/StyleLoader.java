@@ -38,14 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.chart.configuration;
+package org.kalypso.swtchart.configuration;
 
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.LayerStyle;
@@ -61,6 +59,7 @@ import org.ksp.chart.layerstyle.LineType;
 import org.ksp.chart.layerstyle.PointType;
 import org.ksp.chart.layerstyle.PolygonType;
 import org.ksp.chart.layerstyle.StyleType;
+import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
@@ -72,7 +71,25 @@ public class StyleLoader
 {
 
   /**
-   * Erzeugt StyleObjekte aus der Konfiguration
+   * Erzeugt ein Style-Objekt anhand der ID aus der Konfiguration
+   */
+  public static ILayerStyle createStyle(ConfigurationType config, String styleId)
+  {
+    List<StyleType> styles = config.getStyle();
+    if (styles!=null)
+    {
+      for( StyleType style : styles )
+      {
+        if (style.getId().compareTo( styleId )==0)
+          return createStyle(style);
+      }
+    }
+    return null;
+  }
+  
+  
+  /**
+   * Erzeugt ein StyleObjekte aus einem Konfiguration-StyleType
    */
   public static ILayerStyle createStyle(StyleType st)
   {
@@ -170,11 +187,9 @@ public class StyleLoader
    */
   public static RGB createColor(byte[] cbyte)
   {
-    int len=cbyte.length;
     int r=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[0]}));
     int g=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[1]}));
     int b=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[2]}));
-    int test=0;
     return new RGB(r,g,b);
   }
   

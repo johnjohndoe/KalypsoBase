@@ -85,7 +85,7 @@
      	  </Abstract>
           <LayerProvider name="org.kalypso.layerprovider.Wasserstand">
                <DataSource>
-                    <Url>http://localhost/kalypso/timeseries.gml</Url>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
@@ -97,7 +97,7 @@
           </LayerProvider>
           <LayerProvider name="org.kalypso.layerprovider.WQTabelle">
                <DataSource>
-                    <Url>http://localhost/kalypso/timeseries.gml</Url>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>
@@ -109,7 +109,7 @@
           </LayerProvider>
           <LayerProvider name="org.kalypso.layerprovider.Niederschlag">
                <DataSource>
-                    <Url>http://localhost/kalypso/timeseries.gml</Url>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
                <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
                <Parameter name="fixedPoint" value="2004-01-01T00:00:00Z"/>
@@ -125,7 +125,7 @@
           </LayerProvider>
           <LayerProvider name="org.kalypso.layerprovider.Alarmstufen">
                <DataSource>
-                    <Url>http://localhost/kalypso/timeseries.gml</Url>
+                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
                <ChartElement name="DEFAULT">
                     <AxisMapping>

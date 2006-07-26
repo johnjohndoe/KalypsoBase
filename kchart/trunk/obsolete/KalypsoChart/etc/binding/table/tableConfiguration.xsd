@@ -12,6 +12,8 @@
           </documentation>
      </annotation>
 	<sequence>
+		<element name="Title" type="string" minOccurs="0"/>
+		<element name="Abstract" type="string" minOccurs="0"/>
 	     <element name="DataSource" type="anyURI" >
 	          <annotation>
 	               <documentation>
@@ -36,7 +38,7 @@
 	          </annotation>
 	     </element>
 	</sequence>
-	<attribute name="title" type="ID" use="required"></attribute>
+	<attribute name="name" type="ID" use="required"></attribute>
 </complexType>
 
 

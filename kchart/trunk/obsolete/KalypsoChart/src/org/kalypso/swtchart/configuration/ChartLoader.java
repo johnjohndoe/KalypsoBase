@@ -38,30 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.chart.configuration;
+package org.kalypso.swtchart.configuration;
 
-import java.awt.Insets;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.KalypsoChartExtensions;
 import org.kalypso.swtchart.chart.axis.AxisFactory;
-import org.kalypso.swtchart.chart.axis.renderer.DateAxisRenderer;
-import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
-import org.kalypso.swtchart.chart.axis.renderer.NumberAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;
@@ -69,9 +55,6 @@ import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ObjectFactory;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 
 
 /**
@@ -81,63 +64,19 @@ import org.osgi.framework.BundleException;
 public class ChartLoader
 {
   
-  public final static ObjectFactory OF = new ObjectFactory();
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-  
-  
-  private String m_configPath;
-  protected ConfigurationType m_config;
-  protected final Chart m_chart;
-
-  public ChartLoader(Chart chart, String path)
-  {
-      m_chart = chart;
-      m_configPath=path;
-      System.out.println("ChartConfiguration: Constructor");
-      loadFile();
-  }
-  
-  public void loadFile()
-  {
-    System.out.println("loadFile Start");
-      try
-      {
-        Object o = JC.createUnmarshaller().unmarshal( new File(m_configPath) );
-        if (o instanceof JAXBElement)
-        {
-          Object child=((JAXBElement) o).getValue();
-          m_config=(ConfigurationType) child;
-        }
-        else if (o instanceof ConfigurationType)
-        {
-           m_config=(ConfigurationType) o;
-        }
-        System.out.println("Configuration geladen");
-      }
-      catch( JAXBException e )
-      {
-        e.printStackTrace();
-      }
-      catch (ClassCastException e)
-      {
-        e.printStackTrace();
-      }
-      System.out.println("loadFile End");
-  }
-  
   /**
    * Erstellt ein Chart aus der Konfiguration  
    * @param chart Das Chart-Objekt, das mit Leben gefüllt wird
    * @param configChartName Der Name der ChartConfiguration, die verwendet werden soll
    */
-  public Chart createChart(String configChartName)
+  public static Chart createChart(Chart chart, ConfigurationType config, String configChartName)
   {
     ChartType configChart=null;
     
     //ChartConfig auslesen
-    if (m_config!=null)
+    if (config!=null)
     {
-      List<ChartType> ccharts = m_config.getChart();
+      List<ChartType> ccharts = config.getChart();
       for( ChartType c : ccharts )
       {
           if (c.getName().compareTo(configChartName)==0)
@@ -159,7 +98,7 @@ public class ChartLoader
         for( JAXBElement< ? extends AbstractAxisType> element : jaxbAxes )
         {
             AbstractAxisType abstractAxis=element.getValue();
-            AxisFactory.addConfigAxis(m_chart, abstractAxis);
+            AxisFactory.addConfigAxis(chart, abstractAxis);
         }
         
         
@@ -177,12 +116,12 @@ public class ChartLoader
               )
             {
               DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider();
-              ddlp.init(m_chart, lp);
+              ddlp.init(chart, lp);
               IChartLayer[] icl=ddlp.getLayers();
               for( IChartLayer layer : icl )
               {
                 System.out.println("Adding Layer "+layer.getName());
-                m_chart.addLayer(layer);
+                chart.addLayer(layer);
               }
             }
             else
@@ -192,14 +131,14 @@ public class ChartLoader
                 final ILayerProvider provider = KalypsoChartExtensions.createProvider( lpname );
                 if (provider!=null)
                 {
-                  provider.init(m_chart, lp);
+                  provider.init(chart, lp);
                   IChartLayer[] icl=provider.getLayers();
                   if (icl!=null)
                   {
                     for( IChartLayer layer : icl )
                     {
                       System.out.println("Adding Layer "+layer.getName());
-                      m_chart.addLayer(layer);
+                      chart.addLayer(layer);
                     }
                   }
                 }
@@ -215,7 +154,7 @@ public class ChartLoader
             }
         }
     }
-    return m_chart;
+    return chart;
   }
 
 

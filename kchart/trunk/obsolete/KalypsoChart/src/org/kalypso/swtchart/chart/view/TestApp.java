@@ -64,7 +64,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.NumberAxisRenderer;
-import org.kalypso.swtchart.chart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.chart.layer.impl.GridLayer;
 import org.kalypso.swtchart.chart.layer.impl.TestDateLayer;
 import org.kalypso.swtchart.chart.layer.impl.TestLayer;
@@ -75,6 +75,7 @@ import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
 
 
 /**
@@ -110,9 +111,10 @@ public class TestApp implements KeyListener
     shell.open();
     
     
+    String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+    ConfigurationLoader cl=new ConfigurationLoader(configPath);
+    ChartLoader.createChart(m_chart, cl.getConfiguration() , "AliTest");
     
-    ChartLoader cl=new ChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
-    cl.createChart("AliTest");
     
     //Es sollen Start- und Entwerte aus der Konfiguration verwendet werden
     m_chart.setAutoscale( false );

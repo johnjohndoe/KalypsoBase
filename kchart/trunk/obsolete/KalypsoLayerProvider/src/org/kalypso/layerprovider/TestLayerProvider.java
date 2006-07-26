@@ -43,15 +43,13 @@ package org.kalypso.layerprovider;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.runtime.Plugin;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.chart.configuration.ChartLoader;
-import org.kalypso.swtchart.chart.configuration.StyleLoader;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.configuration.StyleLoader;
 import org.ksp.chart.layerstyle.StyleType;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.AxisMappingType;
@@ -99,10 +97,6 @@ public class TestLayerProvider implements ILayerProvider
     
     Vector<IChartLayer> layers=new Vector<IChartLayer>();
     
-    String name=m_lpt.getName();
-    
-    
-    
     List<ChartElementType> ces = m_lpt.getChartElement();
     for( ChartElementType ce : ces )
     {
@@ -116,7 +110,6 @@ public class TestLayerProvider implements ILayerProvider
       AxisMappingType amt_value = am.getValue();
       AbstractAxisType valueAxis = (AbstractAxisType) amt_value.getAxisLink();
       String valueId=valueAxis.getId();
-      
       
       IAxis domain=ar.getAxis(domainId);
       IAxis value=ar.getAxis(valueId);
@@ -134,7 +127,7 @@ public class TestLayerProvider implements ILayerProvider
     }
     
     //Und jetzt noch von Vector in Array umrechnen
-    //TODO: Das geht klüger - poder evtl. Interface verändern
+    //TODO: Das geht klüger - oder evtl. Interface verändern
     IChartLayer[] icl=new IChartLayer[layers.size()];
     for( int i = 0; i < layers.size(); i++ )
     {
