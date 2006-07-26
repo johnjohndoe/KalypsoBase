@@ -52,16 +52,16 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.swtchart.axis.IAxis;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.IDataRange;
-import org.kalypso.swtchart.layer.impl.DataRange;
-import org.kalypso.swtchart.legend.ILegendItem;
-import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.StyledLine;
-import org.kalypso.swtchart.styles.StyledPoint;
-import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.swtchart.util.AliComparator;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.IDataRange;
+import org.kalypso.swtchart.chart.layer.impl.DataRange;
+import org.kalypso.swtchart.chart.legend.ILegendItem;
+import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.StyledLine;
+import org.kalypso.swtchart.chart.styles.StyledPoint;
+import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.chart.util.AliComparator;
 
 /**
  * @author schlienger
@@ -93,7 +93,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
   public void paint( final GCWrapper gc, final Device dev )
@@ -135,7 +135,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getName()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
    */
   public String getName( )
   {
@@ -143,7 +143,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDescription()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
   public String getDescription( )
   {
@@ -151,7 +151,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainAxis()
    */
   public IAxis getDomainAxis( )
   {
@@ -159,7 +159,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getRangeAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getRangeAxis()
    */
   public IAxis getValueAxis( )
   {
@@ -167,7 +167,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getLegendItem()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
    */
   public ILegendItem getLegendItem( )
   {
@@ -175,7 +175,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isActive()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
   public boolean isActive( )
   {
@@ -183,7 +183,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isVisible()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isVisible()
    */
   public boolean isVisible( )
   {
@@ -191,7 +191,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
    */
   public ILayerStyle getStyle( )
   {
@@ -199,7 +199,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#setStyle(org.kalypso.swtchart.styles.ILayerStyle)
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
   public void setStyle( ILayerStyle style )
   {
@@ -207,7 +207,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   public IDataRange getDomainRange( )
   {
@@ -229,7 +229,7 @@ private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getValueRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueRange()
    */
   public IDataRange getValueRange( )
   {

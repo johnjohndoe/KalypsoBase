@@ -50,11 +50,11 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.swtchart.Chart;
-import org.kalypso.swtchart.axis.IAxis;
-import org.kalypso.swtchart.configuration.StyleLoader;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.ILayerProvider;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.configuration.StyleLoader;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.layerstyle.StyleType;
@@ -88,7 +88,7 @@ public class NiederschlagLayerProvider implements ILayerProvider
   }
     
   /**
-   * @see org.kalypso.swtchart.layer.ILayerProvider#getLayers()
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
   public IChartLayer[] getLayers( )
   {

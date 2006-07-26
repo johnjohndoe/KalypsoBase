@@ -3,15 +3,14 @@
      xmlns:kcvc="http://www.ksp.org/chart/viewerConfiguration"
      targetNamespace="http://www.ksp.org/chart/viewerConfiguration"
      xmlns:kcls="http://www.ksp.org/chart/layerStyle"
+     xmlns:kctc="http://www.ksp.org/chart/tableConfiguration"
      elementFormDefault="qualified"
      >
 
      <import namespace="http://www.ksp.org/chart/layerStyle"
           schemaLocation="../style/layerStyle.xsd"/>
-
-     <import namespace="http://www.w3.org/1999/xlink"
-          schemaLocation="http://dev.bjoernsen.de/ogc/schema/gml/3.1.1s/xlink/xlinks.xsd"/>
-
+     <import namespace="http://www.ksp.org/chart/tableConfiguration"
+          schemaLocation="../table/tableConfiguration.xsd"/>
 
      <annotation>
           <documentation> Die Elemente referenzieren grundsätzlich ihre Typen, da beim Binden dann
@@ -27,6 +26,7 @@
                <element ref="kcvc:Chart" minOccurs="1" maxOccurs="unbounded"> </element>
                <!--element ref="kcvc:Legend" minOccurs="0" maxOccurs="unbounded"/-->
                <element ref="kcls:Style" minOccurs="1" maxOccurs="unbounded"/>
+               <element ref="kctc:Table" minOccurs="0" maxOccurs="unbounded"/>
           </sequence>
 
      </complexType>
@@ -35,11 +35,31 @@
 
      <complexType name="ChartType">
           <sequence>
+          	   <element name="Title" type="string" minOccurs="0" >
+          	   <annotation>
+	          	   <documentation>
+	          	   		Ein erweiterter Bezeichner für das Chart
+	          	   </documentation>
+          	   </annotation>
+          	   </element>
+          	   <element name="Abstract" type="string" minOccurs="0" >
+          	   <annotation>
+          	   		<documentation>
+          	   			Beschreibung des ChartInhalts
+          	   		</documentation>
+          	   </annotation>
+          	   </element>
                <element ref="kcvc:LayerProvider" minOccurs="1" maxOccurs="unbounded"/>
                <element ref="kcvc:Axis" minOccurs="0" maxOccurs="unbounded"/>
                <element ref="kcvc:Grid" minOccurs="0" maxOccurs="unbounded"/>
           </sequence>
-          <attribute name="title" type="ID" use="required"/>
+          <attribute name="name" type="ID" use="required">
+          <annotation>
+	          	   <documentation>
+	          	   		Der eindeutige Bezeichner für das Chart zur Referenzierung von aussen 
+	          	   </documentation>
+          	   </annotation>
+          </attribute>
      </complexType>
 
      <element name="LayerProvider" type="kcvc:LayerProviderType"/>

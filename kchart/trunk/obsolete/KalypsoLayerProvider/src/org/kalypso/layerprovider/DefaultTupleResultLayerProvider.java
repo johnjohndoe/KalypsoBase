@@ -43,10 +43,10 @@ package org.kalypso.layerprovider;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.swtchart.Chart;
-import org.kalypso.swtchart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.ILayerProvider;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
 /**

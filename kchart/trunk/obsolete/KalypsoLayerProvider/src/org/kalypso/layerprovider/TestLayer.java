@@ -48,17 +48,17 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.swtchart.axis.IAxis;
-import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
-import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.IDataRange;
-import org.kalypso.swtchart.layer.impl.DataRange;
-import org.kalypso.swtchart.legend.ILegendItem;
-import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.IStyledElement;
-import org.kalypso.swtchart.styles.StyledLine;
-import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
+import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.IDataRange;
+import org.kalypso.swtchart.chart.layer.impl.DataRange;
+import org.kalypso.swtchart.chart.legend.ILegendItem;
+import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.IStyledElement;
+import org.kalypso.swtchart.chart.styles.StyledLine;
+import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 import sun.java2d.loops.FillRect;
 
@@ -84,7 +84,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getName()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
    */
   public String getName( )
   {
@@ -92,7 +92,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDescription()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
   public String getDescription( )
   {
@@ -100,7 +100,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainAxis()
    */
   public IAxis getDomainAxis( )
   {
@@ -108,7 +108,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getValueAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueAxis()
    */
   public IAxis getValueAxis( )
   {
@@ -116,7 +116,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getLegendItem()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
    */
   public ILegendItem getLegendItem( )
   {
@@ -124,7 +124,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isActive()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
   public boolean isActive( )
   {
@@ -132,7 +132,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isVisible()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isVisible()
    */
   public boolean isVisible( )
   {
@@ -141,7 +141,7 @@ public class TestLayer implements IChartLayer
 
   
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
    */
   public ILayerStyle getStyle( )
   {
@@ -149,7 +149,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#setStyle(org.kalypso.swtchart.styles.ILayerStyle)
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
   public void setStyle( ILayerStyle style )
   {
@@ -158,7 +158,7 @@ public class TestLayer implements IChartLayer
 
   /**
    * Zeichnet die Daetn als Balken ins Diagramm
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
@@ -306,7 +306,7 @@ public class TestLayer implements IChartLayer
   
   
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   public IDataRange getDomainRange( )
   {
@@ -327,7 +327,7 @@ public class TestLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getValueRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueRange()
    */
   public IDataRange getValueRange( )
   {

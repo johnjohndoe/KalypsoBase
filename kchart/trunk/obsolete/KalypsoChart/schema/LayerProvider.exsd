@@ -57,7 +57,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.swtchart.layer.ILayerProvider"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.swtchart.chart.layer.ILayerProvider"/>
                </appInfo>
             </annotation>
          </attribute>

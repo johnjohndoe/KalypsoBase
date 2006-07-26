@@ -6,7 +6,9 @@
           http://www.ksp.org/chart/viewerConfiguration ../conf/viewerConfiguration.xsd 
           http://www.ksp.org/chart/layerStyle ../style/layerStyle.xsd
           ">
-     <Chart title="Test">
+     <Chart name="Test">
+     		<Title>Test-Chart</Title>
+     		<Abstract>Dies ist ein Chart zum Testen der Funktionalität - die DataSources werden nicht ausgewertet</Abstract>
           <LayerProvider name="org.ksp.observation.layerProvider.Test.Line">
                <DataSource>
                     <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
@@ -76,7 +78,11 @@
           
      </Chart>
 
-     <Chart title="WasserstandEtc">
+     <Chart name="WasserstandEtc">
+     	  <Title>Wasserstand, Niederschlag und WQ-Tabelle zum Pegel Löben</Title>
+     	  <Abstract>
+     	  		Die hier angezeigten Werte stammen aus einer Beispiel-Observation zuer Demonstration der Funktionalität der Chart-Komponente
+     	  </Abstract>
           <LayerProvider name="org.kalypso.layerprovider.Wasserstand">
                <DataSource>
                     <Url>http://localhost/kalypso/timeseries.gml</Url>
@@ -166,8 +172,11 @@
           </DateAxis>
      </Chart>
      
-     <Chart title="AliTest">
-          <!-- Das ist ein nicht-funktionierender Testeintrag zum Testen des Extension-Points -->
+     <Chart name="Test2">
+     	  <Title>Ein weiterer Testeintrag</Title>
+     	  <Abstract>
+     	  	Mit diesem Eintrag sollen die Erweiterung der Chart-LayerProvider über Eclipse-Extensions getestet werden
+     	  </Abstract>
           <LayerProvider name="org.kalypso.chart.layerprovider.AliLayerProvider">
                <DataSource>
                     <Url></Url>

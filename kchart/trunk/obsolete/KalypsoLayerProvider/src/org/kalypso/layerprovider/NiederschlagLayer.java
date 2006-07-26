@@ -56,17 +56,17 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.swtchart.axis.IAxis;
-import org.kalypso.swtchart.axis.IAxisConstants.ORIENTATION;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.IDataRange;
-import org.kalypso.swtchart.layer.impl.DataRange;
-import org.kalypso.swtchart.legend.ILegendItem;
-import org.kalypso.swtchart.styles.ILayerStyle;
-import org.kalypso.swtchart.styles.StyledPolygon;
-import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.swtchart.util.AliComparator;
-import org.kalypso.swtchart.util.Recalc;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.IDataRange;
+import org.kalypso.swtchart.chart.layer.impl.DataRange;
+import org.kalypso.swtchart.chart.legend.ILegendItem;
+import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.StyledPolygon;
+import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.chart.util.Recalc;
 import org.ksp.chart.viewerconfiguration.ParameterType;
 
 /**
@@ -99,7 +99,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
   public void paint( final GCWrapper gc, final Device dev ) 
@@ -194,7 +194,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getName()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
    */
   public String getName( )
   {
@@ -202,7 +202,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDescription()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
   public String getDescription( )
   {
@@ -210,7 +210,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainAxis()
    */
   public IAxis getDomainAxis( )
   {
@@ -218,7 +218,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getRangeAxis()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getRangeAxis()
    */
   public IAxis getValueAxis( )
   {
@@ -226,7 +226,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getLegendItem()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
    */
   public ILegendItem getLegendItem( )
   {
@@ -234,7 +234,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isActive()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
   public boolean isActive( )
   {
@@ -242,7 +242,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isVisible()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isVisible()
    */
   public boolean isVisible( )
   {
@@ -250,7 +250,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
    */
   public ILayerStyle getStyle( )
   {
@@ -258,7 +258,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#setStyle(org.kalypso.swtchart.styles.ILayerStyle)
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
   public void setStyle( ILayerStyle style )
   {
@@ -266,7 +266,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getDomainRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   public IDataRange getDomainRange( )
   {
@@ -288,7 +288,7 @@ public class NiederschlagLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#getValueRange()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueRange()
    */
   public IDataRange getValueRange( )
   {

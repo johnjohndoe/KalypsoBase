@@ -44,14 +44,14 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Plugin;
-import org.kalypso.swtchart.Chart;
-import org.kalypso.swtchart.axis.IAxis;
-import org.kalypso.swtchart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.configuration.StyleLoader;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.ILayerProvider;
-import org.kalypso.swtchart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.chart.configuration.ChartLoader;
+import org.kalypso.swtchart.chart.configuration.StyleLoader;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.ksp.chart.layerstyle.StyleType;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.AxisMappingType;
@@ -91,7 +91,7 @@ public class TestLayerProvider implements ILayerProvider
 
 
 /**
-   * @see org.kalypso.swtchart.layer.ILayerProvider#getLayers()
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
   public IChartLayer[] getLayers( )
   {
