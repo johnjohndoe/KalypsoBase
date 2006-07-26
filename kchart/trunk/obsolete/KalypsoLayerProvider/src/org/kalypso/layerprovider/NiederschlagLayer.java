@@ -104,7 +104,7 @@ public class NiederschlagLayer implements IChartLayer
    */
   public void paint( final GCWrapper gc, final Device dev ) 
   {
-    int size = m_result.size();
+   
     gc.setLineWidth(5);
    // gc.drawLine(0,0, 200, 200);
     System.out.println("Drawing TupleResultChartLayer");
@@ -154,6 +154,7 @@ public class NiederschlagLayer implements IChartLayer
     System.out.println("Used BarInterval: "+barInterval);
     
     //Daten zum Zeichnen durchlaufen
+    int size = m_result.size();
     for( int i = 0; i < size; i++)
     {
       final IRecord r1 = m_result.get( i );
