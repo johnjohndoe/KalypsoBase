@@ -75,7 +75,7 @@ public class SampleData
 
   public static TreeMap<Date, Double> createRandomDatePoints( int size )
   {
-    final TreeMap<Date, Double> data = new TreeMap();
+    final TreeMap<Date, Double> data = new TreeMap<Date, Double>();
     
     long now=System.currentTimeMillis();
     
