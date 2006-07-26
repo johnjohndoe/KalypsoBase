@@ -322,4 +322,32 @@
                </kcls:Border>
           </kcls:Polygon>
      </kcls:Style>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MyFirstTable">
+          <Title>Eine erste Tabelle zum Testen</Title>
+          <Abstract>Das ist der Abstrakt der ersten Tabelle zum Testen</Abstract>
+          <DataSource>http://www.openali.de/kalypso/timeseries.gml</DataSource>
+          <Observation>
+               <Id>wasserstandsmessung</Id>
+          </Observation>
+          <Component>
+               <ItemID>Datum</ItemID>
+          </Component>
+          <Component>
+               <ItemID>Pegelhoehe</ItemID>
+          </Component>
+     </Table>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MySecondTable">
+          <Title>Eine zweite Tabelle zum Testen</Title>
+          <Abstract>Das ist der Abstrakt der zweiten Tabelle zum Testen</Abstract>
+          <DataSource>http://www.openali.de/kalypso/timeseries.gml</DataSource>
+          <Observation>
+               <Id>niederschlagsmessung</Id>
+          </Observation>
+          <Component>
+               <ItemID>Datum</ItemID>
+          </Component>
+          <Component>
+               <ItemID>Niederschlag</ItemID>
+          </Component>
+     </Table>
 </Configuration>

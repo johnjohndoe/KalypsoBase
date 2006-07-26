@@ -21,7 +21,15 @@
 	               </documentation>
 	          </annotation>
 	     </element>
-	     <element name="Component" type="kctc:ComponentType">
+	     <element name="Observation" type="kctc:ObservationType">
+	          <annotation>
+	               <documentation>
+	                    Hier wird die Observation angegeben, deren Ergebnis in der Tabelle erscheinen soll;
+	                    am besten durch eine Id, muss aber noch geprüft werden.(TODO)
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="Component" type="kctc:ComponentType" maxOccurs="unbounded">
 	          <annotation>
 	               <documentation>
 	                    Eine Component ist eine Spalte, die in der Tabelle angezeigt werden soll.
@@ -41,6 +49,17 @@
 	<attribute name="name" type="ID" use="required"></attribute>
 </complexType>
 
+     <complexType name="ObservationType">
+          <annotation>
+               <documentation>
+                    TODO: Überprüfen, wie sich eine Observation am idealsten Beschreiben lässt
+               </documentation>
+          </annotation>
+          <sequence>
+               <element name="Id" type="string"></element>
+          </sequence>
+          
+     </complexType>
 
 
      <complexType name="ComponentType">

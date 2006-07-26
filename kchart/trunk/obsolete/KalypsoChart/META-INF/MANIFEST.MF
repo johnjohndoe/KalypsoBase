@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.commons,
- org.kalypso.jwsdp
+ org.kalypso.jwsdp,
+ org.kalypso.core
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.chart,
@@ -18,13 +19,14 @@ Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.chart.axis.component,
  org.kalypso.swtchart.chart.axis.registry,
  org.kalypso.swtchart.chart.axis.renderer,
- org.kalypso.swtchart.configuration,
  org.kalypso.swtchart.chart.layer,
  org.kalypso.swtchart.chart.layer.impl,
  org.kalypso.swtchart.chart.legend,
  org.kalypso.swtchart.chart.styles,
  org.kalypso.swtchart.chart.util,
  org.kalypso.swtchart.chart.view,
+ org.kalypso.swtchart.configuration,
  org.ksp.chart.layerstyle,
+ org.ksp.chart.tableconfiguration,
  org.ksp.chart.viewerconfiguration
 Bundle-ClassPath: kalypsoChart.jar
