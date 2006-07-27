@@ -545,6 +545,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     return launchAnt( message, "updateCalcCase", null, folder, monitor );
   }
+  /**
+   * Übernimmt das Modell aus der Rechenvariante in das Basismodell
+   */
+  public IStatus setBasicModel( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  {
+    final String message = "Übernehme Rechanvariante in Basismodell";
+
+    return launchAnt( message, "setBasicModel", null, folder, monitor );
+  }
 
   /**
    * Führt eine Transformation auf einer Rechenvariante durch

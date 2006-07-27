@@ -105,6 +105,14 @@
                id="org.kalypso.action.model.getCalcCase">
          </action>
          <action
+               label="%org.kalypso.action.model.setBasicModel.label"
+               icon="icons/elcl16/export-simple-template.gif"
+               tooltip="%org.kalypso.action.model.setBasicModel.tooltip"
+               class="org.kalypso.simulation.ui.actions.SetBasicModelDelegate"
+               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.setBasicModel">
+         </action>
+         <action
                label="%org.kalypso.action.model.updateCalcCaseTimeseries.label"
                icon="icons/elcl16/refreshCalcCase.gif"
                tooltip="%org.kalypso.action.model.updateCalcCaseTimeseries.tooltip"
