@@ -106,12 +106,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
   public void paint( final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen )
   {
-    Image img=paintBuffered(null, dev, axis, screen);
+    Image img=paintBuffered(dev, axis, screen);
     gc.drawImage(img, 0,0);
     img.dispose();
   }
 
-  public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen)
+  public Image paintBuffered(final Device dev, final IAxis<Number> axis, final Rectangle screen)
   {
     Image bufImg=new Image(dev, dev.getBounds());
     GC bufGc=new GC(bufImg);

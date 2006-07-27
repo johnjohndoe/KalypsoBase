@@ -128,6 +128,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     super.setLayout( gridLayout );
     setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
+    
+    
     final int axisContainerStyle = SWT.NONE;
 
     // 1.1

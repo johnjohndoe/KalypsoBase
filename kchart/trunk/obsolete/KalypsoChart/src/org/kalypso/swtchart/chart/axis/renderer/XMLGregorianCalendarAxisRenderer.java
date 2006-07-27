@@ -17,6 +17,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
@@ -128,11 +130,11 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     assert coords != null && coords.length == 4;
     drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
-    //final Collection<Number> ticks = calcTicks( gc, axis );
     m_ticks=calcTicks(bufGcw, axis);
     drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
     drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+
     bufGc.dispose();
     bufGcw.dispose();
     

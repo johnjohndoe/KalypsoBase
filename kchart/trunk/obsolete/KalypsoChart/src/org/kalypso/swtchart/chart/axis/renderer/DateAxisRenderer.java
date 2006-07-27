@@ -113,7 +113,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
   public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen)
   {
-    Image bufImg=new Image(dev, dev.getBounds());
+    Image bufImg=new Image(dev, screen.width, screen.height);
     GC bufGc=new GC(bufImg);
     GCWrapper bufGcw=new GCWrapper(bufGc);
     // paint axis line
@@ -126,6 +126,8 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
     drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+
+    
     bufGc.dispose();
     bufGcw.dispose();
     

@@ -75,7 +75,7 @@ public class ChartUtilities
     gc.setBackground(dev.getSystemColor(SWT.COLOR_WHITE));
     gc.setLineWidth(1);
     gc.setLineStyle(SWT.LINE_SOLID);
-  //  gc.setAlpha(255);
+    gc.setAlpha(255);
   }
   
 

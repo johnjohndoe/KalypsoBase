@@ -257,4 +257,9 @@ public class AxisRegistry implements IAxisRegistry
     final Collection<IAxis> axes = m_axes.values();
     return axes.toArray( new IAxis[ axes.size() ] );
   }
+  
+  public Map<IAxis, IAxisComponent> getComponents()
+  {
+    return m_components;
+  }
 }

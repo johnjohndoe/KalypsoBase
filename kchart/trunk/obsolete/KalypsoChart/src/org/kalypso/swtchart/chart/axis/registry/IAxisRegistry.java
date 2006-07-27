@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis.registry;
 
+import java.util.Map;
+
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.IAxisConstants;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
@@ -84,4 +86,6 @@ public interface IAxisRegistry extends IAxisRegistryEventProvider
   public IAxisComponent getComponent( IAxis axis );
 
   public void setComponent( IAxis axis, IAxisComponent comp );
+  
+  public Map<IAxis, IAxisComponent> getComponents();
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis.component;
 
+import org.eclipse.swt.graphics.Rectangle;
+
 
 /**
  * @author schlienger
@@ -53,4 +55,7 @@ public interface IAxisComponent<T>
   public void dispose( );
 
   public void setVisible( boolean b );
+  
+  public Rectangle getBounds();
+  
 }

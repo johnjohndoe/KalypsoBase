@@ -40,14 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.configuration;
 
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.KalypsoChartExtensions;
+import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.axis.AxisFactory;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.component.AxisComponent;
+import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
+import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;
@@ -155,6 +175,77 @@ public class ChartLoader
         }
     }
     return chart;
+  }
+  
+  /**
+   * Erzeugt das gewünschte Chart und schreibt es in ein Image
+   * @param config Chart-Konfiguration (ge-un-marshallte Konfigurationsdatei)
+   * @param chartname der Name des Charts in der Konfiguration
+   * @param img Das Image, in das das Chart gezeichnet werden soll.
+   */
+    public static void createChartImage (ConfigurationType config, String chartname, Image img) {
+    
+    Display d= Display.getDefault();
+    //Display für Shell kann null sein :-)
+    Shell shell = new Shell( );
+    //shell.setLayout( new FillLayout() );
+    Chart chart = new Chart( null, SWT.NONE );
+ 
+    ChartLoader.createChart(chart, config, chartname);
+    chart.setSize(new Point(img.getBounds().width,img.getBounds().height));
+    chart.layout();
+    chart.update();
+    
+    GCWrapper gcw=new GCWrapper(new GC(img));
+    Image tmpImg=new Image(d, img.getBounds().width, img.getBounds().height);
+    GC tmpGc=new GC(tmpImg);
+    GCWrapper tmpGcw=new GCWrapper(tmpGc);
+    tmpGcw.setBackground(d.getSystemColor(SWT.COLOR_YELLOW));
+    tmpGcw.fillRectangle(0,0,tmpImg.getBounds().width, tmpImg.getBounds().height);
+    
+    //img mit weißem Hintergrund versehen
+    gcw.setBackground(d.getSystemColor(SWT.COLOR_WHITE));
+    gcw.fillRectangle(0,0, img.getBounds().width, img.getBounds().height);
+    
+    
+    //Plot zeichnen
+    Plot plot=(Plot) chart.getPlot();
+    tmpImg=plot.paintChart(d, tmpGcw, img.getBounds(), null);
+    ImageLoader il=new ImageLoader();
+    gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height, plot.getBounds().x, plot.getBounds().y, plot.getBounds().width, plot.getBounds().height);
+    tmpGcw.fillRectangle(0,0,tmpImg.getBounds().width, tmpImg.getBounds().height);
+    
+    
+    IAxisRegistry ar = chart.getAxisRegistry();
+    Map<IAxis, IAxisComponent> components = ar.getComponents();
+    Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
+    for( Entry<IAxis, IAxisComponent> ac : acs )
+    {
+      IAxis axis = ac.getKey();
+      //Casten, damit man auf die Component-Eigenschaften zugreifen kann
+      AxisComponent comp = (AxisComponent) ac.getValue();
+      IAxisRenderer rend=axis.getRenderer();
+      
+      //Wenn man den GC nicht neu erzeugt, werden die AChsen nicht gezeichnet, sondern nochmal das Chart
+      tmpGc.dispose();
+      tmpGcw.dispose();
+      tmpGc=new GC(tmpImg);
+      tmpGcw=new GCWrapper(tmpGc);
+      //den Renderer in den TmpGC-Zeichnen lassen
+      rend.paint(tmpGcw, d, axis, comp.getBounds());
+      /*  ...und ins Endbild kopieren; dabei muss berücksichtigt werden, 
+             dass die Components in 2 Ebenen Tiefe liegen - zur Position muss 
+             noch die der Eltern addiert werden
+      */
+      gcw.drawImage( tmpImg, comp.getBounds().x, comp.getBounds().y , comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x+comp.getBounds().x, comp.getParent().getBounds().y+comp.getBounds().y, comp.getBounds().width, comp.getBounds().height);
+    }
+    
+    chart.dispose();
+    gcw.dispose();
+    tmpGcw.dispose();
+    shell.dispose();
+    tmpImg.dispose();
+    
   }
 
 
