@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.layer.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -48,7 +49,10 @@ import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.ChartUtilities;
@@ -77,6 +81,10 @@ public class TestDateLayer implements IChartLayer
   private final TreeMap<Date, Double> m_values;
   
   private final ILayerStyle m_style=null;
+
+  private String m_name;
+
+  private String m_description;
 
   public TestDateLayer( IAxis domAxis, IAxis valAxis )
   {
@@ -168,41 +176,6 @@ public class TestDateLayer implements IChartLayer
       IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
       IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
     }
-    
-    
-    
-    /*
-    Point[] points=new Point[m_doubles.length];
-    int[] path=new int[2*(m_doubles.length)];
-    
-    //horizontale und vertikale Achse bestimmen Achse
-    IAxis hAxis, vAxis;
-    if (m_domAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
-    {
-        hAxis=m_domAxis;
-        vAxis=m_valAxis;
-    }
-    else
-    {
-      vAxis=m_domAxis;
-      hAxis=m_valAxis;
-    }
-    
-    for( int i = 0; i < m_doubles.length; i++ )
-    {
-      int x1 = hAxis.logicalToScreen( m_doubles[i][0] );
-      int y1 = vAxis.logicalToScreen( m_doubles[i][1] );
-
-
-      points[i]=new Point(x1, y1);
-      path[2*i]=x1;
-      path[2*i+1]=y1;
-      oval.setCenter(new Point(x1,y1));
-      oval.paint();
-    }
-    line.setPath(path);
-    line.paint();
-    */
   }
 
   /**
@@ -251,5 +224,53 @@ public class TestDateLayer implements IChartLayer
     }
     
     return new DataRange<Double>( yMin, yMax );
+  }
+
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
+   */
+  public void drawIcon( Image img, int width, int height )
+  {
+    GC gc=new GC(img);
+    GCWrapper gcw=new GCWrapper(gc);
+    
+    gcw.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_YELLOW));
+    gcw.fillRectangle(0,0,width, height);
+    
+    
+    IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
+    IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+    
+    if (line!=null)
+    {
+      ArrayList<Point> points=new ArrayList<Point>();
+      //Linie von Links nach rechts
+      points.add(new Point(0, (int) height/2));
+      points.add(new Point( width,(int)  height/2));
+      line.setPath(points);
+      line.paint(gcw, Display.getCurrent());
+    }
+    
+    if (point!=null)
+    {
+      ArrayList<Point> points=new ArrayList<Point>();
+      //Linie von Links nach rechts
+      points.add(new Point((int) width/2, (int) height/2));
+      point.setPath(points);
+      point.paint(gcw, Display.getCurrent());
+    }
+    
+    gc.dispose();
+    gcw.dispose();
+    
+  }
+  
+  public void setName(String name) {
+    m_name=name;
+  }
+
+  public void setDescription(String description) {
+      m_description=description;
   }
 }

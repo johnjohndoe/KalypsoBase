@@ -42,9 +42,11 @@ package org.kalypso.swtchart.chart.layer.impl;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.ChartUtilities;
@@ -55,8 +57,6 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
-import org.kalypso.swtchart.chart.styles.StyledLine;
-import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
@@ -74,6 +74,10 @@ public class TestLayer implements IChartLayer
 
   private ArrayList<Point> m_screenPoints;
 
+  private String m_name;
+
+  private String m_description;
+
   public TestLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
@@ -88,7 +92,38 @@ public class TestLayer implements IChartLayer
    */
   public String getName( )
   {
-    return "TestLayer";
+    return m_name;
+  }
+  
+  public void drawIcon(Image img, int width, int height)
+  {
+      GC gc=new GC(img);
+      GCWrapper gcw=new GCWrapper(gc);
+      
+      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
+      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+      
+      if (line!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point(0, (int) height/2));
+        points.add(new Point( width,(int)  height/2));
+        line.setPath(points);
+        line.paint(gcw, Display.getCurrent());
+      }
+      
+      if (point!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point((int) width/2, (int) height/2));
+        point.setPath(points);
+        point.paint(gcw, Display.getCurrent());
+      }
+      
+      gc.dispose();
+      gcw.dispose();
   }
 
   /**
@@ -271,4 +306,12 @@ public class TestLayer implements IChartLayer
 
     return new DataRange<Number>( yMin, yMax );
   }
+  
+  public void setName(String name) {
+    m_name=name;
+}
+
+public void setDescription(String description) {
+    m_description=description;
+}
 }

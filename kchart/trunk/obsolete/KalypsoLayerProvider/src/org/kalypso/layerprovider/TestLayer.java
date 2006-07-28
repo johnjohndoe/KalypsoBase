@@ -44,6 +44,7 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.math.SampleData;
@@ -75,6 +76,10 @@ public class TestLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
+private String m_name;
+
+private String m_description;
+
   public TestLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
@@ -88,7 +93,7 @@ public class TestLayer implements IChartLayer
    */
   public String getName( )
   {
-    return "TestStackLayer";
+    return m_name;
   }
 
   /**
@@ -96,7 +101,7 @@ public class TestLayer implements IChartLayer
    */
   public String getDescription( )
   {
-    return "Keine Beschreibung";
+    return m_description;
   }
 
   /**
@@ -346,4 +351,19 @@ public class TestLayer implements IChartLayer
 
     return new DataRange<Number>( yMin, yMax );
   }
+
+public void drawIcon(Image img, int width, int height) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+public void setName(String name) {
+	m_name=name;
+}
+
+public void setDescription(String description) {
+	m_description=description;
+}
+
 }

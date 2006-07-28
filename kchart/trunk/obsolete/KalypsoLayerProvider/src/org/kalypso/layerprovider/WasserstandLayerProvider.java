@@ -148,7 +148,7 @@ public class WasserstandLayerProvider implements ILayerProvider
              
              WasserstandLayer wl=new WasserstandLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
              wl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
-             
+             wl.setName(ce.getName());
              icl[0]=wl;
           }
           

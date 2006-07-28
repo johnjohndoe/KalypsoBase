@@ -13,7 +13,7 @@
                <DataSource>
                     <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Die erste Datenreihe">
                     <AxisMapping>
                          <Domain axisLink="Width_Axis" equation="Breite"/>
                          <Value axisLink="Height_Axis" equation="Hoehe"/>
@@ -25,7 +25,7 @@
                <DataSource>
                     <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Die zweite Datenreihe">
                     <AxisMapping>
                          <Domain axisLink="Width_Axis" equation="Breite"/>
                          <Value axisLink="Height_Axis" equation="Hoehe"/>
@@ -37,7 +37,7 @@
                <DataSource>
                     <Url>/home/alibu/dev/kalypso_workspace312/KalypsoContributionsOGC31/etc/examples/example-timeserie/_timeseriesNoDict.gml#wasserstandsmessung</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Die dritte Datenreihe">
                     <AxisMapping>
                          <Domain axisLink="Width_Axis" equation="Breite"/>
                          <Value axisLink="Precipitation_Axis" equation="Hoehe"/>
@@ -87,7 +87,7 @@
                <DataSource>
                     <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Wasserstand">
                     <AxisMapping>
                          <Domain axisLink="Datum_Axis" equation="Datum"/>
                          <Value axisLink="Wasserstand_Axis" equation="Wasserstand"/>
@@ -99,7 +99,7 @@
                <DataSource>
                     <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="WQTabelle">
                     <AxisMapping>
                          <Domain axisLink="WasserstandNN_Axis" equation="Wasserstand"/>
                          <Value axisLink="Abfluss_Axis" equation="Abfluss"/>
@@ -115,7 +115,7 @@
                <Parameter name="fixedPoint" value="2004-01-01T00:00:00Z"/>
                <!-- Die Breite eines Bars in Millisekunden -->
                <Parameter name="barInterval" value="86400000"/>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Niederschlag">
                     <AxisMapping>
                          <Domain axisLink="Datum_Axis" equation="Datum"/>
                          <Value axisLink="Niederschlag_Axis" equation="Wasserstand"/>
@@ -127,7 +127,7 @@
                <DataSource>
                     <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
-               <ChartElement name="DEFAULT">
+               <ChartElement name="Alarmstufen">
                     <AxisMapping>
                          <Value axisLink="Wasserstand_Axis" equation=""/>
                     </AxisMapping>
@@ -172,79 +172,7 @@
           </DateAxis>
      </Chart>
      
-     <Chart name="Test2">
-     	  <Title>Ein weiterer Testeintrag</Title>
-     	  <Abstract>
-     	  	Mit diesem Eintrag sollen die Erweiterung der Chart-LayerProvider über Eclipse-Extensions getestet werden
-     	  </Abstract>
-          <LayerProvider name="org.kalypso.chart.layerprovider.AliLayerProvider">
-               <DataSource>
-                    <Url></Url>
-               </DataSource>
-               <ChartElement>
-                    <AxisMapping>
-                         <Domain axisLink="Ali_Axis1" equation="Lala"/>
-                         <Value axisLink="Ali_Axis2" equation="Lulu"/>
-                    </AxisMapping>
-                    <StyleLink ref="Bar_Style_Red"/>
-               </ChartElement>
-          </LayerProvider>
-          <LayerProvider name="org.kalypso.chart.layerprovider.AliLayerProvider">
-               <DataSource>
-                    <Url></Url>
-               </DataSource>
-               <ChartElement>
-                    <AxisMapping>
-                         <Domain axisLink="Ali_Axis3" equation="Lala"/>
-                         <Value axisLink="Ali_Axis4" equation="Lulu"/>
-                    </AxisMapping>
-                    <StyleLink ref="Bar_Style_Blue"/>
-               </ChartElement>
-          </LayerProvider>
-
-          <LayerProvider name="TotallyNewLP.provider">
-               <DataSource>
-                    <Url></Url>
-               </DataSource>
-               <ChartElement>
-                    <AxisMapping>
-                         <Domain axisLink="Ali_Axis3" equation="Lala"/>
-                         <Value axisLink="Ali_Axis4" equation="Lulu"/>
-                    </AxisMapping>
-                    <StyleLink ref="Line_Style"/>
-               </ChartElement>
-          </LayerProvider>
-         
-          <DoubleAxis id="Ali_Axis1">
-               <Name>Achse unten</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>BOTTOM</Position>
-               <MinVal>-20</MinVal>
-               <MaxVal>120</MaxVal>
-          </DoubleAxis>
-          <DoubleAxis id="Ali_Axis2">
-               <Name>Achse links</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>LEFT</Position>
-               <MinVal>-2</MinVal>
-               <MaxVal>+2</MaxVal>
-          </DoubleAxis>
-          <DoubleAxis id="Ali_Axis4">
-               <Name>Achse unten</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>TOP</Position>
-               <MinVal>-2</MinVal>
-               <MaxVal>+2</MaxVal>
-          </DoubleAxis>
-          <DoubleAxis id="Ali_Axis3">
-               <Name>Achse links</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>RIGHT</Position>
-               <MinVal>-20</MinVal>
-               <MaxVal>+120</MaxVal>
-          </DoubleAxis>
-     </Chart>
-
+    
      <kcls:Style id="Wasserstand_Style">
           
           <kcls:Line>

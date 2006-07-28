@@ -50,8 +50,12 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -63,6 +67,7 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.impl.DataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
@@ -87,6 +92,10 @@ public class NiederschlagLayer implements IChartLayer
   private ILayerStyle m_style;
 
   private final List<ParameterType> m_parameters;
+
+private String m_name;
+
+private String m_description;
 
   public NiederschlagLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
   {
@@ -199,7 +208,7 @@ public class NiederschlagLayer implements IChartLayer
    */
   public String getName( )
   {
-    return "test";
+    return "Niederschlag";
   }
 
   /**
@@ -307,4 +316,38 @@ public class NiederschlagLayer implements IChartLayer
     }
    return new DataRange(min, max);
   }
+
+  public void drawIcon(Image img, int width, int height)
+  {
+      GC gc=new GC(img);
+      GCWrapper gcw=new GCWrapper(gc);
+      
+      
+      IStyledElement poly=m_style.getElement(SE_TYPE.POLYGON, 0);
+      
+
+      
+      if (poly!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point((int) (width*0.2), (int) (height*0.2)));
+        points.add(new Point((int) (width*0.2), (int) (height*0.8)));
+        points.add(new Point((int) (width*0.8), (int) (height*0.8)));
+        points.add(new Point((int) (width*0.8), (int) (height*0.2)));
+        poly.setPath(points);
+        poly.paint(gcw, Display.getCurrent());
+      }
+      
+      gc.dispose();
+      gcw.dispose();
+  }
+  
+  public void setName(String name) {
+		m_name=name;
+	}
+
+	public void setDescription(String description) {
+		m_description=description;
+	}
 }

@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -423,6 +424,8 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
   {
     return m_maxTickLabelExtent.y;
   }
+  
+
 
 
 

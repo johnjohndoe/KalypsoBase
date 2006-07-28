@@ -72,6 +72,8 @@ import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.ILayerManager;
 import org.kalypso.swtchart.chart.layer.impl.DataRange;
+import org.kalypso.swtchart.chart.legend.DefaultLegendItem;
+import org.kalypso.swtchart.chart.legend.Legend;
 
 /**
  * @author schlienger
@@ -102,6 +104,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   private final Color m_white;
   private final Color m_black;
 
+   
+  
 
   public Chart( Composite parent, int style )
   {
@@ -113,6 +117,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     
     addListener( SWT.Resize, this );
     m_axisRegistry.addAxisRegistryEventListener( this );
+    
   }
   
 
@@ -259,7 +264,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   public void addLayer( final IChartLayer layer )
   {
     m_layers.add( layer );
-
     updateAxisLayerMap( layer, true );
 
     if( m_autoscale )
@@ -373,6 +377,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     m_layers.remove( layer );
 
+    //TODO: das LegendItem muss gelöscht werden
+    
     if( m_autoscale )
       autoscale( null );
 
@@ -406,7 +412,10 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     redraw();
   }
 
-  protected List<IChartLayer> getLayers( )
+  /**
+   * Gibt die Liste der Layer zurück
+   */
+  public List<IChartLayer> getLayers( )
   {
     return m_layers;
   }
@@ -437,6 +446,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       return m_white;
   }
   
+
 
 
 }

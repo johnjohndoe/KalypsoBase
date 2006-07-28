@@ -41,6 +41,7 @@
 package org.kalypso.swtchart.chart.layer;
 
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
@@ -51,8 +52,10 @@ import org.kalypso.swtchart.chart.styles.ILayerStyle;
  */
 public interface IChartLayer
 {
+  public void setName(String name);
   public String getName();
   
+  public void setDescription(String description);
   public String getDescription();
   
   public IAxis getDomainAxis();
@@ -62,6 +65,8 @@ public interface IChartLayer
   public IDataRange getValueRange( );
   
   public ILegendItem getLegendItem();
+  
+  public void drawIcon(Image img, int width, int height);
   
   public boolean isActive();
   //public void setActive( boolean active );

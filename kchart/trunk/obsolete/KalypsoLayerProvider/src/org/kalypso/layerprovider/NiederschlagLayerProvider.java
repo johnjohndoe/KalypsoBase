@@ -149,6 +149,7 @@ public class NiederschlagLayerProvider implements ILayerProvider
              
              NiederschlagLayer trcl=new NiederschlagLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
              trcl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
+             trcl.setName(ce.getName());
              
              icl[0]=trcl;
           }

@@ -44,8 +44,11 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -74,6 +77,10 @@ public class TestStackLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
+  private String m_name;
+
+  private String m_description;
+
   public TestStackLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
@@ -87,7 +94,7 @@ public class TestStackLayer implements IChartLayer
    */
   public String getName( )
   {
-    return "TestStackLayer";
+    return m_name;
   }
 
   /**
@@ -95,7 +102,7 @@ public class TestStackLayer implements IChartLayer
    */
   public String getDescription( )
   {
-    return "Keine Beschreibung";
+    return m_description;
   }
 
   /**
@@ -345,4 +352,37 @@ public class TestStackLayer implements IChartLayer
 
     return new DataRange<Number>( yMin, yMax );
   }
+  
+  public void drawIcon(Image img, int width, int height)
+  {
+      GC gc=new GC(img);
+      GCWrapper gcw=new GCWrapper(gc);
+      
+      IStyledElement poly=m_style.getElement(SE_TYPE.POLYGON, 0);
+      
+
+      
+      if (poly!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point((int) (width*0.2), (int) (height*0.2)));
+        points.add(new Point((int) (width*0.2), (int) (height*0.8)));
+        points.add(new Point((int) (width*0.8), (int) (height*0.8)));
+        points.add(new Point((int) (width*0.8), (int) (height*0.2)));
+        poly.setPath(points);
+        poly.paint(gcw, Display.getCurrent());
+      }
+      
+      gc.dispose();
+      gcw.dispose();
+  }
+  
+  public void setName(String name) {
+    m_name=name;
+}
+
+public void setDescription(String description) {
+    m_description=description;
+}
 }

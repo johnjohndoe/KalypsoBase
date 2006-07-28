@@ -68,6 +68,7 @@
 
      <complexType name="LayerProviderType">
           <sequence>
+          	 
                <element ref="kcvc:DataSource" minOccurs="1" maxOccurs="unbounded"/>
                <element ref="kcvc:Parameter" minOccurs="0" maxOccurs="unbounded"></element>
                <element ref="kcvc:ChartElement" minOccurs="1" maxOccurs="unbounded"/>
@@ -86,13 +87,13 @@
      <element name="ChartElement" type="kcvc:ChartElementType">
           <annotation>
                <documentation> Ein ChartElement ist ein im Chart sichtbarer Datensatz,
-                    beispielsweise eine Zeitreihen- oder Profilline; </documentation>
+                    beispielsweise eine Zeitreihen- oder Profilline; 
+               </documentation>
           </annotation>
      </element>
 
      <complexType name="ChartElementType">
           <sequence>
-
                <element name="AxisMapping">
                     <annotation>
                          <documentation> Hier werden dem Datensatz die Achsen zugewiesen

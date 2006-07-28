@@ -46,7 +46,10 @@ import java.util.List;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -57,6 +60,7 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.impl.DataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
@@ -81,6 +85,9 @@ public class TupleResultLineChartLayer implements IChartLayer
   private ILayerStyle m_style;
 
 private List<ParameterType> m_params;
+
+private String m_name="No name given";
+private String m_description="No description given";
 
   public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> params )
   {
@@ -134,12 +141,14 @@ private List<ParameterType> m_params;
     }
   }
 
+  
+  
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
    */
   public String getName( )
   {
-    return "test";
+    return m_name;
   }
 
   /**
@@ -147,7 +156,7 @@ private List<ParameterType> m_params;
    */
   public String getDescription( )
   {
-    return "";
+    return m_description;
   }
 
   /**
@@ -247,4 +256,43 @@ private List<ParameterType> m_params;
     }
    return new DataRange(min, max);
   }
+
+  public void drawIcon(Image img, int width, int height)
+  {
+      GC gc=new GC(img);
+      GCWrapper gcw=new GCWrapper(gc);
+      
+      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
+      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+      
+      if (line!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point(0, (int) height/2));
+        points.add(new Point( width,(int)  height/2));
+        line.setPath(points);
+        line.paint(gcw, Display.getCurrent());
+      }
+      
+      if (point!=null)
+      {
+        ArrayList<Point> points=new ArrayList<Point>();
+        //Linie von Links nach rechts
+        points.add(new Point((int) width/2, (int) height/2));
+        point.setPath(points);
+        point.paint(gcw, Display.getCurrent());
+      }
+      
+      gc.dispose();
+      gcw.dispose();
+  }
+
+public void setName(String name) {
+	m_name=name;
+}
+
+public void setDescription(String description) {
+	m_description=description;
+}
 }

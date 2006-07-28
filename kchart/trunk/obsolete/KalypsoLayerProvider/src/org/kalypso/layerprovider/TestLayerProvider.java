@@ -121,6 +121,7 @@ public class TestLayerProvider implements ILayerProvider
       ILayerStyle ls=StyleLoader.createStyle(st);
       
       cl.setStyle(ls);
+      cl.setName(ce.getName());
       
       layers.add(cl);
       

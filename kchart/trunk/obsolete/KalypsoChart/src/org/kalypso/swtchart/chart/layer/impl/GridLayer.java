@@ -44,6 +44,7 @@ import java.util.Collection;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.math.SampleData;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
@@ -66,6 +67,10 @@ public class GridLayer implements IChartLayer
   private final IAxis m_domAxis;
 
   private final IAxis m_valAxis;
+
+  private String m_name;
+
+  private String m_description;
 
 
   public GridLayer( IAxis domAxis, IAxis valAxis )
@@ -219,5 +224,23 @@ public class GridLayer implements IChartLayer
   public IDataRange getValueRange( )
   {
     return null;
+  }
+
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
+   */
+  public void drawIcon( Image img, int width, int height )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  public void setName(String name) {
+    m_name=name;
+  }
+  
+  public void setDescription(String description) {
+      m_description=description;
   }
 }

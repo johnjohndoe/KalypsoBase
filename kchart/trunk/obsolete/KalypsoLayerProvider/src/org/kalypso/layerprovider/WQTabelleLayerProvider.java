@@ -147,6 +147,7 @@ IChartLayer[] icl=new IChartLayer[1];
              List<ParameterType> parameter = m_lp.getParameter(); 
              TupleResultLineChartLayer trcl=new TupleResultLineChartLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
              trcl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
+             trcl.setName(ce.getName());
              icl[0]=trcl;
           }
         }

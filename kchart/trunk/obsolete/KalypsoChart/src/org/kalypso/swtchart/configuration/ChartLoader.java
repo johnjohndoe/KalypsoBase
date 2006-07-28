@@ -188,8 +188,9 @@ public class ChartLoader
     Display d= Display.getDefault();
     //Display für Shell kann null sein :-)
     Shell shell = new Shell( );
-    //shell.setLayout( new FillLayout() );
-    Chart chart = new Chart( null, SWT.NONE );
+    shell.setLayout( new FillLayout() );
+    //Display für Shell darf nicht null sein :-(
+    Chart chart = new Chart( shell, SWT.NONE );
  
     ChartLoader.createChart(chart, config, chartname);
     chart.setSize(new Point(img.getBounds().width,img.getBounds().height));
