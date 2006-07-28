@@ -41,17 +41,33 @@
 package org.kalypso.services.ods.tools;
 
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.Plot;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.swtchart.configuration.TableLoader;
+import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author alibu
@@ -62,6 +78,11 @@ public class DebugView extends ViewPart implements PaintListener
   
   Composite m_composite;
   private Canvas m_canvas;
+//Pfad zu CapabilitiesDatei
+  String m_pathCaps="/home/alibu/dev/workspace32/KalypsoServiceODS/etc/binding/examples/Capabilities.xml";
+  //Pfad zur Config-Datei
+  String m_pathVC="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+  Image m_chartImage;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -72,42 +93,70 @@ public class DebugView extends ViewPart implements PaintListener
     
     m_canvas = new Canvas( parent, SWT.FILL );
     m_canvas.setLayout( new FillLayout() );
-   // final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
-   // m_canvas.setLayoutData( pad );
     m_canvas.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
     m_canvas.addPaintListener( this );
-    m_canvas.setSize( 200,200 );
-    
-    GC gc = new GC(m_canvas);
-    Display d=parent.getDisplay();
-    gc.setForeground( d.getSystemColor(SWT.COLOR_YELLOW) );
-    gc.setBackground( d.getSystemColor(SWT.COLOR_BLUE) );
-    gc.setLineWidth( 5 );
-    
-    Rectangle canvRect=m_canvas.getBounds();
-    System.out.println(canvRect.toString());
-    gc.fillRectangle( canvRect );
-    gc.drawLine(0,0,100,100);
     
     
-    
-    gc.dispose();
-    
-    
-    
-    
-    //Capabilities auslesen
-    String pathCaps="/home/alibu/dev/workspace32/KalypsoServiceODS/etc/binding/examples/Capabilities.xml";
-    String pathVC="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
-    
-    ParseFile pf = new ParseFile(pathCaps, pathVC);
-    pf.mergeConfigIntoODS();
-    String capsxml = pf.getCapsString();
-    //System.out.println(capsxml);
-    
+    int width=300;
+    int height=200;
+    m_chartImage=new Image(Display.getDefault(), width, height);  
+    createChart("WasserstandEtc", m_chartImage);
+    createChart("Test", m_chartImage);
     
   }
+  
+  /**
+   * Capabilities auslesen und ausgeben
+   */
+  public void getCapabilities()
+  {
+    ParseFile pf = new ParseFile(m_pathCaps, m_pathVC);
+    pf.mergeConfigIntoODS();
+    String capsxml = pf.getCapsString();
+    System.out.println(capsxml);
+  }
+  
+  /**
+   * Testmethode zur Ausgabe einer Tabelle aus einem 
+   */
+  public void getHTMLTable()
+  {
+   
+    
+    //HTMLTabelle erzeugen
+    ConfigurationLoader cl=new ConfigurationLoader(m_pathVC);
+    String htmltable = TableLoader.createTable(cl.getConfiguration(), "MyFirstTable");
+    System.out.println(htmltable);
+    //  und noch eine HTMLTabelle erzeugen
+    String htmltable2 = TableLoader.createTable(cl.getConfiguration(), "MySecondTable");
+    System.out.println(htmltable2);
+  }
 
+  
+  /**
+   * Chart erzeugen
+   * @see org.eclipse.ui.IWorkbenchPart#dispose()
+   */
+  public static Image createChart (String chartname, Image img) {
+    
+    Display d= Display.getDefault();
+    //Display für Shell kann null sein :-)
+    String confpath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+    ConfigurationLoader cl=new ConfigurationLoader(confpath);
+    ConfigurationType config = cl.getConfiguration();
+    ChartLoader.createChartImage(config, chartname, img);
+    
+    
+    return  img;
+    
+  }
+  
+  
+  
+  
+  
+  
+  
   @Override
   public void dispose()
   {
@@ -120,6 +169,11 @@ public class DebugView extends ViewPart implements PaintListener
     {
       m_canvas.dispose();
       m_canvas=null;
+    }
+    if (m_chartImage!=null)
+    {
+      m_chartImage.dispose();
+      m_chartImage=null;
     }
     super.dispose();
   }
@@ -140,11 +194,14 @@ public class DebugView extends ViewPart implements PaintListener
   public void paintControl( PaintEvent e )
   {
     GC gc=e.gc;
-    gc.setBackground( e.display.getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setBackground( e.display.getSystemColor( SWT.COLOR_WHITE ) );
     gc.setForeground( e.display.getSystemColor( SWT.COLOR_BLACK ) );
-    gc.setLineWidth( 5 );
-    gc.drawLine( 0,0,100,100);
+    gc.drawString("Ich bin nur zum Testen da.", 100, 100);
     
+    if (m_chartImage!=null)
+    {
+      gc.drawImage(m_chartImage, 0, 0);
+    }
     
   }
 

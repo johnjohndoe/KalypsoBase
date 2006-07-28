@@ -53,6 +53,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.tools.HTMLTools;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.swtchart.configuration.TableLoader;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author alibu
@@ -68,29 +71,25 @@ public class GetHTMLTable implements IODSOperation
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
-    final PrintWriter out=response.getWriter();
-    out.println(HTMLTools.getHTMLHeader( "GetHTMLTable Operation" ));
-    out.println("Operation not implemented yet.");
-    out.println("But -- check out this test table: <br>");
-    
-    //TestTabelle erstellen
-    LinkedList<LinkedList<String>> table=new LinkedList<LinkedList<String>>();
-    String testString="Hallo Du hier ist ein Satz der ganz geschickt auf die einzelnen Zellen einer Tabelle verteilt wurde. Ich hoffe, dass Du dich wenigstens ein bisschen darueber freust.";
-    String[] words = testString.split( " " );
-    int rowlength=4;
-    LinkedList<String> row=new LinkedList<String>();
-    for (int i=0;i<words.length;i++)
+    String name=request.getParameter( "NAME" );
+    if (name!=null)
     {
-        row.add( words[i] );
-        if (i%rowlength==(rowlength-1) || i==words.length-1)
-        {
-            LinkedList<String> tmp= (LinkedList<String>) row.clone();
-            table.add(tmp);
-            row.clear();
-        }
+//    HTMLTabelle erzeugen
+      String pathVC="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
+      ConfigurationLoader cl=new ConfigurationLoader(pathVC);
+      //GMLWorkspace initialisieren
+      KalypsoGisPlugin.getDefault();
+      String htmltable = TableLoader.createTable(cl.getConfiguration(), name);
+
+      response.setContentType( "text/html" );
+      final PrintWriter out=response.getWriter();
+      if (htmltable!=null)
+        out.write( htmltable );
+      else
+        out.write( "Error" );
+      out.close();
+        
     }
-    out.println(HTMLTools.getHTMLTable( table ));
-    out.println(HTMLTools.getHTMLFooter());
-    out.close();
+    
   }
 }

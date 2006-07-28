@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,
  org.kalypso.chart,
  org.eclipse.ui.views,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.kalypso.ui
 Eclipse-LazyStart: true
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0"

@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 /*
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -65,6 +71,10 @@ public class ODSServlet extends HttpServlet implements Servlet
           GetLegend gl=new GetLegend();
           gl.operate( request, response );
         }
+        else
+        {
+          oldDoGet( request, response );
+        }
       }
     
     
@@ -75,7 +85,7 @@ public class ODSServlet extends HttpServlet implements Servlet
   /**
    * Das ist die alte Testklasse von Gernot; ich lasse sie hier drin, damit ich mich später evtl daran orientieren kann.
    */
-  /*
+  
   private void oldDoGet(final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing swt servlet", null ) );
@@ -111,6 +121,6 @@ public class ODSServlet extends HttpServlet implements Servlet
         display.dispose();
     }
   }
-  */
+  
 
 }

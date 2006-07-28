@@ -44,6 +44,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.GregorianCalendar;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
@@ -52,6 +53,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 /*
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -60,8 +70,15 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 */
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.tools.HTMLTools;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.Plot;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author alibu
@@ -77,83 +94,75 @@ public class GetChart implements IODSOperation
   public void operate( HttpServletRequest request, HttpServletResponse response )
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
-
-    /*
-
-    Display display = null;
-    OutputStream outputStream = null;
-
-    try
+    System.out.println("---------------GetChart.operate--------------------");
+    
+    int width=300;
+    int height=200;
+    String reqWidth=request.getParameter( "WIDTH" );
+    String reqHeight=request.getParameter( "HEIGHT" );
+    String reqName=request.getParameter( "NAME" );
+    if (reqWidth!=null)
+      width=Integer.parseInt( reqWidth );
+    if (reqHeight!=null)
+      height=Integer.parseInt( reqHeight );
+  //  Display disp=Display.getDefault();
+    Display disp=Display.getDefault();
+    Image chartImage=new Image(disp, width, height);
+    
+    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if (reqName!=null)
     {
-      
-      // Grösse des Ausgabebildes bestimmen
-      String widthStr = request.getParameter(  "width" );
-      String heightStr = request.getParameter(  "height" );
-      int width=200;
-      int height=150;
-      if (widthStr!=null)
+      createChart(reqName, chartImage);
+    
+      BufferedOutputStream outputStream;
+      try
       {
-        width=Integer.parseInt( widthStr );
+        response.setContentType( "image/jpeg" );
+        ImageLoader il=new ImageLoader();
+        ImageData id=chartImage.getImageData();
+        il.data=new ImageData[]{id};
+        outputStream = new BufferedOutputStream( response.getOutputStream() );
+        il.save( outputStream, SWT.IMAGE_JPEG );
+        outputStream.close();
       }
-      if (heightStr!=null)
+      catch( IOException e )
       {
-        height=Integer.parseInt( heightStr );
+        e.printStackTrace();
       }
-      
-      response.setContentType( "image/jpeg" );
-      display = new Display();
-
-      final Image img = new Image( display, width, height );
-
-      final GC gc = new GC( img );
-      gc.setBackground( display.getSystemColor( SWT.COLOR_GREEN ) );
-      gc.fillRectangle( img.getBounds() );
-      gc.dispose();
-
-      final ImageLoader il = new ImageLoader();
-      il.data = new ImageData[] { img.getImageData() };
-
-      outputStream = new BufferedOutputStream( response.getOutputStream() );
-      il.save( outputStream, SWT.IMAGE_JPEG );
-      outputStream.close();
+     
     }
-    catch (Exception e) {
-        response.setContentType( "text/html" );
-        PrintWriter writer;
-        try
-        {
-          writer = response.getWriter();
-          writer.println(HTMLTools.getHTMLHeader( "GetChartOperation" ));
-          writer.println("Problems occured during execution of GetChart-Operation");
-          
-          writer.println(HTMLTools.getHTMLFooter(  ));
-          writer.close();
-        }
-        catch( IOException e1 )
-        {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
-        }
-        
-        
-    }
-    finally
-    {
-      if( outputStream != null )
-      {
-        try
-        {
-          outputStream.close();
-        }
-        catch( IOException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-      if( display != null )
-        display.dispose();
-    }
-    */
+    
+    
+    chartImage.dispose();
+
   }
+ 
+  /*
+  * Chart erzeugen
+  * @see org.eclipse.ui.IWorkbenchPart#dispose()
+  */
+ public static void createChart (String chartname, Image img) {
+   
+   
+   //GMLWorkspace initialisieren
+   KalypsoGisPlugin.getDefault();
+   
+   
+   String confpath="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
+   ConfigurationLoader cl=new ConfigurationLoader(confpath);
+   ConfigurationType config = cl.getConfiguration();
+   img=ChartLoader.createChartImage( config, chartname, img );
+   
+   /*
+   ImageLoader il=new ImageLoader();
+   il.data=new ImageData[]{img.getImageData()};
+   long timeInMillis = GregorianCalendar.getInstance().getTimeInMillis();
+   il.save("/home/alibu/Desktop/chartImg"+chartname+timeInMillis+".jpg", SWT.IMAGE_JPEG);
+   */
+   
+
+   
+   
+ }
+ 
 }
