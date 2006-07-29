@@ -55,7 +55,7 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
  * @author alibu
  *
  */
-public class LegendImage 
+public class LegendImageContainer 
 {
   
   Image m_img=null;
@@ -69,7 +69,7 @@ public class LegendImage
    * 
    * Das Objekt muss nach der Verwendung diposed werden 
    */
-  public LegendImage(ConfigurationType config,  String chartname, Device dev)
+  public LegendImageContainer(ConfigurationType config,  String chartname, Device dev)
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
@@ -82,9 +82,13 @@ public class LegendImage
     //Größe berechnen lassen
     Point size = legend.computeSize(0, 0);
     m_img=new Image(dev, size.x, size.y);
-    
+    int height=size.x;
+    int width=size.y;
+    if (width> 0 && height>0)
+    {
     // Legende zeichnen
-    legend.drawImage( m_img, Display.getDefault() );    
+        legend.drawImage( m_img, dev );
+    }
     legend.dispose();
     shell.dispose();
   }
@@ -92,7 +96,7 @@ public class LegendImage
   /**
    * Wenn man schon ein fertiges Chart hat, kann man auch leichter konstruieren
    */
-  public LegendImage(Chart chart, Device dev)
+  public LegendImageContainer(Chart chart, Device dev)
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
