@@ -40,42 +40,109 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ods.operation;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
 
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.core.internal.jobs.OrderedLock;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.tools.HTMLTools;
+import org.kalypso.swtchart.chart.legend.LegendImageContainer;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author alibu
  *
  */
-public class GetLegend implements IODSOperation
+public class GetLegend implements IODSOperation, Runnable
 {
+
+  private HttpServletRequest m_request;
+  private HttpServletResponse m_response;
 
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
+ public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
 
-    final PrintWriter out=response.getWriter();
-    out.println(HTMLTools.getHTMLHeader( "GetLegend Operation" ));
-    out.println("Operation not implemented yet.<br>");
     
-    out.println(HTMLTools.getHTMLFooter());
-    out.close();
-    
+    String reqName = request.getParameter( "NAME" );
+    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if (reqName!=null)
+    {
+      Display display=null;
+      BufferedOutputStream outputStream=null;
+      LegendImageContainer lic=null;
+      try
+      {
+          KalypsoGisPlugin.getDefault();
+          String confpath="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
+          ConfigurationLoader cl=new ConfigurationLoader(confpath);
+          ConfigurationType config = cl.getConfiguration();
+          display=Display.getDefault();
+          lic = new LegendImageContainer(config, reqName, display);
+          Image legendImg=lic.getImage();
+          
+          if (legendImg!=null)
+          {
+            response.setContentType( "image/jpeg" );
+            ImageLoader il=new ImageLoader();
+            ImageData id=legendImg.getImageData();
+            il.data=new ImageData[]{id};
+            outputStream = new BufferedOutputStream( response.getOutputStream() );
+            il.save( outputStream, SWT.IMAGE_JPEG );
+            outputStream.close();
+          }
+          
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        if (display!=null && !display.isDisposed())
+          display.dispose();
+        if (lic!=null)
+          lic.dispose();
+        if (outputStream!=null)
+          outputStream.close();
+      }
+     
+    }
   }
-  
+ 
+ public void init(HttpServletRequest request, HttpServletResponse response)
+ {
+   m_request=request;
+   m_response=response;
+ }
+
+  /**
+   * @see java.lang.Runnable#run()
+   */
+  public void run( )
+  {
+    try
+    {
+      operate( m_request, m_response );
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+  }  
 }

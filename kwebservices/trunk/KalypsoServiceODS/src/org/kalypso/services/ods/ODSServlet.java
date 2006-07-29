@@ -6,9 +6,11 @@ package org.kalypso.services.ods;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,19 +49,24 @@ public class ODSServlet extends HttpServlet implements Servlet
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-      
+      //Gewünschte Operation ausführen
       String odsrequest=request.getParameter( "REQUEST" );
-      if (odsrequest!=null)
+      //Natürlich nur, wenn als Service auch ODS angegeben ist
+      String service=request.getParameter( "SERVICE" );
+      if (odsrequest!=null && service!=null && service.compareTo( "ODS" )==0)
       {
         if (odsrequest.compareTo( "GetCapabilities" )==0)
         {
           GetCapabilites gc=new GetCapabilites();
           gc.operate( request, response );
         }
-        else if (odsrequest.compareTo( "GetChart" )==0)
+        else if (odsrequest.compareTo( "GetDiagram" )==0)
         {
+          //heisst hier noch GetChart
           GetChart gc=new GetChart();
-          gc.operate( request, response );
+          gc.init( request, response );
+          Display.getDefault().syncExec( gc );
+          //gc.operate( request, response );
         }
         else if (odsrequest.compareTo( "GetHTMLTable" )==0)
         {
@@ -69,14 +76,18 @@ public class ODSServlet extends HttpServlet implements Servlet
         else if (odsrequest.compareTo( "GetLegend" )==0)
         {
           GetLegend gl=new GetLegend();
-          gl.operate( request, response );
+          gl.init( request, response );
+          Display.getDefault().syncExec( gl );
+          //gl.operate( request, response );
         }
         else
         {
-          oldDoGet( request, response );
+          //oldDoGet( request, response );
+          ServletConfig sc = getServletConfig();
+          Enumeration ipns = sc.getInitParameterNames();
+          System.out.println(ipns.toString())   ;
         }
       }
-    
     
 
   }
@@ -97,7 +108,7 @@ public class ODSServlet extends HttpServlet implements Servlet
 
     try
     {
-      display = new Display();
+      display = Display.getDefault();
       final Image img = new Image( display, 50, 50 );
 
       final GC gc = new GC( img );
@@ -116,9 +127,9 @@ public class ODSServlet extends HttpServlet implements Servlet
     {
       if( outputStream != null )
         outputStream.close();
-
-      if( display != null )
+      if (display!=null)
         display.dispose();
+
     }
   }
   

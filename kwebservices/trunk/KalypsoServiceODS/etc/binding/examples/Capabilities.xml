@@ -8,7 +8,7 @@
 	<Name>ODS</Name>
 	<Title>Diagramme zur Visualisierung hydrologischer Messdaten</Title>
 	<Abstract>Web Diagram Servicer - Bjoernsen Beratende Ingenieure </Abstract>
-	<OnlineResource xlink:href="http://ibpm.bjoernsen.de/wds"/>
+	<OnlineResource xlink:href="http://ibpm.bjoernsen.de/ods"/>
 	<ContactInformation>
 	<ContactPersonPrimary>
 		<ContactPerson>Alexander Burtscher</ContactPerson>

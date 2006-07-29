@@ -63,7 +63,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.chart.Plot;
+import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
@@ -83,6 +85,7 @@ public class DebugView extends ViewPart implements PaintListener
   //Pfad zur Config-Datei
   String m_pathVC="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
   Image m_chartImage;
+  Image m_legendImage;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -100,8 +103,8 @@ public class DebugView extends ViewPart implements PaintListener
     int width=300;
     int height=200;
     m_chartImage=new Image(Display.getDefault(), width, height);  
-    createChart("WasserstandEtc", m_chartImage);
-    createChart("Test", m_chartImage);
+    m_legendImage=new Image(Display.getDefault(), 200, 150);  
+    createChart("Test");
     
   }
   
@@ -137,17 +140,30 @@ public class DebugView extends ViewPart implements PaintListener
    * Chart erzeugen
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public static Image createChart (String chartname, Image img) {
+  public void createChart (String chartname) {
     
     Display d= Display.getDefault();
     //Display für Shell kann null sein :-)
     String confpath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
     ConfigurationLoader cl=new ConfigurationLoader(confpath);
     ConfigurationType config = cl.getConfiguration();
-    ChartLoader.createChartImage(config, chartname, img);
     
+    ChartImageContainer cic=new ChartImageContainer(config, "Test", d, 500,100);
+    LegendImageContainer lic=new LegendImageContainer(config, "Test", d);
     
-    return  img;
+    GC gcchart=new GC(m_chartImage);
+    GC gcleg=new GC(m_legendImage);
+    Image cicImage=cic.getImage();
+    Image licImage=lic.getImage();
+    if (cicImage!=null)
+      gcchart.drawImage( cicImage, 0, 0 );
+    if (licImage!=null)
+      gcleg.drawImage( licImage, 0, 0 );
+    
+    gcleg.dispose();
+    gcchart.dispose();
+    lic.dispose();
+    cic.dispose();
     
   }
   
@@ -201,6 +217,10 @@ public class DebugView extends ViewPart implements PaintListener
     if (m_chartImage!=null)
     {
       gc.drawImage(m_chartImage, 0, 0);
+    }
+    if (m_legendImage!=null)
+    {
+      gc.drawImage(m_legendImage, 0, 0);
     }
     
   }

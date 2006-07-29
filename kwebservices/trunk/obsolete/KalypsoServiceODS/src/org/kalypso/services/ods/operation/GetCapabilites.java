@@ -78,5 +78,12 @@ public class GetCapabilites implements IODSOperation
     writer.println(pf.getCapsString());
     writer.close();
   }
+  
+  public String createURL()
+  {
+    
+    
+    return "";
+  }
 
 }
