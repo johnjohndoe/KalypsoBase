@@ -58,4 +58,6 @@ public interface IAxisComponent<T>
   
   public Rectangle getBounds();
   
+  public void layout();
+  
 }
