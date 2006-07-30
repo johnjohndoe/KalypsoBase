@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ods.operation;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,8 +48,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.tools.ParseFile;
+import org.kalypso.services.ods.preferences.IODSPreferences;
+import org.kalypso.services.ods.preferences.ODSPreferences;
 
 /**
  * @author alibu
@@ -70,20 +70,16 @@ public class GetCapabilites implements IODSOperation
     response.setContentType("text/xml");
     PrintWriter writer = response.getWriter();
     
-    String pathCaps="/home/alibu/dev/workspace32/KalypsoServiceODS/etc/binding/examples/Capabilities.xml";
-    String pathVC="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
+    IEclipsePreferences prefs = new ODSPreferences().getPreferences();
     
-    ParseFile pf = new ParseFile(pathCaps, pathVC);
+    String pathCaps=prefs.get( IODSPreferences.CAPABILITIES_PATH, "" )+prefs.get( IODSPreferences.CAPABILITIES_NAME, "" );
+    String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
+    
+    CapabilitiesLoader pf = new CapabilitiesLoader(pathCaps, pathVC);
     pf.mergeConfigIntoODS();
-    writer.println(pf.getCapsString());
+    writer.println(pf.getCapsXMLString());
     writer.close();
   }
   
-  public String createURL()
-  {
-    
-    
-    return "";
-  }
 
 }

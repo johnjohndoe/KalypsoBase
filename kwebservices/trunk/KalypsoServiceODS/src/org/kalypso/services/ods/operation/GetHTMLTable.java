@@ -42,17 +42,13 @@ package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.tools.HTMLTools;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.ui.KalypsoGisPlugin;

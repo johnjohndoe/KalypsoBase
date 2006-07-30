@@ -44,6 +44,7 @@ package org.kalypso.services.ods.tools;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -62,6 +63,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.services.ods.operation.CapabilitiesLoader;
+import org.kalypso.services.ods.preferences.IODSPreferences;
+import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.chart.Plot;
@@ -81,9 +85,9 @@ public class DebugView extends ViewPart implements PaintListener
   Composite m_composite;
   private Canvas m_canvas;
 //Pfad zu CapabilitiesDatei
-  String m_pathCaps="/home/alibu/dev/workspace32/KalypsoServiceODS/etc/binding/examples/Capabilities.xml";
+  String m_pathCaps;
   //Pfad zur Config-Datei
-  String m_pathVC="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+  String m_pathVC;
   Image m_chartImage;
   Image m_legendImage;
 
@@ -99,12 +103,16 @@ public class DebugView extends ViewPart implements PaintListener
     m_canvas.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
     m_canvas.addPaintListener( this );
     
+    IEclipsePreferences preferences = new ODSPreferences().getPreferences();
+    m_pathVC=preferences.get(IODSPreferences.CONFIG_PATH, "")+preferences.get(IODSPreferences.CONFIG_NAME, "");
+    m_pathCaps=preferences.get(IODSPreferences.CAPABILITIES_PATH, "")+preferences.get(IODSPreferences.CAPABILITIES_NAME, "");
     
     int width=300;
     int height=200;
     m_chartImage=new Image(Display.getDefault(), width, height);  
     m_legendImage=new Image(Display.getDefault(), 200, 150);  
-    createChart("Test");
+   // createChart("Test");
+    getCapabilities();
     
   }
   
@@ -113,9 +121,9 @@ public class DebugView extends ViewPart implements PaintListener
    */
   public void getCapabilities()
   {
-    ParseFile pf = new ParseFile(m_pathCaps, m_pathVC);
+    CapabilitiesLoader pf = new CapabilitiesLoader(m_pathCaps, m_pathVC);
     pf.mergeConfigIntoODS();
-    String capsxml = pf.getCapsString();
+    String capsxml = pf.getCapsXMLString();
     System.out.println(capsxml);
   }
   

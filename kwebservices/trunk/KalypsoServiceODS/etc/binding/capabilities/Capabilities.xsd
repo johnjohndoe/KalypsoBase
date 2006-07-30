@@ -68,9 +68,9 @@
                <restriction base="string">
                   <enumeration value="text/html"></enumeration>  
                   <enumeration value="text/xml"></enumeration>  
-                  <enumeration value="img/gif"></enumeration>  
-                  <enumeration value="img/png"></enumeration>  
-                  <enumeration value="img/jpeg"></enumeration>  
+                  <enumeration value="image/gif"></enumeration>  
+                  <enumeration value="image/png"></enumeration>  
+                  <enumeration value="image/jpeg"></enumeration>  
                </restriction>
           </simpleType>
      </element>
@@ -169,6 +169,7 @@
                     <element ref="ods:Request"/>
                     <element ref="ods:Exception"/>
                     <element ref="ods:Diagram" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="ods:Legend" minOccurs="0" maxOccurs="unbounded"/>
                     <element ref="ods:Table" minOccurs="0" maxOccurs="unbounded"/>
                </sequence>
           </complexType>
@@ -288,8 +289,28 @@
      <!-- ********************************************************************* -->
      <element name="Table">
           <annotation>
-               <documentation> List of zero or more Diagrams offered by this
+               <documentation> List of zero or more Tables offered by this
                server.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Name" minOccurs="0"/>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:DataURL" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+               <attribute name="queryable" type="boolean" default="0"/>
+          </complexType>
+     </element>
+
+     <!-- ********************************************************************* -->
+     <!-- ** The Legend Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Legend">
+          <annotation>
+               <documentation> 
+               List of zero or more Legends offered by this server.
+               </documentation>
           </annotation>
           <complexType>
                <sequence>

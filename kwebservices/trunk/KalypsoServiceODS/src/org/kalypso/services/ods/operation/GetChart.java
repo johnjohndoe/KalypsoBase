@@ -49,12 +49,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.preferences.IODSPreferences;
+import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ChartLoader;
@@ -77,8 +80,8 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
  {
    Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
 
-   int width=300;
-   int height=200;
+   int width=500;
+   int height=400;
    String reqWidth=request.getParameter( "WIDTH" );
    String reqHeight=request.getParameter( "HEIGHT" );
    String reqName=request.getParameter( "NAME" );
@@ -94,9 +97,12 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
      ChartImageContainer cic = null;
      try
      {
+        //GMLWorkspace initialisieren
          KalypsoGisPlugin.getDefault();
-         String confpath="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
-         ConfigurationLoader cl=new ConfigurationLoader(confpath);
+         IEclipsePreferences prefs = new ODSPreferences().getPreferences();
+         String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
+
+         ConfigurationLoader cl=new ConfigurationLoader(pathVC);
          ConfigurationType config = cl.getConfiguration();
          display=Display.getDefault();
          cic = new ChartImageContainer(config, reqName, display, width, height);

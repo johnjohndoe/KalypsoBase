@@ -43,9 +43,7 @@
 	               </DCPType>
 	          </GetCapabilities>
 	          <GetDiagram>
-	               <Format>img/jpeg</Format>
-	               <Format>img/png</Format>
-	               <Format>img/gif</Format>
+	               <Format>image/jpeg</Format>
 	               <DCPType>
 	                    <HTTP>
 	                         <Get>
@@ -65,9 +63,7 @@
 	               </DCPType>
 	          </GetHTMLTable>
 	          <GetLegend>
-	               <Format>img/jpeg</Format>
-	               <Format>img/png</Format>
-	               <Format>img/gif</Format>
+	               <Format>image/jpeg</Format>
 	               <DCPType>
 	                    <HTTP>
 	                         <Get>
@@ -85,7 +81,7 @@
 	          <Title>Testdiagramm</Title>
 	          <Abstract>Diagramm zum Testen der Server-Funktionalität</Abstract>
 	          <DataURL>
-	               <Format>img/png</Format>
+	               <Format>image/png</Format>
 	               <OnlineResource xlink:href="http://ibpm.bjoernsen.de/wds/getDiagram?name=Test"/>
 	          </DataURL>
 	     </Diagram>
