@@ -119,7 +119,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
     //final Collection<Number> ticks = calcTicks( gc, axis );
-    m_ticks=calcTicks(bufGcw, axis);
+    m_ticks=calcTicks(bufGcw, dev, axis);
     drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
     drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
@@ -271,7 +271,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
   /**
    * TODO: testweise auf public gesetzt - für das GridLayer
    */
-  public Collection<Date> calcTicks( final GCWrapper gc, final IAxis<Date> axis )
+  public Collection<Date> calcTicks( final GCWrapper gc, Device dev, final IAxis<Date> axis )
   {
     final Point ticklabelSize = calcTickLabelSize( gc, axis );
 

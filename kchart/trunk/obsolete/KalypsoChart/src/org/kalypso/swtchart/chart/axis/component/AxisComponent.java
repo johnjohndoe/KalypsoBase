@@ -94,19 +94,20 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
   {
-    return new Point( 50, 50 );
-    /*
-    IAxisRenderer ar=m_axis.getRenderer();
-    Point p=new Point(0,0);
-    if (ar!=null)
+    //return new Point( 50, 50 );
+    if (m_axis!=null)
     {
-      int width=ar.getAxisWidth(m_axis);
-      p.x=width;
-      p.y=width;
+      IAxisRenderer<T> renderer = m_axis.getRenderer();
+      if (renderer!=null)
+      {
+        int axisWidth = renderer.getAxisWidth(m_axis);
+        if (m_axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+          return new Point(0,axisWidth );
+        else
+          return new Point(axisWidth, 0 );
+      }
     }
-    return p;
-    */
-    
+    return new Point(0,0);
   }
 
   /**
@@ -123,7 +124,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
 
-    System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
+   // System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
 
     IAxisRenderer renderer = m_axis.getRenderer();
     if (renderer != null)

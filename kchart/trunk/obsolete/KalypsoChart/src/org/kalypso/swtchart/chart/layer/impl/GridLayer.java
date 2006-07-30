@@ -157,7 +157,7 @@ public class GridLayer implements IChartLayer
     gc.m_gc.setLineStyle(SWT.LINE_DASHDOT);
     
     
-    Collection<Object> ticks=m_domAxis.getRenderer().calcTicks(gc, m_domAxis);
+    Collection<Object> ticks=m_domAxis.getRenderer().calcTicks(gc, dev, m_domAxis);
     //Der Typ ist auf Object gesetzt, weil man nicht genau weiss, was calcTicks zurückliefert
     //Der Typ der  calcTicks-Collection ist aber der gleiche, der auch für logicalToScreen verwendet wird
     for (Object n:ticks)
@@ -180,7 +180,7 @@ public class GridLayer implements IChartLayer
       }
     }   
 
-    ticks=m_valAxis.getRenderer().calcTicks(gc, m_valAxis);
+    ticks=m_valAxis.getRenderer().calcTicks(gc, dev, m_valAxis);
     for (Object n:ticks)
     {
       if (m_domAxis.getPosition().getOrientation() != ORIENTATION.HORIZONTAL)

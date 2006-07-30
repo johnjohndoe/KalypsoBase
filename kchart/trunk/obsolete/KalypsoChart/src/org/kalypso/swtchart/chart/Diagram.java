@@ -85,8 +85,8 @@ public class Diagram extends Composite implements Listener
     
     String configFullPath=configPath+configName;
     
-    //String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
     ConfigurationLoader cl=new ConfigurationLoader(configFullPath);
+    //ChartLoader.createChart(m_chart, cl.getConfiguration() , "WasserstandEtc");
     ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
     
@@ -116,7 +116,7 @@ public class Diagram extends Composite implements Listener
     fd_legend.bottom=new FormAttachment(100, -10);
     m_legend.setLayoutData( fd_legend);
     
-
+    layout();
     
   }
   
