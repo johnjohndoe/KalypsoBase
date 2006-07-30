@@ -5,3 +5,6 @@ Uses the concepts of:
 - Layout based UI
 - IChartLayer
 - ILayerStyles
+
+Store etc/binding/examples/Configuration.xml at WORKSPACE/KalypsoChart/Configuration.xml 
+and adjust paths to timeseries.gml to make it work.

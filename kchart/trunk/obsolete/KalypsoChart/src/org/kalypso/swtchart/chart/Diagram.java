@@ -42,6 +42,7 @@ package org.kalypso.swtchart.chart;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
@@ -53,7 +54,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.legend.Legend;
 import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.preferences.ChartPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.swtchart.preferences.IChartPreferences;
 
 /**
  * @author alibu
@@ -74,8 +77,16 @@ public class Diagram extends Composite implements Listener
     
     m_chart = new Chart( this, SWT.BORDER );
     
-    String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
-    ConfigurationLoader cl=new ConfigurationLoader(configPath);
+    IEclipsePreferences prefs = new ChartPreferences().getPreferences();
+    
+    
+    String configPath=prefs.get(IChartPreferences.CONFIG_PATH, "");
+    String configName=prefs.get(IChartPreferences.CONFIG_NAME, "");
+    
+    String configFullPath=configPath+configName;
+    
+    //String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+    ConfigurationLoader cl=new ConfigurationLoader(configFullPath);
     ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
     

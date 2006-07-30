@@ -38,52 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.chart;
-
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.ksp.chart.layerstyle.ObjectFactory;
-import org.ksp.chart.layerstyle.StyleType;
+package org.kalypso.swtchart.preferences;
 
 /**
  * @author alibu
  *
  */
-public class TestPleaseRemove
+public interface IChartPreferences
 {
-  public final static ObjectFactory OF = new ObjectFactory();
-  
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-  
-  public void irgendetwasSerialisieren( Object etwasWasPasst )
-  {
-    /*
-    Style style = OF.createStyle();
-    style.setId( etwasWasPasst.getID() );
-    List<JAXBElement< ? extends PointType>> point = style.getPoint();
-    
-    Marshaller marshaller = JC.createMarshaller();
-    marshaller.marshal( style, new FileWriter(new File("pfad zu Datei")) );
-    */
-  }
-  
-  
-  public StyleType etwasLesen() throws JAXBException
-  {
-    Object object = JC.createUnmarshaller().unmarshal( new File("somewhere") );
-    
-    return (StyleType) object;
-  }
-  
-  public void etwasMitDemStayleMachen( Object conf, StyleType style )
-  {
-    /*
-       conf.addPointStyle( style.getPoint() );
-       */
-    
-  }
+  public static final String CONFIG_PATH = "kalypso.chart.configpath";
+  public static final String CONFIG_NAME = "kalypso.chart.configname";
 }
