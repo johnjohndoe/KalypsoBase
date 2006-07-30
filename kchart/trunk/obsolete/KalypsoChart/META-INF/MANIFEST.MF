@@ -24,6 +24,7 @@ Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.chart.util,
  org.kalypso.swtchart.chart.view,
  org.kalypso.swtchart.configuration,
+ org.kalypso.swtchart.preferences,
  org.ksp.chart.layerstyle,
  org.ksp.chart.tableconfiguration,
  org.ksp.chart.viewerconfiguration
