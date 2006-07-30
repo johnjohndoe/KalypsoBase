@@ -55,9 +55,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
 
   private final int m_gap;
 
-  private FontData m_fontDataLabel=new FontData("Arial", 12, SWT.BOLD);;
+  private FontData m_fontDataLabel=new FontData("Arial", 11, SWT.BOLD);;
   
-  private FontData m_fontDataTick=new FontData("Arial", 8, SWT.NONE);
+  private FontData m_fontDataTick=new FontData("Arial", 10, SWT.NONE);
   
 
   /**
@@ -78,7 +78,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
    * @param gap
    *          space between axis and component border
    */
-  public XMLGregorianCalendarAxisRenderer( final Color foreground, final Color background, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final SimpleDateFormat df )
+  public XMLGregorianCalendarAxisRenderer( final Color foreground, final Color background, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final SimpleDateFormat df )
   {
     m_foreground = foreground;
     m_background = background;
@@ -132,10 +132,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
       {        
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_df.format( value.toGregorianCalendar().getTimeInMillis() );
-        final Point tickExtent = gc.textExtent( label );
+        final Point tickExtent = getTextExtent(gc, dev, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
-      //  gc.drawText( label, tickPos - tickExtent.x / 2, y2 + m_tickLabelInsets.top );
         textX=tickPos - tickExtent.x / 2;
         textY=y2 + m_tickLabelInsets.top;
         drawText(gc, dev,  label, textX, textY, m_fontDataTick );
@@ -150,10 +149,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_df.format( new Date(value.toGregorianCalendar().getTimeInMillis()) );
-        final Point tickExtent = gc.textExtent( label );
+        final Point tickExtent = getTextExtent(gc, dev, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
-        //gc.drawText( label, tickPos - tickExtent.x / 2, y2 - m_tickLabelInsets.top - tickExtent.y );
         textX=tickPos - tickExtent.x / 2;
         textY= y2 - m_tickLabelInsets.top - tickExtent.y;
         drawText(gc, dev,  label, textX, textY, m_fontDataTick );
@@ -168,10 +166,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
       {
         final int tickPos = axis.logicalToScreen( value );  
         final String label = m_df.format(new Date(value.toGregorianCalendar().getTimeInMillis()) );
-        final Point tickExtent = gc.textExtent( label );
+        final Point tickExtent = getTextExtent(gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        //gc.drawText( label, x2 - tickExtent.x - m_tickLabelInsets.top, tickPos - tickExtent.y / 2 );
         textX=tickPos - x2 - tickExtent.x - m_tickLabelInsets.top;
         textY= tickPos - tickExtent.y / 2;
         drawText(gc, dev,  label, textX, textY, m_fontDataTick );
@@ -186,10 +183,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_df.format( new Date(value.toGregorianCalendar().getTimeInMillis()) );
-        final Point tickExtent = gc.textExtent( label );
+        final Point tickExtent = getTextExtent(gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        //gc.drawText( label, x2 + m_tickLabelInsets.top, tickPos - tickExtent.y / 2 );
         textX=x2 + m_tickLabelInsets.top;
         textY= tickPos - tickExtent.y / 2;
         drawText(gc, dev,  label, textX, textY, m_fontDataTick );
@@ -224,13 +220,10 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     final int screenInterval = 2 + ticklabelSize.x;
     
     //optimales logisches Intervall - soll sicherstellen, dass pro Tag höchstens ein Tick gezeichnet wird
-   // long from=axis.getFrom().toGregorianCalendar().getTimeInMillis();
     XMLGregorianCalendar from=axis.getFrom();
     XMLGregorianCalendar fromPlusOne= ((XMLGregorianCalendar) from.clone());
     fromPlusOne.setDay(from.getDay()+1);
-    //long fromPlusOneDay=axis.getFrom().add(new Duration())
     int optLogicalInterval = Math.abs(axis.logicalToScreen(from)-axis.logicalToScreen(fromPlusOne));   
-      //Math.abs( axis.screenToLogical( screenInterval * 2 ).toGregorianCalendar().getTimeInMillis() - axis.screenToLogical( screenInterval ).toGregorianCalendar().getTimeInMillis() ) ;
     int interval=screenInterval;
     if (optLogicalInterval>screenInterval)
       interval=optLogicalInterval;
@@ -292,21 +285,22 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     //Ticks+Labels
     if (axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
     {
-//    Noch etwas Toleranz dazu
-      width+=10;
+      width+=m_tickLabelInsets.top+m_tickLabelInsets.bottom;
+      width+=m_labelInsets.top+m_labelInsets.bottom;
       label=tls.y;
+      //Toleranzwert
+      width+=5;
     }
     else
     {
-      //Noch etwas Toleranz dazu
-      width+=3;
+      width+=m_tickLabelInsets.left+m_tickLabelInsets.right;
+      width+=m_labelInsets.left+m_labelInsets.right;
       label=tls.x;
     }
     width+=label;
     width+=m_gap;
     width+=m_lineWidth;
     width+=m_tickLength;
-    
     
     //Jetzt noch den Text
     Point labelExtent = getTextExtent( gcw, d, axis.getLabel(), m_fontDataLabel );
@@ -405,7 +399,6 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
   
   protected void drawAxisLabel( GCWrapper gc, Device dev, IAxis<XMLGregorianCalendar> axis, int x1, int y1, int x2, int y2 )
   {
-    
     ChartUtilities.resetGC(gc.m_gc, dev);
     
     

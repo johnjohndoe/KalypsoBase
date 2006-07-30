@@ -94,7 +94,6 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
   {
-    //return new Point( 50, 50 );
     if (m_axis!=null)
     {
       IAxisRenderer<T> renderer = m_axis.getRenderer();

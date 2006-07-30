@@ -45,6 +45,8 @@ import java.text.SimpleDateFormat;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
@@ -104,6 +106,11 @@ public class AxisFactory
          * TODO: Insgesamt ist hier alles noch ein wenig hart reincodiert: Label insets, MaxDigits, etc.
          */
         
+        FontData fdLabel=new FontData("Arial", 11, SWT.BOLD);
+        FontData fdTick=new FontData("Arial", 10, SWT.NONE);
+        Insets insetsTick=new Insets( 1, 1, 1, 1 );
+        Insets insetsLabel=new Insets( 1, 1, 1, 1 );
+        
         if (a instanceof DoubleAxisType) 
         {
           DoubleAxisType da=(DoubleAxisType) a;
@@ -113,7 +120,7 @@ public class AxisFactory
           ar.addAxis(axis);
           if (ar.getRenderer(axis)==null)
           {
-            IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 0 );
+            IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
             ar.setRenderer(Number.class, numberAxisRenderer);
           }
           System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
@@ -128,25 +135,19 @@ public class AxisFactory
           ar.addAxis(axis);
           if (ar.getRenderer(axis)==null)
           {
-            IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, new Insets( 1, 1, 1, 1 ), 1, new Insets( 1, 1, 1, 1 ), 0, new SimpleDateFormat("dd.MM.yy") );
+            IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat("dd.MM.yy") );
             //ar.setRenderer(Date.class, dateAxisRenderer);
             ar.setRenderer(XMLGregorianCalendar.class, xgcAxisRenderer);
             if (ar.getRenderer(axis)!=null)
-                System.out.println("DateAxisRenderer hinzugefügt");
+                System.out.println("XMLCalendarAxisRenderer added");
             else
-              System.out.println("DateAxisRenderer nicht hinzugefügt");
+              System.out.println("XMLCalendar was not added");
           }
-          System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
+          System.out.println("AxisFactory: axis added: "+a.getName());
         }
         else
         {
-          System.out.println("AxisFactory: Unbekannter Achsentyp: "+a.getClass().getName());
-          
+          System.out.println("AxisFactory: Unknown axis type: "+a.getClass().getName());
         }
-        
-           
-            
-        
-        
       }
 }
