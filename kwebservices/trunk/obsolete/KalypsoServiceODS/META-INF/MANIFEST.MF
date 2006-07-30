@@ -18,7 +18,9 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0"
-Export-Package: org.kalypso.services.ods,
+Export-Package: net.opengis.ows,
+ org.kalypso.services.ods,
  org.kalypso.services.ods.operation,
+ org.kalypso.services.ods.preferences,
  org.kalypso.services.ods.tools,
  org.ksp.ods.capabilities

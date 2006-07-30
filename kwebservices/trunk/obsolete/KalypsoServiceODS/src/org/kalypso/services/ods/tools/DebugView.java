@@ -41,6 +41,7 @@
 package org.kalypso.services.ods.tools;
 
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -64,6 +65,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.operation.CapabilitiesLoader;
+import org.kalypso.services.ods.operation.ODSException;
+import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.Chart;
@@ -113,6 +116,7 @@ public class DebugView extends ViewPart implements PaintListener
     m_legendImage=new Image(Display.getDefault(), 200, 150);  
    // createChart("Test");
     getCapabilities();
+    getException();
     
   }
   
@@ -123,8 +127,23 @@ public class DebugView extends ViewPart implements PaintListener
   {
     CapabilitiesLoader pf = new CapabilitiesLoader(m_pathCaps, m_pathVC);
     pf.mergeConfigIntoODS();
-    String capsxml = pf.getCapsXMLString();
+    String capsxml = pf.getXMLString();
     System.out.println(capsxml);
+  }
+  
+  public void getException()
+  {
+    try
+    {
+      System.out.println(ODSException.getXMLString( ERROR_CODE.DIAGRAM_NOT_DEFINED ));
+      System.out.println(ODSException.getXMLString( ERROR_CODE.SERVICE_NOT_SUPPORTED ));
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
   }
   
   /**

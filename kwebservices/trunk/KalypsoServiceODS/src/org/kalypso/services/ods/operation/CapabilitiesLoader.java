@@ -149,7 +149,7 @@ public class CapabilitiesLoader
         System.out.println("ViewerConf == null");
   }
   
-  public String getCapsXMLString()
+  public String getXMLString()
   {
     String capsString="";
     try
@@ -179,7 +179,7 @@ public class CapabilitiesLoader
   /**
    * Fügt die über die ViewerConfiguration definierten Diagramme und Tabellen in das GetCapabilities-Dokument ein
    */
-  public ODSCapabilities mergeConfigIntoODS()
+  public void mergeConfigIntoODS()
   {
     
     IEclipsePreferences prefs = new ODSPreferences().getPreferences();
@@ -313,7 +313,6 @@ public class CapabilitiesLoader
     }
     
     
-    return null;
   }
   
   /**

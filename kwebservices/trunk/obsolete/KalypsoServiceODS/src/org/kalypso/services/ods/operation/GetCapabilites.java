@@ -77,7 +77,7 @@ public class GetCapabilites implements IODSOperation
     
     CapabilitiesLoader pf = new CapabilitiesLoader(pathCaps, pathVC);
     pf.mergeConfigIntoODS();
-    writer.println(pf.getCapsXMLString());
+    writer.println(pf.getXMLString());
     writer.close();
   }
   

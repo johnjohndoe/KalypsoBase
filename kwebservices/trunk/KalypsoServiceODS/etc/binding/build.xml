@@ -6,6 +6,7 @@
 	
 	  <patternset id="binding.schemata">
 	  	 <include name="etc/binding/capabilities/*.xsd"/>
+	  	 <include name="etc/binding/exception/*.xsd"/>
 	  </patternset>
   
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml"/>

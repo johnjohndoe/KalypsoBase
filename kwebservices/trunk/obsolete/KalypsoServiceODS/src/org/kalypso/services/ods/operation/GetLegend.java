@@ -55,6 +55,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
@@ -109,6 +110,10 @@ public class GetLegend implements IODSOperation, Runnable
             il.save( outputStream, SWT.IMAGE_JPEG );
             outputStream.close();
           }
+          else
+          {
+            ODSException.showException( response, ERROR_CODE.LEGEND_NOT_DEFINED );
+          }
           
       }
       catch( IOException e )
@@ -126,6 +131,8 @@ public class GetLegend implements IODSOperation, Runnable
       }
      
     }
+    else
+      ODSException.showException( response, ERROR_CODE.NO_NAME_SPEZIFIED );
   }
  
  public void init(HttpServletRequest request, HttpServletResponse response)

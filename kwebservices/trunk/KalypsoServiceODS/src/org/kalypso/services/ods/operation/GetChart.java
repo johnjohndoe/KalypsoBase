@@ -56,6 +56,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.ChartImageContainer;
@@ -106,16 +107,20 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
          ConfigurationType config = cl.getConfiguration();
          display=Display.getDefault();
          cic = new ChartImageContainer(config, reqName, display, width, height);
-         Image legendImg=cic.getImage();
+         Image chartImg=cic.getImage();
          
-         if (legendImg!=null)
+         if (chartImg!=null)
          {
            response.setContentType( "image/jpeg" );
            ImageLoader il=new ImageLoader();
-           ImageData id=legendImg.getImageData();
+           ImageData id=chartImg.getImageData();
            il.data=new ImageData[]{id};
            outputStream = new BufferedOutputStream( response.getOutputStream() );
            il.save( outputStream, SWT.IMAGE_JPEG );
+         }
+         else
+         {
+           ODSException.showException( response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
          }
      }
      catch( IOException e )
@@ -131,8 +136,9 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
        if (outputStream!=null)
          outputStream.close();
      }
-    
    }
+   else
+       ODSException.showException( response, ERROR_CODE.NO_NAME_SPEZIFIED );
  }  
  public void init(HttpServletRequest request, HttpServletResponse response)
  {

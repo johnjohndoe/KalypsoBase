@@ -24,17 +24,19 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 /*
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Display;
-*/
+ import org.eclipse.swt.SWT;
+ import org.eclipse.swt.graphics.GC;
+ import org.eclipse.swt.graphics.Image;
+ import org.eclipse.swt.graphics.ImageData;
+ import org.eclipse.swt.graphics.ImageLoader;
+ import org.eclipse.swt.widgets.Display;
+ */
 import org.kalypso.services.ods.operation.GetCapabilites;
 import org.kalypso.services.ods.operation.GetChart;
 import org.kalypso.services.ods.operation.GetHTMLTable;
 import org.kalypso.services.ods.operation.GetLegend;
+import org.kalypso.services.ods.operation.ODSException;
+import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 
 /**
  * @author Gernot Belger
@@ -49,89 +51,55 @@ public class ODSServlet extends HttpServlet implements Servlet
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-      //Gewünschte Operation ausführen
-      String odsrequest=request.getParameter( "REQUEST" );
-      //Natürlich nur, wenn als Service auch ODS angegeben ist
-      String service=request.getParameter( "SERVICE" );
-      if (odsrequest!=null && service!=null && service.compareTo( "ODS" )==0)
+    //Gewünschte Operation ausführen
+    String odsrequest = request.getParameter( "REQUEST" );
+    //Natürlich nur, wenn als Service auch ODS angegeben ist
+    String service = request.getParameter( "SERVICE" );
+    if( service != null  )
+    {
+      if (service.compareTo( "ODS" ) == 0)
       {
-        if (odsrequest.compareTo( "GetCapabilities" )==0)
-        {
-          GetCapabilites gc=new GetCapabilites();
-          gc.operate( request, response );
-        }
-        else if (odsrequest.compareTo( "GetDiagram" )==0)
-        {
-          //heisst hier noch GetChart
-          GetChart gc=new GetChart();
-          gc.init( request, response );
-          Display.getDefault().syncExec( gc );
-          //gc.operate( request, response );
-        }
-        else if (odsrequest.compareTo( "GetHTMLTable" )==0)
-        {
-          GetHTMLTable ght=new GetHTMLTable();
-          ght.operate( request, response );
-        }
-        else if (odsrequest.compareTo( "GetLegend" )==0)
-        {
-          GetLegend gl=new GetLegend();
-          gl.init( request, response );
-          Display.getDefault().syncExec( gl );
-          //gl.operate( request, response );
-        }
+        if( odsrequest != null )
+            executeOperation(request, response, odsrequest);
         else
-        {
-          //oldDoGet( request, response );
-          ServletConfig sc = getServletConfig();
-          Enumeration ipns = sc.getInitParameterNames();
-          System.out.println(ipns.toString())   ;
-        }
+          ODSException.showException( response, ERROR_CODE.OPERATION_NOT_SPEZIFIED );
       }
+      else
+        ODSException.showException( response, ERROR_CODE.SERVICE_NOT_SUPPORTED );
+    }
+    else
+      ODSException.showException( response, ERROR_CODE.SERVICE_NOT_SPEZIFIED );
+  }
+
     
-
-  }
-  
-  
-  /**
-   * Das ist die alte Testklasse von Gernot; ich lasse sie hier drin, damit ich mich später evtl daran orientieren kann.
-   */
-  
-  private void oldDoGet(final HttpServletRequest request, final HttpServletResponse response ) throws IOException
-  {
-    Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing swt servlet", null ) );
-
-    response.setContentType( "image/jpeg" );
-
-    Display display = null;
-    OutputStream outputStream = null;
-
-    try
-    {
-      display = Display.getDefault();
-      final Image img = new Image( display, 50, 50 );
-
-      final GC gc = new GC( img );
-      gc.setBackground( display.getSystemColor( SWT.COLOR_GREEN ) );
-      gc.fillRectangle( img.getBounds() );
-      gc.dispose();
-
-      final ImageLoader il = new ImageLoader();
-      il.data = new ImageData[] { img.getImageData() };
-
-      outputStream = new BufferedOutputStream( response.getOutputStream() );
-      il.save( outputStream, SWT.IMAGE_JPEG );
-      outputStream.close();
-    }
-    finally
-    {
-      if( outputStream != null )
-        outputStream.close();
-      if (display!=null)
-        display.dispose();
-
-    }
-  }
-  
-
+   private void executeOperation(final HttpServletRequest request, final HttpServletResponse response, String odsrequest) throws IOException
+   {
+     if( odsrequest.compareTo( "GetCapabilities" ) == 0 )
+     {
+       GetCapabilites gc = new GetCapabilites();
+       gc.operate( request, response );
+     }
+     else if( odsrequest.compareTo( "GetDiagram" ) == 0 )
+     {
+       //heisst hier noch GetChart
+       GetChart gc = new GetChart();
+       gc.init( request, response );
+       //die Operation muss im UI-Threat ausgeführt werden, sonst gibts IllegalAccessErrors
+       Display.getDefault().syncExec( gc );
+     }
+     else if( odsrequest.compareTo( "GetHTMLTable" ) == 0 )
+     {
+       GetHTMLTable ght = new GetHTMLTable();
+       ght.operate( request, response );
+     }
+     else if( odsrequest.compareTo( "GetLegend" ) == 0 )
+     {
+       GetLegend gl = new GetLegend();
+       gl.init( request, response );
+       //        die Operation muss im UI-Threat ausgeführt werden, sonst gibts IllegalAccessErrors
+       Display.getDefault().syncExec( gl );
+     }
+     else
+       ODSException.showException( response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
+   }
 }

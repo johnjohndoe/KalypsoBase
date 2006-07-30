@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -82,10 +83,12 @@ public class GetHTMLTable implements IODSOperation
       if (htmltable!=null)
         out.write( htmltable );
       else
-        out.write( "Error" );
+          ODSException.showException( response, ERROR_CODE.TABLE_NOT_DEFINED );
       out.close();
         
     }
+    else
+      ODSException.showException( response, ERROR_CODE.NO_NAME_SPEZIFIED );
     
   }
 }
