@@ -81,11 +81,11 @@ public class LegendImageContainer
     legend.addLayers(chart.getLayers());
     //Größe berechnen lassen
     Point size = legend.computeSize(0, 0);
-    m_img=new Image(dev, size.x, size.y);
     int height=size.x;
     int width=size.y;
     if (width> 0 && height>0)
     {
+       m_img=new Image(dev, size.x, size.y);
     // Legende zeichnen
         legend.drawImage( m_img, dev );
     }
