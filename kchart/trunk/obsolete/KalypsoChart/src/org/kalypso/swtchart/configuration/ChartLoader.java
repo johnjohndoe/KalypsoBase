@@ -40,34 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.configuration;
 
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.KalypsoChartExtensions;
-import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.axis.AxisFactory;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.axis.component.AxisComponent;
-import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
-import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;

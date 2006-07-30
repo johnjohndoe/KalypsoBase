@@ -12,31 +12,7 @@
           </documentation>
      </annotation>
 	<sequence>
-		<element name="Title" type="string" minOccurs="0"/>
-		<element name="Abstract" type="string" minOccurs="0"/>
-	     <element name="DataSource" type="anyURI" >
-	          <annotation>
-	               <documentation>
-	                    die URL oder der Dateipfad zur Quellobservation
-	               </documentation>
-	          </annotation>
-	     </element>
-	     <element name="Observation" type="kctc:ObservationType">
-	          <annotation>
-	               <documentation>
-	                    Hier wird die Observation angegeben, deren Ergebnis in der Tabelle erscheinen soll;
-	                    am besten durch eine Id, muss aber noch geprüft werden.(TODO)
-	               </documentation>
-	          </annotation>
-	     </element>
-	     <element name="Component" type="kctc:ComponentType" maxOccurs="unbounded">
-	          <annotation>
-	               <documentation>
-	                    Eine Component ist eine Spalte, die in der Tabelle angezeigt werden soll.
-	               </documentation>
-	          </annotation>
-	     </element>
-	     <element name="Class" type="string" minOccurs="0">
+	     <element name="TableClass" type="string" minOccurs="0">
 	          <annotation>
 	               <documentation>
 	                    Name der CSS-Klasse, die für die Tabelle verwendet wird; dieser Parameter
@@ -45,30 +21,69 @@
 	               </documentation>
 	          </annotation>
 	     </element>
+	     <element name="Title" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Titel der Tabelle
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="TitleClass" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Name der CSS-Klasse, die für den Titel der Tabelle verwendet wird 
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="Abstract" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Beschreibung zum Tabelleninhalt
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="AbstracClass" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Name der CSS-Klasse, die für den Abstract verwendet wird 
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="DataSource" type="kctc:DataSourceType" />
+	     <element ref="kctc:Component" maxOccurs="unbounded">
+	          <annotation>
+	               <documentation>
+	                    Eine Component ist eine Spalte, die in der Tabelle angezeigt werden soll.
+	               </documentation>
+	          </annotation>
+	     </element>
 	</sequence>
 	<attribute name="name" type="ID" use="required"></attribute>
 </complexType>
 
-     <complexType name="ObservationType">
+
+     <complexType name="DataSourceType">
           <annotation>
                <documentation>
-                    TODO: Überprüfen, wie sich eine Observation am idealsten Beschreiben lässt
+                    die URL oder der Dateipfad zur Observation-Datei
+                    sowie die id der zu verwendenden Observation
                </documentation>
           </annotation>
           <sequence>
+               <element name="Url" type="anyURI"></element>
                <element name="Id" type="string"></element>
           </sequence>
-          
      </complexType>
 
+     <element  name="Component" type="kctc:ComponentType"></element>
 
      <complexType name="ComponentType">
           <sequence>
-               <element name="ItemID" type="string" minOccurs="1" maxOccurs="1">
+               <element name="Name" type="string" minOccurs="1" maxOccurs="1">
                     <annotation>
                          <documentation>
-                             Über die Item-ID wird die gewünschte Spalte des ObservationResults definiert.
-                             die Item-ID entspricht der id des ResultItem in der ResultDefinition
+                             Über den Namen wird die gewünschte Spalte des ObservationResults definiert.
+                             Der Name muss dem Namen der Procedure des ResultItems entsprechen. 
                          </documentation>
                     </annotation>
                </element>
@@ -99,6 +114,25 @@
                     </annotation>
                </element>
           </sequence>
+     </complexType>
+     
+     <element name="DateComponent" type="kctc:DateComponentType" substitutionGroup="kctc:Component">
+          <annotation>
+               <documentation>
+                    Eine DateComponent bietet ein zusätzliches Feld zur Angabe eines Datum-Format-Strings,
+                    z.B. dd.MM.yyyy HH:mm 
+               </documentation>
+          </annotation>
+     </element>
+     
+     <complexType name="DateComponentType">
+          <complexContent>
+               <extension base="kctc:ComponentType">
+                    <sequence>
+                         <element name="DateFormat" type="string" /> 
+                    </sequence>
+               </extension>
+          </complexContent>
      </complexType>
 
 </schema>

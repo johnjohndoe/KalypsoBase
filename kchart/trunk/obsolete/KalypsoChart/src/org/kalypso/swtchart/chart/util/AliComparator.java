@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.util;
 
-import java.util.Comparator;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;

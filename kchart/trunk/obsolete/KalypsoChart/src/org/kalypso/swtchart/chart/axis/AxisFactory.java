@@ -42,7 +42,6 @@ package org.kalypso.swtchart.chart.axis;
 
 import java.awt.Insets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -52,12 +51,10 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.chart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.NumberAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.XMLGregorianCalendarAxisRenderer;
 import org.kalypso.swtchart.chart.util.AliComparator;
-import org.kalypso.swtchart.chart.util.Recalc;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.DateAxisType;
 import org.ksp.chart.viewerconfiguration.DoubleAxisType;

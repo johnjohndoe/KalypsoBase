@@ -42,7 +42,6 @@ package org.kalypso.swtchart.chart.legend;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 
 /**

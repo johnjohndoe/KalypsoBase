@@ -41,17 +41,12 @@
 package org.kalypso.swtchart.chart;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.ksp.chart.layerstyle.ObjectFactory;
-import org.ksp.chart.layerstyle.PointType;
 import org.ksp.chart.layerstyle.StyleType;
 
 /**

@@ -251,31 +251,56 @@
           </kcls:Polygon>
      </kcls:Style>
      <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MyFirstTable">
-          <Title>Eine erste Tabelle zum Testen</Title>
-          <Abstract>Das ist der Abstrakt der ersten Tabelle zum Testen</Abstract>
-          <DataSource>http://www.openali.de/kalypso/timeseries.gml</DataSource>
-          <Observation>
+          <TableClass>table1</TableClass>
+          <Title>Wasserstandsdaten</Title>
+          <TitleClass>title1</TitleClass>
+          <Abstract>Die Tabelle zeigt Wasserstandsdaten. Außerdem kann sie anhand der definierten
+          Klassen CSS-formatiert werden.</Abstract>
+          <AbstracClass>abstract1</AbstracClass>
+          <DataSource>
+               <!--Url>http://www.openali.de/kalypso/timeseries.gml</Url-->
+               <Url>file:///home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/timeseries.gml</Url>
                <Id>wasserstandsmessung</Id>
-          </Observation>
+          </DataSource>
           <Component>
-               <ItemID>Datum</ItemID>
+               <Name>Datum</Name>
+               <ComponentClass>comp1_1</ComponentClass>
+               <Header>Dies ist ein optionaler Header für das Datum</Header>
+               <HeaderClass>header1_1</HeaderClass>
           </Component>
           <Component>
-               <ItemID>Pegelhoehe</ItemID>
+               <Name>Wasserstand</Name>
+               <ComponentClass>comp1_2</ComponentClass>
+               <Header>Dies ist ein optionaler Header für die Pegelhöhe</Header>
+               <HeaderClass>header1_2</HeaderClass>
           </Component>
      </Table>
      <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MySecondTable">
-          <Title>Eine zweite Tabelle zum Testen</Title>
-          <Abstract>Das ist der Abstrakt der zweiten Tabelle zum Testen</Abstract>
-          <DataSource>http://www.openali.de/kalypso/timeseries.gml</DataSource>
-          <Observation>
+          <TableClass>table2</TableClass>
+          <Title>Niederschlag</Title>
+          <TitleClass>title2</TitleClass>
+          <Abstract>
+               Die Tabelle zeigt Niederschlagsdaten.Das Datum-Feld enthält ein benutzerdefiniertes Zeit-Format.
+          
+          </Abstract>
+          <AbstracClass>abstract2</AbstracClass>
+          <DataSource>
+               <!--Url>http://www.openali.de/kalypso/timeseries.gml</Url-->
+               <Url>file:///home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/timeseries.gml</Url>
                <Id>niederschlagsmessung</Id>
-          </Observation>
+          </DataSource>
+          <DateComponent>
+               <Name>Datum</Name>
+               <ComponentClass>comp2_1</ComponentClass>
+               <Header>Dies ist ein optionaler Header für das Datum</Header>
+               <HeaderClass>header2_1</HeaderClass>
+               <DateFormat>dd.MM.yyyy HH:mm</DateFormat>
+          </DateComponent>
           <Component>
-               <ItemID>Datum</ItemID>
-          </Component>
-          <Component>
-               <ItemID>Niederschlag</ItemID>
+               <Name>Niederschlag</Name>
+               <ComponentClass>comp2_2</ComponentClass>
+               <Header>Dies ist ein optionaler Header für die Pegelhöhe</Header>
+               <HeaderClass>header2_2</HeaderClass>
           </Component>
      </Table>
 </Configuration>

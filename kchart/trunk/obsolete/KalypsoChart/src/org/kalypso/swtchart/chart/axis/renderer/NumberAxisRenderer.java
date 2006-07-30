@@ -3,7 +3,6 @@ package org.kalypso.swtchart.chart.axis.renderer;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
@@ -21,8 +20,6 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.util.InsetsHelper;
-
-import sun.security.action.GetBooleanAction;
 
 /**
  * @author schlienger

@@ -1,10 +1,7 @@
 package org.kalypso.swtchart.chart.axis.renderer;
 
 import java.awt.Insets;
-import java.text.NumberFormat;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;

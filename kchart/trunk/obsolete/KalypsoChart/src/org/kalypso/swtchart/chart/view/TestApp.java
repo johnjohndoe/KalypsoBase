@@ -43,7 +43,6 @@ package org.kalypso.swtchart.chart.view;
 import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -64,7 +63,6 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.renderer.DateAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.NumberAxisRenderer;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.chart.layer.impl.GridLayer;
 import org.kalypso.swtchart.chart.layer.impl.TestDateLayer;
 import org.kalypso.swtchart.chart.layer.impl.TestLayer;
@@ -75,6 +73,7 @@ import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 
 

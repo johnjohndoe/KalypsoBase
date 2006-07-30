@@ -1,7 +1,6 @@
 package org.kalypso.swtchart.chart.axis.renderer;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Rectangle;
