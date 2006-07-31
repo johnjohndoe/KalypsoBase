@@ -51,58 +51,80 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class ODSPreferences
 {
-      private static final String DEFAULT_CONFIG_PATH=Platform.getInstanceLocation().getURL().getPath()+"KalypsoODS/";
-      private static final String DEFAULT_CONFIG_NAME="Configuration.xml";
-      private static final String DEFAULT_CAPABILITIES_PATH=DEFAULT_CONFIG_PATH;
-      private static final String DEFAULT_CAPABILITIES_NAME="Capabilities.xml";
-      private static final String DEFAULT_SERVICE_ROOT="http://www.example.org/ods";
-      
-      private static IEclipsePreferences m_prefs=new InstanceScope().getNode("org.kalypso.services.ods");
-      
-      
-      public ODSPreferences()
-      {
-        init();
-      }
-      
-      public void init()
-      {
-        //Mit Standarddaten initialisieren, falls keine Inhalte drin sind
-        if (m_prefs!=null)
-        {
-          String tmp= m_prefs.get(IODSPreferences.CONFIG_PATH, "");
-          if (tmp.compareTo("")==0)
-              m_prefs.put(IODSPreferences.CONFIG_PATH, DEFAULT_CONFIG_PATH);
-          
-          tmp= m_prefs.get(IODSPreferences.CONFIG_NAME, "");
-          if (tmp.compareTo("")==0)
-            m_prefs.put(IODSPreferences.CONFIG_NAME, DEFAULT_CONFIG_NAME);
-          
-          tmp= m_prefs.get(IODSPreferences.CAPABILITIES_PATH, "");
-          if (tmp.compareTo("")==0)
-            m_prefs.put(IODSPreferences.CAPABILITIES_PATH, DEFAULT_CAPABILITIES_PATH);
+  private static final String DEFAULT_CONFIG_PATH = Platform.getInstanceLocation().getURL().getPath() + "KalypsoODS/";
 
-          tmp= m_prefs.get(IODSPreferences.CAPABILITIES_NAME, "");
-          if (tmp.compareTo("")==0)
-            m_prefs.put(IODSPreferences.CAPABILITIES_NAME, DEFAULT_CAPABILITIES_NAME);
-         
-          tmp= m_prefs.get(IODSPreferences.SERVICE_ROOT, "");
-          if (tmp.compareTo("")==0)
-            m_prefs.put(IODSPreferences.SERVICE_ROOT, DEFAULT_SERVICE_ROOT);
-          try
-          {
-            m_prefs.flush();
-          }
-          catch( BackingStoreException e )
-          {
-            System.out.println("Konnte Preferences nicht speichern");
-            e.printStackTrace();
-          }
+  private static final String DEFAULT_CONFIG_NAME = "Configuration.xml";
+
+  private static final String DEFAULT_CAPABILITIES_PATH = DEFAULT_CONFIG_PATH;
+
+  private static final String DEFAULT_CAPABILITIES_NAME = "Capabilities.xml";
+
+  private static final String DEFAULT_SERVICE_ROOT = "http://www.example.org/ods";
+
+  private static IEclipsePreferences m_prefs = new InstanceScope().getNode( "org.kalypso.services.ods" );
+
+  public ODSPreferences( )
+  {
+    init();
+  }
+
+  public void init( )
+  {
+    //Mit Standarddaten initialisieren, falls keine Inhalte drin sind
+    if( m_prefs != null )
+    {
+      boolean dirty = false;
+      String tmp = m_prefs.get( IODSPreferences.CONFIG_PATH, "" );
+      if( tmp.compareTo( "" ) == 0 )
+      {
+        m_prefs.put( IODSPreferences.CONFIG_PATH, DEFAULT_CONFIG_PATH );
+        dirty = true;
+      }
+      tmp = m_prefs.get( IODSPreferences.CONFIG_NAME, "" );
+      if( tmp.compareTo( "" ) == 0 )
+      {
+        m_prefs.put( IODSPreferences.CONFIG_NAME, DEFAULT_CONFIG_NAME );
+        dirty = true;
+      }
+
+      tmp = m_prefs.get( IODSPreferences.CAPABILITIES_PATH, "" );
+      if( tmp.compareTo( "" ) == 0 )
+      {
+        m_prefs.put( IODSPreferences.CAPABILITIES_PATH, DEFAULT_CAPABILITIES_PATH );
+        dirty = true;
+      }
+
+      tmp = m_prefs.get( IODSPreferences.CAPABILITIES_NAME, "" );
+      if( tmp.compareTo( "" ) == 0 )
+      {
+        m_prefs.put( IODSPreferences.CAPABILITIES_NAME, DEFAULT_CAPABILITIES_NAME );
+        dirty = true;
+      }
+
+      tmp = m_prefs.get( IODSPreferences.SERVICE_ROOT, "" );
+      if( tmp.compareTo( "" ) == 0 )
+      {
+        m_prefs.put( IODSPreferences.SERVICE_ROOT, DEFAULT_SERVICE_ROOT );
+        dirty = true;
+      }
+      //Nur schreiben, wenn mind. 1 Wert nicht vorhanden war
+      if (dirty)
+      {
+        try
+        {
+          m_prefs.flush();
+        }
+        catch( BackingStoreException e )
+        {
+          System.out.println( "Konnte Preferences nicht speichern" );
+          e.printStackTrace();
         }
       }
-      
-      public IEclipsePreferences getPreferences()
-      {
-        return m_prefs;
-      }      
+    }
+  }
+
+  public IEclipsePreferences getPreferences( )
+  {
+    return m_prefs;
+  }
 }
