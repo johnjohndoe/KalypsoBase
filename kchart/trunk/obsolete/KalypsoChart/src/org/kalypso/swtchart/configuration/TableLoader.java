@@ -107,10 +107,30 @@ public class TableLoader
   {
     String html="";
     DataSourceType dataSource = conftable.getDataSource();
-    
-    //Parameter auslesen
     String url=dataSource.getUrl();
     String obsId=dataSource.getId();
+    
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(new URL(url));
+    Feature feature = workspace.getFeature(obsId);
+    if (feature!=null)
+    {  
+      System.out.println("Feature found: "+feature.getId());
+      return tableFromFeature(feature, conftable);
+    }
+    else
+    {
+      System.out.println("Feature not found: "+obsId);
+      return "";
+    }
+    
+    
+    
+  }
+    
+  private static String tableFromFeature(Feature feature, TableType conftable)
+  {
+    //Parameter auslesen
+   
     String title=conftable.getTitle();
     String titleClass=conftable.getTitleClass();
     String abst=conftable.getAbstract();
@@ -118,20 +138,12 @@ public class TableLoader
     String tableClass=conftable.getTableClass();
     
     
-    //TODO: Workspace muss initialisiert werden. Das kann man mit KalypsoGisPlugin hier nicht machen,
-    //weil sonst eine zylkische Abhängigkeit mit KalypsoUI entsteht
-    //KalypsoGisPlugin.getDefault();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(new URL(url));
-    Feature feature = workspace.getFeature(obsId);
-    if (feature!=null)
-      System.out.println("Feature found: "+feature.getId());
-    else 
-      System.out.println("Feature not found: "+feature.getId());
-    
     
     IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation(feature);
     TupleResult result = obs.getResult();
    
+    String html="";
+    
     //Vorsicht: Unterscheidung zwischen TableComponent aus Config (compT) und und ResultComponent (compR) 
     //List<ComponentType> compTs = conftable.getComponent();
     List<JAXBElement< ? extends ComponentType>> compTs = conftable.getComponent();
@@ -274,7 +286,7 @@ public class TableLoader
           if (value instanceof XMLGregorianCalendar)
           {
             XMLGregorianCalendar cal=(XMLGregorianCalendar) value;
-            html+="Datum: "+df.format(new Date(cal.toGregorianCalendar().getTimeInMillis()));
+            html+=df.format(new Date(cal.toGregorianCalendar().getTimeInMillis()));
           }
           else
             html+=value.toString();
@@ -290,6 +302,5 @@ public class TableLoader
     
     return html;
   }
-
 
 }
