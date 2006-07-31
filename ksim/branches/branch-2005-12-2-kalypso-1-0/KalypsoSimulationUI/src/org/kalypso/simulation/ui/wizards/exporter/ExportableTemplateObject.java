@@ -56,6 +56,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 
@@ -107,7 +108,8 @@ public class ExportableTemplateObject implements IExportableObject
    * @param replaceTokens
    *          tokens used to replace elements of the template file that relate to values of specific gml-feature
    *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
-   * @param category the category of the document resulting from the export of this object
+   * @param category
+   *          the category of the document resulting from the export of this object
    */
   public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
       final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
@@ -130,21 +132,19 @@ public class ExportableTemplateObject implements IExportableObject
           + ". Nur .odt und .ott Vorlagen werden unterstützt." );
   }
 
-  public String getPreferredDocumentName()
+public String getPreferredDocumentName()
   {
     switch( m_exportType )
     {
-      case EXPORT_TYPE_DIAGRAM:
-        final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-        return m_documentName + "." + format;
-      case EXPORT_TYPE_TABLE:
-        return m_documentName + ".csv";
-      default:
-        return "<default>";
+    case EXPORT_TYPE_DIAGRAM:
+      final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
+      return FileUtilities.validateName( m_documentName + "." + format,"_");
+    case EXPORT_TYPE_TABLE:
+      return FileUtilities.validateName( m_documentName + ".csv", "_" );
+    default:
+      return FileUtilities.validateName( "<default>", "_" );
     }
-  }
-
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+  }  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
       final Configuration metadataExtensions )
   {
     Reader reader = null;
@@ -158,13 +158,13 @@ public class ExportableTemplateObject implements IExportableObject
 
       switch( m_exportType )
       {
-        case EXPORT_TYPE_DIAGRAM:
-          return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+      case EXPORT_TYPE_DIAGRAM:
+        return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
+            monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
 
-        case EXPORT_TYPE_TABLE:
-          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+      case EXPORT_TYPE_TABLE:
+        return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor,
+            1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
       }
 
       // should never come here
