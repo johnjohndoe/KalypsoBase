@@ -132,15 +132,11 @@ IChartLayer[] icl=new IChartLayer[1];
              for( int i = 0; i < comps.length; i++ )
              {
                final QName qn = comps[i].getValueTypeName();
-
-               if (comps[i].getName().compareTo("Wasserstand")==0)
-                   map.put("domain", comps[i] );
-               else if (comps[i].getName().compareTo("Abfluss")==0)
-                 map.put("value", comps[i] );
-               System.out.println("Component: "+comps[i].getName());
-               System.out.println("Component: "+comps[i].getDescription());
-               System.out.println("Component: "+comps[i].getPosition());
-               System.out.println("Component: "+comps[i].getValueTypeName());
+               IComponent c=comps[i];
+               if (c.getName().compareTo("Wasserstand")==0)
+                   map.put("domain", c );
+               else if (c.getName().compareTo("Abfluss")==0)
+                 map.put("value", c );
                if( map.size() == 2 )
                  break;
              }

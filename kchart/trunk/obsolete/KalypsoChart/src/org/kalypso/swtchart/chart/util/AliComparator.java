@@ -71,7 +71,7 @@ public class AliComparator extends ComparableComparator
         return compare( ((XMLGregorianCalendar) o1).toGregorianCalendar(), ((XMLGregorianCalendar) o2).toGregorianCalendar() );
       else
       {
-        System.out.println("o1 hat andere Klasse als o2: "+o1.getClass().getName()+" "+o2.getClass().getName());
+        System.out.println("Can't compare: different classes: "+o1.getClass().getName()+" "+o2.getClass().getName());
         return 0;
       }
     }
@@ -81,7 +81,7 @@ public class AliComparator extends ComparableComparator
         return compare( ((XMLGregorianCalendarImpl) o1).toGregorianCalendar(), ((XMLGregorianCalendarImpl) o2).toGregorianCalendar() );
       else
       { 
-         System.out.println("o1 hat andere Klasse als o2: "+o1.getClass().getName()+" "+o2.getClass().getName());
+         System.out.println("Can't compare: different classes: "+o1.getClass().getName()+" "+o2.getClass().getName());
          return 0;
       }
     }

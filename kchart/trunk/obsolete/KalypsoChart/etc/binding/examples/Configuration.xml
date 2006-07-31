@@ -95,18 +95,6 @@
                     <StyleLink ref="Wasserstand_Style"/>
                </ChartElement>
           </LayerProvider>
-          <LayerProvider name="org.kalypso.layerprovider.WQTabelle">
-               <DataSource>
-                    <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
-               </DataSource>
-               <ChartElement name="WQTabelle">
-                    <AxisMapping>
-                         <Domain axisLink="WasserstandNN_Axis" equation="Wasserstand"/>
-                         <Value axisLink="Abfluss_Axis" equation="Abfluss"/>
-                    </AxisMapping>
-                    <StyleLink ref="WQTabelle_Style"/>
-               </ChartElement>
-          </LayerProvider>
           <LayerProvider name="org.kalypso.layerprovider.Niederschlag">
                <DataSource>
                     <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
@@ -142,13 +130,7 @@
                <MinVal>140</MinVal>
                <MaxVal>250</MaxVal>
           </DoubleAxis>
-          <DoubleAxis id="WasserstandNN_Axis">
-               <Name>Wasserstand (mNN)</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>BOTTOM</Position>
-               <MinVal>-70</MinVal>
-               <MaxVal>-48</MaxVal>
-          </DoubleAxis>
+         
           <DoubleAxis id="Niederschlag_Axis">
                <Name>Niederschlag (mm)</Name>
                <Direction>NEGATIVE</Direction>
@@ -156,13 +138,7 @@
                <MinVal>0</MinVal>
                <MaxVal>100</MaxVal>
           </DoubleAxis>
-          <DoubleAxis id="Abfluss_Axis">
-               <Name>Abfluss (m³/s)</Name>
-               <Direction>POSITIVE</Direction>
-               <Position>LEFT</Position>
-               <MinVal>-0.0100001</MinVal>
-               <MaxVal>0.0100001</MaxVal>
-          </DoubleAxis>
+          
           <DateAxis id="Datum_Axis">
                <Name>Datum</Name>
                <Direction>POSITIVE</Direction>
@@ -172,9 +148,111 @@
           </DateAxis>
      </Chart>
      
+     <Chart name="WasserstandLippe1">
+          <Title>Wasserstand Lippe</Title>
+          <Abstract>
+               aus Datei 20001w-30t.uvt
+          </Abstract>
+          <LayerProvider name="org.kalypso.layerprovider.Wasserstand">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/wasserstand_01.gml</Url>
+               </DataSource>
+               <ChartElement name="Wasserstand">
+                    <AxisMapping>
+                         <Domain axisLink="Datum_Axis" equation="Datum"/>
+                         <Value axisLink="Wasserstand_Axis" equation="Wasserstand"/>
+                    </AxisMapping>
+                    <StyleLink ref="Wasserstand_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <DoubleAxis id="Wasserstand_Axis">
+               <Name>Wasserstand</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>40</MinVal>
+               <MaxVal>100</MaxVal>
+          </DoubleAxis>
+          <DateAxis id="Datum_Axis">
+               <Name>Datum</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>2005-09-15</MinVal>
+               <MaxVal>2005-10-25</MaxVal>
+          </DateAxis>
+     </Chart>
+
+     <Chart name="Niederschlag1">
+          <Title>Niederschlag von irgendwo</Title>
+          <Abstract>
+               aus ZML-Datei
+          </Abstract>
+          <LayerProvider name="org.kalypso.layerprovider.Niederschlag">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/niederschlag_01.gml</Url>
+               </DataSource>
+               <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
+               <Parameter name="fixedPoint" value="2006-07-01T00:00:00Z"/>
+               <!-- Die Breite eines Bars in Millisekunden - Ein Tag enspricht 86400000 ms-->
+               <Parameter name="barInterval" value="800"/>
+               <ChartElement name="Wasserstand">
+                    <AxisMapping>
+                         <Domain axisLink="Datum_Axis" equation="Datum"/>
+                         <Value axisLink="Niederschlag_Axis" equation="Niederschlag"/>
+                    </AxisMapping>
+                    <StyleLink ref="Niederschlag_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <DoubleAxis id="Niederschlag_Axis">
+               <Name>Wasserstand</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>0.0000000</MinVal>
+               <MaxVal>0.5</MaxVal>
+          </DoubleAxis>
+          <DateAxis id="Datum_Axis">
+               <Name>Datum</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>2006-07-05</MinVal>
+               <MaxVal>2006-07-20</MaxVal>
+          </DateAxis>
+     </Chart>
+
+     <Chart name="WQ1">
+          <Title>WQ-Tabelle</Title>
+          <Abstract>
+               aus ZML-Datei
+          </Abstract>
+          <LayerProvider name="org.kalypso.layerprovider.WQTabelle">
+               <DataSource>
+                    <Url>http://www.openali.de/kalypso/wq_01.gml</Url>
+               </DataSource>
+               <ChartElement name="WQTabelle">
+                    <AxisMapping>
+                         <Domain axisLink="W_Axis" equation="Wasserstand"/>
+                         <Value axisLink="Q_Axis" equation="Abfluss"/>
+                    </AxisMapping>
+                    <StyleLink ref="WQTabelle_Style"/>
+               </ChartElement>
+          </LayerProvider>
+          <DoubleAxis id="W_Axis">
+               <Name>Wasserstand (mm)</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>BOTTOM</Position>
+               <MinVal>30</MinVal>
+               <MaxVal>320</MaxVal>
+          </DoubleAxis>
+          <DoubleAxis id="Q_Axis">
+               <Name>Abfluss (m³/s)</Name>
+               <Direction>POSITIVE</Direction>
+               <Position>LEFT</Position>
+               <MinVal>0</MinVal>
+               <MaxVal>85</MaxVal>
+          </DoubleAxis>
+ 
+     </Chart>
     
      <kcls:Style id="Wasserstand_Style">
-          
           <kcls:Line>
                <kcls:LineWidth>2</kcls:LineWidth>
                <kcls:LineStyle>DASH</kcls:LineStyle>
@@ -191,6 +269,7 @@
                </kcls:Border>
           </kcls:Polygon>
      </kcls:Style>
+     
      <kcls:Style id="WQTabelle_Style">
           <kcls:Point>
                <kcls:PointWidth>3</kcls:PointWidth>
@@ -250,57 +329,77 @@
                </kcls:Border>
           </kcls:Polygon>
      </kcls:Style>
-     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MyFirstTable">
-          <TableClass>table1</TableClass>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="Wasserstand1">
+          <TableClass>ws_table</TableClass>
           <Title>Wasserstandsdaten</Title>
-          <TitleClass>title1</TitleClass>
+          <TitleClass>ws_title</TitleClass>
           <Abstract>Die Tabelle zeigt Wasserstandsdaten. Außerdem kann sie anhand der definierten
           Klassen CSS-formatiert werden.</Abstract>
-          <AbstracClass>abstract1</AbstracClass>
+          <AbstracClass>ws_abstract</AbstracClass>
           <DataSource>
-               <!--Url>http://www.openali.de/kalypso/timeseries.gml</Url-->
-               <Url>file:///home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/timeseries.gml</Url>
+               <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                <Id>wasserstandsmessung</Id>
           </DataSource>
           <Component>
                <Name>Datum</Name>
-               <ComponentClass>comp1_1</ComponentClass>
+               <ComponentClass>ws_comp1</ComponentClass>
                <Header>Dies ist ein optionaler Header für das Datum</Header>
-               <HeaderClass>header1_1</HeaderClass>
+               <HeaderClass>ws_header1</HeaderClass>
           </Component>
           <Component>
                <Name>Wasserstand</Name>
-               <ComponentClass>comp1_2</ComponentClass>
+               <ComponentClass>ws_comp2</ComponentClass>
                <Header>Dies ist ein optionaler Header für die Pegelhöhe</Header>
-               <HeaderClass>header1_2</HeaderClass>
+               <HeaderClass>ws_header2</HeaderClass>
           </Component>
      </Table>
-     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="MySecondTable">
-          <TableClass>table2</TableClass>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="WQ1">
+          <TableClass>wq1_table</TableClass>
+          <Title>Wasserstand-Abfluss-Beziehung</Title>
+          <TitleClass>wq1_title</TitleClass>
+          <Abstract>Die Tabelle setzt Wasserstands-Daten in Beziehung zum jeweiligen Abfluss.</Abstract>
+          <AbstracClass>wq_abstract</AbstracClass>
+          <DataSource>
+               <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
+               <Id>wqtable1</Id>
+          </DataSource>
+          <Component>
+               <Name>Wasserstand</Name>
+               <ComponentClass>wq1_comp1</ComponentClass>
+               <Header>Dies ist ein optionaler Header für die Pegelhöhe</Header>
+               <HeaderClass>wq1_header1</HeaderClass>
+          </Component>
+          <Component>
+               <Name>Abfluss</Name>
+               <ComponentClass>wq1_comp2</ComponentClass>
+               <Header>Abfluss</Header>
+               <HeaderClass>wq1_header2</HeaderClass>
+          </Component>
+     </Table>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="Niederschlag1">
+          <TableClass>ns_table</TableClass>
           <Title>Niederschlag</Title>
-          <TitleClass>title2</TitleClass>
+          <TitleClass>ns_title</TitleClass>
           <Abstract>
                Die Tabelle zeigt Niederschlagsdaten.Das Datum-Feld enthält ein benutzerdefiniertes Zeit-Format.
-          
           </Abstract>
-          <AbstracClass>abstract2</AbstracClass>
+          <AbstracClass>ns_abstract</AbstracClass>
           <DataSource>
-               <!--Url>http://www.openali.de/kalypso/timeseries.gml</Url-->
-               <Url>file:///home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/timeseries.gml</Url>
+               <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                <Id>niederschlagsmessung</Id>
           </DataSource>
           <DateComponent>
                <Name>Datum</Name>
-               <ComponentClass>comp2_1</ComponentClass>
-               <Header>Dies ist ein optionaler Header für das Datum</Header>
-               <HeaderClass>header2_1</HeaderClass>
+               <ComponentClass>ns_comp1</ComponentClass>
+               <Header>Datum</Header>
+               <HeaderClass>ns_header1</HeaderClass>
                <DateFormat>dd.MM.yyyy HH:mm</DateFormat>
           </DateComponent>
           <Component>
                <Name>Niederschlag</Name>
-               <ComponentClass>comp2_2</ComponentClass>
-               <Header>Dies ist ein optionaler Header für die Pegelhöhe</Header>
-               <HeaderClass>header2_2</HeaderClass>
+               <ComponentClass>ns_comp2</ComponentClass>
+               <Header>Niederschlag</Header>
+               <HeaderClass>ns_header2</HeaderClass>
           </Component>
      </Table>
 </Configuration>

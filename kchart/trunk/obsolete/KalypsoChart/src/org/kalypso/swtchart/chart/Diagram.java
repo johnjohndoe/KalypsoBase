@@ -86,7 +86,7 @@ public class Diagram extends Composite implements Listener
     String configFullPath=configPath+configName;
     
     ConfigurationLoader cl=new ConfigurationLoader(configFullPath);
-    ChartLoader.createChart(m_chart, cl.getConfiguration() , "WasserstandEtc");
+    ChartLoader.createChart(m_chart, cl.getConfiguration() , "WQ1");
     //ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
     

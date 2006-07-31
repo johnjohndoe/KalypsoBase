@@ -128,7 +128,7 @@ private String m_description;
       int iy1 = m_valAxis.logicalToScreen( y1 );
       path.add(new Point(ix1, iy1));
 
-      System.out.println( "Path: addingPoint...("+ix1+":"+iy1+")" );
+      System.out.println( "Path: addingPoint...("+ix1+":"+iy1+") " );
     }
     if (sl!=null)
     {

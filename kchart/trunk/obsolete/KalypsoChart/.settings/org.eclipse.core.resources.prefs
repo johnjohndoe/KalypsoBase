@@ -1,4 +1,6 @@
-#Thu Jul 27 00:12:52 CEST 2006
+#Mon Jul 31 18:28:10 CEST 2006
 eclipse.preferences.version=1
 encoding//etc/binding/examples/timeseries.gml=UTF-8
+encoding//etc/binding/examples/timeseries_minimal.gml=UTF-8
+encoding//etc/binding/examples/wq_01.gml=UTF-8
 encoding//etc/binding/response/CapabilitesCopy_org.xsd.xml=UTF8

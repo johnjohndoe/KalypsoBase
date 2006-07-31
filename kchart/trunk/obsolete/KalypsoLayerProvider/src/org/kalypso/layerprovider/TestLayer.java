@@ -232,7 +232,7 @@ private String m_description;
         if (polygon!=null)
         {
           polygon.setPath(imgPoints);
-          polygon.paint(gc, dev);
+       //   polygon.paint(gc, dev);
         }
         else
         {

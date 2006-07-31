@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -114,7 +115,9 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     if( comp == null )
       return 0;
 
-    return comp.normalizedToScreen( logicalToNormalized( value ) );
+    double norm=logicalToNormalized( value );
+    int screen=comp.normalizedToScreen( norm );
+    return screen;
   }
 
   /**
