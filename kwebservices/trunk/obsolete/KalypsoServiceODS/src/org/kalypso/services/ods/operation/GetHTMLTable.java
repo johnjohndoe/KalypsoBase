@@ -48,8 +48,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
+import org.kalypso.services.ods.preferences.IODSPreferences;
+import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -71,20 +74,23 @@ public class GetHTMLTable implements IODSOperation
     String name=request.getParameter( "NAME" );
     if (name!=null)
     {
-//    HTMLTabelle erzeugen
-      String pathVC="/home/alibu/dev/workspace32/KalypsoChart/etc/binding/examples/Configuration.xml";
+      //    HTMLTabelle erzeugen
+      IEclipsePreferences prefs = new ODSPreferences().getPreferences();
+      String pathVC=prefs.get(IODSPreferences.CONFIG_PATH, "")+prefs.get(IODSPreferences.CONFIG_NAME, "");
       ConfigurationLoader cl=new ConfigurationLoader(pathVC);
       //GMLWorkspace initialisieren
       KalypsoGisPlugin.getDefault();
       String htmltable = TableLoader.createTable(cl.getConfiguration(), name);
 
-      response.setContentType( "text/html" );
-      final PrintWriter out=response.getWriter();
       if (htmltable!=null)
+      {
+        final PrintWriter out=response.getWriter();
+        response.setContentType( "text/html" );
         out.write( htmltable );
+        out.close();
+      }
       else
           ODSException.showException( response, ERROR_CODE.TABLE_NOT_DEFINED );
-      out.close();
         
     }
     else
