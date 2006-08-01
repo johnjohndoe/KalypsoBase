@@ -182,6 +182,7 @@ public class CapabilitiesLoader
   public void mergeConfigIntoODS()
   {
     
+    
     IEclipsePreferences prefs = new ODSPreferences().getPreferences();
     String serviceRoot=prefs.get( IODSPreferences.SERVICE_ROOT, "" );
     String service="ODS";
@@ -239,8 +240,9 @@ public class CapabilitiesLoader
     }
     if (diagrams.size()>0)
     {
-      //an die "hartcodierten" Tabellen anhängen
       List<Diagram> diagram = m_caps.getCapability().getDiagram();
+      //die anderen löschen
+      diagram.clear();
       diagram.addAll(diagrams);
     }
     
@@ -271,8 +273,9 @@ public class CapabilitiesLoader
     }
     if (legends.size()>0)
     {
-      //an die "hartcodierten" Legenden anhängen
       List<Legend> legend = m_caps.getCapability().getLegend();
+      //alle anderen verwerfen
+      legend.clear();
       legend.addAll(legends);
     }
     
@@ -307,8 +310,9 @@ public class CapabilitiesLoader
     }
     if (captables.size()>0)
     {
-      //an die "hartcodierten" Tabellen anhängen
       List<Table> tables = m_caps.getCapability().getTable();
+      //alle anderen Löschen
+      tables.clear();
       tables.addAll(captables);
     }
     

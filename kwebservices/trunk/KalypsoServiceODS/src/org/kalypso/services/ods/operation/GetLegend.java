@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -112,7 +113,7 @@ public class GetLegend implements IODSOperation, Runnable
           }
           else
           {
-            ODSException.showException( response, ERROR_CODE.LEGEND_NOT_DEFINED );
+            ODSException.showException( request, response, ERROR_CODE.LEGEND_NOT_DEFINED );
           }
           
       }
@@ -123,7 +124,7 @@ public class GetLegend implements IODSOperation, Runnable
       finally
       {
         if (display!=null && !display.isDisposed())
-          display.dispose();
+            display.dispose();
         if (lic!=null)
           lic.dispose();
         if (outputStream!=null)
@@ -132,7 +133,7 @@ public class GetLegend implements IODSOperation, Runnable
      
     }
     else
-      ODSException.showException( response, ERROR_CODE.NO_NAME_SPEZIFIED );
+      ODSException.showException( request, response, ERROR_CODE.NO_NAME_SPECIFIED );
   }
  
  public void init(HttpServletRequest request, HttpServletResponse response)

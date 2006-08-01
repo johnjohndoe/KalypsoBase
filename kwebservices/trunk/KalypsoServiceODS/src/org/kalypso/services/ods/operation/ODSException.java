@@ -73,15 +73,15 @@ public class ODSException
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public static void showException( HttpServletResponse response, ERROR_CODE ec )
+  public static void showException( HttpServletRequest request, HttpServletResponse response, ERROR_CODE ec )
   {
       PrintWriter writer =null;
       try
       {
-        KalypsoGisPlugin.getDefault();
+        //KalypsoGisPlugin.getDefault();
         writer = response.getWriter();
         response.setContentType("text/xml");
-        writer.write( getXMLString(ec) );
+        writer.write( getXMLString(ec, request) );
       }
       catch( IOException e)
       {
@@ -94,11 +94,12 @@ public class ODSException
       }
   }
   
-  public static String getXMLString(ERROR_CODE e) throws IOException
+  public static String getXMLString(ERROR_CODE e, HttpServletRequest request) throws IOException
   {
     ExceptionReport report = OF.createExceptionReport();
     ExceptionType extype = OF.createExceptionType();
     extype.setExceptionCode( e.toString() );
+    extype.setLocator( request.getQueryString() );
     report.getException().add( extype );
     Marshaller m;
     String excString="";

@@ -76,7 +76,7 @@ public class GetCapabilites implements IODSOperation
     String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
     
     CapabilitiesLoader pf = new CapabilitiesLoader(pathCaps, pathVC);
-    pf.mergeConfigIntoODS();
+   // pf.mergeConfigIntoODS();
     writer.println(pf.getXMLString());
     writer.close();
   }

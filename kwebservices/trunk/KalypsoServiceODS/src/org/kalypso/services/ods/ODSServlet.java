@@ -49,7 +49,7 @@ public class ODSServlet extends HttpServlet implements Servlet
    *      javax.servlet.http.HttpServletResponse)
    */
   @Override
-  protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
+  protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     //Gewünschte Operation ausführen
     String odsrequest = request.getParameter( "REQUEST" );
@@ -62,13 +62,14 @@ public class ODSServlet extends HttpServlet implements Servlet
         if( odsrequest != null )
             executeOperation(request, response, odsrequest);
         else
-          ODSException.showException( response, ERROR_CODE.OPERATION_NOT_SPEZIFIED );
+          ODSException.showException(request,  response, ERROR_CODE.OPERATION_NOT_SPECIFIED );
       }
       else
-        ODSException.showException( response, ERROR_CODE.SERVICE_NOT_SUPPORTED );
+        ODSException.showException( request, response, ERROR_CODE.SERVICE_NOT_SUPPORTED );
     }
     else
-      ODSException.showException( response, ERROR_CODE.SERVICE_NOT_SPEZIFIED );
+      ODSException.showException( request, response, ERROR_CODE.SERVICE_NOT_SPECIFIED );
+    
   }
 
     
@@ -100,6 +101,7 @@ public class ODSServlet extends HttpServlet implements Servlet
        Display.getDefault().syncExec( gl );
      }
      else
-       ODSException.showException( response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
+       ODSException.showException( request, response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
    }
+   
 }

@@ -116,7 +116,6 @@ public class DebugView extends ViewPart implements PaintListener
     m_legendImage=new Image(Display.getDefault(), 200, 150);  
    // createChart("Test");
     getCapabilities();
-    getException();
     
   }
   
@@ -131,20 +130,7 @@ public class DebugView extends ViewPart implements PaintListener
     System.out.println(capsxml);
   }
   
-  public void getException()
-  {
-    try
-    {
-      System.out.println(ODSException.getXMLString( ERROR_CODE.DIAGRAM_NOT_DEFINED ));
-      System.out.println(ODSException.getXMLString( ERROR_CODE.SERVICE_NOT_SUPPORTED ));
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    
-  }
+  
   
   /**
    * Testmethode zur Ausgabe einer Tabelle aus einem 

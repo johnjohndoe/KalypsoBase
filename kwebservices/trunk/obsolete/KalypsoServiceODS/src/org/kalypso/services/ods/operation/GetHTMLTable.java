@@ -90,11 +90,11 @@ public class GetHTMLTable implements IODSOperation
         out.close();
       }
       else
-          ODSException.showException( response, ERROR_CODE.TABLE_NOT_DEFINED );
+          ODSException.showException( request, response, ERROR_CODE.TABLE_NOT_DEFINED );
         
     }
     else
-      ODSException.showException( response, ERROR_CODE.NO_NAME_SPEZIFIED );
+      ODSException.showException( request, response, ERROR_CODE.NO_NAME_SPECIFIED );
     
   }
 }
