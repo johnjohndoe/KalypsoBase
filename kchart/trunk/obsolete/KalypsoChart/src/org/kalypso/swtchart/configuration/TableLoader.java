@@ -42,6 +42,7 @@ package org.kalypso.swtchart.configuration;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -154,6 +155,8 @@ public class TableLoader
     HashMap<String, IComponent> compRMap=new HashMap<String, IComponent>();
     //Map mit Name der Conponente und der Benutzer-Component -
     HashMap<String, ComponentType> compTMap=new HashMap<String, ComponentType>();
+    //Array mit den Namen der Components - damit die Reihenfolge nicht verloren geht
+    ArrayList<String> orderedNames=new ArrayList<String>();
     
     //Die Config als äußere Schleife, damit die Components in der richtigen
     //Reihenfolge angehängt werden
@@ -175,6 +178,7 @@ public class TableLoader
           if (compR.getName().compareTo(compT.getName())==0)
           {
             String name=compR.getName();
+            orderedNames.add( name );
             compTMap.put(name, compT);
             compRMap.put(name, compR);
             break;
@@ -226,8 +230,7 @@ public class TableLoader
     tmpHtml+="<tr>";
     
     //dazu müssen die Schlüssel der Map durchlaufen werden
-    Set<String> compNames = compTMap.keySet();
-    for( String compName : compNames )
+    for( String compName : orderedNames )
     {
       ComponentType compT=compTMap.get(compName);
       String header=compT.getHeader();
@@ -264,7 +267,7 @@ public class TableLoader
     {
       html+="<tr>";
       final IRecord record = result.get( i );
-      for( String compName : compNames )
+      for( String compName : orderedNames )
       {
          html+="<td ";
         
