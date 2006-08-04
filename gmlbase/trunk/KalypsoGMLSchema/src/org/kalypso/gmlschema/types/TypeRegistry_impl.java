@@ -31,7 +31,6 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   {
     final QName typeName = typeHandler.getTypeName();
     final Class className = typeHandler.getValueClass();
-
 //    if( m_typeMap.containsKey( typeName ) )
 //      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
 
@@ -106,6 +105,11 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
     return m_typeMap.values().toArray( a );
   }
 
+  public int getRegisteredTypeHandlerSize()
+  {
+    return m_typeMap.values().size();
+  }
+  
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#clearRegistry()
    */

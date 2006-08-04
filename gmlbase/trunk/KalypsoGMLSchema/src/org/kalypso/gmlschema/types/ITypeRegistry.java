@@ -45,4 +45,6 @@ public interface ITypeRegistry<H extends ITypeHandler>
    * @see java.util.Collection#toArray(T[])
    */
   public H[] getRegisteredTypeHandler( final H[] a );
+  
+  public int getRegisteredTypeHandlerSize();
 }
