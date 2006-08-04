@@ -92,7 +92,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
       if( !result.contains( ft ) && isRequested( ft ) )
         result.add( ft );
     }
-    return result.toArray( new FeatureType[result.size()] );
+    return result.toArray( new IFeatureType[result.size()] );
   }
 
   private boolean isRequested( final IFeatureType ft )
