@@ -103,7 +103,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
    */
   public H[] getRegisteredTypeHandler( final H[] a )
   {
-    return m_classMap.values().toArray( a );
+    return m_typeMap.values().toArray( a );
   }
 
   /**

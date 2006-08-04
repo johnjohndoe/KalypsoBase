@@ -39,7 +39,13 @@ public interface IMarshallingTypeHandler extends ITypeHandler
 
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException;
 
-  /** Creates an instance of my type from a string */
+  /**
+   * Creates an instance of my type from a string.
+   * <p>
+   * Remark this should not be used for gui purposes. Use IGuiTypeHandler#fromText instead.
+   * </p>
+   * <p>TODO: Check if this should be deprecated</p>
+   */
   public Object parseType( final String text ) throws ParseException;
 
 }
