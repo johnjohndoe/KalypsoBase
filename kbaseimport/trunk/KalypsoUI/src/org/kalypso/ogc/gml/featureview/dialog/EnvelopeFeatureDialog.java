@@ -51,6 +51,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
+ * This class opens a envelope editing dialog.
+ * 
  * @author Holger Albert
  */
 public class EnvelopeFeatureDialog implements IFeatureDialog
@@ -74,7 +76,16 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   {
     GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
 
-    Double[] values = new Double[] { envelope.getMin().getX(), envelope.getMin().getY(), envelope.getMax().getX(), envelope.getMax().getY() };
+    Double[] values = null;
+
+    if( envelope == null )
+    {
+      values = new Double[] { new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ) };
+    }
+    else
+    {
+      values = new Double[] { envelope.getMin().getX(), envelope.getMin().getY(), envelope.getMax().getX(), envelope.getMax().getY() };
+    }
 
     final EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
 

@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Gui type handler for xs:date's.
+ * Gui type handler for gml:envelopes's.
  * 
  * @author Holger Albert
  */

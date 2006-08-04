@@ -67,11 +67,11 @@ final class EnvelopeDialogListener implements ModifyListener
     final Text text = (Text) e.getSource();
     final String content = text.getText();
 
+    Double[] values = m_envDialog.getValues();
+
     try
     {
       Double dbl = Double.parseDouble( content );
-
-      Double[] values = m_envDialog.getValues();
 
       values[m_whichText] = dbl;
 
@@ -79,7 +79,14 @@ final class EnvelopeDialogListener implements ModifyListener
     }
     catch( Exception ex )
     {
-      /* Is handled via a DoubleModifyListener in EnvelopeDialog. */
+      values[m_whichText] = new Double( "0.0" );
+
+      m_envDialog.setValues( values );
+    }
+    finally
+    {
+      /* Setze den Status des OK-Buttons. */
+      m_envDialog.checkModified();
     }
   }
 }

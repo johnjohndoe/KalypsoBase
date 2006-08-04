@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.dialog;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -53,6 +54,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * This class builds the dialog for the data input for the GM_Envelope.
@@ -62,12 +64,15 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 public class EnvelopeDialog extends Dialog
 {
   private Double m_values[];
+  
+  private Text m_text[];
 
   public EnvelopeDialog( Shell parent, Double[] values )
   {
     super( parent );
 
-    m_values = new Double[] { values[0], values[1], values[2], values[3] };
+    m_values = values;
+    m_text = new Text[4];
   }
 
   /**
@@ -103,31 +108,31 @@ public class EnvelopeDialog extends Dialog
     label1.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
-    Text text1 = new Text( group, SWT.BORDER );
-    text1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    text1.setText( m_values[0].toString() );
+    m_text[0] = new Text( group, SWT.BORDER );
+    m_text[0].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_text[0].setText( m_values[0].toString() );
 
     /* The label for the input data. */
     Label label2 = new Label( group, SWT.NONE );
     label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label2.setText( "Rechtswert MAX" );
+    label2.setText( "Hochwert MIN" );
     label2.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
-    Text text2 = new Text( group, SWT.BORDER );
-    text2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    text2.setText( m_values[1].toString() );
+    m_text[1] = new Text( group, SWT.BORDER );
+    m_text[1].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_text[1].setText( m_values[1].toString() );
 
     /* The label for the input data. */
     Label label3 = new Label( group, SWT.NONE );
     label3.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label3.setText( "Hochwert MIN" );
+    label3.setText( "Rechtswert MAX" );
     label3.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
-    Text text3 = new Text( group, SWT.BORDER );
-    text3.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    text3.setText( m_values[2].toString() );
+    m_text[2] = new Text( group, SWT.BORDER );
+    m_text[2].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_text[2].setText( m_values[2].toString() );
 
     /* The label for the input data. */
     Label label4 = new Label( group, SWT.NONE );
@@ -136,14 +141,14 @@ public class EnvelopeDialog extends Dialog
     label4.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
-    Text text4 = new Text( group, SWT.BORDER );
-    text4.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    text4.setText( m_values[3].toString() );
+    m_text[3] = new Text( group, SWT.BORDER );
+    m_text[3].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_text[3].setText( m_values[3].toString() );
 
-    text1.addModifyListener( new EnvelopeDialogListener( this, 0 ) );
-    text2.addModifyListener( new EnvelopeDialogListener( this, 1 ) );
-    text3.addModifyListener( new EnvelopeDialogListener( this, 2 ) );
-    text4.addModifyListener( new EnvelopeDialogListener( this, 3 ) );
+    m_text[0].addModifyListener( new EnvelopeDialogListener( this, 0 ) );
+    m_text[1].addModifyListener( new EnvelopeDialogListener( this, 1 ) );
+    m_text[2].addModifyListener( new EnvelopeDialogListener( this, 2 ) );
+    m_text[3].addModifyListener( new EnvelopeDialogListener( this, 3 ) );
 
     final Display display = shell.getDisplay();
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
@@ -151,12 +156,23 @@ public class EnvelopeDialog extends Dialog
 
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-    text1.addModifyListener( doubleModifyListener );
-    text2.addModifyListener( doubleModifyListener );
-    text3.addModifyListener( doubleModifyListener );
-    text4.addModifyListener( doubleModifyListener );
+    m_text[0].addModifyListener( doubleModifyListener );
+    m_text[1].addModifyListener( doubleModifyListener );
+    m_text[2].addModifyListener( doubleModifyListener );
+    m_text[3].addModifyListener( doubleModifyListener );
 
     return panel;
+  }
+  
+  /* Diese Funktion setzt den Status des OK-Buttons, nach dem Status der Text-Felder. */
+  public void checkModified( )
+  {
+    if( NumberUtils.isDouble( m_text[0].getText() ) && NumberUtils.isDouble( m_text[1].getText() ) && NumberUtils.isDouble( m_text[2].getText() ) && NumberUtils.isDouble( m_text[3].getText() ) )
+    {
+      this.getButton( IDialogConstants.OK_ID ).setEnabled(true);
+    } else {
+      this.getButton( IDialogConstants.OK_ID ).setEnabled(false);
+    }
   }
 
   public Double[] getValues( )
