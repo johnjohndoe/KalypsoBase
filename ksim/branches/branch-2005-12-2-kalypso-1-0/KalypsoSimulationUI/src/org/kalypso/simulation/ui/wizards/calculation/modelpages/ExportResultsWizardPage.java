@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -217,10 +218,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       sashForm.setWeights( new int[]
-      { mainWeight, 100 - mainWeight } );
+      {
+          mainWeight,
+          100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight, 100 - rightWeight } );
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -385,7 +390,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
-      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target );
+      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target, "Berichtsablage" );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
 
       // just open the dialog, business is done in the dialog
@@ -402,7 +407,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus(
+      ErrorDialog.openError( shell, "Berichtsablage", "Fehler sind aufgetreten", StatusUtilities.createStatus(
           IStatus.ERROR, "Siehe Details", e ) );
     }
   }
@@ -454,6 +459,17 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final FeatureList featureList = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
       final Feature[] features = featureList.toFeatures();
 
+      final Shell shell = getContainer().getShell();
+      final String dialogTitle = "Export Pegel: Rechenvariante " + calcCase.getName();
+
+      if( features == null || features.length == 0 )
+      {
+        MessageDialog
+            .openWarning( shell, dialogTitle,
+                "Es stehen keine Ergebnisse für die Ablage bereit.\nStellen Sie sicher, dass eine Berechnung durchgeführt wurde." );
+        return null;
+      }
+
       final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty,
           context );
       // view it!
@@ -470,10 +486,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       Arrays.sort( features, new FeatureComparator( nameProperty ) );
 
       final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
-      final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
-          new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
+      final ListSelectionDialog dialog = new ListSelectionDialog( shell, features, new ArrayContentProvider(),
+          labelProvider, "Die Daten folgender Pegel werden exportiert:" );
       dialog.setInitialElementSelections( selectedFeatures );
-      dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
+      dialog.setTitle( dialogTitle );
       if( dialog.open() != Window.OK )
         return null;
 
@@ -534,7 +550,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   {
     final IFolder calcFolder = getCalcFolder();
     final FeatureList featureList = chooseSelectedFeatures( calcFolder );
-    if( featureList == null )
+    if( featureList == null || featureList.size() == 0 )
       return;
 
     // put feature-ids in feature-path'es
@@ -552,7 +568,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     // call ant - with properties
     launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN,
-        "Fehler bemi Speichern der Vorhersage-Zeotreihen", antProps );
+        "Fehler bemi Speichern der Vorhersage-Zeitreihen", antProps );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
