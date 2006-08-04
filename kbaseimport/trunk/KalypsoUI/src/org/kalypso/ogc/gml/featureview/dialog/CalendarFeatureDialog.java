@@ -40,10 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+//import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -53,12 +55,14 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 import org.kalypsodeegree.model.feature.Feature;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
 /**
  * @author belger
  */
 public class CalendarFeatureDialog implements IFeatureDialog
 {
-  private DateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+  //private DateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
 
   private FeatureChange m_change = null;
 
@@ -83,21 +87,29 @@ public class CalendarFeatureDialog implements IFeatureDialog
     if( open == Window.OK )
     {
       Date newDate = dialog.getDate();
-      if( m_ftp.getValueClass()==DateWithoutTime.class )
+      if( m_ftp.getValueClass() == DateWithoutTime.class )
         newDate = new DateWithoutTime( newDate );
 
-      m_change = new FeatureChange( m_feature, m_ftp, newDate );
+      final GregorianCalendar cal = new GregorianCalendar();
+      cal.setTime( newDate );
+      m_change = new FeatureChange( m_feature, m_ftp, new XMLGregorianCalendarImpl( cal ) );
     }
 
     return open;
   }
 
-  private Date getDate()
+  private Date getDate( )
+  {
+    final XMLGregorianCalendar calendar = getCalendar();
+    return calendar.toGregorianCalendar().getTime();
+  }
+
+  private XMLGregorianCalendar getCalendar( )
   {
     if( m_change != null )
-      return (Date)m_change.getNewValue();
+      return (XMLGregorianCalendar) m_change.getNewValue();
 
-    return (Date)m_feature.getProperty( m_ftp);
+    return (XMLGregorianCalendar) m_feature.getProperty( m_ftp );
   }
 
   /**
@@ -112,11 +124,13 @@ public class CalendarFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel()
+  public String getLabel( )
   {
-    final Date date = getDate();
-    if(date==null)
-      return "";
-    return m_dateFormat.format( date );
+//    final Date date = getDate();
+//    if( date == null )
+//      return "";
+//    
+//    return m_dateFormat.format( date );
+    return "...";
   }
 }
