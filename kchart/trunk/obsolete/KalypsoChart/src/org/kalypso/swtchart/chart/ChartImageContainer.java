@@ -48,7 +48,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
@@ -63,109 +62,101 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author alibu
- *
  */
-public class ChartImageContainer 
+public class ChartImageContainer
 {
-  
-  Image m_img=null;
-  
+
+  Image m_img = null;
+
   /**
-   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei
-   * Im momement geschieht das Erzeugen etwas umständlich:
-   * Chart erzeugen, dann Layer geben lassen und in Legende füllen;
-   * ohne Chart kommt man aber nicht an die Layer ran: LayerProvider
-   * verlangt in der Init-Methode nach einem Chart
-   * 
-   * Das Objekt muss nach der Verwendung diposed werden 
+   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei Im momement geschieht das Erzeugen etwas
+   * umständlich: Chart erzeugen, dann Layer geben lassen und in Legende füllen; ohne Chart kommt man aber nicht an die
+   * Layer ran: LayerProvider verlangt in der Init-Methode nach einem Chart Das Objekt muss nach der Verwendung diposed
+   * werden
    */
-  public ChartImageContainer(ConfigurationType config,  String chartname, Device dev, int width, int height)
+  public ChartImageContainer( ConfigurationType config, String chartname, Device dev, int width, int height )
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
     Chart chart = new Chart( shell, SWT.NONE );
-    //Chart füllen
-    ChartLoader.createChart(chart, config, chartname);
+    // Chart füllen
+    ChartLoader.createChart( chart, config, chartname );
     createChartImage( chart, dev, width, height );
-    
+
     shell.dispose();
   }
-  
+
   /**
    * Wenn man schon ein fertiges Chart hat, kann man auch leichter konstruieren
    */
-  public ChartImageContainer(Chart chart, Device dev, int width, int height)
+  public ChartImageContainer( Chart chart, Device dev, int width, int height )
   {
     createChartImage( chart, dev, width, height );
   }
-  
+
   /**
    * Gibt das erzeugte Bild zurück
    */
-  public Image getImage()
+  public Image getImage( )
   {
     return m_img;
   }
-  
-  public void dispose()
+
+  public void dispose( )
   {
-    if (m_img!=null)
+    if( m_img != null )
       m_img.dispose();
-    m_img=null;
+    m_img = null;
   }
-  
-  
-  public void createChartImage(Chart chart, Device dev, int width, int height)
+
+  public void createChartImage( Chart chart, Device dev, int width, int height )
   {
-    chart.setSize(new Point(width,height));
+    chart.setSize( new Point( width, height ) );
     chart.layout();
     chart.update();
-    
-    
-    m_img=new Image(dev, width, height);
-    
-    GCWrapper gcw=new GCWrapper(new GC(m_img));
-    Image tmpImg=new Image(dev, width, height);
-    GC tmpGc=new GC(tmpImg);
-    GCWrapper tmpGcw=new GCWrapper(tmpGc);
-    tmpGcw.setBackground(dev.getSystemColor(SWT.COLOR_YELLOW));
-    tmpGcw.fillRectangle(0,0,tmpImg.getBounds().width, tmpImg.getBounds().height);
-    
-    //img mit weißem Hintergrund versehen
-    gcw.setBackground(dev.getSystemColor(SWT.COLOR_WHITE));
-    gcw.fillRectangle(0,0, width, height);
-    
-    
-    //Plot zeichnen
-    Plot plot=(Plot) chart.getPlot();
-    tmpImg=plot.paintChart(dev, tmpGcw, m_img.getBounds(), null);
-    ImageLoader il=new ImageLoader();
-    gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height, plot.getBounds().x, plot.getBounds().y, plot.getBounds().width, plot.getBounds().height);
-    tmpGcw.fillRectangle(0,0,tmpImg.getBounds().width, tmpImg.getBounds().height);
-    
-    
+
+    m_img = new Image( dev, width, height );
+
+    GCWrapper gcw = new GCWrapper( new GC( m_img ) );
+    Image tmpImg = new Image( dev, width, height );
+    GC tmpGc = new GC( tmpImg );
+    GCWrapper tmpGcw = new GCWrapper( tmpGc );
+    tmpGcw.setBackground( dev.getSystemColor( SWT.COLOR_YELLOW ) );
+    tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
+
+    // img mit weißem Hintergrund versehen
+    gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
+    gcw.fillRectangle( 0, 0, width, height );
+
+    // Plot zeichnen
+    Plot plot = (Plot) chart.getPlot();
+    tmpImg = plot.paintChart( dev, tmpGcw, m_img.getBounds(), null );
+    gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height, plot.getBounds().x, plot.getBounds().y, plot.getBounds().width, plot.getBounds().height );
+    tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
+
     IAxisRegistry ar = chart.getAxisRegistry();
     Map<IAxis, IAxisComponent> components = ar.getComponents();
     Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
     for( Entry<IAxis, IAxisComponent> ac : acs )
     {
       IAxis axis = ac.getKey();
-      //Casten, damit man auf die Component-Eigenschaften zugreifen kann
+      // Casten, damit man auf die Component-Eigenschaften zugreifen kann
       AxisComponent comp = (AxisComponent) ac.getValue();
-      IAxisRenderer rend=axis.getRenderer();
-      
-      //Wenn man den GC nicht neu erzeugt, werden die AChsen nicht gezeichnet, sondern nochmal das Chart
+      IAxisRenderer rend = axis.getRenderer();
+
+      // Wenn man den GC nicht neu erzeugt, werden die AChsen nicht gezeichnet, sondern nochmal das Chart
       tmpGc.dispose();
       tmpGcw.dispose();
-      tmpGc=new GC(tmpImg);
-      tmpGcw=new GCWrapper(tmpGc);
-      //den Renderer in den TmpGC-Zeichnen lassen
-      rend.paint(tmpGcw, dev, axis, comp.getBounds());
-      /*  ...und ins Endbild kopieren; dabei muss berücksichtigt werden, 
-             dass die Components in 2 Ebenen Tiefe liegen - zur Position muss 
-             noch die der Eltern addiert werden
-      */
-      gcw.drawImage( tmpImg, comp.getBounds().x, comp.getBounds().y , comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x+comp.getBounds().x, comp.getParent().getBounds().y+comp.getBounds().y, comp.getBounds().width, comp.getBounds().height);
+      tmpGc = new GC( tmpImg );
+      tmpGcw = new GCWrapper( tmpGc );
+      // den Renderer in den TmpGC-Zeichnen lassen
+      rend.paint( tmpGcw, dev, axis, comp.getBounds() );
+      /*
+       * ...und ins Endbild kopieren; dabei muss berücksichtigt werden, dass die Components in 2 Ebenen Tiefe liegen -
+       * zur Position muss noch die der Eltern addiert werden
+       */
+      gcw.drawImage( tmpImg, comp.getBounds().x, comp.getBounds().y, comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x + comp.getBounds().x, comp.getParent().getBounds().y
+          + comp.getBounds().y, comp.getBounds().width, comp.getBounds().height );
     }
     chart.dispose();
     gcw.dispose();

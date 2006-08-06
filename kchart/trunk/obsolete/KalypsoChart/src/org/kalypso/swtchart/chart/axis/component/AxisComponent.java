@@ -60,7 +60,7 @@ import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComponent<T>
 {
   private final IAxis<T> m_axis;
-  private Point m_mousePos;
+
   private final Color m_white;
 
   // private int space = 5;
@@ -68,8 +68,8 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
-    m_white = new Color(null, 255, 255, 255);
-    setBackground(m_white);
+    m_white = new Color( null, 255, 255, 255 );
+    setBackground( m_white );
     m_axis = axis;
 
     addPaintListener( this );
@@ -87,26 +87,25 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   }
 
   /**
-   * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
-   * TODO: im Moment gibt die Funktion noch einen Standardwert zurück - die wirklichen Ausmaße 
-   * sollen aber berechnet werden
+   * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean) TODO: im Moment gibt die Funktion noch einen
+   *      Standardwert zurück - die wirklichen Ausmaße sollen aber berechnet werden
    */
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
   {
-    if (m_axis!=null)
+    if( m_axis != null )
     {
       IAxisRenderer<T> renderer = m_axis.getRenderer();
-      if (renderer!=null)
+      if( renderer != null )
       {
-        int axisWidth = renderer.getAxisWidth(m_axis);
-        if (m_axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
-          return new Point(0,axisWidth );
+        int axisWidth = renderer.getAxisWidth( m_axis );
+        if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+          return new Point( 0, axisWidth );
         else
-          return new Point(axisWidth, 0 );
+          return new Point( axisWidth, 0 );
       }
     }
-    return new Point(0,0);
+    return new Point( 0, 0 );
   }
 
   /**
@@ -119,14 +118,14 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private void paint( final GCWrapper gc, final Device dev )
   {
-    
+
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
 
-   // System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
+    // System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
 
     IAxisRenderer renderer = m_axis.getRenderer();
-    if (renderer != null)
+    if( renderer != null )
       renderer.paint( gc, dev, m_axis, b );
   }
 
@@ -168,6 +167,5 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
       range = bounds.height; // vertical
     return range;
   }
-  
-    
+
 }

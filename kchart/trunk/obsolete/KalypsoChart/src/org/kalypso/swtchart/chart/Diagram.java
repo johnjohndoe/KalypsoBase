@@ -60,67 +60,60 @@ import org.kalypso.swtchart.preferences.IChartPreferences;
 
 /**
  * @author alibu
- *
  */
 public class Diagram extends Composite implements Listener
 {
-
   private Chart m_chart;
-  private Composite m_composite;
+
   private Legend m_legend;
-  
-  public Diagram( Composite parent, int style ) 
+
+  public Diagram( Composite parent, int style )
   {
-    super(parent, style);
-    addListener(SWT.Resize, this);
-    this.setLayout(new FormLayout());
-    
+    super( parent, style );
+    addListener( SWT.Resize, this );
+    this.setLayout( new FormLayout() );
+
     m_chart = new Chart( this, SWT.BORDER );
-    
+
     IEclipsePreferences prefs = new ChartPreferences().getPreferences();
-    
-    
-    String configPath=prefs.get(IChartPreferences.CONFIG_PATH, "");
-    String configName=prefs.get(IChartPreferences.CONFIG_NAME, "");
-    
-    String configFullPath=configPath+configName;
-    
-    ConfigurationLoader cl=new ConfigurationLoader(configFullPath);
-    ChartLoader.createChart(m_chart, cl.getConfiguration() , "WQ1");
-    //ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
+
+    String configPath = prefs.get( IChartPreferences.CONFIG_PATH, "" );
+    String configName = prefs.get( IChartPreferences.CONFIG_NAME, "" );
+
+    String configFullPath = configPath + configName;
+
+    ConfigurationLoader cl = new ConfigurationLoader( configFullPath );
+    ChartLoader.createChart( m_chart, cl.getConfiguration(), "WQ1" );
+    // ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
-    
-    m_legend=new Legend(this, SWT.BORDER);
+
+    m_legend = new Legend( this, SWT.BORDER );
     List<IChartLayer> layers = m_chart.getLayers();
     for( IChartLayer layer : layers )
     {
-      m_legend.addLayer(layer);
-    }  
-    Point legendSize = m_legend.computeSize(0,0);
-    
-    
-    
-    FormData fd_chart=new FormData() ;
-    fd_chart.left=new FormAttachment(0, 10);
-    fd_chart.right=new FormAttachment(m_legend,-5 , SWT.LEFT);
-    fd_chart.top=new FormAttachment(0, 10);
-    fd_chart.bottom=new FormAttachment(100, -10);
+      m_legend.addLayer( layer );
+    }
+    Point legendSize = m_legend.computeSize( 0, 0 );
+
+    FormData fd_chart = new FormData();
+    fd_chart.left = new FormAttachment( 0, 10 );
+    fd_chart.right = new FormAttachment( m_legend, -5, SWT.LEFT );
+    fd_chart.top = new FormAttachment( 0, 10 );
+    fd_chart.bottom = new FormAttachment( 100, -10 );
     m_chart.setLayoutData( fd_chart );
-    
-   
-    
-    FormData fd_legend=new FormData() ;
-    fd_legend.left=new FormAttachment(100, -legendSize.x-5  );
-    fd_legend.right=new FormAttachment(100, -10);
-    fd_legend.top=new FormAttachment(100, -10-legendSize.y);
-    fd_legend.bottom=new FormAttachment(100, -10);
-    m_legend.setLayoutData( fd_legend);
-    
+
+    FormData fd_legend = new FormData();
+    fd_legend.left = new FormAttachment( 100, -legendSize.x - 5 );
+    fd_legend.right = new FormAttachment( 100, -10 );
+    fd_legend.top = new FormAttachment( 100, -10 - legendSize.y );
+    fd_legend.bottom = new FormAttachment( 100, -10 );
+    m_legend.setLayoutData( fd_legend );
+
     layout();
-    
+
   }
-  
-  public Chart getChart()
+
+  public Chart getChart( )
   {
     return m_chart;
   }
@@ -133,10 +126,5 @@ public class Diagram extends Composite implements Listener
     // TODO Auto-generated method stub
     layout();
   }
-  
-  
-  
-
-
 
 }
