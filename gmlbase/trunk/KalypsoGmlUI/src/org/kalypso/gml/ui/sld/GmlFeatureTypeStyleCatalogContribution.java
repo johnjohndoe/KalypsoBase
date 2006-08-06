@@ -8,7 +8,6 @@ import org.kalypso.core.catalog.ICatalogContribution;
 
 public class GmlFeatureTypeStyleCatalogContribution implements ICatalogContribution
 {
-
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = getClass().getResource( "resources/urn/catalog.xml" );
