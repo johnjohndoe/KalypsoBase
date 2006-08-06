@@ -38,7 +38,7 @@
 *  v.doemming@tuhh.de
 *   
 *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface;
+package org.kalypso.contribs.eclipse.jface.viewers.tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
