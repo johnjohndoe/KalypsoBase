@@ -197,9 +197,29 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure( )
+  public void configure( ) throws CoreException
   {
-    // nix tun
+    // create the .metadata file
+    try
+    {
+      final IFile file = getMetadataFile();
+
+      if( !file.exists() )
+      {
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        m_metadata.store( bos, "Modell-Projekt Metadata Information" );
+        bos.close();
+  
+        final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+        file.create( bis, false, new NullProgressMonitor() );
+  
+        bis.close();
+      }
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public final IFolder getPrognoseFolder( )
@@ -215,30 +235,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#deconfigure()
    */
-  public void deconfigure( ) throws CoreException
+  public void deconfigure( )
   {
-    // todo: wird nie aufgerufen!
-    try
-    {
-      final IFile file = getMetadataFile();
-
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      m_metadata.store( bos, "Modell-Projekt Metadata Information" );
-      bos.close();
-
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-
-      if( file.exists() )
-        file.setContents( bis, false, true, new NullProgressMonitor() );
-      else
-        file.create( bis, false, new NullProgressMonitor() );
-
-      bis.close();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
+    // nothing to do; only thing to do might be to delete the .metadata file
   }
 
   /**
@@ -268,8 +267,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        // todo: als job absetzen?
-        e.printStackTrace();
+        // just ignore; this will happen when a new prjoject is created
       }
     }
 
