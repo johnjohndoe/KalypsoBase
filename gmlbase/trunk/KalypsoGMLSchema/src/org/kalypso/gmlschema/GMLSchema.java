@@ -95,8 +95,6 @@ public class GMLSchema implements IGMLSchema
 
   private final Hashtable<Object, Object> m_buildedObjectHash = new Hashtable<Object, Object>();
 
-  // private final List<FeatureType> m_featureTypesList = new ArrayList<FeatureType>();
-
   private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
   private final List<IRelationType> m_relationTypeList = new ArrayList<IRelationType>();
@@ -327,11 +325,8 @@ public class GMLSchema implements IGMLSchema
     // return null;
   }
 
-  /**
-   * @param namespaceURI
-   * @return gmlschema
-   */
-  private GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
+  /** public in order to allow force dependency from outside. */
+  public GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
     // TODO make a nice visitor
     // first level ?
@@ -359,7 +354,7 @@ public class GMLSchema implements IGMLSchema
       if( schema != null )
         m_additonalSchemas.put( namespaceURI, schema );
 
-      // TODO: we load schemas here, which are not known as imported schemes
+      // REAMRK: we load schemas here, which are not known as imported schemes
       // They are probably used by the gml instance via substitution
       // We need to remember those schemes for later (e.g. for substitution resolution)
       return schema;
@@ -548,7 +543,7 @@ public class GMLSchema implements IGMLSchema
     }
   }
 
-  private GMLSchema[] getAdditionalSchemas( )
+  public GMLSchema[] getAdditionalSchemas( )
   {
     return m_additonalSchemas.values().toArray( new GMLSchema[m_additonalSchemas.values().size()] );
   }
@@ -597,7 +592,7 @@ public class GMLSchema implements IGMLSchema
         // if we get this, don't search again
         if( schemaForNamespaceURI == this )
           return null;
-        
+
       }
       catch( final GMLSchemaException e )
       {
@@ -633,5 +628,12 @@ public class GMLSchema implements IGMLSchema
   public SchemaDocument[] getIncludedSchemas( )
   {
     return m_includedSchemas.toArray( new SchemaDocument[m_includedSchemas.size()] );
+  }
+
+  public void addAdditionalSchema( final GMLSchema schema )
+  {
+    m_additonalSchemas.put( schema.getTargetNamespace(), schema );
+    // TODO Auto-generated method stub
+
   }
 }

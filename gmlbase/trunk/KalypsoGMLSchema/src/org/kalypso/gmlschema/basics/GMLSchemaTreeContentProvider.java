@@ -90,28 +90,17 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
     {
       final GMLSchema schema = (GMLSchema) parent;
 
-      final GMLSchema[] importedSchemas = schema.getImports();
       final List<GMLSchema> schemasToShow = new ArrayList<GMLSchema>();
-      for( GMLSchema _import : importedSchemas )
-      {
-        if( !m_importMap.containsKey( _import ) )
-        {
-          schemasToShow.add( _import );
-          m_importMap.put( _import, schema );
-        }
-        else
-        {
-          // if called for the same position (e.g. update for a view)
-          if( m_importMap.get( _import ) == schema )
-            schemasToShow.add( _import );
-        }
-      }
+      schemasToShow.addAll( getSchemaChildren( schema, schema.getImports() ) );
+      schemasToShow.addAll( getSchemaChildren( schema, schema.getAdditionalSchemas() ) );
+      
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
       final Object[] children = new Object[schemasToShow.size() + featureTypes.length];
       System.arraycopy( schemasToShow.toArray(), 0, children, 0, schemasToShow.size() );
       System.arraycopy( featureTypes, 0, children, schemasToShow.size(), featureTypes.length );
       return children;
     }
+    
     if( !m_detailed )
     {
       if( parent instanceof IFeatureType )
@@ -199,6 +188,26 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
         return vpt.getRestriction();
     }
     return new Object[0];
+  }
+
+  private List<GMLSchema> getSchemaChildren( final GMLSchema schema, final GMLSchema[] importedSchemas )
+  {
+    final List<GMLSchema> schemasToShow = new ArrayList<GMLSchema>();
+    for( final GMLSchema _import : importedSchemas )
+    {
+      if( !m_importMap.containsKey( _import ) )
+      {
+        schemasToShow.add( _import );
+        m_importMap.put( _import, schema );
+      }
+      else
+      {
+        // if called for the same position (e.g. update for a view)
+        if( m_importMap.get( _import ) == schema )
+          schemasToShow.add( _import );
+      }
+    }
+    return schemasToShow;
   }
 
   /**
