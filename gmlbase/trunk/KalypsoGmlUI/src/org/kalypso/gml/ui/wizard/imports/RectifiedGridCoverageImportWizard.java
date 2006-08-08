@@ -187,7 +187,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           // Workspace && create workspace
           //
           monitor.subTask( " - creating GMLWorkspace..." );
-          final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NS.GML3, new QName( NS.GML3, "RectifiedGridCoverage" ), "3.1" );
+          final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS.GML3, "RectifiedGridCoverage" ), "3.1" );
 
           final FileType rangeSetFile = GML3_FAC.createFileType();
 
