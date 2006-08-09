@@ -106,10 +106,19 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
 
     Element elem = m_factory.createElementNS( uri, qname );
     if( atts != null )
+    {
       for( int i = 0; i < atts.getLength(); i++ )
       {
-        elem.setAttributeNS( atts.getURI( i ), atts.getQName( i ), atts.getValue( i ) );
+        String attUri = atts.getURI( i );
+        final String attQname = atts.getQName( i );
+        final String attValue = atts.getValue( i );
+        if( attQname.startsWith( "xmlns" ) )
+          attUri = "http://www.w3.org/2000/xmlns/";
+
+        elem.setAttributeNS( attUri, attQname, attValue );
       }
+    }
+
     if( m_prefixes != null && m_prefixes.size() > 0 )
     {
       for( int i = 0; i < m_prefixes.size(); i++ )
