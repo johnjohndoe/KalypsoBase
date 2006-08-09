@@ -332,6 +332,7 @@ public class GMLSchema implements IGMLSchema
     // first level ?
     if( namespaceURI.equals( getTargetNamespace() ) )
       return this;
+
     if( m_importedSchemasHash.containsKey( namespaceURI ) )
       return m_importedSchemasHash.get( namespaceURI );
 
@@ -339,13 +340,17 @@ public class GMLSchema implements IGMLSchema
       return m_additonalSchemas.get( namespaceURI );
 
     // other level....
-
     for( final GMLSchema gmlSchema : m_importedSchemasHash.values() )
     {
       final GMLSchema schemaForNamespaceURI = gmlSchema.getGMLSchemaForNamespaceURI( namespaceURI );
       if( schemaForNamespaceURI != null )
+      {
+        // also remember to schema here, used as shortcut for later search
+        m_additonalSchemas.put( namespaceURI, schemaForNamespaceURI );
         return schemaForNamespaceURI;
+      }
     }
+
     // if schema is not implemented we have to ask GMLSchemaCache, maybe it is a well known schema like wfs.xsd
     try
     {
