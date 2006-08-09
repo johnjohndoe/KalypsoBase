@@ -5,14 +5,19 @@ import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.builder.ReferencedRelationType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-// TODO: rename: this is not an interface
-public class IAnnotationAdapterFactory implements IAdapterFactory
+/**
+ * This adapter factory creates {@link org.kalypso.gmlschema.adapter.IAnnotation}s for adaptable objects.
+ * 
+ * @author vdoemming
+ */
+public class AnnotationAdapterFactory implements IAdapterFactory
 {
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
@@ -70,6 +75,9 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
   }
 
   /**
+   * Create an IAnnotation from an xsd-annotation element.
+   * <p>All inner elements from the dcoument element are regarded as annotations.</p>
+   * 
    * @param createDefaultAnnotation
    *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if
    *          false it returns null in this case.
@@ -88,36 +96,23 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
       final String lang = documentation.getLang();
       if( platformLang.equals( lang ) )
       {
+        final DefaultAnnotation annotation = new DefaultAnnotation( lang, defaultName );
+
+        // Put all inner elements into the annotation-hash
         final Node domNode = documentation.getDomNode();
-        final org.w3c.dom.Element ele = (org.w3c.dom.Element) domNode;
-        // TODO: get namespace constants from somewhere else!
-        final String xmlSchemaNamespace = "http://www.w3.org/2001/XMLSchema";
-        final String tooltip = getStringFromChildElement( ele, xmlSchemaNamespace, "tooltip" );
-        final String label = getStringFromChildElement( ele, xmlSchemaNamespace, "label" );
-        final String description = getStringFromChildElement( ele, xmlSchemaNamespace, "description" );
-        final String defaultValue = defaultName;
-        return new IAnnotation()
+        final NodeList childNodes = domNode.getChildNodes();
+        for( int n = 0; n < childNodes.getLength(); n++ )
         {
-          public String getLang( )
+          final Node node = childNodes.item( n );
+          if( NS.XSD_SCHEMA.equals( node.getNamespaceURI() ) )
           {
-            return lang;
+            final String name = node.getLocalName();
+            final String value = getStringValue( node );
+            annotation.putValue( name, value );
           }
+        }
 
-          public String getTooltip( )
-          {
-            return tooltip == null ? defaultValue : tooltip;
-          }
-
-          public String getLabel( )
-          {
-            return label == null ? defaultValue : label;
-          }
-
-          public String getDescription( )
-          {
-            return description == null ? defaultValue : description;
-          }
-        };
+        return annotation;
       }
     }
     String elementName = defaultName;
@@ -136,45 +131,12 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
     if( !createDefaultAnnotation )
       return null;
 
-    return new IAnnotation()
-    {
-      public String getLang( )
-      {
-        return lang;
-      }
-
-      public String getTooltip( )
-      {
-        return defaultName;
-      }
-
-      public String getLabel( )
-      {
-        return defaultName;
-      }
-
-      public String getDescription( )
-      {
-        return defaultName;
-      }
-    };
+    return new DefaultAnnotation( lang, defaultName );
   }
 
   public Class[] getAdapterList( )
   {
     return new Class[] { IAnnotation.class };
-  }
-
-  private static String getStringFromChildElement( final org.w3c.dom.Element elt, final String namespace, final String eltName )
-  {
-    final NodeList nlL = elt.getElementsByTagNameNS( namespace, eltName );
-    if( nlL.getLength() > 0 )
-    {
-      final org.w3c.dom.Element innerElt = (org.w3c.dom.Element) nlL.item( 0 );
-      return getStringValue( innerElt );
-    }
-
-    return null;
   }
 
   /**
@@ -188,15 +150,13 @@ public class IAnnotationAdapterFactory implements IAdapterFactory
    */
   private static String getStringValue( Node node )
   {
-    NodeList children = node.getChildNodes();
-    StringBuffer sb = new StringBuffer( children.getLength() * 500 );
+    final NodeList children = node.getChildNodes();
 
+    final StringBuffer sb = new StringBuffer( children.getLength() * 500 );
     for( int i = 0; i < children.getLength(); i++ )
     {
       if( children.item( i ).getNodeType() == Node.TEXT_NODE || children.item( i ).getNodeType() == Node.CDATA_SECTION_NODE )
-      {
         sb.append( children.item( i ).getNodeValue() );
-      }
     }
 
     return sb.toString().trim();

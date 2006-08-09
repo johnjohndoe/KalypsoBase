@@ -45,12 +45,50 @@ package org.kalypso.gmlschema.adapter;
  */
 public interface IAnnotation
 {
-  public abstract String getDescription( );
+  /** Constant for the name annotation element. */
+  public static String ANNO_NAME = "name";
 
+  /** Constant for the label annotation element. */
+  public static String ANNO_LABEL = "label";
+
+  /** Constant for the description annotation element. */
+  public static String ANNO_DESCRIPTION = "description";
+
+  /** Constant for the label annotation element. */
+  public static String ANNO_TOOLTIP = "tooltip";
+
+  /**
+   * A label for a feature. For example the label of a tree element. Pattern replacement may take place.
+   * <p>
+   * Same as {@link #getValue(ANNO_LABEL)}
+   * </p>
+   */
   public abstract String getLabel( );
 
+  /**
+   * A (lengthy) description for a feature. For example the status line text for a selected feature. Pattern replacement
+   * may take place.
+   * <p>
+   * Same as {@link #getValue(ANNO_DESCRIPTION)}
+   * </p>
+   */
+  public abstract String getDescription( );
+
+  /**
+   * A tooltip for a feature. For example the status line text for a selected feature. Pattern replacement may take
+   * place.
+   * <p>
+   * Same as {@link #getValue(ANNO_TOOLTIP)}
+   * </p>
+   */
   public abstract String getTooltip( );
 
+  /** The language this annotation supports. */
   public abstract String getLang( );
 
+  /**
+   * Returns the value for the given key.@param element Must be one of {@link #ANNO_NAME}, {@link #ANNO_NAME},
+   * {@link #ANNO_LABEL}, {@link #ANNO_TOOLTIP}
+   */
+  public abstract String getValue( final String element );
 }

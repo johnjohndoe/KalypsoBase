@@ -39,7 +39,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.adapter.IAnnotationAdapterFactory;
+import org.kalypso.gmlschema.adapter.AnnotationAdapterFactory;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
@@ -73,8 +73,8 @@ public class ContentRestrictionFactory
 
         final String stringValue = facet.getValue().getStringValue();
 
-        final String platformLang = IAnnotationAdapterFactory.getPlatformLang();
-        final IAnnotation annotation = IAnnotationAdapterFactory.annotationForElement( platformLang, facet.getAnnotation(), stringValue );
+        final String platformLang = AnnotationAdapterFactory.getPlatformLang();
+        final IAnnotation annotation = AnnotationAdapterFactory.annotationForElement( platformLang, facet.getAnnotation(), stringValue );
 
         values[i] = stringValue;
         labels[i] = annotation.getLabel();
