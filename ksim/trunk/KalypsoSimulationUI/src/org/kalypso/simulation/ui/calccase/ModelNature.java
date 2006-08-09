@@ -216,7 +216,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         bis.close();
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
