@@ -101,8 +101,11 @@ public final class DateUtilities
     return calDest.getTime();
   }
 
-  public static Date toDate( XMLGregorianCalendar xmlGregorianCalendar )
+  public static Date toDate( final XMLGregorianCalendar xmlGregorianCalendar )
   {
+    if( xmlGregorianCalendar == null )
+      return null;
+    
     final GregorianCalendar greg = xmlGregorianCalendar.toGregorianCalendar();
     return greg.getTime();
   }
