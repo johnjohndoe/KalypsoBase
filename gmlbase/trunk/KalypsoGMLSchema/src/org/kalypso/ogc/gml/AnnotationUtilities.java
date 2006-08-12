@@ -49,20 +49,6 @@ import org.kalypso.gmlschema.adapter.IAnnotation;
  */
 public class AnnotationUtilities
 {
-  // TODO use PlatForm.getNL();
-  // public static IAnnotation getAnnotation( IPropertyType pt )
-  // {
-  // // final String nl = Platform.getNL();
-  // // final Annotation annotation = (Annotation) pt.getAdapter( Annotation.class );
-  // return new Annotation( "de", pt.getName(), pt.getName(), pt.getName() );
-  // }
-  //
-  // public static IAnnotation getAnnotation( IFeatureType ft )
-  // {
-  // return getAnnotation(ft);
-  // // return new Annotation( "de", ft.getName(), ft.getName(), ft.getName() );
-  // }
-
   public static IAnnotation getAnnotation( final Object object )
   {
     if( object instanceof IAdaptable )

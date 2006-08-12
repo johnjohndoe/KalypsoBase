@@ -80,11 +80,12 @@ public class Mapper
     throw new Exception( "unknown XML type: " + clazz + "  for value: " + value );
   }
 
-  public static Object defaultValueforJavaType( final Class type, final boolean createGeometry )
+  public static Object defaultValueforJavaType( final Class type )
   {
-    // TODO try to get default value from schema !
+    // Why not ask the type handler for a default value?
+    
     if( "java.util.Date".equals( type ) )
-      return new Date( 0 );
+      return new Date(  );
     if( "DateWithoutTime.class.getName()".equals( type ) )
       return new DateWithoutTime();
     if( "java.lang.Boolean".equals( type ) )
@@ -100,20 +101,21 @@ public class Mapper
     if( "java.lang.Long".equals( type ) )
       return new Long( 0 );
 
-    if( !createGeometry )
-      return null;
-
-    // TODO create default geo properties
+    // No one calls this with createGeometry == true
+//    if( !createGeometry )
+//      return null;
+//
+//    // TODO create default geo properties
 
     return null;
   }
 
-  public static Object defaultValueforJavaType( IValuePropertyType ftp, boolean createGeometry )
+  public static Object defaultValueforJavaType( final IValuePropertyType ftp )
   {
     if( ftp.isList())
       return new ArrayList();
     
-    return defaultValueforJavaType( ftp.getClass(), createGeometry );
+    return defaultValueforJavaType( ftp.getClass() );
   }
 
   public static Object mapXMLValueToJava( String value, IValuePropertyType ftp ) throws Exception
