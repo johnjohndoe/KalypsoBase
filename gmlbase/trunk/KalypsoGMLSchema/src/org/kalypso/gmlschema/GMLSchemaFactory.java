@@ -134,7 +134,9 @@ public class GMLSchemaFactory
     try
     {
       inputStream = schemaLocationURL.openStream();
-      return createGMLSchema( inputStream, gmlVersion, schemaLocationURL );
+      final GMLSchema createGMLSchema = createGMLSchema( inputStream, gmlVersion, schemaLocationURL );
+      inputStream.close();
+      return createGMLSchema;
     }
     catch( final Exception e )
     {
