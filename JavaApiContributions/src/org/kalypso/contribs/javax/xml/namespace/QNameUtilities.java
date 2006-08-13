@@ -61,7 +61,7 @@ public class QNameUtilities
    * syntax of fragmentedFullQName :
    * 
    * <pre>
-   *  &lt;namespace&gt;#&lt;localpart&gt;
+   *        &lt;namespace&gt;#&lt;localpart&gt;
    * </pre>
    * 
    * example: fragmentedFullQName = www.w3c.org#index.html
@@ -72,5 +72,34 @@ public class QNameUtilities
   {
     final String[] parts = fragmentedFullQName.split( "#" );
     return new QName( parts[0], parts[1] );
+  }
+
+  /**
+   * Returns a qname from a string, previously obtained from {@link QName#toString()}.
+   * <p>
+   * So
+   * </p>
+   * <code>QNameUtilities.fromString( ( qname.toString() )).equals( qname )</code>
+   * <p>
+   * should always return true.
+   * </p>
+   * 
+   * @return null, if qnameString contains no namespace part.
+   * @throws NullPointerException
+   *           If qnameString is null.
+   */
+  public static QName fromString( final String qnameString )
+  {
+    if( !qnameString.startsWith( "{" ) )
+      return null;
+
+    final int curleyEnd = qnameString.indexOf( '}' );
+    if( curleyEnd == -1 || curleyEnd > qnameString.length() - 1 )
+      return null;
+
+    final String namespace = qnameString.substring( 1, curleyEnd );
+    final String localPart = qnameString.substring( curleyEnd + 1 );
+
+    return new QName( namespace, localPart );
   }
 }
