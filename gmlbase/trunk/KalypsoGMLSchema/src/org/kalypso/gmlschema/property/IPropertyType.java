@@ -51,6 +51,8 @@ public interface IPropertyType extends IInitialize, IAdaptable
 
   public QName getQName( );
 
+  public boolean isNillable();
+  
   /**
    * @deprecated use getQName()
    * @return local part of qualified name

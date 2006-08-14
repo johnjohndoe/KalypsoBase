@@ -207,14 +207,14 @@ public class GMLSchemaFactory
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
 
-  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final ITypeHandler typeHandler, final int minOccurs, final int maxOccurs )
+  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final ITypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     final IPropertyContentType pct = new CustomPropertyContentType( valueQName, typeHandler );
-    return new CustomValueProperType( name, pct, minOccurs, maxOccurs );
+    return new CustomValueProperType( name, pct, minOccurs, maxOccurs, isNillable );
   }
 
-  public static IRelationType createRelationType( final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs )
+  public static IRelationType createRelationType( final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
-    return new CustomRelationType( qName, targetFT, minOccurs, maxOccurs );
+    return new CustomRelationType( qName, targetFT, minOccurs, maxOccurs, isNillable );
   }
 }

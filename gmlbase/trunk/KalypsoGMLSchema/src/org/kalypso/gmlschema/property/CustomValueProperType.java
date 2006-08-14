@@ -52,7 +52,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public class CustomValueProperType implements IValuePropertyType
 {
-
   private final QName m_qName;
 
   private final IPropertyContentType m_contentType;
@@ -61,12 +60,15 @@ public class CustomValueProperType implements IValuePropertyType
 
   private final int m_maxOccurs;
 
-  public CustomValueProperType( final QName qName, final IPropertyContentType contentType, int minOccurs, int maxOccurs )
+  private final boolean m_isNillable;
+
+  public CustomValueProperType( final QName qName, final IPropertyContentType contentType, int minOccurs, int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
     m_contentType = contentType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
+    m_isNillable = isNillable;
   }
 
   /**
@@ -221,6 +223,14 @@ public class CustomValueProperType implements IValuePropertyType
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     final Object adapter = adapterManager.loadAdapter( this, adapterClass.getName() );
     return adapter;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
+   */
+  public boolean isNillable( )
+  {
+    return m_isNillable;
   }
 
 }

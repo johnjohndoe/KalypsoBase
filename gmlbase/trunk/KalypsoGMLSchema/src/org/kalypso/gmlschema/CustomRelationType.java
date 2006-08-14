@@ -51,7 +51,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class CustomRelationType implements IRelationType
 {
-
   private final IFeatureType m_targetFT;
 
   private final int m_minOccurs;
@@ -60,12 +59,15 @@ public class CustomRelationType implements IRelationType
 
   private final QName m_qName;
 
-  public CustomRelationType( final QName qName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs )
+  private final boolean m_isNillable;
+
+  public CustomRelationType( final QName qName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
     m_targetFT = targetFeatureType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
+    m_isNillable = isNillable;
   }
 
   /**
@@ -149,6 +151,14 @@ public class CustomRelationType implements IRelationType
   public Object getAdapter( Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
+   */
+  public boolean isNillable( )
+  {
+    return m_isNillable;
   }
 
 }
