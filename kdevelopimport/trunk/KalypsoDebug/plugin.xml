@@ -94,6 +94,8 @@
             targetID="org.kalypso.ui.editor.GmlEditor">
          <action
                class="org.kalypso.debug.editor.gistree.ShowSchemaEditorActionDelegate"
+               disabledIcon="icons/dlcl16/show_schema.gif"
+               icon="icons/elcl16/show_schema.gif"
                id="org.kalypso.ui.editor.gistreeeditor.ShowSchemaAction"
                label="Schema anzeigen"
                menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
