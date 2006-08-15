@@ -40,72 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.catalogs;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.core.catalog.urn.IURNGenerator;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureTypeImageCatalog
+public class FeatureTypeImageCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "swtimage";
 
   public static ImageDescriptor getImage( final URL context, final QName qname )
   {
-    final String urn = createImageUrn( qname );
-
-    final String uri = getImageLocation( urn );
-    // if we got no uri or an urn do nothing, we need a real url 
-    if( uri == null || uri.startsWith( "urn" ))
-      return null;
-
-    try
-    {
-      final URL imgUrl = new URL( context, uri );
-      return ImageDescriptor.createFromURL( imgUrl );
-    }
-    catch( final MalformedURLException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
-    }
-
-    return null;
+    final URL imgUrl = getURL( BASETYPE, context, qname );
+    return imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
   }
-
-  public static String getImageLocation( final String urn )
-  {
-    // search for url
-    final CatalogManager catalogManager = CatalogManager.getDefault();
-    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
-    return uri;
-  }
-
-  public static String createImageUrn( final QName qname )
-  {
-    // REMARK: catalog is registered for feature type, not for qname
-    // Hint for a refaktoring on the CatalogManager
-    final IURNGenerator generator = CatalogManager.getDefault().getURNGeneratorFor( IFeatureType.class );
-    if( generator == null )
-      return null;
-
-    final String baseURN = generator.generateURNFor( qname );
-    if( baseURN == null )
-      return null;
-
-    return baseURN + ":" + BASETYPE + ":default";
-  }
-
 }
