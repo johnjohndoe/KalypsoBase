@@ -74,6 +74,8 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = (GmlEditor) targetEditor;
+    
+    refreshAction( action );
   }
 
   /**
@@ -82,7 +84,13 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   public void run( final IAction action )
   {
     final GMLWorkspace workspace = m_targetEditor.getTreeView().getWorkspace();
+    if( workspace == null )
+      return;
+    
     final IGMLSchema schema = workspace.getGMLSchema();
+    if( schema == null )
+      return;
+    
     final String version = schema.getGMLVersion();
     final String schemaNamespace = schema.getTargetNamespace();
     final String schemaLocationString = workspace.getSchemaLocationString();
@@ -111,6 +119,12 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
+    refreshAction( action );
+  }
+
+  private void refreshAction( final IAction action )
+  {
+    action.setEnabled( m_targetEditor != null && m_targetEditor.getTreeView() != null && m_targetEditor.getTreeView().getWorkspace() != null );
   }
 
 }
