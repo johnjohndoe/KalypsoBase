@@ -74,13 +74,12 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return getMaxOccurs() > 1 || getMaxOccurs() == UNBOUND_OCCURENCY;
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */
   public boolean isNillable( )
   {
-    // TODO :check if this is the right property
-    return getElement().isSetNillable();
+    return getElement().getNillable();
   }
 }
