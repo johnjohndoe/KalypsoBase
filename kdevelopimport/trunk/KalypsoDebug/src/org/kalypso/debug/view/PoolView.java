@@ -42,8 +42,8 @@
 package org.kalypso.debug.view;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -96,7 +96,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     public abstract String getValue( final KeyInfo info );
   }
 
-  private final Collection<PoolViewColumn> m_columns = new ArrayList<PoolViewColumn>( 3 );
+  private final List<PoolViewColumn> m_columns = new ArrayList<PoolViewColumn>( 3 );
 
   private ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
@@ -106,12 +106,12 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
   private TableViewer m_viewer;
 
-  public PoolView()
+  public PoolView( )
   {
     m_task = new TimerTask()
     {
       @Override
-      public void run()
+      public void run( )
       {
         updateView();
       }
@@ -121,7 +121,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     m_timer.schedule( m_task, 1000, 1000 );
   }
 
-  protected void updateView()
+  protected void updateView( )
   {
     final TableViewer viewer = m_viewer;
     final ResourcePool pool = m_pool;
@@ -134,7 +134,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     {
       table.getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        public void run( )
         {
           // to avoid exception when window is closed test for content provider
           if( viewer.getContentProvider() != null )
@@ -148,7 +148,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     m_task.cancel();
     m_timer.cancel();
@@ -171,7 +171,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
         final ISelection selection = event.getSelection();
         if( !selection.isEmpty() && selection instanceof IStructuredSelection )
         {
-          final KeyInfo info = (KeyInfo)( (IStructuredSelection)selection ).getFirstElement();
+          final KeyInfo info = (KeyInfo) ((IStructuredSelection) selection).getFirstElement();
 
           final IPoolListener[] listeners = info.getListeners();
 
@@ -188,8 +188,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
               return super.getText( element );
             }
           };
-          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(),
-              listeners, new ArrayContentProvider(), labelProvider, "Listeners for KeyInfo: " + info );
+          final ListSelectionDialog dialog = new ListSelectionDialog( event.getViewer().getControl().getShell(), listeners, new ArrayContentProvider(), labelProvider, "Listeners for KeyInfo: " + info );
           dialog.open();
         }
       }
@@ -201,7 +200,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     for( final Iterator cIt = m_columns.iterator(); cIt.hasNext(); )
     {
-      final PoolViewColumn col = (PoolViewColumn)cIt.next();
+      final PoolViewColumn col = (PoolViewColumn) cIt.next();
 
       final TableColumn keytc = new TableColumn( table, SWT.BEGINNING );
       keytc.setText( col.text );
@@ -213,9 +212,9 @@ public class PoolView extends ViewPart implements ITableLabelProvider
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
-  // egal
+    // egal
   }
 
   /**
@@ -223,7 +222,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  // egal
+    // egal
   }
 
   /**
@@ -239,7 +238,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  // egal
+    // egal
 
   }
 
@@ -254,24 +253,12 @@ public class PoolView extends ViewPart implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
-  public String getColumnText( Object element, int columnIndex )
+  public String getColumnText( final Object element, final int columnIndex )
   {
-    final KeyInfo info = (KeyInfo)element;
-    final IPoolableObjectType key = info.getKey();
+    final KeyInfo info = (KeyInfo) element;
 
-    switch( columnIndex )
-    {
-    case 0:
-      return "" + key.getLocation();
-
-    case 1:
-      return "" + info.getListeners().length;
-
-    case 2:
-      return "" + info.getObject();
-    }
-
-    return null;
+    final PoolViewColumn column = m_columns.get( columnIndex );
+    return column.getValue(info);
   }
 
   /**
@@ -310,6 +297,14 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       }
     } );
 
+    m_columns.add( new PoolViewColumn( "isDirty", memento )
+    {
+      @Override
+      public String getValue( final KeyInfo info )
+      {
+        return "" + info.isDirty();
+      }
+    } );
   }
 
   /**
