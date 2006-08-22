@@ -64,11 +64,18 @@ public class TreeViewerUtilities
 
   public static void accept( final ITreeContentProvider contentProvider, final Object[] roots, final ITreeVisitor visitor )
   {
-    for( final Object root : roots )
-      accept( contentProvider, root, visitor );
+    try
+    {
+      for( final Object root : roots )
+        accept( contentProvider, root, visitor );
+    }
+    catch( final TreeVisiterAbortException e )
+    {
+      // just eat is silently, the visitor wants the search to be finished
+    }
   }
 
-  public static void accept( final ITreeContentProvider contentProvider, final Object element, final ITreeVisitor visitor )
+  public static void accept( final ITreeContentProvider contentProvider, final Object element, final ITreeVisitor visitor ) throws TreeVisiterAbortException
   {
     if( visitor.visit( element, contentProvider ) )
     {
