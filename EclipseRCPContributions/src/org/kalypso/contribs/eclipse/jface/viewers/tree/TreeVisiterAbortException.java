@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.tree;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-
-public interface ITreeVisitor
+/**
+ * Exception used for visiting trees.
+ * <p>
+ * A visitor can throw this exception, thus indicating that the visit should be abondoned.
+ * </p>
+ * 
+ * @see org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeVisitor
+ * @author Gernot Belger
+ */
+public class TreeVisiterAbortException extends Exception
 {
-  /**
-   * Called for each item of the tree.
-   * 
-   * @return A flag indicating if the child elements of the current item should also be visited or not.
-   * @throws TreeVisiterAbortException
-   *           If this exception is thrown, this visit will be stopped. The exception will be eaten silently.
-   */
-  public boolean visit( final Object element, final ITreeContentProvider contentprovider ) throws TreeVisiterAbortException;
 }
