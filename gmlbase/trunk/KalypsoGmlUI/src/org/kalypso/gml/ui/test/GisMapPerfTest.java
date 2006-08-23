@@ -70,7 +70,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
 
 /**
- * Not for automatik tzesting. Test methods changed to 'tost' for this reason.
+ * Not for automatik testing. Test methods changed to 'tost' for this reason.
  * 
  * @author Gernot Belger
  */
