@@ -7,7 +7,8 @@
 	<property name="project" value="${workspace}/KalypsoWPS" />
 	<patternset id="binding.schemata">
 		<include name="etc/schemas/**/*.xsd" />
-	</patternset>
+	</patternset>	
+	<property name="xjc-args" value="-nv" />	
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
 	
 </project>
