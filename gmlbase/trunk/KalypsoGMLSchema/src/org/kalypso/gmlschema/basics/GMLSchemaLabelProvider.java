@@ -29,6 +29,10 @@
  */
 package org.kalypso.gmlschema.basics;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -145,19 +149,42 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     }
 
     if( element instanceof IRelationType )
-      result.append( "  Relation: " + ((IRelationType) element).getQName() );
+    {
+      final IRelationType relationType = (IRelationType) element;
+      result.append( "  Relation: " + (relationType).getQName() );
+
+      final List<String> strings = new ArrayList<String>();
+
+      if( relationType.isInlineAble() )
+        strings.add( "inlinable" );
+      if( relationType.isLinkAble() )
+        strings.add( "linkable" );
+      if( relationType.isNillable() )
+        strings.add( "nillable" );
+
+      if( strings.size() > 0 )
+        result.append( " (" );
+      for( final Iterator iter = strings.iterator(); iter.hasNext(); )
+      {
+        result.append( iter.next() );
+        if( iter.hasNext() )
+          result.append( ',' );
+      }
+      if( strings.size() > 0 )
+        result.append( ") " );
+    }
     else if( element instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) element;
       result.append( "Property: " + vpt.getQName() );
       if( vpt.isGeometry() )
         result.append( "    [X] GEOMETRY" );
-      result.append( "\n     Value: " + vpt.getValueQName() );
-      result.append( "\n     Class: " + vpt.getValueClass() );
+      result.append( "     Value: " + vpt.getValueQName() );
+      result.append( "     Class: " + vpt.getValueClass() );
       if( vpt.hasDefault() )
-        result.append( "\n     default: " + vpt.getDefault() );
+        result.append( "     default: " + vpt.getDefault() );
       if( vpt.isFixed() )
-        result.append( "\n     fixed: " + vpt.getFixed() );
+        result.append( "     fixed: " + vpt.getFixed() );
     }
     else
       return "unknown";
