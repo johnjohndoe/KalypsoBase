@@ -52,6 +52,7 @@ public class JavaApiContributionsExtension
   private static synchronized void initRegistry( ) throws CoreException
   {
     m_catalogs = new HashMap<Object, IUrlCatalog>();
+    
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( URL_CATALOG_EXTENSION_POINT );
@@ -64,8 +65,6 @@ public class JavaApiContributionsExtension
       String id = element.getAttribute( "id" );
       IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
       m_catalogs.put( id, catalog );
-      
-      System.out.println("Loading extension urlCatalog " + id );
     }
   }
 
@@ -79,14 +78,5 @@ public class JavaApiContributionsExtension
     if( m_catalogs == null )
       initRegistry();
     return m_catalogs.values().toArray( new IUrlCatalog[m_catalogs.size()] );
-  }
-
-  public static synchronized void registerCatalog( final Object id, final IUrlCatalog catalog ) throws Exception
-  {
-    if( m_catalogs == null )
-      initRegistry();
-    if( m_catalogs.containsKey( id ) )
-      throw new Exception( "key: " + id + " already has an asocciated value: " + catalog );
-    m_catalogs.put( id, catalog );
   }
 }
