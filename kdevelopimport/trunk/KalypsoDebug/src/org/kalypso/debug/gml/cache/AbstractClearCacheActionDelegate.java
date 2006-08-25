@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 
 /**
  * @author belger
@@ -79,10 +79,8 @@ public abstract class AbstractClearCacheActionDelegate implements IWorkbenchWind
    */
   public void run( final IAction action )
   {
-    // make sure the catalog was initialized
-    KalypsoGisPlugin.getDefault();
-    
-    GMLSchemaCatalog.clearCache( m_onlyMemoryCache );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    schemaCatalog.clearCache( m_onlyMemoryCache );
   }
 
   /**

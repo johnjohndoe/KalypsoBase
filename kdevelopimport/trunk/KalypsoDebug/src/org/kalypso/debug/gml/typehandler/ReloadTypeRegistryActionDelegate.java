@@ -44,6 +44,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -85,7 +86,8 @@ public class ReloadTypeRegistryActionDelegate implements IWorkbenchWindowActionD
     marshallingRegistry.clearRegistry();
     guiRegistry.clearRegistry();
 
-    KalypsoGisPlugin.registerTypeHandler( marshallingRegistry, guiRegistry );
+    KalypsoCorePlugin.getDefault().registerTypeHandler();
+    KalypsoGisPlugin.getDefault().registerGuiTypeHandler( );
   }
 
   /**
