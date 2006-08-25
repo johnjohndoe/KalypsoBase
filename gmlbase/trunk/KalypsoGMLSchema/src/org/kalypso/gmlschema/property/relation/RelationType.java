@@ -54,7 +54,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -75,7 +75,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
    */
   public boolean isInlineAble( )
   {
-    return true;
+    return m_relationContentType.isInlineable();
   }
 
   /**
@@ -83,7 +83,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
    */
   public boolean isLinkAble( )
   {
-    return true;
+    return m_relationContentType.isLinkable();
   }
 
   /**

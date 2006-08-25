@@ -1,19 +1,26 @@
 package org.kalypso.gmlschema;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.contribs.java.JavaApiContributionsExtension;
+import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.osgi.framework.BundleContext;
 
 public class KalypsoGMLSchemaPlugin extends Plugin
 {
   // The shared instance.
-  private static KalypsoGMLSchemaPlugin m_plugin;
+  private static KalypsoGMLSchemaPlugin INSTANCE;
 
-  /**
-   * The constructor.
-   */
+  private GMLSchemaCatalog m_schemaCatalog = null;
+
   public KalypsoGMLSchemaPlugin( )
   {
-    m_plugin = this;
+    super();
+
+    INSTANCE = this;
   }
 
   /**
@@ -32,7 +39,30 @@ public class KalypsoGMLSchemaPlugin extends Plugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    m_plugin = null;
+
+    INSTANCE = null;
+    m_schemaCatalog = null;
+  }
+
+  public GMLSchemaCatalog getSchemaCatalog( )
+  {
+    if( m_schemaCatalog == null )
+    {
+      try
+      {
+        final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
+        final IPath stateLocation = getStateLocation();
+        final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
+        cacheDir.mkdir();
+        m_schemaCatalog = new GMLSchemaCatalog( theCatalog, cacheDir );
+      }
+      catch( final CoreException e )
+      {
+        getLog().log( e.getStatus() );
+      }
+    }
+
+    return m_schemaCatalog;
   }
 
   /**
@@ -40,6 +70,6 @@ public class KalypsoGMLSchemaPlugin extends Plugin
    */
   public static KalypsoGMLSchemaPlugin getDefault( )
   {
-    return m_plugin;
+    return INSTANCE;
   }
 }

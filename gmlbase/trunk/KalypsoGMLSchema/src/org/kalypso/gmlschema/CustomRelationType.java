@@ -47,6 +47,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
+ * TODO: shouldnt we also give the 'inlinable' and 'linkable' properties in the constructor? Maybe this type is not only
+ * used in the shapefile-context.
+ * 
  * @author doemming
  */
 public class CustomRelationType implements IRelationType
@@ -92,7 +95,7 @@ public class CustomRelationType implements IRelationType
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getTargetFeatureTypes(org.kalypso.gmlschema.GMLSchema,
    *      boolean)
    */
-  public IFeatureType getTargetFeatureType()
+  public IFeatureType getTargetFeatureType( )
   {
     return m_targetFT;
   }

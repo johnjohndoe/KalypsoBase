@@ -53,6 +53,7 @@ public class KalypsoOGC31Plugin extends Plugin
   public KalypsoOGC31Plugin( )
   {
     super();
+    
     m_plugin = this;
   }
 

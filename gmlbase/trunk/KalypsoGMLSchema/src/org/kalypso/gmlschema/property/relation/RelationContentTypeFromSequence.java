@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.property.relation;
 
 import java.util.List;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
@@ -55,5 +56,14 @@ public class RelationContentTypeFromSequence extends RelationContentType
   public List<ElementWithOccurs> getSequence()
   {
     return m_elements;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.RelationContentType#getAttributeGroups()
+   */
+  @Override
+  public AttributeGroupRef[] getAttributeGroups( )
+  {
+    return getComplexType().getAttributeGroupArray();
   }
 }

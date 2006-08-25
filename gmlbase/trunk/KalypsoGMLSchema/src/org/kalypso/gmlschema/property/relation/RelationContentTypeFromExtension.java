@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.kalypso.gmlschema.ElementWithOccurs;
@@ -53,7 +54,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
 
   private final List<ElementWithOccurs> m_elements;
 
-  private RelationContentType m_extensionBase = null;
+  private AttributeGroupRef[] m_attributeGroupArray;
 
   public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension ) throws GMLSchemaException
   {
@@ -83,12 +84,20 @@ public class RelationContentTypeFromExtension extends RelationContentType
 
         final QName base = m_extension.getBase();
         final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
-        m_extensionBase = schema.getRelationContentTypeFor( complexType );
+        m_attributeGroupArray = complexType.getAttributeGroupArray();
         break;
     }
     super.init( initializeRun );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.RelationContentType#getAttributeGroups()
+   */
+  @Override
+  public AttributeGroupRef[] getAttributeGroups( )
+  {
+    return m_attributeGroupArray;
   }
 
 }

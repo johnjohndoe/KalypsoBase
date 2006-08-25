@@ -223,7 +223,8 @@ public class GMLSchema implements IGMLSchema
           }
 
           // always try to load with schemaLocation if present
-          final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( namespaceToImport, getGMLVersion(), schemaLocationURL );
+          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+          final GMLSchema gmlSchema = schemaCatalog.getSchema( namespaceToImport, getGMLVersion(), schemaLocationURL );
 
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
@@ -355,7 +356,8 @@ public class GMLSchema implements IGMLSchema
     try
     {
       // load all imported schema with same gml version
-      final GMLSchema schema = GMLSchemaCatalog.getSchema( namespaceURI, getGMLVersion() );
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, getGMLVersion() );
       if( schema != null )
         m_additonalSchemas.put( namespaceURI, schema );
 

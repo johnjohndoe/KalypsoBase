@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
@@ -51,9 +52,9 @@ public class RelationContentTypeFromRestriction extends RelationContentType
 {
   private final ComplexRestrictionType m_restriction;
 
-  private RelationContentType m_restrictionBase = null;
-
   private final List<ElementWithOccurs> m_elements;
+
+  private AttributeGroupRef[] m_attributeGroupArray;
 
   public RelationContentTypeFromRestriction( final GMLSchema schema, final ComplexType complexType, final ComplexRestrictionType restriction ) throws GMLSchemaException
   {
@@ -82,12 +83,20 @@ public class RelationContentTypeFromRestriction extends RelationContentType
       case IInitialize.INITIALIZE_RUN_FIRST:
         final QName base = m_restriction.getBase();
         final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
-        m_restrictionBase = schema.getRelationContentTypeFor( complexType );
+        m_attributeGroupArray = complexType.getAttributeGroupArray();
         break;
     }
     super.init( initializeRun );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.RelationContentType#getAttributeGroups()
+   */
+  @Override
+  public AttributeGroupRef[] getAttributeGroups( )
+  {
+    return m_attributeGroupArray;
   }
 
 }

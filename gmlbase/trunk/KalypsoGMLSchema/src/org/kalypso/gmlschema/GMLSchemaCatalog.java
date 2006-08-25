@@ -7,90 +7,58 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
  * <p>
- * Singleton über dem {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}welches sich darüberhinaus noch um den
- * XML-Katalog kümmert.
- * </p>
- * <p>
- * Muss vor der ersten Benutzung durch {@link #init(IUrlCatalog, File)}initialisiert werden.
+ * GML Schema Catalog, benutzt den {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}.
  * </p>
  * 
  * @author schlienger
  */
 public final class GMLSchemaCatalog
 {
-  /** Temporary directory, used by the GMLSchemaCache */
-  private static final File TMP_DIR = new File( FileUtilities.TMP_DIR, GMLSchemaCatalog.class.getName() );
-
   private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
 
-  private static GMLSchemaCache THE_CACHE;
+  private IUrlCatalog m_urlCatalog;
 
-  private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException( "Schema-Katalog nicht initialisiert. Zuerst 'init' aufrufen!" );
-
-  private static IUrlCatalog THE_CATALOG;
-
-  private GMLSchemaCatalog( )
-  {
-    // wird nicht instantiiert
-  }
+  private GMLSchemaCache m_cache;
 
   /**
-   * Initializes the schema-cache. Empties it, if it already exists.
-   * 
    * @throws NullPointerException
    *           If catalog or cacheDirectory is null.
    */
-  public synchronized static void init( final IUrlCatalog catalog, final File cacheDirectory )
+  public GMLSchemaCatalog( final IUrlCatalog catalog, final File cacheDirectory )
   {
-    GMLSchemaCatalog.THE_CATALOG = catalog;
-
     if( catalog == null )
       throw new NullPointerException();
 
-    // delete old tmp-dir
-    FileUtilities.deleteRecursive( TMP_DIR );
-    TMP_DIR.mkdirs();
+    m_urlCatalog = catalog;
 
-    THE_CACHE = new GMLSchemaCache( cacheDirectory, TMP_DIR );
+    m_cache = new GMLSchemaCache( cacheDirectory );
 
     LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
   }
-
-  /** Should be called when this cache is no more used. Releases all blocked resources. */
-  public synchronized static void release( )
+  
+  public IUrlCatalog getDefaultCatalog()
   {
-    FileUtilities.deleteRecursive( TMP_DIR );
+    return m_urlCatalog;
   }
-
-  public static IUrlCatalog getDefaultCatalog( )
-  {
-    if( THE_CATALOG == null )
-      throw NOT_INITIALIZED;
-    return THE_CATALOG;
-  }
-
+  
   /**
    * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
    * 
    * @return null, wenn schema nicht geladen werden konnte
    */
-  public synchronized static GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
+  public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
   {
-    if( THE_CACHE == null )
-      throw NOT_INITIALIZED;
-
     try
     {
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      THE_CACHE.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
+      m_cache.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
 
       return schema;
     }
@@ -105,7 +73,7 @@ public final class GMLSchemaCatalog
   /**
    * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
    */
-  public synchronized static GMLSchema getSchema( final String namespace, final String gmlVersion ) throws InvocationTargetException
+  public GMLSchema getSchema( final String namespace, final String gmlVersion ) throws InvocationTargetException
   {
     return getSchema( namespace, gmlVersion, null );
   }
@@ -117,16 +85,13 @@ public final class GMLSchemaCatalog
    * Ist im Katalog eine schema-location gegeben, wird diese bevorzugt.
    * </p>
    */
-  public synchronized static GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
+  public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
   {
-    if( THE_CACHE == null )
-      throw NOT_INITIALIZED;
-
     // HACK: if we are looking for the gml namespace
     // tweak it and add the version number
     final URL catalogUrl;
     final String version;
-    
+
     if( namespace.equals( NS.GML2 ) )
     {
       if( gmlVersion == null )
@@ -137,11 +102,11 @@ public final class GMLSchemaCatalog
       else
         version = gmlVersion;
 
-      catalogUrl = THE_CATALOG.getURL( namespace + "#" + version.charAt( 0 ) );
+      catalogUrl = m_urlCatalog.getURL( namespace + "#" + version.charAt( 0 ) );
     }
     else
     {
-      catalogUrl = THE_CATALOG.getURL( namespace );
+      catalogUrl = m_urlCatalog.getURL( namespace );
       version = gmlVersion;
     }
 
@@ -149,7 +114,7 @@ public final class GMLSchemaCatalog
 
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
-    return THE_CACHE.getSchema( namespace, version, schemaUrl );
+    return m_cache.getSchema( namespace, version, schemaUrl );
   }
 
   /**
@@ -158,9 +123,8 @@ public final class GMLSchemaCatalog
    * @param onlyMemoryCache
    *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
-  public static void clearCache( final boolean onlyMemoryCache )
+  public void clearCache( final boolean onlyMemoryCache )
   {
-    if( THE_CACHE != null )
-      THE_CACHE.clearCache( onlyMemoryCache );
+    m_cache.clearCache( onlyMemoryCache );
   }
 }

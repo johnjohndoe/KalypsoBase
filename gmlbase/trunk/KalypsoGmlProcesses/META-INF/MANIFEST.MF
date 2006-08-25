@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.simulation.core,
  org.kalypso.deegree,
  org.kalypso.core,
- org.junit
+ org.junit,
+ org.kalypso.contribs.ogc31
 Eclipse-AutoStart: true
 Export-Package: com.bce.apps.wspfli,
  com.bce.ext.jargs,

@@ -31,21 +31,24 @@ package org.kalypso.gmlschema.property.relation;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
  * @author doemming
  */
 public class AdvRelationType extends AbstractPropertyTypeFromElement implements IRelationType
 {
-  private IRelationContentType m_relationContentType;
-
   private final QName m_advReferenziertesElement;
+
+  private IFeatureType m_ftRelationTarget = null;
 
   public AdvRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName advReferenziertesElement )
   {
@@ -61,11 +64,18 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-        m_relationContentType = new ForcedRelationContentType( getGMLSchema(), m_advReferenziertesElement );
+        
+        final ElementReference reference = getGMLSchema().resolveElementReference( m_advReferenziertesElement );
+        final GMLSchema schema = reference.getGMLSchema();
+        final Element element = reference.getElement();
+        final Object buildedObject = schema.getBuildedObjectFor( element );
+        if( buildedObject instanceof FeatureType )
+          m_ftRelationTarget = (IFeatureType) buildedObject;
+        else
+          throw new UnsupportedOperationException();
+        
         break;
     }
-    if( m_relationContentType != null )
-      m_relationContentType.init( initializeRun );
   }
 
   /**
@@ -90,6 +100,6 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
    */
   public IFeatureType getTargetFeatureType( )
   {
-    return m_relationContentType.getTargetFeatureType();
+    return m_ftRelationTarget;
   }
 }

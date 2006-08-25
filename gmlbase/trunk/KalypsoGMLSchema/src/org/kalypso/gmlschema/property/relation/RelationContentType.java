@@ -34,8 +34,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -51,12 +54,15 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
-
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
 
   private FeatureType m_ftRelationTarget = null;
+
+  private boolean m_linkable = false;
+
+  private boolean m_inlinable = true;
 
   public RelationContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
@@ -72,23 +78,23 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-
+      {
         final List<FeatureType> result = new ArrayList<FeatureType>();
         final List<ElementWithOccurs> localElements = getSequence();
         final ElementWithOccurs[] elementArray = localElements.toArray( new ElementWithOccurs[localElements.size()] );
-        for( int i = 0; i < elementArray.length; i++ )
+        for( final ElementWithOccurs elementWithOccurs : elementArray )
         {
-          final QName ref = elementArray[i].getElement().getRef();
+          final QName ref = elementWithOccurs.getElement().getRef();
           final Element element;
           final GMLSchema schema;
           if( ref == null )
           {
-            element = elementArray[i].getElement();
+            element = elementWithOccurs.getElement();
             schema = getGMLSchema();
           }
           else
@@ -97,25 +103,44 @@ public abstract class RelationContentType implements IRelationContentType, IInit
             schema = reference.getGMLSchema();
             element = reference.getElement();
           }
+          
           final Object buildedObject = schema.getBuildedObjectFor( element );
           if( buildedObject instanceof FeatureType )
+          {
             result.add( (FeatureType) buildedObject );
+            
+            /* We determine also if we may inline. Normaly this is true but when the maxOccurs of the referenced element is set to 0.*/
+            if( elementWithOccurs.getOccurs().getMax() == 0 )
+              m_inlinable = false;
+
+            // we only need the first occurence and ignore the rest
+            break;
+          }
           else
             System.out.println( "schema error: links not to a feature:" + element );
         }
         if( result.size() != 1 )
-          throw new UnsupportedOperationException();
+          throw new UnsupportedOperationException( "An object relation must reference exactly one element" );
         m_ftRelationTarget = result.get( 0 );
+
+        /* Determine if linked objects are allowed */
+        final AttributeGroupRef[] attributeGroups = getAttributeGroups();
+        for( final AttributeGroupRef ag : attributeGroups )
+        {
+          final QName ref = ag.getRef();
+          // TODO: what about gml2, probably it is different there? Maybe just look for xlink:href
+          if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) )
+            m_linkable = true;
+        }
+      }
         break;
     }
   }
 
-  /**
-   */
   public abstract List<ElementWithOccurs> getSequence( );
 
-  /**
-   */
+  public abstract AttributeGroupRef[] getAttributeGroups( );
+
   public ComplexType getComplexType( )
   {
     return m_complexType;
@@ -128,5 +153,18 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   public IFeatureType getTargetFeatureType( )
   {
     return m_ftRelationTarget;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationContentType#isLinkable()
+   */
+  public boolean isLinkable( )
+  {
+    return m_linkable;
+  }
+  
+  public boolean isInlineable( )
+  {
+    return m_inlinable;
   }
 }

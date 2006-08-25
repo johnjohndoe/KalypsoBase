@@ -86,14 +86,10 @@ public class GMLSchemaCache
 
   private final FileCache<StringValidityKey, GMLSchema> m_fileCache;
 
-  private File m_baseTmpDir;
-
-  public GMLSchemaCache( final File cacheDirectory, final File tmpDir )
+  public GMLSchemaCache( final File cacheDirectory )
   {
-    m_baseTmpDir = tmpDir;
-
     m_memCache = new LfuCacheFactory().newInstance( "gml.schemas", TIMEOUT, SIZE );
-    m_fileCache = new FileCache<StringValidityKey, GMLSchema>( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(), new GMLSchemaSerializer( tmpDir ), cacheDirectory );
+    m_fileCache = new FileCache<StringValidityKey, GMLSchema>( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(), new GMLSchemaSerializer(), cacheDirectory );
   }
 
   /**
@@ -161,7 +157,7 @@ public class GMLSchemaCache
       File archiveDir = null;
       try
       {
-        tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip", m_baseTmpDir );
+        tmpFile = File.createTempFile( "tempSchemaCacheFile", ".zip" );
 
         archiveDir = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
 
@@ -187,8 +183,7 @@ public class GMLSchemaCache
         if( tmpFile != null )
           tmpFile.delete();
 
-        if( archiveDir != null )
-          FileUtilities.deleteRecursive( archiveDir );
+        FileUtilities.deleteRecursive( archiveDir );
       }
     }
 
@@ -225,20 +220,13 @@ public class GMLSchemaCache
 
   private static class GMLSchemaSerializer implements ISerializer<GMLSchema>
   {
-    private final File m_baseTmpDir;
-
-    public GMLSchemaSerializer( final File baseTmpDir )
-    {
-      m_baseTmpDir = baseTmpDir;
-    }
-
     public GMLSchema read( final InputStream ins ) throws InvocationTargetException, IOException
     {
       OutputStream fos = null;
       File tmpDir = null;
       try
       {
-        tmpDir = FileUtilities.createNewTempDir( "tmpSchemaCacheDir_unzipped", m_baseTmpDir );
+        tmpDir = FileUtilities.createNewTempDir( "tmpSchemaCacheDir_unzipped" );
 
         // we unzip because of the problem of deleting zip files, once accessed via a zip-url-stream
         ZipUtilities.unzip( ins, tmpDir );
@@ -274,17 +262,20 @@ public class GMLSchemaCache
     {
       // write schema into tmp dir
       // TODO: check if this really works with included schemata
-      final File archiveDir = FileUtilities.createNewTempDir( "gmlSerializerTmpDir", m_baseTmpDir );
+      final File archiveDir = FileUtilities.createNewTempDir( "gmlSerializerTmpDir" );
       try
       {
         GMLSchemaUtilities.createSchemaDir( schema.getContext(), schema.getSchema(), archiveDir );
         FileUtils.writeStringToFile( new File( archiveDir, ".version" ), schema.getGMLVersion(), "UTF-8" );
         ZipUtilities.zip( new ZipOutputStream( os ), archiveDir );
-        FileUtilities.deleteRecursive( archiveDir );
       }
       catch( final XmlException e )
       {
         throw new InvocationTargetException( e );
+      }
+      finally
+      {
+        FileUtilities.deleteRecursive( archiveDir );
       }
     }
   }
