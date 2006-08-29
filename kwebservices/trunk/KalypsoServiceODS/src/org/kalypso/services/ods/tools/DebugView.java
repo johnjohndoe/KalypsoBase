@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -76,6 +78,8 @@ import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -135,17 +139,27 @@ public class DebugView extends ViewPart implements PaintListener
   /**
    * Testmethode zur Ausgabe einer Tabelle aus einem 
    */
-  public void getHTMLTable()
+  public void getHTMLTable() throws ConfigTableNotFoundException
   {
-   
-    
     //HTMLTabelle erzeugen
-    ConfigurationLoader cl=new ConfigurationLoader(m_pathVC);
-    String htmltable = TableLoader.createTable(cl.getConfiguration(), "MyFirstTable");
-    System.out.println(htmltable);
-    //  und noch eine HTMLTabelle erzeugen
-    String htmltable2 = TableLoader.createTable(cl.getConfiguration(), "MySecondTable");
-    System.out.println(htmltable2);
+    ConfigurationLoader cl=null;
+    try
+    {
+      cl = new ConfigurationLoader(m_pathVC);
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    
+    if (cl!=null)
+    {
+      String htmltable = TableLoader.createTable(cl.getConfiguration(), "MyFirstTable");
+      System.out.println(htmltable);
+      //  und noch eine HTMLTabelle erzeugen
+      String htmltable2 = TableLoader.createTable(cl.getConfiguration(), "MySecondTable");
+      System.out.println(htmltable2);
+    }
   }
 
   
@@ -158,25 +172,50 @@ public class DebugView extends ViewPart implements PaintListener
     Display d= Display.getDefault();
     //Display für Shell kann null sein :-)
     String confpath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
-    ConfigurationLoader cl=new ConfigurationLoader(confpath);
-    ConfigurationType config = cl.getConfiguration();
-    
-    ChartImageContainer cic=new ChartImageContainer(config, "Test", d, 500,100);
-    LegendImageContainer lic=new LegendImageContainer(config, "Test", d);
-    
-    GC gcchart=new GC(m_chartImage);
-    GC gcleg=new GC(m_legendImage);
-    Image cicImage=cic.getImage();
-    Image licImage=lic.getImage();
-    if (cicImage!=null)
-      gcchart.drawImage( cicImage, 0, 0 );
-    if (licImage!=null)
-      gcleg.drawImage( licImage, 0, 0 );
-    
-    gcleg.dispose();
-    gcchart.dispose();
-    lic.dispose();
-    cic.dispose();
+    ConfigurationLoader cl=null;
+    try
+    {
+      cl = new ConfigurationLoader(confpath);
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    if (cl!=null)
+    {
+      ConfigurationType config = cl.getConfiguration();
+      
+      ChartImageContainer cic=null;
+      LegendImageContainer lic=null;
+      try
+      {
+        cic = new ChartImageContainer(config, "Test", d, 500,100);
+        lic=new LegendImageContainer(config, "Test", d);
+      }
+      catch( ConfigChartNotFoundException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      if (cic!=null && lic!=null)
+      {
+        GC gcchart=new GC(m_chartImage);
+        GC gcleg=new GC(m_legendImage);
+        Image cicImage=cic.getImage();
+        Image licImage=lic.getImage();
+        if (cicImage!=null)
+          gcchart.drawImage( cicImage, 0, 0 );
+        if (licImage!=null)
+          gcleg.drawImage( licImage, 0, 0 );
+        
+        gcleg.dispose();
+        gcchart.dispose();
+        lic.dispose();
+        cic.dispose();
+      }
+      
+    }
     
   }
   

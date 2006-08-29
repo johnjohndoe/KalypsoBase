@@ -124,7 +124,7 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
            ODSException.showException( request, response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
          }
      }
-     catch( IOException e )
+     catch( Exception e )
      {
        e.printStackTrace();
      }

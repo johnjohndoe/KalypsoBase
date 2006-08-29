@@ -45,6 +45,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -61,6 +62,7 @@ import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
@@ -94,30 +96,24 @@ public class GetLegend implements IODSOperation, Runnable
           KalypsoGisPlugin.getDefault();
           IEclipsePreferences prefs = new ODSPreferences().getPreferences();
           String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
-          
           ConfigurationLoader cl=new ConfigurationLoader(pathVC);
           ConfigurationType config = cl.getConfiguration();
           display=Display.getDefault();
           lic = new LegendImageContainer(config, reqName, display);
           Image legendImg=lic.getImage();
-          
-          if (legendImg!=null)
-          {
-            response.setContentType( "image/jpeg" );
-            ImageLoader il=new ImageLoader();
-            ImageData id=legendImg.getImageData();
-            il.data=new ImageData[]{id};
-            outputStream = new BufferedOutputStream( response.getOutputStream() );
-            il.save( outputStream, SWT.IMAGE_JPEG );
-            outputStream.close();
-          }
-          else
-          {
-            ODSException.showException( request, response, ERROR_CODE.LEGEND_NOT_DEFINED );
-          }
-          
+          response.setContentType( "image/jpeg" );
+          ImageLoader il=new ImageLoader();
+          ImageData id=legendImg.getImageData();
+          il.data=new ImageData[]{id};
+          outputStream = new BufferedOutputStream( response.getOutputStream() );
+          il.save( outputStream, SWT.IMAGE_JPEG );
+          outputStream.close();
       }
-      catch( IOException e )
+      catch( ConfigChartNotFoundException e )
+      {
+        ODSException.showException( request, response, ERROR_CODE.LEGEND_NOT_DEFINED );
+      }
+      catch( Exception e )
       {
         e.printStackTrace();
       }
