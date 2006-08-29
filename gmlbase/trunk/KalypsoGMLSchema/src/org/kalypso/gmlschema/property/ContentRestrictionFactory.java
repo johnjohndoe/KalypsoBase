@@ -157,7 +157,7 @@ public class ContentRestrictionFactory
 
   private static double getMaxAsDouble( Facet[] facets )
   {
-    double result = Double.MIN_VALUE;
+    double result = -Double.MAX_VALUE;
     for( int i = 0; i < facets.length; i++ )
     {
       final double value = doubleValue( facets[i] );
