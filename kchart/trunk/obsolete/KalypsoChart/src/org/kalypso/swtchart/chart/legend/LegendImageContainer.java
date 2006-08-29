@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -69,7 +70,7 @@ public class LegendImageContainer
    * 
    * Das Objekt muss nach der Verwendung diposed werden 
    */
-  public LegendImageContainer(ConfigurationType config,  String chartname, Device dev)
+  public LegendImageContainer(ConfigurationType config,  String chartname, Device dev) throws ConfigChartNotFoundException
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );

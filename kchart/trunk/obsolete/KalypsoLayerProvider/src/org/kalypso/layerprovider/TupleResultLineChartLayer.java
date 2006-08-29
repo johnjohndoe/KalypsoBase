@@ -41,8 +41,11 @@
 package org.kalypso.layerprovider;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
@@ -107,7 +110,6 @@ private String m_description="No description given";
   {
     int size = m_result.size();
     gc.setLineWidth(5);
-   // gc.drawLine(0,0, 200, 200);
     System.out.println("Drawing TupleResultChartLayer");
     
     StyledPoint sp=(StyledPoint) getStyle().getElement(SE_TYPE.POINT, 0);
@@ -115,20 +117,27 @@ private String m_description="No description given";
     
     ArrayList<Point> path=new ArrayList<Point>();
     
+
+    
+    
     for( int i = 0; i < size; i++)
     {
       final IRecord r1 = m_result.get( i );
-
+      
       Object x1 = m_result.getValue( r1, m_domComp );
       Object y1 = m_result.getValue( r1, m_valComp );
 
       
-      int ix1 = m_domAxis.logicalToScreen( x1 );
-      int iy1 = m_valAxis.logicalToScreen( y1 );
-      path.add(new Point(ix1, iy1));
+      
+        int ix1 = m_domAxis.logicalToScreen( x1 );
+        int iy1 = m_valAxis.logicalToScreen( y1 );
+        path.add(new Point(ix1, iy1));
 
-      System.out.println( "Path: addingPoint...("+ix1+":"+iy1+")" );
+        System.out.println( "Path: addingPoint...("+ix1+":"+iy1+")" );
+      
+     
     }
+    
     if (sl!=null)
     {
       sl.setPath(path);

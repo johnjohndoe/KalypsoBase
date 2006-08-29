@@ -51,6 +51,7 @@ import org.kalypso.swtchart.chart.axis.AxisFactory;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
@@ -69,7 +70,7 @@ public class ChartLoader
    * @param chart Das Chart-Objekt, das mit Leben gefüllt wird
    * @param configChartName Der Name der ChartConfiguration, die verwendet werden soll
    */
-  public static Chart createChart(Chart chart, ConfigurationType config, String configChartName)
+  public static Chart createChart(Chart chart, ConfigurationType config, String configChartName) throws ConfigChartNotFoundException
   {
     ChartType configChart=null;
     
@@ -88,9 +89,11 @@ public class ChartLoader
     }
     
 
-    
-    
-    if (configChart!=null)
+    if (configChart==null)
+    {
+      throw new ConfigChartNotFoundException(configChartName);
+    }
+    else
     {
         //Achsen hinzufügen
       

@@ -109,10 +109,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_black=new Color(null, 0, 0, 0);
     setBackground(m_white);
     createControl( this );
-    
     addListener( SWT.Resize, this );
     m_axisRegistry.addAxisRegistryEventListener( this );
-    
   }
   
 

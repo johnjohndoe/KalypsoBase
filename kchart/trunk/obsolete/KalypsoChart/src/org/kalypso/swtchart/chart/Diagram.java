@@ -42,6 +42,8 @@ package org.kalypso.swtchart.chart;
 
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -56,6 +58,7 @@ import org.kalypso.swtchart.chart.legend.Legend;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.preferences.ChartPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.preferences.IChartPreferences;
 
 /**
@@ -67,7 +70,7 @@ public class Diagram extends Composite implements Listener
 
   private Legend m_legend;
 
-  public Diagram( Composite parent, int style )
+  public Diagram( Composite parent, int style ) throws JAXBException, ConfigChartNotFoundException
   {
     super( parent, style );
     addListener( SWT.Resize, this );
@@ -83,7 +86,7 @@ public class Diagram extends Composite implements Listener
     String configFullPath = configPath + configName;
 
     ConfigurationLoader cl = new ConfigurationLoader( configFullPath );
-    ChartLoader.createChart( m_chart, cl.getConfiguration(), "WQ1" );
+    ChartLoader.createChart( m_chart, cl.getConfiguration(), "WasserstandEtc" );
     // ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
 

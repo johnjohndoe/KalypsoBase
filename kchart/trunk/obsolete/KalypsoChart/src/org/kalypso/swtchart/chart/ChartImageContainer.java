@@ -58,6 +58,7 @@ import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -74,7 +75,7 @@ public class ChartImageContainer
    * Layer ran: LayerProvider verlangt in der Init-Methode nach einem Chart Das Objekt muss nach der Verwendung diposed
    * werden
    */
-  public ChartImageContainer( ConfigurationType config, String chartname, Device dev, int width, int height )
+  public ChartImageContainer( ConfigurationType config, String chartname, Device dev, int width, int height ) throws ConfigChartNotFoundException
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );

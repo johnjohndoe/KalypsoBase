@@ -56,6 +56,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.tableconfiguration.ComponentType;
@@ -72,27 +73,36 @@ public class TableLoader
 {
   public final static ObjectFactory OF = new ObjectFactory();
 
-  public static String createTable( ConfigurationType config, String tableName )
+  public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
   {
     List<TableType> tables = config.getTable();
+    TableType foundTable=null;
     if( tables != null )
     {
       for( TableType table : tables )
       {
         if( table.getName().compareTo( tableName ) == 0 )
         {
-          try
-          {
-            String htmltable = createTable( table );
-            return htmltable;
-          }
-          catch( Exception e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+         foundTable=table;
         }
       }
+    }
+
+    if (foundTable!=null)
+    {
+      try
+      {
+        String htmltable = createTable( foundTable );
+        return htmltable;
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      throw new ConfigTableNotFoundException(tableName);
     }
     return null;
   }

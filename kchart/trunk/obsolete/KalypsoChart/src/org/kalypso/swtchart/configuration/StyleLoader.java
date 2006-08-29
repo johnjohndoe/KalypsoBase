@@ -51,7 +51,6 @@ import org.kalypso.swtchart.chart.styles.StyleHelper;
 import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
-import org.kalypso.swtchart.chart.util.Recalc;
 import org.ksp.chart.layerstyle.AbstractPointType;
 import org.ksp.chart.layerstyle.BorderType;
 import org.ksp.chart.layerstyle.ImagePointType;
@@ -177,7 +176,6 @@ public class StyleLoader
       sp=new StyledPolygon(createColor(pt.getFillColor()), borderWidth, borderColor, alpha);
     }
     return sp;
-    
   }
   
   /**
@@ -187,12 +185,32 @@ public class StyleLoader
    */
   public static RGB createColor(byte[] cbyte)
   {
-    int r=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[0]}));
-    int g=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[1]}));
-    int b=Recalc.hexToInt(HexBin.encode(new byte[]{cbyte[2]}));
+    int r=hexToInt(HexBin.encode(new byte[]{cbyte[0]}));
+    int g=hexToInt(HexBin.encode(new byte[]{cbyte[1]}));
+    int b=hexToInt(HexBin.encode(new byte[]{cbyte[2]}));
     return new RGB(r,g,b);
   }
   
-  
+  /**
+   * Wandelt einen HexString in eine Dezimalzahl um
+   * @param strHex die Zahl als Hexadezimal-String
+   * @return die Zahl als Integer
+   */
+  public static int hexToInt(String strHex)
+  {
+    String str;
+    String hexVals = "0123456789ABCDEF";
+    int i, val, n;
+
+    val = 0;
+    n   = 1;
+    str = strHex.toUpperCase();
+
+    for(i=str.length()-1; i>=0; i--, n*=16)
+    {
+      val+= n * hexVals.indexOf(str.charAt(i)); 
+    }
+    return val;
+  }
   
 }

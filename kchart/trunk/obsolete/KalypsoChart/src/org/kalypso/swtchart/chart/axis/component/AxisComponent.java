@@ -63,15 +63,12 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private final Color m_white;
 
-  // private int space = 5;
-
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
     m_white = new Color( null, 255, 255, 255 );
     setBackground( m_white );
     m_axis = axis;
-
     addPaintListener( this );
   }
 
@@ -121,9 +118,6 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
-
-    // System.out.println( "Axis Component Bounds: " + b + " Screen Range= " + getRange() );
-
     IAxisRenderer renderer = m_axis.getRenderer();
     if( renderer != null )
       renderer.paint( gc, dev, m_axis, b );
@@ -132,34 +126,26 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   public int normalizedToScreen( double normValue )
   {
     final int range = getRange();
-
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
       normValue = 1 - normValue;
-
     final int screenValue = (int) (range * normValue);
-
     return screenValue;
   }
 
   public double screenToNormalized( int screenValue )
   {
     final int range = getRange();
-
     if( range == 0 )
       return 0;
-
     double normValue = (double) screenValue / range;
-
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
       normValue = 1 - normValue;
-
     return normValue;
   }
 
   private int getRange( )
   {
     final Rectangle bounds = getBounds();
-
     final int range;
     if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       range = bounds.width; // horizontal

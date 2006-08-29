@@ -112,6 +112,7 @@ public class DefaultLegendItem implements ILegendItem
     {
       GC gc=new GC(Display.getDefault());
       GCWrapper gcw=new GCWrapper(gc);
+      
       FontMetrics fm=gcw.getFontMetrics();
       int nameWidth=getName().length()*fm.getAverageCharWidth();
       
@@ -142,10 +143,6 @@ public class DefaultLegendItem implements ILegendItem
       Point p0=new Point(m_inset, m_inset);
       
       gc.setBackground(Display.getDefault().getSystemColor((int)(Math.random()*20.0)));
-     // gc.fillRectangle(0,0,img.getBounds().width, img.getBounds().height);  
-      
-      
-    
       
       //Icon holen 
       Image iconImage=new Image(Display.getDefault(), m_iconWidth, m_iconHeight);

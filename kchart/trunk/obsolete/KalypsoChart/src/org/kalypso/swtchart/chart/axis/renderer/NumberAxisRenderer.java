@@ -425,6 +425,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     catch (java.lang.IllegalArgumentException e)
     {
       System.out.println(value.toString());
+      e.printStackTrace();
     }
     return getTextExtent(gc, dev, label, fd);
   }

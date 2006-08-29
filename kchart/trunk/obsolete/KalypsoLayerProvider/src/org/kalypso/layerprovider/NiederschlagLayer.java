@@ -71,8 +71,9 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
-import org.kalypso.swtchart.chart.util.Recalc;
 import org.ksp.chart.viewerconfiguration.ParameterType;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author schlienger
@@ -158,7 +159,7 @@ private String m_description;
       //Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
       GregorianCalendar fixedGregCal=new GregorianCalendar();
       fixedGregCal.set(2000, 0, 1, 0,0);
-      fixedPoint=Recalc.gregCalToXMLGregCal(fixedGregCal);
+      fixedPoint=new XMLGregorianCalendarImpl(fixedGregCal);
     }
     System.out.println("Used BarInterval: "+barInterval);
     
@@ -176,7 +177,7 @@ private String m_description;
         Point xs = m_domAxis.logicalToScreenInterval( domVal,fixedPoint ,barInterval  );
         x1=Math.min(xs.x, xs.y);
         x2=Math.max(xs.x, xs.y);
-        y1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
+        y1 = m_valAxis.logicalToScreen( 0 );
         y2= m_valAxis.logicalToScreen( valVal );
       }
       else

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis;
 
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,7 +51,8 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
-import org.kalypso.swtchart.chart.util.Recalc;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author schlienger
@@ -100,7 +100,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     GregorianCalendar c = new GregorianCalendar();
     c.setTime(new Date(logical));
     
-    return Recalc.gregCalToXMLGregCal(c);
+    return new XMLGregorianCalendarImpl(c);
   }
 
   /**
@@ -166,12 +166,12 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     //Start-Zeitpunkt des Wert-Intervalls
     GregorianCalendar startCal=new GregorianCalendar();
     startCal.setTimeInMillis(start);
-    XMLGregorianCalendar startXMLCal=Recalc.gregCalToXMLGregCal(startCal);
+    XMLGregorianCalendar startXMLCal=new XMLGregorianCalendarImpl(startCal);
 
     //End-Zeitpunkt des Wert-Intervalls
     GregorianCalendar endCal=new GregorianCalendar();
     endCal.setTimeInMillis(end);
-    XMLGregorianCalendar endXMLCal=Recalc.gregCalToXMLGregCal(endCal);
+    XMLGregorianCalendar endXMLCal=new XMLGregorianCalendarImpl(endCal);
     
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )

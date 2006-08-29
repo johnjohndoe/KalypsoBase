@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
-
 import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
@@ -28,7 +26,8 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.util.InsetsHelper;
-import org.kalypso.swtchart.chart.util.Recalc;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author alibu
@@ -249,7 +248,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         Date d=new Date(tickValue);
         gregCal.setTime(d);
         //Recalc.gr
-        ticks.add( Recalc.gregCalToXMLGregCal(gregCal) );
+        ticks.add( new XMLGregorianCalendarImpl(gregCal) );
         //System.out.println("XMLGregorianCalendarAxisTick: "+m_df.format(tickValue));
       }
     }

@@ -110,10 +110,11 @@ public class NumberAxis extends AbstractAxis<Number>
 
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
+   * TODO Not implemented yet
    */
   public Point logicalToScreenInterval( Number value, Number fixedPoint, double intervalSize )
   {
-    // TODO Auto-generated method stub
+    
     return null;
   }
 }
