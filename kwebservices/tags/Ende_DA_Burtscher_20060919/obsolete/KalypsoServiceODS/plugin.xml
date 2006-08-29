@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="ODSOperation" name="ODSOperation" schema="schema/ODSOperation.exsd"/>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            name="ObservationDiagramService"
+            alias="/ods"
+            class="org.kalypso.services.ods.ODSServlet"/>
+   </extension>
+   <extension
+         point="org.kalypso.services.ods.ODSOperation">
+         <odsoperation
+         	class="org.kalypso.services.ods.operation.GetCapabilities"
+         	id="GetCapabilities"
+         />
+         <odsoperation
+         	class="org.kalypso.services.ods.operation.GetLegend"
+         	id="GetLegend"
+         />
+         <odsoperation
+         	class="org.kalypso.services.ods.operation.GetChart"
+         	id="GetChart"
+         />
+         <odsoperation
+         	class="org.kalypso.services.ods.operation.GetHTMLTable"
+         	id="GetHTMLTable"
+         />
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.kalypso.services.ods.tools.DebugView"
+            id="KalypsoServiceODS.view1"
+            name="AlisDebugView"/>
+   </extension>
+</plugin>
