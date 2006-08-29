@@ -4,5 +4,4 @@ Bundle-Name: KalypsoWPS
 Bundle-SymbolicName: org.kalypso.kalypsoWPS
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.jwsdp,
- org.kalypso.services.core
+Require-Bundle: org.kalypso.jwsdp

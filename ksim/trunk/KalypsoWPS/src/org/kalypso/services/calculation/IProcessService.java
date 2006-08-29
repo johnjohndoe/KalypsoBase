@@ -40,41 +40,40 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation;
 
-import net.opengeospatial.ows.GetCapabilitiesType;
-import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.ProcessDescriptions;
 
-import org.kalypso.services.IKalypsoService;
-
 /**
- * The IProcessService executes requests for calculations.
- * 
- * It provides methods for querying the capabilities of the service and
- * delivering detailed service descriptions.
+ * The IProcessService executes requests for calculations. It provides methods for querying the capabilities of the
+ * service and delivering detailed service descriptions.
  * 
  * @author skurzbach
  */
-public interface IProcessService extends IKalypsoService
+public interface IProcessService
 {
-	/**
-	 * Gives metadata about the service and the processes it can execute. Result
-	 * object contains the information specified in the request.
-	 */
-	public Capabilities getCapabilities(
-			final GetCapabilitiesType getCapabilitiesRequest);
+  /**
+   * Gives metadata about the service and the processes it can execute. Result object always contains all information
+   * available. <code>Sections</code>, <code>AcceptFormats</code> and <code>updateSequence</code> parameters
+   * specified in the request will be ignored as required in <b>OGC WPS 0.4.0 specification [OGC 05-007r4] Table 5</b>.
+   * The <code>service</code> parameter is assumed to be <code>WPS</code> and the <code>request</code> parameter
+   * should be <code>getCapabilities</code>.
+   * 
+   * @param acceptVersions
+   *          accepted service versions ordered by client preference, all versions accepted if no parameters are given
+   * @return {@link net.opengeospatial.wps.Capabilities} wrapper
+   */
+  public Capabilities getCapabilities( final String... acceptVersions );
 
-	/**
-	 * Get detailed description of one or more processes that can be executed.
-	 */
-	public ProcessDescriptions describeProcess(
-			final DescribeProcess describeProcessRequest);
+  /**
+   * Get detailed description of one or more processes that can be executed.
+   */
+  public ProcessDescriptions describeProcess( final DescribeProcess describeProcessRequest );
 
-	/**
-	 * Executes the process specified in the request and return a response
-	 * object that contains information about the status of the process.
-	 */
-	public ExecuteResponseType execute(final Execute executeRequest);
+  /**
+   * Executes the process specified in the request and return a response object that contains information about the
+   * status of the process.
+   */
+  public ExecuteResponseType execute( final Execute executeRequest );
 }
