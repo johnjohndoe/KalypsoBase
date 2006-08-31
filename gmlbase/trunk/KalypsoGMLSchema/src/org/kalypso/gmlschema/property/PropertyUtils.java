@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property;
 
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * Utilities around {@link org.kalypso.gmlschema.property.IPropertyType}
@@ -61,12 +66,14 @@ public class PropertyUtils
   /**
    * Reads the values and label of an restricted type into a map.
    * 
-   * @return Map 'label' -> 'values'. Empty if the type has no enumeration-restrictions.
+   * @return Map 'value' -> 'label'. Empty if the type has no enumeration-restrictions.
    */
-  public static Map<String, String> createComboEntries( final IValuePropertyType vpt )
+  public static Map<Object, String> createComboEntries( final IValuePropertyType vpt )
   {
-    // comboLabel -> comboValue
-    final Map<String, String> comboEntries = new LinkedHashMap<String, String>();
+    // comboValue -> comboLabel
+    final Map<Object, String> comboEntries = new LinkedHashMap<Object, String>();
+
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
 
     // if we have an enumeration, create a combo
     final IRestriction[] restrictions = vpt.getRestriction();
@@ -81,10 +88,19 @@ public class PropertyUtils
 
         for( int i = 0; i < labels.length; i++ )
         {
-          final String value = values[i];
           final String label = labels[i];
-
-          comboEntries.put( label, value );
+          final String valueString = values[i];
+          Object value = null;
+          try
+          {
+            value = typeHandler.parseType( valueString );
+            comboEntries.put( value, label );
+          }
+          catch( final ParseException e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
+          }
         }
       }
     }
