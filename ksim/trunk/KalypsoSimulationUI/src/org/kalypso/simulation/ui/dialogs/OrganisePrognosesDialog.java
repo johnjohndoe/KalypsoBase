@@ -85,7 +85,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
   private IFolder m_prognoseFolder;
 
-  private Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
+  private Action m_removeAction = new Action( "Loeschen", SimulationImageProvider.ID_REMOVE )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -116,7 +116,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     m_prognoseFolder = modelProject.getFolder( ModelNature.PROGNOSE_FOLDER );
     m_titleImage = ImageProvider.IMAGE_KALYPSO_ICON_BIG.createImage();
     m_archiveAction.setToolTipText("Archivieren");
-    m_removeAction.setToolTipText("Löschen");
+    m_removeAction.setToolTipText("Lï¿½schen");
 
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
@@ -145,7 +145,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
     getShell().setText( VORHERSAGEN_ORGANISIEREN );
     setTitle( VORHERSAGEN_ORGANISIEREN );
-    setMessage( "Wählen Sie eine Vorhersage aus und löschen oder archivieren Sie diese." );
+    setMessage( "Wï¿½hlen Sie eine Vorhersage aus und lï¿½schen oder archivieren Sie diese." );
 
     // toolbar
     final ToolBarManager manager = new ToolBarManager( SWT.FLAT );
@@ -221,7 +221,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     
     // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getParentShell(), VORHERSAGEN_ORGANISIEREN,
-        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
+        CommitCalcCaseDelegate.RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
     job.setUser( true );
     job.schedule();
   }
