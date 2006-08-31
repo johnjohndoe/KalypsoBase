@@ -69,8 +69,10 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -86,8 +88,10 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), new URL[] {} );
-  
+  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
+
   private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
 
   private boolean m_update;
@@ -108,7 +112,8 @@ public class SteuerparameterWizardPage extends WizardPage
     m_canGoBack = canGoBack;
 
     final Collection<FeatureChange> changes = m_changes;
-    m_featureComposite.addChangeListener( new IFeatureChangeListener() {
+    m_featureComposite.addChangeListener( new IFeatureChangeListener()
+    {
 
       public void featureChanged( final FeatureChange change )
       {
@@ -118,8 +123,9 @@ public class SteuerparameterWizardPage extends WizardPage
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
         // TODO:
-      }});
-    
+      }
+    } );
+
     m_projectProvider = pp;
   }
 
@@ -149,12 +155,11 @@ public class SteuerparameterWizardPage extends WizardPage
     getControl().getDisplay().syncExec( new CatchRunnable()
     {
       @Override
-      public void runIntern() throws Exception
+      public void runIntern( ) throws Exception
       {
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( m_workspace, featureChanges )
-            .process();
+        new ChangeFeaturesCommand( m_workspace, featureChanges ).process();
       }
     } );
 
@@ -183,7 +188,7 @@ public class SteuerparameterWizardPage extends WizardPage
     }
   }
 
-  public boolean isUpdate()
+  public boolean isUpdate( )
   {
     return m_update;
   }
@@ -198,7 +203,7 @@ public class SteuerparameterWizardPage extends WizardPage
       if( checkUpdate != null && !checkUpdate.isDisposed() )
         checkUpdate.getDisplay().asyncExec( new Runnable()
         {
-          public void run()
+          public void run( )
           {
             checkUpdate.setSelection( update );
           }
@@ -221,7 +226,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       m_panel.getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        public void run( )
         {
           createFeatureControl( panel );
           panel.layout();
@@ -246,7 +251,7 @@ public class SteuerparameterWizardPage extends WizardPage
     // gleich mal den Workspace auf das default setzen
     try
     {
-      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
+      final ModelNature nature = (ModelNature) project.getNature( ModelNature.ID );
       m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
     }
     catch( final CoreException e )
@@ -266,7 +271,7 @@ public class SteuerparameterWizardPage extends WizardPage
     try
     {
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH );
-      m_featureComposite.addView( viewURL );
+      m_fvFactory.addView( viewURL );
     }
     catch( final MalformedURLException e )
     {
@@ -310,12 +315,12 @@ public class SteuerparameterWizardPage extends WizardPage
       featureComposite.updateControl();
     }
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
    */
   @Override
-  public IWizardPage getPreviousPage()
+  public IWizardPage getPreviousPage( )
   {
     return m_canGoBack ? super.getPreviousPage() : null;
   }
