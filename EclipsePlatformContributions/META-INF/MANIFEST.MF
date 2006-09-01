@@ -16,6 +16,7 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui.dialogs,
  org.kalypso.contribs.eclipse.ui.editorinput,
  org.kalypso.contribs.eclipse.ui.internal.decorators,
+ org.kalypso.contribs.eclipse.ui.intro.config,
  org.kalypso.contribs.eclipse.ui.views.contentoutline,
  org.kalypso.contribs.eclipse.ui.views.propertysheet,
  org.kalypso.contribs.java.net
@@ -29,5 +30,6 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.help,
  org.eclipse.ui;visibility:=reexport,
  org.kalypso.contribs.java,
- org.eclipse.ui.browser;visibility:=reexport
+ org.eclipse.ui.browser;visibility:=reexport,
+ org.eclipse.ui.intro
 Eclipse-AutoStart: true
