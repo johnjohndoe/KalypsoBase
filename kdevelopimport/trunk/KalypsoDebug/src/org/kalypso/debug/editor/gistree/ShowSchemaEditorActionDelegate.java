@@ -103,7 +103,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, workspace.getContext() );
       
       final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, version, namespaces.get( schemaNamespace ) );
-      activePage.openEditor( input, "org.kalypso.ogc.gml.editor.GMLSchemaEditor" );
+      activePage.openEditor( input, "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" );
     }
     catch( final Exception e )
     {
