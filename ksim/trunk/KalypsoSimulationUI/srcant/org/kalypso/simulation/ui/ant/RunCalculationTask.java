@@ -44,11 +44,12 @@ package org.kalypso.simulation.ui.ant;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -70,12 +71,12 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
   private static final org.kalypso.simulation.core.simspec.ObjectFactory OF = new org.kalypso.simulation.core.simspec.ObjectFactory();
-  
+
   private String m_calcCasePath;
 
   private Modeldata m_modeldata;
 
-  private IFolder m_calcCaseFolder;
+  private IContainer m_calcCaseFolder;
 
   public RunCalculationTask( )
   {
@@ -118,7 +119,13 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       throw new BuildException( "calcCaseFolder is not set" );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    m_calcCaseFolder = root.getFolder( new Path( m_calcCasePath ) );
+
+    final IPath calcCasePath = new Path( m_calcCasePath );
+    if( calcCasePath.segmentCount() == 1 )
+      m_calcCaseFolder = root.getProject( calcCasePath.segment( 0 ) );
+    else
+      m_calcCaseFolder = root.getFolder( calcCasePath );
+
     if( m_calcCaseFolder == null )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
   }
