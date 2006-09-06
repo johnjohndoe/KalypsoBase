@@ -61,7 +61,7 @@ public class DefaultTableViewer extends TableViewer
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
   /**
-   * true when this viewer is being disposed. This information is held so that removeAllColumns does not remove the
+   * True when this viewer is being disposed. This information is held so that removeAllColumns does not remove the
    * columns if this viewer is being disposed, it else leads to conflicts with SWT
    */
   private boolean m_disposing = false;
@@ -85,7 +85,7 @@ public class DefaultTableViewer extends TableViewer
    * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
    */
   @Override
-  protected void handleDispose( DisposeEvent event )
+  protected void handleDispose( final DisposeEvent event )
   {
     m_disposing = true;
 
@@ -132,7 +132,7 @@ public class DefaultTableViewer extends TableViewer
   public void refreshColumnProperties( )
   {
     final Table table = getTable();
-    if( table.isDisposed() )
+    if( m_disposing || table.isDisposed() )
       return;
 
     final TableColumn[] columns = table.getColumns();
