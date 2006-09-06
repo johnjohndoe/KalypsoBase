@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -24,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: merge with other ExcelLikeTablecursor
+ * TODO: move code into TableCursor-Copy
  * 
  * @author belger
  */
@@ -111,7 +111,7 @@ public class ExcelTableCursor3_1 extends TableCursor
   final KeyListener m_keyListenerOnCell = new KeyAdapter()
   {
     @Override
-    public void keyPressed( KeyEvent e )
+    public void keyPressed( final KeyEvent e )
     {
       // handle cursor moving
       int dx = 0, dy = 0;
@@ -145,27 +145,40 @@ public class ExcelTableCursor3_1 extends TableCursor
             break;
         }
       }
-
-      if( dx != 0 || dy != 0 )
+      else if( e.keyCode == SWT.TAB )
       {
-        final int col = getColumn() + dx;
-        final Table table2 = getViewer().getTable();
-        TableItem row2 = getRow();
-        final int row = table2.indexOf( row2 ) + dy;
+        final Table table = getViewer().getTable();
+        final TableItem row2 = getRow();
 
-        if( col >= 0 && col < table2.getColumnCount() && row >= 0 && row < table2.getItemCount() )
+        final int row = table.indexOf( row2 );
+        final int col = getColumn();
+        final int rowCount = table.getItemCount();
+        final int columnCount = table.getColumnCount();
+
+        // Advance cursor: always go to the left, go to first item of row at the end of row
+        // go to first item at end of table
+        if( col == columnCount - 1 )
         {
-          setSelection( row, col );
-          setVisible( true );
-          setFocus();
-          // leaf cell
-          ((Control)e.getSource()).removeKeyListener( m_keyListenerOnCell );
+          dx = 1 - columnCount;
+          
+          if( row == rowCount - 1 )
+            dy = 1 - rowCount;
+          else
+            dy = 1;
+        }
+        else
+        {
+          dx = 1;
+          dy = 0;
         }
       }
+
+      advanceCursor( (Control) e.getSource(), dx, dy );
+
       if( e.keyCode != SWT.CR && e.getSource() instanceof CheckboxCellEditor )
       {
         // toggle checkbox
-        CheckboxCellEditor ce = (CheckboxCellEditor)e.getSource();
+        final CheckboxCellEditor ce = (CheckboxCellEditor) e.getSource();
         if( Boolean.TRUE.equals( ce.getValue() ) )
           ce.setValue( Boolean.FALSE );
         else
@@ -177,7 +190,7 @@ public class ExcelTableCursor3_1 extends TableCursor
   /**
    * keylistener on table <br>
    * handle start editing on pressed key <br>
-   * handle CTRL and SHIFT keys
+   * handle CTRL and SHIFT and TAB keys
    */
   final KeyListener m_keyListenerOnTableCursor = new KeyAdapter()
   {
@@ -198,12 +211,51 @@ public class ExcelTableCursor3_1 extends TableCursor
 
       // handle F2 to start editing
       if( e.keyCode == SWT.F2
-          || (" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0
-              || (e.character >= '0' && e.character <= 'z') || (e.character >= 'A' && e.character <= 'Z')) )
+          || (" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0 || (e.character >= '0' && e.character <= 'z') || (e.character >= 'A' && e.character <= 'Z')) )
       {
         startEditing( e );
         return;
       }
+      
+      if( e.keyCode == SWT.DEL )
+      {
+        // TODO: empty current cell
+      }
+
+      if( e.keyCode == SWT.TAB )
+      {
+        final Table table = getViewer().getTable();
+        final TableItem row2 = getRow();
+
+        final int row = table.indexOf( row2 );
+        final int col = getColumn();
+        final int rowCount = table.getItemCount();
+        final int columnCount = table.getColumnCount();
+
+        final int dx;
+        final int dy;
+        
+        // Advance cursor: always go to the left, go to first item of row at the end of row
+        // go to first item at end of table
+        if( col == columnCount - 1 )
+        {
+          dx = 1 - columnCount;
+          
+          if( row == rowCount - 1 )
+            dy = 1 - rowCount;
+          else
+            dy = 1;
+        }
+        else
+        {
+          dx = 1;
+          dy = 0;
+        }
+        
+        advanceCursor( null, dx, dy );
+        return;
+      }
+
       setVisible( true );
       setFocus();
     }
@@ -238,8 +290,7 @@ public class ExcelTableCursor3_1 extends TableCursor
 
   private final TableViewer m_viewer;
 
-  public ExcelTableCursor3_1( final TableViewer viewer, final int style, final ADVANCE_MODE mode,
-      final boolean selectionFollowsCursor )
+  public ExcelTableCursor3_1( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
   {
     super( viewer.getTable(), style );
 
@@ -274,8 +325,7 @@ public class ExcelTableCursor3_1 extends TableCursor
         setBackground( canModify ? getCanEditColor() : getCannotEditColor() );
 
         if( selectionFollowsCursor )
-          ((Table)getParent()).setSelection( new TableItem[]
-          { row } );
+          ((Table) getParent()).setSelection( new TableItem[] { row } );
       }
 
       /**
@@ -340,8 +390,7 @@ public class ExcelTableCursor3_1 extends TableCursor
     if( control != null && !control.isDisposed() )
     {
       control.removeKeyListener( m_keyListenerOnCell );
-      if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
-        control.addKeyListener( m_keyListenerOnCell );
+      control.addKeyListener( m_keyListenerOnCell );
     }
     m_viewer.editElement( element, column );
 
@@ -360,13 +409,13 @@ public class ExcelTableCursor3_1 extends TableCursor
     // 
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
-      Button button = (Button)control;
+      Button button = (Button) control;
       button.setSelection( !button.getSelection() );
     }
     // 
     if( control instanceof Text )
     {
-      final Text text = (Text)control;
+      final Text text = (Text) control;
       if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
         text.insert( "" + keyEvent.character );
     }
@@ -407,5 +456,36 @@ public class ExcelTableCursor3_1 extends TableCursor
   protected Color getCannotEditColor( )
   {
     return m_cannotEditColor;
+  }
+
+  /**
+   * Advances the cursor position by the given delta.
+   * 
+   * @param control
+   *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
+   */
+  protected void advanceCursor( final Control control, final int dx, final int dy )
+  {
+    if( dx != 0 || dy != 0 )
+    {
+      final Table table = getViewer().getTable();
+      final TableItem row2 = getRow();
+
+      final int row = table.indexOf( row2 ) + dy;
+      final int col = getColumn() + dx;
+      final int rowCount = table.getItemCount();
+      final int columnCount = table.getColumnCount();
+
+      if( col >= 0 && col < columnCount && row >= 0 && row < rowCount )
+      {
+        setSelection( row, col );
+        setVisible( true );
+        setFocus();
+
+        // leaf cell
+        if( control != null )
+          control.removeKeyListener( m_keyListenerOnCell );
+      }
+    }
   }
 }
