@@ -56,7 +56,7 @@ public class MultiException extends Exception
 {
   private List<Exception> m_exceptions = null;
 
-  public MultiException()
+  public MultiException( )
   {
     super();
   }
@@ -65,7 +65,7 @@ public class MultiException extends Exception
    * @see java.lang.Object#finalize()
    */
   @Override
-  protected void finalize() throws Throwable
+  protected void finalize( ) throws Throwable
   {
     if( !isEmpty() )
       m_exceptions.clear();
@@ -85,14 +85,14 @@ public class MultiException extends Exception
    * @see java.lang.Throwable#getMessage()
    */
   @Override
-  public String getMessage()
+  public String getMessage( )
   {
     if( isEmpty() )
       return "";
 
     final StringBuffer bf = new StringBuffer();
     for( final Iterator it = m_exceptions.iterator(); it.hasNext(); )
-      bf.append( ( (Exception)it.next() ).getMessage() ).append( '\n' );
+      bf.append( ((Exception) it.next()).getMessage() ).append( '\n' );
 
     return bf.toString();
   }
@@ -100,8 +100,19 @@ public class MultiException extends Exception
   /**
    * @return true if this MultiException container does not contain any exceptions
    */
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_exceptions == null || m_exceptions.size() == 0;
+  }
+
+  /**
+   * @see java.lang.Throwable#getCause()
+   */
+  @Override
+  public Throwable getCause( )
+  {
+    if( m_exceptions.size() == 0 )
+      return super.getCause();
+    return m_exceptions.get( 0 );
   }
 }
