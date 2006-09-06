@@ -106,7 +106,8 @@ public class TupleResultLabelProvider implements ITableLabelProvider
 
       final IComponent comp = comps[columnIndex];
 
-      return record.getValue( comp ).toString();
+      final Object value = record.getValue( comp );
+      return value == null ? "" : value.toString();
     }
 
     return null;

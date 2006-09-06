@@ -58,7 +58,7 @@ public interface IComponent
   public Object getDefaultValue( );
   
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( Object object );
+  public boolean equals( final Object object );
 
   /** override hashCode according to equals */
   public int hashCode();
