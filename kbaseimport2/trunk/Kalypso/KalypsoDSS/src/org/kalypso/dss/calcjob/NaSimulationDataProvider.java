@@ -51,14 +51,14 @@ import org.kalypso.simulation.core.SimulationException;
 /**
  * @author kuepfer
  */
-public class NaSimulationDataProvieder implements ISimulationDataProvider
+public class NaSimulationDataProvider implements ISimulationDataProvider
 {
 
   public static final String CALC_DIR = "CALC_DIR";
 
   private final File m_calcDir;
 
-  public NaSimulationDataProvieder( final File calcDir )
+  public NaSimulationDataProvider( final File calcDir )
   {
     m_calcDir = calcDir;
   }
@@ -109,7 +109,7 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
       }
       if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
       {
-        return new URL( m_calcDir.toURL(), "Anfangswerte" );
+        return new URL( m_calcDir.toURL(), "Anfangswerte/" );
       }
       if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       {
