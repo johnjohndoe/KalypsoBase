@@ -372,6 +372,11 @@ public class QueuedSimulationService implements ISimulationService
       e.printStackTrace();
       throw new SimulationException( "Unable to initialize jaxb unmarshaller", e );
     }
+    catch( IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Error while reading sim-service specs", e );
+    }
 
     m_modelspecMap.put( typeID, data );
 
