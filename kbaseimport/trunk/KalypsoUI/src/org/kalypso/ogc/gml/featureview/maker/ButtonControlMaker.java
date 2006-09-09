@@ -66,10 +66,10 @@ public class ButtonControlMaker extends AbstractValueControlMaker
   protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType fpt, final GridDataType griddata )
   {
     final Button button = FeatureviewHelper.FACTORY.createButton();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( fpt.getQName() );
 
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+    griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     griddata.setHorizontalSpan( 2 );
 
     return FeatureviewHelper.FACTORY.createButton( button );
