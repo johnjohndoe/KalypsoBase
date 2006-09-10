@@ -192,7 +192,15 @@ public class GMLSchemaCache
       schema = m_fileCache.getObject( key );
 
     if( schema != null )
-      m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
+    {
+      if( validity == null )
+      {
+        /* When does this occur? */
+        System.out.println( "DEBUG: got validity null here, should not happen." );
+      }
+      else
+        m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
+    }
 
     return schema;
   }
