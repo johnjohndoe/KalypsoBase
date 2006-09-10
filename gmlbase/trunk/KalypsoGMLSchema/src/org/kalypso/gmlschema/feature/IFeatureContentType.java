@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.feature;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlObject;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
@@ -60,9 +61,11 @@ public interface IFeatureContentType extends IInitialize
    * @param name
    * @return property by name
    */
-  public IPropertyType getProperty( QName name );
+  public IPropertyType getProperty( final QName name );
 
   public IPropertyType[] getDirectProperties();
 
   public QName getQName();
+  
+  public XmlObject[] collectFunctionProperties();
 }

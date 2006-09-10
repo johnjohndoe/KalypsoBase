@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
@@ -50,7 +51,6 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public class FeatureContentTypeFromRestriction extends FeatureContentType
 {
-
   private final ComplexRestrictionType m_restriction;
 
   private FeatureContentType m_restrictionBase = null;
@@ -120,5 +120,25 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   public IPropertyType[] getDirectProperties( )
   {
     return m_pt;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#collectFunctionProperties()
+   */
+  @Override
+  public XmlObject[] collectFunctionProperties( )
+  {
+    final XmlObject[] myObjects = super.collectFunctionProperties();
+    final XmlObject[] baseObjects = m_restrictionBase.collectFunctionProperties();
+
+    final XmlObject[] allObjects = new XmlObject[myObjects.length + baseObjects.length];
+
+    System.arraycopy( myObjects, 0, allObjects, 0, myObjects.length );
+    System.arraycopy( baseObjects, 0, allObjects, myObjects.length, baseObjects.length );
+
+    // TODO: consider the case when function-properties get overridden.
+    // At the moment we have 'myObject' before 'allObjects', so newdefinitions get found first.
+
+    return allObjects;
   }
 }

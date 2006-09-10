@@ -184,9 +184,6 @@ public class GMLSchemaFactory
     String version;
     if( gmlVersion == null )
     {
-      // final String version = "2.1";
-      // final String version = "3.1";
-
       final String parsedGmlVersion = GMLSchemaUtilities.parseGmlVersion( schemaDocument );
 
       // we must decide for the first schema, which gml version it is

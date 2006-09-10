@@ -43,7 +43,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
  */
 public class FeatureContentTypeFromSequence extends FeatureContentType
 {
-
   private final List<ElementWithOccurs> m_elementList;
 
   public FeatureContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elementList )
@@ -89,5 +88,4 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   {
     return m_pt;
   }
-
 }

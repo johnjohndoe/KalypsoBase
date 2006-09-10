@@ -35,8 +35,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -155,4 +157,18 @@ public abstract class FeatureContentType implements IFeatureContentType
     }
     return null;
   }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#collectFunctionProperties()
+   */
+  public XmlObject[] collectFunctionProperties( )
+  {
+    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
+    final String xpath = "xs:annotation/xs:appinfo/kapp:functionProperty";
+
+    final String fullXpath = namespaceDecl + xpath;
+
+    return getComplexType().selectPath( fullXpath );
+  }
+
 }
