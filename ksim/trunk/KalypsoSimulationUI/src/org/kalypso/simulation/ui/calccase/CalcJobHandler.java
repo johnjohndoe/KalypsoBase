@@ -327,6 +327,8 @@ public class CalcJobHandler
     for( final SimulationDescription desc : inputDescription )
       inputdescriptionMap.put( desc.getId(), desc );
 
+    
+
     ZipResourceVisitor zipper = null;
     try
     {
@@ -378,7 +380,16 @@ public class CalcJobHandler
     finally
     {
       if( zipper != null )
-        zipper.close();
+      {
+        try
+        {
+          zipper.close();
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
+      }
     }
   }
 }

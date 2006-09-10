@@ -390,7 +390,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // TODO: timeout konfigurierbar machen?
       final int minutes = 5;
-      monitor.subTask( "warte auf Ende der Berechnung..." );
+      monitor.subTask( "Warte auf Ende der Berechnung..." );
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( monitor.isCanceled() )
