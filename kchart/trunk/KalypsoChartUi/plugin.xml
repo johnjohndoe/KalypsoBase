@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.kalypso.chart.ui.editor.ChartEditor"
+            default="true"
+            extensions="kod"
+            icon="icons/obj16/kalypso_odt.gif"
+            id="org.kalypso.chart.ui.editor.ChartEditor"
+            name="Chart Editor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.kalypso.chart.ui.editor.ChartEditorContribution"
+            targetID="org.kalypso.chart.ui.editor.ChartEditor">
+         <menu
+               id="org.kalypso.chart.ui.menu"
+               label="&amp;Chart"
+               path="additions">
+            <groupMarker name="actions"/>
+         </menu>
+         <action
+               class="org.kalypso.chart.ui.editor.actions.MaximizeActionDelegate"
+               icon="icons/elcl16/chart_maximize.gif"
+               id="KalypsoChartUi.action1"
+               label="&amp;Maximize"
+               menubarPath="org.kalypso.chart.ui.menu/actions"
+               style="push"
+               toolbarPath="actions"
+               tooltip="Maximize Chart"/>
+      </editorContribution>
+   </extension>
+
+</plugin>
