@@ -49,122 +49,119 @@ import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 
-
 /**
  * @author alibu
- *
  */
 public class DefaultLegendItem implements ILegendItem
 {
-    
-    private IChartLayer m_layer;
-    private int m_inset=5;
-    private int m_iconHeight;
-    private int m_iconWidth;
-    private Point m_size;
 
-    public DefaultLegendItem(IChartLayer l, int iconWidth, int iconHeight, int inset)
-    {
-      m_inset=inset;
-      m_iconHeight=iconHeight;
-      m_iconWidth=iconWidth;
-      m_layer=l;
-    }
-   
+  private IChartLayer m_layer;
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#getName()
-     */
-    public String getName( )
-    {
-      String lname=m_layer.getName();
-      if (lname!=null)
-        return lname;
-      return "no Name";
-    }
+  private int m_inset = 5;
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#getDescription()
-     */
-    public String getDescription( )
-    {
-      String desc=m_layer.getDescription();
-      if (desc!=null)
-        return desc;
-      return "no Description";
-    }
+  private int m_iconHeight;
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#drawIcon(org.eclipse.swt.graphics.Image)
-     */
-    public void drawIcon( Image img )
-    {
-      m_layer.drawIcon(img, m_iconWidth, m_iconHeight);
-    }
+  private int m_iconWidth;
 
+  private Point m_size;
 
+  public DefaultLegendItem( IChartLayer l, int iconWidth, int iconHeight, int inset )
+  {
+    m_inset = inset;
+    m_iconHeight = iconHeight;
+    m_iconWidth = iconWidth;
+    m_layer = l;
+  }
 
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#getName()
+   */
+  public String getName( )
+  {
+    String lname = m_layer.getName();
+    if( lname != null )
+      return lname;
+    return "no Name";
+  }
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#calcSize(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
-     */
-    public Point computeSize( int whint, int hhint)
-    {
-      GC gc=new GC(Display.getDefault());
-      GCWrapper gcw=new GCWrapper(gc);
-      
-      FontMetrics fm=gcw.getFontMetrics();
-      int nameWidth=getName().length()*fm.getAverageCharWidth();
-      
-      int width=m_inset+m_iconWidth+m_inset+nameWidth+m_inset+m_inset;
-      int height=m_inset+m_iconHeight+m_inset;
-      
-      gcw.dispose();
-      gc.dispose();
-      
-      return m_size=new Point(width, height);
-    }
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#getDescription()
+   */
+  public String getDescription( )
+  {
+    String desc = m_layer.getDescription();
+    if( desc != null )
+      return desc;
+    return "no Description";
+  }
 
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#drawIcon(org.eclipse.swt.graphics.Image)
+   */
+  public void drawIcon( Image img )
+  {
+    m_layer.drawIcon( img, m_iconWidth, m_iconHeight );
+  }
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#getSize()
-     */
-    public Point getSize( )
-    {
-      return m_size;
-    }
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#calcSize(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   */
+  public Point computeSize( int whint, int hhint )
+  {
+    GC gc = new GC( Display.getDefault() );
+    GCWrapper gcw = new GCWrapper( gc );
 
-    /**
-     * @see org.kalypso.swtchart.chart.legend.ILegendItem#paintImage(org.eclipse.swt.graphics.Image)
-     */
-    public void paintImage( Image img )
-    {
-      GC gc=new GC(img);
-      Point p0=new Point(m_inset, m_inset);
-      
-      gc.setBackground(Display.getDefault().getSystemColor((int)(Math.random()*20.0)));
-      
-      //Icon holen 
-      Image iconImage=new Image(Display.getDefault(), m_iconWidth, m_iconHeight);
-      m_layer.drawIcon(iconImage, m_iconWidth, m_iconHeight);
-      //Icon kopieren
-      gc.drawImage(iconImage, 0,0, m_iconWidth, m_iconHeight, p0.x, p0.y, m_iconWidth, m_iconHeight );
-      //TestImage zerstören
-      iconImage.dispose();
-      
-      gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-      gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-      gc.drawRectangle(p0.x, p0.y, m_iconWidth, m_iconHeight);
+    FontMetrics fm = gcw.getFontMetrics();
+    int nameWidth = getName().length() * fm.getAverageCharWidth();
 
-      //Jetzt den Layernamen
-      gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-      
-      //an Mitte  von icon anpassen
-      FontMetrics fm = gc.getFontMetrics();
-      int fontheight=fm.getHeight();
-      int fontTop=(m_iconHeight-fontheight) / 2;
-      gc.drawString(getName(), p0.x+m_iconWidth+m_inset, p0.y+fontTop);
-      
-      gc.dispose();
-    }
+    int width = m_inset + m_iconWidth + m_inset + nameWidth + m_inset + m_inset;
+    int height = m_inset + m_iconHeight + m_inset;
+
+    gcw.dispose();
+    gc.dispose();
+
+    return m_size = new Point( width, height );
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#getSize()
+   */
+  public Point getSize( )
+  {
+    return m_size;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.legend.ILegendItem#paintImage(org.eclipse.swt.graphics.Image)
+   */
+  public void paintImage( Image img )
+  {
+    GC gc = new GC( img );
+    Point p0 = new Point( m_inset, m_inset );
+
+    gc.setBackground( Display.getDefault().getSystemColor( (int) (Math.random() * 20.0) ) );
+
+    // Icon holen
+    Image iconImage = new Image( Display.getDefault(), m_iconWidth, m_iconHeight );
+    m_layer.drawIcon( iconImage, m_iconWidth, m_iconHeight );
+    // Icon kopieren
+    gc.drawImage( iconImage, 0, 0, m_iconWidth, m_iconHeight, p0.x, p0.y, m_iconWidth, m_iconHeight );
+    // TestImage zerstören
+    iconImage.dispose();
+
+    gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_GRAY ) );
+    gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_WHITE ) );
+    gc.drawRectangle( p0.x, p0.y, m_iconWidth, m_iconHeight );
+
+    // Jetzt den Layernamen
+    gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+
+    // an Mitte von icon anpassen
+    FontMetrics fm = gc.getFontMetrics();
+    int fontheight = fm.getHeight();
+    int fontTop = (m_iconHeight - fontheight) / 2;
+    gc.drawString( getName(), p0.x + m_iconWidth + m_inset, p0.y + fontTop );
+
+    gc.dispose();
+  }
 }

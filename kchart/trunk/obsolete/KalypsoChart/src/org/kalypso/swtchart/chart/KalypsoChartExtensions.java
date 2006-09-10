@@ -51,25 +51,24 @@ import org.kalypso.swtchart.chart.layer.ILayerProvider;
 
 /**
  * @author alibu
- *
  */
 public class KalypsoChartExtensions
 {
   private static Map<String, IConfigurationElement> THE_MAP = null;
 
-  private KalypsoChartExtensions()
+  private KalypsoChartExtensions( )
   {
     // will not be instantiated
   }
-  
+
   public static ILayerProvider createProvider( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> elts = getProviders();
-    
-    final IConfigurationElement element = elts.get(id);
-    if( element == null)
+
+    final IConfigurationElement element = elts.get( id );
+    if( element == null )
       return null;
-    
+
     return (ILayerProvider) element.createExecutableExtension( "class" );
   }
 
@@ -77,10 +76,10 @@ public class KalypsoChartExtensions
   {
     if( THE_MAP != null )
       return THE_MAP;
-    
+
     THE_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
-    if (er!=null)
+    if( er != null )
     {
       final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.chart.LayerProvider" );
       for( final IConfigurationElement element : configurationElementsFor )
@@ -90,7 +89,7 @@ public class KalypsoChartExtensions
       }
     }
     else
-      System.out.println("Error: cant find ExtensionRegistry");
+      System.out.println( "Error: cant find ExtensionRegistry" );
     return THE_MAP;
   }
 

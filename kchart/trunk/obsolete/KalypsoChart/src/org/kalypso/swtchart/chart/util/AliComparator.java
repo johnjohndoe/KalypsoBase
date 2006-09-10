@@ -48,11 +48,10 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
-
 /**
  * @author alibu
  */
-//public class DateComparator implements Comparator<Date>
+// public class DateComparator implements Comparator<Date>
 public class AliComparator extends ComparableComparator
 {
   /**
@@ -71,7 +70,7 @@ public class AliComparator extends ComparableComparator
         return compare( ((XMLGregorianCalendar) o1).toGregorianCalendar(), ((XMLGregorianCalendar) o2).toGregorianCalendar() );
       else
       {
-        System.out.println("Can't compare: different classes: "+o1.getClass().getName()+" "+o2.getClass().getName());
+        System.out.println( "Can't compare: different classes: " + o1.getClass().getName() + " " + o2.getClass().getName() );
         return 0;
       }
     }
@@ -80,16 +79,13 @@ public class AliComparator extends ComparableComparator
       if( o2 instanceof XMLGregorianCalendarImpl )
         return compare( ((XMLGregorianCalendarImpl) o1).toGregorianCalendar(), ((XMLGregorianCalendarImpl) o2).toGregorianCalendar() );
       else
-      { 
-         System.out.println("Can't compare: different classes: "+o1.getClass().getName()+" "+o2.getClass().getName());
-         return 0;
+      {
+        System.out.println( "Can't compare: different classes: " + o1.getClass().getName() + " " + o2.getClass().getName() );
+        return 0;
       }
     }
     else
       return super.compare( o1, o2 );
   }
-  
-  
-  
- 
+
 }

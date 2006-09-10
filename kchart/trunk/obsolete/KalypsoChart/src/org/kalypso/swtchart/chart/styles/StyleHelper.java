@@ -47,88 +47,86 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 
 /**
- * @author alibu
- * Hilfsklasse zum Umgang mit Stylesach
+ * @author alibu Hilfsklasse zum Umgang mit Stylesach
  */
 public class StyleHelper
 {
-  
+
   /**
    * Wandelt einen eindimensionalen Array, der abwechselnd aus x und y Werten besteht , in eine Liste von Point um
    */
-    public static ArrayList<Point> intArrayToPointList(int[] path)
+  public static ArrayList<Point> intArrayToPointList( int[] path )
+  {
+    ArrayList<Point> newpath = new ArrayList<Point>();
+    if( path != null )
     {
-      ArrayList<Point> newpath=new ArrayList<Point>();
-      if (path!=null)
+      for( int i = 0; i < path.length; i += 2 )
       {
-        for (int i=0;i<path.length;i+=2)
+        int x = path[i];
+        int y = path[i + 1];
+        Point p = new Point( x, y );
+      }
+    }
+
+    return newpath;
+  }
+
+  /**
+   * Wandelt eine Liste von Point in einen eindimensionalen Array um, der abwechselnd aus x und y Werten besteht
+   */
+  public static int[] pointListToIntArray( ArrayList<Point> path )
+  {
+    int[] newpath;
+    if( path != null )
+    {
+      newpath = new int[path.size() * 2];
+      for( int i = 0; i < path.size(); i++ )
+      {
+        Point p = path.get( i );
+        if( p != null )
         {
-          int x=path[i];
-          int y=path[i+1];
-          Point p = new Point(x, y);
+          newpath[2 * i] = p.x;
+          newpath[2 * i + 1] = p.y;
         }
       }
-      
-      return newpath;
     }
-    
-    /**
-     * Wandelt eine Liste von Point in einen eindimensionalen Array um, der abwechselnd aus x und y Werten besteht
-     */
-    public static int[] pointListToIntArray(ArrayList<Point> path)
-    {
-      int[] newpath;
-      if (path!=null)
-      {
-        newpath=new int[path.size()*2];
-        for (int i=0;i<path.size();i++)
-        {
-          Point p=path.get(i);
-          if (p!=null)
-          {
-            newpath[2*i]=p.x;
-            newpath[2*i+1]=p.y;
-          }
-        }
-      }
-      else
-        newpath=new int[0];
-      return newpath;
-    }
-    
-    /**
-     * erzeugt ein SE_LINESTYLE-Element aus einem String
-     * TODO: Dieses Vorgehen ist leicht behindert: zuerst wird aus einem String ein SE_LINESTYLE
-     * erzeugt, dann wird daraus wieder eine SWT-Enum-Element gemacht; ein Schritt sollte da doch
-     * reichen
-     */
-    public static SE_LINESTYLE stringToLinestyle(String ls)
-    {
-        if (ls.compareTo("SOLID")==0)
-            return SE_LINESTYLE.SOLID;
-        else if (ls.compareTo("DOT")==0)
-          return SE_LINESTYLE.DOT;
-        else if (ls.compareTo("DASH")==0)
-          return SE_LINESTYLE.DASH;
-        else if (ls.compareTo("DASHDOT")==0)
-          return SE_LINESTYLE.DASHDOT;
-        else if (ls.compareTo("DASHDOTDOT")==0)
-          return SE_LINESTYLE.DASHDOTDOT;
-        else
-           return null;
-    }
-    
-    public static int linestyleToSWT(SE_LINESTYLE ls)
-    {
-      if (ls==SE_LINESTYLE.DASH)
-        return SWT.LINE_DASH;
-      else if (ls==SE_LINESTYLE.DOT)
-        return SWT.LINE_DOT;
-      else if (ls==SE_LINESTYLE.DASHDOT)
-        return SWT.LINE_DASHDOT;
-      else if (ls==SE_LINESTYLE.DASHDOTDOT)
-        return SWT.LINE_DASHDOTDOT;
-      else
-        return SWT.LINE_SOLID;
-    }
+    else
+      newpath = new int[0];
+    return newpath;
+  }
+
+  /**
+   * erzeugt ein SE_LINESTYLE-Element aus einem String TODO: Dieses Vorgehen ist leicht behindert: zuerst wird aus einem
+   * String ein SE_LINESTYLE erzeugt, dann wird daraus wieder eine SWT-Enum-Element gemacht; ein Schritt sollte da doch
+   * reichen
+   */
+  public static SE_LINESTYLE stringToLinestyle( String ls )
+  {
+    if( ls.compareTo( "SOLID" ) == 0 )
+      return SE_LINESTYLE.SOLID;
+    else if( ls.compareTo( "DOT" ) == 0 )
+      return SE_LINESTYLE.DOT;
+    else if( ls.compareTo( "DASH" ) == 0 )
+      return SE_LINESTYLE.DASH;
+    else if( ls.compareTo( "DASHDOT" ) == 0 )
+      return SE_LINESTYLE.DASHDOT;
+    else if( ls.compareTo( "DASHDOTDOT" ) == 0 )
+      return SE_LINESTYLE.DASHDOTDOT;
+    else
+      return null;
+  }
+
+  public static int linestyleToSWT( SE_LINESTYLE ls )
+  {
+    if( ls == SE_LINESTYLE.DASH )
+      return SWT.LINE_DASH;
+    else if( ls == SE_LINESTYLE.DOT )
+      return SWT.LINE_DOT;
+    else if( ls == SE_LINESTYLE.DASHDOT )
+      return SWT.LINE_DASHDOT;
+    else if( ls == SE_LINESTYLE.DASHDOTDOT )
+      return SWT.LINE_DASHDOTDOT;
+    else
+      return SWT.LINE_SOLID;
+  }
 }

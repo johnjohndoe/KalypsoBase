@@ -12,9 +12,9 @@ import org.kalypso.swtchart.chart.axis.IAxis;
  */
 public interface IAxisRenderer<T>
 {
-  public Collection<T> calcTicks( GCWrapper gc, Device dev, IAxis<T> axis);
-  
+  public Collection<T> calcTicks( GCWrapper gc, Device dev, IAxis<T> axis );
+
   public void paint( GCWrapper gc, Device dev, IAxis<T> axis, Rectangle screenArea );
-  
-  public int getAxisWidth ( IAxis<T> axis );
+
+  public int getAxisWidth( IAxis<T> axis );
 }

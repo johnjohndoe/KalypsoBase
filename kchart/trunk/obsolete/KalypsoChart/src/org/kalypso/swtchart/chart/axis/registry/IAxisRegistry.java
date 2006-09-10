@@ -55,8 +55,8 @@ public interface IAxisRegistry extends IAxisRegistryEventProvider
   public boolean hasAxis( String identifier );
 
   public IAxis getAxis( String identifier );
-  
-  public IAxis[] getAxes();
+
+  public IAxis[] getAxes( );
 
   public void addAxis( IAxis axis );
 
@@ -86,6 +86,6 @@ public interface IAxisRegistry extends IAxisRegistryEventProvider
   public IAxisComponent getComponent( IAxis axis );
 
   public void setComponent( IAxis axis, IAxisComponent comp );
-  
-  public Map<IAxis, IAxisComponent> getComponents();
+
+  public Map<IAxis, IAxisComponent> getComponents( );
 }

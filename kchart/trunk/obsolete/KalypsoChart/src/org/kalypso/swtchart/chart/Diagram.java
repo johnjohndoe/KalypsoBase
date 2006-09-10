@@ -56,9 +56,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.legend.Legend;
 import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.preferences.ChartPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.preferences.ChartPreferences;
 import org.kalypso.swtchart.preferences.IChartPreferences;
 
 /**
@@ -86,7 +86,7 @@ public class Diagram extends Composite implements Listener
     String configFullPath = configPath + configName;
 
     ConfigurationLoader cl = new ConfigurationLoader( configFullPath );
-    ChartLoader.createChart( m_chart, cl.getConfiguration(), "WasserstandEtc" );
+    ChartLoader.createChart( m_chart, cl.getConfiguration(), "WasserstandEtc", null );
     // ChartLoader.createChart(m_chart, cl.getConfiguration() , "Test");
     m_chart.setAutoscale( false );
 

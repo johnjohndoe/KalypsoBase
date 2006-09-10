@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.layer;
 
+import java.net.URL;
+
 import org.kalypso.swtchart.chart.Chart;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
@@ -48,8 +50,9 @@ import org.ksp.chart.viewerconfiguration.LayerProviderType;
  */
 public interface ILayerProvider
 {
-  public IChartLayer[] getLayers( );
-  
-  public void init(Chart chart, LayerProviderType lpt);
-  
+  public IChartLayer[] getLayers( final URL context );
+
+  // TODO: move chart parameter to getLayers
+  public void init( final Chart chart, final LayerProviderType lpt );
+
 }

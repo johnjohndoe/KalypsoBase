@@ -54,77 +54,73 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author alibu
- *
  */
-public class LegendImageContainer 
+public class LegendImageContainer
 {
-  
-  Image m_img=null;
-  
+
+  Image m_img = null;
+
   /**
-   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei
-   * Im momement geschieht das Erzeugen etwas umständlich:
-   * Chart erzeugen, dann Layer geben lassen und in Legende füllen;
-   * ohne Chart kommt man aber nicht an die Layer ran: LayerProvider
-   * verlangt in der Init-Methode nach einem Chart
-   * 
-   * Das Objekt muss nach der Verwendung diposed werden 
+   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei Im momement geschieht das Erzeugen etwas
+   * umständlich: Chart erzeugen, dann Layer geben lassen und in Legende füllen; ohne Chart kommt man aber nicht an die
+   * Layer ran: LayerProvider verlangt in der Init-Methode nach einem Chart Das Objekt muss nach der Verwendung diposed
+   * werden
    */
-  public LegendImageContainer(ConfigurationType config,  String chartname, Device dev) throws ConfigChartNotFoundException
+  public LegendImageContainer( ConfigurationType config, String chartname, Device dev ) throws ConfigChartNotFoundException
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
-    Legend legend = new Legend( shell, SWT.NONE );   
+    Legend legend = new Legend( shell, SWT.NONE );
     Chart chart = new Chart( shell, SWT.NONE );
-    //Chart füllen
-    ChartLoader.createChart(chart, config, chartname);
-    //Layer umfüllen
-    legend.addLayers(chart.getLayers());
-    //Größe berechnen lassen
-    Point size = legend.computeSize(0, 0);
-    int height=size.x;
-    int width=size.y;
-    if (width> 0 && height>0)
+    // Chart füllen
+    ChartLoader.createChart( chart, config, chartname, null );
+    // Layer umfüllen
+    legend.addLayers( chart.getLayers() );
+    // Größe berechnen lassen
+    Point size = legend.computeSize( 0, 0 );
+    int height = size.x;
+    int width = size.y;
+    if( width > 0 && height > 0 )
     {
-       m_img=new Image(dev, size.x, size.y);
-    // Legende zeichnen
-        legend.drawImage( m_img, dev );
+      m_img = new Image( dev, size.x, size.y );
+      // Legende zeichnen
+      legend.drawImage( m_img, dev );
     }
     legend.dispose();
     shell.dispose();
   }
-  
+
   /**
    * Wenn man schon ein fertiges Chart hat, kann man auch leichter konstruieren
    */
-  public LegendImageContainer(Chart chart, Device dev)
+  public LegendImageContainer( Chart chart, Device dev )
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
-    Legend legend = new Legend( shell, SWT.NONE );   
-    //Layer umfüllen
-    legend.addLayers(chart.getLayers());
-    //Größe berechnen lassen
-    Point size = legend.computeSize(0, 0);
-    m_img=new Image(dev, size.x, size.y);
+    Legend legend = new Legend( shell, SWT.NONE );
+    // Layer umfüllen
+    legend.addLayers( chart.getLayers() );
+    // Größe berechnen lassen
+    Point size = legend.computeSize( 0, 0 );
+    m_img = new Image( dev, size.x, size.y );
     // Legende zeichnen
-    legend.drawImage( m_img, Display.getDefault() );    
+    legend.drawImage( m_img, Display.getDefault() );
     legend.dispose();
     shell.dispose();
   }
-  
+
   /**
    * Gibt das erzeugte Bild zurück
    */
-  public Image getImage()
+  public Image getImage( )
   {
     return m_img;
   }
-  
-  public void dispose()
+
+  public void dispose( )
   {
-    if (m_img!=null)
+    if( m_img != null )
       m_img.dispose();
-    m_img=null;
+    m_img = null;
   }
 }

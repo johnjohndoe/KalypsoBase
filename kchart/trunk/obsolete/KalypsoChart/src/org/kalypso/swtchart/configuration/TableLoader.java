@@ -76,19 +76,19 @@ public class TableLoader
   public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
   {
     List<TableType> tables = config.getTable();
-    TableType foundTable=null;
+    TableType foundTable = null;
     if( tables != null )
     {
       for( TableType table : tables )
       {
         if( table.getName().compareTo( tableName ) == 0 )
         {
-         foundTable=table;
+          foundTable = table;
         }
       }
     }
 
-    if (foundTable!=null)
+    if( foundTable != null )
     {
       try
       {
@@ -102,7 +102,7 @@ public class TableLoader
     }
     else
     {
-      throw new ConfigTableNotFoundException(tableName);
+      throw new ConfigTableNotFoundException( tableName );
     }
     return null;
   }

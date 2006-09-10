@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.layerprovider;
 
+import java.net.URL;
+
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -70,13 +72,14 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
 
   private Chart m_chart;
 
-  public DefaultTupleResultLayerProvider()
+  public DefaultTupleResultLayerProvider( )
   {
-	  
+
   }
-  
+
   /**
    * alter Konstruktor - wird nicht mehr benutzt
+   * 
    * @param registry
    * @param obs
    * @param domainComponent
@@ -95,27 +98,26 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
     m_domAxisID = domAxisID;
     m_valAxisID = valAxisID;
   }
-  
-  
-  public void init(Chart chart, LayerProviderType lpt)
+
+  public void init( Chart chart, LayerProviderType lpt )
   {
-    m_lpt=lpt;
-    m_chart=chart;
+    m_lpt = lpt;
+    m_chart = chart;
   }
 
   /**
    * @see de.kalypso.swtchart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( URL context )
   {
-	if (m_obs!=null)
-	{
-    final TupleResult result = m_obs.getResult();
-    
-    final TupleResultLineChartLayer layer = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ), null );
-    return new IChartLayer[] { layer };
-	}
-	else
-		return null;
+    if( m_obs != null )
+    {
+      final TupleResult result = m_obs.getResult();
+
+      final TupleResultLineChartLayer layer = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ), null );
+      return new IChartLayer[] { layer };
+    }
+    else
+      return null;
   }
 }

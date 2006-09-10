@@ -46,50 +46,50 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
- *
  */
 public class LayerStyle implements ILayerStyle
 {
   private ArrayList<IStyledElement> m_elements;
-  
-  public LayerStyle()
+
+  public LayerStyle( )
   {
-    m_elements=new ArrayList<IStyledElement>();
+    m_elements = new ArrayList<IStyledElement>();
   }
-  
-  public void add(IStyledElement se)
+
+  public void add( IStyledElement se )
   {
-    m_elements.add(se);
+    m_elements.add( se );
   }
-  
+
   /*
    * TODO: Besser Map<Type, List<Styles>>
    */
-  
+
   /**
    * @see org.kalypso.swtchart.styles.ILayerStyle#getElement(org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE, int)
-   * Gibt das StyledElement zurück, das sich an der gewünschten Position befindet; 
-   * wenn es keines an der Position gibt, wird das letzte zurückgegeben - oder null, wenns garkeines von 
-   * dem Typ gibt 
-   * @param type Typ des gesuchten StyledElements
-   * @param pos Position des Elements - nur sinnvoll, falls es meherere des gleichen Typs gibt
+   *      Gibt das StyledElement zurück, das sich an der gewünschten Position befindet; wenn es keines an der Position
+   *      gibt, wird das letzte zurückgegeben - oder null, wenns garkeines von dem Typ gibt
+   * @param type
+   *          Typ des gesuchten StyledElements
+   * @param pos
+   *          Position des Elements - nur sinnvoll, falls es meherere des gleichen Typs gibt
    * @return das gefundene IStyledElement oder null
    */
   public IStyledElement getElement( SE_TYPE type, int pos )
   {
     IStyledElement elt = null;
-    int count=0;
-    for (IStyledElement se:m_elements)
+    int count = 0;
+    for( IStyledElement se : m_elements )
     {
-      if (se.getType()==type)
+      if( se.getType() == type )
       {
-        elt=se;
+        elt = se;
         count++;
-        if (pos==count)
-           break;
+        if( pos == count )
+          break;
       }
     }
-     return elt;
+    return elt;
   }
 
 }

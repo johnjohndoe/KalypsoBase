@@ -42,12 +42,12 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
   private final Color m_foreground;
 
   private final Color m_background;
-  
+
   private Collection<Date> m_ticks;
 
   private final int m_gap;
-  
-  private Point m_maxTickLabelExtent = new Point(0,0);
+
+  private Point m_maxTickLabelExtent = new Point( 0, 0 );
 
   /**
    * @param foreground
@@ -77,9 +77,8 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     m_labelInsets = labelInsets;
     m_maxDigits = maxDigits;
     m_gap = gap;
-    m_df=df;
+    m_df = df;
   }
-
 
   private Point calcTickLabelSize( final GCWrapper gc, final IAxis<Date> axis )
   {
@@ -96,38 +95,37 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
     return new Point( x, y );
   }
-  
+
   public void paint( final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen )
   {
     /*
      * TODO: Buffer bringt hier nix
      */
-    Image img=paintBuffered(null, dev, axis, screen);
-    gc.drawImage(img, 0,0);
+    Image img = paintBuffered( null, dev, axis, screen );
+    gc.drawImage( img, 0, 0 );
     img.dispose();
-    
+
   }
 
-  public Image paintBuffered(final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen)
+  public Image paintBuffered( final GCWrapper gc, final Device dev, final IAxis<Date> axis, final Rectangle screen )
   {
-    Image bufImg=new Image(dev, screen.width, screen.height);
-    GC bufGc=new GC(bufImg);
-    GCWrapper bufGcw=new GCWrapper(bufGc);
+    Image bufImg = new Image( dev, screen.width, screen.height );
+    GC bufGc = new GC( bufImg );
+    GCWrapper bufGcw = new GCWrapper( bufGc );
     // paint axis line
     int[] coords = createAxisSegment( axis, screen );
     assert coords != null && coords.length == 4;
     drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
-    //final Collection<Number> ticks = calcTicks( gc, axis );
-    m_ticks=calcTicks(bufGcw, dev, axis);
+    // final Collection<Number> ticks = calcTicks( gc, axis );
+    m_ticks = calcTicks( bufGcw, dev, axis );
     drawTicks( bufGcw, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
 
     drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
 
-    
     bufGc.dispose();
     bufGcw.dispose();
-    
+
     return bufImg;
   }
 
@@ -183,7 +181,6 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setForeground( m_foreground );
-   
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
@@ -191,19 +188,19 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
       int y2 = y1 + m_tickLength;
 
       for( final Date value : ticks )
-      {        
+      {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_df.format( value.getTime() );
         final Point tickExtent = gc.textExtent( label );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         gc.drawText( label, tickPos - tickExtent.x / 2, y2 + m_tickLabelInsets.top );
-        
-        if (m_maxTickLabelExtent.x < tickExtent.x)
-           m_maxTickLabelExtent.x=tickExtent.x;
-        if (m_maxTickLabelExtent.y < tickExtent.y)
-          m_maxTickLabelExtent.y=tickExtent.y;
-        
+
+        if( m_maxTickLabelExtent.x < tickExtent.x )
+          m_maxTickLabelExtent.x = tickExtent.x;
+        if( m_maxTickLabelExtent.y < tickExtent.y )
+          m_maxTickLabelExtent.y = tickExtent.y;
+
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -228,7 +225,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
       for( final Date value : ticks )
       {
-        final int tickPos = axis.logicalToScreen( value );  
+        final int tickPos = axis.logicalToScreen( value );
         final String label = m_df.format( value );
         final Point tickExtent = gc.textExtent( label );
 
@@ -278,9 +275,9 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     // + 2 wegen Rundungsfehlern beim positionieren
     final int screenInterval = 2 + ticklabelSize.x;
 
-    long logicalInterval =   Math.abs( axis.screenToLogical( screenInterval * 2 ).getTime() - axis.screenToLogical( screenInterval ).getTime() ) ;
-    logicalInterval = (long) ( MathUtils.round( logicalInterval, MathUtils.RoundMethod.UP )) ;
- //   System.out.println( "Logical Interval= " + logicalInterval );
+    long logicalInterval = Math.abs( axis.screenToLogical( screenInterval * 2 ).getTime() - axis.screenToLogical( screenInterval ).getTime() );
+    logicalInterval = (long) (MathUtils.round( logicalInterval, MathUtils.RoundMethod.UP ));
+    // System.out.println( "Logical Interval= " + logicalInterval );
 
     final int digits = Math.min( MathUtils.scale( logicalInterval ), m_maxDigits );
 
@@ -288,13 +285,12 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
 
     final Collection<Date> ticks = new LinkedList<Date>();
 
-    
     if( ticklength > 0.0 )
     {
       for( long tickValue = (long) MathUtils.setScale( axis.getFrom().getTime(), digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().getTime(); tickValue += ticklength )
       {
         ticks.add( new Date( tickValue ) );
-     //   System.out.println("DateAxisTick: "+m_df.format(tickValue));
+        // System.out.println("DateAxisTick: "+m_df.format(tickValue));
       }
     }
     return ticks;
@@ -321,7 +317,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
       int x = 0;
       int y = 0;
 
-      Transform tr =  new Transform( dev );
+      Transform tr = new Transform( dev );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -330,46 +326,42 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
           y = y1;
 
           if( axis.getPosition() == POSITION.TOP )
-            y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top +  m_labelInsets.bottom +  2*textExtent.y;
+            y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top + m_labelInsets.bottom + 2 * textExtent.y;
           else
-            y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top +  m_labelInsets.bottom +  textExtent.y;
+            y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + m_tickLabelInsets.bottom + m_labelInsets.top + m_labelInsets.bottom + textExtent.y;
         }
         else
         {
           x = x1;
           y = Math.abs( y2 - y1 ) / 2;
-          
-         
-          int rotation=0;
-          
-          
-          
-          
+
+          int rotation = 0;
+
           if( axis.getPosition() == POSITION.LEFT )
           {
-            rotation=-90;
-            x -= m_lineWidth + m_tickLength +  m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left +m_labelInsets.bottom  + textExtent.y ;
+            rotation = -90;
+            x -= m_lineWidth + m_tickLength + m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left + m_labelInsets.bottom + textExtent.y;
             y += textExtent.x / 2;
           }
           else
           {
-            rotation=90;
-            x += m_lineWidth + m_tickLength +  m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left +m_labelInsets.bottom  + textExtent.y ;
+            rotation = 90;
+            x += m_lineWidth + m_tickLength + m_tickLabelInsets.right + m_maxTickLabelExtent.x + m_tickLabelInsets.left + m_labelInsets.bottom + textExtent.y;
             y -= textExtent.x / 2;
           }
-          tr.translate(x,y);
-          tr.rotate(rotation);
-          tr.translate(-x,-y);
-            
+          tr.translate( x, y );
+          tr.rotate( rotation );
+          tr.translate( -x, -y );
+
         }
         if( tr != null )
         {
           gc.setTransform( tr );
-        //  System.out.println( "Using Transform: " + tr );
+          // System.out.println( "Using Transform: " + tr );
         }
         gc.drawText( axis.getLabel(), x, y );
 
-       // System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
+        // System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
       }
       finally
       {
@@ -379,7 +371,6 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     }
   }
 
-
   private Point getTextExtent( final GCWrapper gc, final Date value )
   {
     final String label = m_df.format( value );
@@ -387,13 +378,11 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
   }
 
   /**
-   * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt 
+   * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
   public int getAxisWidth( IAxis<Date> axis )
   {
     return m_maxTickLabelExtent.y;
   }
-
-
 
 }

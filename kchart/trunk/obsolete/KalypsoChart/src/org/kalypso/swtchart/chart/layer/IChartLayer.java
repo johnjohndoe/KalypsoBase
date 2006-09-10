@@ -52,29 +52,35 @@ import org.kalypso.swtchart.chart.styles.ILayerStyle;
  */
 public interface IChartLayer
 {
-  public void setName(String name);
-  public String getName();
-  
-  public void setDescription(String description);
-  public String getDescription();
-  
-  public IAxis getDomainAxis();
+  public void setName( String name );
+
+  public String getName( );
+
+  public void setDescription( String description );
+
+  public String getDescription( );
+
+  public IAxis getDomainAxis( );
+
   public IDataRange getDomainRange( );
-  
-  public IAxis getValueAxis();
+
+  public IAxis getValueAxis( );
+
   public IDataRange getValueRange( );
-  
-  public ILegendItem getLegendItem();
-  
-  public void drawIcon(Image img, int width, int height);
-  
-  public boolean isActive();
-  //public void setActive( boolean active );
-  
-  public boolean isVisible();
-  
-  public ILayerStyle getStyle();
+
+  public ILegendItem getLegendItem( );
+
+  public void drawIcon( Image img, int width, int height );
+
+  public boolean isActive( );
+
+  // public void setActive( boolean active );
+
+  public boolean isVisible( );
+
+  public ILayerStyle getStyle( );
+
   public void setStyle( ILayerStyle style );
-  
+
   public void paint( final GCWrapper gc, final Device dev );
 }

@@ -66,13 +66,11 @@ public class GridLayer implements IChartLayer
 
   private String m_description;
 
-
   public GridLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
     m_valAxis = valAxis;
 
-  
   }
 
   /**
@@ -131,7 +129,6 @@ public class GridLayer implements IChartLayer
     return true;
   }
 
-  
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
    */
@@ -148,60 +145,59 @@ public class GridLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_GRAY ) );
-    gc.setLineWidth(1);
-    gc.m_gc.setLineStyle(SWT.LINE_DASHDOT);
-    
-    
-    Collection<Object> ticks=m_domAxis.getRenderer().calcTicks(gc, dev, m_domAxis);
-    //Der Typ ist auf Object gesetzt, weil man nicht genau weiss, was calcTicks zurückliefert
-    //Der Typ der  calcTicks-Collection ist aber der gleiche, der auch für logicalToScreen verwendet wird
-    for (Object n:ticks)
-    {
-      if (m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      {
-        int x1=m_domAxis.logicalToScreen(n);
-        int y1=m_valAxis.logicalToScreen(m_valAxis.getFrom());
-        int x2=m_domAxis.logicalToScreen(n);
-        int y2=m_valAxis.logicalToScreen(m_valAxis.getTo());
-        gc.drawLine(x1, y1, x2, y2) ;
-      }
-      else
-      {
-        int y1=m_domAxis.logicalToScreen(n);
-        int x1=m_valAxis.logicalToScreen(m_valAxis.getFrom());
-        int y2=m_domAxis.logicalToScreen(n);
-        int x2=m_valAxis.logicalToScreen(m_valAxis.getTo());
-        gc.drawLine(x1, y1, x2, y2) ;
-      }
-    }   
+    gc.setLineWidth( 1 );
+    gc.m_gc.setLineStyle( SWT.LINE_DASHDOT );
 
-    ticks=m_valAxis.getRenderer().calcTicks(gc, dev, m_valAxis);
-    for (Object n:ticks)
+    Collection<Object> ticks = m_domAxis.getRenderer().calcTicks( gc, dev, m_domAxis );
+    // Der Typ ist auf Object gesetzt, weil man nicht genau weiss, was calcTicks zurückliefert
+    // Der Typ der calcTicks-Collection ist aber der gleiche, der auch für logicalToScreen verwendet wird
+    for( Object n : ticks )
     {
-      if (m_domAxis.getPosition().getOrientation() != ORIENTATION.HORIZONTAL)
+      if( m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        int x1=m_valAxis.logicalToScreen(n);
-        int y1=m_domAxis.logicalToScreen(m_domAxis.getFrom());
-        int x2=m_valAxis.logicalToScreen(n);
-        int y2=m_domAxis.logicalToScreen(m_domAxis.getTo());
-        gc.drawLine(x1, y1, x2, y2) ;
+        int x1 = m_domAxis.logicalToScreen( n );
+        int y1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
+        int x2 = m_domAxis.logicalToScreen( n );
+        int y2 = m_valAxis.logicalToScreen( m_valAxis.getTo() );
+        gc.drawLine( x1, y1, x2, y2 );
       }
       else
       {
-        int y1=m_valAxis.logicalToScreen(n);
-        int x1=m_domAxis.logicalToScreen(m_domAxis.getFrom());
-        int y2=m_valAxis.logicalToScreen(n);
-        int x2=m_domAxis.logicalToScreen(m_domAxis.getTo());
-          gc.drawLine(x1, y1, x2, y2) ;
+        int y1 = m_domAxis.logicalToScreen( n );
+        int x1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
+        int y2 = m_domAxis.logicalToScreen( n );
+        int x2 = m_valAxis.logicalToScreen( m_valAxis.getTo() );
+        gc.drawLine( x1, y1, x2, y2 );
       }
-    }   
-    
-    
+    }
+
+    ticks = m_valAxis.getRenderer().calcTicks( gc, dev, m_valAxis );
+    for( Object n : ticks )
+    {
+      if( m_domAxis.getPosition().getOrientation() != ORIENTATION.HORIZONTAL )
+      {
+        int x1 = m_valAxis.logicalToScreen( n );
+        int y1 = m_domAxis.logicalToScreen( m_domAxis.getFrom() );
+        int x2 = m_valAxis.logicalToScreen( n );
+        int y2 = m_domAxis.logicalToScreen( m_domAxis.getTo() );
+        gc.drawLine( x1, y1, x2, y2 );
+      }
+      else
+      {
+        int y1 = m_valAxis.logicalToScreen( n );
+        int x1 = m_domAxis.logicalToScreen( m_domAxis.getFrom() );
+        int y2 = m_valAxis.logicalToScreen( n );
+        int x2 = m_domAxis.logicalToScreen( m_domAxis.getTo() );
+        gc.drawLine( x1, y1, x2, y2 );
+      }
+    }
+
   }
 
   /**
@@ -209,7 +205,7 @@ public class GridLayer implements IChartLayer
    */
   public IDataRange getDomainRange( )
   {
-   return null;
+    return null;
   }
 
   /**
@@ -220,21 +216,22 @@ public class GridLayer implements IChartLayer
     return null;
   }
 
-
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
   public void drawIcon( Image img, int width, int height )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  
-  public void setName(String name) {
-    m_name=name;
+
+  public void setName( String name )
+  {
+    m_name = name;
   }
-  
-  public void setDescription(String description) {
-      m_description=description;
+
+  public void setDescription( String description )
+  {
+    m_description = description;
   }
 }

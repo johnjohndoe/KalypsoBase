@@ -52,9 +52,9 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.layerstyle.StyleType;
@@ -67,107 +67,104 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 
 /**
  * @author alibu
- *
  */
 public class NiederschlagLayerProvider implements ILayerProvider
 {
-  
-  
+
   private LayerProviderType m_lpt;
+
   private Chart m_chart;
 
-  public NiederschlagLayerProvider()
+  public NiederschlagLayerProvider( )
   {
-    
+
   }
-  
-  public void init(Chart chart, LayerProviderType lpt)
+
+  public void init( Chart chart, LayerProviderType lpt )
   {
-    m_lpt=lpt;
-    m_chart=chart;
+    m_lpt = lpt;
+    m_chart = chart;
   }
-    
+
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( URL context )
   {
-    IChartLayer[] icl=new IChartLayer[1];
-    
+    IChartLayer[] icl = new IChartLayer[1];
+
     List<DataSourceType> dataSource = m_lpt.getDataSource();
     for( DataSourceType ds : dataSource )
     {
-      String url=ds.getUrl();
-      Object o=null;
-        
-        try
-        {
-          GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(new URL(url));
-          Feature feature = workspace.getFeature("niederschlagsmessung");
-          if (feature!=null)
-          {
-            System.out.println("Found feature: "+feature.getId());
-          }
-          IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation(feature);
-          
-          List<ChartElementType> ces = m_lpt.getChartElement();
-          for( ChartElementType ce : ces )
-          {
-             AxisMapping am = ce.getAxisMapping();
-             
-             AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-             IAxis domAxis=m_chart.getAxisRegistry().getAxis(domLink.getId());
+      String url = ds.getUrl();
+      Object o = null;
 
-             AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-             IAxis valAxis=m_chart.getAxisRegistry().getAxis(valLink.getId());
-             
-             TupleResult result = obs.getResult();
-             
-             //ResultComponent rausfinden
-             final IComponent[] comps = result.getComponents();
-             final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>(  );
-             for( int i = 0; i < comps.length; i++ )
-             {
-               /*
-                * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden;
-                * besser: id, aber das wird nicht von der Componente zurückgegebn
-                */
-               IComponent comp=comps[i];
-               System.out.println("Component: "+comp.getName());
-               System.out.println("Component: "+comp.getDescription());
-               System.out.println("Component: "+comp.getPosition());
-               System.out.println("Component: "+comp.getValueTypeName());
-               if (comp.getName().compareTo("Datum")==0)
-                 map.put("domain", comp );
-               else if (comp.getName().compareTo("Niederschlag")==0)
-                 map.put("value", comp );
-               if( map.size() == 2 )
-                 break;
-             }
-             
-             List<ParameterType> parameter = m_lpt.getParameter();
-             
-             NiederschlagLayer trcl=new NiederschlagLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
-             trcl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
-             trcl.setName(ce.getName());
-             
-             icl[0]=trcl;
+      try
+      {
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ) );
+        Feature feature = workspace.getFeature( "niederschlagsmessung" );
+        if( feature != null )
+        {
+          System.out.println( "Found feature: " + feature.getId() );
+        }
+        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+
+        List<ChartElementType> ces = m_lpt.getChartElement();
+        for( ChartElementType ce : ces )
+        {
+          AxisMapping am = ce.getAxisMapping();
+
+          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
+
+          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+
+          TupleResult result = obs.getResult();
+
+          // ResultComponent rausfinden
+          final IComponent[] comps = result.getComponents();
+          final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
+          for( int i = 0; i < comps.length; i++ )
+          {
+            /*
+             * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden; besser: id, aber das wird nicht von der
+             * Componente zurückgegebn
+             */
+            IComponent comp = comps[i];
+            System.out.println( "Component: " + comp.getName() );
+            System.out.println( "Component: " + comp.getDescription() );
+            System.out.println( "Component: " + comp.getPosition() );
+            System.out.println( "Component: " + comp.getValueTypeName() );
+            if( comp.getName().compareTo( "Datum" ) == 0 )
+              map.put( "domain", comp );
+            else if( comp.getName().compareTo( "Niederschlag" ) == 0 )
+              map.put( "value", comp );
+            if( map.size() == 2 )
+              break;
           }
-          
-          
-          
+
+          List<ParameterType> parameter = m_lpt.getParameter();
+
+          NiederschlagLayer trcl = new NiederschlagLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+          trcl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().getRef() ) );
+          trcl.setName( ce.getName() );
+
+          icl[0] = trcl;
         }
-        catch( MalformedURLException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( Exception e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        return icl;
+
+      }
+      catch( MalformedURLException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return icl;
     }
     return null;
   }

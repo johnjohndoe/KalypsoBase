@@ -42,12 +42,11 @@ package org.kalypso.swtchart.exception;
 
 /**
  * @author alibu
- *
  */
 public class ConfigChartNotFoundException extends Exception
 {
-      public ConfigChartNotFoundException(String chartname)
-      {
-        super("Chart \""+chartname+"\" was not found in configuration");
-      }
+  public ConfigChartNotFoundException( String chartname )
+  {
+    super( "Chart \"" + chartname + "\" was not found in configuration" );
+  }
 }

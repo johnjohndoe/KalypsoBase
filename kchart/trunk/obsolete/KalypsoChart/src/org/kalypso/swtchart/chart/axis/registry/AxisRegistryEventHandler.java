@@ -67,16 +67,16 @@ public class AxisRegistryEventHandler implements IAxisRegistryEventProvider
   {
     m_listeners.remove( l );
   }
-  
+
   protected void fireAxisAdded( IAxis axis )
   {
-    for( IAxisRegistryEventListener l: m_listeners )
+    for( IAxisRegistryEventListener l : m_listeners )
       l.onAxisAdded( axis );
   }
 
   protected void fireAxisRemoved( IAxis axis )
   {
-    for( IAxisRegistryEventListener l: m_listeners )
+    for( IAxisRegistryEventListener l : m_listeners )
       l.onAxisRemoved( axis );
   }
 }

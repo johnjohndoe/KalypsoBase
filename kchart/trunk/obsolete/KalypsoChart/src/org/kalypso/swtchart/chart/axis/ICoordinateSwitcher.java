@@ -49,13 +49,13 @@ import org.eclipse.swt.graphics.Point;
  */
 public interface ICoordinateSwitcher
 {
-  public int toInt();
-  
+  public int toInt( );
+
   public double getX( final Point2D point );
 
   public double getY( final Point2D point );
-  
+
   public int getX( final Point point );
-  
+
   public int getY( final Point point );
 }

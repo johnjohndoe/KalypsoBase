@@ -69,90 +69,71 @@ import org.kalypso.swtchart.chart.layer.IChartLayer;
 public class Legend extends Canvas implements PaintListener
 {
   private String m_title;
-  
+
   private ArrayList<ILegendItem> m_items;
 
-  private int m_iconWidth=20;
+  private int m_iconWidth = 20;
 
-  private int m_iconHeight=20;
-  
-  private int m_inset=5;
+  private int m_iconHeight = 20;
+
+  private int m_inset = 5;
 
   private Image m_bufferImg;
 
   public Legend( Composite parent, int style )
   {
     super( parent, style );
-    addPaintListener(this);
-    m_items=new ArrayList<ILegendItem>();
-    setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+    addPaintListener( this );
+    m_items = new ArrayList<ILegendItem>();
+    setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
   }
 
   public void setTitle( final String title )
   {
     m_title = title;
   }
-  
-  public void addLayer(IChartLayer l)
+
+  public void addLayer( IChartLayer l )
   {
-    DefaultLegendItem li=new DefaultLegendItem(l,m_iconWidth, m_iconHeight, m_inset);
-    addLegendItem(li);
+    DefaultLegendItem li = new DefaultLegendItem( l, m_iconWidth, m_iconHeight, m_inset );
+    addLegendItem( li );
   }
 
-  public void addLayers(IChartLayer[] layers)
+  public void addLayers( IChartLayer[] layers )
   {
-      for(IChartLayer l:layers )
-      {
-        addLayer(l);
-      }
-  }
-  
-  public void addLayers( List<IChartLayer> layers )
-  {
-    for(IChartLayer l:layers )
+    for( IChartLayer l : layers )
     {
-      addLayer(l);
+      addLayer( l );
     }
   }
-  
-  public void addLegendItem(ILegendItem l)
+
+  public void addLayers( List<IChartLayer> layers )
   {
-    m_items.add(l);
+    for( IChartLayer l : layers )
+    {
+      addLayer( l );
+    }
+  }
+
+  public void addLegendItem( ILegendItem l )
+  {
+    m_items.add( l );
   }
 
   /**
    * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
    */
   /*
-  public void paintControl( PaintEvent e )
-  {
-    GC gc=e.gc;
-    gc.setBackground(e.display.getSystemColor(SWT.COLOR_WHITE));
-    gc.setForeground(e.display.getSystemColor(SWT.COLOR_BLACK));
-    
-    //Abstand zum oberen Rand der Komponente
-    int top=0;
-    
-    for( ILegendItem li : m_items )
-    {
-      Point size=li.computeSize(0,0);
-      Image liImg=new Image(e.display, size.x, size.y);
-      li.paintImage(liImg);
-      
-      gc.drawImage(liImg, 0, top);
-      
-      liImg.dispose();
-      top+=size.y;
-    }
-    gc.dispose();
-  }
-  */
+   * public void paintControl( PaintEvent e ) { GC gc=e.gc; gc.setBackground(e.display.getSystemColor(SWT.COLOR_WHITE));
+   * gc.setForeground(e.display.getSystemColor(SWT.COLOR_BLACK)); //Abstand zum oberen Rand der Komponente int top=0;
+   * for( ILegendItem li : m_items ) { Point size=li.computeSize(0,0); Image liImg=new Image(e.display, size.x, size.y);
+   * li.paintImage(liImg); gc.drawImage(liImg, 0, top); liImg.dispose(); top+=size.y; } gc.dispose(); }
+   */
 
   /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   * 
-   * Zeichnet nacheinander alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht 
-   * neu berechnet, sondern ein gepuffertes Img angezeigt 
+   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Zeichnet nacheinander
+   *      alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht neu berechnet, sondern ein
+   *      gepuffertes Img angezeigt
    */
   public void paintControl( final PaintEvent e )
   {
@@ -160,15 +141,14 @@ public class Legend extends Canvas implements PaintListener
     final Rectangle screenArea = getClientArea();
     m_bufferImg = paintLegend( e.display, gcw, screenArea, m_bufferImg );
     gcw.dispose();
-    
+
   }
-  
+
   /**
-   * ÜBernommen und angepasst von de.belger.swtchart
-   * zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot gezeichnet (doubleBuffering) und 
-   * zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen wird 
-   * Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den
-   * Webservice verwendet wird.
+   * ÜBernommen und angepasst von de.belger.swtchart zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot
+   * gezeichnet (doubleBuffering) und zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen
+   * wird Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den Webservice
+   * verwendet wird.
    */
   public Image paintLegend( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
@@ -178,38 +158,38 @@ public class Legend extends Canvas implements PaintListener
     {
       usedBufferImage = new Image( dev, screen.width, screen.height );
 
-      drawImage(usedBufferImage, dev);
+      drawImage( usedBufferImage, dev );
     }
     else
       usedBufferImage = bufferImage;
 
     // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
     // selstsamen effekten
-    gcw.drawImage( usedBufferImage, 0,0);
+    gcw.drawImage( usedBufferImage, 0, 0 );
     return usedBufferImage;
   }
-  
+
   /**
    * Zeichnet die Legende in eine Image
    */
-  public void drawImage(Image img, Device dev)
+  public void drawImage( Image img, Device dev )
   {
     final GCWrapper buffGc = new GCWrapper( new GC( img ) );
-    buffGc.setBackground(dev.getSystemColor(SWT.COLOR_WHITE));
-    buffGc.setForeground(dev.getSystemColor(SWT.COLOR_BLACK));
+    buffGc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
+    buffGc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
     try
     {
-//    Abstand zum oberen Rand der Komponente
-      int top=0;
-      
+      // Abstand zum oberen Rand der Komponente
+      int top = 0;
+
       for( ILegendItem li : m_items )
       {
-        Point size=li.computeSize(0,0);
-        Image liImg=new Image(dev, size.x, size.y);
-        li.paintImage(liImg);
-        buffGc.drawImage(liImg, 0, top);
+        Point size = li.computeSize( 0, 0 );
+        Image liImg = new Image( dev, size.x, size.y );
+        li.paintImage( liImg );
+        buffGc.drawImage( liImg, 0, top );
         liImg.dispose();
-        top+=size.y;
+        top += size.y;
       }
 
     }
@@ -222,22 +202,21 @@ public class Legend extends Canvas implements PaintListener
       buffGc.dispose();
     }
   }
-  
+
   @Override
-  public Point computeSize(int whint, int hhint)
+  public Point computeSize( int whint, int hhint )
   {
-    int width=0;
-    int height=0;
+    int width = 0;
+    int height = 0;
     for( ILegendItem li : m_items )
     {
-        Point lisize=li.computeSize(0,0);
-        if (lisize.x>width)
-          width=lisize.x;
-        height+=lisize.y;
+      Point lisize = li.computeSize( 0, 0 );
+      if( lisize.x > width )
+        width = lisize.x;
+      height += lisize.y;
     }
-    int tolerance=5;
-    return new Point(width, height+tolerance);
+    int tolerance = 5;
+    return new Point( width, height + tolerance );
   }
-
 
 }

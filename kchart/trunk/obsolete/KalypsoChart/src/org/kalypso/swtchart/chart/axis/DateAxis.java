@@ -63,16 +63,16 @@ public class DateAxis extends AbstractAxis<Date>
   {
     super( id, label, prop, pos, dir, comp, Date.class );
   }
-  
-  
+
   public double logicalToNormalized( final Date value )
   {
     // r should not be 0 here (see AbstractAxis)
     final long r = getTo().getTime() - getFrom().getTime();
-    
-    //Die rechte Seite muss unbedingt nach double gecastet werden, da sonst auf die Werte 0 oder 1 gerundet wird.
-    final double norm = ( (double) (value.getTime() - getFrom().getTime())) / r;
-    //System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from: "+getFrom().getTime()+ " to: "+getTo().getTime());
+
+    // Die rechte Seite muss unbedingt nach double gecastet werden, da sonst auf die Werte 0 oder 1 gerundet wird.
+    final double norm = ((double) (value.getTime() - getFrom().getTime())) / r;
+    // System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from:
+    // "+getFrom().getTime()+ " to: "+getTo().getTime());
     return norm;
   }
 
@@ -81,7 +81,7 @@ public class DateAxis extends AbstractAxis<Date>
     final double r = getTo().getTime() - getFrom().getTime();
 
     final long logical = (long) (value * r + getFrom().getTime());
-    
+
     return new Date( logical );
   }
 
@@ -123,6 +123,5 @@ public class DateAxis extends AbstractAxis<Date>
     // TODO Auto-generated method stub
     return null;
   }
-
 
 }

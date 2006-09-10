@@ -80,12 +80,12 @@ public abstract class AbstractAxis<T> implements IAxis<T>
    * Uses a ComparableComparator as dataComparator
    */
   @SuppressWarnings("unchecked")
-  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Class<?> dataClass )
+  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Class< ? > dataClass )
   {
     this( id, label, prop, pos, dir, new ComparableComparator(), dataClass );
   }
 
-  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<T> dataComparator, final Class<?> dataClass )
+  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<T> dataComparator, final Class< ? > dataClass )
   {
     m_id = id;
     m_label = label;
@@ -103,7 +103,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   {
     return m_dataClass;
   }
-  
+
   /**
    * @see org.kalypso.swtchart.axis.IAxis#setRegistry(org.kalypso.swtchart.axis.registry.IAxisRegistry)
    */
@@ -119,7 +119,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   public IAxisRenderer<T> getRenderer( )
   {
     if( m_registry == null )
-      throw new IllegalStateException("Registry is null");
+      throw new IllegalStateException( "Registry is null" );
 
     return m_registry.getRenderer( this );
   }
@@ -209,7 +209,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
     m_max = max;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -218,7 +218,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   {
     return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
   }
-  
+
   /**
    * @see org.kalypso.swtchart.axis.IAxis#autorange(org.kalypso.swtchart.layer.IDataRange<T>[])
    */
@@ -226,7 +226,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   {
     T min = null;
     T max = null;
-    
+
     for( int i = 0; i < ranges.length; i++ )
     {
       if( min == null || m_dataComparator.compare( min, ranges[i].getMin() ) > 0 )
@@ -234,7 +234,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
       if( max == null || m_dataComparator.compare( max, ranges[i].getMax() ) < 0 )
         max = ranges[i].getMax();
     }
-    
+
     setFrom( min );
     setTo( max );
   }

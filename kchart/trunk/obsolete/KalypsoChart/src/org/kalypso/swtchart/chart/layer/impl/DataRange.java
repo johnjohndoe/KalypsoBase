@@ -48,6 +48,7 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 public class DataRange<T> implements IDataRange<T>
 {
   private final T m_min;
+
   private final T m_max;
 
   public DataRange( T min, T max )
@@ -55,7 +56,7 @@ public class DataRange<T> implements IDataRange<T>
     m_min = min;
     m_max = max;
   }
-  
+
   /**
    * @see org.kalypso.swtchart.layer.IDataRange#getMin()
    */

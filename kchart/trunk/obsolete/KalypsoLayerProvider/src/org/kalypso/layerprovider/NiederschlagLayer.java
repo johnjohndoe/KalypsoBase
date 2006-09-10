@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.layerprovider;
 
-
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -50,7 +49,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -94,9 +92,9 @@ public class NiederschlagLayer implements IChartLayer
 
   private final List<ParameterType> m_parameters;
 
-private String m_name;
+  private String m_name;
 
-private String m_description;
+  private String m_description;
 
   public NiederschlagLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
   {
@@ -112,96 +110,96 @@ private String m_description;
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc, final Device dev ) 
+  public void paint( final GCWrapper gc, final Device dev )
   {
-   
-    gc.setLineWidth(5);
-   // gc.drawLine(0,0, 200, 200);
-    System.out.println("Drawing TupleResultChartLayer");
-    
-    StyledPolygon sp=(StyledPolygon) getStyle().getElement(SE_TYPE.POLYGON, 0);
-    
-    //Config-Parameter auslesen
-    double barInterval=0;
-    XMLGregorianCalendar fixedPoint=null;
-    if (m_parameters!=null)
+
+    gc.setLineWidth( 5 );
+    // gc.drawLine(0,0, 200, 200);
+    System.out.println( "Drawing TupleResultChartLayer" );
+
+    StyledPolygon sp = (StyledPolygon) getStyle().getElement( SE_TYPE.POLYGON, 0 );
+
+    // Config-Parameter auslesen
+    double barInterval = 0;
+    XMLGregorianCalendar fixedPoint = null;
+    if( m_parameters != null )
     {
       for( ParameterType param : m_parameters )
       {
-        //parsen des Config-Werts in XMLGregCalendar
-        if (param.getName().compareTo("fixedPoint")==0 && param.getValue().length()>0)
+        // parsen des Config-Werts in XMLGregCalendar
+        if( param.getName().compareTo( "fixedPoint" ) == 0 && param.getValue().length() > 0 )
         {
           try
           {
-            DatatypeFactory df= DatatypeFactory.newInstance();
-            fixedPoint = df.newXMLGregorianCalendar(param.getValue());
+            DatatypeFactory df = DatatypeFactory.newInstance();
+            fixedPoint = df.newXMLGregorianCalendar( param.getValue() );
           }
           catch( DatatypeConfigurationException e )
           {
             e.printStackTrace();
           }
         }
-        if (param.getName().compareTo("barInterval")==0 && param.getValue().length()>0)
+        if( param.getName().compareTo( "barInterval" ) == 0 && param.getValue().length() > 0 )
         {
-          barInterval=Double.parseDouble(param.getValue());
-          System.out.println("Parsed BarInterval: "+barInterval);
+          barInterval = Double.parseDouble( param.getValue() );
+          System.out.println( "Parsed BarInterval: " + barInterval );
         }
       }
-    }  
-    //Falls noch nicht initialisiert werden nun Standardwerte gesetzt
-    if (barInterval==0)
-    {
-      //Intervall: ein Tag in Millisekunden
-      barInterval=24*60*60*1000;
-    } 
-    if (fixedPoint==null)
-    {
-      //Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
-      GregorianCalendar fixedGregCal=new GregorianCalendar();
-      fixedGregCal.set(2000, 0, 1, 0,0);
-      fixedPoint=new XMLGregorianCalendarImpl(fixedGregCal);
     }
-    System.out.println("Used BarInterval: "+barInterval);
-    
-    //Daten zum Zeichnen durchlaufen
+    // Falls noch nicht initialisiert werden nun Standardwerte gesetzt
+    if( barInterval == 0 )
+    {
+      // Intervall: ein Tag in Millisekunden
+      barInterval = 24 * 60 * 60 * 1000;
+    }
+    if( fixedPoint == null )
+    {
+      // Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
+      GregorianCalendar fixedGregCal = new GregorianCalendar();
+      fixedGregCal.set( 2000, 0, 1, 0, 0 );
+      fixedPoint = new XMLGregorianCalendarImpl( fixedGregCal );
+    }
+    System.out.println( "Used BarInterval: " + barInterval );
+
+    // Daten zum Zeichnen durchlaufen
     int size = m_result.size();
-    for( int i = 0; i < size; i++)
+    for( int i = 0; i < size; i++ )
     {
       final IRecord r1 = m_result.get( i );
 
       Object domVal = m_result.getValue( r1, m_domComp );
       Object valVal = m_result.getValue( r1, m_valComp );
       int x1, y1, x2, y2;
-      if (m_domAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+      if( m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        Point xs = m_domAxis.logicalToScreenInterval( domVal,fixedPoint ,barInterval  );
-        x1=Math.min(xs.x, xs.y);
-        x2=Math.max(xs.x, xs.y);
+        Point xs = m_domAxis.logicalToScreenInterval( domVal, fixedPoint, barInterval );
+        x1 = Math.min( xs.x, xs.y );
+        x2 = Math.max( xs.x, xs.y );
         y1 = m_valAxis.logicalToScreen( 0 );
-        y2= m_valAxis.logicalToScreen( valVal );
+        y2 = m_valAxis.logicalToScreen( valVal );
       }
       else
       {
-        Point ys = m_domAxis.logicalToScreenInterval( domVal,fixedPoint ,barInterval  );
-        y1=Math.min(ys.x, ys.y);
-        y2=Math.max(ys.x, ys.y);
+        Point ys = m_domAxis.logicalToScreenInterval( domVal, fixedPoint, barInterval );
+        y1 = Math.min( ys.x, ys.y );
+        y2 = Math.max( ys.x, ys.y );
         x1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
-        x2=m_valAxis.logicalToScreen( valVal );
+        x2 = m_valAxis.logicalToScreen( valVal );
       }
-      ArrayList<Point> path=new ArrayList<Point>();
-      path.add(new Point(x1, y1));
-      path.add(new Point(x2, y1));
-      path.add(new Point(x2, y2));
-      path.add(new Point(x1, y2));
-      
-      if (sp!=null)
+      ArrayList<Point> path = new ArrayList<Point>();
+      path.add( new Point( x1, y1 ) );
+      path.add( new Point( x2, y1 ) );
+      path.add( new Point( x2, y2 ) );
+      path.add( new Point( x1, y2 ) );
+
+      if( sp != null )
       {
-        sp.setPath(path);
-        System.out.println("Drawing Bar: ("+x1+":"+y1+"):("+x2+":"+y2+")");
-        sp.paint(gc, dev);
+        sp.setPath( path );
+        System.out.println( "Drawing Bar: (" + x1 + ":" + y1 + "):(" + x2 + ":" + y2 + ")" );
+        sp.paint( gc, dev );
       }
     }
-   
+
   }
 
   /**
@@ -273,7 +271,7 @@ private String m_description;
    */
   public void setStyle( ILayerStyle style )
   {
-    m_style=style;
+    m_style = style;
   }
 
   /**
@@ -281,21 +279,20 @@ private String m_description;
    */
   public IDataRange getDomainRange( )
   {
-    Object min=null;
-    Object max=null;
-    AliComparator ac=new AliComparator();
-    for (int i=0;i<m_result.size();i++)
+    Object min = null;
+    Object max = null;
+    AliComparator ac = new AliComparator();
+    for( int i = 0; i < m_result.size(); i++ )
     {
-      IRecord rec=m_result.get(i);
-      Object val=rec.getValue(m_domComp);
-      if (min == null || ac.compare(min, val)<0)
-        min=val;
-      if (max == null || ac.compare(max, val)>0)
-        max=val;
+      IRecord rec = m_result.get( i );
+      Object val = rec.getValue( m_domComp );
+      if( min == null || ac.compare( min, val ) < 0 )
+        min = val;
+      if( max == null || ac.compare( max, val ) > 0 )
+        max = val;
     }
-    return new DataRange(min, max);
-   
-   
+    return new DataRange( min, max );
+
   }
 
   /**
@@ -303,52 +300,51 @@ private String m_description;
    */
   public IDataRange getValueRange( )
   {
-    Object min=null;
-    Object max=null;
-    ComparableComparator cc=new ComparableComparator();
-    for (int i=0;i<m_result.size();i++)
+    Object min = null;
+    Object max = null;
+    ComparableComparator cc = new ComparableComparator();
+    for( int i = 0; i < m_result.size(); i++ )
     {
-      IRecord rec=m_result.get(i);
-      Object val=rec.getValue(m_valComp);
-      if (min == null || cc.compare(min, val)>0)
-        min=val;
-      if (max == null || cc.compare(max, val)<0)
-        max=val;
+      IRecord rec = m_result.get( i );
+      Object val = rec.getValue( m_valComp );
+      if( min == null || cc.compare( min, val ) > 0 )
+        min = val;
+      if( max == null || cc.compare( max, val ) < 0 )
+        max = val;
     }
-   return new DataRange(min, max);
+    return new DataRange( min, max );
   }
 
-  public void drawIcon(Image img, int width, int height)
+  public void drawIcon( Image img, int width, int height )
   {
-      GC gc=new GC(img);
-      GCWrapper gcw=new GCWrapper(gc);
-      
-      
-      IStyledElement poly=m_style.getElement(SE_TYPE.POLYGON, 0);
-      
+    GC gc = new GC( img );
+    GCWrapper gcw = new GCWrapper( gc );
 
-      
-      if (poly!=null)
-      {
-        ArrayList<Point> points=new ArrayList<Point>();
-        //Linie von Links nach rechts
-        points.add(new Point((int) (width*0.2), (int) (height*0.2)));
-        points.add(new Point((int) (width*0.2), (int) (height*0.8)));
-        points.add(new Point((int) (width*0.8), (int) (height*0.8)));
-        points.add(new Point((int) (width*0.8), (int) (height*0.2)));
-        poly.setPath(points);
-        poly.paint(gcw, Display.getCurrent());
-      }
-      
-      gc.dispose();
-      gcw.dispose();
+    IStyledElement poly = m_style.getElement( SE_TYPE.POLYGON, 0 );
+
+    if( poly != null )
+    {
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( (int) (width * 0.2), (int) (height * 0.2) ) );
+      points.add( new Point( (int) (width * 0.2), (int) (height * 0.8) ) );
+      points.add( new Point( (int) (width * 0.8), (int) (height * 0.8) ) );
+      points.add( new Point( (int) (width * 0.8), (int) (height * 0.2) ) );
+      poly.setPath( points );
+      poly.paint( gcw, Display.getCurrent() );
+    }
+
+    gc.dispose();
+    gcw.dispose();
   }
-  
-  public void setName(String name) {
-		m_name=name;
-	}
 
-	public void setDescription(String description) {
-		m_description=description;
-	}
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
+  public void setDescription( String description )
+  {
+    m_description = description;
+  }
 }

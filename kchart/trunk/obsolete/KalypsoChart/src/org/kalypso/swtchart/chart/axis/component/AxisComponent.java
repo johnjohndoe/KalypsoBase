@@ -137,9 +137,10 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final int range = getRange();
     if( range == 0 )
       return 0;
-    double normValue = (double) screenValue / range;
+    final double normValue = (double) screenValue / range;
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
-      normValue = 1 - normValue;
+      return 1 - normValue;
+    
     return normValue;
   }
 

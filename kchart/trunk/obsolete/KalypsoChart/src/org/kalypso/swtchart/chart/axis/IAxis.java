@@ -45,7 +45,6 @@ import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 
-
 /**
  * @author schlienger
  */
@@ -54,8 +53,8 @@ public interface IAxis<T>
   public String getIdentifier( );
 
   public String getLabel( );
-  
-  public Class<?> getDataClass();
+
+  public Class< ? > getDataClass( );
 
   public IAxisConstants.PROPERTY getProperty( );
 
@@ -65,7 +64,7 @@ public interface IAxis<T>
 
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
-  
+
   public T getFrom( );
 
   public void setFrom( T min );
@@ -73,24 +72,26 @@ public interface IAxis<T>
   public T getTo( );
 
   public void setTo( T max );
-  
+
   public void autorange( IDataRange<T>[] ranges );
 
   public int logicalToScreen( T value );
-  
+
   /**
-   * Gibt ein Intervall von Bildschrimkoordinaten mit der logischen Breite zurück, in dem der übergebene 
-   * Wert liegt
-   * @param value ein Wert, der im zurückgegebenen Intervall liegt
-   * @param fixedPoint ein fixer Punkt auf der Achse, von dem aus die Intervallegemessen werden 
-   * @param intervalSize Die Größe des Intervalls; die muss von einzelnen Implementationen entsprechend 
-   *            Interpretiert werden;
-   * @return Point, dessen x/y-Werte den Anfang- und Endwert des Intervalls auf der Achse zurückgeben 
+   * Gibt ein Intervall von Bildschrimkoordinaten mit der logischen Breite zurück, in dem der übergebene Wert liegt
+   * 
+   * @param value
+   *          ein Wert, der im zurückgegebenen Intervall liegt
+   * @param fixedPoint
+   *          ein fixer Punkt auf der Achse, von dem aus die Intervallegemessen werden
+   * @param intervalSize
+   *          Die Größe des Intervalls; die muss von einzelnen Implementationen entsprechend Interpretiert werden;
+   * @return Point, dessen x/y-Werte den Anfang- und Endwert des Intervalls auf der Achse zurückgeben
    */
-  public Point logicalToScreenInterval(T value, T fixedPoint, double intervalSize);
+  public Point logicalToScreenInterval( T value, T fixedPoint, double intervalSize );
 
   public T screenToLogical( int value );
-  
+
   public void setRegistry( IAxisRegistry axisRegistry );
 
   public IAxisRenderer<T> getRenderer( );

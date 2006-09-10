@@ -43,16 +43,19 @@ package org.kalypso.swtchart.chart.legend;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
-
 /**
  * @author schlienger
  */
 public interface ILegendItem
 {
-  public String getName();
-  public String getDescription();
+  public String getName( );
+
+  public String getDescription( );
+
   public void drawIcon( Image img );
+
   public Point computeSize( int whint, int hhint );
-  public void paintImage(Image img);
-  
+
+  public void paintImage( Image img );
+
 }

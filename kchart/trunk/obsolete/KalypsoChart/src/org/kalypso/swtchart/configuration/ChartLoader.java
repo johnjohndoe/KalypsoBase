@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.configuration;
 
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -57,113 +58,107 @@ import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
-
 /**
  * @author alibu
- *
  */
 public class ChartLoader
 {
-  
   /**
-   * Erstellt ein Chart aus der Konfiguration  
-   * @param chart Das Chart-Objekt, das mit Leben gefüllt wird
-   * @param configChartName Der Name der ChartConfiguration, die verwendet werden soll
+   * Erstellt ein Chart aus der Konfiguration
+   * 
+   * @param chart
+   *          Das Chart-Objekt, das mit Leben gefüllt wird
+   * @param configChartName
+   *          Der Name der ChartConfiguration, die verwendet werden soll
    */
-  public static Chart createChart(Chart chart, ConfigurationType config, String configChartName) throws ConfigChartNotFoundException
+  public static Chart createChart( Chart chart, ConfigurationType config, String configChartName, final URL context ) throws ConfigChartNotFoundException
   {
-    ChartType configChart=null;
-    
-    //ChartConfig auslesen
-    if (config!=null)
+    ChartType configChart = null;
+
+    // ChartConfig auslesen
+    if( config != null )
     {
-      List<ChartType> ccharts = config.getChart();
-      for( ChartType c : ccharts )
+      final List<ChartType> ccharts = config.getChart();
+      for( final ChartType c : ccharts )
       {
-          if (c.getName().compareTo(configChartName)==0)
-          {
-            configChart=c;
-            break;
-          }
+        if( c.getName().compareTo( configChartName ) == 0 )
+        {
+          configChart = c;
+          break;
+        }
       }
     }
-    
 
-    if (configChart==null)
+    if( configChart == null )
     {
-      throw new ConfigChartNotFoundException(configChartName);
+      throw new ConfigChartNotFoundException( configChartName );
     }
     else
     {
-        //Achsen hinzufügen
-      
-        List<JAXBElement< ? extends AbstractAxisType>> jaxbAxes = configChart.getAxis();
-        for( JAXBElement< ? extends AbstractAxisType> element : jaxbAxes )
-        {
-            AbstractAxisType abstractAxis=element.getValue();
-            AxisFactory.addConfigAxis(chart, abstractAxis);
-        }
-        
-        
-        //Layer hinzufügen
-        List<LayerProviderType> lps = configChart.getLayerProvider();
-        for( LayerProviderType lp : lps )
-        {
-            String lpname=lp.getName();
-            /**
-             * Das ist nur zum Testen
-             */
-            if (
-                  lpname.compareTo("org.ksp.observation.layerProvider.Test.Line")==0
-                  || lpname.compareTo("org.ksp.observation.layerProvider.Test.Bar")==0  
-              )
-            {
-              DoubleDataLayerProvider ddlp=new DoubleDataLayerProvider();
-              ddlp.init(chart, lp);
-              IChartLayer[] icl=ddlp.getLayers();
-              for( IChartLayer layer : icl )
-              {
-                System.out.println("Adding Layer "+layer.getName());
-                chart.addLayer(layer);
-              }
-            }
-            else
-            {
-              try
-              {
-                final ILayerProvider provider = KalypsoChartExtensions.createProvider( lpname );
-                if (provider!=null)
-                {
-                  provider.init(chart, lp);
-                  IChartLayer[] icl=provider.getLayers();
-                  if (icl!=null)
-                  {
-                    for( IChartLayer layer : icl )
-                    {
-                      System.out.println("Adding Layer "+layer.getName());
-                      chart.addLayer(layer);
-                    }
-                  }
-                }
-                else    
-                {
-                  System.out.println("No LayerProvider for "+lpname);
-                }
-              }
-              catch( CoreException e )
-              {
-                e.printStackTrace();
-              }
-            }
-        }
+      configureChart( chart, configChart, context );
     }
     return chart;
   }
-  
-  
 
+  public static void configureChart( final Chart chart, final ChartType configChart, final URL context )
+  {
+    // Achsen hinzufügen
 
-  
+    List<JAXBElement< ? extends AbstractAxisType>> jaxbAxes = configChart.getAxis();
+    for( JAXBElement< ? extends AbstractAxisType> element : jaxbAxes )
+    {
+      AbstractAxisType abstractAxis = element.getValue();
+      AxisFactory.addConfigAxis( chart, abstractAxis );
+    }
+
+    // Layer hinzufügen
+    List<LayerProviderType> lps = configChart.getLayerProvider();
+    for( LayerProviderType lp : lps )
+    {
+      String lpname = lp.getName();
+      /**
+       * Das ist nur zum Testen
+       */
+      if( lpname.compareTo( "org.ksp.observation.layerProvider.Test.Line" ) == 0 || lpname.compareTo( "org.ksp.observation.layerProvider.Test.Bar" ) == 0 )
+      {
+        final DoubleDataLayerProvider ddlp = new DoubleDataLayerProvider();
+        ddlp.init( chart, lp );
+        final IChartLayer[] icl = ddlp.getLayers( context );
+        for( IChartLayer layer : icl )
+        {
+          System.out.println( "Adding Layer " + layer.getName() );
+          chart.addLayer( layer );
+        }
+      }
+      else
+      {
+        try
+        {
+          final ILayerProvider provider = KalypsoChartExtensions.createProvider( lpname );
+          if( provider != null )
+          {
+            provider.init( chart, lp );
+            IChartLayer[] icl = provider.getLayers( context );
+            if( icl != null )
+            {
+              for( final IChartLayer layer : icl )
+              {
+                System.out.println( "Adding Layer " + layer.getName() );
+                chart.addLayer( layer );
+              }
+            }
+          }
+          else
+          {
+            System.out.println( "No LayerProvider for " + lpname );
+          }
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
 }
-
-  

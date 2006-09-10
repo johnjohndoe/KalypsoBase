@@ -45,9 +45,10 @@ package org.kalypso.swtchart.chart.layer;
  */
 public interface IDataRange<T>
 {
-  public T getMin();
-  public T getMax();
-  
-//  public void setMin( T min );
-//  public void setMax( T max );
+  public T getMin( );
+
+  public T getMax( );
+
+  // public void setMin( T min );
+  // public void setMax( T max );
 }

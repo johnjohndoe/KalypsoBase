@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.layer.impl;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
@@ -59,95 +60,71 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 
 /**
  * @author alibu
- *
  */
 public class DoubleDataLayerProvider implements ILayerProvider
 {
-
-  
-  
   private LayerProviderType m_lpt;
+
   private Chart m_chart;
 
-
-  public DoubleDataLayerProvider()
-  {
-   
-  }
-  
-  
-  
   /**
    * @see org.kalypso.swtchart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( final URL context )
   {
-    IAxisRegistry ar=m_chart.getAxisRegistry();
-    
-    Vector<IChartLayer> layers=new Vector<IChartLayer>();
-    
-    String name=m_lpt.getName();
-    
-    
-    
+    IAxisRegistry ar = m_chart.getAxisRegistry();
+
+    Vector<IChartLayer> layers = new Vector<IChartLayer>();
+
+    String name = m_lpt.getName();
+
     List<ChartElementType> ces = m_lpt.getChartElement();
     for( ChartElementType ce : ces )
     {
-      //Achsen für Layer herausfinden
+      // Achsen für Layer herausfinden
       AxisMapping am = ce.getAxisMapping();
-      //DomainAxis
+      // DomainAxis
       AxisMappingType amt_domain = am.getDomain();
       AbstractAxisType domainAxis = (AbstractAxisType) amt_domain.getAxisLink();
-      String domainId=domainAxis.getId();
-      //ValueAxis
+      String domainId = domainAxis.getId();
+      // ValueAxis
       AxisMappingType amt_value = am.getValue();
       AbstractAxisType valueAxis = (AbstractAxisType) amt_value.getAxisLink();
-      String valueId=valueAxis.getId();
-      
-      
-      IAxis domain=ar.getAxis(domainId);
-      IAxis value=ar.getAxis(valueId);
-      IChartLayer cl=null;
-      if (name.compareTo("org.ksp.observation.layerProvider.Test.Line")==0)
+      String valueId = valueAxis.getId();
+
+      IAxis domain = ar.getAxis( domainId );
+      IAxis value = ar.getAxis( valueId );
+      IChartLayer cl = null;
+      if( name.compareTo( "org.ksp.observation.layerProvider.Test.Line" ) == 0 )
       {
-        cl=new TestLayer(domain, value);
+        cl = new TestLayer( domain, value );
       }
-      else if (name.compareTo("org.ksp.observation.layerProvider.Test.Bar")==0)
+      else if( name.compareTo( "org.ksp.observation.layerProvider.Test.Bar" ) == 0 )
       {
-        cl=new TestStackLayer(domain, value);
+        cl = new TestStackLayer( domain, value );
       }
-      
-      StyleType st=(StyleType) (ce.getStyleLink().getRef());
-      
-      ILayerStyle ls=StyleLoader.createStyle(st);
-      
-      cl.setStyle(ls);
-      cl.setName(ce.getName());
-      
-      layers.add(cl);
-      
+
+      StyleType st = (StyleType) (ce.getStyleLink().getRef());
+
+      ILayerStyle ls = StyleLoader.createStyle( st );
+
+      cl.setStyle( ls );
+      cl.setName( ce.getName() );
+
+      layers.add( cl );
     }
-    
-    //Und jetzt noch von Vector in Array umrechnen
-    //TODO: Das geht klüger - poder evtl. Interface verändern
-    IChartLayer[] icl=new IChartLayer[layers.size()];
-    for( int i = 0; i < layers.size(); i++ )
-    {
-      icl[i]=layers.get(i);
-    }
-    return icl;
+
+    return layers.toArray( new IChartLayer[layers.size()] );
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.ILayerProvider#init(org.kalypso.swtchart.Chart, org.ksp.chart.viewerconfiguration.LayerProviderType)
+   * @see org.kalypso.swtchart.layer.ILayerProvider#init(org.kalypso.swtchart.Chart,
+   *      org.ksp.chart.viewerconfiguration.LayerProviderType)
    */
-  public void init( Chart chart, LayerProviderType lpt )
+  public void init( final Chart chart, final LayerProviderType lpt )
   {
-    m_chart=chart;
-    m_lpt=lpt;
+    m_chart = chart;
+    m_lpt = lpt;
   }
-
-
-
 
 }

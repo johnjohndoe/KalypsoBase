@@ -48,7 +48,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -60,36 +59,37 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
-import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.axis.component.AxisComponent;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.mouse.DragMouseHandler;
+import org.kalypso.swtchart.chart.mouse.IChartMouseHandler;
 
 /**
  * @author schlienger
  */
-public class Plot extends Canvas implements PaintListener, MouseListener, MouseMoveListener, Listener
+public class Plot extends Canvas implements PaintListener, Listener, MouseListener, MouseMoveListener
 {
   private final Chart m_chart;
-  
-  private Point m_mouseDragStart;
-  private Point m_mouseDragEnd;
-  private boolean m_mousePressed=false;
-  private Rectangle m_mouseDragRect;
 
-  private Image m_bufferImg=null;
+  private Image m_bufferImg = null;
 
-  public Plot( Chart chart, Composite parent, int style )
+  private IChartMouseHandler m_mouseHandler;
+
+  public Plot( final Chart chart, final Composite parent, final int style )
   {
     super( parent, style );
     m_chart = chart;
 
     addPaintListener( this );
-    addMouseListener(this);
-    addMouseMoveListener(this);
-    addListener(SWT.RESIZE, this);
-    addListener(SWT.Resize, this);
+
+    // TODO: set mouse handler from outside
+    m_mouseHandler = new DragMouseHandler( this );
+    
+    addMouseListener( this );
+    addMouseMoveListener( this );
+
+    addListener( SWT.Resize, this );
   }
 
   /**
@@ -99,55 +99,43 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
   public void dispose( )
   {
     removePaintListener( this );
-    if (m_bufferImg!=null)
+    if( m_bufferImg != null )
     {
       m_bufferImg.dispose();
-      m_bufferImg=null;
+      m_bufferImg = null;
     }
     super.dispose();
   }
 
   /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   * 
-   * Zeichnet nacheinander alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht 
-   * neu berechnet, sondern ein gepuffertes Img angezeigt 
+   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Zeichnet nacheinander
+   *      alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht neu berechnet, sondern ein
+   *      gepuffertes Img angezeigt
    */
   public void paintControl( final PaintEvent e )
   {
     final GCWrapper gcw = new GCWrapper( e.gc );
-    
-    //Antialiasing setzen
-    gcw.m_gc.setAntialias(SWT.ON);
+
+    // Antialiasing setzen
+    gcw.m_gc.setAntialias( SWT.ON );
 
     final Rectangle screenArea = getClientArea();
-    
-    
+
     m_bufferImg = paintChart( e.display, gcw, screenArea, m_bufferImg );
-    
-    
-    //Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
-    if (m_mouseDragRect!=null && m_mousePressed)
-    {
-      gcw.setForeground(new Color(e.display,0,0,0));
-      gcw.setLineStyle(SWT.LINE_DASH);
-      gcw.setLineWidth(1);
-      gcw.drawRectangle(m_mouseDragRect);
-    }
-   gcw.dispose();
-    
+
+    m_mouseHandler.paint( gcw );
+
+    gcw.dispose();
   }
-  
+
   /**
-   * ÜBernommen und angepasst von de.belger.swtchart
-   * zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot gezeichnet (doubleBuffering) und 
-   * zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen wird 
-   * Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den
-   * Webservice verwendet wird.
+   * Übernommen und angepasst von de.belger.swtchart zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot
+   * gezeichnet (doubleBuffering) und zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen
+   * wird Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den Webservice
+   * verwendet wird.
    */
   public Image paintChart( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
-
     final Image usedBufferImage;
     if( bufferImage == null )
     {
@@ -160,11 +148,9 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
         final List<IChartLayer> layers = m_chart.getLayers();
         for( final IChartLayer layer : layers )
         {
-          ChartUtilities.resetGC(buffGc.m_gc, dev);
-          buffGc.setAlpha(170);
+          ChartUtilities.resetGC( buffGc.m_gc, dev );
           layer.paint( buffGc, dev );
         }
-
       }
       catch( final Exception e )
       {
@@ -180,11 +166,10 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
 
     // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
     // selstsamen effekten
-    gcw.drawImage( usedBufferImage, 0,0);
+    gcw.drawImage( usedBufferImage, screen.x, screen.y, screen.width, screen.height, screen.x, screen.y, screen.width, screen.height );
     return usedBufferImage;
   }
-  
-  
+
   /** Forces a repaint of the complete chart. The buffered image is disposed. */
   public void repaint( )
   {
@@ -193,16 +178,141 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
+
     redraw();
   }
 
+  public void zoomIn( final Point start, final Point end )
+  {
+    final IAxisRegistry ar = m_chart.getAxisRegistry();
+    final IAxis[] axes = ar.getAxes();
+    for( IAxis axis : axes )
+    {
+      Object from = null;
+      Object to = null;
+
+      switch( axis.getPosition().getOrientation() )
+      {
+        case HORIZONTAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToLogical( Math.min( start.x, end.x ) );
+              to = axis.screenToLogical( Math.max( start.x, end.x ) );
+              break;
+
+            case NEGATIVE:
+              from = axis.screenToLogical( Math.max( start.x, end.x ) );
+              to = axis.screenToLogical( Math.min( start.x, end.x ) );
+              break;
+          }
+          break;
+
+        case VERTICAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToLogical( Math.max( start.y, end.y ) );
+              to = axis.screenToLogical( Math.min( start.y, end.y ) );
+              break;
+
+            case NEGATIVE:
+              from = axis.screenToLogical( Math.min( start.y, end.y ) );
+              to = axis.screenToLogical( Math.max( start.y, end.y ) );
+              break;
+          }
+          break;
+      }
+
+      // TRICKY: always set from and to in one go, bceause 'screenToLogcal' depends on its values
+      if( from != null && to != null )
+      {
+        axis.setFrom( from );
+        axis.setTo( to );
+
+        /*
+         * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden - sonst gibts
+         * keinen Zugriff auf die Paint-Sachen
+         */
+        AxisComponent ac = (AxisComponent) ar.getComponent( axis );
+        ac.redraw();
+      }
+    }
+    repaint();
+  }
+
+//  /**
+//   * Gibt die Größe des neuen Ausschnitts im Verhältnis zum alten Ausschnitt an
+//   */
+//  private void zoom( final double zoomFactor )
+//  {
+//    IAxisRegistry ar = m_chart.getAxisRegistry();
+//    IAxis[] axes = ar.getAxes();
+//    Rectangle bounds = getBounds();
+//    if( getDisplay() != null && getDisplay().getActiveShell() != null )
+//      bounds = getDisplay().getActiveShell().getBounds();
+//    for( IAxis axis : axes )
+//    {
+//      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+//      {
+//        if( axis.getDirection() == DIRECTION.POSITIVE )
+//        {
+//          axis.setFrom( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//          axis.setTo( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//        }
+//        else if( axis.getDirection() == DIRECTION.NEGATIVE )
+//        {
+//          axis.setTo( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//          axis.setFrom( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//        }
+//      }
+//      if( axis.getPosition().getOrientation() == ORIENTATION.VERTICAL )
+//      {
+//        if( axis.getDirection() == DIRECTION.NEGATIVE )
+//        {
+//          axis.setFrom( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//          axis.setTo( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//        }
+//        else if( axis.getDirection() == DIRECTION.POSITIVE )
+//        {
+//          axis.setTo( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//          axis.setFrom( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
+//        }
+//      }
+//      /*
+//       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden - sonst gibts keinen
+//       * Zurgriff auf die Paint-Sachen
+//       */
+//      AxisComponent ac = (AxisComponent) ar.getComponent( axis );
+//      ac.redraw();
+//    }
+//    repaint();
+//  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+   */
+  public void handleEvent( final Event event )
+  {
+    if( event.type == SWT.Resize )
+      repaint();
+  }
+
+  /**
+   * Gibt das Bildchen, das zum Puffern verwendet wird, zurück
+   */
+  public Image getBufferImg( )
+  {
+    return m_bufferImg;
+  }
 
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
-  public void mouseDoubleClick( MouseEvent e )
+  public void mouseDoubleClick( final MouseEvent e )
   {
-      
+    if( m_mouseHandler != null )
+      m_mouseHandler.mouseDoubleClick( e );
   }
 
   /**
@@ -210,172 +320,26 @@ public class Plot extends Canvas implements PaintListener, MouseListener, MouseM
    */
   public void mouseDown( final MouseEvent e )
   {
-    m_mouseDragStart=new Point (e.x, e.y);
-    m_mouseDragRect=new Rectangle(e.x, e.y,0,0);
-    m_mousePressed=true;
+    if( m_mouseHandler != null )
+      m_mouseHandler.mouseDown( e );
   }
 
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
-  public void mouseUp( MouseEvent e )
+  public void mouseUp( final MouseEvent e )
   {
-    m_mouseDragEnd=new Point (e.x, e.y);
-    
-    //Wenn nach rechts unten gezogen wurde, wird reingezoomt
-    if ( 
-          (m_mouseDragStart.x<m_mouseDragEnd.x)
-          &&
-          (m_mouseDragStart.y<m_mouseDragEnd.y)
-      )
-    {
-      zoomIn(m_mouseDragStart, m_mouseDragEnd);
-    }
-    //Wenn nach links oben gezogen wurde, wird rausgezoomt
-    else if ( 
-        (m_mouseDragStart.x>m_mouseDragEnd.x)
-        &&
-        (m_mouseDragStart.y>m_mouseDragEnd.y)
-    )
-    {
-      
-      zoom(2);
-    }
-    
-    m_mousePressed=false;
-    m_mouseDragRect=null;
-  }
-  
-  private void zoomIn(Point start, Point end)
-  {
-    IAxisRegistry ar=m_chart.getAxisRegistry();
-    for (IAxis axis:ar.getAxes())
-    {
-      if (axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
-      {
-        if (axis.getDirection()==DIRECTION.POSITIVE)
-        {
-          axis.setFrom(axis.screenToLogical(Math.min(start.x, end.x)));
-          axis.setTo(axis.screenToLogical(Math.max(start.x, end.x)));
-        }
-        else if (axis.getDirection()==DIRECTION.NEGATIVE)
-        {
-          axis.setFrom(axis.screenToLogical(Math.max(start.x, end.x)));
-          axis.setTo(axis.screenToLogical(Math.min(start.x, end.x)));
-        }
-      }
-      else if (axis.getPosition().getOrientation()==ORIENTATION.VERTICAL)
-      {
-        if (axis.getDirection()==DIRECTION.NEGATIVE)
-        {
-          axis.setFrom(axis.screenToLogical(Math.min(start.y, end.y)));
-          axis.setTo(axis.screenToLogical(Math.max(start.y, end.y)));
-        }
-        else if (axis.getDirection()==DIRECTION.POSITIVE)
-        {
-          axis.setFrom(axis.screenToLogical(Math.max(start.y, end.y)));
-          axis.setTo(axis.screenToLogical(Math.min(start.y, end.y)));
-        }
-        
-      }
-      /*
-       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden -
-       * sonst gibts keinen Zurgriff auf die Paint-Sachen
-       */
-      AxisComponent ac=(AxisComponent) ar.getComponent(axis);
-      ac.redraw();
-    }
-   // m_chart.redraw();
-    repaint();
-  }
-
-  
-  /**
-   * Gibt die Größe des neuen Ausschnitts im Verhältnis zum alten Ausschnitt an
-   */
-  private void zoom(double zoomFactor)
-  {
-    IAxisRegistry ar=m_chart.getAxisRegistry();
-    IAxis[] axes=ar.getAxes();
-    Rectangle bounds=getBounds();
-    if (getDisplay()!=null && getDisplay().getActiveShell()!=null)
-      bounds=getDisplay().getActiveShell().getBounds();
-    for (IAxis axis:axes)
-    {
-      if (axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
-      {
-        if (axis.getDirection()==DIRECTION.POSITIVE)
-        {
-          axis.setFrom(axis.screenToLogical((int) (0-0.5*( zoomFactor*bounds.width- bounds.width ))));
-          axis.setTo(axis.screenToLogical((int) (bounds.width+0.5*( zoomFactor*bounds.width- bounds.width ))));
-        }
-        else if (axis.getDirection()==DIRECTION.NEGATIVE)
-        {
-            axis.setTo(axis.screenToLogical((int) (0-0.5*( zoomFactor*bounds.width- bounds.width ))));
-            axis.setFrom(axis.screenToLogical((int) (bounds.width+0.5*( zoomFactor*bounds.width- bounds.width ))));
-        }
-      }
-      if (axis.getPosition().getOrientation()==ORIENTATION.VERTICAL)
-      {
-        if (axis.getDirection()==DIRECTION.NEGATIVE)
-        {
-          axis.setFrom(axis.screenToLogical((int) (0-0.5*( zoomFactor*bounds.width- bounds.width ))));
-          axis.setTo(axis.screenToLogical((int) (bounds.width+0.5*( zoomFactor*bounds.width- bounds.width ))));
-        }
-        else if (axis.getDirection()==DIRECTION.POSITIVE)
-        {
-          axis.setTo(axis.screenToLogical((int) (0-0.5*( zoomFactor*bounds.width- bounds.width ))));
-          axis.setFrom(axis.screenToLogical((int) (bounds.width+0.5*( zoomFactor*bounds.width- bounds.width ))));
-        }
-      }
-      /*
-       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden -
-       * sonst gibts keinen Zurgriff auf die Paint-Sachen
-       */
-      AxisComponent ac=(AxisComponent) ar.getComponent(axis);
-      ac.redraw();
-    }
-    repaint();
+    if( m_mouseHandler != null )
+      m_mouseHandler.mouseUp( e );
   }
 
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
-  public void mouseMove( MouseEvent e )
+  public void mouseMove( final MouseEvent e )
   {
-      if (m_mousePressed==true)
-      {
-        
-        //redraw kann nicht mit negativen Breiten und Höhen umgehen, daher muss der Startpunkt umgerechnet werden;
-        int x0=m_mouseDragStart.x;
-        int y0=m_mouseDragStart.y;
-        int x1=e.x+m_mouseDragRect.width;
-        int y1= e.y+m_mouseDragRect.height;
-        redraw(Math.min(x0,x1)-1, Math.min(y0, y1)-1 ,Math.abs(x1-x0)+2 ,Math.abs(y1-y0)+2, true);
-        //redraw();
-        m_mouseDragRect.width=e.x-m_mouseDragStart.x;
-        m_mouseDragRect.height=e.y-m_mouseDragStart.y;
-        
-      }
+    if( m_mouseHandler != null )
+      m_mouseHandler.mouseMove( e );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-   */
-  public void handleEvent( Event event )
-  {
-    repaint();
-    
-  }
-  
-  /**
-   * Gibt das Bildchen, das zum Puffern verwendet wird, zurück
-   */
-  public Image getBufferImg()
-  {
-    return m_bufferImg;
-  }
-
- 
-  
 }

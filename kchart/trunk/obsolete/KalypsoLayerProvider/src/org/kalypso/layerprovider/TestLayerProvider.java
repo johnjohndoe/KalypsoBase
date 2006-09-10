@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.layerprovider;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
@@ -59,80 +60,76 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 
 /**
  * @author alibu
- *
  */
-public class TestLayerProvider implements ILayerProvider 
+public class TestLayerProvider implements ILayerProvider
 {
 
-  
-  
   private LayerProviderType m_lpt;
+
   private Chart m_chart;
 
-
-  public TestLayerProvider()
+  public TestLayerProvider( )
   {
 
   }
-  
-  public TestLayerProvider(LayerProviderType lpt, Chart chart)
+
+  public TestLayerProvider( LayerProviderType lpt, Chart chart )
   {
-	  m_lpt=lpt;
-	  m_chart=chart;
+    m_lpt = lpt;
+    m_chart = chart;
   }
-  
-  
-  public void init(Chart m_chart, LayerProviderType lpt) {
-	this.m_chart = m_chart;
-	this.m_lpt=lpt;
-}
 
+  public void init( Chart m_chart, LayerProviderType lpt )
+  {
+    this.m_chart = m_chart;
+    this.m_lpt = lpt;
+  }
 
-/**
+  /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( URL context )
   {
-    IAxisRegistry ar=m_chart.getAxisRegistry();
-    
-    Vector<IChartLayer> layers=new Vector<IChartLayer>();
-    
+    IAxisRegistry ar = m_chart.getAxisRegistry();
+
+    Vector<IChartLayer> layers = new Vector<IChartLayer>();
+
     List<ChartElementType> ces = m_lpt.getChartElement();
     for( ChartElementType ce : ces )
     {
-      //Achsen für Layer herausfinden
+      // Achsen für Layer herausfinden
       AxisMapping am = ce.getAxisMapping();
-      //DomainAxis
+      // DomainAxis
       AxisMappingType amt_domain = am.getDomain();
       AbstractAxisType domainAxis = (AbstractAxisType) amt_domain.getAxisLink();
-      String domainId=domainAxis.getId();
-      //ValueAxis
+      String domainId = domainAxis.getId();
+      // ValueAxis
       AxisMappingType amt_value = am.getValue();
       AbstractAxisType valueAxis = (AbstractAxisType) amt_value.getAxisLink();
-      String valueId=valueAxis.getId();
-      
-      IAxis domain=ar.getAxis(domainId);
-      IAxis value=ar.getAxis(valueId);
-      IChartLayer cl=null;
+      String valueId = valueAxis.getId();
 
-      cl=new TestLayer(domain, value);
-      StyleType st=(StyleType) (ce.getStyleLink().getRef());
-      
-      ILayerStyle ls=StyleLoader.createStyle(st);
-      
-      cl.setStyle(ls);
-      cl.setName(ce.getName());
-      
-      layers.add(cl);
-      
+      IAxis domain = ar.getAxis( domainId );
+      IAxis value = ar.getAxis( valueId );
+      IChartLayer cl = null;
+
+      cl = new TestLayer( domain, value );
+      StyleType st = (StyleType) (ce.getStyleLink().getRef());
+
+      ILayerStyle ls = StyleLoader.createStyle( st );
+
+      cl.setStyle( ls );
+      cl.setName( ce.getName() );
+
+      layers.add( cl );
+
     }
-    
-    //Und jetzt noch von Vector in Array umrechnen
-    //TODO: Das geht klüger - oder evtl. Interface verändern
-    IChartLayer[] icl=new IChartLayer[layers.size()];
+
+    // Und jetzt noch von Vector in Array umrechnen
+    // TODO: Das geht klüger - oder evtl. Interface verändern
+    IChartLayer[] icl = new IChartLayer[layers.size()];
     for( int i = 0; i < layers.size(); i++ )
     {
-      icl[i]=layers.get(i);
+      icl[i] = layers.get( i );
     }
     return icl;
   }

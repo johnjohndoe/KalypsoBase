@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.layerprovider;
 
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
@@ -87,10 +83,11 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-private List<ParameterType> m_params;
+  private List<ParameterType> m_params;
 
-private String m_name="No name given";
-private String m_description="No description given";
+  private String m_name = "No name given";
+
+  private String m_description = "No description given";
 
   public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> params )
   {
@@ -109,49 +106,37 @@ private String m_description="No description given";
   public void paint( final GCWrapper gc, final Device dev )
   {
     int size = m_result.size();
-    gc.setLineWidth(5);
-    System.out.println("Drawing TupleResultChartLayer");
-    
-    StyledPoint sp=(StyledPoint) getStyle().getElement(SE_TYPE.POINT, 0);
-    StyledLine sl=(StyledLine) getStyle().getElement(SE_TYPE.LINE, 0);
-    
-    ArrayList<Point> path=new ArrayList<Point>();
-    
+    gc.setLineWidth( 5 );
 
-    
-    
-    for( int i = 0; i < size; i++)
+    StyledPoint sp = (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 );
+    StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
+
+    ArrayList<Point> path = new ArrayList<Point>();
+
+    for( int i = 0; i < size; i++ )
     {
       final IRecord r1 = m_result.get( i );
-      
+
       Object x1 = m_result.getValue( r1, m_domComp );
       Object y1 = m_result.getValue( r1, m_valComp );
 
-      
-      
-        int ix1 = m_domAxis.logicalToScreen( x1 );
-        int iy1 = m_valAxis.logicalToScreen( y1 );
-        path.add(new Point(ix1, iy1));
+      int ix1 = m_domAxis.logicalToScreen( x1 );
+      int iy1 = m_valAxis.logicalToScreen( y1 );
+      path.add( new Point( ix1, iy1 ) );
+    }
 
-        System.out.println( "Path: addingPoint...("+ix1+":"+iy1+")" );
-      
-     
-    }
-    
-    if (sl!=null)
+    if( sl != null )
     {
-      sl.setPath(path);
-      sl.paint(gc, dev);
+      sl.setPath( path );
+      sl.paint( gc, dev );
     }
-    if (sp!=null)
+    if( sp != null )
     {
-      sp.setPath(path);
-      sp.paint(gc, dev);
+      sp.setPath( path );
+      sp.paint( gc, dev );
     }
   }
 
-  
-  
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
    */
@@ -221,7 +206,7 @@ private String m_description="No description given";
    */
   public void setStyle( ILayerStyle style )
   {
-    m_style=style;
+    m_style = style;
   }
 
   /**
@@ -229,21 +214,28 @@ private String m_description="No description given";
    */
   public IDataRange getDomainRange( )
   {
-    Object min=null;
-    Object max=null;
-    AliComparator ac=new AliComparator();
-    for (int i=0;i<m_result.size();i++)
+    Object min = null;
+    Object max = null;
+    AliComparator ac = new AliComparator();
+    for( int i = 0; i < m_result.size(); i++ )
     {
-      IRecord rec=m_result.get(i);
-      Object val=rec.getValue(m_domComp);
-      if (min == null || ac.compare(min, val)<0)
-        min=val;
-      if (max == null || ac.compare(max, val)>0)
-        max=val;
+      IRecord rec = m_result.get( i );
+      Object val = rec.getValue( m_domComp );
+
+      if( val == null )
+      {
+//        System.out.println( rec );
+      }
+      else
+      {
+        if( min == null || ac.compare( min, val ) > 0 )
+          min = val;
+        if( max == null || ac.compare( max, val ) < 0 )
+          max = val;
+      }
     }
-    return new DataRange(min, max);
-   
-   
+    return new DataRange( min, max );
+
   }
 
   /**
@@ -251,57 +243,59 @@ private String m_description="No description given";
    */
   public IDataRange getValueRange( )
   {
-    Object min=null;
-    Object max=null;
-    ComparableComparator cc=new ComparableComparator();
-    for (int i=0;i<m_result.size();i++)
+    Object min = null;
+    Object max = null;
+    ComparableComparator cc = new ComparableComparator();
+    for( int i = 0; i < m_result.size(); i++ )
     {
-      IRecord rec=m_result.get(i);
-      Object val=rec.getValue(m_valComp);
-      if (min == null || cc.compare(min, val)>0)
-        min=val;
-      if (max == null || cc.compare(max, val)<0)
-        max=val;
+      IRecord rec = m_result.get( i );
+      Object val = rec.getValue( m_valComp );
+      if( min == null || cc.compare( min, val ) > 0 )
+        min = val;
+      if( max == null || cc.compare( max, val ) < 0 )
+        max = val;
     }
-   return new DataRange(min, max);
+    return new DataRange( min, max );
   }
 
-  public void drawIcon(Image img, int width, int height)
+  public void drawIcon( Image img, int width, int height )
   {
-      GC gc=new GC(img);
-      GCWrapper gcw=new GCWrapper(gc);
-      
-      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
-      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
-      
-      if (line!=null)
-      {
-        ArrayList<Point> points=new ArrayList<Point>();
-        //Linie von Links nach rechts
-        points.add(new Point(0, (int) height/2));
-        points.add(new Point( width,(int)  height/2));
-        line.setPath(points);
-        line.paint(gcw, Display.getCurrent());
-      }
-      
-      if (point!=null)
-      {
-        ArrayList<Point> points=new ArrayList<Point>();
-        //Linie von Links nach rechts
-        points.add(new Point((int) width/2, (int) height/2));
-        point.setPath(points);
-        point.paint(gcw, Display.getCurrent());
-      }
-      
-      gc.dispose();
-      gcw.dispose();
+    GC gc = new GC( img );
+    GCWrapper gcw = new GCWrapper( gc );
+
+    IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+    IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+
+    if( line != null )
+    {
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( 0, height / 2 ) );
+      points.add( new Point( width, height / 2 ) );
+      line.setPath( points );
+      line.paint( gcw, Display.getCurrent() );
+    }
+
+    if( point != null )
+    {
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( width / 2, height / 2 ) );
+      point.setPath( points );
+      point.paint( gcw, Display.getCurrent() );
+    }
+
+    gc.dispose();
+    gcw.dispose();
   }
 
-public void setName(String name) {
-	m_name=name;
-}
+  public void setName( String name )
+  {
+    m_name = name;
+  }
 
-public void setDescription(String description) {
-	m_description=description;
-}
+  public void setDescription( String description )
+  {
+    m_description = description;
+  }
 }

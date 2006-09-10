@@ -67,18 +67,21 @@ public class ChartUtilities
 
     return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir == DIRECTION.NEGATIVE;
   }
-  
-  
-  public static void resetGC(GC gc, Device dev)
-  {
-    gc.setForeground(dev.getSystemColor(SWT.COLOR_BLACK));
-    gc.setBackground(dev.getSystemColor(SWT.COLOR_WHITE));
-    gc.setLineWidth(1);
-    gc.setLineStyle(SWT.LINE_SOLID);
-    gc.setAlpha(255);
-  }
-  
 
-  
-  
+  public static void resetGC( final GC gc, final Device dev )
+  {
+    gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
+    gc.setLineWidth( 1 );
+    gc.setLineStyle( SWT.LINE_SOLID );
+    gc.setAlpha( 255 );
+  }
+
+  public static void maximize( final Chart chart )
+  {
+    final IAxis[] axes = chart.getAxisRegistry().getAxes();
+    chart.autoscale( axes );
+    chart.repaint();
+  }
+
 }

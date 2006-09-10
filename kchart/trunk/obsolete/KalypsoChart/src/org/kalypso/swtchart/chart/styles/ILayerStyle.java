@@ -47,5 +47,5 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
  */
 public interface ILayerStyle
 {
-    public IStyledElement getElement(SE_TYPE type, int pos);    
+  public IStyledElement getElement( SE_TYPE type, int pos );
 }

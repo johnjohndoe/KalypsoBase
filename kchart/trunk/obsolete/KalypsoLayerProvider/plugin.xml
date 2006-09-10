@@ -18,6 +18,9 @@
          <provider
                class="org.kalypso.layerprovider.WasserstandLayerProvider"
                id="org.kalypso.layerprovider.Wasserstand"/>
+         <provider
+               class="org.kalypso.layerprovider.observation.WasserstandLayerProvider"
+               id="org.kalypso.layerprovider.observation.WasserstandLayerProvider"/>
    </extension>
 
 </plugin>

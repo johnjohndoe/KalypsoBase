@@ -89,16 +89,17 @@ public class AxisRegistry implements IAxisRegistry
    */
   public void addAxis( IAxis axis )
   {
-    //TODO: Exception wieder rein und else raus
+    // TODO: Exception wieder rein und else raus
     if( m_axes.containsKey( axis.getIdentifier() ) )
-      System.out.println("Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
-      //throw new IllegalArgumentException( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
+      System.out.println( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
+    // throw new IllegalArgumentException( "Axis already present in registry: " + axis.getIdentifier() + " - " +
+    // axis.getLabel() );
     else
     {
       axis.setRegistry( this );
-  
+
       m_axes.put( axis.getIdentifier(), axis );
-  
+
       m_handler.fireAxisAdded( axis );
     }
   }
@@ -128,7 +129,7 @@ public class AxisRegistry implements IAxisRegistry
     for( final IAxisComponent comp : m_components.values() )
       comp.dispose();
     m_components.clear();
-    
+
     for( final IAxis axis : m_axes.values() )
       m_handler.fireAxisRemoved( axis );
     m_axes.clear();
@@ -181,20 +182,20 @@ public class AxisRegistry implements IAxisRegistry
     IAxisRenderer renderer = m_id2renderers.get( axis.getIdentifier() );
     if( renderer != null )
       return renderer;
-    
+
     renderer = m_class2renderers.get( axis.getDataClass() );
     if( renderer != null )
       return renderer;
-    
-    for( final Entry<Class<?>, IAxisRenderer> entry : m_class2renderers.entrySet() )
+
+    for( final Entry<Class< ? >, IAxisRenderer> entry : m_class2renderers.entrySet() )
     {
-      final Class<?> dataClass = entry.getKey();
+      final Class< ? > dataClass = entry.getKey();
       renderer = entry.getValue();
-      
+
       if( dataClass.isAssignableFrom( axis.getDataClass() ) )
         return renderer;
     }
-    
+
     return null;
   }
 
@@ -255,10 +256,10 @@ public class AxisRegistry implements IAxisRegistry
   public IAxis[] getAxes( )
   {
     final Collection<IAxis> axes = m_axes.values();
-    return axes.toArray( new IAxis[ axes.size() ] );
+    return axes.toArray( new IAxis[axes.size()] );
   }
-  
-  public Map<IAxis, IAxisComponent> getComponents()
+
+  public Map<IAxis, IAxisComponent> getComponents( )
   {
     return m_components;
   }

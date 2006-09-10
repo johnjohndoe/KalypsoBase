@@ -63,91 +63,86 @@ import org.ksp.chart.viewerconfiguration.DoubleAxisType;
 
 /**
  * @author schlienger
- *
  */
 public class AxisFactory
 {
-      
+
   /**
    * Static-Methode zum hinzufügen einer Achse aus der Configuration zu einem Chart
    */
-      public static void addConfigAxis(Chart chart, AbstractAxisType a)
+  public static void addConfigAxis( Chart chart, AbstractAxisType a )
+  {
+    IAxisRegistry ar = chart.getAxisRegistry();
+
+    // Richtung
+    DIRECTION dir = DIRECTION.POSITIVE;
+    String direction = a.getDirection().value();
+    if( direction.compareTo( "NEGATIVE" ) == 0 )
+      dir = DIRECTION.NEGATIVE;
+
+    // Position
+    POSITION pos = null;
+    String position = a.getPosition().value();
+    if( position.compareTo( "BOTTOM" ) == 0 )
+      pos = POSITION.BOTTOM;
+    else if( position.compareTo( "TOP" ) == 0 )
+      pos = POSITION.TOP;
+    else if( position.compareTo( "RIGHT" ) == 0 )
+      pos = POSITION.RIGHT;
+    else if( position.compareTo( "LEFT" ) == 0 )
+      pos = POSITION.LEFT;
+
+    /**
+     * TODO: mit dem DoubleComparator muss ich mir noch was einfallen lassen: Wie soll die Genauigkeit festgelegt
+     * werden? * in der Config * automatisch
+     */
+
+    /**
+     * TODO: Insgesamt ist hier alles noch ein wenig hart reincodiert: Label insets, MaxDigits, etc.
+     */
+
+    FontData fdLabel = new FontData( "Arial", 11, SWT.BOLD );
+    FontData fdTick = new FontData( "Arial", 10, SWT.NONE );
+    Insets insetsTick = new Insets( 1, 1, 1, 1 );
+    Insets insetsLabel = new Insets( 1, 1, 1, 1 );
+
+    if( a instanceof DoubleAxisType )
+    {
+      DoubleAxisType da = (DoubleAxisType) a;
+      IAxis<Number> axis = new NumberAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, dir, new DoubleComparator( 0.001 ) );
+      axis.setFrom( da.getMinVal() );
+      axis.setTo( da.getMaxVal() );
+      ar.addAxis( axis );
+      if( ar.getRenderer( axis ) == null )
       {
-        IAxisRegistry ar = chart.getAxisRegistry();
-        
-        
-        //Richtung
-        DIRECTION dir=DIRECTION.POSITIVE;
-        String direction = a.getDirection().value();
-        if (direction.compareTo("NEGATIVE")==0)
-          dir=DIRECTION.NEGATIVE;
-        
-        
-        //Position
-        POSITION pos=null;
-        String position=a.getPosition().value();
-        if (position.compareTo("BOTTOM")==0)
-           pos=POSITION.BOTTOM;
-        else if (position.compareTo("TOP")==0)
-          pos=POSITION.TOP;
-        else if (position.compareTo("RIGHT")==0)
-          pos=POSITION.RIGHT;
-        else if (position.compareTo("LEFT")==0)
-          pos=POSITION.LEFT;
-            
-        /**
-         * TODO: mit dem DoubleComparator muss ich mir noch was einfallen lassen:
-         * Wie soll die Genauigkeit festgelegt werden? 
-         *      * in der Config
-         *      * automatisch
-         */
-        
-        /**
-         * TODO: Insgesamt ist hier alles noch ein wenig hart reincodiert: Label insets, MaxDigits, etc.
-         */
-        
-        FontData fdLabel=new FontData("Arial", 11, SWT.BOLD);
-        FontData fdTick=new FontData("Arial", 10, SWT.NONE);
-        Insets insetsTick=new Insets( 1, 1, 1, 1 );
-        Insets insetsLabel=new Insets( 1, 1, 1, 1 );
-        
-        if (a instanceof DoubleAxisType) 
-        {
-          DoubleAxisType da=(DoubleAxisType) a;
-          IAxis<Number> axis = new NumberAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, dir, new DoubleComparator( 0.001 ) );
-          axis.setFrom(da.getMinVal());
-          axis.setTo(da.getMaxVal());
-          ar.addAxis(axis);
-          if (ar.getRenderer(axis)==null)
-          {
-            IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
-            ar.setRenderer(Number.class, numberAxisRenderer);
-          }
-          System.out.println("AxisFactory: Axis hinzugefügt: "+a.getName());
-        }
-        else if (a instanceof DateAxisType) 
-        {
-          DateAxisType da=(DateAxisType) a;
-          AliComparator ac=new AliComparator( );
-          IAxis<XMLGregorianCalendar> axis = new XMLGregorianCalendarAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, ac, dir );
-          axis.setFrom(da.getMinVal());
-          axis.setTo(da.getMaxVal());
-          ar.addAxis(axis);
-          if (ar.getRenderer(axis)==null)
-          {
-            IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer(chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat("dd.MM.yy") );
-            //ar.setRenderer(Date.class, dateAxisRenderer);
-            ar.setRenderer(XMLGregorianCalendar.class, xgcAxisRenderer);
-            if (ar.getRenderer(axis)!=null)
-                System.out.println("XMLCalendarAxisRenderer added");
-            else
-              System.out.println("XMLCalendar was not added");
-          }
-          System.out.println("AxisFactory: axis added: "+a.getName());
-        }
-        else
-        {
-          System.out.println("AxisFactory: Unknown axis type: "+a.getClass().getName());
-        }
+        IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
+        ar.setRenderer( Number.class, numberAxisRenderer );
       }
+//      System.out.println( "AxisFactory: Axis hinzugefügt: " + a.getName() );
+    }
+    else if( a instanceof DateAxisType )
+    {
+      DateAxisType da = (DateAxisType) a;
+      AliComparator ac = new AliComparator();
+      IAxis<XMLGregorianCalendar> axis = new XMLGregorianCalendarAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, ac, dir );
+      axis.setFrom( da.getMinVal() );
+      axis.setTo( da.getMaxVal() );
+      ar.addAxis( axis );
+      if( ar.getRenderer( axis ) == null )
+      {
+        IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
+        // ar.setRenderer(Date.class, dateAxisRenderer);
+        ar.setRenderer( XMLGregorianCalendar.class, xgcAxisRenderer );
+//        if( ar.getRenderer( axis ) != null )
+//          System.out.println( "XMLCalendarAxisRenderer added" );
+//        else
+//          System.out.println( "XMLCalendar was not added" );
+      }
+//      System.out.println( "AxisFactory: axis added: " + a.getName() );
+    }
+    else
+    {
+      System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
+    }
+  }
 }

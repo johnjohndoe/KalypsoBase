@@ -52,9 +52,9 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.layerstyle.StyleType;
@@ -67,105 +67,96 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 
 /**
  * @author alibu
- *
  */
 public class WasserstandLayerProvider implements ILayerProvider
 {
-  
-  
   private LayerProviderType m_lpt;
+
   private Chart m_chart;
 
-  public WasserstandLayerProvider()
+  public void init( final Chart chart, final LayerProviderType lpt )
   {
-    
+    m_lpt = lpt;
+    m_chart = chart;
   }
-  
-  public void init(Chart chart, LayerProviderType lpt)
-  {
-    m_lpt=lpt;
-    m_chart=chart;
-  }
-    
+
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( URL context )
   {
-    IChartLayer[] icl=new IChartLayer[1];
-    
+    IChartLayer[] icl = new IChartLayer[1];
+
     List<DataSourceType> dataSource = m_lpt.getDataSource();
     for( DataSourceType ds : dataSource )
     {
-      String url=ds.getUrl();
-        
-        try
-        {
-          GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(new URL(url));
-          Feature feature = workspace.getFeature("wasserstandsmessung");
-          if (feature!=null)
-          {
-            System.out.println("Found feature: "+feature.getId());
-          }
-          IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation(feature);
-          
-          List<ChartElementType> ces = m_lpt.getChartElement();
-          for( ChartElementType ce : ces )
-          {
-             AxisMapping am = ce.getAxisMapping();
-             
-             AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-             IAxis domAxis=m_chart.getAxisRegistry().getAxis(domLink.getId());
+      String url = ds.getUrl();
 
-             AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-             IAxis valAxis=m_chart.getAxisRegistry().getAxis(valLink.getId());
-             
-             TupleResult result = obs.getResult();
-             
-             //ResultComponent rausfinden
-             final IComponent[] comps = result.getComponents();
-             final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>(  );
-             for( int i = 0; i < comps.length; i++ )
-             {
-               /*
-                * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden;
-                * besser: id, aber das wird nicht von der Componente zurückgegebn
-                */
-               IComponent comp=comps[i];
-               System.out.println("Component: "+comp.getName());
-               System.out.println("Component: "+comp.getDescription());
-               System.out.println("Component: "+comp.getPosition());
-               System.out.println("Component: "+comp.getValueTypeName());
-               if (comp.getName().compareTo("Datum")==0)
-                 map.put("domain", comp );
-               else if (comp.getName().compareTo("Wasserstand")==0)
-                 map.put("value", comp );
-               if( map.size() == 2 )
-                 break;
-             }
-             
-             List<ParameterType> parameter = m_lpt.getParameter();
-             
-             WasserstandLayer wl=new WasserstandLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
-             wl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
-             wl.setName(ce.getName());
-             icl[0]=wl;
+      try
+      {
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ) );
+        Feature feature = workspace.getFeature( "wasserstandsmessung" );
+        if( feature != null )
+        {
+          System.out.println( "Found feature: " + feature.getId() );
+        }
+        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+
+        List<ChartElementType> ces = m_lpt.getChartElement();
+        for( ChartElementType ce : ces )
+        {
+          AxisMapping am = ce.getAxisMapping();
+
+          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
+
+          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+
+          TupleResult result = obs.getResult();
+
+          // ResultComponent rausfinden
+          final IComponent[] comps = result.getComponents();
+          final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
+          for( int i = 0; i < comps.length; i++ )
+          {
+            /*
+             * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden; besser: id, aber das wird nicht von der
+             * Componente zurückgegebn
+             */
+            IComponent comp = comps[i];
+            System.out.println( "Component: " + comp.getName() );
+            System.out.println( "Component: " + comp.getDescription() );
+            System.out.println( "Component: " + comp.getPosition() );
+            System.out.println( "Component: " + comp.getValueTypeName() );
+            if( comp.getName().compareTo( "Datum" ) == 0 )
+              map.put( "domain", comp );
+            else if( comp.getName().compareTo( "Wasserstand" ) == 0 )
+              map.put( "value", comp );
+            if( map.size() == 2 )
+              break;
           }
-          
-          
-          
+
+          List<ParameterType> parameter = m_lpt.getParameter();
+
+          WasserstandLayer wl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+          wl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().getRef() ) );
+          wl.setName( ce.getName() );
+          icl[0] = wl;
         }
-        catch( MalformedURLException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( Exception e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        return icl;
+
+      }
+      catch( MalformedURLException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return icl;
     }
     return null;
   }

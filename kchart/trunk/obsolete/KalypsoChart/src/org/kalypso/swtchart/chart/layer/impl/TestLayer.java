@@ -84,7 +84,7 @@ public class TestLayer implements IChartLayer
     m_valAxis = valAxis;
 
     m_doubles = SampleData.createRandomPoints( 25 );
-  //  m_doubles = SampleData.createSinusPoints( 20 );
+    // m_doubles = SampleData.createSinusPoints( 20 );
   }
 
   /**
@@ -94,36 +94,36 @@ public class TestLayer implements IChartLayer
   {
     return m_name;
   }
-  
-  public void drawIcon(Image img, int width, int height)
+
+  public void drawIcon( Image img, int width, int height )
   {
-      GC gc=new GC(img);
-      GCWrapper gcw=new GCWrapper(gc);
-      
-      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
-      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
-      
-      if (line!=null)
-      {
-        ArrayList<Point> points=new ArrayList<Point>();
-        //Linie von Links nach rechts
-        points.add(new Point(0, (int) height/2));
-        points.add(new Point( width,(int)  height/2));
-        line.setPath(points);
-        line.paint(gcw, Display.getCurrent());
-      }
-      
-      if (point!=null)
-      {
-        ArrayList<Point> points=new ArrayList<Point>();
-        //Linie von Links nach rechts
-        points.add(new Point((int) width/2, (int) height/2));
-        point.setPath(points);
-        point.paint(gcw, Display.getCurrent());
-      }
-      
-      gc.dispose();
-      gcw.dispose();
+    GC gc = new GC( img );
+    GCWrapper gcw = new GCWrapper( gc );
+
+    IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+    IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+
+    if( line != null )
+    {
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( 0, (int) height / 2 ) );
+      points.add( new Point( width, (int) height / 2 ) );
+      line.setPath( points );
+      line.paint( gcw, Display.getCurrent() );
+    }
+
+    if( point != null )
+    {
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( (int) width / 2, (int) height / 2 ) );
+      point.setPath( points );
+      point.paint( gcw, Display.getCurrent() );
+    }
+
+    gc.dispose();
+    gcw.dispose();
   }
 
   /**
@@ -174,7 +174,6 @@ public class TestLayer implements IChartLayer
     return true;
   }
 
-  
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
    */
@@ -188,83 +187,82 @@ public class TestLayer implements IChartLayer
    */
   public void setStyle( ILayerStyle style )
   {
-    m_style=style;
+    m_style = style;
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
-     ChartUtilities.resetGC(gc.m_gc, dev);
-     
-     // gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
-      if (m_style!=null)
+    ChartUtilities.resetGC( gc.m_gc, dev );
+
+    // gc.setForeground( dev.getSystemColor( SWT.COLOR_DARK_MAGENTA ) );
+    if( m_style != null )
+    {
+      IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+      IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+
+      /*
+       * TODO: muss derzeit von Hand angestossen werden wenn der Layer ein Listener auf die Achse ist, dann soll das
+       * automatisch geschehen
+       */
+      calcScreenPoints();
+      ArrayList<Point> screenPoints = getScreenPoints();
+
+      if( point != null )
       {
-        IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
-        IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
-      
-        /*
-         * TODO: muss derzeit von Hand angestossen werden 
-         * wenn der Layer ein Listener auf die Achse ist,
-         * dann soll das automatisch geschehen
-         */
-        calcScreenPoints();
-        ArrayList<Point> screenPoints=getScreenPoints();
-       
-        if (point!=null)
-        {
-          point.setPath(screenPoints);
-          point.paint(gc, dev);
-        }
-        if (line!=null)
-        {
-          line.setPath(screenPoints);
-          line.paint(gc, dev);
-        }
+        point.setPath( screenPoints );
+        point.paint( gc, dev );
+      }
+      if( line != null )
+      {
+        line.setPath( screenPoints );
+        line.paint( gc, dev );
+      }
     }
   }
 
   /**
    * Gibt die Bildschirmkoordinaten der Datenpunkte als ArrayList von Point zurück
    */
-  public ArrayList<Point> getScreenPoints()
+  public ArrayList<Point> getScreenPoints( )
   {
-    if (m_screenPoints==null)
+    if( m_screenPoints == null )
       calcScreenPoints();
     return m_screenPoints;
   }
-  
+
   /**
    * berechnet die ScreenKoordinaten der Datenpunkte und speichert sie in der Klassenvariable m_screenPoints
    */
-  private void calcScreenPoints()
+  private void calcScreenPoints( )
   {
-    ArrayList<Point> points=new ArrayList<Point>();
-    
-    //horizontale und vertikale Achse bestimmen Achse
+    ArrayList<Point> points = new ArrayList<Point>();
+
+    // horizontale und vertikale Achse bestimmen Achse
     IAxis hAxis, vAxis;
-    if (m_domAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+    if( m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-        hAxis=m_domAxis;
-        vAxis=m_valAxis;
+      hAxis = m_domAxis;
+      vAxis = m_valAxis;
     }
     else
     {
-      vAxis=m_domAxis;
-      hAxis=m_valAxis;
+      vAxis = m_domAxis;
+      hAxis = m_valAxis;
     }
-    
+
     for( int i = 0; i < m_doubles.length; i++ )
     {
       int x1 = hAxis.logicalToScreen( m_doubles[i][0] );
       int y1 = vAxis.logicalToScreen( m_doubles[i][1] );
-      points.add(new Point(x1, y1));
+      points.add( new Point( x1, y1 ) );
     }
-    m_screenPoints= points;
+    m_screenPoints = points;
   }
-  
-  
+
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getDomainRange()
    */
@@ -306,12 +304,14 @@ public class TestLayer implements IChartLayer
 
     return new DataRange<Number>( yMin, yMax );
   }
-  
-  public void setName(String name) {
-    m_name=name;
-}
 
-public void setDescription(String description) {
-    m_description=description;
-}
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
+  public void setDescription( String description )
+  {
+    m_description = description;
+  }
 }

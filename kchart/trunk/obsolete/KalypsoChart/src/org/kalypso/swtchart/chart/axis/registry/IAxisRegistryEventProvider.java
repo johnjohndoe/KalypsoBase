@@ -46,5 +46,6 @@ package org.kalypso.swtchart.chart.axis.registry;
 public interface IAxisRegistryEventProvider
 {
   public void addAxisRegistryEventListener( IAxisRegistryEventListener l );
+
   public void removeAxisRegistryEventListener( IAxisRegistryEventListener l );
 }

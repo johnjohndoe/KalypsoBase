@@ -81,7 +81,7 @@ public class ChartImageContainer
     shell.setLayout( new FillLayout() );
     Chart chart = new Chart( shell, SWT.NONE );
     // Chart füllen
-    ChartLoader.createChart( chart, config, chartname );
+    ChartLoader.createChart( chart, config, chartname, null );
     createChartImage( chart, dev, width, height );
 
     shell.dispose();

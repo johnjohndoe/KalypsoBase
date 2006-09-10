@@ -73,8 +73,8 @@ public class TestDateLayer implements IChartLayer
   private final IAxis m_valAxis;
 
   private final TreeMap<Date, Double> m_values;
-  
-  private final ILayerStyle m_style=null;
+
+  private final ILayerStyle m_style = null;
 
   private String m_name;
 
@@ -143,7 +143,6 @@ public class TestDateLayer implements IChartLayer
     return true;
   }
 
-  
   /**
    * @see org.kalypso.swtchart.layer.IChartLayer#getStyle()
    */
@@ -160,15 +159,16 @@ public class TestDateLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
-    if (m_style!=null)
+    if( m_style != null )
     {
-      IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
-      IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
+      IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+      IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
     }
   }
 
@@ -180,17 +180,17 @@ public class TestDateLayer implements IChartLayer
     Date xMin = null;
     Date xMax = null;
 
-    Set<Date> keys=m_values.keySet();
-    Iterator<Date> keyIt=keys.iterator();
-    
-    AliComparator dc=new AliComparator();
-    
-    while(keyIt.hasNext())
+    Set<Date> keys = m_values.keySet();
+    Iterator<Date> keyIt = keys.iterator();
+
+    AliComparator dc = new AliComparator();
+
+    while( keyIt.hasNext() )
     {
       Date x = keyIt.next();
-      if( xMin == null || dc.compare(x, xMin)<0 )
+      if( xMin == null || dc.compare( x, xMin ) < 0 )
         xMin = x;
-      if( xMax == null || dc.compare(x, xMax)>0 )
+      if( xMax == null || dc.compare( x, xMax ) > 0 )
         xMax = x;
     }
 
@@ -205,66 +205,66 @@ public class TestDateLayer implements IChartLayer
     Double yMin = null;
     Double yMax = null;
 
-    Set<Date> keys=m_values.keySet();
-    Iterator<Date> keyIt=keys.iterator();
-    
-    while(keyIt.hasNext())
+    Set<Date> keys = m_values.keySet();
+    Iterator<Date> keyIt = keys.iterator();
+
+    while( keyIt.hasNext() )
     {
-      double y = m_values.get(keyIt.next());
+      double y = m_values.get( keyIt.next() );
       if( yMin == null || y < yMin )
         yMin = y;
       if( yMax == null || y > yMax )
         yMax = y;
     }
-    
+
     return new DataRange<Double>( yMin, yMax );
   }
-
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
   public void drawIcon( Image img, int width, int height )
   {
-    GC gc=new GC(img);
-    GCWrapper gcw=new GCWrapper(gc);
-    
-    gcw.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_YELLOW));
-    gcw.fillRectangle(0,0,width, height);
-    
-    
-    IStyledElement line=m_style.getElement(SE_TYPE.LINE, 0);
-    IStyledElement point=m_style.getElement(SE_TYPE.POINT, 0);
-    
-    if (line!=null)
+    GC gc = new GC( img );
+    GCWrapper gcw = new GCWrapper( gc );
+
+    gcw.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_YELLOW ) );
+    gcw.fillRectangle( 0, 0, width, height );
+
+    IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+    IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+
+    if( line != null )
     {
-      ArrayList<Point> points=new ArrayList<Point>();
-      //Linie von Links nach rechts
-      points.add(new Point(0, (int) height/2));
-      points.add(new Point( width,(int)  height/2));
-      line.setPath(points);
-      line.paint(gcw, Display.getCurrent());
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( 0, (int) height / 2 ) );
+      points.add( new Point( width, (int) height / 2 ) );
+      line.setPath( points );
+      line.paint( gcw, Display.getCurrent() );
     }
-    
-    if (point!=null)
+
+    if( point != null )
     {
-      ArrayList<Point> points=new ArrayList<Point>();
-      //Linie von Links nach rechts
-      points.add(new Point((int) width/2, (int) height/2));
-      point.setPath(points);
-      point.paint(gcw, Display.getCurrent());
+      ArrayList<Point> points = new ArrayList<Point>();
+      // Linie von Links nach rechts
+      points.add( new Point( (int) width / 2, (int) height / 2 ) );
+      point.setPath( points );
+      point.paint( gcw, Display.getCurrent() );
     }
-    
+
     gc.dispose();
     gcw.dispose();
-    
-  }
-  
-  public void setName(String name) {
-    m_name=name;
+
   }
 
-  public void setDescription(String description) {
-      m_description=description;
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
+  public void setDescription( String description )
+  {
+    m_description = description;
   }
 }

@@ -42,10 +42,10 @@ package org.kalypso.swtchart.preferences;
 
 /**
  * @author alibu
- *
  */
 public interface IChartPreferences
 {
   public static final String CONFIG_PATH = "kalypso.chart.configpath";
+
   public static final String CONFIG_NAME = "kalypso.chart.configname";
 }

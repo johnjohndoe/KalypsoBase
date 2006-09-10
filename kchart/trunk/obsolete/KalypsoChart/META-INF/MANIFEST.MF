@@ -8,7 +8,7 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.jwsdp,
+ org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.core
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.swtchart,

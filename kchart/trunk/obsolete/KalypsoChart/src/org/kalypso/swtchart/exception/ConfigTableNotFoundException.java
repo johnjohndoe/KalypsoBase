@@ -42,12 +42,11 @@ package org.kalypso.swtchart.exception;
 
 /**
  * @author alibu
- *
  */
 public class ConfigTableNotFoundException extends Exception
 {
-      public ConfigTableNotFoundException(String tablename)
-      {
-        super("Table \""+tablename+"\" was not found in configuration");
-      }
+  public ConfigTableNotFoundException( String tablename )
+  {
+    super( "Table \"" + tablename + "\" was not found in configuration" );
+  }
 }

@@ -64,7 +64,6 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 /**
  * @author alibu
- *
  */
 public class StyleLoader
 {
@@ -72,145 +71,143 @@ public class StyleLoader
   /**
    * Erzeugt ein Style-Objekt anhand der ID aus der Konfiguration
    */
-  public static ILayerStyle createStyle(ConfigurationType config, String styleId)
+  public static ILayerStyle createStyle( ConfigurationType config, String styleId )
   {
     List<StyleType> styles = config.getStyle();
-    if (styles!=null)
+    if( styles != null )
     {
       for( StyleType style : styles )
       {
-        if (style.getId().compareTo( styleId )==0)
-          return createStyle(style);
+        if( style.getId().compareTo( styleId ) == 0 )
+          return createStyle( style );
       }
     }
     return null;
   }
-  
-  
+
   /**
    * Erzeugt ein StyleObjekte aus einem Konfiguration-StyleType
    */
-  public static ILayerStyle createStyle(StyleType st)
+  public static ILayerStyle createStyle( StyleType st )
   {
-    LayerStyle ls=new LayerStyle();
-    if (st!=null)
+    LayerStyle ls = new LayerStyle();
+    if( st != null )
     {
-      //Punkte
+      // Punkte
       List<JAXBElement< ? extends AbstractPointType>> points = st.getAbstractPoint();
-      if (points!=null)
+      if( points != null )
       {
-        int alpha=255;
+        int alpha = 255;
         for( JAXBElement< ? extends AbstractPointType> jaxbelt : points )
         {
-          AbstractPointType apt=jaxbelt.getValue();
-          if (apt instanceof PointType)
+          AbstractPointType apt = jaxbelt.getValue();
+          if( apt instanceof PointType )
           {
-             PointType ot=(PointType) apt;
-             if (ot.getAlpha()!=null)
-               alpha=ot.getAlpha();
-             StyledPoint so=new StyledPoint(ot.getPointWidth(),ot.getPointHeight(), createColor(ot.getColor()), ot.getBorder().getBorderWidth(), createColor(ot.getBorder().getBorderColor() ), alpha );
-             ls.add(so);
+            PointType ot = (PointType) apt;
+            if( ot.getAlpha() != null )
+              alpha = ot.getAlpha();
+            StyledPoint so = new StyledPoint( ot.getPointWidth(), ot.getPointHeight(), createColor( ot.getColor() ), ot.getBorder().getBorderWidth(), createColor( ot.getBorder().getBorderColor() ), alpha );
+            ls.add( so );
           }
-          else if (apt instanceof ImagePointType)
+          else if( apt instanceof ImagePointType )
           {
-              //TODO;ImagePoints einbauen
+            // TODO;ImagePoints einbauen
           }
         }
       }
-      
-      //Polygone
+
+      // Polygone
       List<PolygonType> polys = st.getPolygon();
-      if (polys!=null)
+      if( polys != null )
       {
         for( PolygonType poly : polys )
         {
-          StyledPolygon sp=createPolygon(poly);
-          ls.add(sp);
+          StyledPolygon sp = createPolygon( poly );
+          ls.add( sp );
         }
       }
-      
-      //Fonts
-      //TODO:Fonts einbauen
-      
-      //Linien
+
+      // Fonts
+      // TODO:Fonts einbauen
+
+      // Linien
       List<LineType> lines = st.getLine();
-      if (lines!=null)
+      if( lines != null )
       {
-        for( LineType line: lines )
+        for( LineType line : lines )
         {
-             StyledLine sl=createLine(line);
-             ls.add(sl);
+          StyledLine sl = createLine( line );
+          ls.add( sl );
         }
       }
     }
-    
+
     return ls;
   }
-  
-  
-  public static StyledLine createLine(LineType lt)
+
+  public static StyledLine createLine( LineType lt )
   {
-    int alpha=255;
-    if (lt.getAlpha()!=null)
-      alpha=lt.getAlpha();
-        StyledLine sl=new StyledLine(lt.getLineWidth(), createColor(lt.getLineColor()), StyleHelper.stringToLinestyle(lt.getLineStyle().value()), alpha);
-        return sl;
+    int alpha = 255;
+    if( lt.getAlpha() != null )
+      alpha = lt.getAlpha();
+    StyledLine sl = new StyledLine( lt.getLineWidth(), createColor( lt.getLineColor() ), StyleHelper.stringToLinestyle( lt.getLineStyle().value() ), alpha );
+    return sl;
   }
-  
-  public static StyledPolygon createPolygon(PolygonType pt)
+
+  public static StyledPolygon createPolygon( PolygonType pt )
   {
-    StyledPolygon sp=null;
-    if (pt!=null)
+    StyledPolygon sp = null;
+    if( pt != null )
     {
-      int borderWidth=0;
-      RGB borderColor=null;
-      BorderType bt=pt.getBorder();
-      if (bt!=null)
+      int borderWidth = 0;
+      RGB borderColor = null;
+      BorderType bt = pt.getBorder();
+      if( bt != null )
       {
-        borderWidth=bt.getBorderWidth();
-        borderColor=createColor(bt.getBorderColor());
+        borderWidth = bt.getBorderWidth();
+        borderColor = createColor( bt.getBorderColor() );
       }
-      int alpha=255;
-      if (pt.getAlpha()!=null)
-        alpha=pt.getAlpha();
-      sp=new StyledPolygon(createColor(pt.getFillColor()), borderWidth, borderColor, alpha);
+      int alpha = 255;
+      if( pt.getAlpha() != null )
+        alpha = pt.getAlpha();
+      sp = new StyledPolygon( createColor( pt.getFillColor() ), borderWidth, borderColor, alpha );
     }
     return sp;
   }
-  
+
   /**
-   * Erzeugt ein RGB-Objekt aus einem 3-Byte, wie es nach dem Unmarshalling von hexBinary-Werten 
-   * zurückgeben wird;
-   * 
+   * Erzeugt ein RGB-Objekt aus einem 3-Byte, wie es nach dem Unmarshalling von hexBinary-Werten zurückgeben wird;
    */
-  public static RGB createColor(byte[] cbyte)
+  public static RGB createColor( byte[] cbyte )
   {
-    int r=hexToInt(HexBin.encode(new byte[]{cbyte[0]}));
-    int g=hexToInt(HexBin.encode(new byte[]{cbyte[1]}));
-    int b=hexToInt(HexBin.encode(new byte[]{cbyte[2]}));
-    return new RGB(r,g,b);
+    int r = hexToInt( HexBin.encode( new byte[] { cbyte[0] } ) );
+    int g = hexToInt( HexBin.encode( new byte[] { cbyte[1] } ) );
+    int b = hexToInt( HexBin.encode( new byte[] { cbyte[2] } ) );
+    return new RGB( r, g, b );
   }
-  
+
   /**
    * Wandelt einen HexString in eine Dezimalzahl um
-   * @param strHex die Zahl als Hexadezimal-String
+   * 
+   * @param strHex
+   *          die Zahl als Hexadezimal-String
    * @return die Zahl als Integer
    */
-  public static int hexToInt(String strHex)
+  public static int hexToInt( String strHex )
   {
     String str;
     String hexVals = "0123456789ABCDEF";
     int i, val, n;
 
     val = 0;
-    n   = 1;
+    n = 1;
     str = strHex.toUpperCase();
 
-    for(i=str.length()-1; i>=0; i--, n*=16)
+    for( i = str.length() - 1; i >= 0; i--, n *= 16 )
     {
-      val+= n * hexVals.indexOf(str.charAt(i)); 
+      val += n * hexVals.indexOf( str.charAt( i ) );
     }
     return val;
   }
-  
+
 }

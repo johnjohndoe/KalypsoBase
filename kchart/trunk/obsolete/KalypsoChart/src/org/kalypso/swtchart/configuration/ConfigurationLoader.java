@@ -41,56 +41,55 @@
 package org.kalypso.swtchart.configuration;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import org.apache.xmlbeans.impl.piccolo.io.FileFormatException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.ObjectFactory;
 
 /**
  * @author alibu
- *
  */
-public class ConfigurationLoader 
+public class ConfigurationLoader
 {
   private String m_configPath;
-  private ConfigurationType m_config;
-  public final static ObjectFactory OF = new ObjectFactory();
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  public ConfigurationLoader(String path) throws JAXBException
+  private ConfigurationType m_config;
+
+  public final static ObjectFactory OF = new ObjectFactory();
+
+  public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
+  public ConfigurationLoader( String path ) throws JAXBException
   {
-      m_configPath=path;
-      loadFile();
+    m_configPath = path;
+    loadFile();
   }
-  
-  public void loadFile() throws JAXBException
+
+  public void loadFile( ) throws JAXBException
   {
-    System.out.println("loadFile Start");
-    File file=new File(m_configPath);
+    System.out.println( "loadFile Start" );
+    File file = new File( m_configPath );
     Object o = JC.createUnmarshaller().unmarshal( file );
-    if (o instanceof JAXBElement)
+    if( o instanceof JAXBElement )
     {
-      Object child=((JAXBElement) o).getValue();
-      m_config=(ConfigurationType) child;
+      Object child = ((JAXBElement) o).getValue();
+      m_config = (ConfigurationType) child;
     }
-    else if (o instanceof ConfigurationType)
+    else if( o instanceof ConfigurationType )
     {
-       m_config=(ConfigurationType) o;
+      m_config = (ConfigurationType) o;
     }
-    System.out.println("Configuration geladen");
-      System.out.println("loadFile End");
+    System.out.println( "Configuration geladen" );
+    System.out.println( "loadFile End" );
   }
-  
-  public ConfigurationType getConfiguration()
+
+  public ConfigurationType getConfiguration( )
   {
     return m_config;
   }
-  
-  
+
 }

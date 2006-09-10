@@ -41,47 +41,42 @@
 package org.kalypso.swtchart.preferences;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * @author alibu
- *
  */
 public class ChartPreferences
 {
-      private static final String DEFAULT_CONFIG_PATH=Platform.getInstanceLocation().getURL().getPath()+"KalypsoChart/";
-      private static final String DEFAULT_CONFIG_NAME="Configuration.xml";
-      
-      private static IEclipsePreferences m_prefs=new InstanceScope().getNode("org.kalypso.chart");
-      
-      
-      public ChartPreferences()
-      {
-        init();
-      }
-      
-      public void init()
-      {
-        //Mit Standarddaten initialisieren, falls keine Inhalte drin sind
-        if (m_prefs!=null)
-        {
-          String tmp= m_prefs.get(IChartPreferences.CONFIG_PATH, "");
-          if (tmp.compareTo("")==0)
-              m_prefs.put(IChartPreferences.CONFIG_PATH, DEFAULT_CONFIG_PATH);
+  private static final String DEFAULT_CONFIG_PATH = Platform.getInstanceLocation().getURL().getPath() + "KalypsoChart/";
 
-          tmp= m_prefs.get(IChartPreferences.CONFIG_NAME, "");
-          if (tmp.compareTo("")==0)
-            m_prefs.put(IChartPreferences.CONFIG_NAME, DEFAULT_CONFIG_NAME);
-        }
-      }
-      
-      public IEclipsePreferences getPreferences()
-      {
-        return m_prefs;
-      }      
+  private static final String DEFAULT_CONFIG_NAME = "Configuration.xml";
+
+  private static IEclipsePreferences m_prefs = new InstanceScope().getNode( "org.kalypso.chart" );
+
+  public ChartPreferences( )
+  {
+    init();
+  }
+
+  public void init( )
+  {
+    // Mit Standarddaten initialisieren, falls keine Inhalte drin sind
+    if( m_prefs != null )
+    {
+      String tmp = m_prefs.get( IChartPreferences.CONFIG_PATH, "" );
+      if( tmp.compareTo( "" ) == 0 )
+        m_prefs.put( IChartPreferences.CONFIG_PATH, DEFAULT_CONFIG_PATH );
+
+      tmp = m_prefs.get( IChartPreferences.CONFIG_NAME, "" );
+      if( tmp.compareTo( "" ) == 0 )
+        m_prefs.put( IChartPreferences.CONFIG_NAME, DEFAULT_CONFIG_NAME );
+    }
+  }
+
+  public IEclipsePreferences getPreferences( )
+  {
+    return m_prefs;
+  }
 }

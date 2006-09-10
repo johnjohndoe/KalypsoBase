@@ -48,5 +48,6 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 public interface IAxisRegistryEventListener
 {
   public void onAxisAdded( IAxis axis );
+
   public void onAxisRemoved( IAxis axis );
 }

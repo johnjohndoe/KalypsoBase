@@ -52,76 +52,77 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
- *
  */
 public class StyledPoint implements IStyledElement
 {
-  
-  private int m_width=5;
-  private int m_height=7;
-  
+
+  private int m_width = 5;
+
+  private int m_height = 7;
+
   private RGB m_borderColor;
+
   private RGB m_fillColor;
-  
+
   private ArrayList<Point> m_path;
+
   private int m_borderWidth;
+
   private final int m_alpha;
-  
-  
-  public StyledPoint(int width, int height, RGB fillColor, int borderWidth, RGB borderColor, int alpha)
+
+  public StyledPoint( int width, int height, RGB fillColor, int borderWidth, RGB borderColor, int alpha )
   {
     m_alpha = alpha;
-    m_path=new ArrayList<Point>();
-    m_borderColor=borderColor;
-    m_fillColor=fillColor;
-    m_borderWidth=borderWidth;
-    m_width=width;
-    m_height=height;
+    m_path = new ArrayList<Point>();
+    m_borderColor = borderColor;
+    m_fillColor = fillColor;
+    m_borderWidth = borderWidth;
+    m_width = width;
+    m_height = height;
   }
 
-
-  
   /**
-   * Wandelt einen Point, der das Zentrum des Elements angibt, in einen Point um, der die linke obere Ecke
-   * des Elements angibt
+   * Wandelt einen Point, der das Zentrum des Elements angibt, in einen Point um, der die linke obere Ecke des Elements
+   * angibt
    */
-  private Point centerToLeftTop(Point p)
+  private Point centerToLeftTop( Point p )
   {
-    return new Point(p.x-( (int) (0.5*m_width)), p.y-( (int) (0.5*m_height)));
+    return new Point( p.x - ((int) (0.5 * m_width)), p.y - ((int) (0.5 * m_height)) );
   }
 
   /**
-   * @see org.kalypso.swtchart.styles.IStyledElement#setPath(java.util.List)
-   * Es wird davon ausgegangen, dass der Pfad die Center-Position des Elements angibt
+   * @see org.kalypso.swtchart.styles.IStyledElement#setPath(java.util.List) Es wird davon ausgegangen, dass der Pfad
+   *      die Center-Position des Elements angibt
    */
   public void setPath( ArrayList<Point> path )
   {
-    m_path=path;
+    m_path = path;
   }
 
   /**
-   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
-      ChartUtilities.resetGC(gc.m_gc, dev);
-      gc.setAlpha(m_alpha);
-      Color borderColor=new Color(dev, m_borderColor);
-      Color fillColor=new Color(dev, m_fillColor);
-      if (m_path!=null)
-      {        
-        for (int i=0;i<m_path.size();i++)
-        {
-            Point p=centerToLeftTop(m_path.get(i));
-            gc.setForeground(borderColor);
-            gc.setBackground(fillColor);
-            gc.fillOval(p.x, p.y, m_width, m_height);
-            gc.setLineWidth(m_borderWidth);
-            gc.drawOval(p.x, p.y, m_width, m_height);
-        }
+    ChartUtilities.resetGC( gc.m_gc, dev );
+    gc.setAlpha( m_alpha );
+    Color borderColor = new Color( dev, m_borderColor );
+    Color fillColor = new Color( dev, m_fillColor );
+    if( m_path != null )
+    {
+      for( int i = 0; i < m_path.size(); i++ )
+      {
+        Point p = centerToLeftTop( m_path.get( i ) );
+        gc.setForeground( borderColor );
+        gc.setBackground( fillColor );
+        gc.fillOval( p.x, p.y, m_width, m_height );
+        gc.setLineWidth( m_borderWidth );
+        gc.drawOval( p.x, p.y, m_width, m_height );
       }
-      borderColor.dispose();
-      fillColor.dispose();
+    }
+    borderColor.dispose();
+    fillColor.dispose();
   }
 
   /**
@@ -131,10 +132,5 @@ public class StyledPoint implements IStyledElement
   {
     return SE_TYPE.POINT;
   }
-  
-  
-  
-  
-  
-  
+
 }

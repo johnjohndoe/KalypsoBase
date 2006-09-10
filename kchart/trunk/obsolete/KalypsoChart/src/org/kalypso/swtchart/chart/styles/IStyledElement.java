@@ -49,18 +49,14 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
- *
  */
 public interface IStyledElement
 {
 
-  
-  public void setPath(ArrayList<Point> path);
-  
-  public void paint(GCWrapper gc, Device dev);
-  
-  public SE_TYPE getType();
+  public void setPath( ArrayList<Point> path );
 
-  
-  
+  public void paint( GCWrapper gc, Device dev );
+
+  public SE_TYPE getType( );
+
 }

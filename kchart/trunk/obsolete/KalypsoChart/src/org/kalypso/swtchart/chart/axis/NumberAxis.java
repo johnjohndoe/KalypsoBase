@@ -63,7 +63,7 @@ public class NumberAxis extends AbstractAxis<Number>
   {
     // r should not be 0 here (see AbstractAxis)
     final double r = getTo().doubleValue() - getFrom().doubleValue();
-    
+
     final double norm = (value.doubleValue() - getFrom().doubleValue()) / r;
 
     return norm;
@@ -74,7 +74,7 @@ public class NumberAxis extends AbstractAxis<Number>
     final double r = getTo().doubleValue() - getFrom().doubleValue();
 
     final double logical = value * r + getFrom().doubleValue();
-    
+
     return logical;
   }
 
@@ -109,12 +109,11 @@ public class NumberAxis extends AbstractAxis<Number>
   }
 
   /**
-   * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
-   * TODO Not implemented yet
+   * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double) TODO Not implemented yet
    */
   public Point logicalToScreenInterval( Number value, Number fixedPoint, double intervalSize )
   {
-    
+
     return null;
   }
 }

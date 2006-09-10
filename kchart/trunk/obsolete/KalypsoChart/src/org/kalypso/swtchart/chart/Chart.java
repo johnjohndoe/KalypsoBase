@@ -47,11 +47,9 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -87,34 +85,30 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
   /** drawing space for the plot itself */
-  private Canvas m_plot;
+  private Plot m_plot;
 
   private boolean m_autoscale = false;
 
   private boolean m_hideUnusedAxes = false;
 
-  /** Buffer Image containing the plot */
-  private Image m_buffer = null;
-  
   private final Color m_white;
+
   private final Color m_black;
 
-   
-  
-
-  public Chart( Composite parent, int style )
+  public Chart( final Composite parent, final int style )
   {
     super( parent, style );
-    m_white=new Color(null, 255, 255, 255);
-    m_black=new Color(null, 0, 0, 0);
-    setBackground(m_white);
+
+    m_white = new Color( null, 255, 255, 255 );
+    m_black = new Color( null, 0, 0, 0 );
+
+    setBackground( m_white );
     createControl( this );
+
     addListener( SWT.Resize, this );
+
     m_axisRegistry.addAxisRegistryEventListener( this );
   }
-  
-
-  
 
   private final void createControl( final Composite parent )
   {
@@ -126,8 +120,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     super.setLayout( gridLayout );
     setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    
-    
     final int axisContainerStyle = SWT.NONE;
 
     // 1.1
@@ -153,7 +145,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_axisPlaces.put( POSITION.LEFT, leftAxes );
 
     // 2.2
-    m_plot = new Plot( this, parent, SWT.NONE );
+    m_plot = new Plot( this, parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.NO_FOCUS );
     m_plot.setLayout( new FillLayout() );
     final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_plot.setLayoutData( pad );
@@ -196,11 +188,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     m_white.dispose();
     m_black.dispose();
-    if( m_buffer != null )
-    {
-      m_buffer.dispose();
-      m_buffer = null;
-    }
   }
 
   /**
@@ -227,7 +214,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     final Composite parent = m_axisPlaces.get( axis.getPosition() );
     final AxisComponent component = new AxisComponent( axis, parent, SWT.NONE );
     m_axisRegistry.setComponent( axis, component );
-    
+
     layout();
   }
 
@@ -244,7 +231,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
    */
   public void handleEvent( final Event event )
   {
-    if( event.type == SWT.Resize || event.type == SWT.RESIZE )
+    if( event.type == SWT.Resize )
     {
       // layout();
       // redraw();
@@ -291,20 +278,17 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       // axis-components must be visible
       m_axisRegistry.getComponent( layer.getDomainAxis() ).setVisible( true );
       m_axisRegistry.getComponent( layer.getValueAxis() ).setVisible( true );
-      
-      /**
-       * TODO: das sollte an einem besseren Ort passieren;  ausserdem ist das ein HACK,
-       * weil immer nur das aktuelle Layer betrachtet wird
-       */
-      
-      IDataRange[] dr= new DataRange[1];
-      dr[0]=layer.getDomainRange();
-      IDataRange[] vr= new DataRange[1];
-      vr[0]=layer.getValueRange();
 
-   
-      
-      
+      /**
+       * TODO: das sollte an einem besseren Ort passieren; ausserdem ist das ein HACK, weil immer nur das aktuelle Layer
+       * betrachtet wird
+       */
+
+      IDataRange[] dr = new DataRange[1];
+      dr[0] = layer.getDomainRange();
+      IDataRange[] vr = new DataRange[1];
+      vr[0] = layer.getValueRange();
+
     }
     else
     {
@@ -327,7 +311,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     }
   }
 
-  private void autoscale( IAxis[] axes )
+  public void autoscale( IAxis[] axes )
   {
     if( axes == null )
       axes = m_axisRegistry.getAxes();
@@ -370,8 +354,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     m_layers.remove( layer );
 
-    //TODO: das LegendItem muss gelöscht werden
-    
+    // TODO: das LegendItem muss gelöscht werden
+
     if( m_autoscale )
       autoscale( null );
 
@@ -412,34 +396,47 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   {
     return m_layers;
   }
-  
-  public Canvas getPlot()
+
+  public Plot getPlot( )
   {
     return m_plot;
   }
-  
- 
+
   /**
    * TODO: Vordergrund und Hintergrundfarbe sind im Moment noch Hartcodiert
    */
-  
+
   /**
    * Gibt die VordergrundFarbe des Charts zurück
    */
-  public Color getFGColor()
+  public Color getFGColor( )
   {
-      return m_black;
+    return m_black;
   }
-  
+
   /**
    * Gibt die HintergrundFarbe des Charts zurück
    */
-  public Color getBGColor()
+  public Color getBGColor( )
   {
-      return m_white;
+    return m_white;
   }
-  
 
+  public void repaint( )
+  {
+    m_plot.repaint();
 
+    final IAxisRegistry axisRegistry = getAxisRegistry();
+    final IAxis[] axes = axisRegistry.getAxes();
+    for( final IAxis axis : axes )
+    {
+      /*
+       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden - sonst gibts keinen
+       * Zugriff auf die Paint-Sachen
+       */
+      final AxisComponent ac = (AxisComponent) axisRegistry.getComponent( axis );
+      ac.redraw();
+    }
+  }
 
 }

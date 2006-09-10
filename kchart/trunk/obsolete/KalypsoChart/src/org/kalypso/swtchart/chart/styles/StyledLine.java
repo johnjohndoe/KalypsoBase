@@ -53,56 +53,54 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
- *
  */
 public class StyledLine implements IStyledElement
 {
   ArrayList<Point> m_path;
-  
-  private int m_width=0;
+
+  private int m_width = 0;
+
   private SE_LINESTYLE m_style;
+
   private int m_swtStyle;
 
   private RGB m_lineColor;
 
   private int m_alpha;
-  
-  
-  public StyledLine(int width, RGB lineColor, SE_LINESTYLE style, int alpha)
+
+  public StyledLine( int width, RGB lineColor, SE_LINESTYLE style, int alpha )
   {
-    m_width=width;
-    m_path=new ArrayList<Point>();
-    m_lineColor=lineColor;
-    m_style=style;
-    m_swtStyle=StyleHelper.linestyleToSWT(m_style);
-    m_alpha=alpha;
+    m_width = width;
+    m_path = new ArrayList<Point>();
+    m_lineColor = lineColor;
+    m_style = style;
+    m_swtStyle = StyleHelper.linestyleToSWT( m_style );
+    m_alpha = alpha;
   }
 
-  public void setPath(ArrayList<Point> path)
+  public void setPath( ArrayList<Point> path )
   {
-    m_path=path;
+    m_path = path;
   }
-  
-
-
 
   /**
-   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gcw, Device dev )
   {
-    ChartUtilities.resetGC(gcw.m_gc, dev);
-    gcw.setAlpha(m_alpha);
-    Color lineColor=new Color(dev, m_lineColor);
-    
-    int[] intPath=StyleHelper.pointListToIntArray(m_path);
-    gcw.setForeground(lineColor);      
-    gcw.setLineWidth(m_width);
-    gcw.setLineStyle(m_swtStyle);
-    gcw.drawPolyline(intPath);
-    
-    lineColor.dispose(); 
-    
+    ChartUtilities.resetGC( gcw.m_gc, dev );
+    gcw.setAlpha( m_alpha );
+    Color lineColor = new Color( dev, m_lineColor );
+
+    int[] intPath = StyleHelper.pointListToIntArray( m_path );
+    gcw.setForeground( lineColor );
+    gcw.setLineWidth( m_width );
+    gcw.setLineStyle( m_swtStyle );
+    gcw.drawPolyline( intPath );
+
+    lineColor.dispose();
+
   }
 
   /**
@@ -113,12 +111,4 @@ public class StyledLine implements IStyledElement
     return SE_TYPE.LINE;
   }
 
-
-
-
-  
-  
-  
-  
-  
 }
