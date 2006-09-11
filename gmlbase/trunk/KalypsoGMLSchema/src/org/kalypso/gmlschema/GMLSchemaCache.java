@@ -136,7 +136,7 @@ public class GMLSchemaCache
 
     // if objekt already in memCache and is valid, just return it
     final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( publicId );
-    if( sw != null && (validity == null || validity.compareTo( sw.getValidity() ) <= 0) )
+    if( sw != null && sw.getValidity() != null && (validity == null || validity.compareTo( sw.getValidity() ) <= 0) )
       return sw.getSchema();
 
     // else, try to get it from file cache
@@ -192,15 +192,7 @@ public class GMLSchemaCache
       schema = m_fileCache.getObject( key );
 
     if( schema != null )
-    {
-      if( validity == null )
-      {
-        /* When does this occur? */
-        System.out.println( "DEBUG: got validity null here, should not happen." );
-      }
-      else
-        m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
-    }
+      m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
 
     return schema;
   }

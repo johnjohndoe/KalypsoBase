@@ -198,7 +198,7 @@ public class GisMapPerfTest extends TestCase
     logger.showElapsedTime( "Loading workspace first time" );
 
     final URL resource = getClass().getResource( "resources/triangles/triangle.gml" );
-    GmlSerializer.createGMLWorkspace( resource );
+    GmlSerializer.createGMLWorkspace( resource, null );
 
     logger.showElapsedTime( "Workspace was loaded" );
 
@@ -206,7 +206,7 @@ public class GisMapPerfTest extends TestCase
     for( int i = 0; i < 10; i++ )
     {
       logger.showElapsedTime( "Loading Workspace #" + i );
-      GmlSerializer.createGMLWorkspace( resource );
+      GmlSerializer.createGMLWorkspace( resource, null );
       logger.showElapsedTime( "Workspace #" + i + "loaded" );
     }
 

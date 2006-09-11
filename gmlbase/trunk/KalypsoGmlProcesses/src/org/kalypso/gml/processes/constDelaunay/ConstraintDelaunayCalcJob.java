@@ -98,7 +98,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       // load gml
       pwSimuLog.println( "Loading GML: " + gmlURL );
       monitor.setMessage( "Loading GML: " + gmlURL );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
       // get calculation via path
       pwSimuLog.println( "Loading geometries: " + geometryXPath );
@@ -213,7 +213,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
     logger.showElapsedTime( "Nodes read." );
 
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ) );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null );
     final Feature rootFeature = workspace.getRootFeature();
     final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" );
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );

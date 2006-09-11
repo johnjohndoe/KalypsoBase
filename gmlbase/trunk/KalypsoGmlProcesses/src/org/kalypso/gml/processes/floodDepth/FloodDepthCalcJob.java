@@ -106,7 +106,7 @@ public class FloodDepthCalcJob implements ISimulation
     try
     {
       // - dreiecke lesen und als DoubleProvider wrappen
-      final GMLWorkspace triangleWorkspace = GmlSerializer.createGMLWorkspace( triangleGmlURL );
+      final GMLWorkspace triangleWorkspace = GmlSerializer.createGMLWorkspace( triangleGmlURL, null );
       final Feature rootFeature = triangleWorkspace.getRootFeature();
       if( !GMLSchemaUtilities.substitutes( rootFeature.getFeatureType(), new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ) ) )
         throw new IllegalArgumentException( "Root-Feature of triangle gml is no triangle collection: " + rootFeature );
@@ -116,7 +116,7 @@ public class FloodDepthCalcJob implements ISimulation
       final DoubleProvider triangleProvider = new TriangleDoubleProvider( triangleList );
 
       // - raster lesen und als DoubleRaster wrappen
-      final GMLWorkspace dtmWorkspace = GmlSerializer.createGMLWorkspace( dtmGmlURL );
+      final GMLWorkspace dtmWorkspace = GmlSerializer.createGMLWorkspace( dtmGmlURL, null );
       final Feature rgcFeature = dtmWorkspace.getRootFeature();
       // TODO: retrieve xpath to rgc from user
       if( !GMLSchemaUtilities.substitutes( rgcFeature.getFeatureType(), new QName( NS.GML3, "RectifiedGridCoverage" ) ) )
