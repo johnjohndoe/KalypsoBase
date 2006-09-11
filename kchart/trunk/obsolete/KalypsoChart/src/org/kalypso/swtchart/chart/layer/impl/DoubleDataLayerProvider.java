@@ -57,6 +57,7 @@ import org.ksp.chart.viewerconfiguration.AxisMappingType;
 import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author alibu
@@ -104,9 +105,10 @@ public class DoubleDataLayerProvider implements ILayerProvider
         cl = new TestStackLayer( domain, value );
       }
 
-      StyleType st = (StyleType) (ce.getStyleLink().getRef());
+      final List<StyleLink> styleLink = ce.getStyleLink();
+      final StyleType st = styleLink.size() > 0 ? (StyleType) (styleLink.get( 0 ).getRef()) : null;
 
-      ILayerStyle ls = StyleLoader.createStyle( st );
+      final ILayerStyle ls = StyleLoader.createStyle( st );
 
       cl.setStyle( ls );
       cl.setName( ce.getName() );
