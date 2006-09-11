@@ -111,7 +111,7 @@ public class WasserstandLayerProvider implements ILayerProvider
 
       final GMLXPath path = new GMLXPath( xpath );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( context, href ) );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( context, href ), null );
 
       final Object object = GMLXPathUtilities.query( path, workspace );
 

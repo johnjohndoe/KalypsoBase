@@ -185,8 +185,8 @@ public abstract class AbstractAxis<T> implements IAxis<T>
    */
   public void setFrom( final T min )
   {
-    if( m_max != null && m_dataComparator.compare( min, m_max ) == 0 )
-      throw new IllegalArgumentException( "min == max" );
+//    if( m_max != null && m_dataComparator.compare( min, m_max ) == 0 )
+//      throw new IllegalArgumentException( "min == max" );
 
     m_min = min;
   }
@@ -204,8 +204,8 @@ public abstract class AbstractAxis<T> implements IAxis<T>
    */
   public void setTo( final T max )
   {
-    if( m_min != null && m_dataComparator.compare( max, m_min ) == 0 )
-      throw new IllegalArgumentException( "max == min" );
+//    if( m_min != null && m_dataComparator.compare( max, m_min ) == 0 )
+//      throw new IllegalArgumentException( "max == min" );
 
     m_max = max;
   }

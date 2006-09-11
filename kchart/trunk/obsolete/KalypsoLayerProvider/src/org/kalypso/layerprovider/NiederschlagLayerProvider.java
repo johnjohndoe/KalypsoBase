@@ -102,7 +102,7 @@ public class NiederschlagLayerProvider implements ILayerProvider
 
       try
       {
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ) );
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
         Feature feature = workspace.getFeature( "niederschlagsmessung" );
         if( feature != null )
         {

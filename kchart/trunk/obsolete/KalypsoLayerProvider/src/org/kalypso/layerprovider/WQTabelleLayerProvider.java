@@ -103,7 +103,7 @@ public class WQTabelleLayerProvider implements ILayerProvider
 
       try
       {
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ) );
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
         Feature feature = workspace.getFeature( "wq_table1" );
         if( feature != null )
         {

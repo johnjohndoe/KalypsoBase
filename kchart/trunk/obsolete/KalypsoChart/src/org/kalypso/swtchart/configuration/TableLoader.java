@@ -113,7 +113,7 @@ public class TableLoader
     String url = dataSource.getUrl();
     String obsId = dataSource.getId();
 
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ) );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
     Feature feature = workspace.getFeature( obsId );
     if( feature != null )
     {
