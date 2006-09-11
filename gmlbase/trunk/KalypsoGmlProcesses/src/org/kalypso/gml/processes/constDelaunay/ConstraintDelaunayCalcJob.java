@@ -145,6 +145,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       // start calculation
       ProcessHelper.startProcess( cmd.toString(), null, tmpdir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
+      // TODO: abfangen, wenn der Prozess fehltschlägt!
 
       // load results + copy to result folder
       monitor.setProgress( 60 );
