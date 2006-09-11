@@ -69,6 +69,7 @@ import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ParameterType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author Gernot Belger
@@ -94,7 +95,7 @@ public class WasserstandLayerProvider implements ILayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-public IChartLayer[] getLayers( final URL context )
+  public IChartLayer[] getLayers( final URL context )
   {
     final List<IChartLayer> layers = new ArrayList<IChartLayer>();
 
@@ -113,7 +114,7 @@ public IChartLayer[] getLayers( final URL context )
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( context, href ) );
 
       final Object object = GMLXPathUtilities.query( path, workspace );
-      
+
       final Feature feature;
       if( object == workspace )
         feature = workspace.getRootFeature();
@@ -155,7 +156,10 @@ public IChartLayer[] getLayers( final URL context )
           final List<ParameterType> parameter = m_lpt.getParameter();
 
           final IChartLayer wl = new TupleResultLineChartLayer( result, domainComponent, valueComponent, domAxis, valAxis, parameter );
-          wl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().getRef() ) );
+
+          final List<StyleLink> styleList = ce.getStyleLink();
+          if( styleList.size() > 0 )
+            wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
           wl.setName( ce.getName() );
           layers.add( wl );
         }

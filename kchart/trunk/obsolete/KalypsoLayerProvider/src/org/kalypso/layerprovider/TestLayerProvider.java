@@ -57,6 +57,7 @@ import org.ksp.chart.viewerconfiguration.AxisMappingType;
 import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author alibu
@@ -113,11 +114,16 @@ public class TestLayerProvider implements ILayerProvider
       IChartLayer cl = null;
 
       cl = new TestLayer( domain, value );
-      StyleType st = (StyleType) (ce.getStyleLink().getRef());
 
-      ILayerStyle ls = StyleLoader.createStyle( st );
+      final List<StyleLink> styleList = ce.getStyleLink();
+      if( styleList.size() > 0 )
+      {
+        StyleType st = (StyleType) (styleList.get( 0 ).getRef());
 
-      cl.setStyle( ls );
+        ILayerStyle ls = StyleLoader.createStyle( st );
+
+        cl.setStyle( ls );
+      }
       cl.setName( ce.getName() );
 
       layers.add( cl );

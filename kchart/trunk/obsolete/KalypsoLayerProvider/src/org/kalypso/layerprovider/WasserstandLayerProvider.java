@@ -64,6 +64,7 @@ import org.ksp.chart.viewerconfiguration.DataSourceType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ParameterType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author alibu
@@ -140,7 +141,10 @@ public class WasserstandLayerProvider implements ILayerProvider
           List<ParameterType> parameter = m_lpt.getParameter();
 
           WasserstandLayer wl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
-          wl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().getRef() ) );
+
+          final List<StyleLink> styleList = ce.getStyleLink();
+          if( styleList.size() > 0 )
+            wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
           wl.setName( ce.getName() );
           icl[0] = wl;
         }

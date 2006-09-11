@@ -66,6 +66,7 @@ import org.ksp.chart.viewerconfiguration.DataSourceType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.chart.viewerconfiguration.ParameterType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author alibu
@@ -139,7 +140,10 @@ public class WQTabelleLayerProvider implements ILayerProvider
           }
           List<ParameterType> parameter = m_lp.getParameter();
           TupleResultLineChartLayer trcl = new TupleResultLineChartLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
-          trcl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().getRef() ) );
+
+          final List<StyleLink> styleList = ce.getStyleLink();
+          if( styleList.size() > 0 )
+            trcl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
           trcl.setName( ce.getName() );
           icl[0] = trcl;
         }
