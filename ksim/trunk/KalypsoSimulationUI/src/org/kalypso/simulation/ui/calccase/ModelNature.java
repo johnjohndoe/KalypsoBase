@@ -788,7 +788,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IUrlResolver urlResolver = configureTokensForcontrol();
 
-      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
+      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
     }
     catch( final Exception e )
     {
@@ -816,7 +816,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IUrlResolver urlResolver = configureTokensForcontrol();
 
-      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
+      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
     }
     catch( final Exception e )
     {
