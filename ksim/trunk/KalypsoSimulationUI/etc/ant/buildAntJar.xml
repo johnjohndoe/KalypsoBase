@@ -3,7 +3,7 @@
 
 	<property name="bootclasspath" value="" />
 
-	<target name="main" depends="clean, libs/anttasks.jar">
+	<target name="main" depends="clean, lib/anttasks.jar">
 	</target>
 
 	<target name="init" depends="properties">
@@ -20,16 +20,16 @@
 		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
 	</target>
 
-	<target name="libs/anttasks.jar" depends="init" unless="libs/anttasks.jar">
-		<property name="destdir" value="${build.temp.dir}/libs/anttasks.jar.bin" />
-		<delete dir="${build.temp.dir}/libs/anttasks.jar.bin" />
-		<mkdir dir="${build.temp.dir}/libs/anttasks.jar.bin" />
+	<target name="lib/anttasks.jar" depends="init" unless="lib/anttasks.jar">
+		<property name="destdir" value="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<mkdir dir="${build.temp.dir}/lib/anttasks.jar.bin" />
 		<!-- compile the source code -->
 
 		<echo message="If JAVA_HOME does not point to a SDK, change your environment variables or ensure that eclipse is started with a sdk" />
 		<echo message="JAVA_HOME: ${java.home}" />
 
-		<javac compiler="modern" destdir="${build.temp.dir}/libs/anttasks.jar.bin" failonerror="true" verbose="true" debug="on" srcdir="${src.dir}">
+		<javac compiler="modern" destdir="${build.temp.dir}/lib/anttasks.jar.bin" failonerror="true" verbose="true" debug="on" srcdir="${src.dir}">
 			<bootclasspath path="${bootclasspath}" />
 			<classpath>
 				<dirset dir="${workspace}">
@@ -51,12 +51,12 @@
 			</classpath>
 		</javac>
 		<!-- copy necessary resources -->
-		<copy todir="${build.temp.dir}/libs/anttasks.jar.bin">
+		<copy todir="${build.temp.dir}/lib/anttasks.jar.bin">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
 		<mkdir dir="${build.result.folder}" />
-		<jar jarfile="${build.result.folder}/anttasks.jar" basedir="${build.temp.dir}/libs/anttasks.jar.bin" />
-		<delete dir="${build.temp.dir}/libs/anttasks.jar.bin" />
+		<jar jarfile="${build.result.folder}/anttasks.jar" basedir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
 		<delete dir="${build.temp.dir}" />
 	</target>
 
