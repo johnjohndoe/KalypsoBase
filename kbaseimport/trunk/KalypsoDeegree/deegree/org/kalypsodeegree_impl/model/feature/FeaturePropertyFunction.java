@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.Properties;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -76,5 +76,5 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    * 
    * @param properties the properties of the appinfo 
    */
-  public abstract void init( final Properties properties );
+  public abstract void init( final Map<String, String> properties );
 }
