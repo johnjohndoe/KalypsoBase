@@ -49,7 +49,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-
   private final Class m_geometryClass;
 
   /**
@@ -72,9 +71,10 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( IAction action, final ISelection selection )
   {
-    super.refreshAction( action );
+    super.refreshAction( action, selection );
+
     if( action != null )
       action.setEnabled( fitsToAction() );
   }
@@ -107,11 +107,11 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell == null )
         return false;
-      
+
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme == null )
         return false;
-      
+
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
         final IFeatureType featureType = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();
