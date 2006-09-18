@@ -64,4 +64,20 @@ public class WspmProfile
     return m_feature;
   }
 
+  public WspmWaterBody getWater( )
+  {
+    final Feature parent = m_feature.getParent();
+    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
+      return new WspmWaterBody( parent );
+
+    return null;
+  }
+
+  public double getStation( )
+  {
+    final Double profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
+
+    return profileStation == null ? Double.NaN : profileStation;
+  }
+
 }
