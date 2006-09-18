@@ -46,15 +46,23 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPersistableElement;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
+import org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory;
 
 /**
- * @author belger
+ * REMARK: implementing {@link org.eclipse.ui.IPersistableElement} is only used in combinisation with
+ * {@link org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput}.
+ * 
+ * @author Gernot Belger
  */
-public class StringStorage implements IEncodedStorage
+public class StringStorage implements IEncodedStorage, IPersistableElement
 {
   private final String m_name;
 
@@ -62,27 +70,12 @@ public class StringStorage implements IEncodedStorage
 
   private final IPath m_path;
 
-  /**
-   * Constructor
-   * 
-   * @param data
-   * @param path
-   */
+  /** Same as {@link #StringStorage("&lt;name&gt;", String, IPath)}. */
   public StringStorage( final String data, final IPath path )
   {
     this( "<name>", data, path );
   }
 
-  /**
-   * Constructor
-   * 
-   * @param name
-   *          name of the storage
-   * @param data
-   *          contents
-   * @param path
-   *          path
-   */
   public StringStorage( final String name, final String data, final IPath path )
   {
     m_name = name;
@@ -94,7 +87,7 @@ public class StringStorage implements IEncodedStorage
    * @throws CoreException
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
-  public InputStream getContents() throws CoreException
+  public InputStream getContents( ) throws CoreException
   {
     try
     {
@@ -103,8 +96,6 @@ public class StringStorage implements IEncodedStorage
     }
     catch( final UnsupportedEncodingException e )
     {
-      e.printStackTrace();
-
       throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "", e ) );
     }
   }
@@ -112,7 +103,7 @@ public class StringStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getFullPath()
    */
-  public IPath getFullPath()
+  public IPath getFullPath( )
   {
     return m_path;
   }
@@ -120,7 +111,7 @@ public class StringStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -128,7 +119,7 @@ public class StringStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#isReadOnly()
    */
-  public boolean isReadOnly()
+  public boolean isReadOnly( )
   {
     return true;
   }
@@ -136,17 +127,56 @@ public class StringStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
-    return null;
+    final IAdapterManager adapterManager = Platform.getAdapterManager();
+    return adapterManager.loadAdapter( this, adapter.getName() );
   }
 
   /**
    * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
    */
-  public String getCharset()
+  public String getCharset( )
   {
     // allways Unicode
     return "UTF-8";
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( this == obj )
+      return true;
+
+    if( !(obj instanceof StringStorage) )
+      return false;
+
+    final StringStorage other = (StringStorage) obj;
+
+    return m_data.equals( other.m_data ) && m_name.equals( other.m_name ) && m_path.equals( other.m_path );
+  }
+
+  /**
+   * @see org.eclipse.ui.IPersistableElement#getFactoryId()
+   */
+  public String getFactoryId( )
+  {
+    return StringStorageInputFactory.ID;
+  }
+
+  /**
+   * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
+   */
+  public void saveState( final IMemento memento )
+  {
+    StringStorageInputFactory.saveState( this, memento );
+  }
+
+  public String getData( )
+  {
+    return m_data;
   }
 }

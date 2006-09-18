@@ -41,14 +41,17 @@
 package org.kalypso.contribs.eclipse.ui.editorinput;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IAdapterManager;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 
 /**
- * TODO: normally should also override equals() according to interface specification... Check if this is possible here.
+ * An {@link org.eclipse.ui.IEditorInput} which is based on a {@link IStorage}.
+ * <p>Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class StorageEditorInput implements IStorageEditorInput
 {
@@ -62,7 +65,7 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
-  public IStorage getStorage()
+  public IStorage getStorage( )
   {
     return m_storage;
   }
@@ -70,7 +73,7 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
-  public boolean exists()
+  public boolean exists( )
   {
     return true;
   }
@@ -78,7 +81,7 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
-  public ImageDescriptor getImageDescriptor()
+  public ImageDescriptor getImageDescriptor( )
   {
     return null;
   }
@@ -86,7 +89,7 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_storage.getName();
   }
@@ -94,15 +97,18 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
-  public IPersistableElement getPersistable()
+  public IPersistableElement getPersistable( )
   {
+    if( m_storage instanceof IPersistableElement )
+      return (IPersistableElement) m_storage;
+
     return null;
   }
 
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
-  public String getToolTipText()
+  public String getToolTipText( )
   {
     // null not allowed, so return name of storage
     return m_storage.getName();
@@ -111,8 +117,33 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
-    return null;
+    final IAdapterManager adapterManager = Platform.getAdapterManager();
+    return adapterManager.loadAdapter( this, adapter.getName() );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( this == obj )
+      return true;
+
+    if( !(obj instanceof StorageEditorInput) )
+      return false;
+
+    return m_storage.equals( ((StorageEditorInput) obj).m_storage );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_storage.hashCode();
   }
 }
