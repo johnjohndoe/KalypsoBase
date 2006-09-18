@@ -50,9 +50,8 @@ import org.ksp.chart.viewerconfiguration.LayerProviderType;
  */
 public interface ILayerProvider
 {
-  public IChartLayer[] getLayers( final URL context );
+  public IChartLayer[] getLayers( final URL context ) throws LayerProviderException;
 
   // TODO: move chart parameter to getLayers
   public void init( final Chart chart, final LayerProviderType lpt );
-
 }

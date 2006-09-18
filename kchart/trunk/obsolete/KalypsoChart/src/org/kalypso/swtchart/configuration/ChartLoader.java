@@ -51,6 +51,7 @@ import org.kalypso.swtchart.chart.KalypsoChartExtensions;
 import org.kalypso.swtchart.chart.axis.AxisFactory;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.chart.layer.LayerProviderException;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
@@ -154,6 +155,10 @@ public class ChartLoader
           }
         }
         catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+        catch( final LayerProviderException e )
         {
           e.printStackTrace();
         }

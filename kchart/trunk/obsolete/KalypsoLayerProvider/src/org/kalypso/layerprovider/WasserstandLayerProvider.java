@@ -128,7 +128,6 @@ public class WasserstandLayerProvider implements ILayerProvider
             IComponent comp = comps[i];
             System.out.println( "Component: " + comp.getName() );
             System.out.println( "Component: " + comp.getDescription() );
-            System.out.println( "Component: " + comp.getPosition() );
             System.out.println( "Component: " + comp.getValueTypeName() );
             if( comp.getName().compareTo( "Datum" ) == 0 )
               map.put( "domain", comp );

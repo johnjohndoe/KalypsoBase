@@ -57,10 +57,12 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.chart.layer.LayerProviderException;
 import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.ksp.chart.layerstyle.StyleType;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
@@ -82,7 +84,7 @@ public class WasserstandLayerProvider implements ILayerProvider
 
   private Chart m_chart;
 
-  public void init( Chart chart, LayerProviderType lpt )
+  public void init( final Chart chart, final LayerProviderType lpt )
   {
     m_chart = chart;
     m_lpt = lpt;
@@ -95,19 +97,17 @@ public class WasserstandLayerProvider implements ILayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( final URL context )
+  public IChartLayer[] getLayers( final URL context ) throws LayerProviderException
   {
     final List<IChartLayer> layers = new ArrayList<IChartLayer>();
 
+    final String href = m_parameters.get( "href" );
+    final String xpath = m_parameters.get( "gmlxpath" );
+
     try
     {
-      final String href = m_parameters.get( "href" );
-      final String xpath = m_parameters.get( "gmlxpath" );
-
       if( href == null )
-      {
         return layers.toArray( new IChartLayer[layers.size()] );
-      }
 
       final GMLXPath path = new GMLXPath( xpath );
 
@@ -140,17 +140,13 @@ public class WasserstandLayerProvider implements ILayerProvider
         final AbstractAxisType domLink = (AbstractAxisType) domain.getAxisLink();
         final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
 
-        final IComponent domainComponent = TupleResultUtilities.getComponent( result, domain.getEquation() );
+        final IComponent domainComponent = TupleResultUtilities.findComponentById( result, domain.getEquation() );
 
         final AbstractAxisType valLink = (AbstractAxisType) value.getAxisLink();
         final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
 
-        final IComponent valueComponent = TupleResultUtilities.getComponent( result, value.getEquation() );
+        final IComponent valueComponent = TupleResultUtilities.findComponentById( result, value.getEquation() );
 
-        /*
-         * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden; besser: id, aber das wird nicht von der
-         * Componente zurückgegebn
-         */
         if( domainComponent != null && valueComponent != null )
         {
           final List<ParameterType> parameter = m_lpt.getParameter();
@@ -166,15 +162,17 @@ public class WasserstandLayerProvider implements ILayerProvider
 
       }
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new LayerProviderException( "URL konnte nicht aufgelöst werden: " + href, e );
     }
-    catch( Exception e )
+    catch( final GMLXPathException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new LayerProviderException( "Ungültiger GML-XPATH: " + xpath, e );
+    }
+    catch( final Exception e )
+    {
+      throw new LayerProviderException( "GML Workspace konnte nicht geladen werden: " + xpath, e );
     }
 
     return layers.toArray( new IChartLayer[layers.size()] );

@@ -98,7 +98,6 @@ public class NiederschlagLayerProvider implements ILayerProvider
     for( DataSourceType ds : dataSource )
     {
       String url = ds.getUrl();
-      Object o = null;
 
       try
       {
@@ -135,7 +134,6 @@ public class NiederschlagLayerProvider implements ILayerProvider
             IComponent comp = comps[i];
             System.out.println( "Component: " + comp.getName() );
             System.out.println( "Component: " + comp.getDescription() );
-            System.out.println( "Component: " + comp.getPosition() );
             System.out.println( "Component: " + comp.getValueTypeName() );
             if( comp.getName().compareTo( "Datum" ) == 0 )
               map.put( "domain", comp );
