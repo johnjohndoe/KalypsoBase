@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:kcvc="http://www.ksp.org/chart/viewerConfiguration"
+     targetNamespace="http://www.ksp.org/chart/viewerConfiguration"
+     xmlns:kcls="http://www.ksp.org/chart/layerStyle"
+     xmlns:kctc="http://www.ksp.org/chart/tableConfiguration" elementFormDefault="qualified">
+
+     <import namespace="http://www.ksp.org/chart/layerStyle"
+          schemaLocation="../style/layerStyle.xsd"/>
+     <import namespace="http://www.ksp.org/chart/tableConfiguration"
+          schemaLocation="../table/tableConfiguration.xsd"/>
+
+     <annotation>
+          <documentation> Die Elemente referenzieren grundsätzlich ihre Typen, da beim Binden dann
+               Klassen erzeugt werden, die den Namen des Typen tragen. Das verhindert, dass die
+               "gebindeten" Klassen die selben Namen haben wie die Chart-Objekte, die sie
+               beschreiben. </documentation>
+     </annotation>
+
+     <element name="Configuration" type="kcvc:ConfigurationType"> </element>
+
+     <complexType name="ConfigurationType">
+          <sequence>
+               <element ref="kcvc:Chart" minOccurs="1" maxOccurs="unbounded"> </element>
+               <!--element ref="kcvc:Legend" minOccurs="0" maxOccurs="unbounded"/-->
+               <element ref="kcls:Style" minOccurs="1" maxOccurs="unbounded"/>
+               <element ref="kctc:Table" minOccurs="0" maxOccurs="unbounded"/>
+          </sequence>
+
+     </complexType>
+
+     <element name="Chart" type="kcvc:ChartType"/>
+
+     <complexType name="ChartType">
+          <sequence>
+               <element name="Title" type="string" minOccurs="0">
+                    <annotation>
+                         <documentation> Ein erweiterter Bezeichner für das Chart </documentation>
+                    </annotation>
+               </element>
+               <element name="Abstract" type="string" minOccurs="0">
+                    <annotation>
+                         <documentation> Beschreibung des ChartInhalts </documentation>
+                    </annotation>
+               </element>
+               <element ref="kcvc:LayerProvider" minOccurs="1" maxOccurs="unbounded"/>
+               <element ref="kcvc:Axis" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcvc:Grid" minOccurs="0" maxOccurs="unbounded"/>
+          </sequence>
+          <attribute name="name" type="ID" use="required">
+               <annotation>
+                    <documentation> Der eindeutige Bezeichner für das Chart zur Referenzierung von
+                         aussen </documentation>
+               </annotation>
+          </attribute>
+     </complexType>
+
+     <element name="LayerProvider" type="kcvc:LayerProviderType"/>
+
+     <element name="Grid" type="kcvc:GridType"/>
+
+     <complexType name="LayerProviderType">
+          <sequence>
+               <element ref="kcvc:DataSource" minOccurs="0" maxOccurs="unbounded">
+                    <annotation>
+                         <documentation>@deprecated Do not use this any more. Each layer should get
+                              all of its informations from the Parameter elements.</documentation>
+                    </annotation>
+               </element>
+               <element ref="kcvc:Parameter" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcvc:ChartElement" minOccurs="1" maxOccurs="unbounded"/>
+          </sequence>
+          <attribute name="name" type="string" use="required"> </attribute>
+     </complexType>
+
+     <element name="Parameter" type="kcvc:ParameterType"/>
+
+
+     <complexType name="ParameterType">
+          <attribute name="name" type="string" use="required"/>
+          <attribute name="value" type="string" use="required"/>
+     </complexType>
+
+     <element name="ChartElement" type="kcvc:ChartElementType">
+          <annotation>
+               <documentation> Ein ChartElement ist ein im Chart sichtbarer Datensatz,
+                    beispielsweise eine Zeitreihen- oder Profilline; </documentation>
+          </annotation>
+     </element>
+
+     <complexType name="ChartElementType">
+          <sequence>
+               <element name="AxisMapping">
+                    <annotation>
+                         <documentation> Hier werden dem Datensatz die Achsen zugewiesen
+                         </documentation>
+                    </annotation>
+                    <complexType>
+                         <sequence>
+                              <element name="Domain" type="kcvc:AxisMappingType" minOccurs="0"/>
+                              <element name="Value" type="kcvc:AxisMappingType"/>
+                         </sequence>
+                    </complexType>
+               </element>
+               <element name="StyleLink" minOccurs="0" maxOccurs="unbounded">
+                    <annotation>
+                         <documentation> Ein Verweis auf den zu verwendenden Style für dieses
+                              Element </documentation>
+                    </annotation>
+                    <complexType>
+                         <attribute name="name" type="string" use="optional" default="DEFAULT">
+                              <annotation>
+                                   <documentation> The name attribute is used to distinguish several
+                                        styles for one chart element. If not set, the defautl value
+                                        is 'DEFAULT'.</documentation>
+                              </annotation>
+                         </attribute>
+                         <attribute name="ref" type="IDREF" use="required"/>
+                    </complexType>
+               </element>
+          </sequence>
+          <attribute name="name" type="string" default="DEFAULT" use="optional">
+               <annotation>
+                    <documentation> Hiermit wird auf das Element referenziert, wie es vom
+                         LayerProvider verstanden wird. Falls es nur ein Element gibt, kann der
+                         Bezeichner "DEFAULT" verwendet werden. </documentation>
+               </annotation>
+          </attribute>
+     </complexType>
+
+     <complexType name="AxisMappingType">
+          <attribute name="axisLink" type="IDREF" use="required">
+               <annotation>
+                    <documentation> Hier soll die ID einer im Chart-Element angegebenen Axis
+                         angegeben werden </documentation>
+               </annotation>
+          </attribute>
+          <attribute name="equation" type="string" use="required">
+               <annotation>
+                    <documentation> Die Equation bezeichnet die Entsprechung der Datenkomponente im
+                         Diagramm; sie ist nicht gleichzusetzen mit den Tabellenspalten, aus der die
+                         Daten stammen, da beispielsweise für Flussprofile zunächst eine Umrechnung
+                         - aus HW und RW wird die Breite berechnet - erfolgt </documentation>
+               </annotation>
+          </attribute>
+     </complexType>
+
+     <element name="DataSource" type="kcvc:DataSourceType"/>
+     <complexType name="DataSourceType">
+          <sequence>
+               <element name="Url" type="anyURI">
+                    <annotation>
+                         <documentation> Die Quelle (URL oder Dateiname) der dem Layer zugrunde
+                              liegenden Observation; wurde in eigenen Typ ausgegliedert, da evtl.
+                              mehrere Layer auf die gleiche URL zugreifen wollen </documentation>
+                    </annotation>
+               </element>
+          </sequence>
+     </complexType>
+
+
+
+
+
+     <annotation>
+          <documentation> Hier werden jetzt die ganzen Links definiert. Obwohl alle den gleichen
+               Mechanismus verwenden und prinzipiell auch ein Typ (z.B. linkType) reichen würde,
+               sollen diese verschiedenen Benennungen dem konfigurierenden Menschen als semantische
+               Hilfe dienen. Ich habe nämlich bisher keine Möglichkeit gefunden, den zu
+               referenzierenden Typen einzuschränken. </documentation>
+     </annotation>
+
+
+
+
+     <element name="Axis" type="kcvc:AbstractAxisType"/>
+     <element name="DateAxis" type="kcvc:DateAxisType" substitutionGroup="kcvc:Axis"/>
+     <element name="DateTimeAxis" type="kcvc:DateTimeAxisType" substitutionGroup="kcvc:Axis"/>
+     <element name="DoubleAxis" type="kcvc:DoubleAxisType" substitutionGroup="kcvc:Axis"/>
+     <element name="IntegerAxis" type="kcvc:IntAxisType" substitutionGroup="kcvc:Axis"/>
+     <element name="StringAxis" type="kcvc:StringAxisType" substitutionGroup="kcvc:Axis"/>
+
+     <complexType name="AbstractAxisType" abstract="true">
+          <annotation>
+               <documentation> Da muss noch ein Data-Type rein </documentation>
+          </annotation>
+          <sequence>
+               <element name="Name" type="string" minOccurs="1" maxOccurs="1"/>
+               <element name="Direction" type="kcvc:AxisDirectionType" minOccurs="1" maxOccurs="1"/>
+               <element name="Position" type="kcvc:AxisPositionType" minOccurs="1" maxOccurs="1"/>
+          </sequence>
+          <attribute name="id" use="required" type="ID"/>
+     </complexType>
+
+     <complexType name="DoubleAxisType">
+          <complexContent>
+               <extension base="kcvc:AbstractAxisType">
+                    <sequence>
+                         <element name="MinVal" type="double"/>
+                         <element name="MaxVal" type="double"/>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="IntAxisType">
+          <complexContent>
+               <extension base="kcvc:AbstractAxisType">
+                    <sequence>
+                         <element name="MinVal" type="int"/>
+                         <element name="MaxVal" type="int"/>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="StringAxisType">
+          <annotation>
+               <documentation> Die String-Axis funktioniert etwas anders als die anderen Typen: Hier
+                    müssen explizit die einzelnen Werte des Wertebereichs aufgezählt werden; dabei
+                    ist der erste Wert unter MinVal zu führen, der letzte unter MaxVal; die Achse
+                    muss mindestens 2 Werte haben, nämlich Min und Max </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcvc:AbstractAxisType">
+                    <sequence>
+                         <element name="MinVal" type="string"/>
+                         <element name="Val" type="string" minOccurs="0" maxOccurs="unbounded"/>
+                         <element name="MaxVal" type="string"/>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="DateAxisType">
+          <complexContent>
+               <extension base="kcvc:AbstractAxisType">
+                    <sequence>
+                         <choice>
+                              <element name="MinVal" type="date"/>
+                              <element name="MinValDistance" type="kcvc:TimeDistanceType"/>
+                         </choice>
+                         <choice>
+                              <element name="MaxVal" type="date"/>
+                              <element name="MaxValDistance" type="kcvc:TimeDistanceType"/>
+                         </choice>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="DateTimeAxisType">
+          <complexContent>
+               <extension base="kcvc:AbstractAxisType">
+                    <sequence>
+                         <choice>
+                              <element name="MinVal" type="dateTime"/>
+                              <element name="MinValDistance" type="kcvc:TimeDistanceType"/>
+                         </choice>
+                         <choice>
+                              <element name="MaxVal" type="dateTime"/>
+                              <element name="MaxValDistance" type="kcvc:TimeDistanceType"/>
+                         </choice>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="TimeDistanceType">
+          <annotation>
+               <documentation> Ermöglicht die Angabe eines Zeitabstands, gesehen von der aktuellen
+                    Zeit; dabei liegt "minus" vor der aktuellen Zeit, "plus" danach </documentation>
+          </annotation>
+          <choice>
+               <element name="minus" type="kcvc:TimeDistanceType"/>
+               <element name="plus" type="kcvc:TimeDistanceType"> </element>
+          </choice>
+     </complexType>
+
+     <complexType name="TimePeriodType">
+          <annotation>
+               <documentation> Ermöglicht die Angabe einer Zeitperiode </documentation>
+          </annotation>
+          <attribute name="years" use="optional" type="int"/>
+          <attribute name="months" use="optional" type="int"/>
+          <attribute name="days" use="optional" type="int"/>
+          <attribute name="hours" use="optional" type="int"/>
+          <attribute name="minutes" use="optional" type="int"/>
+          <attribute name="seconds" use="optional" type="int"/>
+     </complexType>
+
+     <simpleType name="AxisDirectionType">
+          <annotation>
+               <documentation> Direction gibt die Richtung an, in die die Werte angetrage werden:
+                    POSITIVE: von links nach rechts; bzw. von unten nach oben (wie in kart.
+                    Koordinatensystem NEGATIVE: von rechts nach links, btw. von oben nach unten
+               </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="POSITIVE"/>
+               <enumeration value="NEGATIVE"/>
+          </restriction>
+     </simpleType>
+
+     <simpleType name="AxisDatatypeType">
+          <annotation>
+               <documentation> Der Datatype bestimmt, welche "Achsen-Art" verwendet wird; REAL kann
+                    reelle Werte anzeigen, DATE Datümmer, usw. </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="DOUBLE"/>
+               <enumeration value="INTEGER"/>
+               <enumeration value="DATE"/>
+               <enumeration value="DATETIME"/>
+               <enumeration value="STRING"/>
+          </restriction>
+     </simpleType>
+
+     <simpleType name="AxisPositionType">
+          <annotation>
+               <documentation> Position der Achse, vom Plot (also der Mitte) aus gesehen; es ist
+                    wichtig, dass der Konfigurator selbst darauf achtet, dass von den bis zu 2
+                    Achsen pro Layer höchstens eine horizontal, die andere vertikal verläuft
+               </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="LEFT"/>
+               <enumeration value="RIGHT"/>
+               <enumeration value="TOP"/>
+               <enumeration value="BOTTOM"/>
+          </restriction>
+     </simpleType>
+
+     <complexType name="GridType">
+          <annotation>
+               <documentation> Beschreibt ein Raster, das im Hintergrund des Charts angezeigt werden
+                    soll; das Raster orientiert sich dabei an den Ticks einer Achse; die optische
+                    Formatierung ist identisch zur Definition einer Linie im Style; </documentation>
+          </annotation>
+          <sequence>
+               <element ref="kcls:Line"/>
+               <element name="Subdivision" type="int" minOccurs="0">
+                    <annotation>
+                         <documentation> Hier kann die Unterteilung weiter verfeinert werden, indem
+                              die Anzahl der "Zwischenlinien" angegeben wird </documentation>
+                    </annotation>
+               </element>
+          </sequence>
+          <attribute name="axisLink" type="IDREF" use="required"/>
+
+     </complexType>
+
+</schema>
