@@ -149,6 +149,5 @@ public class QualifiedElement implements IAdaptable
       return null;
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapterClass.getName() );
-    // return adapterManager.getAdapter( this, adapter );
   }
 }

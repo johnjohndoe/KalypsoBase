@@ -214,10 +214,11 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
   private static void handleFrame( final RepresentationType type, final Document doc, final Element elt )
   {
-    if( type.getFrame().length() > 0 )
+    final String frame = type.getFrame();
+    if( frame != null && frame.length() > 0 )
     {
       final Element eltFrame = doc.createElementNS( NS.SWE, "frame" );
-      eltFrame.setAttributeNS( NS.SWE, "frame", type.getFrame() );
+      eltFrame.setAttributeNS( NS.SWE, "frame", frame );
 
       elt.appendChild( eltFrame );
     }
