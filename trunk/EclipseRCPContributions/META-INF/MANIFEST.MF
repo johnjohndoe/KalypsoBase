@@ -10,7 +10,6 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.core.runtime,
  org.kalypso.contribs.eclipse.core.runtime.jobs,
- org.kalypso.contribs.eclipse.jface,
  org.kalypso.contribs.eclipse.jface.action,
  org.kalypso.contribs.eclipse.jface.dialog,
  org.kalypso.contribs.eclipse.jface.operation,
