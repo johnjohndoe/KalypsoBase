@@ -124,8 +124,7 @@ public class ResourceUtilities
     if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
       final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
-
-      final Path path2 = new Path( path );
+      final Path path2 = new Path( path.replaceAll( "//", "/" ) );
       return path2;
     }
     // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
