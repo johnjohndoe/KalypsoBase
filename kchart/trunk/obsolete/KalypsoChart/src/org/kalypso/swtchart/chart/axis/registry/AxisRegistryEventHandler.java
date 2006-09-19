@@ -47,6 +47,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 
 /**
  * @author schlienger
+ * @author burtscher
  */
 public class AxisRegistryEventHandler implements IAxisRegistryEventProvider
 {

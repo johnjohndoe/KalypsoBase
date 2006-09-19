@@ -47,30 +47,61 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 
 /**
  * @author schlienger
+ * @author burtscher
  */
 public interface IAxis<T>
 {
+  /**
+   * @return the axis' unique identifier
+   */
   public String getIdentifier( );
 
+  /**
+   * @return axis label
+   */
   public String getLabel( );
 
+  /**
+   * @return DataClass which is understood by this axis
+   */
   public Class< ? > getDataClass( );
 
+  /**
+   * @return Axis property - discrete or continous
+   */
   public IAxisConstants.PROPERTY getProperty( );
 
+  /**
+   *  @return axis position - left, right, top, bottom
+   */
   public IAxisConstants.POSITION getPosition( );
 
+  /**
+   * @return axis direction - positive or negative 
+   */
   public IAxisConstants.DIRECTION getDirection( );
 
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
 
+  /**
+   * @return minimal displayable value
+   */
   public T getFrom( );
 
+  /**
+   * sets minimal displayable value
+   */
   public void setFrom( T min );
 
+  /**
+   * @return maximum displayable value
+   */
   public T getTo( );
 
+  /**
+   * sets maximum displayable value
+   */
   public void setTo( T max );
 
   public void autorange( IDataRange<T>[] ranges );

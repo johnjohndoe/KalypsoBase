@@ -62,13 +62,16 @@ import org.ksp.chart.viewerconfiguration.DateAxisType;
 import org.ksp.chart.viewerconfiguration.DoubleAxisType;
 
 /**
- * @author schlienger
+ * @author burtscher
+ *  
+ *  creates Axis stuff from configuration 
+ *  TODO: should be moved to the configuration package  
  */
 public class AxisFactory
 {
-
   /**
-   * Static-Methode zum hinzufügen einer Achse aus der Configuration zu einem Chart
+   * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the corresponding renderer 
+   * and adds both to a given Chart
    */
   public static void addConfigAxis( Chart chart, AbstractAxisType a )
   {
@@ -118,7 +121,6 @@ public class AxisFactory
         IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
         ar.setRenderer( Number.class, numberAxisRenderer );
       }
-//      System.out.println( "AxisFactory: Axis hinzugefügt: " + a.getName() );
     }
     else if( a instanceof DateAxisType )
     {
@@ -131,14 +133,7 @@ public class AxisFactory
       if( ar.getRenderer( axis ) == null )
       {
         IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
-        // ar.setRenderer(Date.class, dateAxisRenderer);
         ar.setRenderer( XMLGregorianCalendar.class, xgcAxisRenderer );
-//        if( ar.getRenderer( axis ) != null )
-//          System.out.println( "XMLCalendarAxisRenderer added" );
-//        else
-//          System.out.println( "XMLCalendar was not added" );
-      }
-//      System.out.println( "AxisFactory: axis added: " + a.getName() );
     }
     else
     {

@@ -27,6 +27,9 @@ import org.kalypso.swtchart.chart.util.InsetsHelper;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ *  * IAxisRenderer-Implementation for displaying numeric values
  */
 public class NumberAxisRenderer implements IAxisRenderer<Number>
 {
@@ -90,8 +93,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   }
 
   /**
-   * Berechnet die Größe des größten Tick-Labels; dabei wird davon ausgegangen, dass sich die Labelgröße monoton
-   * verhält, also entweder der kleinste oder der größte Achsenwert das größte Label bekommt
+   * calculates the size of the biggest tick label by assiuming that the width
+   * of all labels is strictly monotonic - this means that either the lowest
+   * or the highest axis value has the biggest label
    */
   private Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<Number> axis )
   {
@@ -109,6 +113,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     return new Point( x, y );
   }
 
+  /**
+   * doubleBuffered painting
+   */
   public void paint( GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen )
   {
     Image img = paintBuffered( dev, axis, screen );
@@ -116,6 +123,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     img.dispose();
   }
 
+  /**
+   * @return Image containing the rendered Axis
+   */
   public Image paintBuffered( final Device dev, final IAxis<Number> axis, final Rectangle screen )
   {
     Image bufImg = new Image( dev, dev.getBounds() );
@@ -137,6 +147,10 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     return bufImg;
   }
 
+  /**
+   * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates
+   * for the axis line and endX/Y its end coordinates within the given Rectangle
+   */
   private int[] createAxisSegment( final IAxis<Number> axis, final Rectangle screen )
   {
     int startX;
@@ -183,7 +197,10 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
     return new int[] { startX, startY, endX, endY };
   }
-
+  
+  /**
+   * draws the Axis ticks into the given GCWrapper
+   */
   private void drawTicks( GCWrapper gc, Device dev, IAxis<Number> axis, int startX, int startY, int endX, int endY, Collection<Number> ticks )
   {
     gc.setLineWidth( m_lineWidth );
@@ -263,6 +280,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     }
   }
 
+  /**
+   * @return Insets-object, transformed in accordance to axis position 
+   */
   private Insets getConvertedInsets( final IAxis<Number> axis, final Insets insets )
   {
     // POSITION BOTTOM is the default order for the insets
@@ -279,7 +299,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   }
 
   /**
-   * Berechnet die Ticks, die für eine Achse angezeigt werden TODO: testweise auf public gesetzt - für das GridLayer
+   * Calculates the ticks shown for the given Axis
    */
   public Collection<Number> calcTicks( GCWrapper gc, Device dev, final IAxis<Number> axis )
   {
@@ -317,6 +337,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     return ticks;
   }
 
+  /**
+   *  draws the axis' main line
+   */
   private void drawAxisLine( GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
   {
     gc.setLineWidth( m_lineWidth );
@@ -326,6 +349,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     gc.drawLine( x1, y1, x2, y2 );
   }
 
+  /**
+   * draws a given text at the position using special fontData
+   */
   private void drawText( GCWrapper gc, Device dev, String text, int x, int y, FontData fd )
   {
     Font f = new Font( dev, fd );
@@ -336,6 +362,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     f.dispose();
   }
 
+  /**
+   * draws the axis label - if the axis is oriented vertical, the text is also drawn vertical
+   */
   private void drawAxisLabel( GCWrapper gc, Device dev, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
   {
     ChartUtilities.resetGC( gc.m_gc, dev );
@@ -412,6 +441,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     }
   }
 
+  /**
+   * calculates the extent of a number using a certain fontdata
+   */
   private Point getTextExtent( GCWrapper gc, Device dev, Number value, FontData fd )
   {
     String label = "";
@@ -426,7 +458,11 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     }
     return getTextExtent( gc, dev, label, fd );
   }
-
+  
+  /**
+   * calculates the extent of text using certain fontdata
+   * TODO: should be extracted into a general helper Method
+   */
   private Point getTextExtent( GCWrapper gc, Device dev, String label, FontData fd )
   {
     Font f = new Font( dev, fd );

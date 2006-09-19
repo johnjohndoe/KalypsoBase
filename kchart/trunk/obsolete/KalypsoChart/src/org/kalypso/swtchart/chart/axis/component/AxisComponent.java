@@ -56,9 +56,20 @@ import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Implementation of IAxisComponent;
+ * AxisComponent is a widget displaying the charts' axes; its used
+ * to calculate screen coordinates for normalized values
+ * 
+ * 
+ * 
  */
 public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComponent<T>
 {
+  /**
+   * the corresponding axis
+   */
   private final IAxis<T> m_axis;
 
   private final Color m_white;
@@ -84,8 +95,12 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   }
 
   /**
-   * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean) TODO: im Moment gibt die Funktion noch einen
-   *      Standardwert zurück - die wirklichen Ausmaße sollen aber berechnet werden
+   * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean) 
+   * 
+   * @return Point p where p.x is the widgets width and p.y is its height;
+   * as there is only 1 dimension in which the axis size needs to be fixed
+   * - width for horizontal, height for vertical axes- the variable dimension
+   * is set to 0
    */
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
@@ -115,7 +130,6 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private void paint( final GCWrapper gc, final Device dev )
   {
-
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
     IAxisRenderer renderer = m_axis.getRenderer();
@@ -123,6 +137,11 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
       renderer.paint( gc, dev, m_axis, b );
   }
 
+  /**
+   * Uses the widgets' complete extension to alculates the screen value in correspondance to a normalized value
+   * 
+   * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#normalizedToScreen(double)
+   */
   public int normalizedToScreen( double normValue )
   {
     final int range = getRange();
@@ -132,6 +151,10 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     return screenValue;
   }
 
+  /**
+   * Uses the widgets' complete extension to alculates the normalized value in correspondance to a screen value
+   * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#screenToNormalized(int)
+   */
   public double screenToNormalized( int screenValue )
   {
     final int range = getRange();
@@ -144,6 +167,9 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     return normValue;
   }
 
+  /**
+   * calculates the significant (= not variable) extension of the widget
+   */
   private int getRange( )
   {
     final Rectangle bounds = getBounds();

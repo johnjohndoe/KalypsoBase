@@ -51,6 +51,7 @@ import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 
 /**
  * @author schlienger
+ * @author burtscher
  */
 public class DateAxis extends AbstractAxis<Date>
 {

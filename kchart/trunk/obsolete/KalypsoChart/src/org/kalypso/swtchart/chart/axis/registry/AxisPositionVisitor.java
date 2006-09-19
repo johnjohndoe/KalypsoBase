@@ -49,6 +49,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 
 /**
  * @author schlienger
+ * @author burtscher
  */
 public class AxisPositionVisitor implements IAxisVisitor
 {

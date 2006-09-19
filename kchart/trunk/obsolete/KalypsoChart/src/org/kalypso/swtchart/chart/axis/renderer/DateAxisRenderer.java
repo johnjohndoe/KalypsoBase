@@ -24,6 +24,9 @@ import org.kalypso.swtchart.chart.util.InsetsHelper;
 
 /**
  * @author alibu
+ * 
+ * IAxisRenderer-Implementation for displaying date-values
+ * 
  */
 public class DateAxisRenderer implements IAxisRenderer<Date>
 {

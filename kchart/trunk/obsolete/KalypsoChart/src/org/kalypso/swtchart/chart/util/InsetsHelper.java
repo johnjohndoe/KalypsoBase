@@ -3,7 +3,10 @@ package org.kalypso.swtchart.chart.util;
 import java.awt.Insets;
 
 /**
- * @author gernot, schlienger
+ * @author gernot, schlienger, burtscher
+ * 
+ * extends AWT-Insets by some methods to mirror and transform inset-characteristics
+ * 
  */
 public class InsetsHelper extends Insets
 {

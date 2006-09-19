@@ -49,23 +49,54 @@ import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Interface describing a container for the chart axes; used
+ * to ensure that only one axis is present for each DataType
  */
+
+
 public interface IAxisRegistry extends IAxisRegistryEventProvider
 {
+  
+  /**
+   * @return true if an axis with the given identifier is already present in the registry, false elsewise
+   */
   public boolean hasAxis( String identifier );
 
+  /**
+   * @return axis with the corresponding identifier
+   */
   public IAxis getAxis( String identifier );
 
+  /**
+   * @return Array of all present axes
+   */
   public IAxis[] getAxes( );
 
+  /**
+   * adds an axis to the registry
+   */
   public void addAxis( IAxis axis );
 
+  /**
+   * removes an axis from the registry
+   */
   public void removeAxis( IAxis axis );
 
+  /**
+   * removes all axes from the registry
+   */
   public void clear( );
 
+  /**
+   * @return Array of all axes at the given position
+   */
   public IAxis[] getAxesAt( IAxisConstants.POSITION pos );
 
+  /**
+   *    applies the axisVisitors mission
+   */
   public void apply( IAxisVisitor axisVisitor );
 
   /**
@@ -75,17 +106,38 @@ public interface IAxisRegistry extends IAxisRegistryEventProvider
    */
   public IAxisRenderer getRenderer( IAxis axis );
 
+  /**
+   * sets the AxisRenderer for a particular dataClass
+   */
   public void setRenderer( Class< ? > dataClass, IAxisRenderer renderer );
 
+  /**
+   * sets the AxisRenderer for a particular axis, identified by - guess what - the axis' identifier
+   */
   public void setRenderer( String identifier, IAxisRenderer renderer );
 
+  /**
+   * removes the renderer for a particular dataClass
+   */
   public void unsetRenderer( Class< ? > dataClass );
 
+  /**
+   * removes the renderer for a particular axis 
+   */
   public void unsetRenderer( String identifier );
 
+  /**
+   * @return the AxisComponent of the given axis or null if there isn't any
+   */
   public IAxisComponent getComponent( IAxis axis );
 
+  /**
+   * sets the component for a particular axis
+   */
   public void setComponent( IAxis axis, IAxisComponent comp );
 
+  /**
+   * @return map of Axis-AxisComponent-Pairs
+   */
   public Map<IAxis, IAxisComponent> getComponents( );
 }

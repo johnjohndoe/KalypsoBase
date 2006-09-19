@@ -52,6 +52,7 @@ import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 
 /**
  * @author schlienger
+ * @author burtscher
  */
 public class AxisRegistry implements IAxisRegistry
 {
@@ -170,7 +171,6 @@ public class AxisRegistry implements IAxisRegistry
   {
     final AxisPositionVisitor v = new AxisPositionVisitor( pos );
     apply( v );
-
     return v.getAxes();
   }
 

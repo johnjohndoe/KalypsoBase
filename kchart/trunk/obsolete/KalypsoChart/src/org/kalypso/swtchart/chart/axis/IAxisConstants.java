@@ -46,6 +46,9 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * some enumerations that describe axis characteristics
  */
 public interface IAxisConstants
 {

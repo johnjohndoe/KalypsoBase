@@ -44,19 +44,42 @@ import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Widget to display chart axes; it also helps 
+ * to calculate screen values from normalized values 
+ * 
  */
 public interface IAxisComponent<T>
 {
+  /**
+   *  converts a double value into the corresponding screen value  
+   */
   public int normalizedToScreen( double d );
 
+  /**
+   * converts a screen value into a normalized value
+   */
   public double screenToNormalized( int value );
 
+  /**
+   * disposes the widget
+   */
   public void dispose( );
 
+  /**
+   * sets the components' visibilty
+   */
   public void setVisible( boolean b );
 
+  /**
+   * @return Rectangle which describes the components' dimension
+   */
   public Rectangle getBounds( );
 
+  /**
+   * redraws and resizes the widget
+   */
   public void layout( );
 
 }
