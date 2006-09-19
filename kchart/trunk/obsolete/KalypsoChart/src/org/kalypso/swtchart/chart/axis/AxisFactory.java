@@ -62,16 +62,13 @@ import org.ksp.chart.viewerconfiguration.DateAxisType;
 import org.ksp.chart.viewerconfiguration.DoubleAxisType;
 
 /**
- * @author burtscher
- *  
- *  creates Axis stuff from configuration 
- *  TODO: should be moved to the configuration package  
+ * @author burtscher creates Axis stuff from configuration TODO: should be moved to the configuration package
  */
 public class AxisFactory
 {
   /**
-   * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the corresponding renderer 
-   * and adds both to a given Chart
+   * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
+   * corresponding renderer and adds both to a given Chart
    */
   public static void addConfigAxis( Chart chart, AbstractAxisType a )
   {
@@ -134,10 +131,11 @@ public class AxisFactory
       {
         IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
         ar.setRenderer( XMLGregorianCalendar.class, xgcAxisRenderer );
-    }
-    else
-    {
-      System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
+      }
+      else
+      {
+        System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
+      }
     }
   }
 }
