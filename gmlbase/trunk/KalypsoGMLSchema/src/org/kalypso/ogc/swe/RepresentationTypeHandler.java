@@ -73,21 +73,22 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     {
       final Element typeElt = (Element) node.getChildNodes().item( 0 );
 
-      // read base-attribute of restriction
-      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
-      Element restrictionElt = null;
-      if( elementsByTagName.getLength() == 1 )
-        restrictionElt = (Element) elementsByTagName.item( 0 );
-
       final String localName = typeElt.getLocalName();
       final String base;
       if( "SimpleType".equals( localName ) )
       {
-        if( restrictionElt != null )
+        // read base-attribute of restriction
+        final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
+        if( elementsByTagName.getLength() == 1 )
+        {
+          final Element restrictionElt = (Element) elementsByTagName.item( 0 );
           base = restrictionElt.getAttribute( "base" );
+
+          // TODO: recurse into simple-type and collect all restrictions
+        }
         else
           // error handling?
-          base = "string";
+          throw new TypeRegistryException( "SimpleType without st:restriction definition." );
       }
       else if( "Number".equals( localName ) )
         base = "double";
@@ -98,6 +99,14 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
       else
         base = "string";
 
+      // read base-attribute of restriction
+//      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" );
+//      Element restrictionElt = null;
+//      if( elementsByTagName.getLength() == 1 )
+//        restrictionElt = (Element) elementsByTagName.item( 0 );
+      
+      // TODO: read IRestriction - Elements from restrictionElt and append them to the RepresentationType
+      
       // parse unitOfMeasure
       final NodeList nlUom = typeElt.getElementsByTagNameNS( NS.GML3, "unitOfMeasure" );
       Element uomElt = null;
