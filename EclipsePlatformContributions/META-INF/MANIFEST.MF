@@ -32,4 +32,4 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.kalypso.contribs.java,
  org.eclipse.ui.browser;visibility:=reexport,
  org.eclipse.ui.intro
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

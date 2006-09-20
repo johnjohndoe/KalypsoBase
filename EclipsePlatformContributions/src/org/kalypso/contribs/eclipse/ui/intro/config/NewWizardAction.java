@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  * @see org.eclipse.ui.intro.config.IIntroAction
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class NewWizardAction implements IIntroAction
 {
   /**

@@ -74,6 +74,7 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * 
  * @author belger
  */
+@SuppressWarnings("restriction")
 public class UrlResolver implements IUrlResolver
 {
   private Properties m_replaceTokenMap = new Properties();

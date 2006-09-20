@@ -43,10 +43,11 @@ import org.eclipse.ui.internal.ide.StringMatcher;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
- * Copy of the original {@link org.eclipse.ui.dialogs.ResourceListSelectionDialog}beacuse that class is not public.
+ * Copy of the original {@link org.eclipse.ui.dialogs.ResourceListSelectionDialog} because that class is not public.
  * 
  * TODO: copy it again from the 3.1 sources
  */
+@SuppressWarnings("restriction")
 public final class ResourceListSelectionDialog extends SelectionDialog
 {
   Text pattern;
