@@ -40,8 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.views.contentoutline;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -62,14 +61,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class ContentOutlinePage2 extends Page implements IContentOutlinePage, ISelectionChangedListener
 {
-  private ListenerList selectionChangedListeners = new ListenerList();
+  private ListenerList selectionChangedListeners = new ListenerList( ListenerList.IDENTITY );
 
   protected TreeViewer treeViewer;
 
   /**
    * Create a new content outline page.
    */
-  protected ContentOutlinePage2()
+  protected ContentOutlinePage2( )
   {
     super();
   }
@@ -126,10 +125,10 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     Object[] listeners = selectionChangedListeners.getListeners();
     for( int i = 0; i < listeners.length; ++i )
     {
-      final ISelectionChangedListener l = (ISelectionChangedListener)listeners[i];
-      Platform.run( new SafeRunnable()
+      final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+      SafeRunnable.run( new SafeRunnable()
       {
-        public void run()
+        public void run( )
         {
           l.selectionChanged( event );
         }
@@ -141,7 +140,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @see org.eclipse.ui.part.IPage#getControl()
    */
   @Override
-  public Control getControl()
+  public Control getControl( )
   {
     if( treeViewer == null )
       return null;
@@ -151,7 +150,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     if( treeViewer == null )
       return StructuredSelection.EMPTY;
@@ -163,7 +162,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * 
    * @return this page's tree viewer, or <code>null</code> if <code>createControl</code> has not been called yet
    */
-  protected TreeViewer getTreeViewer()
+  protected TreeViewer getTreeViewer( )
   {
     return treeViewer;
   }
@@ -198,7 +197,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * Sets focus to a part in the page.
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
     treeViewer.getControl().setFocus();
   }

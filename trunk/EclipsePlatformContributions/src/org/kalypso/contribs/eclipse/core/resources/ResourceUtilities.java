@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author schlienger (14.06.2005)
  */
+@SuppressWarnings("restriction")
 public class ResourceUtilities
 {
   private ResourceUtilities( )

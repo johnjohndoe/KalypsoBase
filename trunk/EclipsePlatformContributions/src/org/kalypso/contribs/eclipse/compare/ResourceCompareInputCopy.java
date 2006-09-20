@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author belger
  */
+@SuppressWarnings("restriction")
 public class ResourceCompareInputCopy extends CompareEditorInput
 {
   private static final boolean NORMALIZE_CASE = true;

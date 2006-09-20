@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -28,6 +27,7 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 
+@SuppressWarnings("restriction")
 public class KalypsoResourceSelectionDialog extends SelectionDialog
 {
   private IResource m_initialSelection;

@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
@@ -881,7 +880,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     for( int i = 0; i < listeners.length; i++ )
     {
       final IWizardContainerListener listener = listeners[i];
-      Platform.run( new SafeRunnable()
+      SafeRunnable.run( new SafeRunnable()
       {
         public void run() throws Exception
         {
@@ -898,7 +897,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     for( int i = 0; i < listeners.length; i++ )
     {
       final IWizardContainerListener listener = listeners[i];
-      Platform.run( new SafeRunnable()
+      SafeRunnable.run( new SafeRunnable()
       {
         public void run() throws Exception
         {
