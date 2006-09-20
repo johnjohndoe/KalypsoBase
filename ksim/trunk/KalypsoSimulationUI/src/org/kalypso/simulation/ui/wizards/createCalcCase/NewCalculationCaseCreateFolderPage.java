@@ -189,6 +189,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
    */
+  @Override
   public void setVisible( boolean visible )
   {
     super.setVisible( visible );

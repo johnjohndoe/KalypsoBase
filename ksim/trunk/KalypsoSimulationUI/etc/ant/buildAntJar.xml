@@ -42,7 +42,9 @@
 					<include name="JWSDPInstallation/jwsdp/**/*.jar" />
 				</fileset>
 				<fileset dir="${eclipse.home}">
+					<include name="plugins/org.eclipse.equinox.common*.jar" />
 					<include name="plugins/org.eclipse.core.runtime*.jar" />
+					<include name="plugins/org.eclipse.core.jobs*.jar" />
 					<include name="plugins/org.eclipse.ant.core*.jar" />
 					<include name="plugins/org.eclipse.core.resources*.jar" />
 					<include name="plugins/org.eclipse.swt*.jar" />

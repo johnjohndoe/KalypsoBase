@@ -48,22 +48,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.actions.CopyFilesAndFoldersOperation;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.simulation.ui.calccase.ModelNature;
-import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
 
 /**
  * @author huebsch

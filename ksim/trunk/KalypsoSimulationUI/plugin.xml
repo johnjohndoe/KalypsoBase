@@ -220,4 +220,41 @@
             name="%sumUpTableExporter.name"
             id="sumUpTableExporter"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <contentExtension
+                  pattern="org.kalypso.simulation.ui.modelContent"/>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.kalypso.simulation.ui.navigator.ModellContentProvider"
+            id="org.kalypso.simulation.ui.modelContent"
+            labelProvider="org.kalypso.simulation.ui.navigator.ModellLabelProvider"
+            name="Kalypso Modell"
+            priority="highest">
+         <triggerPoints>
+            <or>
+               <adapt type="org.eclipse.core.resources.IProject">
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.kalypso.simulation.ui.ModelNature"/>
+               </adapt>
+               <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+               <instanceof value="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+               <instanceof value="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
+            </or>
+         </possibleChildren>
+         </navigatorContent>
+   </extension>
 </plugin>

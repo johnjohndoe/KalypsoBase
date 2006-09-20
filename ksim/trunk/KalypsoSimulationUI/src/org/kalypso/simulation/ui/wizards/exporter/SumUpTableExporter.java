@@ -159,7 +159,7 @@ public class SumUpTableExporter extends AbstractExporter
    *      org.eclipse.jface.resource.ImageDescriptor)
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration,
-      final ImageDescriptor defaultImage ) throws CoreException
+      final ImageDescriptor defaultImage )
   {
     return new IWizardPage[0];
   }
