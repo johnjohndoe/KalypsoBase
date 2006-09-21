@@ -136,7 +136,7 @@ public class KalypsoSimulationCoreExtensions
         }
       }
       else
-        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: " + element.getValueAsIs() );
+        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: " + element.getValue() );
     }
 
     return status;
