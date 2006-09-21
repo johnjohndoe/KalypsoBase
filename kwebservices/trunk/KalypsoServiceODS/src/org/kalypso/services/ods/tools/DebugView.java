@@ -41,41 +41,24 @@
 package org.kalypso.services.ods.tools;
 
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.operation.CapabilitiesLoader;
-import org.kalypso.services.ods.operation.ODSException;
-import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
-import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
-import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;

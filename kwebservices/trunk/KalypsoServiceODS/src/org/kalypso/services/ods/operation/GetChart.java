@@ -42,7 +42,6 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,8 +60,6 @@ import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.ChartImageContainer;
-import org.kalypso.swtchart.chart.legend.LegendImageContainer;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;

@@ -56,7 +56,6 @@ import net.opengis.ows.ObjectFactory;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 
 

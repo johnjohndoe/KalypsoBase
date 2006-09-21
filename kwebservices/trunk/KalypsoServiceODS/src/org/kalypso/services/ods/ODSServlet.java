@@ -3,34 +3,14 @@
  */
 package org.kalypso.services.ods;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.Map;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
-/*
- import org.eclipse.swt.SWT;
- import org.eclipse.swt.graphics.GC;
- import org.eclipse.swt.graphics.Image;
- import org.eclipse.swt.graphics.ImageData;
- import org.eclipse.swt.graphics.ImageLoader;
- import org.eclipse.swt.widgets.Display;
- */
 import org.kalypso.services.ods.operation.GetCapabilites;
 import org.kalypso.services.ods.operation.GetChart;
 import org.kalypso.services.ods.operation.GetHTMLTable;
