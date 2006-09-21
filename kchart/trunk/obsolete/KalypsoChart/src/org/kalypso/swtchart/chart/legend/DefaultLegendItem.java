@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class DefaultLegendItem implements ILegendItem
 {

@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class KalypsoChartExtensions
 {

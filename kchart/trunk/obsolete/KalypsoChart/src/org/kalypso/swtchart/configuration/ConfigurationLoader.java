@@ -51,7 +51,9 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.ObjectFactory;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * loads a configuration file
  */
 public class ConfigurationLoader
 {
@@ -63,12 +65,18 @@ public class ConfigurationLoader
 
   public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
+  /**
+   * @param path file system path or url where the configuration file can be found
+   */
   public ConfigurationLoader( String path ) throws JAXBException
   {
     m_configPath = path;
     loadFile();
   }
 
+  /**
+   *  reads and loads the configuration file
+   */
   public void loadFile( ) throws JAXBException
   {
     System.out.println( "loadFile Start" );
@@ -87,6 +95,9 @@ public class ConfigurationLoader
     System.out.println( "loadFile End" );
   }
 
+  /**
+   * @return marshalled configuration
+   */
   public ConfigurationType getConfiguration( )
   {
     return m_config;

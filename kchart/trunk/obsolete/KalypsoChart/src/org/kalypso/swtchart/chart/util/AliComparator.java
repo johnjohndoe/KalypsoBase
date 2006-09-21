@@ -49,9 +49,15 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Badly named comparator class used to compare "certain" objects 
+ * which do not implement the Comparable interface;
+ * right now, it only compares XMLGergorianCalendarObjects;
+ * 
+ * TODO: Rename
+ * 
  */
-// public class DateComparator implements Comparator<Date>
 public class AliComparator extends ComparableComparator
 {
   /**

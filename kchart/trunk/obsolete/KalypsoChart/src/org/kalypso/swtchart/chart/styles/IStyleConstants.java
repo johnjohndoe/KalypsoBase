@@ -41,15 +41,13 @@
 package org.kalypso.swtchart.chart.styles;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public interface IStyleConstants
 {
 
   /**
-   * Die verschiedenen Typen der StyledElements
-   * 
-   * @author alibu
+   * different types of StyledElements 
    */
   public enum SE_TYPE
   {
@@ -60,10 +58,7 @@ public interface IStyleConstants
   }
 
   /**
-   * Verschiedene Stysles, in denen eine Linie geezeichnet werden kann (durchgezogen, gestrichelt, gepunktet,...) das
-   * sind genau die Linien-Styles von SWT
-   * 
-   * @author alibu
+   * different styles which can be used on line elements
    */
   public enum SE_LINESTYLE
   {

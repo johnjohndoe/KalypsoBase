@@ -56,6 +56,10 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Concrete IAxis implementation - to be used for calendar data from XML documents
+ * 
  */
 public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
 {
@@ -87,7 +91,6 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     // Die rechte Seite muss unbedingt nach double gecastet werden, da sonst auf die Werte 0 oder 1 gerundet wird.
     final double norm = ((double) (valueMillis - fromMillis)) / r;
     // System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from:
-    // "+getFrom().getTime()+ " to: "+getTo().getTime());
     return norm;
   }
 
@@ -144,8 +147,10 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
     long intervalMillis = (long) intervalSize;
     long fixedMillis = fixedPoint.toGregorianCalendar().getTimeInMillis();
     long valueMillis = value.toGregorianCalendar().getTimeInMillis();
-    // der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
-    // gesehen liegt
+    /*
+     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
+     *  gesehen liegt  
+     */ 
     long start = fixedMillis;
     long end = fixedMillis;
     System.out.println( "Axis (" + getIdentifier() + "): starting IntervalCalculation" );

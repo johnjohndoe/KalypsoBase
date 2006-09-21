@@ -46,6 +46,8 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * @author schlienger
+ * 
+ * switch to return x- or y-coordinates according to the an orientation
  */
 public interface ICoordinateSwitcher
 {

@@ -41,7 +41,7 @@
 package org.kalypso.swtchart.preferences;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public interface IChartPreferences
 {

@@ -67,6 +67,9 @@ import org.kalypso.swtchart.chart.mouse.IChartMouseHandler;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * widget in which the layers' content is paintet
  */
 public class Plot extends Canvas implements PaintListener, Listener, MouseListener, MouseMoveListener
 {
@@ -108,9 +111,10 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
   }
 
   /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Zeichnet nacheinander
-   *      alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht neu berechnet, sondern ein
-   *      gepuffertes Img angezeigt
+   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) 
+   * 
+   * Draws all layers if a PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a
+   * MouseDrag-Action, a buffered plot image is used
    */
   public void paintControl( final PaintEvent e )
   {
@@ -129,10 +133,9 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
   }
 
   /**
-   * Übernommen und angepasst von de.belger.swtchart zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot
-   * gezeichnet (doubleBuffering) und zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen
-   * wird Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den Webservice
-   * verwendet wird.
+   * 
+   * double-buffered paint method; set to public in order to be used from ouside, e.g. from
+   * ChartImageContainer
    */
   public Image paintChart( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
@@ -182,6 +185,9 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
     redraw();
   }
 
+  /**
+   * maximises the content of the plot to the values inside a dragged rectangle
+   */
   public void zoomIn( final Point start, final Point end )
   {
     final IAxisRegistry ar = m_chart.getAxisRegistry();
@@ -241,53 +247,6 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
     repaint();
   }
 
-//  /**
-//   * Gibt die Größe des neuen Ausschnitts im Verhältnis zum alten Ausschnitt an
-//   */
-//  private void zoom( final double zoomFactor )
-//  {
-//    IAxisRegistry ar = m_chart.getAxisRegistry();
-//    IAxis[] axes = ar.getAxes();
-//    Rectangle bounds = getBounds();
-//    if( getDisplay() != null && getDisplay().getActiveShell() != null )
-//      bounds = getDisplay().getActiveShell().getBounds();
-//    for( IAxis axis : axes )
-//    {
-//      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-//      {
-//        if( axis.getDirection() == DIRECTION.POSITIVE )
-//        {
-//          axis.setFrom( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//          axis.setTo( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//        }
-//        else if( axis.getDirection() == DIRECTION.NEGATIVE )
-//        {
-//          axis.setTo( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//          axis.setFrom( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//        }
-//      }
-//      if( axis.getPosition().getOrientation() == ORIENTATION.VERTICAL )
-//      {
-//        if( axis.getDirection() == DIRECTION.NEGATIVE )
-//        {
-//          axis.setFrom( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//          axis.setTo( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//        }
-//        else if( axis.getDirection() == DIRECTION.POSITIVE )
-//        {
-//          axis.setTo( axis.screenToLogical( (int) (0 - 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//          axis.setFrom( axis.screenToLogical( (int) (bounds.width + 0.5 * (zoomFactor * bounds.width - bounds.width)) ) );
-//        }
-//      }
-//      /*
-//       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisComponent gecastet werden - sonst gibts keinen
-//       * Zurgriff auf die Paint-Sachen
-//       */
-//      AxisComponent ac = (AxisComponent) ar.getComponent( axis );
-//      ac.redraw();
-//    }
-//    repaint();
-//  }
 
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
@@ -299,7 +258,7 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
   }
 
   /**
-   * Gibt das Bildchen, das zum Puffern verwendet wird, zurück
+   * @return Image used to buffer plot graphics
    */
   public Image getBufferImg( )
   {

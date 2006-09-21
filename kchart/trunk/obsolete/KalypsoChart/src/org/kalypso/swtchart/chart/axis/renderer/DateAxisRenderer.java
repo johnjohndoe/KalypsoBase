@@ -23,7 +23,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.util.InsetsHelper;
 
 /**
- * @author alibu
+ * @author burtscher
  * 
  * IAxisRenderer-Implementation for displaying date-values
  * 

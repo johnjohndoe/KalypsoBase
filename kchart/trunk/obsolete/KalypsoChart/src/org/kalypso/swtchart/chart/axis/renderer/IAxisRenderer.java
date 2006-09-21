@@ -11,6 +11,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
  * @author schlienger
  * @author burtscher
  * 
+ * Interface used to render an IAxis object into an IAxisComponent
  * 
  */
 public interface IAxisRenderer<T>

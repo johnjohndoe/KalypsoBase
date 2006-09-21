@@ -42,6 +42,9 @@ package org.kalypso.swtchart.chart.layer;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * used to manage chart layers - right now this means adding and removing them 
  */
 public interface ILayerManager
 {

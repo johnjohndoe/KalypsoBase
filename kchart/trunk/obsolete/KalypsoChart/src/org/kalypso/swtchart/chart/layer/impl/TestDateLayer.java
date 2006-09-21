@@ -64,7 +64,7 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class TestDateLayer implements IChartLayer
 {

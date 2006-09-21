@@ -62,7 +62,11 @@ import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Creates an Image from a chart widget.
+ * 
+ * The objects has to be disposed when it's no longer needed
  */
 public class ChartImageContainer
 {
@@ -70,10 +74,11 @@ public class ChartImageContainer
   Image m_img = null;
 
   /**
-   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei Im momement geschieht das Erzeugen etwas
-   * umständlich: Chart erzeugen, dann Layer geben lassen und in Legende füllen; ohne Chart kommt man aber nicht an die
-   * Layer ran: LayerProvider verlangt in der Init-Methode nach einem Chart Das Objekt muss nach der Verwendung diposed
-   * werden
+   * @param config Configuration containing the desired chart
+   * @param chartname name of the desired chart - must be present in given config
+   * @param dev Device for which the image should be created
+   * @param width width of the Image
+   * @param height height of the Image
    */
   public ChartImageContainer( ConfigurationType config, String chartname, Device dev, int width, int height ) throws ConfigChartNotFoundException
   {
@@ -88,7 +93,10 @@ public class ChartImageContainer
   }
 
   /**
-   * Wenn man schon ein fertiges Chart hat, kann man auch leichter konstruieren
+   * @param pre-loaded chart object
+   * @param dev Device for which the image should be created
+   * @param width width of the Image
+   * @param height height of the Image
    */
   public ChartImageContainer( Chart chart, Device dev, int width, int height )
   {
@@ -96,13 +104,16 @@ public class ChartImageContainer
   }
 
   /**
-   * Gibt das erzeugte Bild zurück
+   * @return the Image containing the chart
    */
   public Image getImage( )
   {
     return m_img;
   }
 
+  /*
+   * disposes the disposable elements
+   */
   public void dispose( )
   {
     if( m_img != null )
@@ -110,6 +121,11 @@ public class ChartImageContainer
     m_img = null;
   }
 
+  /**
+   * 
+   * 
+   * TODO: set to private
+   */
   public void createChartImage( Chart chart, Device dev, int width, int height )
   {
     chart.setSize( new Point( width, height ) );

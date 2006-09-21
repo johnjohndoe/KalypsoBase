@@ -32,7 +32,7 @@ import org.kalypso.swtchart.chart.util.InsetsHelper;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregorianCalendar>
 {

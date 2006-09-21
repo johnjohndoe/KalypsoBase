@@ -63,13 +63,13 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class StyleLoader
 {
 
   /**
-   * Erzeugt ein Style-Objekt anhand der ID aus der Konfiguration
+   * creates a style object by id from configuration file
    */
   public static ILayerStyle createStyle( ConfigurationType config, String styleId )
   {
@@ -86,7 +86,7 @@ public class StyleLoader
   }
 
   /**
-   * Erzeugt ein StyleObjekte aus einem Konfiguration-StyleType
+   * creates a style object from a configuration styletype object
    */
   public static ILayerStyle createStyle( StyleType st )
   {
@@ -145,6 +145,9 @@ public class StyleLoader
     return ls;
   }
 
+  /**
+   * creates a StyledLine object from a style configuration 
+   */
   public static StyledLine createLine( LineType lt )
   {
     int alpha = 255;
@@ -154,6 +157,9 @@ public class StyleLoader
     return sl;
   }
 
+  /**
+   * creates a StyledPolygon object from a style configuration 
+   */
   public static StyledPolygon createPolygon( PolygonType pt )
   {
     StyledPolygon sp = null;
@@ -176,7 +182,7 @@ public class StyleLoader
   }
 
   /**
-   * Erzeugt ein RGB-Objekt aus einem 3-Byte, wie es nach dem Unmarshalling von hexBinary-Werten zurückgeben wird;
+   * creates a rgb object from 3byte as returned by the unmarshalling process of heybinary values
    */
   public static RGB createColor( byte[] cbyte )
   {
@@ -187,11 +193,10 @@ public class StyleLoader
   }
 
   /**
-   * Wandelt einen HexString in eine Dezimalzahl um
+   * transforms a hex string into an integer
    * 
-   * @param strHex
-   *          die Zahl als Hexadezimal-String
-   * @return die Zahl als Integer
+   * @param strHex hexdec representation of the number as String 
+   * @return integer representation
    */
   public static int hexToInt( String strHex )
   {

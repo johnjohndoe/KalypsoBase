@@ -49,6 +49,9 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * some helper methods to ease your everyday life programming chart stuff
  */
 public class ChartUtilities
 {
@@ -68,6 +71,11 @@ public class ChartUtilities
     return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir == DIRECTION.NEGATIVE;
   }
 
+  
+  /**
+   * sets the given GC to an initial state - this methosd should be called before any 
+   * chart painting action is processed
+   */
   public static void resetGC( final GC gc, final Device dev )
   {
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
@@ -77,6 +85,9 @@ public class ChartUtilities
     gc.setAlpha( 255 );
   }
 
+  /**
+   * maximises the chart view - that means all the available data of all layers is shown
+   */
   public static void maximize( final Chart chart )
   {
     final IAxis[] axes = chart.getAxisRegistry().getAxes();

@@ -53,7 +53,15 @@ import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Creates an Image containing the legend of a specified chart from configuration data.
+ * Right now this is done in some long winded way: first, the chart widget has to be created, then
+ * the charts layers need to be traversed and filled into the legend. This has to be done as
+ * the layer provider is needed to create the layers and is to be initialized with a chart widget.
+ * 
+ * The object has to be disposed when not needed any more
+ * 
  */
 public class LegendImageContainer
 {
@@ -61,10 +69,9 @@ public class LegendImageContainer
   Image m_img = null;
 
   /**
-   * Erzeugt eine Legende zu einem ChartNamen und einer Config-Datei Im momement geschieht das Erzeugen etwas
-   * umständlich: Chart erzeugen, dann Layer geben lassen und in Legende füllen; ohne Chart kommt man aber nicht an die
-   * Layer ran: LayerProvider verlangt in der Init-Methode nach einem Chart Das Objekt muss nach der Verwendung diposed
-   * werden
+   * @param config the marshalled configuration file
+   * @param chartname name of the chart in the configuration file
+   * @param dev Device for which the image shall be created
    */
   public LegendImageContainer( ConfigurationType config, String chartname, Device dev ) throws ConfigChartNotFoundException
   {
@@ -91,7 +98,8 @@ public class LegendImageContainer
   }
 
   /**
-   * Wenn man schon ein fertiges Chart hat, kann man auch leichter konstruieren
+   * @param chart (preloaded) Chart widget whose legend shall be created
+   * @param dev Device for which the image shall be created 
    */
   public LegendImageContainer( Chart chart, Device dev )
   {
@@ -110,7 +118,7 @@ public class LegendImageContainer
   }
 
   /**
-   * Gibt das erzeugte Bild zurück
+   * @return Legend image
    */
   public Image getImage( )
   {

@@ -67,12 +67,19 @@ import org.ksp.chart.tableconfiguration.TableType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * reads an observation and transforms its values into an html table
  */
 public class TableLoader
 {
   public final static ObjectFactory OF = new ObjectFactory();
 
+  /**
+   * checks if a tableType-object named tableName is found in the ConfigurationType. If so, it
+   * tries to load the data, creates an html table and returns it as string. Otherwise, it throws a
+   * ConfigTableNotFound Exception 
+   */
   public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
   {
     List<TableType> tables = config.getTable();
@@ -127,6 +134,13 @@ public class TableLoader
     }
   }
 
+  /**
+   * creates an html table from the given features content, using the TableType from a confguration
+   * in order to select the displayed properties; 
+   * @param feature observation which shall be displayed as html table
+   * @param conftable TableType which lists the contents to be contained in the table
+   * @return string containing the html table  
+   */
   private static String tableFromFeature( Feature feature, TableType conftable )
   {
     // Parameter auslesen

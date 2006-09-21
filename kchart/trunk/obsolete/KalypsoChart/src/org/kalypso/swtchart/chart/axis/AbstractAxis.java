@@ -52,7 +52,10 @@ import org.kalypso.swtchart.chart.layer.IDataRange;
 
 /**
  * @author schlienger
- * @author alibu
+ * @author burtscher
+ * 
+ * Abstract implementation of IAxis - implements some 
+ * methods which are equal for all concrete IAxis-classes
  */
 public abstract class AbstractAxis<T> implements IAxis<T>
 {

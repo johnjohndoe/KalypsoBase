@@ -62,7 +62,10 @@ import org.kalypso.swtchart.preferences.ChartPreferences;
 import org.kalypso.swtchart.preferences.IChartPreferences;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * widget containing a chart and a legend 
+ * 
  */
 public class Diagram extends Composite implements Listener
 {

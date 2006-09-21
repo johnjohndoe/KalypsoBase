@@ -60,7 +60,7 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class TestStackLayer implements IChartLayer
 {

@@ -60,7 +60,7 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class DoubleDataLayerProvider implements ILayerProvider
 {

@@ -47,9 +47,22 @@ import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * A LayerProvider is needed to create layers from configuration data.
+ * Theres no 1:1 mapping from data soureces to layers, as 
+ * 1.) several data sources can be merged to generate layer data and
+ * 2.) one data source can be used to create several layers.
+ * The LayerProvider is used to fetch, filter and analyze data and to provide
+ * layers according to the datas needs.
+ *  
  */
 public interface ILayerProvider
 {
+  /**
+   * @return Array of all layers created by the LayerProvider
+   * @param context context path - needed to resolve relative paths from xml configuration
+   */
   public IChartLayer[] getLayers( final URL context ) throws LayerProviderException;
 
   // TODO: move chart parameter to getLayers

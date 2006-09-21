@@ -49,38 +49,90 @@ import org.kalypso.swtchart.chart.styles.ILayerStyle;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * an IChartLayer represents a (visual) layer of the chart; 
+ * it can be assigned to up to 2 axes to translate logical data 
+ * into screen values
  */
 public interface IChartLayer
 {
+  /**
+   * sets the layers name (which will be shown in the legend)
+   */
   public void setName( String name );
 
+  /**
+   * @return the layers name
+   */
   public String getName( );
 
+  /**
+   * sets a description for the layer
+   */
   public void setDescription( String description );
 
+  /**
+   * @return the layers description
+   */
   public String getDescription( );
 
+  /**
+   * @return the IAxis object used with domain data
+   */
   public IAxis getDomainAxis( );
 
+  /**
+   * @return DataRange object describing minimal and maximal domain values
+   */
   public IDataRange getDomainRange( );
 
+  /**
+   * @return the IAxis object used with value data
+   */
   public IAxis getValueAxis( );
 
+  /**
+   * @return DataRange object describing minimal and maximal target values 
+   * (to remain inside the elsewise used vocabulary: the "target values" should be 
+   * refered to as "value values" which sounds a bit strange...) 
+   */
   public IDataRange getValueRange( );
 
+  /**
+   * @return ILegendItem which describes the Layers content and style 
+   */
   public ILegendItem getLegendItem( );
 
+  /**
+   * draws a picture of a given size into the given Image; the icon will be used 
+   * for the legend to describe the layers visual representation
+   */
   public void drawIcon( Image img, int width, int height );
 
+  /**
+   * @return true if the layer is set active, false otherwise
+   */
   public boolean isActive( );
 
-  // public void setActive( boolean active );
 
+  /**
+   *  @return true if the layer is set visible, false otherwise
+   */
   public boolean isVisible( );
 
+  /**
+   * @return the layer style
+   */
   public ILayerStyle getStyle( );
 
+  /**
+   * sets the layer's style
+   */
   public void setStyle( ILayerStyle style );
-
+  
+  /**
+   * draws the layer using the given GCWrapper and Device
+   */
   public void paint( final GCWrapper gc, final Device dev );
 }

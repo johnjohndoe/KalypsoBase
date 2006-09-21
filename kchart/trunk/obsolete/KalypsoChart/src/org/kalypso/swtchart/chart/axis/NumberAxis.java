@@ -50,7 +50,9 @@ import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 
 /**
  * @author schlienger
- * @author alibu
+ * @author burtscher
+ * 
+ * Concrete IAxis implementation - to be used for numeric data 
  */
 public class NumberAxis extends AbstractAxis<Number>
 {

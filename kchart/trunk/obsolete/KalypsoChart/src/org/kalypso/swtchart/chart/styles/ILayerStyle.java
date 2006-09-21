@@ -44,8 +44,18 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Container for IStyledElements
+ * 
  */
 public interface ILayerStyle
 {
+  /**
+   * @return IStyledElement with given type on given position pos; if there's no element
+   * at the designated position, the last element by the favoured type is returned. If there's
+   * no element by the designated type is available, null is returned;
+   * 
+   */
   public IStyledElement getElement( SE_TYPE type, int pos );
 }

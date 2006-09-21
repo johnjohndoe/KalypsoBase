@@ -41,7 +41,7 @@
 package org.kalypso.swtchart.exception;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class ConfigChartNotFoundException extends Exception
 {

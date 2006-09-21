@@ -60,17 +60,17 @@ import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Creates a chart object from a configration
  */
 public class ChartLoader
 {
   /**
-   * Erstellt ein Chart aus der Konfiguration
-   * 
    * @param chart
-   *          Das Chart-Objekt, das mit Leben gefüllt wird
+   *          the (empty) chart widget which is to be filled 
    * @param configChartName
-   *          Der Name der ChartConfiguration, die verwendet werden soll
+   *          name of ChartConfiguration that is to be used 
    */
   public static Chart createChart( Chart chart, ConfigurationType config, String configChartName, final URL context ) throws ConfigChartNotFoundException
   {
@@ -101,6 +101,7 @@ public class ChartLoader
     return chart;
   }
 
+  
   public static void configureChart( final Chart chart, final ChartType configChart, final URL context )
   {
     // Achsen hinzufügen

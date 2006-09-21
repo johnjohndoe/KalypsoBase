@@ -58,13 +58,11 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 
 /**
- * The legend can be rendered in the chart at following positions:
- * <ul>
- * <li>right</li>
- * <li>left</li>
- * </ul>
- * 
  * @author schlienger
+ * @author burtscher
+ * 
+ * widget displaying a legend describing a charts contents; also a container for ILegendItems 
+ * 
  */
 public class Legend extends Canvas implements PaintListener
 {
@@ -88,17 +86,28 @@ public class Legend extends Canvas implements PaintListener
     setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
   }
 
+  /**
+   * sets the legends title
+   * TODO: the title is not rendered into the legend image 
+   * - this should be done as there's no need for a title otherwise
+   */
   public void setTitle( final String title )
   {
     m_title = title;
   }
 
+  /**
+   * creates an ILegendItem for the given ChartLayer and adds it to the list of ILegendItems 
+   */
   public void addLayer( IChartLayer l )
   {
     DefaultLegendItem li = new DefaultLegendItem( l, m_iconWidth, m_iconHeight, m_inset );
     addLegendItem( li );
   }
 
+  /**
+   * creates ILegendItems for the given ChartLayers and adds them to the list of ILegendItems 
+   */
   public void addLayers( IChartLayer[] layers )
   {
     for( IChartLayer l : layers )
@@ -107,6 +116,9 @@ public class Legend extends Canvas implements PaintListener
     }
   }
 
+  /**
+   * creates ILegendItems for the given ChartLayers and adds them to the list of ILegendItems 
+   */
   public void addLayers( List<IChartLayer> layers )
   {
     for( IChartLayer l : layers )
@@ -115,25 +127,16 @@ public class Legend extends Canvas implements PaintListener
     }
   }
 
+  /**
+   * adds an ILegendItem to the list of ILengendItems
+   */
   public void addLegendItem( ILegendItem l )
   {
     m_items.add( l );
   }
 
   /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   */
-  /*
-   * public void paintControl( PaintEvent e ) { GC gc=e.gc; gc.setBackground(e.display.getSystemColor(SWT.COLOR_WHITE));
-   * gc.setForeground(e.display.getSystemColor(SWT.COLOR_BLACK)); //Abstand zum oberen Rand der Komponente int top=0;
-   * for( ILegendItem li : m_items ) { Point size=li.computeSize(0,0); Image liImg=new Image(e.display, size.x, size.y);
-   * li.paintImage(liImg); gc.drawImage(liImg, 0, top); liImg.dispose(); top+=size.y; } gc.dispose(); }
-   */
-
-  /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Zeichnet nacheinander
-   *      alle Layer; falls eine MouseDrag-Aktion ausgeführt wird, werden die Werte nicht neu berechnet, sondern ein
-   *      gepuffertes Img angezeigt
+   * paints the legend into the PaintEvents GC; uses DoubleBuffering
    */
   public void paintControl( final PaintEvent e )
   {
@@ -145,14 +148,13 @@ public class Legend extends Canvas implements PaintListener
   }
 
   /**
-   * ÜBernommen und angepasst von de.belger.swtchart zeichnet zuerst ein Image vom Chart, das dann in dem GC vom Plot
-   * gezeichnet (doubleBuffering) und zurückgegeben wird; es wird also nur erzeugt, wenn explizit redraw() aufgerufen
-   * wird Die Funktion ist public, da sie auch für die Generierungen von Grafiken für die Rückgabe über den Webservice
-   * verwendet wird.
+   * paints the legend into a buffer image and uses the given Rectangle to define the size; if the given image is null, a new image will be created
+   * and returned
+   * 
+   * TODO: rename to paintBufferedLegend or similar to separate from drawImage
    */
   public Image paintLegend( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
-
     final Image usedBufferImage;
     if( bufferImage == null )
     {
@@ -163,14 +165,12 @@ public class Legend extends Canvas implements PaintListener
     else
       usedBufferImage = bufferImage;
 
-    // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
-    // selstsamen effekten
     gcw.drawImage( usedBufferImage, 0, 0 );
     return usedBufferImage;
   }
 
   /**
-   * Zeichnet die Legende in eine Image
+   * paints the legend into an Image
    */
   public void drawImage( Image img, Device dev )
   {

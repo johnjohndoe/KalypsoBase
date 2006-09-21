@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class ChartPreferences
 {
@@ -60,6 +60,9 @@ public class ChartPreferences
     init();
   }
 
+  /**
+   * initializes the preferences with standard values, if no preference file was found 
+   */
   public void init( )
   {
     // Mit Standarddaten initialisieren, falls keine Inhalte drin sind

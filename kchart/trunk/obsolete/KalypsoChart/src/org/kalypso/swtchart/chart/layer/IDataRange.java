@@ -42,6 +42,10 @@ package org.kalypso.swtchart.chart.layer;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * describes min and max valuse of an (ordered) data set
+ * 
  */
 public interface IDataRange<T>
 {

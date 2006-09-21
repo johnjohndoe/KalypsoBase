@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class LayerStyle implements ILayerStyle
 {
@@ -61,19 +61,8 @@ public class LayerStyle implements ILayerStyle
     m_elements.add( se );
   }
 
-  /*
-   * TODO: Besser Map<Type, List<Styles>>
-   */
-
   /**
    * @see org.kalypso.swtchart.styles.ILayerStyle#getElement(org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE, int)
-   *      Gibt das StyledElement zurück, das sich an der gewünschten Position befindet; wenn es keines an der Position
-   *      gibt, wird das letzte zurückgegeben - oder null, wenns garkeines von dem Typ gibt
-   * @param type
-   *          Typ des gesuchten StyledElements
-   * @param pos
-   *          Position des Elements - nur sinnvoll, falls es meherere des gleichen Typs gibt
-   * @return das gefundene IStyledElement oder null
    */
   public IStyledElement getElement( SE_TYPE type, int pos )
   {

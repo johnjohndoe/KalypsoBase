@@ -47,13 +47,14 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 
 /**
- * @author alibu Hilfsklasse zum Umgang mit Stylesach
+ * @author burtscher 
+ * static helper methods to ease the handling of Style-concerns
  */
 public class StyleHelper
 {
 
   /**
-   * Wandelt einen eindimensionalen Array, der abwechselnd aus x und y Werten besteht , in eine Liste von Point um
+   * transforms an array of alternating x- and y- values into an array of Points
    */
   public static ArrayList<Point> intArrayToPointList( int[] path )
   {
@@ -72,7 +73,7 @@ public class StyleHelper
   }
 
   /**
-   * Wandelt eine Liste von Point in einen eindimensionalen Array um, der abwechselnd aus x und y Werten besteht
+   * transforms an array of points into an array of alternating x- and y- values
    */
   public static int[] pointListToIntArray( ArrayList<Point> path )
   {
@@ -96,9 +97,12 @@ public class StyleHelper
   }
 
   /**
-   * erzeugt ein SE_LINESTYLE-Element aus einem String TODO: Dieses Vorgehen ist leicht behindert: zuerst wird aus einem
-   * String ein SE_LINESTYLE erzeugt, dann wird daraus wieder eine SWT-Enum-Element gemacht; ein Schritt sollte da doch
-   * reichen
+   * creates a SE_LINESTYLE enum element from a string 
+   * 
+   * TODO: Dieses Vorgehen ist leicht behindert: zuerst wird aus einem
+   * TODO: There must be a better way: first, a String is transformed into a SE_LINESTYLE,
+   * next (@see linestyleToSWT) the SE_LINESTYLE is transformed into a SWT-Linestyle; "someone"
+   * should check if the separation of these 2 steps is necessary
    */
   public static SE_LINESTYLE stringToLinestyle( String ls )
   {
@@ -116,6 +120,9 @@ public class StyleHelper
       return null;
   }
 
+  /**
+   * creates an SWT line style from a SE_LINESTYLE 
+   */
   public static int linestyleToSWT( SE_LINESTYLE ls )
   {
     if( ls == SE_LINESTYLE.DASH )

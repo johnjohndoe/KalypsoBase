@@ -70,6 +70,11 @@ import org.kalypso.swtchart.chart.layer.impl.DataRange;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Chart widget; parent for AxisComponent and Plot
+ * also acts as LayerManager and contains the AxisRegistry; 
+ * 
  */
 public class Chart extends Composite implements IAxisRegistryEventListener, Listener, ILayerManager
 {
@@ -110,6 +115,9 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_axisRegistry.addAxisRegistryEventListener( this );
   }
 
+  /**
+   * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP)  and Plot
+   */
   private final void createControl( final Composite parent )
   {
     final GridLayout gridLayout = new GridLayout( 3, false );
@@ -208,6 +216,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisAdded(org.kalypso.swtchart.axis.IAxis)
+   * 
+   * adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry 
    */
   public void onAxisAdded( final IAxis axis )
   {
@@ -220,6 +230,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisRemoved(org.kalypso.swtchart.axis.IAxis)
+   * 
+   * TODO: not implemented yet (or is it? - irght now there's no way to remove an axis, so this should be checked in the future)
    */
   public void onAxisRemoved( final IAxis axis )
   {
@@ -233,8 +245,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   {
     if( event.type == SWT.Resize )
     {
-      // layout();
-      // redraw();
+      
     }
   }
 
@@ -252,6 +263,10 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     redraw();
   }
 
+  /**
+   * adds layers to or removes layers from the chart
+   * @param bAdding if true, the layer will be added; if false, the layer will be removed
+   */
   private void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
   {
     List<IChartLayer> domList = m_axis2Layers.get( layer.getDomainAxis() );
@@ -279,16 +294,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       m_axisRegistry.getComponent( layer.getDomainAxis() ).setVisible( true );
       m_axisRegistry.getComponent( layer.getValueAxis() ).setVisible( true );
 
-      /**
-       * TODO: das sollte an einem besseren Ort passieren; ausserdem ist das ein HACK, weil immer nur das aktuelle Layer
-       * betrachtet wird
-       */
-
-      IDataRange[] dr = new DataRange[1];
-      dr[0] = layer.getDomainRange();
-      IDataRange[] vr = new DataRange[1];
-      vr[0] = layer.getValueRange();
-
     }
     else
     {
@@ -311,6 +316,9 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     }
   }
 
+  /**
+   * automatically scales all given axes; scaling means here: show all available values
+   */
   public void autoscale( IAxis[] axes )
   {
     if( axes == null )
@@ -330,11 +338,13 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
         if( range != null )
           ranges.add( range );
       }
-
       axis.autorange( ranges.toArray( new IDataRange[ranges.size()] ) );
     }
   }
 
+  /**
+   * @return DataRange of all domain or value data available in the given layer 
+   */
   private IDataRange getRangeFor( final IChartLayer layer, final IAxis axis )
   {
     if( axis == layer.getDomainAxis() )
@@ -347,6 +357,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * @see org.kalypso.swtchart.layer.ILayerManager#removeLayer(org.kalypso.swtchart.layer.IChartLayer)
+   * reomves layer from chart
    */
   public void removeLayer( final IChartLayer layer )
   {
@@ -362,6 +373,10 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     redraw();
   }
 
+  /**
+   * sets autoscaling
+   * @param b if true, axes are automatically scaled to show the layers full data range 
+   */
   public void setAutoscale( boolean b )
   {
     m_autoscale = b;
@@ -370,6 +385,10 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       autoscale( null );
   }
 
+  /**
+   * @param b if true, axes in the AxisRegistry which are not used by any layer are hidden; if false,
+   * all axes are shown
+   */
   public void setHideUnusedAxes( boolean b )
   {
     m_hideUnusedAxes = b;
@@ -385,12 +404,11 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
         comp.setVisible( !m_hideUnusedAxes );
       }
     }
-
     redraw();
   }
 
   /**
-   * Gibt die Liste der Layer zurück
+   * @return List of all ChartLayer objects
    */
   public List<IChartLayer> getLayers( )
   {
@@ -407,7 +425,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
    */
 
   /**
-   * Gibt die VordergrundFarbe des Charts zurück
+   * @return the charts foreground color
    */
   public Color getFGColor( )
   {
@@ -415,13 +433,16 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * Gibt die HintergrundFarbe des Charts zurück
+   * @return the charts background color
    */
   public Color getBGColor( )
   {
     return m_white;
   }
 
+  /**
+   * repaints all paintable elements (which are: Plot and AxisComponents)
+   */
   public void repaint( )
   {
     m_plot.repaint();

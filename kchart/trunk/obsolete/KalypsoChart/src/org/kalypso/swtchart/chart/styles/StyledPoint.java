@@ -51,7 +51,7 @@ import org.kalypso.swtchart.chart.ChartUtilities;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class StyledPoint implements IStyledElement
 {
@@ -91,8 +91,9 @@ public class StyledPoint implements IStyledElement
   }
 
   /**
-   * @see org.kalypso.swtchart.styles.IStyledElement#setPath(java.util.List) Es wird davon ausgegangen, dass der Pfad
-   *      die Center-Position des Elements angibt
+   * @see org.kalypso.swtchart.styles.IStyledElement#setPath(java.util.List) 
+   * The path is used draw a styled point at each point of the path; the Point is regarded
+   * as the center position of the element
    */
   public void setPath( ArrayList<Point> path )
   {

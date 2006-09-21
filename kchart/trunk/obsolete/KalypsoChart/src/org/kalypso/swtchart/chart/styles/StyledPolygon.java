@@ -51,7 +51,7 @@ import org.kalypso.swtchart.chart.ChartUtilities;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class StyledPolygon implements IStyledElement
 {
@@ -74,6 +74,9 @@ public class StyledPolygon implements IStyledElement
     m_fillColor = fillColor;
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.styles.IStyledElement#setPath(java.util.ArrayList)
+   */
   public void setPath( ArrayList<Point> path )
   {
     m_path = path;

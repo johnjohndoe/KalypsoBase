@@ -52,7 +52,7 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
  */
 public class StyledLine implements IStyledElement
 {
@@ -78,6 +78,9 @@ public class StyledLine implements IStyledElement
     m_alpha = alpha;
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.styles.IStyledElement#setPath(java.util.ArrayList)
+   */
   public void setPath( ArrayList<Point> path )
   {
     m_path = path;
