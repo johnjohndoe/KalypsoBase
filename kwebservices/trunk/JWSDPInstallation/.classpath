@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
+	<classpathentry exported="true" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
