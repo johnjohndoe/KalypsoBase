@@ -192,7 +192,7 @@ public class GMLSchemaUtilities
     }
     else
     {
-      System.out.println( "unknown type:" + complexType.getName() );
+//      System.out.println( "unknown type:" + complexType.getName() );
       return null;
       // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
     }
@@ -205,7 +205,7 @@ public class GMLSchemaUtilities
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
     if( reference == null )
     {
-      System.out.println( "unknown name: " + base );
+//      System.out.println( "unknown name: " + base );
       return null;
     }
 

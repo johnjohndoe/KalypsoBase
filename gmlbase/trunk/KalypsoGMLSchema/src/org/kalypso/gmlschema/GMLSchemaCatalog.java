@@ -98,7 +98,7 @@ public final class GMLSchemaCatalog
         // if we get here and don't know the version number, we are probably loading
         // a gml whichs schema is the gml schema directly.
         // This is only possible for gml3 documents.
-        version = "3.1";
+        version = "3.1.1";
       else
         version = gmlVersion;
 
@@ -111,6 +111,8 @@ public final class GMLSchemaCatalog
     }
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
+    if( schemaUrl == null )
+      System.out.println( "No location for namespace: " + namespace + " - trying to load from cache." );
 
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache

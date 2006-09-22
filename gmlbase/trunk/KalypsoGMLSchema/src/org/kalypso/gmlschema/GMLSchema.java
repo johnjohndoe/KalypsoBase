@@ -124,8 +124,9 @@ public class GMLSchema implements IGMLSchema
    * We need to remember these schemas, to resolve substituting feature types.
    * </p>
    */
-  private Map<String, GMLSchema> m_additonalSchemas = new HashMap<String, GMLSchema>();
+  private Map<String, GMLSchema> m_additionalSchemas = new HashMap<String, GMLSchema>();
 
+  /** Ignored namespaces: these two schemas import each other, we don't know how to handle this. */
   private List<String> m_ignoreNameSpaces = new ArrayList<String>();
   {
     m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" );
@@ -318,17 +319,14 @@ public class GMLSchema implements IGMLSchema
     if( reference != null )
       return reference;
     return resolveComplexTypeReference( qName );
-    // final String namespaceURI = qName.getNamespaceURI();
-    // if( getTargetNamespace().equals( namespaceURI ) )
-    // return m_refHash.get( qName );
-    // final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    // // return gmlschema.resolveReference( qName );
-    // return null;
   }
 
   /** public in order to allow force dependency from outside. */
   public GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
+    if( m_ignoreNameSpaces.contains( namespaceURI ))
+      return null;
+    
     // TODO make a nice visitor
     // first level ?
     if( namespaceURI.equals( getTargetNamespace() ) )
@@ -337,8 +335,8 @@ public class GMLSchema implements IGMLSchema
     if( m_importedSchemasHash.containsKey( namespaceURI ) )
       return m_importedSchemasHash.get( namespaceURI );
 
-    if( m_additonalSchemas.containsKey( namespaceURI ) )
-      return m_additonalSchemas.get( namespaceURI );
+    if( m_additionalSchemas.containsKey( namespaceURI ) )
+      return m_additionalSchemas.get( namespaceURI );
 
     // other level....
     for( final GMLSchema gmlSchema : m_importedSchemasHash.values() )
@@ -347,7 +345,7 @@ public class GMLSchema implements IGMLSchema
       if( schemaForNamespaceURI != null )
       {
         // also remember to schema here, used as shortcut for later search
-        m_additonalSchemas.put( namespaceURI, schemaForNamespaceURI );
+        m_additionalSchemas.put( namespaceURI, schemaForNamespaceURI );
         return schemaForNamespaceURI;
       }
     }
@@ -359,7 +357,7 @@ public class GMLSchema implements IGMLSchema
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
       final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, getGMLVersion() );
       if( schema != null )
-        m_additonalSchemas.put( namespaceURI, schema );
+        m_additionalSchemas.put( namespaceURI, schema );
 
       // REAMRK: we load schemas here, which are not known as imported schemes
       // They are probably used by the gml instance via substitution
@@ -552,7 +550,7 @@ public class GMLSchema implements IGMLSchema
 
   public GMLSchema[] getAdditionalSchemas( )
   {
-    return m_additonalSchemas.values().toArray( new GMLSchema[m_additonalSchemas.values().size()] );
+    return m_additionalSchemas.values().toArray( new GMLSchema[m_additionalSchemas.values().size()] );
   }
 
   public GMLSchema[] getImports( )
@@ -639,7 +637,7 @@ public class GMLSchema implements IGMLSchema
 
   public void addAdditionalSchema( final GMLSchema schema )
   {
-    m_additonalSchemas.put( schema.getTargetNamespace(), schema );
+    m_additionalSchemas.put( schema.getTargetNamespace(), schema );
     // TODO Auto-generated method stub
 
   }

@@ -60,6 +60,9 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) );
     prefixes.put( NS.SWE, "swe" );
 
+    catalog.put( NS.ST, myClass.getResource( "schemata/sweCommon/1.0.30/simpleTypeDerivation.xsd" ) );
+    prefixes.put( NS.ST, "st" );
+
     catalog.put( NS.OM, myClass.getResource("schemata/om/1.0.30/observation.xsd") );
     prefixes.put( NS.OM, "om" );
   }

@@ -110,9 +110,9 @@ public abstract class FeatureContentType implements IFeatureContentType
             final QName ref = elementItem.getRef();
             if( ref == null )
             {
-              final String message = "no typeHandler for " + elementItem.getType();
-              System.out.println( message );
-              System.out.println();
+//              final String message = "no typeHandler for " + elementItem.getType();
+//              System.out.println( message );
+//              System.out.println();
             }
             else
             {
@@ -130,8 +130,8 @@ public abstract class FeatureContentType implements IFeatureContentType
           // why are alle buildedObjects of type IPropertyType ?
           if( buildedObject != null && buildedObject instanceof IPropertyType )
             propertyTypes.add( (IPropertyType) buildedObject );
-          else
-            System.out.println( "no valid property found for " + elementItem );
+//          else
+//            System.out.println( "no valid property found for " + elementItem );
         }
         m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
         break;
