@@ -218,7 +218,7 @@ public class GMLSchemaCache
     }
   }
 
-  private static class GMLSchemaSerializer implements ISerializer<GMLSchema>
+  protected static class GMLSchemaSerializer implements ISerializer<GMLSchema>
   {
     public GMLSchema read( final InputStream ins ) throws InvocationTargetException, IOException
     {

@@ -121,7 +121,7 @@ public class GMLSchema implements IGMLSchema
    * Additional schemas, which are not known as imported schemas. They are loaded implicitly while searching for certain
    * namespaces. This happens probably only, if the gml instance contains some substituting types.
    * <p>
-   * We need to remeber these schemas, to resolve substituting feature types.
+   * We need to remember these schemas, to resolve substituting feature types.
    * </p>
    */
   private Map<String, GMLSchema> m_additonalSchemas = new HashMap<String, GMLSchema>();
