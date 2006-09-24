@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
- * TODO: insert type comment here
+ * Instances of this interface represent the properties of a {@link org.kalypso.gmlschema.feature.IFeatureType}.
  * 
  * @author doemming
  */
@@ -51,8 +51,8 @@ public interface IPropertyType extends IInitialize, IAdaptable
 
   public QName getQName( );
 
-  public boolean isNillable();
-  
+  public boolean isNillable( );
+
   /**
    * @deprecated use getQName()
    * @return local part of qualified name

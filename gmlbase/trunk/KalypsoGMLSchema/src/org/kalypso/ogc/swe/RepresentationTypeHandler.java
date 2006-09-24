@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author schlienger
+ * @author Marc Schlienger
  */
 public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 {
