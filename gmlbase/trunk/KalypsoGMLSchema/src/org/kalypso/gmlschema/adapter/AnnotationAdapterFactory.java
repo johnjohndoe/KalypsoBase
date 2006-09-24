@@ -6,6 +6,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.builder.ReferencedRelationType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -25,6 +26,15 @@ public class AnnotationAdapterFactory implements IAdapterFactory
 
     if( adapterType == IAnnotation.class )
     {
+      /* First, we try to get an annotation from an external annotation provider */
+      final IAnnotationProvider[] annotationProviders = KalypsoGmlSchemaExtensions.getAnnotationProviders();
+      for( final IAnnotationProvider provider : annotationProviders )
+      {
+        final IAnnotation annotation = provider.getAnnotation( platformLang, adaptableObject );
+        if( annotation != null )
+          return annotation;
+      }
+
       // BUGFIX: if it is a referenced element, first try to get the annotation from the
       // referencing element. Only if we get nothing there, return the annotation of the referenced element.
       if( adaptableObject instanceof ReferencedRelationType )
@@ -76,7 +86,9 @@ public class AnnotationAdapterFactory implements IAdapterFactory
 
   /**
    * Create an IAnnotation from an xsd-annotation element.
-   * <p>All inner elements from the dcoument element are regarded as annotations.</p>
+   * <p>
+   * All inner elements from the dcoument element are regarded as annotations.
+   * </p>
    * 
    * @param createDefaultAnnotation
    *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if

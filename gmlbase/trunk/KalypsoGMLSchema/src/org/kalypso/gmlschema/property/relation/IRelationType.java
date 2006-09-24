@@ -44,4 +44,6 @@ public interface IRelationType extends IPropertyType
   public boolean isLinkAble( );
 
   public IFeatureType getTargetFeatureType( );
+
+  public IDocumentReference[] getDocumentReferences( );
 }

@@ -99,7 +99,11 @@ public class DefaultAnnotation implements IAnnotation
    */
   public void putValue( final String element, final String value )
   {
-    m_values.put( element, value );
+    /* Don't put null's into the hash */
+    if( value == null )
+      m_values.remove( element );
+    else
+      m_values.put( element, value );
   }
 
   /**

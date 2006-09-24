@@ -38,41 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gmlschema.adapter;
+package org.kalypso.gmlschema.property.relation;
 
-import java.util.HashMap;
-
-import org.eclipse.core.runtime.IAdaptable;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * TODO [Andreas] löschen?
- * 
- * @author doemming
+ * @author Gernot Belger
  */
-public class AdapterRegistry
+public class DocumentReference implements IDocumentReference
 {
-  private static AdapterRegistry m_registry = null;
+  private final String m_uri;
 
-  public static AdapterRegistry getRegistry( )
+  public DocumentReference( final String uri )
   {
-    if( m_registry == null )
-    {
-      m_registry = new AdapterRegistry();
-    }
-    return m_registry;
+    m_uri = uri;
   }
-
-  final HashMap<Class, IAdaptable> m_adapters = new HashMap<Class, IAdaptable>();
-
-  private AdapterRegistry( )
+  
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IDocumentReference#getReference()
+   */
+  public String getReference( )
   {
-
+    return m_uri;
   }
-
-  public void getGeneratorFor( Class adapter )
+  
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object other )
   {
-    // TODO Auto-generated method stub
-
+    return EqualsBuilder.reflectionEquals( this, other );
   }
-
+  
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
+  }
 }

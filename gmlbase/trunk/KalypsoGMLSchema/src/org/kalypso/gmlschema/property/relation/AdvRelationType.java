@@ -46,6 +46,8 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public class AdvRelationType extends AbstractPropertyTypeFromElement implements IRelationType
 {
+  private final static IDocumentReference[] DOCUMENT_REFERENCES = new IDocumentReference[] { IDocumentReference.SELF_REFERENCE };
+
   private final QName m_advReferenziertesElement;
 
   private IFeatureType m_ftRelationTarget = null;
@@ -64,7 +66,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-        
+
         final ElementReference reference = getGMLSchema().resolveElementReference( m_advReferenziertesElement );
         final GMLSchema schema = reference.getGMLSchema();
         final Element element = reference.getElement();
@@ -73,7 +75,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
           m_ftRelationTarget = (IFeatureType) buildedObject;
         else
           throw new UnsupportedOperationException();
-        
+
         break;
     }
   }
@@ -101,5 +103,13 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   public IFeatureType getTargetFeatureType( )
   {
     return m_ftRelationTarget;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
+   */
+  public IDocumentReference[] getDocumentReferences( )
+  {
+    return DOCUMENT_REFERENCES;
   }
 }

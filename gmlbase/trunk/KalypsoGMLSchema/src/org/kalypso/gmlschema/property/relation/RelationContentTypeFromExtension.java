@@ -29,10 +29,13 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
@@ -98,6 +101,25 @@ public class RelationContentTypeFromExtension extends RelationContentType
   public AttributeGroupRef[] getAttributeGroups( )
   {
     return m_attributeGroupArray;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.RelationContentType#collectReferences()
+   */
+  @Override
+  public String[] collectReferences( )
+  {
+    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
+    final XmlObject[] xmlObjectsFromRestriction = m_extension.selectPath( DOCREF_XPATH );
+
+    /* Derived refs overwrite ths from the extension. */
+    final Set<String> refs = new HashSet<String>( xmlObjects.length );
+    for( final XmlObject object : xmlObjectsFromRestriction )
+      refs.add( object.newCursor().getTextValue() );
+    for( final XmlObject object : xmlObjects )
+      refs.add( object.newCursor().getTextValue() );
+
+    return refs.toArray( new String[refs.size()] );
   }
 
 }

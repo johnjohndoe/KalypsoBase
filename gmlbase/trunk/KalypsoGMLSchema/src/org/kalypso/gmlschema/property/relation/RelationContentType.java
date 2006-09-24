@@ -30,7 +30,9 @@
 package org.kalypso.gmlschema.property.relation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -54,6 +56,11 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
+  /** TODO move this one to a constants class. */
+  protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
+  
+  protected final static String DOCREF_XPATH = XPATH_APPINFO_NAMESPACE_DECL + "xs:annotation/xs:appinfo/kapp:documentReference";
+
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
@@ -63,6 +70,8 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   private boolean m_linkable = false;
 
   private boolean m_inlinable = true;
+
+  private IDocumentReference[] m_documentReferences;
 
   public RelationContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
@@ -103,13 +112,16 @@ public abstract class RelationContentType implements IRelationContentType, IInit
             schema = reference.getGMLSchema();
             element = reference.getElement();
           }
-          
+
           final Object buildedObject = schema.getBuildedObjectFor( element );
           if( buildedObject instanceof FeatureType )
           {
             result.add( (FeatureType) buildedObject );
-            
-            /* We determine also if we may inline. Normaly this is true but when the maxOccurs of the referenced element is set to 0.*/
+
+            /*
+             * We determine also if we may inline. Normaly this is true but when the maxOccurs of the referenced element
+             * is set to 0.
+             */
             if( elementWithOccurs.getOccurs().getMax() == 0 )
               m_inlinable = false;
 
@@ -132,6 +144,25 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) )
             m_linkable = true;
         }
+
+        /* Collect document references */
+        final String[] docRefs = collectReferences();
+        if( docRefs.length == 0 )
+          m_documentReferences = new IDocumentReference[] { IDocumentReference.SELF_REFERENCE };
+        else
+        {
+          final Set<IDocumentReference> docRefSet = new HashSet<IDocumentReference>( docRefs.length );
+          for( final String ref : docRefs )
+          {
+            if( IDocumentReference.SELF_REFERENCE_NAME.equals( ref ) )
+              docRefSet.add( IDocumentReference.SELF_REFERENCE );
+            else
+              docRefSet.add( new DocumentReference( ref ) );
+          }
+
+          m_documentReferences = docRefSet.toArray( new IDocumentReference[docRefSet.size()] );
+        }
+
       }
         break;
     }
@@ -140,6 +171,8 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   public abstract List<ElementWithOccurs> getSequence( );
 
   public abstract AttributeGroupRef[] getAttributeGroups( );
+
+  public abstract String[] collectReferences( );
 
   public ComplexType getComplexType( )
   {
@@ -162,9 +195,17 @@ public abstract class RelationContentType implements IRelationContentType, IInit
   {
     return m_linkable;
   }
-  
+
   public boolean isInlineable( )
   {
     return m_inlinable;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationContentType#getDocumentReferences()
+   */
+  public IDocumentReference[] getDocumentReferences( )
+  {
+    return m_documentReferences;
   }
 }

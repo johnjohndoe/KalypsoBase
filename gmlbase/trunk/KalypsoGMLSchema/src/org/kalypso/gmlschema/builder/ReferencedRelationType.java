@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
+import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -147,5 +148,15 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
     // allways return the one that known content
     // TODO for other usage implement AppinfoProvider
     return ((QualifiedElement) m_globalRT).getElement();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
+   */
+  public IDocumentReference[] getDocumentReferences( )
+  {
+    checkState();
+
+    return m_globalRT.getDocumentReferences();
   }
 }

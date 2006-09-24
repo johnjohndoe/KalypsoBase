@@ -51,4 +51,6 @@ public interface IRelationContentType extends IInitialize
   
   /** Returns true if inlined objects are allowed for this relation. */
   public boolean isInlineable();
+
+  public IDocumentReference[] getDocumentReferences( );
 }

@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
@@ -54,6 +55,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class CustomRelationType implements IRelationType
 {
+  private final static IDocumentReference[] DOCUMENT_REFERENCES = new IDocumentReference[] { IDocumentReference.SELF_REFERENCE };
+
   private final IFeatureType m_targetFT;
 
   private final int m_minOccurs;
@@ -162,6 +165,14 @@ public class CustomRelationType implements IRelationType
   public boolean isNillable( )
   {
     return m_isNillable;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
+   */
+  public IDocumentReference[] getDocumentReferences( )
+  {
+    return DOCUMENT_REFERENCES;
   }
 
 }

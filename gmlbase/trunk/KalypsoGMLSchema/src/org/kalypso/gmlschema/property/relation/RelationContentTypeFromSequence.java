@@ -29,15 +29,17 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * representation of a feature content definition from a xml schema sequence fragment.
  * 
  * @author doemming
@@ -46,14 +48,14 @@ public class RelationContentTypeFromSequence extends RelationContentType
 {
   private final List<ElementWithOccurs> m_elements;
 
-  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elements)
+  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elements )
   {
     super( gmlSchema, complexType );
     m_elements = elements;
   }
 
   @Override
-  public List<ElementWithOccurs> getSequence()
+  public List<ElementWithOccurs> getSequence( )
   {
     return m_elements;
   }
@@ -65,5 +67,20 @@ public class RelationContentTypeFromSequence extends RelationContentType
   public AttributeGroupRef[] getAttributeGroups( )
   {
     return getComplexType().getAttributeGroupArray();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.relation.RelationContentType#collectReferences()
+   */
+  @Override
+  public String[] collectReferences( )
+  {
+    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
+
+    final List<String> refs = new ArrayList<String>( xmlObjects.length );
+    for( final XmlObject object : xmlObjects )
+      refs.add( object.newCursor().getTextValue() );
+
+    return refs.toArray( new String[refs.size()] );
   }
 }

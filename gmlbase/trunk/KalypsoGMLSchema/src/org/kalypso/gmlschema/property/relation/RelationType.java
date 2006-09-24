@@ -95,4 +95,12 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
     return m_relationContentType.getTargetFeatureType();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
+   */
+  public IDocumentReference[] getDocumentReferences( )
+  {
+    return m_relationContentType.getDocumentReferences();
+  }
+
 }
