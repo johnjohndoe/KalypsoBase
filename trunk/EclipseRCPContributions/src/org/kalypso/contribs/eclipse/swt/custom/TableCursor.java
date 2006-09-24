@@ -203,7 +203,7 @@ public class TableCursor extends Canvas
         switch( event.type )
         {
           case SWT.Dispose:
-            dispose( event );
+            disposeInternal(  );
             break;
           case SWT.FocusIn:
           case SWT.FocusOut:
@@ -237,7 +237,7 @@ public class TableCursor extends Canvas
             tableMouseDown( event );
             break;
           case SWT.FocusIn:
-            tableFocusIn( event );
+            tableFocusIn(  );
             break;
         }
       }
@@ -317,7 +317,7 @@ public class TableCursor extends Canvas
     addListener( SWT.DefaultSelection, typedListener );
   }
 
-  void dispose( Event event )
+  void disposeInternal(  )
   {
     m_table.removeListener( SWT.FocusIn, m_tableListener );
     m_table.removeListener( SWT.MouseDown, m_tableListener );
@@ -520,7 +520,7 @@ public class TableCursor extends Canvas
     }
   }
 
-  void tableFocusIn( Event event )
+  void tableFocusIn(  )
   {
     if( isDisposed() )
       return;

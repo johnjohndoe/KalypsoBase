@@ -253,7 +253,7 @@ public class DateRangeInputControl extends Composite
     }
   }
 
-  private class SelListener implements SelectionListener
+  protected class SelListener implements SelectionListener
   {
     public void explicitSelect( )
     {

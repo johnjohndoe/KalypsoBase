@@ -132,7 +132,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * 
    * @author schlienger
    */
-  private static class PseudoValidator implements Validator
+  protected static class PseudoValidator implements Validator
   {
     /**
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#validate(java.lang.String)
@@ -164,7 +164,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * 
    * @author schlienger
    */
-  private static class DateValidator implements Validator
+  protected static class DateValidator implements Validator
   {
     private static final DateFormat DF = DateFormat.getDateTimeInstance();
 
