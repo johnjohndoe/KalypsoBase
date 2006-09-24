@@ -71,6 +71,7 @@ import org.eclipse.ui.internal.WorkbenchWindow;
  * 
  * @author belger
  */
+@SuppressWarnings("restriction")
 public class FullscreenPerspectiveListener implements IPerspectiveListener
 {
   private final boolean m_hideToolbars;

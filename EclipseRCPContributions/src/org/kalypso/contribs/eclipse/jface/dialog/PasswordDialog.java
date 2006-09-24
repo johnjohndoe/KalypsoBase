@@ -66,7 +66,7 @@ public class PasswordDialog extends InputDialog
     return composite;
   }
 
-  private static class PasswordValidator implements IInputValidator
+  protected static class PasswordValidator implements IInputValidator
   {
     /**
      * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)

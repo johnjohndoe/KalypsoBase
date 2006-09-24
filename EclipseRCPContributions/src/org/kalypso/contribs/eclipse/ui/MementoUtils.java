@@ -64,6 +64,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
  * 
  * @author schlienger
  */
+@SuppressWarnings("restriction")
 public class MementoUtils
 {
   public final static String ISO88591 = "ISO-8859-1";

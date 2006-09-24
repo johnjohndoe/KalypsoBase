@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -57,6 +58,7 @@ import org.osgi.framework.Bundle;
  * 
  * @author Belger
  */
+@SuppressWarnings("restriction")
 public class PluginUtilities
 {
   private PluginUtilities( )
@@ -77,7 +79,12 @@ public class PluginUtilities
     plugin.getLog().log( status );
   }
 
-  /** Log information to given plugin. <p>Formats message wirth args</p>*/
+  /**
+   * Log information to given plugin.
+   * <p>
+   * Formats message wirth args
+   * </p>
+   */
   public static void logInfo( final Plugin plugin, final String message, final Object... args )
   {
     final String msg = String.format( message, args );
@@ -112,7 +119,7 @@ public class PluginUtilities
       return null;
 
     // look for the image (this will check both the plugin and fragment folders
-    return Platform.find( bundle, new Path( pluginRelativePath ) );
+    return FileLocator.find( bundle, new Path( pluginRelativePath ), null );
   }
 
   public static String id( final Plugin plugin )

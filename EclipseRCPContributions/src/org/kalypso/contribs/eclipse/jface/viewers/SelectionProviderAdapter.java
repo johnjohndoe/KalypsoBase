@@ -43,7 +43,6 @@ package org.kalypso.contribs.eclipse.jface.viewers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -141,7 +140,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
         }
       };
 
-      Platform.run( safeRunnable );
+      SafeRunnable.run( safeRunnable );
     }
   }
 }
