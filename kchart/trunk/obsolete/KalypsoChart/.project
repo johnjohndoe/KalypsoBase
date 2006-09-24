@@ -3,7 +3,6 @@
 	<name>KalypsoChart</name>
 	<comment></comment>
 	<projects>
-		<project>KalypsoDeegree</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

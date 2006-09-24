@@ -76,9 +76,9 @@ public class TestDateLayer implements IChartLayer
 
   private final ILayerStyle m_style = null;
 
-  private String m_name;
+//  private String m_name;
 
-  private String m_description;
+//  private String m_description;
 
   public TestDateLayer( IAxis domAxis, IAxis valAxis )
   {
@@ -167,8 +167,8 @@ public class TestDateLayer implements IChartLayer
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
     if( m_style != null )
     {
-      IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
-      IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+//      IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+//      IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
     }
   }
 
@@ -238,8 +238,8 @@ public class TestDateLayer implements IChartLayer
     {
       ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
-      points.add( new Point( 0, (int) height / 2 ) );
-      points.add( new Point( width, (int) height / 2 ) );
+      points.add( new Point( 0, height / 2 ) );
+      points.add( new Point( width, height / 2 ) );
       line.setPath( points );
       line.paint( gcw, Display.getCurrent() );
     }
@@ -248,7 +248,7 @@ public class TestDateLayer implements IChartLayer
     {
       ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
-      points.add( new Point( (int) width / 2, (int) height / 2 ) );
+      points.add( new Point( width / 2, height / 2 ) );
       point.setPath( points );
       point.paint( gcw, Display.getCurrent() );
     }
@@ -260,11 +260,11 @@ public class TestDateLayer implements IChartLayer
 
   public void setName( String name )
   {
-    m_name = name;
+//    m_name = name;
   }
 
   public void setDescription( String description )
   {
-    m_description = description;
+//    m_description = description;
   }
 }

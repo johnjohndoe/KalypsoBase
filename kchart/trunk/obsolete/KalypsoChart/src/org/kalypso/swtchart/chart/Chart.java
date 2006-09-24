@@ -66,7 +66,6 @@ import org.kalypso.swtchart.chart.axis.registry.IAxisRegistryEventListener;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.ILayerManager;
-import org.kalypso.swtchart.chart.layer.impl.DataRange;
 
 /**
  * @author schlienger

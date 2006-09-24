@@ -76,7 +76,7 @@ public class TestLayer implements IChartLayer
 
   private String m_name;
 
-  private String m_description;
+//  private String m_description;
 
   public TestLayer( IAxis domAxis, IAxis valAxis )
   {
@@ -107,8 +107,8 @@ public class TestLayer implements IChartLayer
     {
       ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
-      points.add( new Point( 0, (int) height / 2 ) );
-      points.add( new Point( width, (int) height / 2 ) );
+      points.add( new Point( 0, height / 2 ) );
+      points.add( new Point( width, height / 2 ) );
       line.setPath( points );
       line.paint( gcw, Display.getCurrent() );
     }
@@ -117,7 +117,7 @@ public class TestLayer implements IChartLayer
     {
       ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
-      points.add( new Point( (int) width / 2, (int) height / 2 ) );
+      points.add( new Point( width / 2, height / 2 ) );
       point.setPath( points );
       point.paint( gcw, Display.getCurrent() );
     }
@@ -312,6 +312,6 @@ public class TestLayer implements IChartLayer
 
   public void setDescription( String description )
   {
-    m_description = description;
+//    m_description = description;
   }
 }
