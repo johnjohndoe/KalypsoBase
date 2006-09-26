@@ -27,6 +27,8 @@ public class ODSServlet extends HttpServlet implements Servlet
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
    *      javax.servlet.http.HttpServletResponse)
+   *      
+   *      @TODO: integrate extensions into  
    */
   @Override
   protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
@@ -53,6 +55,11 @@ public class ODSServlet extends HttpServlet implements Servlet
   }
 
     
+  /**
+   * TODO: check if UI thread execution is really needed - maybe only synchronized doGet method
+   * is demanded in order to stop getting swt errors (in second case, its possible to easily integrate new methods
+   * by using an extension point
+   */
    private void executeOperation(final HttpServletRequest request, final HttpServletResponse response, String odsrequest) throws IOException
    {
      if( odsrequest.compareTo( "GetCapabilities" ) == 0 )

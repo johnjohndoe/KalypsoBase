@@ -50,8 +50,9 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.services.ods.operation.IODSOperation;
 
 /**
- * @author alibu
- *
+ * @author burtscher
+ * 
+ * class managing operation extension point implementations 
  */
 public class OperationExtensions
 {

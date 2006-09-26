@@ -60,7 +60,7 @@ import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 
 
 /**
- * @author alibu
+ * @author burtscher
  *
  */
 public class ODSException
@@ -71,6 +71,7 @@ public class ODSException
   
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   * creates an exception document from the ERROR_CODE and writes it into the response object
    */
   public static void showException( HttpServletRequest request, HttpServletResponse response, ERROR_CODE ec )
   {
@@ -93,6 +94,9 @@ public class ODSException
       }
   }
   
+  /**
+   * @return error document as formatted XML string
+   */
   public static String getXMLString(ERROR_CODE e, HttpServletRequest request) throws IOException
   {
     ExceptionReport report = OF.createExceptionReport();

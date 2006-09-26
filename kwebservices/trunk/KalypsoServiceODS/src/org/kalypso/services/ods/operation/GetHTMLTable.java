@@ -60,8 +60,9 @@ import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * @author alibu
+ * @author burtscher
  *
+ * IODSOperation to return O&M data as HTML table
  */
 public class GetHTMLTable implements IODSOperation
 {

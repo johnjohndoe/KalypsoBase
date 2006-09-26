@@ -72,7 +72,11 @@ import org.ksp.ods.capabilities.Table;
 
 
 /**
- * @author alibu
+ * @author burtscher
+ *
+ * Loads (marshalls) the capabilities configuration file 
+ * and supplements the information with infos from configuration file
+ * in order to create a getCapabilities-XML-Document
  *
  */
 public class CapabilitiesLoader
@@ -88,6 +92,7 @@ public class CapabilitiesLoader
   private ConfigurationType m_vc=null;
   
 
+
   public CapabilitiesLoader(String pathCaps, String pathVC)
   {
       m_configPathCaps=pathCaps;
@@ -96,6 +101,9 @@ public class CapabilitiesLoader
       mergeConfigIntoODS();
   }
   
+  /**
+   * marshalling of Capabilites.xml
+   */
   public void loadFile()
   {
     System.out.println("loadFile Start");
@@ -149,6 +157,9 @@ public class CapabilitiesLoader
         System.out.println("ViewerConf == null");
   }
   
+  /**
+   * @return Capabilities document as formatted xml string
+   */
   public String getXMLString()
   {
     String capsString="";
@@ -177,7 +188,9 @@ public class CapabilitiesLoader
   }
   
   /**
-   * Fügt die über die ViewerConfiguration definierten Diagramme und Tabellen in das GetCapabilities-Dokument ein
+   * supplements capabilities document width diagrams, tables, legends defined in configuration.xml
+   * - more precisely, legends are not defined inside the configuration file; instead, chart entries in the
+   * configuration file are used to create diagrams AND legends
    */
   public void mergeConfigIntoODS()
   {
@@ -320,11 +333,11 @@ public class CapabilitiesLoader
   }
   
   /**
-   * Erzeugt einen Link auf einen Service als OnlineResource 
-   * @param serviceRoot URL zur Webservice-Klasse
-   * @param service Name des Services, z.B. "ODS"
-   * @param operation Auszuführende Operation (REQUEST)
-   * @param name Name eines auswählbaren Elements - wenn nicht zutreffend, kann uach null übergeben werden 
+   * @return OnlineResource containing an url to a specified service
+   * @param serviceRoot url of the service root  
+   * @param service service name, e.g. "ODS"
+   * @param operation requested operation (REQUEST parameter)
+   * @param name name of a selectable element (tables, diagrams, ...) - if not applicable, null shall be passed instead
    */
   private OnlineResource createOnlineResource(String serviceRoot, String service, String operation, String name)
   {
@@ -336,6 +349,9 @@ public class CapabilitiesLoader
     return resource;
   }
   
+  /**
+   * creates DCPType (DCP = Distributed Computing Platform) using createOnlineResource method
+   */
   public DCPType createDCPType(String serviceRoot, String service, String operation)
   {
     DCPType dcpCaps=m_ofCap.createDCPType();

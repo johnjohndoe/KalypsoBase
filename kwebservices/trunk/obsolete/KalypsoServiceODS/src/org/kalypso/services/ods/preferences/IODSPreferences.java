@@ -41,8 +41,12 @@
 package org.kalypso.services.ods.preferences;
 
 /**
- * @author alibu
+ * @author burtscher
  *
+ * some constants to use with preferences:
+ * <ul>
+ * <li>Names of preference definitions 
+ * </ul>
  */
 public interface IODSPreferences
 {

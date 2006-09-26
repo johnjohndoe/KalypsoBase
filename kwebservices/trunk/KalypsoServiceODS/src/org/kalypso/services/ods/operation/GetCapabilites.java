@@ -54,14 +54,16 @@ import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 
 /**
- * @author alibu
- *
+ * @author burtscher
+ * 
+ * IODSOperation to display the services capabilities 
  */
 public class GetCapabilites implements IODSOperation
 {
 
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
    */
   public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
   {

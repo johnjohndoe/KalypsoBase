@@ -65,8 +65,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
+ * @author burtscher
  *
+ * operation creating a legend image from a given name
  */
 public class GetLegend implements IODSOperation, Runnable
 {

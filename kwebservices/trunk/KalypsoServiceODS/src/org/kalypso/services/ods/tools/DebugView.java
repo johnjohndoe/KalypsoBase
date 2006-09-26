@@ -66,7 +66,10 @@ import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
+ * @author burtscher
+ * eclipse view part to check if chart images are generated correctly
+ * 
+ * @TODO: move to its own project - this has nothing to do width ods
  *
  */
 public class DebugView extends ViewPart implements PaintListener
@@ -154,7 +157,7 @@ public class DebugView extends ViewPart implements PaintListener
     
     Display d= Display.getDefault();
     //Display für Shell kann null sein :-)
-    String confpath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+    String confpath="/home/burtscher/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
     ConfigurationLoader cl=null;
     try
     {

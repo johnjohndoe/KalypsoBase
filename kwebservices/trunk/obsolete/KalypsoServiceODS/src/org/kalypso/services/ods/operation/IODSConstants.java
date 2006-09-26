@@ -41,11 +41,15 @@
 package org.kalypso.services.ods.operation;
 
 /**
- * @author alibu
+ * @author burtscher
  *
  */
 public interface IODSConstants
 {
+  
+  /**
+   * Codes describing error types
+   */
     public enum ERROR_CODE
     {
       INVALID_FORMAT,

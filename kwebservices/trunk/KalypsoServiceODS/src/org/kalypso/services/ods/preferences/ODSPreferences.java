@@ -46,8 +46,11 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * @author alibu
- *
+ * @author burtscher
+ * 
+ * manages preferences concerns using the eclipse preference mechanism
+ * 
+ * @TODO: check if default constants should be extracted to IChartPreferences
  */
 public class ODSPreferences
 {
@@ -68,6 +71,11 @@ public class ODSPreferences
     init();
   }
 
+  
+  /**
+   * checks if config file is present and is containing all needed definitions; if one or
+   * more definitions are missing, they are initialized with default values  
+   */
   public void init( )
   {
     //Mit Standarddaten initialisieren, falls keine Inhalte drin sind

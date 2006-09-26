@@ -65,8 +65,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
- * @author alibu
- *
+ * @author burtscher
+ * IODS operation to display an image containing a chart 
  */
 public class GetChart implements IODSOperation, Runnable
 {
