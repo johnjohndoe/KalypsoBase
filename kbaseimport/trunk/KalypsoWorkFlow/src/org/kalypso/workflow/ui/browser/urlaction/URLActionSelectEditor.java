@@ -42,6 +42,7 @@ package org.kalypso.workflow.ui.browser.urlaction;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -55,20 +56,12 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionSelectEditor extends AbstractURLAction
 {
 
-//  private final static String COMMAND_NAME = "selectEditor";
+  // private final static String COMMAND_NAME = "selectEditor";
 
   /**
    * file name that is the input of the editor to be selected
    */
   private final static String PARAM_INPUT = "input";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
@@ -85,7 +78,7 @@ public class URLActionSelectEditor extends AbstractURLAction
       final IFile inputFile = visitor.getFile();
       final IEditorPart part = activePage.findEditor( new FileEditorInput( inputFile ) );
       if( part == null )
-        return false;
+        return generateMessageDialog("The editor-input:" + fileName + " does not match loaded Editors" ,IStatus.CANCEL);
       activePage.activate( part );
     }
     catch( Exception e )
