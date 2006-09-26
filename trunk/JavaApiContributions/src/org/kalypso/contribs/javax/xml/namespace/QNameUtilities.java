@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.javax.xml.namespace;
 
+import java.util.ArrayList;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -61,7 +63,7 @@ public class QNameUtilities
    * syntax of fragmentedFullQName :
    * 
    * <pre>
-   *        &lt;namespace&gt;#&lt;localpart&gt;
+   *         &lt;namespace&gt;#&lt;localpart&gt;
    * </pre>
    * 
    * example: fragmentedFullQName = www.w3c.org#index.html
@@ -101,5 +103,17 @@ public class QNameUtilities
     final String localPart = qnameString.substring( curleyEnd + 1 );
 
     return new QName( namespace, localPart );
+  }
+
+  public static QName[] createQNames( String fragmentedFullQNameList, String separator )
+  {
+    
+    final ArrayList<QName> allQNames = new ArrayList<QName>();
+    final String[] qNameStrings = fragmentedFullQNameList.split( separator );
+    for( String s : qNameStrings )
+    {
+      allQNames.add( createQName( s ) );
+    }
+    return allQNames.toArray( new QName[allQNames.size()] );
   }
 }
