@@ -42,6 +42,10 @@ package org.kalypso.swtchart.preferences;
 
 /**
  * @author burtscher
+ * Some constants to use with chart preferences:
+ *  <ul>
+ *  <li>names of preference variables</li>
+ *  </ul> 
  */
 public interface IChartPreferences
 {

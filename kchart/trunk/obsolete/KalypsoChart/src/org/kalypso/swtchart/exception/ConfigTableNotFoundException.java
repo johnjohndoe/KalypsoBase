@@ -42,6 +42,8 @@ package org.kalypso.swtchart.exception;
 
 /**
  * @author burtscher
+ * Exception specialization: if a desired table name can not be found in the configuration file, 
+ * this exception should be thrown
  */
 public class ConfigTableNotFoundException extends Exception
 {

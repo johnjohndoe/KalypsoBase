@@ -53,6 +53,11 @@ import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * LayerProvider for TupleResult Data - provides a TupleResultLineChartLayer
+ * 
+ * 
  */
 public class DefaultTupleResultLayerProvider implements ILayerProvider
 {

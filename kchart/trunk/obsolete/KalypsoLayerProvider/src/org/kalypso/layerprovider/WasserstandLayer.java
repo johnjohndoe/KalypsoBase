@@ -67,6 +67,22 @@ import org.kalypso.swtchart.chart.util.AliComparator;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ *  visualization of gauge data as line chart;
+ * 
+ *  The following configuration parameters are needed for NiederschlagLayer:
+ *  dataSource:     URL or relative path leading to observation data
+ *  @TODO: dataSource is an independent configuration tag right now - it should be
+ *      moved into the parameter section as not every layer provider needs an url
+ *  
+ *   
+ *   
+ *  The following styled elements are used:
+ *  Line:         used to draw the line connecting the individual data points
+ *  Point:        used to draw the individual data points; the points are draw after the line
+ *  
+ *  
  */
 public class WasserstandLayer implements IChartLayer
 {

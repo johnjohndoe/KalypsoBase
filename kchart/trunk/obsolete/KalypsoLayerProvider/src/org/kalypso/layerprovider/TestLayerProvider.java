@@ -60,7 +60,8 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
- * @author alibu
+ * @author burtscher
+ * LayerProvider implementation for testing purposes - should not be used in real life
  */
 public class TestLayerProvider implements ILayerProvider
 {

@@ -75,6 +75,22 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ *  visualization of precipitation data as bar chart;
+ * 
+ *  The following configuration parameters are needed for NiederschlagLayer:
+ *  fixedPoint:     start time (e.g. 2006-07-01T00:00:00Z) of any possible bar within the chart;
+ *                  typically, bars start at 00:00 and end at 23:59, but to get more flexibility, 
+ *                  it's possible to make them "last" more or less than one day (see next parameter) 
+ *                  and start them at any desired time / date.
+ *  barWidth:       width of the chart bars in milliseconds (e.g. 86400000 for one day)
+ *  
+ *  The following styled elements are used:
+ *  Polygon:        used to draw the individual bars
+ *  
+ *  
+ * 
  */
 public class NiederschlagLayer implements IChartLayer
 {

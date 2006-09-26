@@ -59,7 +59,8 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
- * @author alibu
+ * @author burtscher
+ * TestLayer for Sample Data - should not be used in real life
  */
 public class TestLayer implements IChartLayer
 {

@@ -68,6 +68,13 @@ import org.ksp.chart.viewerconfiguration.ParameterType;
 
 /**
  * @author schlienger
+ * @author burtscher
+ * 
+ * Visualization of TupleResult data as line chart
+ * 
+ *  The following styled elements are used:
+ *  Line:         used to draw the line connecting the individual data points
+ *  Point:        used to draw the individual data points; the points are draw after the line
  */
 public class TupleResultLineChartLayer implements IChartLayer
 {

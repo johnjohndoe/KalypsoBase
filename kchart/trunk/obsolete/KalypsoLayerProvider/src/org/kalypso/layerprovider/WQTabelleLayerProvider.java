@@ -69,7 +69,23 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Layer Provider for precipitation data from O&M data;
+ * it's looking for a feature named "wq_table1", then tries to
+ * transform it into an IObservation, creates a DefaultTupleResultLayer
+ *  and uses the result components which go by the name "Wasserstand" (domain data) and 
+ *  "Abfluss" (value data) as data input for the layer; the DefaultTupleResultLayer draws 
+ *  its data as line chart
+ *  
+ *  @TODO: change named feature to "wq_table" or - even better - move feature name
+ *  to parameter section 
+ *  
+ *  The following configuration parameters are needed for this LayerProvider:
+ *  dataSource:     URL or relative path leading to observation data
+ *  @TODO: dataSource is an independent configuration tag right now - it should be
+ *      moved into the parameter section as not every layer provider needs an url
+ *  
  */
 public class WQTabelleLayerProvider implements ILayerProvider
 {

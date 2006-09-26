@@ -67,7 +67,20 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Layer Provider for gauge data from O&M data;
+ * it's looking for a feature named "wasserstandsmessung", then tries to
+ * transform it into an IObservation, creates a WasserstandLayer
+ *  and uses the result components which go by the name "Datum" (domain data) and 
+ *  "Wasserstand" (value data) as data input for the layer; the WasserstandLayer draws 
+ *  its data as line chart
+ * 
+ *  The following configuration parameters are needed for the LayerProvider:
+ *  dataSource:     URL or relative path leading to observation data
+ *  @TODO: dataSource is an independent configuration tag right now - it should be
+ *      moved into the parameter section as not every layer provider needs an url
+ * 
  */
 public class WasserstandLayerProvider implements ILayerProvider
 {

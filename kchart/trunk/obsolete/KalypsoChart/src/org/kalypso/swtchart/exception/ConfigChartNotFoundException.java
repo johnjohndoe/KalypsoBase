@@ -42,6 +42,8 @@ package org.kalypso.swtchart.exception;
 
 /**
  * @author burtscher
+ * Exception specialization: if a desired chart name can not be found in the configuration file, 
+ * this exception should be thrown
  */
 public class ConfigChartNotFoundException extends Exception
 {

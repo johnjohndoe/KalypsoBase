@@ -67,7 +67,29 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
- * @author alibu
+ * @author burtscher
+ * 
+ * Layer Provider for precipitation data from O&M data;
+ * it's looking for a feature named "niederschlagsmessung", then tries to
+ * transform it into an IObservation, creates a NiederschlagLayer
+ *  and uses the result components which go by the name "Datum" (domain data) and 
+ *  "Niederschlag" (value data) as data input for the layer; the NiederschlagLayer draws 
+ *  its data as bar chart
+ *  
+ *  The following configuration parameters are needed for the LayerProvider:
+ *  dataSource:     URL or relative path leading to observation data
+ *  @TODO: dataSource is an independent configuration tag right now - it should be
+ *      moved into the parameter section as not every layer provider needs an url
+ *  
+ *  
+ *  The following configuration parameters are needed for NiederschlagLayer:
+ *  fixedPoint:     starting time (e.g. 2006-07-01T00:00:00Z) of any possible bar within the chart;
+ *                  typically, bars start at 00:00 and end at 23:59, but to get more flexibility, 
+ *                  it's possible to make them "last" more or less than one day (see next parameter) 
+ *                  and start them at any desired time / date.
+ *  barWidth:       width of the chart bars in milliseconds (e.g. 86400000 for one day)
+ *  
+ * 
  */
 public class NiederschlagLayerProvider implements ILayerProvider
 {

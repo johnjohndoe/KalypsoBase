@@ -46,6 +46,9 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 
 /**
  * @author burtscher
+ * manages preference concerns using the eclipse preference mechanism
+ * 
+ * @TODO: check if constants should be extracted to IChartPreferences
  */
 public class ChartPreferences
 {
