@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://elbe.wb.tu-harburg.de/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:rd="http://elbe.wb.tu-harburg.de/rasterData">
-	<!-- =========================================================== -->
+<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_rd="http://www.tuhh.de/floodrisk/rasterData">
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
-	<import namespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" schemaLocation="rectifiedGridCoverage.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="base/coverage.xsd"/>
+	<!-- =========================================================== -->
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
 	<!-- =========================================================== -->
 	<!-- RasterDataModel=========================================================== -->
-	<element name="RasterDataModel" type="rd:RasterDataModelType"/>
-	<complexType name="RasterDataModelType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType" substitutionGroup="gml:_Coverage"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-</schema>
+	<xs:element name="RasterDataModel" type="risk_rd:RasterDataModelType"/>
+	<xs:complexType name="RasterDataModelType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractCoverageType">
+				<xs:sequence>
+					<xs:element name="RectifiedGridCoverage" type="gml:RectifiedGridCoverageType" substitutionGroup="gml:_DiscreteCoverage"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
