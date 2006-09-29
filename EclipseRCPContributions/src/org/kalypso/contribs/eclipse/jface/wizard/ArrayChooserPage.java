@@ -44,6 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -77,6 +78,8 @@ public class ArrayChooserPage extends WizardPage
     }
   };
 
+  private IBaseLabelProvider m_labelProvider = new LabelProvider();
+
   /**
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
@@ -95,6 +98,11 @@ public class ArrayChooserPage extends WizardPage
     m_chooseables = chooseables;
     m_selected = selected;
     m_checked = checked;
+  }
+  
+  public void setLabelProvider( final IBaseLabelProvider labelProvider )
+  {
+    m_labelProvider = labelProvider;
   }
 
   /**
@@ -119,7 +127,7 @@ public class ArrayChooserPage extends WizardPage
 
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_viewer.setLabelProvider( new LabelProvider() );
+    m_viewer.setLabelProvider( m_labelProvider );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setInput( m_chooseables );
     m_viewer.addCheckStateListener( m_checkStateListener );
