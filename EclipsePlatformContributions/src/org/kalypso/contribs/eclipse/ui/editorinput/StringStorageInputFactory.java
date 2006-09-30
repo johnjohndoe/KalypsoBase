@@ -55,7 +55,7 @@ public class StringStorageInputFactory implements IElementFactory
   public final static String ID = "org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory";
 
   private static final String MEMENTO_DATA = "string.storage.memento.data";
-  
+
   private static final String MEMENTO_PATH = "string.storage.memento.path";
 
   private static final String MEMENTO_NAME = "string.storage.memento.name";
@@ -63,7 +63,9 @@ public class StringStorageInputFactory implements IElementFactory
   public static void saveState( final StringStorage storage, final IMemento memento )
   {
     memento.putString( MEMENTO_DATA, storage.getData() );
-    memento.putString( MEMENTO_PATH, storage.getFullPath().toPortableString() );
+    final IPath fullPath = storage.getFullPath();
+    if( fullPath != null )
+      memento.putString( MEMENTO_PATH, fullPath.toPortableString() );
     memento.putString( MEMENTO_NAME, storage.getName() );
   }
 
@@ -76,7 +78,7 @@ public class StringStorageInputFactory implements IElementFactory
     final String pathName = memento.getString( MEMENTO_PATH );
     final String name = memento.getString( MEMENTO_NAME );
 
-    final IPath path = Path.fromPortableString( pathName );
+    final IPath path = pathName == null ? null : Path.fromPortableString( pathName );
 
     final StringStorage storage = new StringStorage( name, data, path );
 
