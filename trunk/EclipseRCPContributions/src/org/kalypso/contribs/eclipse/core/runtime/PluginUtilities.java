@@ -91,6 +91,10 @@ public class PluginUtilities
     plugin.getLog().log( new Status( IStatus.INFO, id( plugin ), 0, msg, null ) );
   }
 
+  /**
+   * Returns the settings with the given name for a plugin. If no settings with this name already exists, one is
+   * created.
+   */
   public static IDialogSettings getDialogSettings( final AbstractUIPlugin plugin, final String sectionName )
   {
     final IDialogSettings workbenchSettings = plugin.getDialogSettings();
