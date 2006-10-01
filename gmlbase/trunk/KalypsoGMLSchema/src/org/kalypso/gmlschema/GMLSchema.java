@@ -324,9 +324,9 @@ public class GMLSchema implements IGMLSchema
   /** public in order to allow force dependency from outside. */
   public GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
-    if( m_ignoreNameSpaces.contains( namespaceURI ))
+    if( m_ignoreNameSpaces.contains( namespaceURI ) )
       return null;
-    
+
     // TODO make a nice visitor
     // first level ?
     if( namespaceURI.equals( getTargetNamespace() ) )
@@ -607,6 +607,10 @@ public class GMLSchema implements IGMLSchema
         // be loaded by now
         return null;
       }
+
+      if( schemaForNamespaceURI == null )
+        return null;
+
       return schemaForNamespaceURI.getFeatureType( qName );
     }
   }
