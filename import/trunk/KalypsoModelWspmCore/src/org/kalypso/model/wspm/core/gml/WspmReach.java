@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public abstract class WspmReach implements IWspmConstants
 {
@@ -81,29 +77,6 @@ public abstract class WspmReach implements IWspmConstants
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public void setWaterBody( final WspmWaterBody body )
-  {
-    final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyLinkMember" ) );
-    m_reach.setProperty( waterProp, body.getFeature().getId() );
-  }
-
-  public WspmWaterBody getWaterBody( )
-  {
-    final Object body = m_reach.getProperty( new QName( NS_WSPM, "waterBodyLinkMember" ) );
-    if( body instanceof Feature )
-      return new WspmWaterBody( (Feature) body );
-    else
-    {
-      final Feature feature = m_reach.getWorkspace().getFeature( (String) body );
-      return new WspmWaterBody( feature );
-    }
-  }
-
-  protected FeatureList getReachSegmentList( )
-  {
-    return (FeatureList) m_reach.getProperty( new QName( NS_WSPM, "reachSegmentMember" ) );
   }
 
   public Feature getFeature( )
