@@ -155,7 +155,11 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
       return false;
 
     final StringStorage other = (StringStorage) obj;
+    
 
+    if( m_path == null )
+      return m_data.equals( other.m_data ) && m_name.equals( other.m_name ) && other.m_path == null;
+    
     return m_data.equals( other.m_data ) && m_name.equals( other.m_name ) && m_path.equals( other.m_path );
   }
 
