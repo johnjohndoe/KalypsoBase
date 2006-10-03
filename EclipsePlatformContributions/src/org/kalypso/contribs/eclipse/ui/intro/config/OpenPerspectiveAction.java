@@ -42,15 +42,21 @@ package org.kalypso.contribs.eclipse.ui.intro.config;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -77,6 +83,8 @@ public class OpenPerspectiveAction implements IIntroAction
     {
       /* Get perspective id */
       final String perspectiveID = params.getProperty( "perspectiveId", null );
+      final String filePathStr = params.getProperty( "file", null );
+      final String editorID = params.getProperty( "editorId", null );
       if( perspectiveID == null )
         throw new CoreException( StatusUtilities.createErrorStatus( "Es ist keine Perspektive mit dieser Aktion verbunden." ) );
 
@@ -87,9 +95,17 @@ public class OpenPerspectiveAction implements IIntroAction
       introManager.closeIntro( introManager.getIntro() );
 
       // show intro view
-      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-      workbench.showPerspective( perspectiveID, activeWorkbenchWindow );
-      // page.resetPerspective();
+      final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+      workbench.showPerspective( perspectiveID, window );
+      
+      if( filePathStr != null )
+      {
+        final IPath filePath = Path.fromPortableString( filePathStr );
+        final IWorkbenchPage page = window.getActivePage();
+        
+        final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( filePath );
+        page.openEditor( new FileEditorInput( file ), editorID );
+      }
     }
     catch( final CoreException e )
     {

@@ -148,7 +148,6 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   @Override
   protected void okPressed( )
   {
-
     final List<IPath> chosenResourcePathList = new ArrayList<IPath>();
     final IPath returnValue = group.getResourceFullPath();
     if( returnValue != null )
