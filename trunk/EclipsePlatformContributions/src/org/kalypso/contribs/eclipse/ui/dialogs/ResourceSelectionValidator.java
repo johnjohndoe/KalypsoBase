@@ -13,7 +13,6 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 
 public class ResourceSelectionValidator implements ISelectionValidator
 {
-
   public static final String ERROR_MESSAGE = "Bitte wählen sie eine Datei aus..";
 
   /**
