@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JWSDPInstallation for Kalypso
 Bundle-SymbolicName: org.kalypso.jwsdp
 Bundle-Version: 1.4
-Bundle-ClassPath: kalypsoJWSDP.jar,
- jwsdp/jaxb/lib/jaxb-api.jar,
+Bundle-ClassPath: jwsdp/jaxb/lib/jaxb-api.jar,
  jwsdp/jaxb/lib/jaxb-impl.jar,
  jwsdp/jaxb/lib/jaxb-xjc.jar,
  jwsdp/jaxrpc/lib/jaxrpc-api.jar,
@@ -41,7 +40,8 @@ Bundle-ClassPath: kalypsoJWSDP.jar,
  jwsdp/xws-security/lib/security-plugin.jar,
  jwsdp/xws-security/lib/wss-provider-update.jar,
  jwsdp/xws-security/lib/xws-security_jaxrpc.jar,
- jwsdp/xws-security/lib/xws-security.jar
+ jwsdp/xws-security/lib/xws-security.jar,
+ .
 Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
