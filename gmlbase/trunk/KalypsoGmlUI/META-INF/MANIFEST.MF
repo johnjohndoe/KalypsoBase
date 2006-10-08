@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoGmlUI Plug-in
 Bundle-SymbolicName: org.kalypso.gml.ui; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: org.kalypso.gml.ui/
 Bundle-Activator: org.kalypso.gml.ui.KalypsoGmlUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
@@ -16,5 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.core,
  org.kalypso.ui,
  org.junit,
- org.kalypso.contribs.ogc31
-Eclipse-AutoStart: true
+ org.kalypso.contribs.ogc31,
+ org.kalypso.gml.processes,
+ org.kalypso.ui.addlayer
+Eclipse-LazyStart: true

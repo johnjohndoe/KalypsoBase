@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp
-Eclipse-AutoStart: true
-Bundle-ClassPath: kalypsoContribOGCmixed.jar
+Eclipse-LazyStart: true
 Export-Package: ogc2.www.opengis.net.gml,
  ogc2.www.opengis.net.ogc,
  ogc2.www.opengis.net.ows,

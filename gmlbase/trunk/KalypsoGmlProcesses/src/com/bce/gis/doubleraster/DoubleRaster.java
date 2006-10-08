@@ -1,6 +1,7 @@
 package com.bce.gis.doubleraster;
 
-import com.bce.util.progressbar.Progressable;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -36,5 +37,5 @@ public interface DoubleRaster
   /** Size of the raster. Amount of raster-cells in direction of y. */
   public int getSizeY( );
 
-  public Object walk( final DoubleRasterWalker pwo, final Progressable pable ) throws DoubleRasterException;
+  public Object walk( final DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException;
 }

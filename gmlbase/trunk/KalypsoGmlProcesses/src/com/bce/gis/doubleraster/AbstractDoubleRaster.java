@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package com.bce.gis.doubleraster;
 
-import com.bce.util.progressbar.Progressable;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -60,12 +61,12 @@ public abstract class AbstractDoubleRaster implements DoubleRaster
     return coordinate;
   }
 
-  public final Object walk( final DoubleRasterWalker pwo, final Progressable pable ) throws DoubleRasterException
+  public final Object walk( final DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException
   {
     final int sizeX = getSizeX();
     final int sizeY = getSizeY();
-    if( pable != null )
-      pable.reset( 0, sizeY );
+    if( monitor != null )
+      monitor.beginTask( "Raster wird durchlaufen", sizeY );
 
     pwo.start( this );
 
@@ -76,12 +77,12 @@ public abstract class AbstractDoubleRaster implements DoubleRaster
       for( int x = 0; x < sizeX; x++ )
         pwo.operate( x, y, calcCoordinate( x, y, tmpCrd ) );
 
-      if( pable != null )
-        pable.setCurrent( sizeY - y );
+      if( monitor != null )
+        monitor.worked( 1 );
 
       pwo.afterLine( y );
 
-      if( pable != null && pable.isCanceled() )
+      if( monitor != null && monitor.isCanceled() )
         throw new DoubleRasterException( "Abbruch durch Benutzer", null );
     }
 

@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree_impl.io.shpapi.ShapeFile;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.bce.gis.doubleraster.DoubleFakeRaster;
 import com.bce.gis.doubleraster.DoubleRaster;
@@ -18,7 +20,6 @@ import com.bce.gis.operation.raster2vector.Raster2Lines;
 import com.bce.gis.operation.raster2vector.SegmentCollector;
 import com.bce.gis.operation.raster2vector.collector.LineStringCollector;
 import com.bce.gis.operation.raster2vector.collector.PolygonCollector;
-import com.bce.util.progressbar.ProgressMonitor;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -40,23 +41,25 @@ public class Hmo2Fli
   {
     LOG.entering( Hmo2Fli.class.getName(), "transform" );
 
-    final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
+//    final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
+    // TODO: show progress dialog 
+    final IProgressMonitor pable = new NullProgressMonitor();
 
     final HMOReader hmoReader = new HMOReader( GF );
-    final LinearRing[] dgmUnten = hmoReader.readFile( hmoUntenFile, pable );
-    final LinearRing[] dgmOben = hmoReader.readFile( hmoObenFile, pable );
+    final LinearRing[] dgmUnten = hmoReader.readFile( hmoUntenFile, null );
+    final LinearRing[] dgmOben = hmoReader.readFile( hmoObenFile, null );
 
     final Geometry gUnten = GF.createGeometryCollection( dgmUnten ).getEnvelope();
     final Geometry gOben = GF.createGeometryCollection( dgmOben ).getEnvelope();
     final Envelope e = gUnten.intersection( gOben ).getEnvelopeInternal();
 
-    if( pable != null )
-      pable.setNote( "Index für Geländemodell wird generiert" );
-    final GetRingsOperation groUnten = new GetRingsOperation( dgmUnten, pable );
+//    if( pable != null )
+//      pable.setNote( "Index für Geländemodell wird generiert" );
+    final GetRingsOperation groUnten = new GetRingsOperation( dgmUnten, null );
 
-    if( pable != null )
-      pable.setNote( "Index für Wasserspiegel wird generiert" );
-    final GetRingsOperation groOben = new GetRingsOperation( dgmOben, pable );
+//    if( pable != null )
+//      pable.setNote( "Index für Wasserspiegel wird generiert" );
+    final GetRingsOperation groOben = new GetRingsOperation( dgmOben, null );
 
     final int xCount = (int) (e.getWidth() / rasterSize) + 1;
     final int yCount = (int) (e.getHeight() / rasterSize) + 1;
@@ -70,8 +73,8 @@ public class Hmo2Fli
     final boolean bSimple = false;
     final SegmentCollector gc = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
     final Raster2Lines r2l = new Raster2Lines( gc, grenzen );
-    if( pable != null )
-      pable.setNote( "Fliesstiefen werden ermittelt" );
+//    if( pable != null )
+//      pable.setNote( "Fliesstiefen werden ermittelt" );
 
     LOG.info( "Start creating flow depths" );
     raster.walk( r2l, pable );
@@ -92,8 +95,8 @@ public class Hmo2Fli
     {
       if( gc instanceof PolygonCollector && calcVolume )
       {
-        if( pable != null )
-          pable.setNote( "Volumen wird ermittelt" );
+//        if( pable != null )
+//          pable.setNote( "Volumen wird ermittelt" );
         LOG.info( "Start calculation of shape volumes" );
         final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
         final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( featureIndex, PolygonCollector.VOLUME_PROP.getName() );
@@ -109,8 +112,8 @@ public class Hmo2Fli
       LOG.info( "Finished writing shape: " + shapeBase );
     }
 
-    if( pable != null )
-      pable.cancel();
+//    if( pable != null )
+//      pable.cancel();
 
     LOG.exiting( Hmo2Fli.class.getName(), "transform" );
   }

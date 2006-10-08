@@ -41,12 +41,15 @@
 package org.kalypso.gmlschema.property;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -105,6 +108,19 @@ public class PropertyUtils
       }
     }
     return comboEntries;
+  }
+
+  public static IPropertyType[] filterProperties( final IFeatureType ft, final IPropertyTypeFilter filter )
+  {
+    final IPropertyType[] properties = ft.getProperties();
+    final List<IPropertyType> filtered = new ArrayList<IPropertyType>( properties.length );
+    for( final IPropertyType type : properties )
+    {
+      if( filter.accept( type ) )
+        filtered.add( type );
+    }
+
+    return filtered.toArray( new IPropertyType[filtered.size()] );
   }
 
 }

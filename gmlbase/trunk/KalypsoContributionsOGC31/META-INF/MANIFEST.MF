@@ -7,8 +7,7 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp,
  org.junit
-Eclipse-AutoStart: true
-Bundle-ClassPath: kalypsoContribsOGC31.jar
+Eclipse-LazyStart: true
 Export-Package: au.csiro.seegrid.xml.st,
  ogc31.org.w3.smil20,
  ogc31.www.isotc211.org.gco,

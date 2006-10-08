@@ -8,7 +8,7 @@ Require-Bundle: org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.commons
 Bundle-ClassPath: lib/xbean.jar,
  lib/schiftone/shiftone-cache.jar,
- kalypsogmlschema.jar
+ .
 Bundle-Vendor: kalypso.org
 Export-Package: javax.xml.namespace,
  org.apache.xmlbeans,
