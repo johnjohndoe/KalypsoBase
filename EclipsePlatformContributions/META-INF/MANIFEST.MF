@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: EclipsePlatformContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipseplatform; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: EclipsePlatformContributions.jar
 Bundle-Activator: org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

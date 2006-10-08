@@ -105,6 +105,11 @@ public class ArrayChooserPage extends WizardPage
     m_labelProvider = labelProvider;
   }
 
+  public IBaseLabelProvider getLabelProvider( )
+  {
+    return m_labelProvider;
+  }
+  
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
