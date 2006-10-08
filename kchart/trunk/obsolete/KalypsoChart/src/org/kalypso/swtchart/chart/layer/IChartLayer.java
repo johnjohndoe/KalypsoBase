@@ -115,12 +115,6 @@ public interface IChartLayer
    */
   public boolean isActive( );
 
-
-  /**
-   *  @return true if the layer is set visible, false otherwise
-   */
-  public boolean isVisible( );
-
   /**
    * @return the layer style
    */

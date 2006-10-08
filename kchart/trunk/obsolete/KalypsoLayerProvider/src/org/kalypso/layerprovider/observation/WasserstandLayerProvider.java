@@ -156,7 +156,7 @@ public class WasserstandLayerProvider implements ILayerProvider
           final List<StyleLink> styleList = ce.getStyleLink();
           if( styleList.size() > 0 )
             wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
-          wl.setName( ce.getName() );
+          wl.setName( valueComponent.getName() );
           layers.add( wl );
         }
 

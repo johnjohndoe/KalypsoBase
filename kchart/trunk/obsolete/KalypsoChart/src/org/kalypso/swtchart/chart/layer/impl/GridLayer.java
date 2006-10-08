@@ -70,7 +70,6 @@ public class GridLayer implements IChartLayer
   {
     m_domAxis = domAxis;
     m_valAxis = valAxis;
-
   }
 
   /**
@@ -117,14 +116,6 @@ public class GridLayer implements IChartLayer
    * @see org.kalypso.swtchart.layer.IChartLayer#isActive()
    */
   public boolean isActive( )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#isVisible()
-   */
-  public boolean isVisible( )
   {
     return true;
   }

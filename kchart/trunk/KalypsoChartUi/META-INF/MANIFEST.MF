@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoChartUi Plug-in
 Bundle-SymbolicName: org.kalypso.chart.ui; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: org.kalypso.chart.ui/
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
@@ -12,5 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.kalypso.chart,
  org.eclipse.core.resources,
- org.kalypso.jwsdp
-Eclipse-AutoStart: true
+ org.kalypso.jwsdp,
+ org.eclipse.ui.views
+Eclipse-LazyStart: true

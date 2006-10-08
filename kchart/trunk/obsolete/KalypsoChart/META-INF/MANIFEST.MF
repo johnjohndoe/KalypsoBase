@@ -28,4 +28,3 @@ Export-Package: org.kalypso.swtchart,
  org.ksp.chart.layerstyle,
  org.ksp.chart.tableconfiguration,
  org.ksp.chart.viewerconfiguration
-Bundle-ClassPath: kalypsoChart.jar

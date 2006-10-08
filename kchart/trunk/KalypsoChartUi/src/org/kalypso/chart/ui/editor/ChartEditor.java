@@ -29,6 +29,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -49,25 +50,7 @@ public class ChartEditor extends EditorPart
 
   private Chart m_chart;
 
-  /**
-   * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public void doSave( final IProgressMonitor monitor )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-   */
-  @Override
-  public void doSaveAs( )
-  {
-    // TODO Auto-generated method stub
-
-  }
+  private ChartEditorOutlinePage m_outlinePage;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -132,6 +115,41 @@ public class ChartEditor extends EditorPart
   }
 
   /**
+   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_outlinePage != null )
+    {
+      m_outlinePage.dispose();
+      m_outlinePage = null;
+    }
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void doSave( final IProgressMonitor monitor )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+   */
+  @Override
+  public void doSaveAs( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
    * @see org.eclipse.ui.part.EditorPart#isDirty()
    */
   @Override
@@ -177,12 +195,13 @@ public class ChartEditor extends EditorPart
       return;
 
     m_chart = null;
-    
+
     /* Reset controls */
     final Control[] children = m_composite.getChildren();
     for( final Control control : children )
       control.dispose();
 
+    final ChartType chartType = getCurrentChart();
     if( m_config == null )
     {
       /* No config set */
@@ -191,11 +210,10 @@ public class ChartEditor extends EditorPart
     }
     else
     {
-      final List<ChartType> charts = m_config.getChart();
-      if( charts.isEmpty() )
+      if( chartType == null )
       {
         final Label label = new Label( m_composite, SWT.NONE );
-        label.setText( "No configuration set" );
+        label.setText( "No chart set" );
       }
       else
       {
@@ -207,7 +225,7 @@ public class ChartEditor extends EditorPart
         {
           final URL context = ResourceUtilities.createURL( file );
           m_chart = new Chart( m_composite, SWT.BORDER );
-          ChartLoader.configureChart( m_chart, charts.get( 0 ), context );
+          ChartLoader.configureChart( m_chart, chartType, context );
 
           m_chart.setAutoscale( true );
         }
@@ -221,6 +239,20 @@ public class ChartEditor extends EditorPart
     }
 
     m_composite.layout();
+
+    if( m_outlinePage != null )
+      m_outlinePage.setChart( m_chart );
+  }
+
+  private ChartType getCurrentChart( )
+  {
+    if( m_config == null )
+      return null;
+    
+    final List<ChartType> charts = m_config.getChart();
+    if( charts.isEmpty() )
+      return null;
+    return charts.get( 0 );
   }
 
   public Chart getChart( )
@@ -228,4 +260,23 @@ public class ChartEditor extends EditorPart
     return m_chart;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
+      {
+        m_outlinePage = new ChartEditorOutlinePage( );
+        m_outlinePage.setChart( m_chart );
+      }
+
+      return m_outlinePage;
+    }
+
+    return super.getAdapter( adapter );
+  }
 }

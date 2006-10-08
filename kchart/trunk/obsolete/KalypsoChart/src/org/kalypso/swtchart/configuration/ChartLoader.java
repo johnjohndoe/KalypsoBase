@@ -114,7 +114,7 @@ public class ChartLoader
     }
 
     // Layer hinzufügen
-    List<LayerProviderType> lps = configChart.getLayerProvider();
+    final List<LayerProviderType> lps = configChart.getLayerProvider();
     for( LayerProviderType lp : lps )
     {
       String lpname = lp.getName();
