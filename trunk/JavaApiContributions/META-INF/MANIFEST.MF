@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JavaApiContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.java; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: JavaApiContributions.jar
 Bundle-Activator: org.kalypso.contribs.java.JavaApiContributionsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
