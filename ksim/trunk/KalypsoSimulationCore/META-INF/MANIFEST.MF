@@ -17,4 +17,3 @@ Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.internal.queued,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util
-Bundle-ClassPath: kalypsoSimulationCore.jar
