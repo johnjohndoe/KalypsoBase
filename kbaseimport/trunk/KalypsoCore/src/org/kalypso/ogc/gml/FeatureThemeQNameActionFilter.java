@@ -80,7 +80,7 @@ public class FeatureThemeQNameActionFilter implements IActionFilterEx
         final QName qName = QNameUtilities.createQName( string );
 
         final IFeatureType featureType = theme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( featureType, qName ) )
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, qName ) )
           return true;
       }
     }
