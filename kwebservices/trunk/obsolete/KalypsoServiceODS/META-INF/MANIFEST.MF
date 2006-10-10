@@ -7,14 +7,9 @@ Bundle-ClassPath: org.kalypso.services.ods/
 Bundle-Activator: org.kalypso.services.ods.Activator
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.equinox.http.registry,
- org.kalypso.jwsdp,
+Require-Bundle: org.kalypso.jwsdp,
  org.kalypso.chart,
- org.eclipse.ui.views,
- org.eclipse.ui,
- org.kalypso.ui
+ org.eclipse.equinox.http.registry
 Eclipse-LazyStart: true
 Import-Package: javax.servlet,
  javax.servlet.http
@@ -22,5 +17,4 @@ Export-Package: net.opengis.ows,
  org.kalypso.services.ods,
  org.kalypso.services.ods.operation,
  org.kalypso.services.ods.preferences,
- org.kalypso.services.ods.tools,
  org.ksp.ods.capabilities

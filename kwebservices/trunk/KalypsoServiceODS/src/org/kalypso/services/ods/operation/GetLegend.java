@@ -61,7 +61,6 @@ import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -92,7 +91,9 @@ public class GetLegend implements IODSOperation, Runnable
       LegendImageContainer lic=null;
       try
       {
+        /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
           KalypsoGisPlugin.getDefault();
+          */
           IEclipsePreferences prefs = new ODSPreferences().getPreferences();
           String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
           ConfigurationLoader cl=new ConfigurationLoader(pathVC);

@@ -61,7 +61,6 @@ import org.kalypso.services.ods.preferences.IODSPreferences;
 import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -77,6 +76,9 @@ private HttpServletResponse m_response;
 
 public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
  {
+  
+  System.getProperty( "myKey", "myDefaultValue" );
+  
    Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
 
    int width=500;
@@ -97,7 +99,9 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
      try
      {
         //GMLWorkspace initialisieren
+       /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
          KalypsoGisPlugin.getDefault();
+         */
          IEclipsePreferences prefs = new ODSPreferences().getPreferences();
          String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
 

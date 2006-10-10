@@ -28,11 +28,4 @@
          	id="GetHTMLTable"
          />
    </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            class="org.kalypso.services.ods.tools.DebugView"
-            id="KalypsoServiceODS.view1"
-            name="AlisDebugView"/>
-   </extension>
 </plugin>

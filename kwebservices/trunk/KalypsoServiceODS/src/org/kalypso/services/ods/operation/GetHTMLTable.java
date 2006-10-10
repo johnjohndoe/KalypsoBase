@@ -57,7 +57,6 @@ import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author burtscher
@@ -85,7 +84,9 @@ public class GetHTMLTable implements IODSOperation
         {
           cl = new ConfigurationLoader(pathVC);
           //GMLWorkspace initialisieren
+          /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
           KalypsoGisPlugin.getDefault();
+          */
           String htmltable = TableLoader.createTable(cl.getConfiguration(), name);
           final PrintWriter out=response.getWriter();
           response.setContentType( "text/html" );
