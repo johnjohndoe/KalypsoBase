@@ -43,7 +43,7 @@ package org.kalypso.contribs.java.util;
 import java.util.Comparator;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class DoubleComparator implements Comparator<Number>
 {
@@ -72,7 +72,6 @@ public class DoubleComparator implements Comparator<Number>
     else if( d1 > d2 + m_delta )
       return 1;
     else
-
       return 0;
   }
 }
