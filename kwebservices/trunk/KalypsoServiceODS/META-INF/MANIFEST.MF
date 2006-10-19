@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServicesODS Plug-in
 Bundle-SymbolicName: org.kalypso.services.ods;singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: org.kalypso.services.ods/
 Bundle-Activator: org.kalypso.services.ods.Activator
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

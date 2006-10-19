@@ -3,7 +3,7 @@
      xmlns:ods="http://www.ksp.org/ods/capabilities" xmlns:xlink="http://www.w3.org/1999/xlink"
      elementFormDefault="qualified">
      <import namespace="http://www.w3.org/1999/xlink"
-          schemaLocation="http://schemas.opengis.net/gml/2.1.2/xlinks.xsd"/>
+          schemaLocation="xlinks.xsd"/>
      <!-- ********************************************************************* -->
      <!-- ** The Top-Level Element. ** -->
      <!-- ********************************************************************* -->

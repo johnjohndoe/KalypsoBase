@@ -28,7 +28,12 @@ public class ODSServlet extends HttpServlet implements Servlet
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
    *      javax.servlet.http.HttpServletResponse)
    *      
-   *      @TODO: integrate extensions into  
+   *      this method has to be synchronized as it uses graphics on an environment without a running display;
+   *      therefore, the display has to be created (Display.getDefault()) and disposed synchronously (or using
+   *      the display generates an illegal Access Error)
+   *      The Display.getCurrent()-method is of no use here.
+   *      
+   *      @TODO: integrate operations extension
    */
   @Override
   protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
