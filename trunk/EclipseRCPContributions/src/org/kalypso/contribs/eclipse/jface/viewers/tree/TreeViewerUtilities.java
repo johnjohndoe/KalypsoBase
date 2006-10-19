@@ -41,6 +41,7 @@
 package org.kalypso.contribs.eclipse.jface.viewers.tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 
 /**
@@ -85,4 +86,21 @@ public class TreeViewerUtilities
     }
   }
 
+  /**
+   * Returns the tree path to a given element of a tree.
+   * <p>
+   * The given content provider MUST return a parent for each non root element.
+   * 
+   * @param element
+   *          If null, {@link TreePath#EMPTY} is returned.
+   */
+  public static TreePath getTreePath( final ITreeContentProvider contentProvider, final Object element )
+  {
+    if( element == null )
+      return TreePath.EMPTY;
+
+    final Object parent = contentProvider.getParent( element );
+    final TreePath parentPath = getTreePath( contentProvider, parent );
+    return parentPath.createChildPath( element );
+  }
 }
