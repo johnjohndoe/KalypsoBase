@@ -158,7 +158,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
+    monitor.beginTask( "Berechnung wird durchgefÃ¼hrt", 3000 );
 
     try
     {
@@ -183,7 +183,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     {
       public void run( )
       {
-        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
+        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgefï¿½hrt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
       }
     } );
   }
