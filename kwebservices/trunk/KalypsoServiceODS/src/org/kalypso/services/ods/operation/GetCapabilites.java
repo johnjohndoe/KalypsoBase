@@ -48,10 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.preferences.IODSPreferences;
-import org.kalypso.services.ods.preferences.ODSPreferences;
 
 /**
  * @author burtscher
@@ -72,12 +69,11 @@ public class GetCapabilites implements IODSOperation
     response.setContentType("text/xml");
     PrintWriter writer = response.getWriter();
     
-    IEclipsePreferences prefs = new ODSPreferences().getPreferences();
+    String pathConfig=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
+    String pathCaps=pathConfig+IODSConstants.ODS_CAPABILITIES_NAME;
+    String pathVC=pathConfig+IODSConstants.ODS_CONFIG_NAME;
     
-    String pathCaps=prefs.get( IODSPreferences.CAPABILITIES_PATH, "" )+prefs.get( IODSPreferences.CAPABILITIES_NAME, "" );
-    String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
-    
-    CapabilitiesLoader pf = new CapabilitiesLoader(pathCaps, pathVC);
+    CapabilitiesLoader pf = new CapabilitiesLoader(request, pathCaps, pathVC);
    // pf.mergeConfigIntoODS();
     writer.println(pf.getXMLString());
     writer.close();

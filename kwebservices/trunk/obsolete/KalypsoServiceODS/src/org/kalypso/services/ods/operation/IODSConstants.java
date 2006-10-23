@@ -46,6 +46,19 @@ package org.kalypso.services.ods.operation;
  */
 public interface IODSConstants
 {
+  /**
+   * System property key describing ODS configuration dir
+   */
+  public static final String ODS_CONFIG_PATH_KEY = "kalypso.ods.config.path";
+  /**
+   * Default path to ODS configuration dir - only used if there's no system property set
+   */
+  public static final String ODS_CONFIG_PATH_DEFAULT = System.getProperty( "user.home" )+"\\.ods\\";
+  
+  public static final String ODS_CONFIG_NAME = "ODSConfiguration.xml";
+  
+  public static final String ODS_CAPABILITIES_NAME = "ODSCapabilities.xml";
+  
   
   /**
    * Codes describing error types

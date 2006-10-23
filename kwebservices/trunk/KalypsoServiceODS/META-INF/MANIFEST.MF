@@ -15,5 +15,4 @@ Import-Package: javax.servlet,
 Export-Package: net.opengis.ows,
  org.kalypso.services.ods,
  org.kalypso.services.ods.operation,
- org.kalypso.services.ods.preferences,
  org.ksp.ods.capabilities

@@ -49,11 +49,8 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
-import org.kalypso.services.ods.preferences.IODSPreferences;
-import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
@@ -77,8 +74,8 @@ public class GetHTMLTable implements IODSOperation
     if (name!=null)
     {
       //    HTMLTabelle erzeugen
-      IEclipsePreferences prefs = new ODSPreferences().getPreferences();
-      String pathVC=prefs.get(IODSPreferences.CONFIG_PATH, "")+prefs.get(IODSPreferences.CONFIG_NAME, "");
+      String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
+      
       ConfigurationLoader cl=null;
         try
         {

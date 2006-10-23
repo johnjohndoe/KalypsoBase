@@ -46,15 +46,13 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.services.ods.preferences.IODSPreferences;
-import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.ksp.chart.tableconfiguration.TableType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
@@ -90,13 +88,16 @@ public class CapabilitiesLoader
   private String m_configPathVC;
   private ODSCapabilities m_caps=null;
   private ConfigurationType m_vc=null;
+  private HttpServletRequest m_request=null;
+  
   
 
 
-  public CapabilitiesLoader(String pathCaps, String pathVC)
+  public CapabilitiesLoader(HttpServletRequest request,String pathCaps, String pathVC)
   {
       m_configPathCaps=pathCaps;
       m_configPathVC=pathVC;
+      m_request=request;
       loadFile();
       mergeConfigIntoODS();
   }
@@ -194,10 +195,14 @@ public class CapabilitiesLoader
    */
   public void mergeConfigIntoODS()
   {
+    //String serviceRoot=System.getProperty( IODSConstants.ODS_SERVICE_ROOT_KEY, IODSConstants.ODS_SERVICE_ROOT_DEFAULT);
     
-    
-    IEclipsePreferences prefs = new ODSPreferences().getPreferences();
-    String serviceRoot=prefs.get( IODSPreferences.SERVICE_ROOT, "" );
+    //get actual service root from URL
+    String serviceRoot="";
+    if (m_request!=null)
+    {
+      serviceRoot=m_request.getRequestURL().toString();
+    }
     String service="ODS";
     
     //URLs für Request erzeugen

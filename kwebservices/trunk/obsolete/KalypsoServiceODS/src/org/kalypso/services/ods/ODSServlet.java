@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.operation.GetCapabilites;
 import org.kalypso.services.ods.operation.GetChart;
@@ -67,6 +68,17 @@ public class ODSServlet extends HttpServlet implements Servlet
    */
    private void executeOperation(final HttpServletRequest request, final HttpServletResponse response, String odsrequest) throws IOException
    {
+     /*  
+      * PROBLEM:
+      * System-Properties can't be set using the config.ini when running eclipse inside Tomcat;
+      * instead of System.getProperty() you have to us FrameworkProperties.getProperty();
+      * to make the proxy work, the framework properties have to be written to system properties
+      */
+     System.setProperty( "proxySet", FrameworkProperties.getProperty( "proxySet", "" ));
+     System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "" ));
+     System.setProperty( "proxyPort", FrameworkProperties.getProperty( "proxyPort", "" ));
+     
+     
      if( odsrequest.compareTo( "GetCapabilities" ) == 0 )
      {
        GetCapabilites gc = new GetCapabilites();

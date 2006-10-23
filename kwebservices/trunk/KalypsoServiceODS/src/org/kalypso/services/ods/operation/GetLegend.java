@@ -48,7 +48,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -56,8 +55,6 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
-import org.kalypso.services.ods.preferences.IODSPreferences;
-import org.kalypso.services.ods.preferences.ODSPreferences;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
@@ -94,8 +91,8 @@ public class GetLegend implements IODSOperation, Runnable
         /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
           KalypsoGisPlugin.getDefault();
           */
-          IEclipsePreferences prefs = new ODSPreferences().getPreferences();
-          String pathVC=prefs.get( IODSPreferences.CONFIG_PATH, "" )+prefs.get( IODSPreferences.CONFIG_NAME, "" );
+          String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
+          
           ConfigurationLoader cl=new ConfigurationLoader(pathVC);
           ConfigurationType config = cl.getConfiguration();
           display=Display.getDefault();
