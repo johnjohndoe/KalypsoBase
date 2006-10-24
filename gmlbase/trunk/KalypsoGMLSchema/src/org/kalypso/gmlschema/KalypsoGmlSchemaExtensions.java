@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -76,7 +76,7 @@ public class KalypsoGmlSchemaExtensions
       try
       {
         final IConfigurationElement element = configurationElements[i];
-        final String name = element.getName();
+//        final String name = element.getName();
         final Object createExecutableExtension = element.createExecutableExtension( "class" );
         final IAnnotationProvider provider = (IAnnotationProvider) createExecutableExtension;
         providers.add( provider );

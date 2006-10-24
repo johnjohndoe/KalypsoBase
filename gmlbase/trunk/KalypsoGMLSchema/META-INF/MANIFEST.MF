@@ -4,8 +4,7 @@ Bundle-Name: org.kalypso.gmlschema
 Bundle-SymbolicName: org.kalypso.gmlschema; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.jwsdp;visibility:=reexport,
- org.kalypso.commons
+Require-Bundle: org.kalypso.jwsdp;visibility:=reexport
 Bundle-ClassPath: lib/xbean.jar,
  lib/schiftone/shiftone-cache.jar,
  .
