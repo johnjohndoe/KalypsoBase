@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.reparator;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * Handles the standard implementation details. Should be derived by most implementors of
@@ -48,17 +49,33 @@ import org.eclipse.core.runtime.IConfigurationElement;
  */
 public abstract class AbstractProfilReparator implements IProfilReparator
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilReparator#doChanges(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public boolean doChanges( IProfil profil )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilReparator#hasChanges(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public boolean hasChanges( IProfil profil )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
   private String m_id;
-
-  private String m_name;
-
   private String m_description;
+  private String m_type;
 
   public final void setInitializationData( final IConfigurationElement config, final String propertyName,
       final Object data )
   {
     m_id = config.getAttribute( "id" );
-    m_name = config.getAttribute( "name" );
+    m_type = config.getAttribute( "type" );
     m_description = config.getAttribute( "description" );
   }
 
@@ -67,13 +84,14 @@ public abstract class AbstractProfilReparator implements IProfilReparator
     return m_id;
   }
 
-  public final String getName( )
+  public final String getType( )
   {
-    return m_name;
+    return m_type;
   }
 
   public final String getDescription( )
   {
     return m_description;
   }
+ 
 }
