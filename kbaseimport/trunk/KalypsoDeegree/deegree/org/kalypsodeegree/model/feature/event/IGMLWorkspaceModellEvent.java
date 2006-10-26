@@ -1,7 +1,3 @@
-package org.kalypsodeegree.model.feature.event;
-
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -42,6 +38,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree.model.feature.event;
+
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public interface IGMLWorkspaceModellEvent
 {
