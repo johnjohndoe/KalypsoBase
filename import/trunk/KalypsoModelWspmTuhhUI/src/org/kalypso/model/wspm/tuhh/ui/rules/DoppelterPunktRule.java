@@ -67,12 +67,11 @@ public class DoppelterPunktRule extends AbstractValidatorRule
     {
       final List<IProfilPoint> points = profil.getPoints();
       IProfilPoint prevPoint = null;
+      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       for( final IProfilPoint point : points )
       {
         if( prevPoint != null )
         {
-          final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-
           if( ProfilUtil.comparePoints( new POINT_PROPERTY[] { POINT_PROPERTY.BREITE, POINT_PROPERTY.HOEHE }, prevPoint, point ) )
           {
             collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ), "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
