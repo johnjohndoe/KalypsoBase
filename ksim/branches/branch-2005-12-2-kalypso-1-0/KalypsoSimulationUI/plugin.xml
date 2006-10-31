@@ -14,9 +14,6 @@
       <library name="lib/simulationUIBinding.jar">
          <export name="*"/>
       </library>
-      <library name="lib/simulationUIAnt.jar">
-         <export name="*"/>
-      </library>
    </runtime>
 
    <requires>
