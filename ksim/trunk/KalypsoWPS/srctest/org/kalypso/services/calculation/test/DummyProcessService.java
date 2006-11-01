@@ -54,9 +54,11 @@ import net.opengeospatial.ows.OperationsMetadata;
 import net.opengeospatial.ows.RequestMethodType;
 import net.opengeospatial.ows.ServiceIdentification;
 import net.opengeospatial.ows.ServiceProvider;
+import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.GetCapabilities;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralOutputType;
@@ -68,13 +70,12 @@ import net.opengeospatial.wps.ProcessOfferings;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
-import org.kalypso.services.calculation.IProcessService;
-import org.kalypso.services.calculation.Capabilities;
+import org.kalypso.services.processing.IWebProcessingService;
 
 /**
  * @author skurzbach
  */
-public class DummyProcessService implements IProcessService
+public class DummyProcessService implements IWebProcessingService
 {
 
   private static final CodeType PROCESS_ID = new CodeType();
@@ -131,9 +132,9 @@ public class DummyProcessService implements IProcessService
   /**
    * @see org.kalypso.services.calculation.IProcessService#getCapabilities(net.opengeospatial.ows.GetCapabilitiesType)
    */
-  public Capabilities getCapabilities( final String... acceptVersions )
+  public Capabilities getCapabilities( final GetCapabilities capabilitiesRequest )
   {
-    final net.opengeospatial.wps.Capabilities capabilities = new net.opengeospatial.wps.Capabilities();
+    final Capabilities capabilities = new Capabilities();
     final ProcessOfferings processOfferings = new ProcessOfferings();
     final ProcessBriefType processBriefType = new ProcessBriefType();
     processBriefType.setIdentifier( PROCESS_ID );
@@ -159,6 +160,6 @@ public class DummyProcessService implements IProcessService
     operations.add( operation );
     capabilities.setOperationsMetadata( operationsMetadata );
     capabilities.setVersion( "0.0.0" );
-    return new Capabilities( capabilities );
+    return capabilities;
   }
 }

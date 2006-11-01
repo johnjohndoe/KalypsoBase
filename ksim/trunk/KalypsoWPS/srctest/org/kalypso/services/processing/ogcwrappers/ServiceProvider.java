@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.calculation;
+package org.kalypso.services.processing.ogcwrappers;
 
 /**
  * @author skurzbach

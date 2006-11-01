@@ -38,25 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.calculation;
+package org.kalypso.services.processing;
+
+import net.opengeospatial.wps.Capabilities;
+import net.opengeospatial.wps.GetCapabilities;
 
 /**
+ * The <code>OWService</code> interface as proposed by the OGC Web Services Common Specification.
+ * 
  * @author skurzbach
  */
-public class ServiceIdentification
+public interface IOGCWebService
 {
 
-  public ServiceIdentification( net.opengeospatial.ows.ServiceIdentification serviceIdentification )
-  {
-    // TODO Auto-generated constructor stub
-  }
-
   /**
-   * @see java.lang.Object#equals(java.lang.Object)
+   * The mandatory <code>GetCapabilities</code> operation allows clients to retrieve service metadata from a server.
+   * The response to a <code>GetCapabilities</code> request shall be a <code>Capabilities</code> data structure
+   * containing service metadata about the server, including brief metadata describing all the processes implemented.
    */
-  @Override
-  public boolean equals( Object obj )
-  {
-    return obj instanceof ServiceIdentification;
-  }
+  public Capabilities getCapabilities( final GetCapabilities capabilitiesRequest );
 }

@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.calculation;
+package org.kalypso.services.processing.ogcwrappers;
 
 /**
  * @author skurzbach
  */
-public class OperationsMetadata
+public class ServiceIdentification
 {
 
-  public OperationsMetadata( net.opengeospatial.ows.OperationsMetadata operationsMetadata )
+  public ServiceIdentification( net.opengeospatial.ows.ServiceIdentification serviceIdentification )
   {
     // TODO Auto-generated constructor stub
   }
@@ -57,6 +57,6 @@ public class OperationsMetadata
   @Override
   public boolean equals( Object obj )
   {
-    return obj instanceof OperationsMetadata;
+    return obj instanceof ServiceIdentification;
   }
 }

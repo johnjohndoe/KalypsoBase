@@ -38,17 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.calculation;
-
-import net.opengeospatial.wps.ProcessBriefType;
+package org.kalypso.services.processing.ogcwrappers;
 
 /**
  * @author skurzbach
  */
-public class ProcessBrief
+public class OperationsMetadata
 {
 
-  public ProcessBrief( ProcessBriefType processBrief )
+  public OperationsMetadata( net.opengeospatial.ows.OperationsMetadata operationsMetadata )
   {
     // TODO Auto-generated constructor stub
   }
@@ -59,6 +57,6 @@ public class ProcessBrief
   @Override
   public boolean equals( Object obj )
   {
-    return obj instanceof ProcessBrief;
+    return obj instanceof OperationsMetadata;
   }
 }
