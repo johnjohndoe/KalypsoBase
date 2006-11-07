@@ -58,11 +58,18 @@ import org.kalypso.services.ods.Activator;
 public class GetCapabilites implements IODSOperation
 {
 
+  public GetCapabilites()
+  {
+    
+  }
+  
+  
+  
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 
    */
-  public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  public void operate( HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing GetCapabilities", null ) );
 
@@ -78,6 +85,5 @@ public class GetCapabilites implements IODSOperation
     writer.println(pf.getXMLString());
     writer.close();
   }
-  
 
 }

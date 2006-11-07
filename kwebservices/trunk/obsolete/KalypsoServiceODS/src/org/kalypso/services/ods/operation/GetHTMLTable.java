@@ -63,14 +63,23 @@ import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 public class GetHTMLTable implements IODSOperation
 {
 
+  private HttpServletRequest m_request;
+  private HttpServletResponse m_response;
+
+  public GetHTMLTable()
+  {
+    
+  }
+  
+  
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  public void operate(HttpServletRequest request, HttpServletResponse response ) throws IOException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
-    String name=request.getParameter( "NAME" );
+    String name=m_request.getParameter( "NAME" );
     if (name!=null)
     {
       //    HTMLTabelle erzeugen
@@ -85,8 +94,8 @@ public class GetHTMLTable implements IODSOperation
           KalypsoGisPlugin.getDefault();
           */
           String htmltable = TableLoader.createTable(cl.getConfiguration(), name);
-          final PrintWriter out=response.getWriter();
-          response.setContentType( "text/html" );
+          final PrintWriter out=m_response.getWriter();
+          m_response.setContentType( "text/html" );
           out.write( htmltable );
           out.close();
         }
@@ -96,11 +105,12 @@ public class GetHTMLTable implements IODSOperation
         }
         catch( ConfigTableNotFoundException e )
         {
-          ODSException.showException( request, response, ERROR_CODE.TABLE_NOT_DEFINED );
+          ODSException.showException( m_request, m_response, ERROR_CODE.TABLE_NOT_DEFINED );
         }
     }
     else
-      ODSException.showException( request, response, ERROR_CODE.NO_NAME_SPECIFIED );
+      ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
     
   }
+  
 }

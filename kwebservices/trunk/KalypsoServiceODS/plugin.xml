@@ -12,7 +12,7 @@
    <extension
          point="org.kalypso.services.ods.ODSOperation">
          <odsoperation
-         	class="org.kalypso.services.ods.operation.GetCapabilities"
+         	class="org.kalypso.services.ods.operation.GetCapabilites"
          	id="GetCapabilities"
          />
          <odsoperation
@@ -21,11 +21,17 @@
          />
          <odsoperation
          	class="org.kalypso.services.ods.operation.GetChart"
-         	id="GetChart"
+         	id="GetDiagram"
          />
          <odsoperation
          	class="org.kalypso.services.ods.operation.GetHTMLTable"
          	id="GetHTMLTable"
          />
    </extension>
+   
+  <extension point="org.eclipse.equinox.http.registry.resources">
+    <resource
+      alias="/"
+      base-name="/web_files"/>
+  </extension>
 </plugin>

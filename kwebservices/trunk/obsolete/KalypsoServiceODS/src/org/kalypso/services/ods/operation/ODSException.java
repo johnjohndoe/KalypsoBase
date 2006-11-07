@@ -94,6 +94,7 @@ public class ODSException
       }
   }
   
+  
   /**
    * @return error document as formatted XML string
    */

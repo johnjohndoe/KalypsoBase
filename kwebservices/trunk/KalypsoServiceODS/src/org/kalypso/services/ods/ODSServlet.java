@@ -10,13 +10,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.services.ods.operation.GetCapabilites;
 import org.kalypso.services.ods.operation.GetChart;
 import org.kalypso.services.ods.operation.GetHTMLTable;
 import org.kalypso.services.ods.operation.GetLegend;
+import org.kalypso.services.ods.operation.IODSOperation;
 import org.kalypso.services.ods.operation.ODSException;
+import org.kalypso.services.ods.operation.ODSOperationExtensions;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 
 /**
@@ -74,38 +78,36 @@ public class ODSServlet extends HttpServlet implements Servlet
       * instead of System.getProperty() you have to us FrameworkProperties.getProperty();
       * to make the proxy work, the framework properties have to be written to system properties
       */
-     System.setProperty( "proxySet", FrameworkProperties.getProperty( "proxySet", "" ));
-     System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "" ));
-     System.setProperty( "proxyPort", FrameworkProperties.getProperty( "proxyPort", "" ));
+      System.setProperty( "proxySet", FrameworkProperties.getProperty( "proxySet", "true" ));
+      System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "proxy.bce01.de" ));
+      System.setProperty( "proxyPort", FrameworkProperties.getProperty( "proxyPort", "8080" ));
      
-     
-     if( odsrequest.compareTo( "GetCapabilities" ) == 0 )
-     {
-       GetCapabilites gc = new GetCapabilites();
-       gc.operate( request, response );
-     }
-     else if( odsrequest.compareTo( "GetDiagram" ) == 0 )
-     {
-       //heisst hier noch GetChart
-       GetChart gc = new GetChart();
-       gc.init( request, response );
-       //die Operation muss im UI-Threat ausgeführt werden, sonst gibts IllegalAccessErrors
-       Display.getDefault().syncExec( gc );
-     }
-     else if( odsrequest.compareTo( "GetHTMLTable" ) == 0 )
-     {
-       GetHTMLTable ght = new GetHTMLTable();
-       ght.operate( request, response );
-     }
-     else if( odsrequest.compareTo( "GetLegend" ) == 0 )
-     {
-       GetLegend gl = new GetLegend();
-       gl.init( request, response );
-       //        die Operation muss im UI-Threat ausgeführt werden, sonst gibts IllegalAccessErrors
-       Display.getDefault().syncExec( gl );
-     }
-     else
-       ODSException.showException( request, response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
+     System.out.println("Operation:  "+odsrequest);
+     try
+      {
+       
+       //Load Operatione from ExtensionPoint
+        IODSOperation op=ODSOperationExtensions.createOperation( odsrequest );
+        if (op!=null)
+        {
+          op.operate( request, response );
+        }
+        else
+        {
+          ODSException.showException( request, response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
+        }
+      }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
    }
    
+   
+  @Override
+  public void destroy()
+  {
+    DisplayHelper.getInstance().dispose();
+  }
 }

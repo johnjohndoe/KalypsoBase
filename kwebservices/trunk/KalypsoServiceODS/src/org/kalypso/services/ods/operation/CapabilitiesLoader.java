@@ -111,7 +111,6 @@ public class CapabilitiesLoader
       try
       {
         //Capabilities laden
-        
         Object o = JCCaps.createUnmarshaller().unmarshal( new File(m_configPathCaps) );
         if (o instanceof JAXBElement)
         {

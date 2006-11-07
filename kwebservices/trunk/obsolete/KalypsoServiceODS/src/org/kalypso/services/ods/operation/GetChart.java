@@ -55,6 +55,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.DisplayHelper;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
@@ -68,87 +69,22 @@ public class GetChart implements IODSOperation, Runnable
 {
 
  
- private HttpServletRequest m_request;
-private HttpServletResponse m_response;
+    private HttpServletRequest m_request;
+    private HttpServletResponse m_response;
+    
+    
+    public GetChart()
+    {
+      
+    }
+    
 
-public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
+public void operate( HttpServletRequest request, final HttpServletResponse response )
  {
-  
-   Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
-
-   int width=500;
-   int height=400;
-   String reqWidth=request.getParameter( "WIDTH" );
-   String reqHeight=request.getParameter( "HEIGHT" );
-   String reqName=request.getParameter( "NAME" );
-   if (reqWidth!=null)
-     width=Integer.parseInt( reqWidth );
-   if (reqHeight!=null)
-     height=Integer.parseInt( reqHeight );
-   //der Name muss da sein, sonst kann kein Chart ausgewählt werden
-   if (reqName!=null)
-   {
-     Display display=null;
-     BufferedOutputStream outputStream=null;
-     ChartImageContainer cic = null;
-     try
-     {
-        //GMLWorkspace initialisieren
-       /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
-       KalypsoGisPlugin.getDefault();
-         */
-         String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-
-         ConfigurationLoader cl=new ConfigurationLoader(pathVC);
-         ConfigurationType config = cl.getConfiguration();
-         display=Display.getDefault();
-         cic = new ChartImageContainer(config, reqName, display, width, height);
-         Image chartImg=cic.getImage();
-         
-         if (chartImg!=null)
-         {
-           response.setContentType( "image/jpeg" );
-           ImageLoader il=new ImageLoader();
-           ImageData id=chartImg.getImageData();
-           il.data=new ImageData[]{id};
-           outputStream = new BufferedOutputStream( response.getOutputStream() );
-           il.save( outputStream, SWT.IMAGE_JPEG );
-         }
-         else
-         {
-           ODSException.showException( request, response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
-         }
-     }
-     catch( Exception e )
-     {
-       e.printStackTrace();
-     }
-     finally
-     {
-       if (display!=null && !display.isDisposed())
-       { 
-         try{
-           display.dispose();
-         }
-         catch (SWTError e)
-         {
-           System.out.println("Display wurde bereits disposed");
-         }
-       }
-       if (cic!=null)
-         cic.dispose();
-       if (outputStream!=null)
-         outputStream.close();
-     }
-   }
-   else
-       ODSException.showException( request, response, ERROR_CODE.NO_NAME_SPECIFIED );
+    m_request=request;
+    m_response=response;
+    DisplayHelper.getInstance().getDisplay().syncExec( this );
  }  
- public void init(HttpServletRequest request, HttpServletResponse response)
- {
-   m_request=request;
-   m_response=response;
- }
 
   /**
    * @see java.lang.Runnable#run()
@@ -156,15 +92,74 @@ public void operate( HttpServletRequest request, HttpServletResponse response ) 
   public void run( )
   {
     
-    try
+    Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
+
+    int width=500;
+    int height=400;
+    String reqWidth=m_request.getParameter( "WIDTH" );
+    String reqHeight=m_request.getParameter( "HEIGHT" );
+    String reqName=m_request.getParameter( "NAME" );
+    if (reqWidth!=null)
+      width=Integer.parseInt( reqWidth );
+    if (reqHeight!=null)
+      height=Integer.parseInt( reqHeight );
+    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if (reqName!=null)
     {
-      operate( m_request, m_response );
+      Display display=DisplayHelper.getInstance().getDisplay();
+      BufferedOutputStream outputStream=null;
+      ChartImageContainer cic = null;
+      try
+      {
+         //GMLWorkspace initialisieren
+        /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
+        KalypsoGisPlugin.getDefault();
+          */
+          String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
+
+          ConfigurationLoader cl=new ConfigurationLoader(pathVC);
+          ConfigurationType config = cl.getConfiguration();
+          cic = new ChartImageContainer(config, reqName, display, width, height);
+          Image chartImg=cic.getImage();
+          
+          if (chartImg!=null)
+          {
+            m_response.setContentType( "image/jpeg" );
+            ImageLoader il=new ImageLoader();
+            ImageData id=chartImg.getImageData();
+            il.data=new ImageData[]{id};
+            outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+            il.save( outputStream, SWT.IMAGE_JPEG );
+          }
+          else
+          {
+            ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
+          }
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        if (cic!=null)
+          cic.dispose();
+        if (outputStream!=null)
+        {
+          try
+          {
+            outputStream.close();
+          }
+          catch( IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+      }
     }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    else
+        ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
     
   }  
 

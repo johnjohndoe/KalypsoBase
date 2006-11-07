@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.DisplayHelper;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
@@ -71,15 +72,32 @@ public class GetLegend implements IODSOperation, Runnable
   private HttpServletRequest m_request;
   private HttpServletResponse m_response;
 
+  
+  public GetLegend()
+  {
+    
+  }
+  
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
- public void operate( HttpServletRequest request, HttpServletResponse response ) throws IOException
+ public void operate( HttpServletRequest request, HttpServletResponse response )
   {
-    Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
+     m_request=request;
+     m_response=response;
+     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
+     
+     DisplayHelper.getInstance().getDisplay().syncExec( this );
+     
+  }
 
-    
-    String reqName = request.getParameter( "NAME" );
+
+  /**
+   * @see java.lang.Runnable#run()
+   */
+  public void run( )
+  {
+    String reqName = m_request.getParameter( "NAME" );
     //der Name muss da sein, sonst kann kein Chart ausgewählt werden
     if (reqName!=null)
     {
@@ -95,20 +113,20 @@ public class GetLegend implements IODSOperation, Runnable
           
           ConfigurationLoader cl=new ConfigurationLoader(pathVC);
           ConfigurationType config = cl.getConfiguration();
-          display=Display.getDefault();
+          display=DisplayHelper.getInstance().getDisplay();
           lic = new LegendImageContainer(config, reqName, display);
           Image legendImg=lic.getImage();
-          response.setContentType( "image/jpeg" );
+          m_response.setContentType( "image/jpeg" );
           ImageLoader il=new ImageLoader();
           ImageData id=legendImg.getImageData();
           il.data=new ImageData[]{id};
-          outputStream = new BufferedOutputStream( response.getOutputStream() );
+          outputStream = new BufferedOutputStream( m_response.getOutputStream() );
           il.save( outputStream, SWT.IMAGE_JPEG );
           outputStream.close();
       }
       catch( ConfigChartNotFoundException e )
       {
-        ODSException.showException( request, response, ERROR_CODE.LEGEND_NOT_DEFINED );
+        ODSException.showException( m_request, m_response, ERROR_CODE.LEGEND_NOT_DEFINED );
       }
       catch( Exception e )
       {
@@ -116,39 +134,25 @@ public class GetLegend implements IODSOperation, Runnable
       }
       finally
       {
-        if (display!=null && !display.isDisposed())
-            display.dispose();
         if (lic!=null)
           lic.dispose();
         if (outputStream!=null)
-          outputStream.close();
+        {
+          try
+          {
+            outputStream.close();
+          }
+          catch( IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
       }
      
     }
     else
-      ODSException.showException( request, response, ERROR_CODE.NO_NAME_SPECIFIED );
-  }
- 
- public void init(HttpServletRequest request, HttpServletResponse response)
- {
-   m_request=request;
-   m_response=response;
- }
-
-  /**
-   * @see java.lang.Runnable#run()
-   */
-  public void run( )
-  {
-    try
-    {
-      operate( m_request, m_response );
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+      ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
     
   }  
 }

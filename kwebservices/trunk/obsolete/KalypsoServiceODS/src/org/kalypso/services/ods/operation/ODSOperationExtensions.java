@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods;
+package org.kalypso.services.ods.operation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,50 +47,51 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.services.ods.operation.IODSOperation;
 
 /**
  * @author burtscher
- * 
- * class managing operation extension point implementations 
  */
-public class OperationExtensions
+public class ODSOperationExtensions
 {
   private static Map<String, IConfigurationElement> THE_MAP = null;
+  
 
-  private OperationExtensions()
+  private ODSOperationExtensions( )
   {
     // will not be instantiated
   }
-  
+
   public static IODSOperation createOperation( final String id ) throws CoreException
   {
-    final Map<String, IConfigurationElement> elts = getProviders();
-    final IConfigurationElement element = elts.get(id);
-    if( element == null)
-      return null;
+    final Map<String, IConfigurationElement> elts = getOperations();
+    System.out.println("searching for operation: "+id);
     
+    final IConfigurationElement element = elts.get( id );
+    if( element == null )
+      return null;
+
     return (IODSOperation) element.createExecutableExtension( "class" );
   }
 
-  private synchronized static Map<String, IConfigurationElement> getProviders( )
+  private synchronized static Map<String, IConfigurationElement> getOperations( )
   {
     if( THE_MAP != null )
       return THE_MAP;
-    
+
     THE_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
-    if (er!=null)
+    if( er != null )
     {
       final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.services.ods.ODSOperation" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "id" );
         THE_MAP.put( id, element );
+        System.out.println("adding for operation: "+id);
       }
     }
     else
-      System.out.println("Error: cant find ExtensionRegistry");
+      System.out.println( "Error: cant find ExtensionRegistry" );
     return THE_MAP;
   }
 
