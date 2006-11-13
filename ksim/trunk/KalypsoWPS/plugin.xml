@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="webProcessingService" name="webProcessingService" schema="schema/webProcessingService.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.services.ui.ServicesView"
+            id="org.kalypso.services.gui.ServicesView"
+            name="Services"/>
+   </extension>
+   <extension
+         point="org.kalypso.WPS.webProcessingService">
+      <simulation
+            class="org.kalypso.convert.namodel.NaModelCalcJob"
+            id="namodel"
+            title="NA-Modell"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.services.processing.IWebProcessingService"
+            class="org.kalypso.services.processing.WebProcessingServiceAdapterFactory">
+         <adapter type="org.eclipse.jface.viewers.ITreeContentProvider"/>
+         <adapter type="org.eclipse.jface.viewers.ILabelProvider"/>
+      </factory>
+   </extension>
+
+</plugin>

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.processing;
 
+import net.opengeospatial.ows.GetCapabilitiesType;
 import net.opengeospatial.wps.Capabilities;
-import net.opengeospatial.wps.GetCapabilities;
 
 /**
  * The <code>OWService</code> interface as proposed by the OGC Web Services Common Specification.
@@ -56,5 +56,5 @@ public interface IOGCWebService
    * The response to a <code>GetCapabilities</code> request shall be a <code>Capabilities</code> data structure
    * containing service metadata about the server, including brief metadata describing all the processes implemented.
    */
-  public Capabilities getCapabilities( final GetCapabilities capabilitiesRequest );
+  public Capabilities getCapabilities( final GetCapabilitiesType capabilitiesRequest );
 }

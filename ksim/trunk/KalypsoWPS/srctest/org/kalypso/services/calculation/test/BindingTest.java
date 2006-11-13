@@ -46,10 +46,9 @@ import java.io.FileWriter;
 import javax.xml.bind.JAXBContext;
 
 import junit.framework.TestCase;
+import net.opengeospatial.ows.GetCapabilitiesType;
 import net.opengeospatial.wps.Capabilities;
-import net.opengeospatial.wps.GetCapabilities;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
@@ -61,7 +60,7 @@ public class BindingTest extends TestCase
 
   public void testBinding( ) throws Exception
   {
-    final Capabilities source = new DummyProcessService().getCapabilities( new GetCapabilities() );
+    final Capabilities source = new DummyProcessService().getCapabilities( new GetCapabilitiesType() );
     final File file = new File( "temp.xml" );
     file.deleteOnExit();
     jc.createMarshaller().marshal( source, new FileWriter( file ) );

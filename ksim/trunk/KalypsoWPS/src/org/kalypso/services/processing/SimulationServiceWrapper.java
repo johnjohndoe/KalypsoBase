@@ -57,19 +57,22 @@ import java.util.zip.ZipOutputStream;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.xml.bind.JAXBException;
 
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
+import net.opengeospatial.ows.GetCapabilitiesType;
+import net.opengeospatial.ows.ServiceIdentification;
 import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
-import net.opengeospatial.wps.GetCapabilities;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
+import net.opengeospatial.wps.ProcessBriefType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.ProcessFailedType;
@@ -84,38 +87,68 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
-import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.internal.queued.ModelspecData;
 
 /**
- * This class wraps an instance of {@link ISimulationService} to provide an {@link IWebProcessingService}
+ * This class wraps an instance of {@link ISimulation} to provide an {@link IWebProcessingService}
  * 
  * @author skurzbach
  */
 public class SimulationServiceWrapper implements IWebProcessingService
 {
-  private final ISimulationService m_simulationService;
+  private final ISimulation m_simulation;
 
   private final File m_tmpDir;
 
-  public SimulationServiceWrapper( final ISimulationService calculationService )
+  private final String m_title;
+
+  private ModelspecData m_data;
+
+  public SimulationServiceWrapper( final ISimulation simulation, final String title )
   {
-    m_simulationService = calculationService;
+    m_simulation = simulation;
     m_tmpDir = FileUtilities.createNewTempDir( "TemporaryProcessInputs", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
+    m_title = title;
+    final URL modelspecURL = m_simulation.getSpezifikation();
+    try
+    {
+      m_data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final SimulationException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
    * @see org.kalypso.services.processing.IWebProcessingService#getCapabilities(net.opengeospatial.wps.GetCapabilities)
    */
-  public Capabilities getCapabilities( final GetCapabilities capabilitiesRequest )
+  public Capabilities getCapabilities( final GetCapabilitiesType capabilitiesRequest )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Capabilities capabilities = new Capabilities();
+    final ProcessOfferings processOfferings = new ProcessOfferings();
+    final ProcessBriefType processBriefType = new ProcessBriefType();
+    final CodeType codeType = new CodeType();
+    processBriefType.setIdentifier( codeType );
+    processBriefType.setTitle( m_title );
+    processOfferings.getProcess().add( processBriefType );
+    capabilities.setProcessOfferings( processOfferings );
+    final ServiceIdentification serviceIdentification = new ServiceIdentification();
+    serviceIdentification.setTitle( "Local Simulation Service" );
+    capabilities.setServiceIdentification( serviceIdentification );
+    return capabilities;
   }
 
   /**
@@ -133,28 +166,22 @@ public class SimulationServiceWrapper implements IWebProcessingService
       processDescriptionType.setProcessVersion( "Version" );
 
       final DataInputs dataInputs = new DataInputs();
-      try
+      List<InputDescriptionType> input = dataInputs.getInput();
+      final SimulationDescription[] requiredInput = m_data.getInput();
+      for( final SimulationDescription bean : requiredInput )
       {
-        final SimulationDescription[] requiredInput = m_simulationService.getRequiredInput( processId.getValue() );
-        for( final SimulationDescription bean : requiredInput )
-        {
-          final InputDescriptionType inputDescriptionType = new InputDescriptionType();
-          final CodeType inputID = new CodeType();
-          inputID.setValue( bean.getId() );
-          inputDescriptionType.setIdentifier( inputID );
-          inputDescriptionType.setTitle( bean.getDescription() );
-          inputDescriptionType.setAbstract( "Abstract" );
-          final SupportedComplexDataType supportedComplexDataType = new SupportedComplexDataType();
-          supportedComplexDataType.setDefaultSchema( bean.getType().toString() );
-          inputDescriptionType.setComplexData( supportedComplexDataType );
-          dataInputs.getInput().add( inputDescriptionType );
-        }
+        final InputDescriptionType inputDescriptionType = new InputDescriptionType();
+        final CodeType inputID = new CodeType();
+        inputID.setValue( bean.getId() );
+        inputDescriptionType.setIdentifier( inputID );
+        inputDescriptionType.setTitle( bean.getDescription() );
+        inputDescriptionType.setAbstract( "Abstract" );
+        final SupportedComplexDataType supportedComplexDataType = new SupportedComplexDataType();
+        supportedComplexDataType.setDefaultSchema( bean.getType().toString() );
+        inputDescriptionType.setComplexData( supportedComplexDataType );
+        input.add( inputDescriptionType );
       }
-      catch( final SimulationException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+
       processDescriptionType.setDataInputs( dataInputs );
 
       processDescriptionType.setProcessOutputs( new ProcessOutputs() );
@@ -199,21 +226,21 @@ public class SimulationServiceWrapper implements IWebProcessingService
     if( simulationInfo == null )
     {
       final DataHandler dataHandler = new DataHandler( new FileDataSource( zipFile ) );
-      try
-      {
-        simulationInfo = m_simulationService.startJob( processId.getValue(), "Description", dataHandler, simulationInputs, simulationOutputs );
-      }
-      catch( SimulationException e )
-      {
-        e.printStackTrace();
-        simulationInfo = new SimulationInfo( processId.getValue(), "Description", "Unknown Type", ISimulationConstants.STATE.ERROR, 0, "Simulation error. Reason: " + e.getLocalizedMessage() );
-      }
+      // try
+      // {
+      // simulationInfo = m_simulation.startJob( processId.getValue(), "Description", dataHandler, simulationInputs,
+      // simulationOutputs );
+      // }
+      // catch( SimulationException e )
+      // {
+      // e.printStackTrace();
+      // simulationInfo = new SimulationInfo( processId.getValue(), "Description", "Unknown Type",
+      // ISimulationConstants.STATE.ERROR, 0, "Simulation error. Reason: " + e.getLocalizedMessage() );
+      // }
     }
 
-    final String state = simulationInfo.getState().toString();
     final String finishText = simulationInfo.getFinishText();
     final BigInteger progress = new BigInteger( Integer.toString( simulationInfo.getProgress() ) );
-    final String[] currentResults = simulationInfo.getCurrentResults();
 
     final ProcessStartedType processStartedType = new ProcessStartedType();
     processStartedType.setPercentCompleted( progress );
@@ -230,7 +257,7 @@ public class SimulationServiceWrapper implements IWebProcessingService
     {
       case UNKNOWN:
       case WAITING:
-        status.setProcessAccepted( state );
+        status.setProcessAccepted( simulationInfo.getState().toString() );
         break;
       case RUNNING:
         status.setProcessStarted( processStartedType );

@@ -40,10 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.processing;
 
-import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
-import net.opengeospatial.wps.GetCapabilities;
 import net.opengeospatial.wps.ProcessDescriptions;
 
 /**

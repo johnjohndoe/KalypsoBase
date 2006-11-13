@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.ows.DCP;
+import net.opengeospatial.ows.GetCapabilitiesType;
 import net.opengeospatial.ows.HTTP;
 import net.opengeospatial.ows.Operation;
 import net.opengeospatial.ows.OperationsMetadata;
@@ -58,7 +59,6 @@ import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
-import net.opengeospatial.wps.GetCapabilities;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralOutputType;
@@ -132,7 +132,7 @@ public class DummyProcessService implements IWebProcessingService
   /**
    * @see org.kalypso.services.calculation.IProcessService#getCapabilities(net.opengeospatial.ows.GetCapabilitiesType)
    */
-  public Capabilities getCapabilities( final GetCapabilities capabilitiesRequest )
+  public Capabilities getCapabilities( final GetCapabilitiesType capabilitiesRequest )
   {
     final Capabilities capabilities = new Capabilities();
     final ProcessOfferings processOfferings = new ProcessOfferings();
