@@ -12,12 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.services.ods.operation.GetCapabilites;
-import org.kalypso.services.ods.operation.GetChart;
-import org.kalypso.services.ods.operation.GetHTMLTable;
-import org.kalypso.services.ods.operation.GetLegend;
 import org.kalypso.services.ods.operation.IODSOperation;
 import org.kalypso.services.ods.operation.ODSException;
 import org.kalypso.services.ods.operation.ODSOperationExtensions;
@@ -29,6 +23,10 @@ import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 @SuppressWarnings("serial")
 public class ODSServlet extends HttpServlet implements Servlet
 {
+  
+
+
+  
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
    *      javax.servlet.http.HttpServletResponse)

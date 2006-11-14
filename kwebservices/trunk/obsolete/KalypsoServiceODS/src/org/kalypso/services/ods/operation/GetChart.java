@@ -42,6 +42,8 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,16 +52,26 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.ChartCache;
 import org.kalypso.services.ods.DisplayHelper;
 import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
+import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
+import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.shiftone.cache.Cache;
 
 /**
  * @author burtscher
@@ -109,54 +121,137 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       Display display=DisplayHelper.getInstance().getDisplay();
       BufferedOutputStream outputStream=null;
       ChartImageContainer cic = null;
-      try
+      Shell shell = null;
+      Chart chart=null;
+      
+      Cache m_cache = ChartCache.getInstance().getCache();
+      chart = (Chart) m_cache.getObject( reqName );
+      
+      //Gecachetes Chart verwenden
+      if (chart!=null && false)
       {
-         //GMLWorkspace initialisieren
-        /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
-        KalypsoGisPlugin.getDefault();
-          */
-          String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-
-          ConfigurationLoader cl=new ConfigurationLoader(pathVC);
-          ConfigurationType config = cl.getConfiguration();
-          cic = new ChartImageContainer(config, reqName, display, width, height);
-          Image chartImg=cic.getImage();
-          
-          if (chartImg!=null)
-          {
-            m_response.setContentType( "image/jpeg" );
-            ImageLoader il=new ImageLoader();
-            ImageData id=chartImg.getImageData();
-            il.data=new ImageData[]{id};
-            outputStream = new BufferedOutputStream( m_response.getOutputStream() );
-            il.save( outputStream, SWT.IMAGE_JPEG );
-          }
-          else
-          {
-            ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
-          }
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        if (cic!=null)
-          cic.dispose();
-        if (outputStream!=null)
+        System.out.println("Using cached Chart");
+        cic = new ChartImageContainer(chart, display, width, height);
+        Image chartImg=cic.getImage();
+        
+        if (chartImg!=null )
         {
+          m_response.setContentType( "image/jpeg" );
+          ImageLoader il=new ImageLoader();
+          ImageData id=chartImg.getImageData();
+          il.data=new ImageData[]{id};
           try
           {
-            outputStream.close();
+            outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+            il.save( outputStream, SWT.IMAGE_JPEG );
           }
           catch( IOException e )
           {
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
+          finally
+          {
+            
+            
+            if (chart != null)
+                chart.dispose();
+            if (cic!=null)
+              cic.dispose();
+            if (shell!=null)
+               shell.dispose();
+            if (outputStream!=null)
+            {
+              try
+              {
+                outputStream.close();
+              }
+              catch( IOException e )
+              {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+            }
+            
+          }
+        }
+        else
+        {
+          ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
         }
       }
+      else
+      {
+        System.out.println("Creating new Chart");
+        try
+        {
+            String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
+  
+            ConfigurationLoader cl=new ConfigurationLoader(pathVC);
+            ConfigurationType config = cl.getConfiguration();
+            
+            shell = new Shell(display, SWT.NONE);
+            chart= new Chart(shell, SWT.NONE);
+            ChartLoader.createChart( chart, config, reqName, null );
+            ODSUtils.setAxisValues( chart, m_request );
+            
+            //Margin setzen
+            Map<IAxis, IAxisComponent> components = chart.getAxisRegistry().getComponents();
+            Set<IAxis> axes = components.keySet();
+            for( IAxis axis : axes )
+            {
+              components.get( axis ).useMargin( true );
+            }
+            
+            
+            cic = new ChartImageContainer(chart, display, width, height);
+            Image chartImg=cic.getImage();
+            
+            if (chartImg!=null)
+            {
+              m_response.setContentType( "image/jpeg" );
+              ImageLoader il=new ImageLoader();
+              ImageData id=chartImg.getImageData();
+              il.data=new ImageData[]{id};
+              outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+              il.save( outputStream, SWT.IMAGE_JPEG );
+            }
+            else
+            {
+              ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
+            }
+            m_cache.addObject( reqName, chart );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+        finally
+        {
+         
+          
+          if (chart != null)
+              chart.dispose();
+          if (cic!=null)
+            cic.dispose();
+          if (shell!=null)
+             shell.dispose();
+          if (outputStream!=null)
+          {
+            try
+            {
+              outputStream.close();
+            }
+            catch( IOException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+          
+        }
+      }
+      
     }
     else
         ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );

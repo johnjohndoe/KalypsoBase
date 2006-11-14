@@ -30,6 +30,12 @@
          <odsoperation
                class="org.kalypso.services.ods.operation.GetPlot"
                id="GetPlot"/>
+         <odsoperation
+               class="org.kalypso.services.ods.operation.GetAxesInfo"
+               id="GetAxesInfo"/>
+         <odsoperation
+               class="org.kalypso.services.ods.operation.GetAxes"
+               id="GetAxes"/>
    </extension>
    
   <extension point="org.eclipse.equinox.http.registry.resources">

@@ -119,10 +119,6 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       GC gc=null;
       try
       {
-         //GMLWorkspace initialisieren
-        /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
-        KalypsoGisPlugin.getDefault();
-          */
           String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
 
           ConfigurationLoader cl=new ConfigurationLoader(pathVC);
@@ -135,6 +131,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           chart= new Chart(shell, SWT.NONE);
           ChartLoader.createChart( chart, config, reqName, null );
           chart.setPlotSize( width, height );
+          ODSUtils.setAxisValues( chart, m_request );
           
           gc=new GC(img);
           gcw=new GCWrapper(gc);
