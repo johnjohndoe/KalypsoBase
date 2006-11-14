@@ -97,7 +97,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
    * of all labels is strictly monotonic - this means that either the lowest
    * or the highest axis value has the biggest label
    */
-  private Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<Number> axis )
+  public Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<Number> axis )
   {
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();

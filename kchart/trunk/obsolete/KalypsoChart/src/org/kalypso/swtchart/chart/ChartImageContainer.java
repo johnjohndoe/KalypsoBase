@@ -72,6 +72,7 @@ public class ChartImageContainer
 {
 
   Image m_img = null;
+  private Chart m_chart;
 
   /**
    * @param config Configuration containing the desired chart
@@ -84,11 +85,11 @@ public class ChartImageContainer
   {
     Shell shell = new Shell();
     shell.setLayout( new FillLayout() );
-    Chart chart = new Chart( shell, SWT.NONE );
+    m_chart = new Chart( shell, SWT.NONE );
     // Chart füllen
-    ChartLoader.createChart( chart, config, chartname, null );
-    createChartImage( chart, dev, width, height );
-
+    ChartLoader.createChart( m_chart, config, chartname, null );
+    createChartImage( m_chart, dev, width, height );
+    m_chart.dispose();
     shell.dispose();
   }
 
@@ -146,7 +147,7 @@ public class ChartImageContainer
     gcw.fillRectangle( 0, 0, width, height );
 
     // Plot zeichnen
-    Plot plot = (Plot) chart.getPlot();
+    Plot plot = chart.getPlot();
     tmpImg = plot.paintChart( dev, tmpGcw, m_img.getBounds(), null );
     gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height, plot.getBounds().x, plot.getBounds().y, plot.getBounds().width, plot.getBounds().height );
     tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
@@ -175,10 +176,15 @@ public class ChartImageContainer
       gcw.drawImage( tmpImg, comp.getBounds().x, comp.getBounds().y, comp.getBounds().width, comp.getBounds().height, comp.getParent().getBounds().x + comp.getBounds().x, comp.getParent().getBounds().y
           + comp.getBounds().y, comp.getBounds().width, comp.getBounds().height );
     }
-    chart.dispose();
+  //  chart.dispose();
     gcw.dispose();
     tmpGc.dispose();
     tmpGcw.dispose();
     tmpImg.dispose();
+  }
+  
+  private Chart getChart()
+  {
+    return m_chart;
   }
 }

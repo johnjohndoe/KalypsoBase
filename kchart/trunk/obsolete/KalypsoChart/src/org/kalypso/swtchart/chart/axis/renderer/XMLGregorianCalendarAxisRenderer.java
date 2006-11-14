@@ -91,7 +91,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     m_df = df;
   }
 
-  protected Point calcTickLabelSize( GCWrapper gc, final Device dev, final IAxis<XMLGregorianCalendar> axis )
+  public Point calcTickLabelSize( GCWrapper gc, final Device dev, final IAxis<XMLGregorianCalendar> axis )
   {
     final XMLGregorianCalendar logicalfrom = axis.getFrom();
     final XMLGregorianCalendar logicalto = axis.getTo();

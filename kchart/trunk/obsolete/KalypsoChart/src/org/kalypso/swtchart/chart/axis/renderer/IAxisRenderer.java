@@ -3,6 +3,7 @@ package org.kalypso.swtchart.chart.axis.renderer;
 import java.util.Collection;
 
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -33,4 +34,10 @@ public interface IAxisRenderer<T>
    * or horizontal extension for vertical axes)
    */
   public int getAxisWidth( IAxis<T> axis );
+  
+  
+  /**
+   * Calculates the maximum size of an axis label 
+   */
+  public Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<T> axis );
 }

@@ -44,10 +44,12 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.ChartUtilities;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -73,6 +75,16 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   private final IAxis<T> m_axis;
 
   private final Color m_white;
+  
+/**
+ * width (or height) of the margin
+ */
+  private int m_margin=0;
+  
+  /**
+   * if set to true, an axis margin is calculated so that all labels are shown in full
+   */
+  private boolean m_useMargin=true;
 
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
@@ -81,6 +93,8 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     setBackground( m_white );
     m_axis = axis;
     addPaintListener( this );
+    
+    calcMargin();
   }
 
   /**
@@ -92,6 +106,38 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     removePaintListener( this );
     m_white.dispose();
     super.dispose();
+  }
+  
+  /**
+   * calculates a margin thats needed to show the full labels for the axis
+   */
+  private void calcMargin()
+  {
+    if (m_useMargin)
+    {
+      IAxisRenderer<T> ar = m_axis.getRenderer();
+      GC gc=new GC(this);
+      GCWrapper gcw=new GCWrapper(gc);
+      if (ar!=null)
+      {
+        Point point =  ar.calcTickLabelSize( gcw, Display.getDefault(), m_axis );
+        if (m_axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+        {
+          m_margin=(int)(0.5*point.x);
+        }
+        else
+        {
+          m_margin=(int)(0.5*point.y);
+        }
+      }
+      else
+      {
+        //Usring default value
+        m_margin=30;
+      }
+      gc.dispose();
+      gcw.dispose();
+    }
   }
 
   /**
@@ -130,9 +176,22 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private void paint( final GCWrapper gc, final Device dev )
   {
+    calcMargin();
     final Rectangle bounds = getClientArea();
-    final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
-    IAxisRenderer renderer = m_axis.getRenderer();
+    int startx=0, starty=0, width=0, height =0;
+    
+    if (m_axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+    {
+      startx=m_margin;
+      width=-2*m_margin;
+    }
+    else
+    {
+      starty=m_margin;
+      height=-2*m_margin;
+    }
+    final Rectangle b=new Rectangle( startx, starty, bounds.width+width, bounds.height+height );
+    IAxisRenderer<T> renderer = m_axis.getRenderer();
     if( renderer != null )
       renderer.paint( gc, dev, m_axis, b );
   }
@@ -147,7 +206,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final int range = getRange();
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
       normValue = 1 - normValue;
-    final int screenValue = (int) (range * normValue);
+    final int screenValue = (int) (range * normValue)+m_margin;
     return screenValue;
   }
 
@@ -175,10 +234,18 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final Rectangle bounds = getBounds();
     final int range;
     if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      range = bounds.width; // horizontal
+      range = bounds.width-2*m_margin; // horizontal
     else
-      range = bounds.height; // vertical
+      range = bounds.height-2*m_margin; // vertical
     return range;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#useMargin(boolean)
+   */
+  public void useMargin( boolean useIt )
+  {
+    m_useMargin=useIt;
   }
 
 }

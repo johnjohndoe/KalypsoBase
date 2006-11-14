@@ -112,12 +112,13 @@ public class AxisFactory
       IAxis<Number> axis = new NumberAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, dir, new DoubleComparator( 0.001 ) );
       axis.setFrom( da.getMinVal() );
       axis.setTo( da.getMaxVal() );
-      ar.addAxis( axis );
       if( ar.getRenderer( axis ) == null )
       {
         IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
         ar.setRenderer( Number.class, numberAxisRenderer );
       }
+      //must be called after setting the renderer as the component checks rhe renderer in order to get the margin
+      ar.addAxis( axis );
     }
     else if( a instanceof DateAxisType )
     {
@@ -126,16 +127,16 @@ public class AxisFactory
       IAxis<XMLGregorianCalendar> axis = new XMLGregorianCalendarAxis( a.getId(), a.getName(), PROPERTY.CONTINUOUS, pos, ac, dir );
       axis.setFrom( da.getMinVal() );
       axis.setTo( da.getMaxVal() );
-      ar.addAxis( axis );
       if( ar.getRenderer( axis ) == null )
       {
         IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
         ar.setRenderer( XMLGregorianCalendar.class, xgcAxisRenderer );
       }
-      else
-      {
-        System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
-      }
+      ar.addAxis( axis );
+    }
+    else
+    {
+      System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
     }
   }
 }

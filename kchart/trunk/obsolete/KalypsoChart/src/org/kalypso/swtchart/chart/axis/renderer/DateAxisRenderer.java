@@ -83,7 +83,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
     m_df = df;
   }
 
-  private Point calcTickLabelSize( final GCWrapper gc, final IAxis<Date> axis )
+  public Point calcTickLabelSize( final GCWrapper gc, Device dev, final IAxis<Date> axis )
   {
     final Date logicalfrom = axis.getFrom();
     final Date logicalto = axis.getTo();
@@ -273,7 +273,7 @@ public class DateAxisRenderer implements IAxisRenderer<Date>
    */
   public Collection<Date> calcTicks( final GCWrapper gc, Device dev, final IAxis<Date> axis )
   {
-    final Point ticklabelSize = calcTickLabelSize( gc, axis );
+    final Point ticklabelSize = calcTickLabelSize( gc, dev, axis );
 
     // + 2 wegen Rundungsfehlern beim positionieren
     final int screenInterval = 2 + ticklabelSize.x;

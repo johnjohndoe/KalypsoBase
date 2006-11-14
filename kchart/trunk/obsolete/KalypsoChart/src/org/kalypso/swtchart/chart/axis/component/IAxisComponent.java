@@ -81,5 +81,10 @@ public interface IAxisComponent<T>
    * redraws and resizes the widget
    */
   public void layout( );
+  
+  /**
+   * 
+   */
+  public void useMargin(boolean useIt);
 
 }
