@@ -21,6 +21,9 @@
          <provider
                class="org.kalypso.layerprovider.observation.WasserstandLayerProvider"
                id="org.kalypso.layerprovider.observation.WasserstandLayerProvider"/>
+         <provider
+               class="org.kalypso.layerprovider.UvfPegelLP"
+               id="org.kalypso.layerprovider.UvfPegel"/>
    </extension>
 
 </plugin>

@@ -458,5 +458,42 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       ac.redraw();
     }
   }
+  
+  /**
+   * resizes the chart according to a given plot size;
+   */
+  public void setPlotSize(int width, int height)
+  {
+     Composite l = m_axisPlaces.get( POSITION.LEFT );
+     Composite r = m_axisPlaces.get( POSITION.RIGHT );
+     Composite t = m_axisPlaces.get( POSITION.TOP );
+     Composite b = m_axisPlaces.get( POSITION.BOTTOM );
+     
+    // setSize( width, height );
+     //TODO: check if border-width must be included
+     int chartwidth=width+l.getBounds().width+r.getBounds().width+ (2*l.getBorderWidth())+ (2*r.getBorderWidth());
+     int chartheight=height+b.getBounds().height+t.getBounds().height+ (2*b.getBorderWidth())+ (2*t.getBorderWidth());
+     
+     //getParent().setSize( chartwidth, chartheight );
+     setSize( chartwidth, chartheight );
+     layout();
+     
+     /**
+      * Leider funktioniert die obige Vergrößerung nicht problemlos, es muss daher noch etwas handarbeit erfolgen;
+      * TODO: überprüfen, ob es da einen besseren Weg geben könnte
+      */
+     
+     //Vergrössern, falls zu klein
+     while (m_plot.getBounds().width<width)
+       setSize(getBounds().width+1, getBounds().height);
+     while (m_plot.getBounds().height<height)
+       setSize(getBounds().width, getBounds().height+1);
+     //Verkleinern, falls zu gross
+     while (m_plot.getBounds().width>width)
+       setSize(getBounds().width-1, getBounds().height);
+     while (m_plot.getBounds().height>height)
+       setSize(getBounds().width, getBounds().height-1);
+     
+  }
 
 }

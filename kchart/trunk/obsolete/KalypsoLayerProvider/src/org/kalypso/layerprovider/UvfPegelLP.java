@@ -1,0 +1,256 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.layerprovider;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TreeMap;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.ksp.chart.layerstyle.StyleType;
+import org.ksp.chart.viewerconfiguration.AbstractAxisType;
+import org.ksp.chart.viewerconfiguration.ChartElementType;
+import org.ksp.chart.viewerconfiguration.DataSourceType;
+import org.ksp.chart.viewerconfiguration.LayerProviderType;
+import org.ksp.chart.viewerconfiguration.ParameterType;
+import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
+import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
+/**
+ * @author burtscher
+ * 
+ * Layer Provider for gauge data from O&M data;
+ * it's looking for a feature named "wasserstandsmessung", then tries to
+ * transform it into an IObservation, creates a WasserstandLayer
+ *  and uses the result components which go by the name "Datum" (domain data) and 
+ *  "Wasserstand" (value data) as data input for the layer; the WasserstandLayer draws 
+ *  its data as line chart
+ * 
+ *  The following configuration parameters are needed for the LayerProvider:
+ *  dataSource:     URL or relative path leading to observation data
+ *  @TODO: dataSource is an independent configuration tag right now - it should be
+ *      moved into the parameter section as not every layer provider needs an url
+ * 
+ */
+public class UvfPegelLP implements ILayerProvider
+{
+  private LayerProviderType m_lpt;
+
+  private Chart m_chart;
+
+  public void init( final Chart chart, final LayerProviderType lpt )
+  {
+    m_lpt = lpt;
+    m_chart = chart;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
+   */
+  public IChartLayer[] getLayers( URL context )
+  {
+    IChartLayer[] icl = new IChartLayer[1];
+
+    List<DataSourceType> dataSource = m_lpt.getDataSource();
+    for( DataSourceType ds : dataSource )
+    {
+      String url = ds.getUrl();
+      try
+      {
+        
+        
+        
+        List<ChartElementType> ces = m_lpt.getChartElement();
+        for( ChartElementType ce : ces )
+        {
+          AxisMapping am = ce.getAxisMapping();
+
+          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
+
+          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+
+          
+          Component comp_date=new Component("date", "Datum", "das Datum", "", "frame_datum", new QName( "Datum" ), null);
+          Component comp_pegel=new Component("pegel", "Pegel", "der Pegelstand", "cmNN", "frame_pegel",  new QName( "Wasserstand" ), null);
+          TupleResult result = new TupleResult(new Component[] {comp_date, comp_pegel});
+          
+//        TODO: umschreiben, damit auch urls verwendet werden können
+          FileReader fr=new FileReader(url);
+          
+          BufferedReader br=new BufferedReader(fr);
+          String s="";
+          int linecount=0;
+          while ((s=br.readLine())!=null)
+          {
+              if (linecount>4)
+              {
+                IRecord record = result.createRecord();
+                String[] cols=s.split( "  *");
+                //YearString
+                String ys=cols[0];
+                //Datum zerpflücken (Bsp: 0510190530)
+                //TODO: Auslagern in Toolbox-ähnliche Klasse
+                int year=2000+Integer.parseInt( ys.substring( 0, 2 )) ;
+                int month=Integer.parseInt( ys.substring( 2, 4 ))-1;
+                int date=Integer.parseInt( ys.substring( 4, 6 )) ;
+                int hour=Integer.parseInt( ys.substring( 6, 8 )) ;
+                int minute=Integer.parseInt( ys.substring( 8, 10 )) ;
+                Calendar cal=GregorianCalendar.getInstance();
+                cal.set( year, month, date, hour, minute );
+                XMLGregorianCalendar xmlcal=new XMLGregorianCalendarImpl((GregorianCalendar) cal);
+                
+                record.setValue( comp_date, xmlcal);
+                record.setValue( comp_pegel, Integer.parseInt( cols[1]));
+                result.add( record );
+              }
+              linecount++;
+          }
+          
+          
+          
+          
+          
+          
+          
+
+          final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
+          map.put( "domain", comp_date);
+          map.put( "value", comp_pegel);
+          
+
+
+          List<ParameterType> parameter = m_lpt.getParameter();
+
+          WasserstandLayer wl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+
+          final List<StyleLink> styleList = ce.getStyleLink();
+          if( styleList.size() > 0 )
+            wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
+          wl.setName( ce.getName() );
+          icl[0] = wl;
+        }
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      }
+      catch( FileNotFoundException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+
+      /*
+      try
+      {
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
+        Feature feature = workspace.getFeature( "wasserstandsmessung" );
+        if( feature != null )
+        {
+          System.out.println( "Found feature: " + feature.getId() );
+        }
+        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+
+        
+      }
+      catch( MalformedURLException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      */
+      return icl;
+    }
+    return null;
+  }
+
+}

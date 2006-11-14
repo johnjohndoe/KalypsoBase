@@ -79,20 +79,26 @@ public class ConfigurationLoader
    */
   public void loadFile( ) throws JAXBException
   {
-    System.out.println( "loadFile Start" );
-    File file = new File( m_configPath );
-    Object o = JC.createUnmarshaller().unmarshal( file );
-    if( o instanceof JAXBElement )
-    {
-      Object child = ((JAXBElement) o).getValue();
-      m_config = (ConfigurationType) child;
+      File file = new File( m_configPath );
+      if (file.exists())
+      {
+      Object o = JC.createUnmarshaller().unmarshal( file );
+      if( o instanceof JAXBElement )
+      {
+        Object child = ((JAXBElement) o).getValue();
+        m_config = (ConfigurationType) child;
+      }
+      else if( o instanceof ConfigurationType )
+      {
+        m_config = (ConfigurationType) o;
+      }
+      System.out.println( "Configuration geladen" );
+      System.out.println( "loadFile End" );
     }
-    else if( o instanceof ConfigurationType )
+      else
     {
-      m_config = (ConfigurationType) o;
+      System.out.println("ERROR: Der Pfad zur Konfigurationsdatei konnte nicht aufgelöst werden. Bitte überprüfen Sie die Einstellungen. \n"+m_configPath);
     }
-    System.out.println( "Configuration geladen" );
-    System.out.println( "loadFile End" );
   }
 
   /**
