@@ -87,7 +87,7 @@ public class ODSOperationExtensions
       {
         final String id = element.getAttribute( "id" );
         THE_MAP.put( id, element );
-        System.out.println("adding for operation: "+id);
+        System.out.println("adding operation: "+id);
       }
     }
     else

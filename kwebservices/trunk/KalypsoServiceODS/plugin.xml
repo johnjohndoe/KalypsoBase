@@ -27,6 +27,9 @@
          	class="org.kalypso.services.ods.operation.GetHTMLTable"
          	id="GetHTMLTable"
          />
+         <odsoperation
+               class="org.kalypso.services.ods.operation.GetPlot"
+               id="GetPlot"/>
    </extension>
    
   <extension point="org.eclipse.equinox.http.registry.resources">

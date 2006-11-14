@@ -79,10 +79,18 @@ public class ODSServlet extends HttpServlet implements Servlet
       * to make the proxy work, the framework properties have to be written to system properties
       */
       System.setProperty( "proxySet", FrameworkProperties.getProperty( "proxySet", "true" ));
-      System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "proxy.bce01.de" ));
+      System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "172.16.0.253" ));
       System.setProperty( "proxyPort", FrameworkProperties.getProperty( "proxyPort", "8080" ));
+      
+      /**
+		For Testing Purposes only - remove if used in different environment
+		*/
+      System.setProperty( "proxyHost",  "172.16.0.253" );
+      System.setProperty( "proxyPort",  "8080" );
+      System.setProperty( "proxySet",  "true" );
      
      System.out.println("Operation:  "+odsrequest);
+     
      try
       {
        
@@ -102,6 +110,7 @@ public class ODSServlet extends HttpServlet implements Servlet
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    
    }
    
    

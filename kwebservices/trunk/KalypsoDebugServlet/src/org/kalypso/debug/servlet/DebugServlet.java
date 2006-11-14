@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.eclipse.swt.widgets.Display;
 
 @SuppressWarnings("serial")
 public class DebugServlet extends HttpServlet
@@ -91,8 +90,6 @@ public class DebugServlet extends HttpServlet
   private void doTest( HttpServletRequest request, HttpServletResponse response ) throws IOException
   {
     
-    Display d;
-    d=Display.getDefault();
     
     final PrintWriter pw = doDefaultHeader( request, response );
     pw.println( "<h2>Test Stuff</h2>" );
