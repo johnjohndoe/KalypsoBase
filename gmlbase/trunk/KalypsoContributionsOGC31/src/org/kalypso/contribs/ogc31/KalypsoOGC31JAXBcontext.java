@@ -42,6 +42,8 @@ package org.kalypso.contribs.ogc31;
 
 import javax.xml.bind.JAXBContext;
 
+import ogc31.www.opengis.net.gml.ObjectFactory;
+
 import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
@@ -51,6 +53,8 @@ import org.kalypso.jwsdp.JaxbUtilities;
  */
 public final class KalypsoOGC31JAXBcontext
 {
+  public final static ObjectFactory GML3_FAC = new ObjectFactory();
+
   private static JAXBContext m_context = null;
 
   private static Class[] m_contextClass = null;

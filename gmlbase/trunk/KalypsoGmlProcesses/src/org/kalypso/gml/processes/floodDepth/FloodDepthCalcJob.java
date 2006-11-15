@@ -240,6 +240,7 @@ public class FloodDepthCalcJob implements ISimulation
     if( fc.getSize() == 0 )
     {
       // LOG.log( Level.WARNING, "No features created" );
+      throw new SimulationException( "Intersection is empty", null );
     }
     else
     {

@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.ogc.gml.WorldFile;
 import org.kalypso.ogc.gml.WorldFileReader;
@@ -69,8 +70,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class RectifiedGridCoverageImportWizard extends Wizard implements IImportWizard
 {
-  static final ObjectFactory GML3_FAC = new ObjectFactory();
-
   private IStructuredSelection m_selection;
 
   private WizardNewFileCreationPage m_fileCreationPage;
@@ -189,7 +188,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           monitor.subTask( " - creating GMLWorkspace..." );
           final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS.GML3, "RectifiedGridCoverage" ), "3.1", null, null );
 
-          final FileType rangeSetFile = GML3_FAC.createFileType();
+          final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
           // file name relative to the gml
           rangeSetFile.setFileName( importFileResource.getName() );
@@ -198,9 +197,11 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
 
           final RectifiedGridDomain domain = new RectifiedGridDomain( origin, offset, gridRange );
 
-          final RangeSetType rangeSet = GML3_FAC.createRangeSetType();
+          final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
           rangeSet.setFile( rangeSetFile );
 
+          
+          // TODO: use the RectifiedGridCoverage-class instead
           final Feature rgcFeature = workspace.getRootFeature();
           // TODO: uncomment, as soon as we are able to serialize GM_Envelopes 
 //          rgcFeature.setProperty( new QName( NS.GML3, "boundedBy" ), domain.getGM_Envelope( crs ) );
