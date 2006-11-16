@@ -10,10 +10,10 @@ import org.deegree.model.feature.FeatureCollection;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gis.doubleraster.DoubleFakeRaster;
+import org.kalypso.gis.doubleraster.DoubleRaster;
+import org.kalypso.gis.doubleraster.walker.FeatureVolumeRasterWalker;
 
-import com.bce.gis.doubleraster.DoubleFakeRaster;
-import com.bce.gis.doubleraster.DoubleRaster;
-import com.bce.gis.doubleraster.walker.FeatureVolumeRasterWalker;
 import com.bce.gis.index.FeatureCollectionIndex;
 import com.bce.gis.io.hmo.HMOReader;
 import com.bce.gis.operation.raster2vector.Raster2Lines;

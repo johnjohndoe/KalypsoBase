@@ -1,8 +1,9 @@
 package com.bce.gis.operation.raster2vector;
 
-import com.bce.gis.doubleraster.DoubleRaster;
-import com.bce.gis.doubleraster.DoubleRasterException;
-import com.bce.gis.doubleraster.DoubleRasterWalker;
+import org.kalypso.gis.doubleraster.DoubleRaster;
+import org.kalypso.gis.doubleraster.DoubleRasterException;
+import org.kalypso.gis.doubleraster.DoubleRasterWalker;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class Raster2Lines implements DoubleRasterWalker
@@ -38,7 +39,7 @@ public class Raster2Lines implements DoubleRasterWalker
   }
 
   /**
-   * @see com.bce.gis.doubleraster.DoubleRasterWalker#start(com.bce.gis.doubleraster.DoubleRaster)
+   * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
   public final void start( final DoubleRaster r )
   {
@@ -56,7 +57,7 @@ public class Raster2Lines implements DoubleRasterWalker
   }
 
   /**
-   * @see com.bce.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
+   * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   public final void operate( final int x, final int y, final Coordinate crd ) throws DoubleRasterException
   {
@@ -96,7 +97,7 @@ public class Raster2Lines implements DoubleRasterWalker
   }
 
   /**
-   * @see com.bce.gis.doubleraster.DoubleRasterWalker#afterLine(int)
+   * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#afterLine(int)
    */
   public final void afterLine( final int y ) throws DoubleRasterException
   {
@@ -125,7 +126,7 @@ public class Raster2Lines implements DoubleRasterWalker
   /**
    * Gibt ein Objekt vom Type LineString[] zurück
    * 
-   * @see com.bce.gis.doubleraster.DoubleRasterWalker#getResult()
+   * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
   public Object getResult( )
   {
