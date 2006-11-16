@@ -58,10 +58,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gis.doubleraster.DoubleDiffDoubleRaster;
+import org.kalypso.gis.doubleraster.DoubleProvider;
 import org.kalypso.gis.doubleraster.DoubleRaster;
 import org.kalypso.gis.doubleraster.DoubleRasterException;
 import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
-import org.kalypso.gis.doubleraster.walker.FeatureVolumeRasterWalker;
 import org.kalypso.gis.doubleraster.walker.MinMaxRasterWalker;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -76,7 +76,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import com.bce.gis.index.FeatureCollectionIndex;
-import com.bce.gis.operation.hmo2fli.DoubleProvider;
+import com.bce.gis.operation.hmo2fli.FeatureVolumeRasterWalker;
 import com.bce.gis.operation.hmo2fli.TriangleDoubleProvider;
 import com.bce.gis.operation.raster2vector.Raster2Lines;
 import com.bce.gis.operation.raster2vector.SegmentCollector;
@@ -236,6 +236,7 @@ public class FloodDepthCalcJob implements ISimulation
     // LOG.info( "Total volume of flooded area is: " + numberInstance.format( volumen ) + " [m³]" );
 
     // Shape schreiben
+    // TODO: we still use deegree api here, switch to kalypso-deegree
     final FeatureCollection fc = gc.getFeatures();
     if( fc.getSize() == 0 )
     {

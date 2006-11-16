@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.kalypso.gis.doubleraster.DoubleProvider;
+
 import com.bce.util.progressbar.Progressable;
 import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.algorithm.SimplePointInRing;

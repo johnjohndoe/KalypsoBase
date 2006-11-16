@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gis.doubleraster.DoubleProvider;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;

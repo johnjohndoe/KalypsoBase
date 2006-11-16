@@ -10,9 +10,10 @@ import org.deegree.model.feature.FeatureCollection;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gis.doubleraster.DGMDiffer;
 import org.kalypso.gis.doubleraster.DoubleFakeRaster;
+import org.kalypso.gis.doubleraster.DoubleProvider;
 import org.kalypso.gis.doubleraster.DoubleRaster;
-import org.kalypso.gis.doubleraster.walker.FeatureVolumeRasterWalker;
 
 import com.bce.gis.index.FeatureCollectionIndex;
 import com.bce.gis.io.hmo.HMOReader;
@@ -37,7 +38,8 @@ public class Hmo2Fli
 
   private final static Logger LOG = Logger.getLogger( Hmo2Fli.class.getName() );
 
-  public static void transform( final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
+  public static void transform( @SuppressWarnings("unused")
+  final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
   {
     LOG.entering( Hmo2Fli.class.getName(), "transform" );
 
