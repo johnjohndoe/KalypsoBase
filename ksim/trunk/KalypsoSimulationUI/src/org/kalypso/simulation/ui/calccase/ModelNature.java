@@ -125,6 +125,8 @@ import org.xml.sax.InputSource;
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
+  
+  // TODO Move this to KalypsoSimulationCore plugin
   public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
   public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
   
