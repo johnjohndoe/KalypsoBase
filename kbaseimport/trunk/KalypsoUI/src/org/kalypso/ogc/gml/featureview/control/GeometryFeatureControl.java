@@ -49,7 +49,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author albert This class controls the ValidatorLabel and its behavior.
+ * This class controls the GeometryLabel and its behavior.
+ * 
+ * @author Holger Albert
  */
 public class GeometryFeatureControl extends AbstractFeatureControl
 {
