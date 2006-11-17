@@ -154,7 +154,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   {
     final URL urlRS = m_resolver.resolveURL( m_context, sourceHref );
     final IObservation source = ZmlFactory.parseXML( urlRS, sourceHref );
-//    final String destRef = targetHref;  
+    //    final String destRef = targetHref;
 
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
     final URL urlPG = m_resolver.resolveURL( m_context, destRef );
@@ -168,10 +168,9 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     }
     catch( final IllegalArgumentException e )
     {
-      //        // not all axes could be associated between source and dest
-      //        LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
-      //            + " are defined in " + source );
-
+      // not all axes could be associated between source and dest
+      // LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
+      // + " are defined in " + source );
       final Status status = new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0,
           "Zeitreihe konnte nicht auf dem Server hochgeladen werden "
               + "weil sie nicht mit der Zielzeitreihe kompatibel ist. " + "Prüfen Sie u.a. die Achsenliste in: "
