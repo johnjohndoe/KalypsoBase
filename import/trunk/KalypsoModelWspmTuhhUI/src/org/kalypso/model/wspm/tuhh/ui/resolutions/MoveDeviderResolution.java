@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import java.util.LinkedList;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -58,17 +61,20 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 
   final private DEVIDER_TYP m_deviderTyp;
 
+  final private DEVIDER_TYP m_destination;
+
   /**
-   * verschiebt die Trennfläche auf den linken Trenner "Durchströmter Bereich"
+   * verschieben der Trennfläche auf die Trenner "Durchströmter Bereich"
    * 
    * @param deviderTyp,deviderIndex
    *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public MoveDeviderResolution( final int deviderIndex, final DEVIDER_TYP deviderTyp )
+  public MoveDeviderResolution( final int deviderIndex, final DEVIDER_TYP deviderTyp, DEVIDER_TYP destination )
   {
-    super( "verschieben der Trennfläche in den durchströmten Bereich", null, null );
+    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
+    m_destination = destination;
   }
 
   /**
@@ -82,14 +88,29 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
     final IProfilDevider devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
     if( devider1 == null )
       return null;
-    final IProfilDevider[] deviders2 = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-    if( deviders2 == null )
-      return null;
-    final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
-    final IProfilDevider devider2 = deviders2[deviderIndex2];
-    if( devider2 == null )
-      return null;
-    return new IProfilChange[] { new DeviderMove( devider1, devider2.getPoint() ), new ActiveObjectEdit( profil, devider2.getPoint(), POINT_PROPERTY.BREITE ) };
+    IProfilPoint point = null;
+    if( m_destination == null )
+    {
+      LinkedList<IProfilPoint> points = profil.getPoints();
+      if( !points.isEmpty() )
+      {
+        point = m_deviderIndex > 0 ? points.getLast() : points.getFirst();
+      }
+    }
+    else
+    {
+      final IProfilDevider[] deviders2 = profil.getDevider( m_destination );
+      if( deviders2 != null )
+      {
+        final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
+        final IProfilDevider devider2 = deviders2[deviderIndex2];
+        if( devider2 != null )
+        {
+          point = devider2.getPoint();
+        }
+      }
+    }
+    return new IProfilChange[] { new DeviderMove( devider1, point ), new ActiveObjectEdit( profil, point, POINT_PROPERTY.BREITE ) };
   }
 
 }
