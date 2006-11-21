@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -61,6 +62,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
@@ -730,16 +732,23 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private void reloadMetadata( ) throws CoreException
   {
+    InputStream contents = null;
     try
     {
       m_metadata.clear();
 
       final IFile file = getMetadataFile();
-      m_metadata.load( file.getContents() );
+      contents = file.getContents();
+      m_metadata.load( contents );
+      contents.close();
     }
     catch( final IOException e )
     {
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Error loading Metadata", e ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contents );
     }
   }
 
