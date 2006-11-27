@@ -62,9 +62,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class ArrayChooserPage extends WizardPage
 {
-  private final Object m_chooseables;
+  private Object m_chooseables;
 
-  CheckboxTableViewer m_viewer = null;
+  protected CheckboxTableViewer m_viewer = null;
 
   private Object[] m_selected = null;
 
@@ -84,14 +84,12 @@ public class ArrayChooserPage extends WizardPage
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
    */
-  public ArrayChooserPage( final Object chooseables, final String pageName, final String title,
-      final ImageDescriptor titleImage )
+  public ArrayChooserPage( final Object chooseables, final String pageName, final String title, final ImageDescriptor titleImage )
   {
     this( chooseables, null, null, pageName, title, titleImage );
   }
 
-  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked,
-      final String pageName, final String title, final ImageDescriptor titleImage )
+  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -99,7 +97,7 @@ public class ArrayChooserPage extends WizardPage
     m_selected = selected;
     m_checked = checked;
   }
-  
+
   public void setLabelProvider( final IBaseLabelProvider labelProvider )
   {
     m_labelProvider = labelProvider;
@@ -109,16 +107,16 @@ public class ArrayChooserPage extends WizardPage
   {
     return m_labelProvider;
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_viewer != null )
       m_viewer.removeCheckStateListener( m_checkStateListener );
-    
+
     super.dispose();
   }
 
@@ -154,7 +152,7 @@ public class ArrayChooserPage extends WizardPage
     setControl( panel );
   }
 
-  public Object[] getChoosen()
+  public Object[] getChoosen( )
   {
     if( m_checked == null )
       return new Object[0];
@@ -175,9 +173,18 @@ public class ArrayChooserPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         viewer.setAllChecked( select );
-        
+
         m_checked = viewer.getCheckedElements();
       }
     } );
+  }
+
+  public void setInput( final Object input )
+  {
+    /* Also set chooseable for the case this method is invoked before the page was created. */
+    m_chooseables = input;
+
+    if( m_viewer != null )
+      m_viewer.setInput( input );
   }
 }
