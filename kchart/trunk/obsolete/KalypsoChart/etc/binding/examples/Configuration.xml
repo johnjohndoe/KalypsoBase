@@ -119,7 +119,7 @@
                     <AxisMapping>
                          <Value axisLink="Wasserstand_Axis" equation=""/>
                     </AxisMapping>
-                    <StyleLink id="S5" ref="Alarmstufen_Style"/>
+                    <StyleLink ref="Alarmstufen_Style"/>
                </ChartElement>
           </LayerProvider>
 
@@ -329,7 +329,7 @@
           <TitleClass>ws_title</TitleClass>
           <Abstract>Die Tabelle zeigt Wasserstandsdaten. Außerdem kann sie anhand der definierten
                Klassen CSS-formatiert werden.</Abstract>
-          <AbstracClass>ws_abstract</AbstracClass>
+          <AbstractClass>ws_abstract</AbstractClass>
           <DataSource>
                <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                <Id>wasserstandsmessung</Id>
@@ -352,7 +352,7 @@
           <Title>Wasserstand-Abfluss-Beziehung</Title>
           <TitleClass>wq1_title</TitleClass>
           <Abstract>Die Tabelle setzt Wasserstands-Daten in Beziehung zum jeweiligen Abfluss.</Abstract>
-          <AbstracClass>wq_abstract</AbstracClass>
+          <AbstractClass>wq_abstract</AbstractClass>
           <DataSource>
                <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                <Id>wqtable1</Id>
@@ -376,7 +376,7 @@
           <TitleClass>ns_title</TitleClass>
           <Abstract> Die Tabelle zeigt Niederschlagsdaten.Das Datum-Feld enthält ein
                benutzerdefiniertes Zeit-Format. </Abstract>
-          <AbstracClass>ns_abstract</AbstracClass>
+          <AbstractClass>ns_abstract</AbstractClass>
           <DataSource>
                <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                <Id>niederschlagsmessung</Id>

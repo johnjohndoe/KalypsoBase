@@ -233,9 +233,10 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
 
     final Collection<XMLGregorianCalendar> ticks = new LinkedList<XMLGregorianCalendar>();
 
+    ticks.add( new XMLGregorianCalendarImpl( axis.getFrom().toGregorianCalendar() ) );
     if( ticklength > 0.0 )
     {
-      for( long tickValue = (long) MathUtils.setScale( axis.getFrom().toGregorianCalendar().getTimeInMillis(), digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().toGregorianCalendar().getTimeInMillis(); tickValue += ticklength )
+      for( long tickValue = (long) MathUtils.setScale( axis.getFrom().toGregorianCalendar().getTimeInMillis()+logicalInterval, digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().toGregorianCalendar().getTimeInMillis()-logicalInterval; tickValue += ticklength )
       {
         GregorianCalendar gregCal = new GregorianCalendar();
         Date d = new Date( tickValue );
@@ -245,6 +246,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         // System.out.println("XMLGregorianCalendarAxisTick: "+m_df.format(tickValue));
       }
     }
+    ticks.add( new XMLGregorianCalendarImpl( axis.getTo().toGregorianCalendar() ) );
     return ticks;
   }
 

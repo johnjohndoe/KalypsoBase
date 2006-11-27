@@ -123,7 +123,8 @@ public class Legend extends Canvas implements PaintListener
   {
     for( IChartLayer l : layers )
     {
-      addLayer( l );
+      if (l.getVisibility())
+        addLayer( l );
     }
   }
 

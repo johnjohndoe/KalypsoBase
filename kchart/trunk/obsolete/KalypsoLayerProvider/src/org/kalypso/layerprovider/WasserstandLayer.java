@@ -104,6 +104,8 @@ public class WasserstandLayer implements IChartLayer
 
   private String m_description;
 
+  private boolean m_isVisible=true;
+
   public WasserstandLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<org.ksp.chart.viewerconfiguration.ParameterType> parameter )
   {
     m_result = result;
@@ -141,7 +143,7 @@ public class WasserstandLayer implements IChartLayer
       int iy1 = m_valAxis.logicalToScreen( y1 );
       path.add( new Point( ix1, iy1 ) );
 
-      System.out.println( "Path: addingPoint...(" + ix1 + ":" + iy1 + ") " );
+  //    System.out.println( "Path: addingPoint...(" + ix1 + ":" + iy1 + ") " );
     }
     if( sl != null )
     {
@@ -310,5 +312,15 @@ public class WasserstandLayer implements IChartLayer
   public void setDescription( String description )
   {
     m_description = description;
+  }
+  
+  public void setVisibility(boolean isVisible)
+  {
+    m_isVisible=isVisible;
+  }
+  
+  public boolean getVisibility()
+  {
+    return m_isVisible;
   }
 }

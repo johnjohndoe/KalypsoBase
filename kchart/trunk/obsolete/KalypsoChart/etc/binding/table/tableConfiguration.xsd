@@ -12,6 +12,13 @@
           </documentation>
      </annotation>
 	<sequence>
+	     <element name="TableProvider" type="string" minOccurs="1" maxOccurs="1">
+	          <annotation>
+	               <documentation>
+	                    ID des TableProviders, der die Daten in eine Tabelle umwandeln soll
+	               </documentation>
+	          </annotation>
+	     </element>
 	     <element name="TableClass" type="string" minOccurs="0">
 	          <annotation>
 	               <documentation>
@@ -42,7 +49,7 @@
 	               </documentation>
 	          </annotation>
 	     </element>
-	     <element name="AbstracClass" type="string" minOccurs="0">
+	     <element name="AbstractClass" type="string" minOccurs="0">
 	          <annotation>
 	               <documentation>
 	                    Name der CSS-Klasse, die für den Abstract verwendet wird 

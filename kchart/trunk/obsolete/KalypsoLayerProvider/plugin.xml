@@ -24,6 +24,9 @@
          <provider
                class="org.kalypso.layerprovider.UvfPegelLP"
                id="org.kalypso.layerprovider.UvfPegel"/>
+         <provider
+               class="org.kalypso.layerprovider.GridLayerProvider"
+               id="org.kalypso.layerprovider.Grid"/>
    </extension>
 
 </plugin>

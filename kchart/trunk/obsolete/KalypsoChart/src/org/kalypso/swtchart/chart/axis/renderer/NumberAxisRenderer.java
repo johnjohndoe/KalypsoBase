@@ -310,9 +310,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      minScreenInterval = 2 + ticklabelSize.x;
+      minScreenInterval = 8 + ticklabelSize.x;
     else
-      minScreenInterval = 2 + ticklabelSize.y;
+      minScreenInterval = 8 + ticklabelSize.y;
 
     // logischen Abstand anhand des Screen-Abstands berechnen
     double logicalInterval = Math.abs( axis.screenToLogical( minScreenInterval * 2 ).doubleValue() - axis.screenToLogical( minScreenInterval ).doubleValue() );
@@ -328,12 +328,13 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
     final Collection<Number> ticks = new LinkedList<Number>();
 
+    ticks.add( new Double( axis.getFrom().doubleValue() ) );
     if( ticklength > 0.0 )
     {
-      for( double tickValue = MathUtils.setScale( axis.getFrom().doubleValue(), digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().doubleValue(); tickValue += ticklength )
+      for( double tickValue = MathUtils.setScale( axis.getFrom().doubleValue()+ logicalInterval, digits, MathUtils.RoundMethod.UP ); tickValue <= axis.getTo().doubleValue()-logicalInterval; tickValue += ticklength )
         ticks.add( new Double( tickValue ) );
     }
-
+    ticks.add( new Double( axis.getTo().doubleValue() ) );
     return ticks;
   }
 

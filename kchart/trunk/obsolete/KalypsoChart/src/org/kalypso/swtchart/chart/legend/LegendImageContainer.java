@@ -93,6 +93,7 @@ public class LegendImageContainer
       // Legende zeichnen
       legend.drawImage( m_img, dev );
     }
+    chart.dispose();
     legend.dispose();
     shell.dispose();
   }

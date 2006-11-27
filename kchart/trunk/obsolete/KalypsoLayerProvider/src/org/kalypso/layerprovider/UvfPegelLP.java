@@ -146,21 +146,24 @@ public class UvfPegelLP implements ILayerProvider
                 IRecord record = result.createRecord();
                 String[] cols=s.split( "  *");
                 //YearString
-                String ys=cols[0];
-                //Datum zerpflücken (Bsp: 0510190530)
-                //TODO: Auslagern in Toolbox-ähnliche Klasse
-                int year=2000+Integer.parseInt( ys.substring( 0, 2 )) ;
-                int month=Integer.parseInt( ys.substring( 2, 4 ))-1;
-                int date=Integer.parseInt( ys.substring( 4, 6 )) ;
-                int hour=Integer.parseInt( ys.substring( 6, 8 )) ;
-                int minute=Integer.parseInt( ys.substring( 8, 10 )) ;
-                Calendar cal=GregorianCalendar.getInstance();
-                cal.set( year, month, date, hour, minute );
-                XMLGregorianCalendar xmlcal=new XMLGregorianCalendarImpl((GregorianCalendar) cal);
-                
-                record.setValue( comp_date, xmlcal);
-                record.setValue( comp_pegel, Integer.parseInt( cols[1]));
-                result.add( record );
+                if (cols.length>=2)
+                {
+                  String ys=cols[0];
+                  //Datum zerpflücken (Bsp: 0510190530)
+                  //TODO: Auslagern in Toolbox-ähnliche Klasse
+                  int year=2000+Integer.parseInt( ys.substring( 0, 2 )) ;
+                  int month=Integer.parseInt( ys.substring( 2, 4 ))-1;
+                  int date=Integer.parseInt( ys.substring( 4, 6 )) ;
+                  int hour=Integer.parseInt( ys.substring( 6, 8 )) ;
+                  int minute=Integer.parseInt( ys.substring( 8, 10 )) ;
+                  Calendar cal=GregorianCalendar.getInstance();
+                  cal.set( year, month, date, hour, minute );
+                  XMLGregorianCalendar xmlcal=new XMLGregorianCalendarImpl((GregorianCalendar) cal);
+                  
+                  record.setValue( comp_date, xmlcal);
+                  record.setValue( comp_pegel, Integer.parseInt( cols[1]));
+                  result.add( record );
+                }
               }
               linecount++;
           }

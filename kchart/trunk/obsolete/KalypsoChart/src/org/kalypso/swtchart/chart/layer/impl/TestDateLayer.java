@@ -76,6 +76,8 @@ public class TestDateLayer implements IChartLayer
 
   private final ILayerStyle m_style = null;
 
+  private boolean m_isVisible=true;
+
 //  private String m_name;
 
 //  private String m_description;
@@ -266,5 +268,15 @@ public class TestDateLayer implements IChartLayer
   public void setDescription( String description )
   {
 //    m_description = description;
+  }
+  
+  public void setVisibility(boolean isVisible)
+  {
+    m_isVisible=isVisible;
+  }
+  
+  public boolean getVisibility()
+  {
+    return m_isVisible;
   }
 }

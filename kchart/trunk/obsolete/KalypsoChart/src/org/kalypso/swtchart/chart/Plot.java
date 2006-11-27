@@ -151,8 +151,11 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
         final List<IChartLayer> layers = m_chart.getLayers();
         for( final IChartLayer layer : layers )
         {
-          ChartUtilities.resetGC( buffGc.m_gc, dev );
-          layer.paint( buffGc, dev );
+          if (layer.getVisibility())
+          {
+            ChartUtilities.resetGC( buffGc.m_gc, dev );
+            layer.paint( buffGc, dev );
+          }
         }
       }
       catch( final Exception e )

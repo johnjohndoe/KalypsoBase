@@ -112,6 +112,8 @@ public class NiederschlagLayer implements IChartLayer
 
   private String m_description;
 
+  private boolean m_isVisible=true;
+
   public NiederschlagLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
   {
     m_result = result;
@@ -362,5 +364,15 @@ public class NiederschlagLayer implements IChartLayer
   public void setDescription( String description )
   {
     m_description = description;
+  }
+  
+  public void setVisibility(boolean isVisible)
+  {
+    m_isVisible=isVisible;
+  }
+  
+  public boolean getVisibility()
+  {
+    return m_isVisible;
   }
 }

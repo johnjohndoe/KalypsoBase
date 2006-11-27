@@ -76,6 +76,8 @@ public class TestLayer implements IChartLayer
 
   private String m_description;
 
+  private boolean m_isVisible=true;
+
   public TestLayer( IAxis domAxis, IAxis valAxis )
   {
     m_domAxis = domAxis;
@@ -355,6 +357,16 @@ public class TestLayer implements IChartLayer
   public void setDescription( String description )
   {
     m_description = description;
+  }
+  
+  public void setVisibility(boolean isVisible)
+  {
+    m_isVisible=isVisible;
+  }
+  
+  public boolean getVisibility()
+  {
+    return m_isVisible;
   }
 
 }

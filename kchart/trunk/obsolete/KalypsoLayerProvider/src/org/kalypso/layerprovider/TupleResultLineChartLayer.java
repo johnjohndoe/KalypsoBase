@@ -96,6 +96,8 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private String m_description = "No description given";
 
+  private boolean m_isVisible=true;
+
   public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> params )
   {
     m_result = result;
@@ -304,5 +306,15 @@ public class TupleResultLineChartLayer implements IChartLayer
   public void setDescription( String description )
   {
     m_description = description;
+  }
+  
+  public void setVisibility(boolean isVisible)
+  {
+    m_isVisible=isVisible;
+  }
+  
+  public boolean getVisibility()
+  {
+    return m_isVisible;
   }
 }

@@ -129,4 +129,8 @@ public interface IChartLayer
    * draws the layer using the given GCWrapper and Device
    */
   public void paint( final GCWrapper gc, final Device dev );
+  
+  public void setVisibility(boolean isVisible);
+
+  public boolean getVisibility();
 }
