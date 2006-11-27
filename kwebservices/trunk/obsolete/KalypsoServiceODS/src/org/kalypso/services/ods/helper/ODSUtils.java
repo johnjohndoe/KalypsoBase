@@ -38,10 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods.operation;
+package org.kalypso.services.ods.helper;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,15 +51,21 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.NumberAxis;
 import org.kalypso.swtchart.chart.axis.XMLGregorianCalendarAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author alibu
  *
+ * Helper class for chart stuff concerning request parameters
  */
 public class ODSUtils
 {
+  
+  /**
+   * sets the charts axes values as given by the request parameters AXIS_MIN and AXIS_MAX
+   */
   public static void setAxisValues(Chart c, HttpServletRequest request )
   {
     String minstring=null;
@@ -132,4 +139,46 @@ public class ODSUtils
     }
     
   }
+  
+  
+  /**
+   * sets the layers visibility from the request parameter LAYERS - if the parameter
+   * is not empty, all those layers which are not mentioned in the comma separated list
+   * are set invisible
+   */
+  public static void setLayerVisibility(Chart chart, HttpServletRequest request)
+  {
+    String reqLayerString=request.getParameter( "LAYERS" );
+    if (reqLayerString!=null)
+    {
+      String[] reqLayers=reqLayerString.split( "," );
+      List<IChartLayer> layers = chart.getLayers();
+      if (reqLayers.length>=1)
+      {
+        for( IChartLayer layer : layers )
+        {
+          boolean foundit=false;
+          for (String reqLayer:reqLayers)
+          {
+            if (layer.getName().compareTo( reqLayer )==0)
+            {
+              foundit=true;
+              System.out.println("LAYER GEFUNDEN: "+layer.getName());
+              break;
+            }
+          }
+          if (!foundit)
+          {
+            //Es wurde nicht gefunden -> verunsichtbaren
+            layer.setVisibility( false );
+          }
+          else
+          {
+            layer.setVisibility( true );
+          }
+        }
+      }
+    }
+  }
+  
 }

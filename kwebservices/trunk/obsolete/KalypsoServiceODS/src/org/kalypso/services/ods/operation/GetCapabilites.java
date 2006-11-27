@@ -49,6 +49,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.helper.CapabilitiesLoader;
+import org.kalypso.services.ods.helper.IODSConstants;
 
 /**
  * @author burtscher

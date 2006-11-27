@@ -35,7 +35,7 @@
                id="GetAxesInfo"/>
          <odsoperation
                class="org.kalypso.services.ods.operation.GetAxes"
-               id="GetAxes"/>
+               id="GetAxes"/> id="getLayers"/>
    </extension>
    
   <extension point="org.eclipse.equinox.http.registry.resources">

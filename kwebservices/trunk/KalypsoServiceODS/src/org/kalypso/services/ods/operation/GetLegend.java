@@ -54,12 +54,13 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.DisplayHelper;
-import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
+import org.kalypso.services.ods.helper.CachedChart;
+import org.kalypso.services.ods.helper.ChartCache;
+import org.kalypso.services.ods.helper.DisplayHelper;
+import org.kalypso.services.ods.helper.ODSUtils;
+import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
+import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author burtscher
@@ -86,9 +87,7 @@ public class GetLegend implements IODSOperation, Runnable
      m_request=request;
      m_response=response;
      Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
-     
      DisplayHelper.getInstance().getDisplay().syncExec( this );
-     
   }
 
 
@@ -104,17 +103,25 @@ public class GetLegend implements IODSOperation, Runnable
       Display display=null;
       BufferedOutputStream outputStream=null;
       LegendImageContainer lic=null;
+      Chart chart=null;
       try
       {
-        /* Gernot sagt, dass man das Plugin nun nicht mehr initialisieren muss
-          KalypsoGisPlugin.getDefault();
-          */
-          String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-          
-          ConfigurationLoader cl=new ConfigurationLoader(pathVC);
-          ConfigurationType config = cl.getConfiguration();
+          CachedChart cc=ChartCache.getInstance().getObject( reqName );
+          if (cc!=null)
+          {
+              chart=cc.getChart();
+              System.out.println("GetLegend: Using cached chart");
+          }
+          else
+          {
+            System.out.println("GetLegend: Creating new chart");
+            cc=new CachedChart(reqName);
+            ChartCache.getInstance().addObject( reqName, cc );
+            chart=cc.getChart();
+          }
+          ODSUtils.setLayerVisibility( chart, m_request );
           display=DisplayHelper.getInstance().getDisplay();
-          lic = new LegendImageContainer(config, reqName, display);
+          lic = new LegendImageContainer(chart, display);
           Image legendImg=lic.getImage();
           m_response.setContentType( "image/jpeg" );
           ImageLoader il=new ImageLoader();
@@ -123,10 +130,6 @@ public class GetLegend implements IODSOperation, Runnable
           outputStream = new BufferedOutputStream( m_response.getOutputStream() );
           il.save( outputStream, SWT.IMAGE_JPEG );
           outputStream.close();
-      }
-      catch( ConfigChartNotFoundException e )
-      {
-        ODSException.showException( m_request, m_response, ERROR_CODE.LEGEND_NOT_DEFINED );
       }
       catch( Exception e )
       {

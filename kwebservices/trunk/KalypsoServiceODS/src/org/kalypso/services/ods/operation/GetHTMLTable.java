@@ -50,7 +50,8 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
+import org.kalypso.services.ods.helper.IODSConstants;
+import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
@@ -79,6 +80,9 @@ public class GetHTMLTable implements IODSOperation
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
+    m_request=request;
+    m_response=response;
+    
     String name=m_request.getParameter( "NAME" );
     if (name!=null)
     {

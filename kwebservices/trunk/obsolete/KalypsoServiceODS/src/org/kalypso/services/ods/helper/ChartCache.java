@@ -38,7 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods;
+package org.kalypso.services.ods.helper;
+
+import java.util.HashSet;
 
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
@@ -58,6 +60,7 @@ public class ChartCache
 
   private Cache m_memCache=null;
   private static ChartCache m_chartCache=null;
+  private HashSet<String> m_names=new HashSet<String>();
   
   private ChartCache()
   {
@@ -77,10 +80,36 @@ public class ChartCache
     return m_chartCache;
   }
   
-  public Cache getCache()
+  public void addObject(String id, CachedChart cc)
   {
-    return m_memCache;
+    if (m_names.contains( id ))
+      remove( id );
+    m_memCache.addObject( id, cc);
+    m_names.add( id );
   }
+  
+  public void remove(String id)
+  {
+    CachedChart cc=(CachedChart) m_memCache.getObject( id );
+    cc.dispose();
+    m_names.remove( id );
+    m_memCache.remove( id );
+  }
+  
+  
+  public void clear()
+  {
+    m_memCache.clear();
+  }
+  
+  public CachedChart getObject(String id)
+  {
+    if (m_names.contains( id ))
+      return (CachedChart) m_memCache.getObject( id );
+    else
+      return null;
+  }
+  
   
   
 

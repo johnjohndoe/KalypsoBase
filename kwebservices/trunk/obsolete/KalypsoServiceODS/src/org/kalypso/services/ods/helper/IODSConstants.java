@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods.operation;
+package org.kalypso.services.ods.helper;
 
 /**
  * @author burtscher
@@ -53,7 +53,7 @@ public interface IODSConstants
   /**
    * Default path to ODS configuration dir - only used if there's no system property set
    */
-  public static final String ODS_CONFIG_PATH_DEFAULT = System.getProperty( "user.home" )+"\\.ods\\";
+  public static final String ODS_CONFIG_PATH_DEFAULT = System.getProperty( "user.home" )+"/.ods/";
   
   public static final String ODS_CONFIG_NAME = "ODSConfiguration.xml";
   

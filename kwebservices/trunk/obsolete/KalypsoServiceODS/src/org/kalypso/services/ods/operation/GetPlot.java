@@ -59,8 +59,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.Activator;
-import org.kalypso.services.ods.DisplayHelper;
-import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
+import org.kalypso.services.ods.helper.CachedChart;
+import org.kalypso.services.ods.helper.ChartCache;
+import org.kalypso.services.ods.helper.DisplayHelper;
+import org.kalypso.services.ods.helper.IODSConstants;
+import org.kalypso.services.ods.helper.ODSUtils;
+import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.configuration.ChartLoader;
@@ -119,28 +123,33 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       GC gc=null;
       try
       {
-          String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-
-          ConfigurationLoader cl=new ConfigurationLoader(pathVC);
-          ConfigurationType config = cl.getConfiguration();
+          
           
           img=new Image(display, width, height);
           
+          CachedChart cc=ChartCache.getInstance().getObject( reqName );
+          if (cc!=null)
+          {
+              chart=cc.getChart();
+              System.out.println("GetLegend: Using cached chart");
+          }
+          else
+          {
+            System.out.println("GetLegend: Creating new chart");
+            cc=new CachedChart(reqName);
+            ChartCache.getInstance().addObject( reqName, cc );
+            chart=cc.getChart();
+          }
+         
           
-          shell = new Shell(display, SWT.NONE);
-          chart= new Chart(shell, SWT.NONE);
-          ChartLoader.createChart( chart, config, reqName, null );
           chart.setPlotSize( width, height );
           ODSUtils.setAxisValues( chart, m_request );
+          ODSUtils.setLayerVisibility( chart, m_request );
           
           gc=new GC(img);
           gcw=new GCWrapper(gc);
           img=chart.getPlot().paintChart( display, gcw, new Rectangle(0,0,width, height), null );
 
-//          gcw.setBackground( display.getSystemColor(SWT.COLOR_WHITE ));
-          
-          
-          
           if (img!=null)
           {
             m_response.setContentType( "image/jpeg" );

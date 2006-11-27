@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods;
+package org.kalypso.services.ods.helper;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.services.ods.Activator;
 
 /**
  * @author burtscher

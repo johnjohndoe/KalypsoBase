@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypso.services.ods.helper.ChartCache;
+import org.kalypso.services.ods.helper.DisplayHelper;
+import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.operation.IODSOperation;
 import org.kalypso.services.ods.operation.ODSException;
 import org.kalypso.services.ods.operation.ODSOperationExtensions;
-import org.kalypso.services.ods.operation.IODSConstants.ERROR_CODE;
 
 /**
  * @author Gernot Belger
@@ -83,9 +85,9 @@ public class ODSServlet extends HttpServlet implements Servlet
       /**
 		For Testing Purposes only - remove if used in different environment
 		*/
-      System.setProperty( "proxyHost",  "172.16.0.253" );
-      System.setProperty( "proxyPort",  "8080" );
-      System.setProperty( "proxySet",  "true" );
+    //  System.setProperty( "proxyHost",  "172.16.0.253" );
+    //  System.setProperty( "proxyPort",  "8080" );
+    //  System.setProperty( "proxySet",  "true" );
      
      System.out.println("Operation:  "+odsrequest);
      
@@ -116,5 +118,6 @@ public class ODSServlet extends HttpServlet implements Servlet
   public void destroy()
   {
     DisplayHelper.getInstance().dispose();
+    ChartCache.getInstance().clear();
   }
 }

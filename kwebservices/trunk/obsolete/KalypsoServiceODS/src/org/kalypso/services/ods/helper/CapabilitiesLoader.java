@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ods.operation;
+package org.kalypso.services.ods.helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,13 +54,17 @@ import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.ksp.chart.tableconfiguration.TableType;
+import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.ksp.chart.viewerconfiguration.LayerProviderType;
 import org.ksp.ods.capabilities.DCPType;
 import org.ksp.ods.capabilities.DataURL;
 import org.ksp.ods.capabilities.Diagram;
 import org.ksp.ods.capabilities.Get;
 import org.ksp.ods.capabilities.HTTP;
+import org.ksp.ods.capabilities.LayerType;
+import org.ksp.ods.capabilities.Layers;
 import org.ksp.ods.capabilities.Legend;
 import org.ksp.ods.capabilities.ODSCapabilities;
 import org.ksp.ods.capabilities.OnlineResource;
@@ -168,7 +172,7 @@ public class CapabilitiesLoader
       StringWriter sw=new StringWriter();
       Marshaller m= JCCaps.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
+      
       m.marshal(m_caps, sw);
       capsString=sw.toString();
       sw.close();
@@ -252,6 +256,31 @@ public class CapabilitiesLoader
         diagram.setTitle(title);
         diagram.setAbstract(cabstract);
         diagram.setQueryable( true );
+        
+        //einzelne Layers auslesen - dazu werden zunächst die ChartElements verwendet
+        //Layers layersElt = diagram.getLayers();
+        
+        Layers layers = m_ofCap.createLayers();
+   //     Layers layers = diagram.getLayers();
+        
+        
+        List<LayerType> layerTypes = layers.getLayer();
+        
+        List<LayerProviderType> layerProviders = chart.getLayerProvider();
+        for( LayerProviderType lp : layerProviders )
+        {
+          List<ChartElementType> ces = lp.getChartElement();
+          for( ChartElementType ce : ces )
+          {
+            String ceName = ce.getName();
+            LayerType layer = m_ofCap.createLayerType(); 
+            layer.setLayerName( ceName );
+            layer.setLayerDescription( "" );
+            layerTypes.add( layer );
+          }
+        }
+        diagram.setLayers( layers );
+        
         diagrams.add(diagram);
       }
     }
@@ -260,7 +289,7 @@ public class CapabilitiesLoader
       List<Diagram> diagram = m_caps.getCapability().getDiagram();
       //die anderen löschen
       diagram.clear();
-      diagram.addAll(diagrams);
+      diagram.addAll(diagrams); 
     }
     
     //Legenden anhängen - die werden auch aus den ConfigCharts generiert, weil zu jedem Chart auch eine Legend gehört 

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.ksp.org/ods/capabilities" xmlns="http://www.w3.org/2001/XMLSchema"
-     xmlns:ods="http://www.ksp.org/ods/capabilities" xmlns:xlink="http://www.w3.org/1999/xlink"
-     elementFormDefault="qualified">
-     <import namespace="http://www.w3.org/1999/xlink"
-          schemaLocation="xlinks.xsd"/>
+<schema targetNamespace="http://www.ksp.org/ods/capabilities" 
+     xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:ods="http://www.ksp.org/ods/capabilities" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     >
+     <!-- 
+     TODO: elementFormDefault="qualified"
+     was removed as JAXB generated not well-formed output (missing namespace for xlink 
+     resulting in attributes like ":href")
+     -->
+     
+     <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
      <!-- ********************************************************************* -->
      <!-- ** The Top-Level Element. ** -->
      <!-- ********************************************************************* -->
@@ -276,6 +283,7 @@
                     <element ref="ods:Name" minOccurs="0"/>
                     <element ref="ods:Title"/>
                     <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:Layers" minOccurs="0"/>
                     <element ref="ods:DataURL" minOccurs="0" maxOccurs="unbounded"/>
                </sequence>
                <attribute name="fixedWidth" type="nonNegativeInteger"/>
@@ -283,6 +291,28 @@
                <attribute name="queryable" type="boolean" default="0"/>
           </complexType>
      </element>
+     
+     
+
+
+     <element name="Layers">
+          <complexType>
+               <sequence>
+                    <element ref="ods:Layer" minOccurs="0" maxOccurs="unbounded"></element>
+               </sequence>
+          </complexType>
+     </element>
+
+     <element name="Layer" type="ods:LayerType"></element>
+
+     <complexType name="LayerType">
+          <sequence>
+               <element name="LayerName" type="string"></element>
+               <element name="LayerDescription" type="string"></element>
+          </sequence>
+     </complexType>
+
+
 
      <!-- ********************************************************************* -->
      <!-- ** The Table Element. ** -->
