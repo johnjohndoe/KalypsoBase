@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.partlistener;
 
+import org.eclipse.ui.IWorkbenchPart;
+
 /**
  * Implementors of this interface want adapted objects.
  * 
  * @author Gernot Belger
- *
  */
 public interface IAdapterEater
 {
-  public void setAdapter( final Object adapter );
+  /**
+   * @param part
+   *          The part which has provided the adapted object.
+   */
+  public void setAdapter( final IWorkbenchPart part, final Object adapter );
 }
