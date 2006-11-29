@@ -84,7 +84,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   /**
    * if set to true, an axis margin is calculated so that all labels are shown in full
    */
-  private boolean m_useMargin=true;
+  private boolean m_useMargin=false;
 
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
