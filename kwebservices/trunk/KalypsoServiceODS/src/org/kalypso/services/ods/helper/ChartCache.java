@@ -91,7 +91,8 @@ public class ChartCache
   public void remove(String id)
   {
     CachedChart cc=(CachedChart) m_memCache.getObject( id );
-    cc.dispose();
+    if (cc!=null)
+      cc.dispose();
     m_names.remove( id );
     m_memCache.remove( id );
   }

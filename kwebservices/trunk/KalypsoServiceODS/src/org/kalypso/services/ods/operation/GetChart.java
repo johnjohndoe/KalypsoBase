@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ods.operation;
 
@@ -80,35 +80,35 @@ import org.shiftone.cache.Cache;
 
 /**
  * @author burtscher
- * IODS operation to display an image containing a chart 
+ * IODS operation to display an image containing a chart
  */
 public class GetChart implements IODSOperation, Runnable
 {
 
- 
+
     private HttpServletRequest m_request;
     private HttpServletResponse m_response;
-    
-    
+
+
     public GetChart()
     {
-      
+
     }
-    
+
 
 public void operate( HttpServletRequest request, final HttpServletResponse response )
  {
     m_request=request;
     m_response=response;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
- }  
+ }
 
   /**
    * @see java.lang.Runnable#run()
    */
   public void run( )
   {
-    
+
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
 
     int width=500;
@@ -127,7 +127,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       BufferedOutputStream outputStream=null;
       ChartImageContainer cic = null;
       Chart chart=null;
-      
+
       CachedChart cc=ChartCache.getInstance().getObject( reqName );
       if (cc!=null)
       {
@@ -143,13 +143,13 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       }
       ODSUtils.setLayerVisibility( chart, m_request );
       ODSUtils.setAxisValues(  chart, m_request );
-      
+
       //Gecachetes Chart verwenden
       if (chart!=null )
       {
         cic = new ChartImageContainer(chart, display, width, height);
         Image chartImg=cic.getImage();
-        
+
         if (chartImg!=null )
         {
           m_response.setContentType( "image/jpeg" );
@@ -182,7 +182,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
                 e.printStackTrace();
               }
             }
-            
+
           }
         }
         else
@@ -190,13 +190,13 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
         }
       }
-      
-      
+
+
     }
     else
         ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-    
-  }  
 
- 
+  }
+
+
 }

@@ -91,6 +91,13 @@ public class ODSServlet extends HttpServlet implements Servlet
      
      System.out.println("Operation:  "+odsrequest);
      
+     //bei Anfrage Cache löschen
+     String clearcache = request.getParameter( "CLEARCACHE" );
+     if (clearcache!=null && clearcache.compareTo( "1" )==0)
+     {
+       ChartCache.getInstance().clear();
+       System.out.println("Cache cleared");
+     }
      try
       {
        
