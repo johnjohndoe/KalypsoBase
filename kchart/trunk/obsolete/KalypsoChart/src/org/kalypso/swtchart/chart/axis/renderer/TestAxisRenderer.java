@@ -107,6 +107,32 @@ public class TestAxisRenderer implements IAxisRenderer<Number>
   {
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();
+
+//  Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
+    int rangepow=0;
+    //Normalisierte Range
+    double normrange=Math.abs(logicalfrom-logicalto);
+    if (normrange!=0)
+    {
+        while (normrange>=10)
+        {
+            normrange/=10;
+            rangepow--;
+        }
+        while (normrange<1)
+        {
+            normrange*=10;
+            rangepow++;
+        }
+    }
+
+//  Für das Number-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
+    if (rangepow>=0)
+    {
+      m_nf.setMaximumFractionDigits( rangepow+1);
+      m_nf.setMinimumFractionDigits( rangepow+1);
+    }
+
     final Point fromTextExtent = getTextExtent( gc, dev, logicalfrom, m_fontDataTick );
     final Point toTextExtent = getTextExtent( gc, dev, logicalto, m_fontDataTick );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
@@ -233,7 +259,6 @@ public class TestAxisRenderer implements IAxisRenderer<Number>
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
     //    final String label=value.toString();
-        System.out.println("label: "+label);
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
@@ -402,17 +427,17 @@ public class TestAxisRenderer implements IAxisRenderer<Number>
     double normmin=Math.floor(axis.getFrom().doubleValue()*Math.pow(10, rangepow));
     //Das Minimum wieder zurückrechnen
     normmin=normmin*Math.pow(10, rangepow*(-1));
-    System.out.println("Normmin: "+normmin);
+//    System.out.println("Normmin: "+normmin);
 
     //Das Maximum normalisieren und aufrunden
     double normmax=Math.ceil(axis.getTo().doubleValue()*Math.pow(10, rangepow));
     //Das Maximum wieder zurückrechnen
     normmax=normmax*Math.pow(10, rangepow*(-1));
-    System.out.println("Normmax: "+normmax);
+ //   System.out.println("Normmax: "+normmax);
 
     //Das Intervall verwendet zunächst nur 10er Schritte
     double interval=Math.pow(10, rangepow*(-1));
-    System.out.println("Interval ("+axis.getIdentifier()+"): "+interval);
+   // System.out.println("Interval ("+axis.getIdentifier()+"): "+interval);
 
     //hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     //3 würde z.B. schnell krumme werte erzeugen
@@ -445,16 +470,24 @@ public class TestAxisRenderer implements IAxisRenderer<Number>
     LinkedList<Number> realticks=new LinkedList<Number>();
     for (Number tick: ticks)
     {
+        //"Unnötige" Zahlen abschneiden - dadurch werden Werte wie -0.0 (von -0.00000000000000001) und unnötige Nachkommastellen entfernt
+        //unnötig ist alles, was mehr als 2 Stellen länger als Rangepow ist
         double tickdv=tick.doubleValue();
+        int tickNorm=(int) (tickdv*Math.pow( 10, (rangepow+2) ));
+        tickdv=tickNorm*Math.pow( 10, -(rangepow+2) );
+
         if ( (tickdv >= logicalMin) && ( tickdv <= logicalMax ))
         {
-            realticks.add( tick );
+            realticks.add( new Double(tickdv) );
         }
     }
 
     //Für das Number-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
     if (rangepow>=0)
+    {
       m_nf.setMaximumFractionDigits( rangepow+1);
+      m_nf.setMinimumFractionDigits( rangepow+1);
+    }
 
     return realticks;
   }
