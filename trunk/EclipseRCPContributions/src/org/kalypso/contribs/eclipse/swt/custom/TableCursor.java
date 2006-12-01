@@ -203,7 +203,7 @@ public class TableCursor extends Canvas
         switch( event.type )
         {
           case SWT.Dispose:
-            disposeInternal(  );
+            disposeInternal();
             break;
           case SWT.FocusIn:
           case SWT.FocusOut:
@@ -237,7 +237,7 @@ public class TableCursor extends Canvas
             tableMouseDown( event );
             break;
           case SWT.FocusIn:
-            tableFocusIn(  );
+            tableFocusIn();
             break;
         }
       }
@@ -317,7 +317,7 @@ public class TableCursor extends Canvas
     addListener( SWT.DefaultSelection, typedListener );
   }
 
-  void disposeInternal(  )
+  void disposeInternal( )
   {
     m_table.removeListener( SWT.FocusIn, m_tableListener );
     m_table.removeListener( SWT.MouseDown, m_tableListener );
@@ -520,7 +520,7 @@ public class TableCursor extends Canvas
     }
   }
 
-  void tableFocusIn(  )
+  void tableFocusIn( )
   {
     if( isDisposed() )
       return;
@@ -725,6 +725,8 @@ public class TableCursor extends Canvas
 
   /**
    * Positions the TableCursor over the cell at the given row and column in the parent table.
+   * <p>
+   * Does not notify any listeners.
    * 
    * @param row
    *          the index of the row for the cell to select
@@ -738,12 +740,32 @@ public class TableCursor extends Canvas
    */
   public void setSelection( int row, int column )
   {
+    setSelection( row, column, false );
+  }
+
+  /**
+   * Positions the TableCursor over the cell at the given row and column in the parent table.
+   * 
+   * @param row
+   *          the index of the row for the cell to select
+   * @param column
+   *          the index of column for the cell to select
+   * @param notify
+   *          notify the listeners
+   * @exception SWTException
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
+   */
+  public void setSelection( int row, int column, boolean notify )
+  {
     checkWidget();
     int columnCount = m_table.getColumnCount();
     int maxColumnIndex = columnCount == 0 ? 0 : columnCount - 1;
     if( row < 0 || row >= m_table.getItemCount() || column < 0 || column > maxColumnIndex )
       SWT.error( SWT.ERROR_INVALID_ARGUMENT );
-    setRowColumn( row, column, false );
+    setRowColumn( row, column, notify );
   }
 
   /**

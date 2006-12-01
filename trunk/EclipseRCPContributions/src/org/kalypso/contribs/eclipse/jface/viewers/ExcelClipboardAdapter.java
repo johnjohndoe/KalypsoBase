@@ -90,11 +90,11 @@ public final class ExcelClipboardAdapter
       final StringTokenizer st2 = new StringTokenizer( rowstring, "\t" );
       for( int j = 0; st2.hasMoreTokens(); j++ )
       {
+        final String newText = st2.nextToken();
+
         final int col = startCol + j;
         if( col >= columnProperties.length )
           continue;
-
-        final String newText = st2.nextToken();
 
         final String property = "" + columnProperties[col];
         if( cellModifier.canModify( element, property ) )
