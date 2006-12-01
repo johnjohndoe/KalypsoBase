@@ -2,7 +2,6 @@ package org.kalypso.contribs.eclipse.swt.custom;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -14,6 +13,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
@@ -22,12 +23,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * TODO: merge with other ExcelLikeTablecursor
- * TODO: move code into TableCursor-Copy
+ * TODO: merge code with TableCursor-Copy
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public class ExcelTableCursor3_1 extends TableCursor
+public class ExcelTableCursor extends TableCursor
 {
   // it is difficult to debug thinks like event
   // in eclipse debugmode, so here some printouts
@@ -80,31 +80,6 @@ public class ExcelTableCursor3_1 extends TableCursor
   };
 
   /**
-   * handle stop editing to continue navigating with cursor on key events
-   */
-  final ICellEditorListener m_cellEditorListener = new ICellEditorListener()
-  {
-    // after editing set tablecursor visible
-    // and give it the focus to continue navigating (e.g. CR-Up, RC-Down)
-    public void applyEditorValue( )
-    {
-      // leaf cell
-      stopEditing();
-    }
-
-    public void cancelEditor( )
-    {
-      // leaf cell
-      stopEditing();
-    }
-
-    public void editorValueChanged( boolean oldValidState, boolean newValidState )
-    {
-      // nothing (maybe change color of something ?)
-    }
-  };
-
-  /**
    * keylistener while editing a cell <br>
    * handle cursor moving
    */
@@ -113,22 +88,32 @@ public class ExcelTableCursor3_1 extends TableCursor
     @Override
     public void keyPressed( final KeyEvent e )
     {
+      if( DEBUG )
+        System.out.println( "Key pressed: " + e.character );
+
       // handle cursor moving
       int dx = 0, dy = 0;
-      if( e.keyCode == SWT.ARROW_LEFT )
-        dx = -1;
-      else if( e.keyCode == SWT.ARROW_RIGHT )
-        dx = 1;
-      else if( e.keyCode == SWT.ARROW_UP )
+
+      /*
+       * If the user presses an arrow key, stop editing and move in this direction.<p>BUGFIX: don't do this for
+       * left/right because than we cannot move within the cell.
+       */
+      // if( e.keyCode == SWT.ARROW_LEFT )
+      // dx = -1;
+      // else if( e.keyCode == SWT.ARROW_RIGHT )
+      // dx = 1;
+      // else
+      if( e.keyCode == SWT.ARROW_UP )
         dy = -1;
       else if( e.keyCode == SWT.ARROW_DOWN )
         dy = 1;
       else if( e.keyCode == SWT.ESC )
       {
         // handle ESCAPE
-        final CellEditor cellEditor = getViewer().getCellEditors()[getColumn()];
-        cellEditor.performUndo();
+        // final CellEditor cellEditor = getViewer().getCellEditors()[getColumn()];
+        // cellEditor.performUndo();
       }
+      /* On enter, stop editing and move either forwards or downwards */
       else if( e.keyCode == SWT.CR )
       {
         switch( getAdvanceMode() )
@@ -145,6 +130,9 @@ public class ExcelTableCursor3_1 extends TableCursor
             break;
         }
       }
+      /* On tab, stop editing, move forwards */
+      // TODO: this does not work, because we never get the tab
+      // The table immediately defocuses on tab
       else if( e.keyCode == SWT.TAB )
       {
         final Table table = getViewer().getTable();
@@ -160,7 +148,7 @@ public class ExcelTableCursor3_1 extends TableCursor
         if( col == columnCount - 1 )
         {
           dx = 1 - columnCount;
-          
+
           if( row == rowCount - 1 )
             dy = 1 - rowCount;
           else
@@ -175,6 +163,9 @@ public class ExcelTableCursor3_1 extends TableCursor
 
       advanceCursor( (Control) e.getSource(), dx, dy );
 
+      /*
+       * Special case: checkbox: always toggle? TODO: shouldn't handle this the CheckboxCellEditor??
+       */
       if( e.keyCode != SWT.CR && e.getSource() instanceof CheckboxCellEditor )
       {
         // toggle checkbox
@@ -216,7 +207,7 @@ public class ExcelTableCursor3_1 extends TableCursor
         startEditing( e );
         return;
       }
-      
+
       if( e.keyCode == SWT.DEL )
       {
         // TODO: empty current cell
@@ -234,13 +225,13 @@ public class ExcelTableCursor3_1 extends TableCursor
 
         final int dx;
         final int dy;
-        
+
         // Advance cursor: always go to the left, go to first item of row at the end of row
         // go to first item at end of table
         if( col == columnCount - 1 )
         {
           dx = 1 - columnCount;
-          
+
           if( row == rowCount - 1 )
             dy = 1 - rowCount;
           else
@@ -251,7 +242,7 @@ public class ExcelTableCursor3_1 extends TableCursor
           dx = 1;
           dy = 0;
         }
-        
+
         advanceCursor( null, dx, dy );
         return;
       }
@@ -282,6 +273,15 @@ public class ExcelTableCursor3_1 extends TableCursor
     }
   };
 
+  private final TraverseListener m_dontTraverseListener = new TraverseListener()
+  {
+    public void keyTraversed( final TraverseEvent e )
+    {
+      if( e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS )
+        e.doit = false;
+    }
+  };
+
   private final Color m_cannotEditColor;
 
   private final Color m_canEditColor;
@@ -290,7 +290,7 @@ public class ExcelTableCursor3_1 extends TableCursor
 
   private final TableViewer m_viewer;
 
-  public ExcelTableCursor3_1( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
+  public ExcelTableCursor( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
   {
     super( viewer.getTable(), style );
 
@@ -382,8 +382,8 @@ public class ExcelTableCursor3_1 extends TableCursor
     // add the editorListener to the celleditor in order to refocus the
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
-    cellEditor.removeListener( m_cellEditorListener );
-    cellEditor.addListener( m_cellEditorListener );
+    final Color errorColor = cellEditor.getControl().getDisplay().getSystemColor( SWT.COLOR_RED );
+    cellEditor.addListener( new ValidateCellEditorListener( cellEditor, errorColor ) );
 
     // remove potential old listener
     final Control control = cellEditor.getControl();
@@ -391,6 +391,8 @@ public class ExcelTableCursor3_1 extends TableCursor
     {
       control.removeKeyListener( m_keyListenerOnCell );
       control.addKeyListener( m_keyListenerOnCell );
+      control.removeTraverseListener( m_dontTraverseListener );
+      control.addTraverseListener( m_dontTraverseListener );
     }
     m_viewer.editElement( element, column );
 
@@ -468,6 +470,8 @@ public class ExcelTableCursor3_1 extends TableCursor
   {
     if( dx != 0 || dy != 0 )
     {
+      stopEditing();
+
       final Table table = getViewer().getTable();
       final TableItem row2 = getRow();
 
@@ -478,13 +482,14 @@ public class ExcelTableCursor3_1 extends TableCursor
 
       if( col >= 0 && col < columnCount && row >= 0 && row < rowCount )
       {
-        setSelection( row, col );
-        setVisible( true );
-        setFocus();
+        setSelection( row, col, true );
 
         // leaf cell
         if( control != null )
+        {
           control.removeKeyListener( m_keyListenerOnCell );
+          control.removeTraverseListener( m_dontTraverseListener );
+        }
       }
     }
   }
