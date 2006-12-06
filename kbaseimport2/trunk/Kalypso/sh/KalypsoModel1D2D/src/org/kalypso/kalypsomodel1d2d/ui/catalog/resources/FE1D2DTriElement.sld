@@ -12,13 +12,13 @@
 		<Title>FE1D2DTriElement</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+		<MaxScaleDenominator>2000.0</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>geometry</ogc:PropertyName>
 			</Geometry>
 			<Fill>
-				<CssParameter name="fill-opacity">0.8</CssParameter>
+				<CssParameter name="fill-opacity">0.5</CssParameter>
 				<CssParameter name="fill">#ff8000</CssParameter>
 			</Fill>
 			<Stroke>
