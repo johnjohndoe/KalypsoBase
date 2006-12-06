@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.adapter.IAnnotationProvider;
  */
 public class KalypsoGmlSchemaExtensions
 {
-  private static final IAnnotationProvider[] THE_ANNOTATION_PROVIDERS = null;
+  private static IAnnotationProvider[] THE_ANNOTATION_PROVIDERS = null;
 
   public static IAnnotationProvider[] getAnnotationProviders( )
   {
@@ -90,6 +90,8 @@ public class KalypsoGmlSchemaExtensions
       }
     }
     
-    return providers.toArray( new IAnnotationProvider[providers.size()] );
+    final IAnnotationProvider[] result = providers.toArray( new IAnnotationProvider[providers.size()] );
+    THE_ANNOTATION_PROVIDERS = result;
+    return result;
   }
 }
