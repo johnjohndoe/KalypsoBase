@@ -3,13 +3,8 @@
      xmlns="http://www.w3.org/2001/XMLSchema"
      xmlns:ods="http://www.ksp.org/ods/capabilities" 
      xmlns:xlink="http://www.w3.org/1999/xlink"
+     elementFormDefault="qualified"
      >
-     <!-- 
-     TODO: elementFormDefault="qualified"
-     was removed as JAXB generated not well-formed output (missing namespace for xlink 
-     resulting in attributes like ":href")
-     -->
-     
      <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
      <!-- ********************************************************************* -->
      <!-- ** The Top-Level Element. ** -->

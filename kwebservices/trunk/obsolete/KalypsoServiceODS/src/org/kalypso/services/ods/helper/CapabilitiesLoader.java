@@ -171,8 +171,10 @@ public class CapabilitiesLoader
     {
       StringWriter sw=new StringWriter();
       Marshaller m= JCCaps.createMarshaller();
-      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+       m.setProperty("com.sun.xml.bind.namespacePrefixMapper",new NamespacePrefixMapperImpl());
+       
+       
       m.marshal(m_caps, sw);
       capsString=sw.toString();
       sw.close();

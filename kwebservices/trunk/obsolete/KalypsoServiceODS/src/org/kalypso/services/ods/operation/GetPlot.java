@@ -49,7 +49,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -62,14 +61,9 @@ import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
-import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.ODSUtils;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.ChartImageContainer;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
  * @author burtscher
