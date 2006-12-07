@@ -61,7 +61,7 @@ public abstract class AbstractDoubleRaster implements DoubleRaster
     return coordinate;
   }
 
-  public final Object walk( final DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException
+  public final Object walk( DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException
   {
     final int sizeX = getSizeX();
     final int sizeY = getSizeY();
