@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.processing;
 
+import org.kalypso.services.IOGCWebService;
+
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ProcessDescriptions;

@@ -40,21 +40,51 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.processing;
 
-import net.opengeospatial.ows.GetCapabilitiesType;
+import net.opengeospatial.ows.CapabilitiesBaseType;
 import net.opengeospatial.wps.Capabilities;
+import net.opengeospatial.wps.GetCapabilities;
+
+import org.kalypso.services.AbstractServiceEntry;
+import org.kalypso.services.IServiceEntry;
 
 /**
- * The <code>OWService</code> interface as proposed by the OGC Web Services Common Specification.
- * 
  * @author skurzbach
  */
-public interface IOGCWebService
+public class WebProcessingServiceEntry extends AbstractServiceEntry implements IServiceEntry
 {
+  private IWebProcessingService m_service;
+
+  public WebProcessingServiceEntry( final IWebProcessingService service )
+  {
+    super( service.getCapabilities( new GetCapabilities() ) );
+    m_service = service;
+  }
+
+  public WebProcessingServiceEntry( final CapabilitiesBaseType capabilities )
+  {
+    super( capabilities );
+  }
 
   /**
-   * The mandatory <code>GetCapabilities</code> operation allows clients to retrieve service metadata from a server.
-   * The response to a <code>GetCapabilities</code> request shall be a <code>Capabilities</code> data structure
-   * containing service metadata about the server, including brief metadata describing all the processes implemented.
+   * @see org.kalypso.services.IServiceEntry#getService()
    */
-  public Capabilities getCapabilities( final GetCapabilitiesType capabilitiesRequest );
+  public IWebProcessingService getService( )
+  {
+    if( m_service == null )
+    {
+      // TODO: not only local simulation services supported
+      final Capabilities capabilities = (Capabilities) getCapabilities();
+      final String id = capabilities.getProcessOfferings().getProcess().get( 0 ).getIdentifier().getValue();
+      m_service = KalypsoWPSPlugin.getDefault().getLocalProcessingService( id );
+    }
+    return m_service;
+  }
+
+  /**
+   * @see org.kalypso.services.IServiceEntry#refreshFromService()
+   */
+  public void refreshFromService( )
+  {
+    setCapabilities( getService().getCapabilities( new GetCapabilities() ) );
+  }
 }

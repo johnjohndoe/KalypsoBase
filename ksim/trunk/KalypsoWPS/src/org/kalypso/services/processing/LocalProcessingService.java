@@ -63,7 +63,9 @@ import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.ows.GetCapabilitiesType;
+import net.opengeospatial.ows.OnlineResourceType;
 import net.opengeospatial.ows.ServiceIdentification;
+import net.opengeospatial.ows.ServiceProvider;
 import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
@@ -91,45 +93,37 @@ import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
-import org.kalypso.simulation.core.SimulationDescription;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.simspec.DataType;
+import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * This class wraps an instance of {@link ISimulation} to provide an {@link IWebProcessingService}
  * 
  * @author skurzbach
  */
-public class SimulationServiceWrapper implements IWebProcessingService
+public class LocalProcessingService implements IWebProcessingService
 {
   private final ISimulation m_simulation;
 
   private final File m_tmpDir;
 
+  private Modelspec m_data;
+
   private final String m_title;
 
-  private ModelspecData m_data;
+  private final String m_simulationId;
 
-  public SimulationServiceWrapper( final ISimulation simulation, final String title )
+  public LocalProcessingService( final String simulationId, final ISimulation simulation, final String title ) throws JAXBException
   {
+    m_simulationId = simulationId;
     m_simulation = simulation;
+    m_title = title;
     m_tmpDir = FileUtilities.createNewTempDir( "TemporaryProcessInputs", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
-    m_title = title;
     final URL modelspecURL = m_simulation.getSpezifikation();
-    try
-    {
-      m_data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final SimulationException e )
-    {
-      e.printStackTrace();
-    }
+    // get modelspec
+    m_data = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( modelspecURL );
   }
 
   /**
@@ -140,14 +134,22 @@ public class SimulationServiceWrapper implements IWebProcessingService
     final Capabilities capabilities = new Capabilities();
     final ProcessOfferings processOfferings = new ProcessOfferings();
     final ProcessBriefType processBriefType = new ProcessBriefType();
-    final CodeType codeType = new CodeType();
-    processBriefType.setIdentifier( codeType );
+    final CodeType processID = new CodeType();
+    processID.setValue( getSimulationId() );
+    processBriefType.setIdentifier( processID );
     processBriefType.setTitle( m_title );
     processOfferings.getProcess().add( processBriefType );
     capabilities.setProcessOfferings( processOfferings );
     final ServiceIdentification serviceIdentification = new ServiceIdentification();
     serviceIdentification.setTitle( "Local Simulation Service" );
     capabilities.setServiceIdentification( serviceIdentification );
+    final ServiceProvider serviceProvider = new ServiceProvider();
+    serviceProvider.setProviderName( "Kalypso" );
+    final OnlineResourceType onlineResourceType = new OnlineResourceType();
+    onlineResourceType.setHref( "localhost" );
+    serviceProvider.setProviderSite( onlineResourceType );
+    capabilities.setServiceProvider( serviceProvider );
+
     return capabilities;
   }
 
@@ -167,8 +169,8 @@ public class SimulationServiceWrapper implements IWebProcessingService
 
       final DataInputs dataInputs = new DataInputs();
       List<InputDescriptionType> input = dataInputs.getInput();
-      final SimulationDescription[] requiredInput = m_data.getInput();
-      for( final SimulationDescription bean : requiredInput )
+      final List<DataType> requiredInput = m_data.getInput();
+      for( final DataType bean : requiredInput )
       {
         final InputDescriptionType inputDescriptionType = new InputDescriptionType();
         final CodeType inputID = new CodeType();
@@ -280,6 +282,11 @@ public class SimulationServiceWrapper implements IWebProcessingService
     final ExecuteResponseType.ProcessOutputs processOutputs = new SimulationInfoWrapper( simulationInfo );
     executeResponse.setProcessOutputs( processOutputs );
     return executeResponse;
+  }
+
+  public String getSimulationId( )
+  {
+    return m_simulationId;
   }
 
   private static void writeZipEntry( final ZipOutputStream zos, final IOValueType input ) throws IOException, MalformedURLException

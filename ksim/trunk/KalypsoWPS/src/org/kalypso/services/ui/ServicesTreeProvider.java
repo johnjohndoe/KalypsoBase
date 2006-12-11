@@ -40,20 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import net.opengeospatial.ows.CapabilitiesBaseType;
-import net.opengeospatial.ows.GetCapabilitiesType;
 
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.services.processing.IOGCWebService;
-import org.kalypso.services.processing.KalypsoWPSPlugin;
+import org.kalypso.services.IServiceEntry;
+import org.kalypso.services.KnownServices;
+import org.kalypso.services.processing.WebProcessingServiceEntry;
 
 /**
  * Provides the content for a service tree based on the registered simulations
@@ -62,47 +60,58 @@ import org.kalypso.services.processing.KalypsoWPSPlugin;
  * 
  * @author skurzbach
  */
-public class ServicesContentProvider implements ITreeContentProvider
+public class ServicesTreeProvider extends LabelProvider implements ITreeContentProvider
 {
 
+  private Map<Object, IServiceEntry> m_parentEntries;
+
   /**
-   * key is the service identification id
+   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
-  private Map<String, List<IOGCWebService>> m_services;
+  @Override
+  public String getText( final Object element )
+  {
+    final IServiceEntry parentEntry = m_parentEntries.get( element );
+    if( parentEntry != null )
+    {
+      final IAdapterManager adapterManager = Platform.getAdapterManager();
+      final ILabelProvider parentLabelProvider = (ILabelProvider) adapterManager.getAdapter( parentEntry, ILabelProvider.class.getName() );
+      if( parentLabelProvider != null )
+      {
+        return parentLabelProvider.getText( element );
+      }
+    }
+    return element.toString();
+  }
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
   {
-    final Object[] result;
-    final List<IOGCWebService> webServices = m_services.get( parentElement );
     if( parentElement.equals( "root" ) )
     {
-      result = m_services.keySet().toArray();
-    }
-    else if( webServices != null )
-    {
-      result = webServices.toArray();
-    }
-    else if( parentElement instanceof IOGCWebService )
-    {
-      final IAdapterManager adapterManager = Platform.getAdapterManager();
-      final ITreeContentProvider childContentProvider = (ITreeContentProvider) adapterManager.getAdapter( parentElement, ITreeContentProvider.class );
-      if( childContentProvider != null )
-      {
-        result = childContentProvider.getChildren( parentElement );
-      }
-      else
-      {
-        result = null;
-      }
+      return KnownServices.getInstance().getServices();
     }
     else
     {
-      result = null;
+      final IServiceEntry parentEntry = m_parentEntries.get( parentElement );
+      if( parentEntry != null )
+      {
+        final IAdapterManager adapterManager = Platform.getAdapterManager();
+        final ITreeContentProvider parentContentProvider = (ITreeContentProvider) adapterManager.getAdapter( parentEntry, ITreeContentProvider.class.getName() );
+        if( parentContentProvider != null )
+        {
+          final Object[] children = parentContentProvider.getChildren( parentEntry );
+          for( final Object object : children )
+          {
+            m_parentEntries.put( object, parentEntry );
+          }
+          return children;
+        }
+      }
     }
-    return result;
+    return null;
   }
 
   /**
@@ -118,7 +127,7 @@ public class ServicesContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( final Object element )
   {
-    return m_services.get( element ) != null || (element instanceof IOGCWebService && Platform.getAdapterManager().hasAdapter( element, ITreeContentProvider.class.getName() ));
+    return element instanceof WebProcessingServiceEntry;
   }
 
   /**
@@ -130,33 +139,24 @@ public class ServicesContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
+    m_parentEntries.clear();
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    if( m_services == null )
+    m_parentEntries = new HashMap<Object, IServiceEntry>();
+    for( final IServiceEntry service : KnownServices.getInstance().getServices() )
     {
-      m_services = new HashMap<String, List<IOGCWebService>>();
-      for( final IOGCWebService service : KalypsoWPSPlugin.getDefault().getWebProcessingServices() )
-      {
-        final CapabilitiesBaseType capabilities = service.getCapabilities( new GetCapabilitiesType() );
-        final String title = capabilities.getServiceIdentification().getTitle();
-        List<IOGCWebService> list = m_services.get( title );
-        if( list == null )
-        {
-          list = new ArrayList<IOGCWebService>();
-          m_services.put( title, list );
-        }
-        list.add( service );
-      }
+      m_parentEntries.put( service, service );
     }
   }
 }

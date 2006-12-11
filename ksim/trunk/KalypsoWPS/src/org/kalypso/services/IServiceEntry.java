@@ -38,50 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.services.ui;
+package org.kalypso.services;
 
-import org.eclipse.core.runtime.IAdapterManager;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
+import net.opengeospatial.ows.CapabilitiesBaseType;
 
 /**
  * @author skurzbach
  */
-public class ServicesLabelProvider extends LabelProvider
+public interface IServiceEntry
 {
-  private static final String UNKNOWN_TYPE_ERROR_TEXT = "unknown element type";
+  public String getTitle( );
 
-  private static final String NO_LABEL_PROVIDER_ERROR_TEXT = "no label provider";
+  public CapabilitiesBaseType getCapabilities( );
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
-  {
-    final String result;
-    final IAdapterManager adapterManager = Platform.getAdapterManager();
-    if( element instanceof String )
-    {
-      result = (String) element;
-    }
-    else if( adapterManager.hasAdapter( element, ILabelProvider.class.getName() ) )
-    {
-      final ILabelProvider childLabelProvider = (ILabelProvider) adapterManager.getAdapter( element, ILabelProvider.class );
-      if( childLabelProvider != null )
-      {
-        result = childLabelProvider.getText( element );
-      }
-      else
-      {
-        result = NO_LABEL_PROVIDER_ERROR_TEXT;
-      }
-    }
-    else
-    {
-      result = UNKNOWN_TYPE_ERROR_TEXT;
-    }
-    return result;
-  }
+  public String getCapabilitiesDocument( );
+
+  public IOGCWebService getService( );
+
+  public void refreshFromService( );
 }

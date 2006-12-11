@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ui;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -54,6 +60,8 @@ import org.eclipse.ui.part.ViewPart;
 public class ServicesView extends ViewPart
 {
 
+  private TreeViewer m_treeViewer;
+
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -61,15 +69,26 @@ public class ServicesView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     setPartName( "OGC Web Services" );
-    setContentDescription( "List of available OGC-compliant Web Processing Services." );
+    setContentDescription( "List of available OGC-compliant Web Processing Services." ); //TODO: translate
     setTitleToolTip( getContentDescription() );
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new FillLayout() );
-    final TreeViewer treeViewer = new TreeViewer( composite );
-    final ServicesContentProvider contentProvider = new ServicesContentProvider();
-    treeViewer.setContentProvider( contentProvider );
-    treeViewer.setLabelProvider( new ServicesLabelProvider() );
-    treeViewer.setInput( "root" );
+    m_treeViewer = new TreeViewer( composite );
+    final ServicesTreeProvider treeProvider = new ServicesTreeProvider();
+    m_treeViewer.setContentProvider( treeProvider );
+    m_treeViewer.setLabelProvider( treeProvider );
+    m_treeViewer.setInput( "root" );    
+    final MenuManager menuManager = new MenuManager();
+    menuManager.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( final IMenuManager manager )
+      {
+        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+      }
+    } );
+    final Menu menu = menuManager.createContextMenu( m_treeViewer.getControl() );
+    getSite().registerContextMenu( menuManager, m_treeViewer );
+    m_treeViewer.getControl().setMenu( menu );
   }
 
   /**
@@ -80,4 +99,8 @@ public class ServicesView extends ViewPart
   {
   }
 
+  public void refresh( )
+  {
+    m_treeViewer.refresh();
+  }
 }

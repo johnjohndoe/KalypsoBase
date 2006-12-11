@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.processing;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -68,7 +68,9 @@ public class KalypsoWPSExtensions
 
   private static final String EXT_ATTRIB_SERVICETITLE = "title";
 
-  private static Map<String, IConfigurationElement> m_elements;
+  private static Map<String, IConfigurationElement> m_configurationElements;
+
+  private static Map<String, LocalProcessingService> m_serviceCache;
 
   static
   {
@@ -86,44 +88,57 @@ public class KalypsoWPSExtensions
 
     final IExtension[] extensions = point.getExtensions();
 
-    final Map<String, IConfigurationElement> elements = new HashMap<String, IConfigurationElement>();
+    m_configurationElements = new HashMap<String, IConfigurationElement>();
     for( final IExtension extension : extensions )
     {
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
       for( final IConfigurationElement element : configurationElements )
       {
         final String typeID = element.getAttribute( EXT_ATTRIB_SERVICEID );
-        elements.put( typeID, element );
+        m_configurationElements.put( typeID, element );
       }
     }
 
-    m_elements = elements;
+    m_serviceCache = new HashMap<String, LocalProcessingService>();
   }
 
   /**
    * @return null, if the id is unknown
    */
-  public static IWebProcessingService getWebProcessingService( final String id ) throws CoreException
+  public static LocalProcessingService getRegisteredService( final String simulationId ) throws CoreException, JAXBException
   {
-    final IConfigurationElement element = m_elements.get( id );
-    if( element == null )
+    IConfigurationElement result = null;
+    for( IConfigurationElement element : m_configurationElements.values() )
+    {
+      if( element.getAttribute( EXT_ATTRIB_SERVICEID ).equals( simulationId ) )
+      {
+        result = element;
+        break;
+      }
+    }
+
+    if( result == null )
       return null;
 
-    return new SimulationServiceWrapper( (ISimulation) element.createExecutableExtension( EXT_ATTRIB_SERVICECLASS ), element.getAttribute( EXT_ATTRIB_SERVICETITLE ) );
+    LocalProcessingService localProcessingService = m_serviceCache.get( simulationId );
+    if( localProcessingService == null )
+    {
+      localProcessingService = new LocalProcessingService( result.getAttribute( EXT_ATTRIB_SERVICEID ), (ISimulation) result.createExecutableExtension( EXT_ATTRIB_SERVICECLASS ), result.getAttribute( EXT_ATTRIB_SERVICETITLE ) );
+      m_serviceCache.put( simulationId, localProcessingService );
+    }
+    return localProcessingService;
   }
 
   /**
    * Returns all registered elements of type {@link IWebProcessingService}
    */
-  public static IWebProcessingService[] getRegisteredServices( ) throws CoreException
+  public static LocalProcessingService[] getRegisteredServices( ) throws CoreException, JAXBException
   {
-    final List<IWebProcessingService> services = new ArrayList<IWebProcessingService>();
-    for( final String id : m_elements.keySet() )
+    for( final String id : m_configurationElements.keySet() )
     {
-      final IWebProcessingService service = getWebProcessingService( id );
-      services.add( service );
+      getRegisteredService( id );
     }
-    return services.toArray( new IWebProcessingService[services.size()] );
+    return m_serviceCache.values().toArray( new LocalProcessingService[m_serviceCache.size()] );
   }
 
   /**
@@ -131,6 +146,6 @@ public class KalypsoWPSExtensions
    */
   public static String[] getRegisteredServiceIDs( )
   {
-    return m_elements.keySet().toArray( new String[m_elements.size()] );
+    return m_configurationElements.keySet().toArray( new String[m_configurationElements.size()] );
   }
 }
