@@ -56,6 +56,9 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 {
 	final static public String CURRENT_VERSION="v0.0.0";
 	final static public String SIM_MODEL_REL_PATH=CURRENT_VERSION+"/simulation_model_base.xsd";
+	final static public URL SIM_MODEL_SCHEMA_URL=
+					UrlCatalogModelSimulationBase.class.getResource( 
+														SIM_MODEL_REL_PATH );
 	final static public String SIM_MODEL_NS="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
 	final static public String SIM_MODEL_NS_PREFIX="simBase";
   
@@ -68,6 +71,7 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 		  				final Map<String, URL> catalog, 
 		  				Map<String, String> prefixes )
   {
+	  
     catalog.put( 
     			SIM_MODEL_NS, 
     			myClass.getResource( SIM_MODEL_REL_PATH ) );
