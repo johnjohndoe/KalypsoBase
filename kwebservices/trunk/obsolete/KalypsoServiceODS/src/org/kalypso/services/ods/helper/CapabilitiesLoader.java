@@ -172,6 +172,8 @@ public class CapabilitiesLoader
       StringWriter sw=new StringWriter();
       Marshaller m= JCCaps.createMarshaller();
        m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+       
+       //using namespace prefix mapper to display a namespace for any element
        m.setProperty("com.sun.xml.bind.namespacePrefixMapper",new NamespacePrefixMapperImpl());
        
        
