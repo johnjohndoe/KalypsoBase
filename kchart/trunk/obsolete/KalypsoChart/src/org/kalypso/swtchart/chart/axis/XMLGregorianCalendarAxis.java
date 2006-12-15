@@ -51,6 +51,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
+import org.kalypso.swtchart.logging.Logger;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -90,7 +91,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
 
     // Die rechte Seite muss unbedingt nach double gecastet werden, da sonst auf die Werte 0 oder 1 gerundet wird.
     final double norm = ((double) (valueMillis - fromMillis)) / r;
-    // System.out.println("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from:
+    // Logger.trace("Normalization: "+DateFormat.getInstance().format(value)+" => "+norm+"; from:
     return norm;
   }
 
@@ -153,7 +154,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
      */ 
     long start = fixedMillis;
     long end = fixedMillis;
-    System.out.println( "Axis (" + getIdentifier() + "): starting IntervalCalculation" );
+    Logger.trace( "Axis (" + getIdentifier() + "): starting IntervalCalculation" );
     if( start >= valueMillis )
     {
       while( start > valueMillis )
@@ -166,7 +167,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
         end += intervalMillis;
       start = end - intervalMillis;
     }
-    System.out.println( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
+    Logger.trace( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
 
     // Start-Zeitpunkt des Wert-Intervalls
     GregorianCalendar startCal = new GregorianCalendar();
@@ -184,7 +185,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
 
     int startPoint = comp.normalizedToScreen( logicalToNormalized( startXMLCal ) );
     int endPoint = comp.normalizedToScreen( logicalToNormalized( endXMLCal ) );
-    System.out.println( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
+    Logger.trace( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
     return new Point( startPoint, endPoint );
   }
 

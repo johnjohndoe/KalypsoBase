@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="http://www.ksp.org/chart/viewerConfiguration"
-     xmlns:kcls="http://www.ksp.org/chart/layerStyle"
+     xmlns="http://www.ksp.org/chart/configuration"
      xs:schemaLocation="
-          http://www.ksp.org/chart/viewerConfiguration ../conf/viewerConfiguration.xsd 
-          http://www.ksp.org/chart/layerStyle ../style/layerStyle.xsd
+          http://www.ksp.org/chart/viewerConfiguration ../conf/newViewerConfig.xsd 
           ">
+
+<Chart name="chart">
+     <title></title>
+     <description></description>
+     <layers>
+          <LayerRef ref="layer"/>
+     </layers>
+</Chart> 
+
+<Layer name="layer">
+     <title></title>
+     <description></description>
+     <provider></provider>
+     <style>
+          <StyleRef ref="layerStyle" />
+     </style>
+     <axes>
+          <DomainAxisRef ref="domainAxis"></DomainAxisRef>
+          <ValueAxisRef ref="valueAxis"></ValueAxisRef>
+     </axes>
+</Layer>
+
+<Style name="layerStyle">
+     <styledElements>
+          <StyledElementRef ref="lineStyle"/> 
+     </styledElements>
+</Style>
+
+<StyledElement name="lineStyle">
+     <alpha>255</alpha>
+     <parameters>
+          <Parameter name="" value=""/>
+     </parameters>
+</StyledElement>
+
+
+<Axis name="domainAxis">
+     <label>Lala</label>
+     <type>DATE</type>
+     <direction>POSITIVE</direction>
+     <position>BOTTOM</position>
+     <minVal>NOW-2600034</minVal>
+     <maxVal>NOW</maxVal>
+</Axis>
+
+<Axis name="valueAxis">
+          <label>Lulu</label>
+          <type>NUMBER</type>
+          <direction>POSITIVE</direction>
+          <position>LEFT</position>
+          <minVal>0</minVal>
+          <maxVal>100</maxVal>
+</Axis>
+
+</Configuration>
+
+<!--
      <Chart name="Test">
           <Title>Test-Chart</Title>
           <Abstract>Dies ist ein Chart zum Testen der Funktionalität - die DataSources werden nicht
@@ -99,9 +154,9 @@
                <DataSource>
                     <Url>http://www.openali.de/kalypso/timeseries.gml</Url>
                </DataSource>
-               <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
+               <!- - Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden 
                <Parameter name="fixedPoint" value="2004-01-01T00:00:00Z"/>
-               <!-- Die Breite eines Bars in Millisekunden -->
+               <!- - Die Breite eines Bars in Millisekunden 
                <Parameter name="barInterval" value="86400000"/>
                <ChartElement name="Niederschlag">
                     <AxisMapping>
@@ -186,9 +241,9 @@
                <DataSource>
                     <Url>http://www.openali.de/kalypso/niederschlag_01.gml</Url>
                </DataSource>
-               <!-- Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden -->
+               <!- - Gibt einen fixen Punkt auf der Achse an, von dem die BarIntervalle gemessen werden 
                <Parameter name="fixedPoint" value="2006-07-01T00:00:00Z"/>
-               <!-- Die Breite eines Bars in Millisekunden - Ein Tag enspricht 86400000 ms-->
+               <!- - Die Breite eines Bars in Millisekunden - Ein Tag enspricht 86400000 ms
                <Parameter name="barInterval" value="800"/>
                <ChartElement name="Wasserstand">
                     <AxisMapping>
@@ -395,4 +450,16 @@
                <HeaderClass>ns_header2</HeaderClass>
           </Component>
      </Table>
+     <Table xmlns="http://www.ksp.org/chart/tableConfiguration" name="">
+          <TableProvider></TableProvider>
+          <DataSource>
+               <Url></Url>
+               <Id></Id>
+          </DataSource>
+          <Component>
+               <Name></Name>
+          </Component>
+     </Table>
 </Configuration>
+
+-->

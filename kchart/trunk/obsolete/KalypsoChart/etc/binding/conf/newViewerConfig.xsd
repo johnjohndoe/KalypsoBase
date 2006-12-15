@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:kcc="http://www.ksp.org/chart/configuration"
+     targetNamespace="http://www.ksp.org/chart/configuration"
+     elementFormDefault="qualified">
+     
+     <element name="Configuration" type="kcc:ConfigurationType"></element>
+     
+    <complexType name="ConfigurationType">
+        <choice minOccurs="0" maxOccurs="unbounded">
+            <element ref="kcc:Chart"></element>
+            <element ref="kcc:Layer"></element>
+            <element ref="kcc:Axis"></element>
+            <element ref="kcc:Style"></element>
+            <element ref="kcc:StyledElement"></element>
+            <element ref="kcc:Table"></element>
+        </choice>
+    </complexType>
+
+
+<!-- Eigentlich ein abstrakter Typ, den alle Elemente von Configuration erweitern sollten;
+    allerdings würde dadurch der ParameterPart ganz oben stehen, und das ist unschön
+    => Jedes Element definiert diese Aspekte für sich selbst -->
+    
+    <complexType name="AbstractConfigurationElement" abstract="true">
+        <sequence>
+            <element ref="kcc:parameters" minOccurs="0"></element>
+        </sequence>
+        <attribute name="name" type="ID" use="required"></attribute>
+    </complexType>
+
+    <element name="Chart" type="kcc:ChartType"></element>
+    
+    <complexType name="ChartType">
+        <sequence>
+            <element name="title" type="string" />            
+            <element name="description" type="string" />            
+            <element name="layers">
+                <complexType>
+                    <sequence>
+                        <element name="LayerRef">
+                            <complexType>
+                                <attribute name="ref" type="IDREF" use="required"/>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>            
+        </sequence>
+        <attribute name="name" type="ID" use="required"></attribute>
+    </complexType>
+    
+
+
+    <element name="Layer">
+        <complexType>
+            <sequence>
+                <element name="title" type="string"></element>
+                <element name="description" type="string"></element>
+                <element ref="kcc:provider"></element>
+                <element name="style">
+                    <complexType>
+                        <sequence>
+                            <element name="StyleRef" type="kcc:RefType" />
+                        </sequence>
+                    </complexType>
+                </element>
+                <element name="axes">
+                    <complexType>
+                        <sequence>
+                            <element name="DomainAxisRef" type="kcc:RefType" />
+                            <element name="ValueAxisRef" type="kcc:RefType" />
+                        </sequence>
+                    </complexType>
+                </element>
+                <element ref="kcc:parameters" minOccurs="0"></element>
+            </sequence>
+            <attribute name="name" type="ID" use="required"></attribute>
+        </complexType>
+    </element>
+
+    <!-- ID of the ExtensionPoint used by the provider -->
+    <element name="provider" type="string"></element>
+    
+    <complexType name="RefType">
+        <attribute name="ref" type="IDREF" use="required"></attribute>
+    </complexType>
+    
+    <element name="Axis">
+        <complexType>
+            <sequence>
+                <element name="label" type="string" />
+                <element name="type">
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="NUMBER" />
+                            <enumeration value="DATE" />
+                            <enumeration value="DATETIME" />
+                        </restriction>
+                    </simpleType>
+                </element>
+                <element name="direction">
+                    <simpleType>
+                            <restriction base="string">
+                                <enumeration value="POSITIVE"></enumeration>
+                                <enumeration value="NEGATIVE"></enumeration>
+                            </restriction>
+                    </simpleType>
+                </element>
+                <element name="position">
+                    <simpleType>
+                            <restriction base="string">
+                                <enumeration value="LEFT"></enumeration>
+                                <enumeration value="RIGHT"></enumeration>
+                                <enumeration value="BOTTOM"></enumeration>
+                                <enumeration value="TOP"></enumeration>
+                            </restriction>
+                    </simpleType>
+                </element>
+                <element name="minVal" type="string" />
+                <element name="maxVal" type="string" />
+                <element ref="kcc:parameters" minOccurs="0" />
+            </sequence>
+            <attribute name="name" type="ID" use="required"></attribute>
+        </complexType>
+        
+    </element>
+  
+    <element name="Style">
+        <complexType>
+            <sequence>
+                <element name="styledElements">
+                    <complexType>
+                        <sequence>
+                            <element name="StyledElementRef" type="kcc:RefType" minOccurs="1" maxOccurs="unbounded"></element>
+                        </sequence>
+                    </complexType>
+                </element>
+            </sequence>
+            <attribute name="name" type="ID"></attribute>
+        </complexType>
+    </element>
+
+    <element name="StyledElement">
+        <complexType>
+            <sequence>
+                <element name="alpha">
+                    <simpleType>
+                        <restriction base="integer">
+                            <minInclusive value="0" />
+                            <maxInclusive value="255" />
+                        </restriction>
+                    </simpleType>
+                </element>
+                <element ref="kcc:parameters"></element>
+            </sequence>
+            <attribute name="name" type="ID"></attribute>
+        </complexType>
+    </element>
+    
+    
+    <element name="parameters">
+        <complexType>
+            <sequence>
+                <element ref="kcc:Parameter" minOccurs="1" maxOccurs="unbounded"></element>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="Parameter">
+        <complexType>
+            <attribute name="name" type="string" use="required"></attribute>
+            <attribute name="value" type="string" use="required"></attribute>
+        </complexType>
+    </element>
+    
+    <element name="Table">
+        <complexType>
+            <sequence>
+                <element name="headerText" type="string" />
+                <element name="headerClass" type="string" />
+                <element name="contentClass" type="string" />
+                <element name="tableColumns" >
+                    <complexType>
+                        <sequence>
+                            <element name="TableColumnRef" maxOccurs="unbounded" type="IDREF" />
+                        </sequence>
+                    </complexType>
+                </element>
+                <element ref="kcc:parameters"/>
+            </sequence>
+            <attribute name="name" type="ID" use="required"></attribute>
+        </complexType>
+    </element>
+
+    <element name="TableColumn">
+        <complexType>
+            <sequence>
+                <element name="headerText" type="string" />
+                <element name="headerClass" type="string" />
+                <element name="contentClass" type="string" />
+                <element ref="kcc:parameters"/>
+            </sequence>
+            <attribute name="name" type="ID" use="required"></attribute>
+        </complexType>
+    </element>
+    
+
+</schema>

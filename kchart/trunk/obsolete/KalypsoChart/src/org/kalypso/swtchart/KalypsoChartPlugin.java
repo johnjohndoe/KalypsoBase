@@ -10,6 +10,9 @@ import org.osgi.framework.BundleContext;
 public class KalypsoChartPlugin extends AbstractUIPlugin
 {
 
+  // The plug-in ID
+  public static final String PLUGIN_ID = "org.kalypso.swtchart";
+  
   // The shared instance.
   private static KalypsoChartPlugin plugin;
 

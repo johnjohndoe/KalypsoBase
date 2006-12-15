@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author schlienger
@@ -139,9 +140,9 @@ public class Legend extends Canvas implements PaintListener
   /**
    * paints the legend into the PaintEvents GC; uses DoubleBuffering
    */
-  public void paintControl( final PaintEvent e )
+  public void paintControl( PaintEvent e )
   {
-    final GCWrapper gcw = new GCWrapper( e.gc );
+    GCWrapper gcw = new GCWrapper( e.gc );
     final Rectangle screenArea = getClientArea();
     m_bufferImg = paintLegend( e.display, gcw, screenArea, m_bufferImg );
     gcw.dispose();
@@ -175,7 +176,7 @@ public class Legend extends Canvas implements PaintListener
    */
   public void drawImage( Image img, Device dev )
   {
-    final GCWrapper buffGc = new GCWrapper( new GC( img ) );
+    GCWrapper buffGc = new GCWrapper( new GC( img ) );
     buffGc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     buffGc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
     try
@@ -212,12 +213,16 @@ public class Legend extends Canvas implements PaintListener
     for( ILegendItem li : m_items )
     {
       Point lisize = li.computeSize( 0, 0 );
+      Logger.trace(li.getName()+" hat Größe "+lisize);
       if( lisize.x > width )
         width = lisize.x;
       height += lisize.y;
+      Logger.trace("Current Legend Size width: "+width+ " height: "+height);
     }
     int tolerance = 5;
-    return new Point( width, height + tolerance );
+    Point size=new Point( width, height + tolerance );
+    Logger.trace("Legend Size: "+size);
+    return size;
   }
 
 }

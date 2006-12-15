@@ -2,10 +2,13 @@ package org.kalypso.swtchart.chart.axis.renderer;
 
 import java.awt.Insets;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.TimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -20,7 +23,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.ChartUtilities;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -28,6 +30,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.util.InsetsHelper;
+import org.kalypso.swtchart.logging.Logger;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -58,7 +61,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
 
   private FontData m_fontDataLabel = new FontData( "Arial", 11, SWT.BOLD );;
 
-  private FontData m_fontDataTick = new FontData( "Arial", 10, SWT.NONE );
+  private FontData m_fontDataTick = new FontData( "Arial", 8, SWT.NONE );
 
   /**
    * @param foreground
@@ -102,9 +105,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     final Insets ihelper = getConvertedInsets( axis, m_tickLabelInsets );
 
     final int x = tickLabelSize.x + ihelper.left + ihelper.right;
-    final int y = tickLabelSize.y + ihelper.top + ihelper.bottom;
+    final int y = 2*tickLabelSize.y + 2*ihelper.top + 2*ihelper.bottom;
 
-    // System.out.println("XMLGregCalAxRend: TickLabelSize: "+x+":"+y);
+    // Logger.trace("XMLGregCalAxRend: TickLabelSize: "+x+":"+y);
     return new Point( x, y );
   }
 
@@ -115,8 +118,21 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setForeground( m_foreground );
 
-    int textX = 0;
-    int textY = 0;
+    int textXDate = 0;
+    int textYDate = 0;
+    int textXTime = 0;
+    int textYTime = 0;
+
+
+
+    SimpleDateFormat dfDate=new SimpleDateFormat( "dd.MM.yy" );
+    SimpleDateFormat dfTime=new SimpleDateFormat( "HH:mm:ss" );
+
+    Calendar cal=Calendar.getInstance();
+    cal.setTimeZone( TimeZone.getTimeZone( "GMT+00:00" ) );
+
+    dfDate.setCalendar( cal );
+    dfTime.setCalendar( cal );
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
@@ -126,13 +142,18 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
       for( final XMLGregorianCalendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
-        final String label = m_df.format( value.toGregorianCalendar().getTimeInMillis() );
-        final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
+        final String labelDate = dfDate.format( value.toGregorianCalendar().getTimeInMillis() );
+        final String labelTime = dfTime.format( value.toGregorianCalendar().getTimeInMillis() );
+        final Point tickExtentDate = getTextExtent( gc, dev, labelDate, m_fontDataTick );
+        final Point tickExtentTime = getTextExtent( gc, dev, labelTime, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
-        textX = tickPos - tickExtent.x / 2;
-        textY = y2 + m_tickLabelInsets.top;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        textXDate = tickPos - tickExtentDate.x / 2;
+        textYDate = y2 + m_tickLabelInsets.top;
+        textXTime = tickPos - tickExtentTime.x / 2;
+        textYTime = y2 + tickExtentDate.y + m_tickLabelInsets.top;
+        drawText( gc, dev, labelDate, textXDate, textYDate, m_fontDataTick );
+        drawText( gc, dev, labelTime, textXTime, textYTime, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -147,9 +168,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
-        textX = tickPos - tickExtent.x / 2;
-        textY = y2 - m_tickLabelInsets.top - tickExtent.y;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        textXDate = tickPos - tickExtent.x / 2;
+        textYDate = y2 - m_tickLabelInsets.top - tickExtent.y;
+        drawText( gc, dev, label, textXDate, textYDate, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.LEFT )
@@ -164,9 +185,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textX = tickPos - x2 - tickExtent.x - m_tickLabelInsets.top;
-        textY = tickPos - tickExtent.y / 2;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        textXDate = tickPos - x2 - tickExtent.x - m_tickLabelInsets.top;
+        textYDate = tickPos - tickExtent.y / 2;
+        drawText( gc, dev, label, textXDate, textYDate, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.RIGHT )
@@ -181,9 +202,9 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textX = x2 + m_tickLabelInsets.top;
-        textY = tickPos - tickExtent.y / 2;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        textXDate = x2 + m_tickLabelInsets.top;
+        textYDate = tickPos - tickExtent.y / 2;
+        drawText( gc, dev, label, textXDate, textYDate, m_fontDataTick );
       }
     }
 
@@ -207,6 +228,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
   /**
    * berechnet die Ticks
    */
+  /*
   public Collection<XMLGregorianCalendar> calcTicks( GCWrapper gc, final Device dev, final IAxis<XMLGregorianCalendar> axis )
   {
     final Point ticklabelSize = calcTickLabelSize( gc, dev, axis );
@@ -225,7 +247,7 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
 
     long logicalInterval = Math.abs( axis.screenToLogical( interval * 2 ).toGregorianCalendar().getTimeInMillis() - axis.screenToLogical( interval ).toGregorianCalendar().getTimeInMillis() );
     logicalInterval = (long) (MathUtils.round( logicalInterval, MathUtils.RoundMethod.UP ));
-    // System.out.println( "Logical Interval= " + logicalInterval );
+    // Logger.trace( "Logical Interval= " + logicalInterval );
 
     final int digits = Math.min( MathUtils.scale( logicalInterval ), m_maxDigits );
 
@@ -243,12 +265,287 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         gregCal.setTime( d );
         // Recalc.gr
         ticks.add( new XMLGregorianCalendarImpl( gregCal ) );
-        // System.out.println("XMLGregorianCalendarAxisTick: "+m_df.format(tickValue));
+        // Logger.trace("XMLGregorianCalendarAxisTick: "+m_df.format(tickValue));
       }
     }
     ticks.add( new XMLGregorianCalendarImpl( axis.getTo().toGregorianCalendar() ) );
     return ticks;
   }
+*/
+
+
+  /**
+   * Calculates the ticks shown for the given Axis
+   */
+  public Collection<XMLGregorianCalendar> calcTicks( GCWrapper gc, Device dev, final IAxis<XMLGregorianCalendar> axis )
+  {
+
+    // größtes Tick<-Label berechnen
+    final Point ticklabelSize = calcTickLabelSize( gc, dev, axis );
+
+    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
+    final int minScreenInterval;
+    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      minScreenInterval = 2 + ticklabelSize.x;
+    else
+      minScreenInterval = 2 + ticklabelSize.y;
+
+    //Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
+    int screenMin, screenMax;
+    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
+      if (axis.getDirection()==DIRECTION.POSITIVE)
+      {
+        screenMin=(int)(axis.logicalToScreen( axis.getFrom()) + Math.ceil(0.5*ticklabelSize.x));
+        screenMax=(int)(axis.logicalToScreen(axis.getTo())-Math.ceil( 0.5*ticklabelSize.x));
+      }
+      else
+      {
+
+        screenMin=(int)(axis.logicalToScreen( axis.getFrom()) - Math.ceil(0.5*ticklabelSize.x));
+        screenMax=(int)(axis.logicalToScreen(axis.getTo()) + Math.ceil( 0.5*ticklabelSize.x));
+      }
+    }
+    else
+    {
+      if (axis.getDirection()==DIRECTION.POSITIVE)
+      {
+        screenMin=(int)(axis.logicalToScreen( axis.getFrom()) - Math.ceil(0.5*ticklabelSize.y));
+        screenMax=(int)(axis.logicalToScreen(axis.getTo())+ Math.ceil(0.5*ticklabelSize.y));
+      }
+      else
+      {
+        screenMin=(int)(axis.logicalToScreen( axis.getFrom()) + Math.ceil(0.5*ticklabelSize.y));
+        screenMax=(int)(axis.logicalToScreen(axis.getTo()) - Math.ceil(0.5*ticklabelSize.y));
+      }
+
+    }
+
+    //Ab jetzt wird nur noch mit long gerechnet
+
+
+    //Debug-Ausgabe
+    Logger.trace("From: " + longToDateString( axis.getFrom().toGregorianCalendar().getTimeInMillis() ));
+    Logger.trace("To: " + longToDateString( axis.getTo().toGregorianCalendar().getTimeInMillis() ));
+
+
+    //logischen mini- und maximalen Wert ermitteln
+    long logicalMin=axis.screenToLogical( screenMin ).toGregorianCalendar().getTimeInMillis();
+    long logicalMax=axis.screenToLogical( screenMax ).toGregorianCalendar().getTimeInMillis();;
+    Logger.trace("Logical Min: " + longToDateString( logicalMin ));
+    Logger.trace("Logical Max: " + longToDateString( logicalMax ));
+
+    double logicalRange=Math.abs( logicalMax-logicalMin) ;
+
+    //der minimale logische Abstand
+    long minLogInterval=Math.abs(axis.screenToLogical( minScreenInterval ).toGregorianCalendar().getTimeInMillis() -axis.screenToLogical( 0 ).toGregorianCalendar().getTimeInMillis() );
+    //ein paar Größen
+    long secondInMillis=1000;
+    long minuteInMillis=secondInMillis*60;
+    long hourInMillis=minuteInMillis*60;
+    long dayInMillis=hourInMillis*24;
+
+
+
+    //letzten Tagesbeginn VOR dem Startdatum
+    long normmin= ( ( logicalMin/dayInMillis) -1) * dayInMillis;
+    //erster Tagesbeginn NACH dem Startdatum
+    long normmax= ( ( logicalMax/dayInMillis) +1) * dayInMillis;
+    Logger.trace("Normmin: " + longToDateString( normmin )+ " sind millis "+normmin);
+    Logger.trace("normmin / day: "+(normmin/dayInMillis)+" normmin % day: "+(normmin%dayInMillis  ));
+
+    Logger.trace("Normmax: " + longToDateString( normmax )+ " sind millis "+normmax);
+    Logger.trace("normmax / day: "+(normmax/dayInMillis)+" normmax % day: "+(normmax%dayInMillis  ));
+
+    //Collection für Ticks
+    HashSet<Long> ticks=new HashSet<Long>();
+
+
+   // findBetweens( normmin, normmax, minLogInterval, ticks );
+
+    int count=0;
+    long oldi=0;
+
+    long goodInterval=dayInMillis;
+    while(goodInterval < minLogInterval)
+    {
+      goodInterval+=dayInMillis;
+    }
+
+
+    for (long i=normmin;i<=normmax;i+=goodInterval)
+    {
+      if (count>0)
+      {
+        findBetweens(oldi, i, minLogInterval, ticks);
+      }
+      ticks.add( i );
+
+      count++;
+      oldi=i;
+    }
+
+
+
+
+    LinkedList<XMLGregorianCalendar> realticks=new LinkedList<XMLGregorianCalendar>();
+    for (Long tick:ticks)
+    {
+      long ticklv=tick.longValue();
+      if (ticklv>=logicalMin && ticklv<=logicalMax)
+      {
+          Logger.trace("Date tick: "+ticklv);
+          GregorianCalendar cal=(GregorianCalendar) GregorianCalendar.getInstance();
+          cal.setTimeInMillis( ticklv );
+          realticks.add(new XMLGregorianCalendarImpl(cal));
+      }
+    }
+
+
+
+
+
+
+
+    return realticks;
+  }
+
+  private String longToDateString(long millis)
+  {
+      Calendar cal=Calendar.getInstance();
+      cal.setTimeZone( TimeZone.getTimeZone( "GMT+00:00" ) );
+      cal.setTimeInMillis( millis );
+      SimpleDateFormat df=new SimpleDateFormat("yy-MM-dd HH:mm");
+      df.setCalendar( cal );
+      String date=df.format( millis );
+
+      return date;
+  }
+
+    /**
+     * recursive function which divides in interval into a number of "divisions" and adds the values to a linked list
+     * the divisions have to have a larger range than the param interval
+     */
+    private void findBetweens(long from, long to, long minInterval, HashSet<Long> ticks)
+    {
+
+      Logger.trace("find Betweens: from: "+from+" to: "+to+" interval: "+minInterval);
+      /*
+      //ein paar grössen
+      final long secondInMillis=1000;
+      final long minuteInMillis=secondInMillis*60;
+      final long hourInMillis=minuteInMillis*60;
+      final long dayInMillis=hourInMillis*24;
+
+      final long range=Math.abs(to-from);
+
+
+
+      long myInterval=0;
+
+
+      //Dauer größer als ein Tag =>
+      if (range>dayInMillis)
+      {
+          Logger.trace("range > day ");
+          myInterval=dayInMillis;
+      }
+      else if (range>hourInMillis)
+      {
+        Logger.trace("range > hour ");
+          myInterval=hourInMillis;
+      }
+      else if (range>minuteInMillis)
+      {
+          Logger.trace("range > minute ");
+          myInterval=minuteInMillis;
+      }
+      else if (range>secondInMillis)
+      {
+        Logger.trace("range > seconds ");
+        myInterval=secondInMillis;
+      }
+      else
+      {
+        Logger.trace("Keine gültige Range in DateAxis: "+range);
+        return;
+      }
+
+
+      if (myInterval>0)
+      {
+        long optInterval=myInterval;
+        while (optInterval<interval)
+        {
+            optInterval+=myInterval;
+        }
+
+        long oldi=0;
+        int count=0;
+        for (long i=from;i<=to;i+=optInterval)
+        {
+          if (count>1)
+          {
+            long newrange=Math.abs( i - oldi);
+            if (newrange >= interval)
+            {
+              findBetweens( oldi, i, interval, ticks );
+            }
+          }
+          ticks.add( i );
+          Logger.trace("added Tick: "+longToDateString( i ));
+          count++;
+          oldi=i;
+        }
+      }
+      */
+
+
+      LinkedList<Integer> divisors=new LinkedList<Integer>();
+      divisors.add(6);
+      divisors.add(4);
+      divisors.add(3);
+      divisors.add(2);
+
+      for (Integer divisor:divisors)
+      {
+        long betweenrange=Math.abs(from-to)/divisor.intValue();
+
+        if (minInterval < betweenrange )
+        {
+            //vorher prüfen
+            int count=0;
+            long oldi=0;
+            for (long i =from;i<=to;i+=betweenrange)
+            {
+              ticks.add( new Long(i) );
+              if (count>=1)
+              {
+                findBetweens(oldi, i, minInterval, ticks);
+              }
+              //Tick setzen
+              count++;
+              oldi=i;
+            }
+            break;
+        }
+      }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   private Point getTextExtent( GCWrapper gc, final Device dev, final XMLGregorianCalendar value, FontData fd )
   {
@@ -444,11 +741,11 @@ public class XMLGregorianCalendarAxisRenderer implements IAxisRenderer<XMLGregor
         if( tr != null )
         {
           gc.setTransform( tr );
-          // System.out.println( "Using Transform: " + tr );
+          // Logger.trace( "Using Transform: " + tr );
         }
         drawText( gc, dev, axis.getLabel(), x, y, m_fontDataLabel );
 
-        // System.out.println( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
+        // Logger.trace( "Axis Label: X=" + x + " Y=" + y + " for " + axis );
       }
       finally
       {

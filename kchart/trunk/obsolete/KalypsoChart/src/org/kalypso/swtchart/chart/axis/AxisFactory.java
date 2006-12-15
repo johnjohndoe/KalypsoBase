@@ -55,10 +55,9 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.NumberAxisRenderer;
-import org.kalypso.swtchart.chart.axis.renderer.TestAxisRenderer;
-import org.kalypso.swtchart.chart.axis.renderer.TestXMLAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.XMLGregorianCalendarAxisRenderer;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.DateAxisType;
 import org.ksp.chart.viewerconfiguration.DoubleAxisType;
@@ -116,8 +115,7 @@ public class AxisFactory
       axis.setTo( da.getMaxVal() );
       if( ar.getRenderer( axis ) == null )
       {
-        IAxisRenderer<Number> numberAxisRenderer = new TestAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
-  //      IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
+        IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick );
         ar.setRenderer( Number.class, numberAxisRenderer );
       }
       //must be called after setting the renderer as the component checks rhe renderer in order to get the margin
@@ -132,15 +130,14 @@ public class AxisFactory
       axis.setTo( da.getMaxVal() );
       if( ar.getRenderer( axis ) == null )
       {
-//        IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
-        IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new TestXMLAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
+        IAxisRenderer<XMLGregorianCalendar> xgcAxisRenderer = new XMLGregorianCalendarAxisRenderer( chart.getFGColor(), chart.getBGColor(), 1, 5, insetsTick, 1, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( "dd.MM.yy" ) );
         ar.setRenderer( XMLGregorianCalendar.class, xgcAxisRenderer );
       }
       ar.addAxis( axis );
     }
     else
     {
-      System.out.println( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
+      Logger.trace( "AxisFactory: Unknown axis type: " + a.getClass().getName() );
     }
   }
 }

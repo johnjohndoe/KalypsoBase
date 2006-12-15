@@ -47,6 +47,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 import org.ksp.chart.viewerconfiguration.ObjectFactory;
 
@@ -92,12 +93,12 @@ public class ConfigurationLoader
       {
         m_config = (ConfigurationType) o;
       }
-      System.out.println( "Configuration geladen" );
-      System.out.println( "loadFile End" );
+      Logger.trace( "Configuration geladen" );
+      Logger.trace( "loadFile End" );
     }
       else
     {
-      System.out.println("ERROR: Der Pfad zur Konfigurationsdatei konnte nicht aufgelöst werden. Bitte überprüfen Sie die Einstellungen. \n"+m_configPath);
+      Logger.trace("ERROR: Der Pfad zur Konfigurationsdatei konnte nicht aufgelöst werden. Bitte überprüfen Sie die Einstellungen. \n"+m_configPath);
     }
   }
 

@@ -49,6 +49,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author schlienger
@@ -92,7 +93,7 @@ public class AxisRegistry implements IAxisRegistry
   {
     // TODO: Exception wieder rein und else raus
     if( m_axes.containsKey( axis.getIdentifier() ) )
-      System.out.println( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
+      Logger.trace( "Axis already present in registry: " + axis.getIdentifier() + " - " + axis.getLabel() );
     // throw new IllegalArgumentException( "Axis already present in registry: " + axis.getIdentifier() + " - " +
     // axis.getLabel() );
     else

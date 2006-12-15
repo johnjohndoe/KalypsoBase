@@ -58,6 +58,7 @@ import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -230,7 +231,7 @@ public class TestStackLayer implements IChartLayer
         }
         else
         {
-          System.out.println( "Teststacklayer: Polygon == null" );
+          Logger.trace( "Teststacklayer: Polygon == null" );
         }
       }
     }

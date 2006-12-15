@@ -58,6 +58,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.tableconfiguration.ComponentType;
@@ -120,12 +121,12 @@ public class ObservationTableProvider implements ITableProvider
       IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
       TupleResult observationResult = obs.getResult();
       
-      System.out.println( "Feature found: " + feature.getId() );
+      Logger.trace( "Feature found: " + feature.getId() );
       return tableFromTupleResult( observationResult );
     }
     else
     {
-      System.out.println( "Feature not found: " + obsId );
+      Logger.trace( "Feature not found: " + obsId );
       return null;
     }
   }

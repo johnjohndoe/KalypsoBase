@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.swtchart.chart.layer.ILayerProvider;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -89,7 +89,7 @@ public class KalypsoTableExtensions
       }
     }
     else
-      System.out.println( "Error: cant find ExtensionRegistry" );
+      Logger.trace( "Error: cant find ExtensionRegistry" );
     return THE_MAP;
   }
 

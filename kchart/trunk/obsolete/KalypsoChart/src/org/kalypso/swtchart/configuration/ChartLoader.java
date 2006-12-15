@@ -54,6 +54,7 @@ import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.LayerProviderException;
 import org.kalypso.swtchart.chart.layer.impl.DoubleDataLayerProvider;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.ChartType;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
@@ -128,7 +129,7 @@ public class ChartLoader
         final IChartLayer[] icl = ddlp.getLayers( context );
         for( IChartLayer layer : icl )
         {
-          System.out.println( "Adding Layer " + layer.getName() );
+          Logger.trace( "Adding Layer " + layer.getName() );
           chart.addLayer( layer );
         }
       }
@@ -145,14 +146,14 @@ public class ChartLoader
             {
               for( final IChartLayer layer : icl )
               {
-                System.out.println( "Adding Layer " + layer.getName() );
+                Logger.trace( "Adding Layer " + layer.getName() );
                 chart.addLayer( layer );
               }
             }
           }
           else
           {
-            System.out.println( "No LayerProvider for " + lpname );
+            Logger.trace( "No LayerProvider for " + lpname );
           }
         }
         catch( final CoreException e )
