@@ -290,6 +290,8 @@ public class ExcelTableCursor extends TableCursor
 
   private final TableViewer m_viewer;
 
+  private Color m_errorColor;
+
   public ExcelTableCursor( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
   {
     super( viewer.getTable(), style );
@@ -299,6 +301,7 @@ public class ExcelTableCursor extends TableCursor
 
     m_cannotEditColor = viewer.getTable().getDisplay().getSystemColor( SWT.COLOR_GRAY );
     m_canEditColor = getBackground();
+    m_errorColor = viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_RED );
 
     // add keylistener to start editing on key pressed
     addKeyListener( m_keyListenerOnTableCursor );
@@ -382,8 +385,7 @@ public class ExcelTableCursor extends TableCursor
     // add the editorListener to the celleditor in order to refocus the
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
-    final Color errorColor = cellEditor.getControl().getDisplay().getSystemColor( SWT.COLOR_RED );
-    cellEditor.addListener( new ValidateCellEditorListener( cellEditor, errorColor ) );
+    cellEditor.addListener( new ValidateCellEditorListener( cellEditor, m_errorColor ) );
 
     // remove potential old listener
     final Control control = cellEditor.getControl();
