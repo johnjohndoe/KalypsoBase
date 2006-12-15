@@ -64,6 +64,7 @@ import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.ODSUtils;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -125,11 +126,11 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           if (cc!=null)
           {
               chart=cc.getChart();
-              System.out.println("GetLegend: Using cached chart");
+              Logger.trace("GetLegend: Using cached chart");
           }
           else
           {
-            System.out.println("GetLegend: Creating new chart");
+            Logger.trace("GetLegend: Creating new chart");
             cc=new CachedChart(reqName);
             ChartCache.getInstance().addObject( reqName, cc );
             chart=cc.getChart();

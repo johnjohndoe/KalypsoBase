@@ -42,9 +42,6 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,12 +50,10 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -69,14 +64,13 @@ import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.ODSUtils;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.ConfigurationType;
 
 /**
@@ -168,12 +162,12 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
         while ( plot.getBounds().height<height)
         {
           c.setSize( c.getSize().x, c.getSize().y+1 );
-          System.out.println("Vergrössere Höhe auf "+plot.getBounds());
+          Logger.trace("Vergrössere Höhe auf "+plot.getBounds());
         }
         while ( plot.getBounds().width<width)
         {
           c.setSize( c.getSize().x+1, c.getSize().y );
-          System.out.println("Vergrössere Breite auf "+plot.getBounds());
+          Logger.trace("Vergrössere Breite auf "+plot.getBounds());
         }
        // plot.setBounds( 0, 0, width, height );
         ODSUtils.setAxisValues( c, m_request );
@@ -188,8 +182,8 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
         IAxis[] axes = ar.getAxes();
         for( IAxis axis : axes )
         {
-          System.out.println(axis.getIdentifier()+": getFrom:"+axis.getFrom());
-          System.out.println(axis.getIdentifier()+": getFrom:"+axis.getTo());
+          Logger.trace(axis.getIdentifier()+": getFrom:"+axis.getFrom());
+          Logger.trace(axis.getIdentifier()+": getFrom:"+axis.getTo());
         } 
         
         if (m_img!=null)

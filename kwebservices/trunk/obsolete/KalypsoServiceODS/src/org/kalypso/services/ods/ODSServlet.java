@@ -18,6 +18,7 @@ import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.services.ods.operation.IODSOperation;
 import org.kalypso.services.ods.operation.ODSException;
 import org.kalypso.services.ods.operation.ODSOperationExtensions;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author Gernot Belger
@@ -89,14 +90,14 @@ public class ODSServlet extends HttpServlet implements Servlet
     //  System.setProperty( "proxyPort",  "8080" );
     //  System.setProperty( "proxySet",  "true" );
      
-     System.out.println("Operation:  "+odsrequest);
+     Logger.trace("Operation:  "+odsrequest);
      
      //bei Anfrage Cache löschen
      String clearcache = request.getParameter( "CLEARCACHE" );
      if (clearcache!=null && clearcache.compareTo( "1" )==0)
      {
        ChartCache.getInstance().clear();
-       System.out.println("Cache cleared");
+       Logger.trace("Cache cleared");
      }
      try
       {

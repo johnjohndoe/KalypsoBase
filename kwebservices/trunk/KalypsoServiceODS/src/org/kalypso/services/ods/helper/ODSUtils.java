@@ -52,6 +52,7 @@ import org.kalypso.swtchart.chart.axis.NumberAxis;
 import org.kalypso.swtchart.chart.axis.XMLGregorianCalendarAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.logging.Logger;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -77,13 +78,13 @@ public class ODSUtils
     } 
     if (minstring!=null)
     {
-      System.out.println("REQUEST: "+minstring);
+      Logger.trace("REQUEST: "+minstring);
       String[] axes = minstring.split( ";" );
       IAxisRegistry ar=c.getAxisRegistry();
       for( String axis : axes )
       {
         String[] axinfo = axis.split( ":" );
-        System.out.println("REQUEST Axis: "+axis);
+        Logger.trace("REQUEST Axis: "+axis);
         IAxis iaxis = ar.getAxis( axinfo[0] );
         if (iaxis !=null)
         {
@@ -101,20 +102,20 @@ public class ODSUtils
             
             iaxis.setFrom( new XMLGregorianCalendarImpl(cal) );
           }
-          System.out.println(iaxis.getIdentifier()+": url from: "+axinfo[1]);
-          System.out.println(iaxis.getIdentifier()+": new from: "+iaxis.getFrom());
+          Logger.trace(iaxis.getIdentifier()+": url from: "+axinfo[1]);
+          Logger.trace(iaxis.getIdentifier()+": new from: "+iaxis.getFrom());
         }
       }
     }
     if (maxstring!=null)
     {
-      System.out.println("REQUEST: "+maxstring);
+      Logger.trace("REQUEST: "+maxstring);
       String[] axes = maxstring.split( ";" );
       IAxisRegistry ar=c.getAxisRegistry();
       for( String axis : axes )
       {
         String[] axinfo = axis.split( ":" );
-        System.out.println("REQUEST Axis: "+axis);
+        Logger.trace("REQUEST Axis: "+axis);
         IAxis iaxis = ar.getAxis( axinfo[0] );
         if (iaxis !=null)
         {
@@ -132,8 +133,8 @@ public class ODSUtils
             
             iaxis.setTo( new XMLGregorianCalendarImpl(cal) );
           }
-          System.out.println(iaxis.getIdentifier()+": url to: "+axinfo[1]);
-          System.out.println(iaxis.getIdentifier()+": new to: "+iaxis.getTo());
+          Logger.trace(iaxis.getIdentifier()+": url to: "+axinfo[1]);
+          Logger.trace(iaxis.getIdentifier()+": new to: "+iaxis.getTo());
         }
       }
     }
@@ -163,7 +164,7 @@ public class ODSUtils
             if (layer.getName().compareTo( reqLayer )==0)
             {
               foundit=true;
-              System.out.println("LAYER GEFUNDEN: "+layer.getName());
+              Logger.trace("LAYER GEFUNDEN: "+layer.getName());
               break;
             }
           }

@@ -42,9 +42,6 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,31 +49,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
-import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.ODSUtils;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
-import org.shiftone.cache.Cache;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -132,11 +117,11 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       if (cc!=null)
       {
           chart=cc.getChart();
-          System.out.println("GetChart: Using cached chart");
+          Logger.trace("GetChart: Using cached chart");
       }
       else
       {
-        System.out.println("GetChart: Creating new chart");
+        Logger.trace("GetChart: Creating new chart");
         cc=new CachedChart(reqName);
         ChartCache.getInstance().addObject( reqName, cc );
         chart=cc.getChart();

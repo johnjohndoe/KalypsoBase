@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -79,7 +80,7 @@ public class DisplayHelper extends Thread
     if( Display.getCurrent() != null )
     {
       m_display = Display.getCurrent();
-      System.out.println( "using current display" );
+      Logger.trace( "using current display" );
 
       // TODO: strange, wurde schon mal aufgerufen? wir sind aber ein singleton
     }
@@ -91,7 +92,7 @@ public class DisplayHelper extends Thread
       if( m_display.getThread() != Thread.currentThread() )
       {
         // TODO: was macher mer denn jetzt?
-        System.out.println( "another thread has the display, what to do?" );
+        Logger.trace( "another thread has the display, what to do?" );
       }
     }
 

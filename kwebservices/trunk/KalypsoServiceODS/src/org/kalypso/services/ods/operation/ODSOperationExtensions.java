@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -64,7 +65,7 @@ public class ODSOperationExtensions
   public static IODSOperation createOperation( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> elts = getOperations();
-    System.out.println("searching for operation: "+id);
+    Logger.trace("searching for operation: "+id);
     
     final IConfigurationElement element = elts.get( id );
     if( element == null )
@@ -87,11 +88,11 @@ public class ODSOperationExtensions
       {
         final String id = element.getAttribute( "id" );
         THE_MAP.put( id, element );
-        System.out.println("adding operation: "+id);
+        Logger.trace("adding operation: "+id);
       }
     }
     else
-      System.out.println( "Error: cant find ExtensionRegistry" );
+      Logger.trace( "Error: cant find ExtensionRegistry" );
     return THE_MAP;
   }
 

@@ -49,6 +49,7 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher1
@@ -74,12 +75,12 @@ public class CachedChart
       {
         String path=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
         ConfigurationLoader cl=new ConfigurationLoader(path);
-        System.out.println("Config-Pfad: "+path);
+        Logger.trace("Config-Pfad: "+path);
         ChartLoader.createChart( m_chart, cl.getConfiguration(), id, null );
       }
       catch( ConfigChartNotFoundException e )
       {
-        System.out.println(e.getMessage());
+        Logger.trace(e.getMessage());
         e.printStackTrace();
       }
       catch( JAXBException e )

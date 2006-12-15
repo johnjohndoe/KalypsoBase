@@ -53,6 +53,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.tableconfiguration.TableType;
 import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.ChartType;
@@ -111,7 +112,7 @@ public class CapabilitiesLoader
    */
   public void loadFile()
   {
-    System.out.println("loadFile Start");
+    Logger.trace("loadFile Start");
       try
       {
         //Capabilities laden
@@ -126,8 +127,8 @@ public class CapabilitiesLoader
           m_caps=(ODSCapabilities)  o;
         }
         else
-          System.out.println("Klasse von Objekt: "+o.getClass().getName());
-        System.out.println("CapabilityDokument geladen");
+          Logger.trace("Klasse von Objekt: "+o.getClass().getName());
+        Logger.trace("CapabilityDokument geladen");
         
         //      ViewerConf
         Object o2 = JCVC.createUnmarshaller().unmarshal( new File(m_configPathVC) );
@@ -141,24 +142,24 @@ public class CapabilitiesLoader
           m_vc=(ConfigurationType)  o2;
         }
         else
-          System.out.println("Klasse von Objekt: "+o2.getClass().getName());
-        System.out.println("ConfDokument geladen");
+          Logger.trace("Klasse von Objekt: "+o2.getClass().getName());
+        Logger.trace("ConfDokument geladen");
         
       }
       catch( JAXBException e )
       {
-        System.out.println("Exception");
+        Logger.trace("Exception");
         e.printStackTrace();
       }
       catch (ClassCastException e)
       {
         e.printStackTrace();
       }
-      System.out.println("loadFile End");
+      Logger.trace("loadFile End");
       if (m_vc!=null)
-        System.out.println("ViewerConf != null");
+        Logger.trace("ViewerConf != null");
       else
-        System.out.println("ViewerConf == null");
+        Logger.trace("ViewerConf == null");
   }
   
   /**
