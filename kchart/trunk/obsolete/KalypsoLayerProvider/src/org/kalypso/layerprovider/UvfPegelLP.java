@@ -224,7 +224,7 @@ public class UvfPegelLP implements ILayerProvider
         Feature feature = workspace.getFeature( "wasserstandsmessung" );
         if( feature != null )
         {
-          System.out.println( "Found feature: " + feature.getId() );
+          Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 

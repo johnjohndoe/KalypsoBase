@@ -69,6 +69,7 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.ParameterType;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
@@ -133,7 +134,7 @@ public class NiederschlagLayer implements IChartLayer
 
     gc.setLineWidth( 5 );
     // gc.drawLine(0,0, 200, 200);
-    System.out.println( "Drawing TupleResultChartLayer" );
+    Logger.trace( "Drawing TupleResultChartLayer" );
 
     StyledPolygon sp = (StyledPolygon) getStyle().getElement( SE_TYPE.POLYGON, 0 );
 
@@ -160,7 +161,7 @@ public class NiederschlagLayer implements IChartLayer
         if( param.getName().compareTo( "barInterval" ) == 0 && param.getValue().length() > 0 )
         {
           barInterval = Double.parseDouble( param.getValue() );
-          System.out.println( "Parsed BarInterval: " + barInterval );
+          Logger.trace( "Parsed BarInterval: " + barInterval );
         }
       }
     }
@@ -177,7 +178,7 @@ public class NiederschlagLayer implements IChartLayer
       fixedGregCal.set( 2000, 0, 1, 0, 0 );
       fixedPoint = new XMLGregorianCalendarImpl( fixedGregCal );
     }
-    System.out.println( "Used BarInterval: " + barInterval );
+    Logger.trace( "Used BarInterval: " + barInterval );
 
     // Daten zum Zeichnen durchlaufen
     int size = m_result.size();
@@ -213,7 +214,7 @@ public class NiederschlagLayer implements IChartLayer
       if( sp != null )
       {
         sp.setPath( path );
-        System.out.println( "Drawing Bar: (" + x1 + ":" + y1 + "):(" + x2 + ":" + y2 + ")" );
+        Logger.trace( "Drawing Bar: (" + x1 + ":" + y1 + "):(" + x2 + ":" + y2 + ")" );
         sp.paint( gc, dev );
       }
     }

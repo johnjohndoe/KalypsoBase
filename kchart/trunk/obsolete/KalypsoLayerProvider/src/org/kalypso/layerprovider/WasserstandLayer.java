@@ -64,6 +64,7 @@ import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author schlienger
@@ -125,7 +126,7 @@ public class WasserstandLayer implements IChartLayer
     int size = m_result.size();
     gc.setLineWidth( 5 );
     // gc.drawLine(0,0, 200, 200);
-    System.out.println( "Drawing TupleResultChartLayer" );
+    Logger.trace( "Drawing TupleResultChartLayer" );
 
     StyledPoint sp = (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 );
     StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
@@ -143,7 +144,7 @@ public class WasserstandLayer implements IChartLayer
       int iy1 = m_valAxis.logicalToScreen( y1 );
       path.add( new Point( ix1, iy1 ) );
 
-  //    System.out.println( "Path: addingPoint...(" + ix1 + ":" + iy1 + ") " );
+  //    Logger.trace( "Path: addingPoint...(" + ix1 + ":" + iy1 + ") " );
     }
     if( sl != null )
     {

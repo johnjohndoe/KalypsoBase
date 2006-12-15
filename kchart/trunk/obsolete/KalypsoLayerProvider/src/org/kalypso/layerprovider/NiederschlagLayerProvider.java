@@ -55,6 +55,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.layerstyle.StyleType;
@@ -127,7 +128,7 @@ public class NiederschlagLayerProvider implements ILayerProvider
         Feature feature = workspace.getFeature( "niederschlagsmessung" );
         if( feature != null )
         {
-          System.out.println( "Found feature: " + feature.getId() );
+          Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 
@@ -154,9 +155,9 @@ public class NiederschlagLayerProvider implements ILayerProvider
              * Componente zurückgegebn
              */
             IComponent comp = comps[i];
-            System.out.println( "Component: " + comp.getName() );
-            System.out.println( "Component: " + comp.getDescription() );
-            System.out.println( "Component: " + comp.getValueTypeName() );
+            Logger.trace( "Component: " + comp.getName() );
+            Logger.trace( "Component: " + comp.getDescription() );
+            Logger.trace( "Component: " + comp.getValueTypeName() );
             if( comp.getName().compareTo( "Datum" ) == 0 )
               map.put( "domain", comp );
             else if( comp.getName().compareTo( "Niederschlag" ) == 0 )

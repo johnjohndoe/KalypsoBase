@@ -42,38 +42,25 @@ package org.kalypso.layerprovider;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
-import org.kalypso.swtchart.chart.layer.impl.DataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledLine;
-import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.viewerconfiguration.ParameterType;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author schlienger
@@ -127,7 +114,7 @@ public class GridLayer implements IChartLayer
 
     gc.setLineWidth( 5 );
     // gc.drawLine(0,0, 200, 200);
-    System.out.println( "Drawing GridLayer" );
+    Logger.trace( "Drawing GridLayer" );
 
     StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
 

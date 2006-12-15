@@ -57,6 +57,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.layerstyle.StyleType;
@@ -123,7 +124,7 @@ public class WQTabelleLayerProvider implements ILayerProvider
         Feature feature = workspace.getFeature( "wq_table1" );
         if( feature != null )
         {
-          System.out.println( "Found feature: " + feature.getId() );
+          Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 

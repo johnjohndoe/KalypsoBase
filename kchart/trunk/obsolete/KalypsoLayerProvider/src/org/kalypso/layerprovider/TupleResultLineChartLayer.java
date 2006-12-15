@@ -233,7 +233,7 @@ public class TupleResultLineChartLayer implements IChartLayer
 
       if( val == null )
       {
-//        System.out.println( rec );
+//        Logger.trace( rec );
       }
       else
       {

@@ -59,6 +59,7 @@ import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.chart.layer.LayerProviderException;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -122,7 +123,7 @@ public class WasserstandLayerProvider implements ILayerProvider
         feature = (Feature) object;
       else
       {
-        System.out.println( "bad path not set: " + xpath );
+        Logger.trace( "bad path not set: " + xpath );
         return layers.toArray( new IChartLayer[layers.size()] );
       }
 
