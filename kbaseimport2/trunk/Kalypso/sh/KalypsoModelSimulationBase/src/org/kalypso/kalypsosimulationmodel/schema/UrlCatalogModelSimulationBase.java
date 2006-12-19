@@ -48,34 +48,61 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 
 /**
- * Catalog which provides the url to the 1d2d schema
+ * Catalog which provides the url to the simulation model base schema.
+ * This schema contains base type and elements to constract other gml 
+ * simulation model schema
  * 
  * @author Patrice Congo
  */
 public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 {
+	/**
+	 * Latest version for schema
+	 */
 	final static public String CURRENT_VERSION="v0.0.0";
-	final static public String SIM_MODEL_REL_PATH=CURRENT_VERSION+"/simulation_model_base.xsd";
+	
+	/**
+	 * path for simulation base schema file
+	 */
+	final static public String SIM_MODEL_REL_PATH=
+								CURRENT_VERSION+"/simulation_model_base.xsd";
+	/**
+	 * Url for simulation base model schema  
+	 */
 	final static public URL SIM_MODEL_SCHEMA_URL=
 					UrlCatalogModelSimulationBase.class.getResource( 
 														SIM_MODEL_REL_PATH );
+	
+	/**
+	 * Namespace for simulation model base 
+	 */
 	final static public String SIM_MODEL_NS="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
+	
+	/**
+	 * Prefix for the simulation model base 
+	 */
 	final static public String SIM_MODEL_NS_PREFIX="simBase";
   
+	
 	/**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
-  @Override
-  protected void fillCatalog( 
-		  				final Class myClass, 
-		  				final Map<String, URL> catalog, 
-		  				Map<String, String> prefixes )
-  {
-	  
-    catalog.put( 
-    			SIM_MODEL_NS, 
-    			myClass.getResource( SIM_MODEL_REL_PATH ) );
-    prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
-  }
+	 *Fills the catalog with the roughness and model simulation base schemas
+	 *schema elements 
+	 *  
+	 * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+	 */
+	  @Override
+	  protected void fillCatalog( 
+			  				final Class myClass, 
+			  				final Map<String, URL> catalog, 
+			  				Map<String, String> prefixes )
+	  {
+		  
+	    catalog.put( 
+	    			SIM_MODEL_NS, 
+	    			myClass.getResource( SIM_MODEL_REL_PATH ) );
+	    prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
+	    
+	    
+	  }
 
 }
