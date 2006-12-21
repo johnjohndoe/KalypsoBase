@@ -65,6 +65,7 @@ import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
 import org.kalypso.swtchart.logging.Logger;
+import org.ksp.chart.configuration.Parameters;
 
 /**
  * @author schlienger
@@ -99,7 +100,7 @@ public class WasserstandLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-  private List<org.ksp.chart.viewerconfiguration.ParameterType> m_params;
+  private Parameters m_params;
 
   private String m_name;
 
@@ -107,7 +108,7 @@ public class WasserstandLayer implements IChartLayer
 
   private boolean m_isVisible=true;
 
-  public WasserstandLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<org.ksp.chart.viewerconfiguration.ParameterType> parameter )
+  public WasserstandLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, Parameters parameter )
   {
     m_result = result;
     m_domComp = domComp;
@@ -143,6 +144,9 @@ public class WasserstandLayer implements IChartLayer
       int ix1 = m_domAxis.logicalToScreen( x1 );
       int iy1 = m_valAxis.logicalToScreen( y1 );
       path.add( new Point( ix1, iy1 ) );
+      
+      if (i>100)
+        break;
 
   //    Logger.trace( "Path: addingPoint...(" + ix1 + ":" + iy1 + ") " );
     }

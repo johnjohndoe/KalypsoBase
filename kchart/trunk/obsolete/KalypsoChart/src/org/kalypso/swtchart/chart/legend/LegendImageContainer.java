@@ -48,9 +48,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.NewChartLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.ksp.chart.configuration.ConfigurationType;
 
 /**
  * @author burtscher
@@ -68,35 +68,6 @@ public class LegendImageContainer
 
   Image m_img = null;
 
-  /**
-   * @param config the marshalled configuration file
-   * @param chartname name of the chart in the configuration file
-   * @param dev Device for which the image shall be created
-   */
-  public LegendImageContainer( ConfigurationType config, String chartname, Device dev ) throws ConfigChartNotFoundException
-  {
-    Shell shell = new Shell();
-    shell.setLayout( new FillLayout() );
-    Legend legend = new Legend( shell, SWT.NONE );
-    Chart chart = new Chart( shell, SWT.NONE );
-    // Chart füllen
-    ChartLoader.createChart( chart, config, chartname, null );
-    // Layer umfüllen
-    legend.addLayers( chart.getLayers() );
-    // Größe berechnen lassen
-    Point size = legend.computeSize( 0, 0 );
-    int height = size.x;
-    int width = size.y;
-    if( width > 0 && height > 0 )
-    {
-      m_img = new Image( dev, size.x, size.y );
-      // Legende zeichnen
-      legend.drawImage( m_img, dev );
-    }
-    chart.dispose();
-    legend.dispose();
-    shell.dispose();
-  }
 
   /**
    * @param chart (preloaded) Chart widget whose legend shall be created

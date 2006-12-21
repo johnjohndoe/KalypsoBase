@@ -43,7 +43,7 @@ package org.kalypso.swtchart.chart.layer;
 import java.net.URL;
 
 import org.kalypso.swtchart.chart.Chart;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
+import org.ksp.chart.configuration.LayerType;
 
 /**
  * @author schlienger
@@ -63,8 +63,8 @@ public interface ILayerProvider
    * @return Array of all layers created by the LayerProvider
    * @param context context path - needed to resolve relative paths from xml configuration
    */
-  public IChartLayer[] getLayers( final URL context ) throws LayerProviderException;
+  public IChartLayer getLayer( final URL context ) throws LayerProviderException;
 
   // TODO: move chart parameter to getLayers
-  public void init( final Chart chart, final LayerProviderType lpt );
+  public void init( final Chart chart, final LayerType lt );
 }

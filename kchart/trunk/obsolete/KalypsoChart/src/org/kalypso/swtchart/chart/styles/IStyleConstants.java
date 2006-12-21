@@ -54,7 +54,7 @@ public interface IStyleConstants
     POINT,
     LINE,
     POLYGON,
-    FONT;
+    TEXT;
   }
 
   /**

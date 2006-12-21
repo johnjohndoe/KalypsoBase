@@ -129,7 +129,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     final int axisContainerStyle = SWT.NONE;
 
-    // 1.1
+    // 1.1 - wird ins erste Feld der ersten Zeile gefüllt
     final Label lbl11 = new Label( parent, SWT.NONE );
     lbl11.setVisible( false );
 
@@ -140,7 +140,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     topAxes.setLayoutData( tad );
     m_axisPlaces.put( POSITION.TOP, topAxes );
 
-    // 1.3
+    // 1.3 - wird ins letzte Feld der ersten Zeile gefüllt
     final Label lbl13 = new Label( parent, SWT.NONE );
     lbl13.setVisible( false );
 
@@ -165,7 +165,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     rightAxes.setLayoutData( rad );
     m_axisPlaces.put( POSITION.RIGHT, rightAxes );
 
-    // 3.1
+    // 3.1 - wird ins erste Feld der letzten Zeile gefüllt
     final Label lbl31 = new Label( parent, SWT.NONE );
     lbl31.setVisible( false );
 
@@ -176,7 +176,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     bottomAxes.setLayoutData( bad );
     m_axisPlaces.put( POSITION.BOTTOM, bottomAxes );
 
-    // 3.3
+    // 3.3 - wird ins letzte Feld der lezten Zeile gefüllt
     final Label lbl33 = new Label( parent, SWT.NONE );
     lbl33.setVisible( false );
   }

@@ -95,45 +95,4 @@ public class StyleHelper
       newpath = new int[0];
     return newpath;
   }
-
-  /**
-   * creates a SE_LINESTYLE enum element from a string 
-   * 
-   * TODO: Dieses Vorgehen ist leicht behindert: zuerst wird aus einem
-   * TODO: There must be a better way: first, a String is transformed into a SE_LINESTYLE,
-   * next (@see linestyleToSWT) the SE_LINESTYLE is transformed into a SWT-Linestyle; "someone"
-   * should check if the separation of these 2 steps is necessary
-   */
-  public static SE_LINESTYLE stringToLinestyle( String ls )
-  {
-    if( ls.compareTo( "SOLID" ) == 0 )
-      return SE_LINESTYLE.SOLID;
-    else if( ls.compareTo( "DOT" ) == 0 )
-      return SE_LINESTYLE.DOT;
-    else if( ls.compareTo( "DASH" ) == 0 )
-      return SE_LINESTYLE.DASH;
-    else if( ls.compareTo( "DASHDOT" ) == 0 )
-      return SE_LINESTYLE.DASHDOT;
-    else if( ls.compareTo( "DASHDOTDOT" ) == 0 )
-      return SE_LINESTYLE.DASHDOTDOT;
-    else
-      return null;
-  }
-
-  /**
-   * creates an SWT line style from a SE_LINESTYLE 
-   */
-  public static int linestyleToSWT( SE_LINESTYLE ls )
-  {
-    if( ls == SE_LINESTYLE.DASH )
-      return SWT.LINE_DASH;
-    else if( ls == SE_LINESTYLE.DOT )
-      return SWT.LINE_DOT;
-    else if( ls == SE_LINESTYLE.DASHDOT )
-      return SWT.LINE_DASHDOT;
-    else if( ls == SE_LINESTYLE.DASHDOTDOT )
-      return SWT.LINE_DASHDOTDOT;
-    else
-      return SWT.LINE_SOLID;
-  }
 }

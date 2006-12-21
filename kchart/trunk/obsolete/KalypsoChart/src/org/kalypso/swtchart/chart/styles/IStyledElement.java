@@ -74,5 +74,6 @@ public interface IStyledElement
    * @return type of the element (point, line, polygon, etc.)
    */
   public SE_TYPE getType( );
+  
 
 }

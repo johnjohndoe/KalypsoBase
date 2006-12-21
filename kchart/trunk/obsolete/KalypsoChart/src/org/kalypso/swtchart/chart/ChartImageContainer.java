@@ -57,9 +57,8 @@ import org.kalypso.swtchart.chart.axis.component.AxisComponent;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.ksp.chart.configuration.ConfigurationType;
 
 /**
  * @author burtscher
@@ -74,24 +73,7 @@ public class ChartImageContainer
   Image m_img = null;
   private Chart m_chart;
 
-  /**
-   * @param config Configuration containing the desired chart
-   * @param chartname name of the desired chart - must be present in given config
-   * @param dev Device for which the image should be created
-   * @param width width of the Image
-   * @param height height of the Image
-   */
-  public ChartImageContainer( ConfigurationType config, String chartname, Device dev, int width, int height ) throws ConfigChartNotFoundException
-  {
-    Shell shell = new Shell();
-    shell.setLayout( new FillLayout() );
-    m_chart = new Chart( shell, SWT.NONE );
-    // Chart füllen
-    ChartLoader.createChart( m_chart, config, chartname, null );
-    createChartImage( m_chart, dev, width, height );
-    m_chart.dispose();
-    shell.dispose();
-  }
+
 
   /**
    * @param pre-loaded chart object

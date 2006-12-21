@@ -64,7 +64,9 @@ import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
-import org.ksp.chart.viewerconfiguration.ParameterType;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.ksp.chart.configuration.ParameterType;
+import org.ksp.chart.configuration.Parameters;
 
 /**
  * @author schlienger
@@ -90,7 +92,6 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-  private List<ParameterType> m_params;
 
   private String m_name = "No name given";
 
@@ -98,14 +99,13 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private boolean m_isVisible=true;
 
-  public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> params )
+  public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis)
   {
     m_result = result;
     m_domComp = domComp;
     m_valComp = valComp;
     m_domAxis = domAxis;
     m_valAxis = valAxis;
-    m_params = params;
   }
 
   /**
@@ -243,7 +243,7 @@ public class TupleResultLineChartLayer implements IChartLayer
           max = val;
       }
     }
-    return new DataRange( min, max );
+    return new DataRange( min, max ); 
 
   }
 

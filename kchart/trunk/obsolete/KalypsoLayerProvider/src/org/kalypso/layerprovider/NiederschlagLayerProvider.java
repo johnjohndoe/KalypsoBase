@@ -42,6 +42,7 @@ package org.kalypso.layerprovider;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -55,17 +56,15 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.configuration.parameters.GregorianCalendarParser;
+import org.kalypso.swtchart.configuration.parameters.NumberParser;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.LayerType;
 import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.DataSourceType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ParameterType;
-import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
-import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 
 /**
  * @author burtscher
@@ -95,7 +94,7 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 public class NiederschlagLayerProvider implements ILayerProvider
 {
 
-  private LayerProviderType m_lpt;
+  private LayerType m_lt;
 
   private Chart m_chart;
 
@@ -104,44 +103,42 @@ public class NiederschlagLayerProvider implements ILayerProvider
 
   }
 
-  public void init( Chart chart, LayerProviderType lpt )
+  public void init( Chart chart, LayerType lt )
   {
-    m_lpt = lpt;
+    m_lt = lt;
     m_chart = chart;
+    
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
-    IChartLayer[] icl = new IChartLayer[1];
-
-    List<DataSourceType> dataSource = m_lpt.getDataSource();
-    for( DataSourceType ds : dataSource )
-    {
-      String url = ds.getUrl();
-
+      IChartLayer icl = null;
+      String configLayerId=m_lt.getName();
+      ParameterHelper ph=new ParameterHelper();
+      ph.addParameters( m_lt.getParameters(), configLayerId);
+    
+    
+      String url = ph.getParameterValue( "url", "" );
+      String observationId=ph.getParameterValue( "observationId", "");
       try
       {
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-        Feature feature = workspace.getFeature( "niederschlagsmessung" );
+        Feature feature = workspace.getFeature( observationId );
         if( feature != null )
         {
           Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 
-        List<ChartElementType> ces = m_lpt.getChartElement();
-        for( ChartElementType ce : ces )
-        {
-          AxisMapping am = ce.getAxisMapping();
+        String domainAxisId= ( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+        String valueAxisId= ( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+        
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
-          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
-
-          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
           TupleResult result = obs.getResult();
 
@@ -151,8 +148,8 @@ public class NiederschlagLayerProvider implements ILayerProvider
           for( int i = 0; i < comps.length; i++ )
           {
             /*
-             * TODO: evtl. ist es nicht klug, die Name-Variable zu verwenden; besser: id, aber das wird nicht von der
-             * Componente zurückgegebn
+             * TODO: 
+             * das sollte nicht hart  codiert sein - besser parameter verwenden
              */
             IComponent comp = comps[i];
             Logger.trace( "Component: " + comp.getName() );
@@ -166,19 +163,15 @@ public class NiederschlagLayerProvider implements ILayerProvider
               break;
           }
 
-          List<ParameterType> parameter = m_lpt.getParameter();
+          
+          // Config-Parameter auslesen
+          GregorianCalendar fixedPoint=ph.getParsedParameterValue( "fixedPoint", "", new GregorianCalendarParser() );
+          long barInterval = ph.getParsedParameterValue( "barInterval", (new Integer(24 * 60 * 60 * 1000)).toString(), new NumberParser() ).longValue();
 
-          NiederschlagLayer trcl = new NiederschlagLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
 
-          final List<StyleLink> styleList = ce.getStyleLink();
-          if( styleList.size() > 0 )
-          {
-            trcl.setStyle( StyleLoader.createStyle( (StyleType) ce.getStyleLink().get( 0 ).getRef() ) );
-            trcl.setName( ce.getName() );
-          }
+          icl = new NiederschlagLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, fixedPoint, barInterval );
+          icl.setName( m_lt.getTitle() );
 
-          icl[0] = trcl;
-        }
 
       }
       catch( MalformedURLException e )
@@ -192,8 +185,6 @@ public class NiederschlagLayerProvider implements ILayerProvider
         e.printStackTrace();
       }
       return icl;
-    }
-    return null;
   }
 
 }

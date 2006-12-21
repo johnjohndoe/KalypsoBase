@@ -55,17 +55,16 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.ParameterType;
+import org.ksp.chart.configuration.Parameters;
 import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.DataSourceType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ParameterType;
-import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
-import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
+import org.ksp.chart.tableconfiguration.DataSourceType;
 
 /**
  * @author burtscher
@@ -85,48 +84,48 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
  */
 public class WasserstandLayerProvider implements ILayerProvider
 {
-  private LayerProviderType m_lpt;
+  private LayerType m_lt;
 
   private Chart m_chart;
 
-  public void init( final Chart chart, final LayerProviderType lpt )
+  public void init( final Chart chart, final LayerType lt )
   {
-    m_lpt = lpt;
+    m_lt = lt;
     m_chart = chart;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
-    IChartLayer[] icl = new IChartLayer[1];
+    IChartLayer icl = null;
 
-    List<DataSourceType> dataSource = m_lpt.getDataSource();
-    for( DataSourceType ds : dataSource )
-    {
-      String url = ds.getUrl();
+    String configLayerId=m_lt.getName();
+    
+    ParameterHelper ph=new ParameterHelper();
+    ph.addParameters( m_lt.getParameters(), configLayerId );
+    
+    String url=ph.getParameterValue( "url", configLayerId, "");
+    String observationId=ph.getParameterValue( "observationId", configLayerId, "" );
+    
 
       try
       {
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-        Feature feature = workspace.getFeature( "wasserstandsmessung" );
+        Feature feature = workspace.getFeature( observationId );
         if( feature != null )
         {
           Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 
-        List<ChartElementType> ces = m_lpt.getChartElement();
-        for( ChartElementType ce : ces )
-        {
-          AxisMapping am = ce.getAxisMapping();
+        String domainAxisId = ( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+        String valueAxisId = ( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+        
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
-          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
-
-          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
           TupleResult result = obs.getResult();
 
@@ -151,16 +150,12 @@ public class WasserstandLayerProvider implements ILayerProvider
               break;
           }
 
-          List<ParameterType> parameter = m_lpt.getParameter();
+          Parameters parameter = m_lt.getParameters();
 
-          WasserstandLayer wl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+          icl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
 
-          final List<StyleLink> styleList = ce.getStyleLink();
-          if( styleList.size() > 0 )
-            wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
-          wl.setName( ce.getName() );
-          icl[0] = wl;
-        }
+          icl.setName( m_lt.getTitle() );
+          
 
       }
       catch( MalformedURLException e )
@@ -174,8 +169,6 @@ public class WasserstandLayerProvider implements ILayerProvider
         e.printStackTrace();
       }
       return icl;
-    }
-    return null;
   }
 
 }

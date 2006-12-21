@@ -42,11 +42,6 @@ package org.kalypso.layerprovider;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
@@ -69,10 +64,10 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.chart.util.AliComparator;
+import org.kalypso.swtchart.configuration.parameters.GregorianCalendarParser;
+import org.kalypso.swtchart.configuration.parameters.NumberParser;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
-import org.ksp.chart.viewerconfiguration.ParameterType;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author schlienger
@@ -107,7 +102,6 @@ public class NiederschlagLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-  private final List<ParameterType> m_parameters;
 
   private String m_name;
 
@@ -115,14 +109,20 @@ public class NiederschlagLayer implements IChartLayer
 
   private boolean m_isVisible=true;
 
-  public NiederschlagLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
+  private GregorianCalendar m_fixedPoint;
+
+  private long m_barInterval;
+
+
+  public NiederschlagLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, GregorianCalendar fixedPoint, long barInterval)
   {
     m_result = result;
     m_domComp = domComp;
     m_valComp = valComp;
     m_domAxis = domAxis;
     m_valAxis = valAxis;
-    m_parameters = parameters;
+    m_barInterval=barInterval;
+    m_fixedPoint=fixedPoint;
   }
 
   /**
@@ -138,48 +138,7 @@ public class NiederschlagLayer implements IChartLayer
 
     StyledPolygon sp = (StyledPolygon) getStyle().getElement( SE_TYPE.POLYGON, 0 );
 
-    // Config-Parameter auslesen
-    double barInterval = 0;
-    XMLGregorianCalendar fixedPoint = null;
-    if( m_parameters != null )
-    {
-      for( ParameterType param : m_parameters )
-      {
-        // parsen des Config-Werts in XMLGregCalendar
-        if( param.getName().compareTo( "fixedPoint" ) == 0 && param.getValue().length() > 0 )
-        {
-          try
-          {
-            DatatypeFactory df = DatatypeFactory.newInstance();
-            fixedPoint = df.newXMLGregorianCalendar( param.getValue() );
-          }
-          catch( DatatypeConfigurationException e )
-          {
-            e.printStackTrace();
-          }
-        }
-        if( param.getName().compareTo( "barInterval" ) == 0 && param.getValue().length() > 0 )
-        {
-          barInterval = Double.parseDouble( param.getValue() );
-          Logger.trace( "Parsed BarInterval: " + barInterval );
-        }
-      }
-    }
-    // Falls noch nicht initialisiert werden nun Standardwerte gesetzt
-    if( barInterval == 0 )
-    {
-      // Intervall: ein Tag in Millisekunden
-      barInterval = 24 * 60 * 60 * 1000;
-    }
-    if( fixedPoint == null )
-    {
-      // Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
-      GregorianCalendar fixedGregCal = new GregorianCalendar();
-      fixedGregCal.set( 2000, 0, 1, 0, 0 );
-      fixedPoint = new XMLGregorianCalendarImpl( fixedGregCal );
-    }
-    Logger.trace( "Used BarInterval: " + barInterval );
-
+   
     // Daten zum Zeichnen durchlaufen
     int size = m_result.size();
     for( int i = 0; i < size; i++ )
@@ -191,7 +150,7 @@ public class NiederschlagLayer implements IChartLayer
       int x1, y1, x2, y2;
       if( m_domAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        Point xs = m_domAxis.logicalToScreenInterval( domVal, fixedPoint, barInterval );
+        Point xs = m_domAxis.logicalToScreenInterval( domVal, m_fixedPoint, m_barInterval );
         x1 = Math.min( xs.x, xs.y );
         x2 = Math.max( xs.x, xs.y );
         y1 = m_valAxis.logicalToScreen( 0 );
@@ -199,7 +158,7 @@ public class NiederschlagLayer implements IChartLayer
       }
       else
       {
-        Point ys = m_domAxis.logicalToScreenInterval( domVal, fixedPoint, barInterval );
+        Point ys = m_domAxis.logicalToScreenInterval( domVal, m_fixedPoint, m_barInterval );
         y1 = Math.min( ys.x, ys.y );
         y2 = Math.max( ys.x, ys.y );
         x1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
@@ -226,7 +185,7 @@ public class NiederschlagLayer implements IChartLayer
    */
   public String getName( )
   {
-    return "Niederschlag";
+    return m_name;
   }
 
   /**

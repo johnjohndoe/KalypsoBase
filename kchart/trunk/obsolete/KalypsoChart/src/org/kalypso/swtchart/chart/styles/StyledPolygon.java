@@ -177,5 +177,10 @@ public class StyledPolygon implements IStyledElement
   {
     return SE_TYPE.POLYGON;
   }
+  
+  public static StyledPolygon getDefault()
+  {
+    return new StyledPolygon( new RGB(230, 230, 230), 1, new RGB(0,0,0), 255);
+  }
 
 }

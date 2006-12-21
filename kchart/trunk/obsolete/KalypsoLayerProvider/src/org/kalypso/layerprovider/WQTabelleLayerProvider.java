@@ -57,17 +57,14 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.LayerType;
 import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.DataSourceType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ParameterType;
-import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
-import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
+
 
 /**
  * @author burtscher
@@ -93,51 +90,50 @@ public class WQTabelleLayerProvider implements ILayerProvider
 
   private Chart m_chart = null;
 
-  private LayerProviderType m_lp = null;
+  private LayerType m_lt = null;
 
   public WQTabelleLayerProvider( )
   {
 
   }
 
-  public void init( Chart chart, LayerProviderType lp )
+  public void init( Chart chart, LayerType lt )
   {
-    m_lp = lp;
+    m_lt = lt;
     m_chart = chart;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
-    IChartLayer[] icl = new IChartLayer[1];
-
-    List<DataSourceType> dataSource = m_lp.getDataSource();
-    for( DataSourceType ds : dataSource )
-    {
-      String url = ds.getUrl();
+    IChartLayer icl=null;
+    String configLayerId=m_lt.getName();
+    
+    ParameterHelper ph=new ParameterHelper();
+    
+    ph.addParameters( m_lt.getParameters(), configLayerId);
+    String url=ph.getParameterValue( "url", configLayerId, "" );
+    String observationId=ph.getParameterValue( "observationId", configLayerId, "" );
+    String domainAxisId=( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+    String valueAxisId=( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+    
 
       try
       {
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-        Feature feature = workspace.getFeature( "wq_table1" );
+        Feature feature = workspace.getFeature( observationId );
         if( feature != null )
         {
           Logger.trace( "Found feature: " + feature.getId() );
         }
         IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
 
-        List<ChartElementType> ces = m_lp.getChartElement();
-        for( ChartElementType ce : ces )
-        {
-          AxisMapping am = ce.getAxisMapping();
 
-          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
-          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
           TupleResult result = obs.getResult();
 
@@ -155,15 +151,11 @@ public class WQTabelleLayerProvider implements ILayerProvider
             if( map.size() == 2 )
               break;
           }
-          List<ParameterType> parameter = m_lp.getParameter();
-          TupleResultLineChartLayer trcl = new TupleResultLineChartLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+          TupleResultLineChartLayer trcl = new TupleResultLineChartLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis);
 
-          final List<StyleLink> styleList = ce.getStyleLink();
-          if( styleList.size() > 0 )
-            trcl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
-          trcl.setName( ce.getName() );
-          icl[0] = trcl;
-        }
+        
+          trcl.setName( m_lt.getTitle() );
+          
       }
       catch( MalformedURLException e )
       {
@@ -173,9 +165,7 @@ public class WQTabelleLayerProvider implements ILayerProvider
       {
         e.printStackTrace();
       }
-      return icl;
-    }
-    return null;
+    return icl;
   }
 
 }

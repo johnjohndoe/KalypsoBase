@@ -43,6 +43,7 @@ package org.kalypso.swtchart.chart.styles;
 import java.util.ArrayList;
 
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author burtscher
@@ -78,7 +79,27 @@ public class LayerStyle implements ILayerStyle
           break;
       }
     }
+    if (elt==null)
+    {
+      Logger.logWarning(Logger.TOPIC_LOG_CONFIG, "No style defined for "+type.toString()+" -> using default style");
+      elt=getDefaultElement(type);
+    }
     return elt;
+  }
+  
+  private IStyledElement getDefaultElement(SE_TYPE type)
+  {
+     if (type.compareTo( SE_TYPE.LINE )==0)
+         return StyledLine.getDefault();
+     else if (type.compareTo( SE_TYPE.POINT )==0)
+       return StyledPoint.getDefault();
+     else if (type.compareTo( SE_TYPE.POLYGON )==0)
+       return StyledPolygon.getDefault();
+     else if (type.compareTo( SE_TYPE.TEXT )==0)
+       return StyledText.getDefault();
+     
+     else
+       return null;
   }
 
 }

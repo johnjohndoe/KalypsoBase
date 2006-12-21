@@ -60,6 +60,7 @@ public class Logger
     public static final String TOPIC_LOG_LEGEND="org.kalypso.chart/debug/legend";
     public static final String TOPIC_LOG_STYLE="org.kalypso.chart/debug/style";
     public static final String TOPIC_TRACE="org.kalypso.chart/trace";
+    public static final String TOPIC_LOG_CONFIG="org.kalypso.chart/debug/config";
   
     private Logger()
     {

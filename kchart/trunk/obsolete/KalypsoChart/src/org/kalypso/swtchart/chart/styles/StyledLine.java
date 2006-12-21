@@ -42,6 +42,7 @@ package org.kalypso.swtchart.chart.styles;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
@@ -68,13 +69,12 @@ public class StyledLine implements IStyledElement
 
   private int m_alpha;
 
-  public StyledLine( int width, RGB lineColor, SE_LINESTYLE style, int alpha )
+  public StyledLine( int width, RGB lineColor, int swtLineStyle, int alpha )
   {
     m_width = width;
     m_path = new ArrayList<Point>();
     m_lineColor = lineColor;
-    m_style = style;
-    m_swtStyle = StyleHelper.linestyleToSWT( m_style );
+    m_swtStyle = swtLineStyle;
     m_alpha = alpha;
   }
 
@@ -112,6 +112,11 @@ public class StyledLine implements IStyledElement
   public SE_TYPE getType( )
   {
     return SE_TYPE.LINE;
+  }
+  
+  public static StyledLine getDefault()
+  {
+    return new StyledLine( 1, new RGB(0,0,0), SWT.LINE_SOLID, 255 );
   }
 
 }

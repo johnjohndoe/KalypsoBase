@@ -58,13 +58,14 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.ksp.chart.tableconfiguration.ComponentType;
-import org.ksp.chart.tableconfiguration.DataSourceType;
-import org.ksp.chart.tableconfiguration.DateComponentType;
-import org.ksp.chart.tableconfiguration.TableType;
+import org.ksp.chart.configuration.RefType;
+import org.ksp.chart.configuration.TableColumnType;
+import org.ksp.chart.configuration.TableType;
+import org.ksp.chart.configuration.TableType.TableColumns;
 
 /**
  * @author burtscher1
@@ -75,6 +76,8 @@ import org.ksp.chart.tableconfiguration.TableType;
 public class ObservationTableProvider implements ITableProvider
 {
   protected TableType m_tableType;
+  private TableColumns m_tableColumns;
+  private URL m_context;
 
   public ObservationTableProvider()
   {
@@ -101,34 +104,49 @@ public class ObservationTableProvider implements ITableProvider
   /**
    * @see org.kalypso.swtchart.table.ITableProvider#init(org.ksp.chart.tableconfiguration.TableType)
    */
-  public void init( TableType tableType )
+  public void init( TableType tableType, URL context )
   {
     m_tableType=tableType;
+    m_context=context;
   }
   
   
   public ITable createTable( ) throws Exception
   {
-    DataSourceType dataSource = m_tableType.getDataSource();
-    String url = dataSource.getUrl();
-    String obsId = dataSource.getId();
+    String id=m_tableType.getName();
 
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-    Feature feature = workspace.getFeature( obsId );
-    if( feature != null )
+    ParameterHelper ph=new ParameterHelper();
+    ph.addParameters( m_tableType.getParameters(), m_tableType.getName());
+    String url = ph.getParameterValue( "dataUrl", id, "");
+    String obsId = ph.getParameterValue( "observationId", id, "");
+
+    if (url.compareTo( "" )!=0 && obsId.compareTo( "" )!=0)
     {
-      
-      IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-      TupleResult observationResult = obs.getResult();
-      
-      Logger.trace( "Feature found: " + feature.getId() );
-      return tableFromTupleResult( observationResult );
+      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
+      Feature feature = workspace.getFeature( obsId );
+      if( feature != null )
+      {
+        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+        TupleResult observationResult = obs.getResult();
+        
+        Logger.trace( "Feature found: " + feature.getId() );
+        return tableFromTupleResult( observationResult );
+      }
+      else
+      {
+        Logger.logError( Logger.TOPIC_LOG_GENERAL, "Observation '" + obsId + "' not found in datasource");
+        return null;
+      }
     }
     else
     {
-      Logger.trace( "Feature not found: " + obsId );
-      return null;
+      if (url.compareTo( "" )!=0)
+        Logger.logError( Logger.TOPIC_LOG_GENERAL, "No dataUrl given.");
+      if (obsId.compareTo( "" )!=0)
+        Logger.logError( Logger.TOPIC_LOG_GENERAL, "No observationId given.");
+        
     }
+    return null;
   }
 
   /**
@@ -140,97 +158,92 @@ public class ObservationTableProvider implements ITableProvider
    */
   protected ITable tableFromTupleResult( TupleResult observationResult )
   {
-    // Parameter auslesen
+    // Tabellen-Parameter auslesen
 
-    String title = m_tableType.getTitle();
-    String titleClass = m_tableType.getTitleClass();
-    String tAbstract = m_tableType.getAbstract();
-    String tAbstractClass = m_tableType.getAbstractClass();
-    String tableClass = m_tableType.getTableClass();
+    String headerText = m_tableType.getHeaderText();
+    String headerClass = m_tableType.getHeaderClass();
+    String descriptionText = m_tableType.getDescriptionText();
+    String descriptionClass = m_tableType.getDescriptionClass();
+    String tableContentClass = m_tableType.getContentClass();
 
+    ParameterHelper columnPH= new ParameterHelper();
     
-    //rausfinden, welche Componenten benötigt werden;
-  
-    //Das sind die Component-Elemente aus dem Configuration
-    List<JAXBElement< ? extends ComponentType>> configComponents = m_tableType.getComponent();
     
-    //... und das die IComponents aus der Observation
+    //.die IComponents aus der Observation
     IComponent[] resultComponents = observationResult.getComponents();
-    
-    //Array mit den Namen der Components - damit die Reihenfolge nicht verloren geht
-    ArrayList<String> orderedNames = new ArrayList<String>();
-    
-    // Map mit Name der Conponente und den gewünschten Components des Results
-    HashMap<String, IComponent> compRMap = new HashMap<String, IComponent>();
-    //Hier werden die IComponents gespeichert, die in der Config angefordert werden 
-    HashMap<String, ComponentType> compTMap = new HashMap<String, ComponentType>();
-    
     // Map mit den CSS-Klassen der Component-Header
     Map<IComponent, String> componentHeaderClasses=new HashMap<IComponent, String>();
     // Map mit den CSS-Klassen der Component-Zelle
     Map<IComponent, String> componentClasses=new HashMap<IComponent, String>();
     // Map mit den Headern der Component-Zelle
     Map<IComponent, String> componentHeaders=new HashMap<IComponent, String>();
+    // Map mit der Zuordnung columnID -> IComponent
+    Map<IComponent, String> componentColumnMap=new HashMap<IComponent, String>();
     
-    /*
-      Durchlaufen der configComponents - das muss in der 
-      äusseren Schleife geschehen, da sonst die Reihenfolge aus der Config
-      nicht beachtet würde
-     */
-    for( JAXBElement configComponent : configComponents )
+    
+    
+    //die einzelnen Tabellenspalten auslesen
+  
+    TableColumns tableColumns = m_tableType.getTableColumns();
+    List<RefType> tableColumnRefs = tableColumns.getTableColumnRef();
+    ArrayList<String> columnNamesOrdered=new ArrayList<String>();
+    
+    
+    //Array für die neuen Components
+    IComponent[] newComponents = new IComponent[tableColumnRefs.size()];
+    
+    
+    //TableColumns durchlaufen, dabei Headers, HeaderClasses, componentClasses und newComponents aufbauen
+    int count=0;
+    for( RefType tableColumnRef : tableColumnRefs )
     {
-      ComponentType compT = (ComponentType) configComponent.getValue();
-      
-      for( int i = 0; i < resultComponents.length; i++ )
+      TableColumnType tct=(TableColumnType) tableColumnRef.getRef();
+      String columnId=tct.getName();
+      String componentId=tct.getComponentId();
+      for (IComponent resultComponent: resultComponents)
       {
-        IComponent compR = resultComponents[i];
-        /*
-         * Vergleich zwischen Component-Name und ItemID
-         */
-        if( compR.getName().compareTo( compT.getName() ) == 0 )
+        if (resultComponent.getId().compareTo( componentId )==0 )
         {
-          String name = compR.getName();
-          orderedNames.add( name );
-          compTMap.put( name, compT );
-          compRMap.put( name, compR );
-          componentHeaderClasses.put( compR, compT.getHeaderClass() );
-          componentHeaders.put( compR, compT.getHeader() );
-          componentClasses.put( compR, compT.getComponentClass() );
+          componentHeaderClasses.put( resultComponent, tct.getHeaderClass() );
+          componentHeaders.put( resultComponent, tct.getHeaderText() );
+          componentClasses.put( resultComponent, tct.getContentClass() );
+          componentColumnMap.put(resultComponent, columnId );
+          newComponents[count]=resultComponent;
+          count++;
           break;
         }
       }
     }
+ 
+    // Map mit Name der Conponente und den gewünschten Components des Results
+    HashMap<String, IComponent> compRMap = new HashMap<String, IComponent>();
+    //Hier werden die IComponents gespeichert, die in der Config angefordert werden 
+    HashMap<String, String> compTMap = new HashMap<String, String>();
     
+
     
-    int newComponentCount = orderedNames.size();
-    int resultSize = observationResult.size();
-    IComponent[] newComponents = new IComponent[newComponentCount];
-    int count=0;
-    //nur diese Componenten in das neue TupleResult bauen
-    for(String name: orderedNames)
-    {
-       newComponents[count]=compRMap.get( name );
-       count++;
-    }
+   
     TupleResult newResult=new TupleResult(newComponents);
     
-    //Aufbau des neuen TupleResults
-    for (int i=0;i<resultSize;i++)
+    //Aufbau des neuen TupleResults - alle Zeilen durchlaufen und bei Bedarf neu Aufbauen
+    for (int i=0;i<observationResult.size();i++)
     {
         IRecord newRecord = newResult.createRecord();
         IRecord oldRecord=observationResult.get( i );
         for (IComponent newComp: newComponents)
         {
           String value="";
-          ComponentType configComponent=compTMap.get(newComp.getName());
-          //Formattierung der Componenten-Werte bei Bedarf
-          if ( configComponent instanceof DateComponentType)
+          
+          String columnId=componentColumnMap.get( newComp );
+          String columnType=columnPH.getParameterValue( "type", columnId, "");
+          
+          if (columnType.compareTo( "DATE" )==0)
           {
-            DateComponentType dateConfigComponent=(DateComponentType) configComponent;
+            String dateFormat=columnPH.getParameterValue( "", columnId, "YYYY.MM.DDThh:ss" );
             XMLGregorianCalendar xmlcal= (XMLGregorianCalendar) oldRecord.getValue( newComp );
             GregorianCalendar cal=xmlcal.toGregorianCalendar();
             Date d = new Date(cal.getTimeInMillis());
-            SimpleDateFormat sdf=new SimpleDateFormat(dateConfigComponent.getDateFormat());
+            SimpleDateFormat sdf=new SimpleDateFormat(dateFormat);
             value= sdf.format(d );
           }
           else
@@ -241,8 +254,7 @@ public class ObservationTableProvider implements ITableProvider
         }
         newResult.add( newRecord );
     }
-    
-    ObservationTable ot=new ObservationTable(tableClass, title, titleClass, tAbstract, tAbstractClass, newResult, componentHeaders, componentHeaderClasses, componentClasses);
+    ObservationTable ot=new ObservationTable(tableContentClass, headerText, headerClass, descriptionText, descriptionClass, newResult, componentHeaders, componentHeaderClasses, componentClasses);
     return ot;
   }
 

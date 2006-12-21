@@ -47,10 +47,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.observation.result.Component;
@@ -61,15 +59,9 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.StyleLoader;
-import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.DataSourceType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ParameterType;
-import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
-import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.LayerType;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -91,42 +83,35 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class UvfPegelLP implements ILayerProvider
 {
-  private LayerProviderType m_lpt;
+  private LayerType m_lt;
 
   private Chart m_chart;
 
-  public void init( final Chart chart, final LayerProviderType lpt )
+  public void init( final Chart chart, final LayerType lpt )
   {
-    m_lpt = lpt;
+    m_lt = lpt;
     m_chart = chart;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
-    IChartLayer[] icl = new IChartLayer[1];
-
-    List<DataSourceType> dataSource = m_lpt.getDataSource();
-    for( DataSourceType ds : dataSource )
-    {
-      String url = ds.getUrl();
+    IChartLayer icl = null;
+    String configLayerId=m_lt.getName();
+    
+    ParameterHelper ph=new ParameterHelper();
+    ph.addParameters( m_lt.getParameters(), configLayerId );
+    
       try
       {
         
-        
-        
-        List<ChartElementType> ces = m_lpt.getChartElement();
-        for( ChartElementType ce : ces )
-        {
-          AxisMapping am = ce.getAxisMapping();
-
-          AbstractAxisType domLink = (AbstractAxisType) am.getDomain().getAxisLink();
-          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domLink.getId() );
-
-          AbstractAxisType valLink = (AbstractAxisType) am.getValue().getAxisLink();
-          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valLink.getId() );
+          String domainAxisId= ( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+          String valueAxisId= ( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+          
+          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
+          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId);
 
           
           Component comp_date=new Component("date", "Datum", "das Datum", "", "frame_datum", new QName( "Datum" ), null);
@@ -134,6 +119,7 @@ public class UvfPegelLP implements ILayerProvider
           TupleResult result = new TupleResult(new Component[] {comp_date, comp_pegel});
           
 //        TODO: umschreiben, damit auch urls verwendet werden können
+          String url=ph.getParameterValue( "url", configLayerId);
           FileReader fr=new FileReader(url);
           
           BufferedReader br=new BufferedReader(fr);
@@ -158,9 +144,9 @@ public class UvfPegelLP implements ILayerProvider
                   int minute=Integer.parseInt( ys.substring( 8, 10 )) ;
                   Calendar cal=GregorianCalendar.getInstance();
                   cal.set( year, month, date, hour, minute );
-                  XMLGregorianCalendar xmlcal=new XMLGregorianCalendarImpl((GregorianCalendar) cal);
+                  //XMLGregorianCalendar xmlcal=new XMLGregorianCalendarImpl((GregorianCalendar) cal);
                   
-                  record.setValue( comp_date, xmlcal);
+                  record.setValue( comp_date, cal);
                   record.setValue( comp_pegel, Integer.parseInt( cols[1]));
                   result.add( record );
                 }
@@ -181,29 +167,11 @@ public class UvfPegelLP implements ILayerProvider
           
 
 
-          List<ParameterType> parameter = m_lpt.getParameter();
 
-          WasserstandLayer wl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, parameter );
+          icl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, m_lt.getParameters() );
 
-          final List<StyleLink> styleList = ce.getStyleLink();
-          if( styleList.size() > 0 )
-            wl.setStyle( StyleLoader.createStyle( (StyleType) styleList.get( 0 ).getRef() ) );
-          wl.setName( ce.getName() );
-          icl[0] = wl;
-        }
+          icl.setName( m_lt.getTitle() );
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
       }
       catch( FileNotFoundException e )
       {
@@ -215,35 +183,8 @@ public class UvfPegelLP implements ILayerProvider
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
 
-      /*
-      try
-      {
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-        Feature feature = workspace.getFeature( "wasserstandsmessung" );
-        if( feature != null )
-        {
-          Logger.trace( "Found feature: " + feature.getId() );
-        }
-        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-
-        
-      }
-      catch( MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      */
-      return icl;
-    }
-    return null;
+    return icl;
   }
 
 }

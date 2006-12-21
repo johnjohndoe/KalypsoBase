@@ -42,23 +42,24 @@ package org.kalypso.swtchart.configuration;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
+import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.LayerStyle;
-import org.kalypso.swtchart.chart.styles.StyleHelper;
 import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.StyledPolygon;
-import org.ksp.chart.layerstyle.AbstractPointType;
-import org.ksp.chart.layerstyle.BorderType;
-import org.ksp.chart.layerstyle.ImagePointType;
-import org.ksp.chart.layerstyle.LineType;
-import org.ksp.chart.layerstyle.PointType;
-import org.ksp.chart.layerstyle.PolygonType;
-import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.kalypso.swtchart.chart.styles.StyledText;
+import org.kalypso.swtchart.configuration.parameters.FontStyleParser;
+import org.kalypso.swtchart.configuration.parameters.IParameterContainer;
+import org.kalypso.swtchart.configuration.parameters.LineStyleParser;
+import org.kalypso.swtchart.configuration.parameters.NumberParser;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.RGBParser;
+import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.RefType;
+import org.ksp.chart.configuration.StyleType;
+import org.ksp.chart.configuration.LayerType.Style;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
@@ -68,115 +69,134 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 public class StyleLoader
 {
 
-  /**
-   * creates a style object by id from configuration file
-   */
-  public static ILayerStyle createStyle( ConfigurationType config, String styleId )
-  {
-    List<StyleType> styles = config.getStyle();
-    if( styles != null )
-    {
-      for( StyleType style : styles )
+   public static ILayerStyle createStyle(LayerType configLayer)
+   {
+     LayerStyle ls=new LayerStyle();
+     
+     List<RefType> styleRefs=null;
+     Style style = configLayer.getStyle();
+     if (style!=null)
+       styleRefs=style.getStyleRef();
+     if (styleRefs!=null)
+     {
+       for( RefType styleRef : styleRefs )
       {
-        if( style.getId().compareTo( styleId ) == 0 )
-          return createStyle( style );
+         StyleType configStyle=(StyleType) styleRef.getRef();
+         IStyledElement ise=createStyledElement( configStyle );
+         if (ise!=null)
+           ls.add( ise );
       }
-    }
-    return null;
-  }
+     }
+     return ls;
+   }
+
 
   /**
    * creates a style object from a configuration styletype object
    */
-  public static ILayerStyle createStyle( StyleType st )
+  public static IStyledElement createStyledElement( StyleType st )
   {
-    LayerStyle ls = new LayerStyle();
+    IStyledElement se=null;
     if( st != null )
     {
-      // Punkte
-      List<JAXBElement< ? extends AbstractPointType>> points = st.getAbstractPoint();
-      if( points != null )
-      {
-        int alpha = 255;
-        for( JAXBElement< ? extends AbstractPointType> jaxbelt : points )
-        {
-          AbstractPointType apt = jaxbelt.getValue();
-          if( apt instanceof PointType )
-          {
-            PointType ot = (PointType) apt;
-            if( ot.getAlpha() != null )
-              alpha = ot.getAlpha();
-            StyledPoint so = new StyledPoint( ot.getPointWidth(), ot.getPointHeight(), createColor( ot.getColor() ), ot.getBorder().getBorderWidth(), createColor( ot.getBorder().getBorderColor() ), alpha );
-            ls.add( so );
-          }
-          else if( apt instanceof ImagePointType )
-          {
-            // TODO;ImagePoints einbauen
-          }
-        }
+      IParameterContainer ph=new ParameterHelper();
+      ph.addParameters( st.getParameters(), st.getName());
+      String type = st.getType();
+      
+      if (type.compareTo( "POINT" )==0)
+      { 
+        se=createPoint(st, ph);
       }
-
-      // Polygone
-      List<PolygonType> polys = st.getPolygon();
-      if( polys != null )
+      else if (type.compareTo( "POLYGON" )==0)
       {
-        for( PolygonType poly : polys )
-        {
-          StyledPolygon sp = createPolygon( poly );
-          ls.add( sp );
-        }
+        se=createPolygon(st, ph);
+        
       }
-
-      // Fonts
-      // TODO:Fonts einbauen
-
-      // Linien
-      List<LineType> lines = st.getLine();
-      if( lines != null )
+      else if (type.compareTo( "LINE" )==0)
       {
-        for( LineType line : lines )
-        {
-          StyledLine sl = createLine( line );
-          ls.add( sl );
-        }
+        se=createLine(st, ph);
+        
+      }
+      else if (type.compareTo( "FONT" )==0)
+      {
+        se=createFont(st, ph);
       }
     }
-
-    return ls;
+    return se;
   }
 
   /**
    * creates a StyledLine object from a style configuration 
    */
-  public static StyledLine createLine( LineType lt )
+  public static StyledLine createLine( StyleType lt, IParameterContainer ph )
   {
-    int alpha = 255;
-    if( lt.getAlpha() != null )
-      alpha = lt.getAlpha();
-    StyledLine sl = new StyledLine( lt.getLineWidth(), createColor( lt.getLineColor() ), StyleHelper.stringToLinestyle( lt.getLineStyle().value() ), alpha );
+    ph.addParameters( lt.getParameters(), lt.getName() );
+    String id=lt.getName();
+    
+    
+    int alpha = ph.getParsedParameterValue( "alpha", "255", id, new NumberParser()).intValue() ;
+    int lineWidth = ph.getParsedParameterValue( "lineWidth", "1", id, new NumberParser()).intValue() ;
+    RGB lineColor = ph.getParsedParameterValue( "lineColor", "#000000", id, new RGBParser());
+    int lineStyle = ph.getParsedParameterValue( "lineStyle", "SOLID", id, new LineStyleParser());
+
+    StyledLine sl = new StyledLine( lineWidth, lineColor, lineStyle, alpha );
     return sl;
   }
 
   /**
    * creates a StyledPolygon object from a style configuration 
    */
-  public static StyledPolygon createPolygon( PolygonType pt )
+  public static StyledPolygon createPolygon( StyleType pt, IParameterContainer ph )
   {
     StyledPolygon sp = null;
     if( pt != null )
     {
-      int borderWidth = 0;
-      RGB borderColor = null;
-      BorderType bt = pt.getBorder();
-      if( bt != null )
-      {
-        borderWidth = bt.getBorderWidth();
-        borderColor = createColor( bt.getBorderColor() );
-      }
-      int alpha = 255;
-      if( pt.getAlpha() != null )
-        alpha = pt.getAlpha();
-      sp = new StyledPolygon( createColor( pt.getFillColor() ), borderWidth, borderColor, alpha );
+      String id=pt.getName();
+      int borderWidth = ph.getParsedParameterValue( "borderWidth", "0", id, new NumberParser() ).intValue();
+      RGB borderColor = ph.getParsedParameterValue( "borderColor", "#000000", id, new RGBParser());
+      RGB fillColor = ph.getParsedParameterValue( "fillColor", "#ffffff", id, new RGBParser());
+      int alpha = ph.getParsedParameterValue( "alpha", "255", id, new NumberParser() ).intValue();
+      sp = new StyledPolygon( fillColor, borderWidth, borderColor, alpha );
+    }
+    return sp;
+  }
+
+  /**
+   * creates a StyledText object from a style configuration 
+   */
+  public static StyledText createFont( StyleType pt, IParameterContainer ph )
+  {
+    StyledText sp = null;
+    if( pt != null )
+    {
+      String id=pt.getName();
+      String fontName = ph.getParameterValue( "fontName", "arial", id);
+      int fontStyle = ph.getParsedParameterValue( "fontName", "NORMAL", id, new FontStyleParser());
+      int fontSize = ph.getParsedParameterValue( "fontSize", "10", id, new NumberParser()).intValue();
+      RGB foregroundColor = ph.getParsedParameterValue( "textColor", "#ffffff", id, new RGBParser());
+      RGB backgroundColor = ph.getParsedParameterValue( "backgroundColor", "#000000", id, new RGBParser());
+      int alpha = ph.getParsedParameterValue( "alpha", "255", id, new NumberParser() ).intValue();
+      sp = new StyledText( foregroundColor, backgroundColor, fontName, fontStyle, fontSize, alpha );
+    }
+    return sp;
+  }
+
+  /**
+   * creates a StyledPoint object from a style configuration 
+   */
+  public static StyledPoint createPoint( StyleType pt, IParameterContainer ph )
+  {
+    StyledPoint sp = null;
+    if( pt != null )
+    {
+      String id=pt.getName();
+      int pointWidth = ph.getParsedParameterValue( "pointWidth", "5", id, new NumberParser()).intValue();
+      int pointHeight = ph.getParsedParameterValue( "pointHeight", "5", id, new NumberParser()).intValue();
+      int borderWidth = ph.getParsedParameterValue( "borderWidth", "1", id, new NumberParser()).intValue();
+      RGB fillColor = ph.getParsedParameterValue( "fillColor", "#ffffff", id, new RGBParser());
+      RGB borderColor = ph.getParsedParameterValue( "borderColor", "#000000", id, new RGBParser());
+      int alpha = ph.getParsedParameterValue( "alpha", "255", id, new NumberParser() ).intValue();
+      sp = new StyledPoint( pointWidth, pointHeight, fillColor, borderWidth, borderColor, alpha );
     }
     return sp;
   }
@@ -214,5 +234,4 @@ public class StyleLoader
     }
     return val;
   }
-
 }

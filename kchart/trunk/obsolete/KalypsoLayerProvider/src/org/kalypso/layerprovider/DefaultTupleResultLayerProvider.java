@@ -49,7 +49,7 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
+import org.ksp.chart.configuration.LayerType;
 
 /**
  * @author schlienger
@@ -73,7 +73,7 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
 
   private String m_valAxisID;
 
-  private LayerProviderType m_lpt;
+  private LayerType m_lt;
 
   private Chart m_chart;
 
@@ -104,25 +104,23 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
     m_valAxisID = valAxisID;
   }
 
-  public void init( Chart chart, LayerProviderType lpt )
+  public void init( Chart chart, LayerType lpt )
   {
-    m_lpt = lpt;
+    m_lt = lpt;
     m_chart = chart;
   }
 
   /**
    * @see de.kalypso.swtchart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
+    IChartLayer icl=null;
     if( m_obs != null )
     {
       final TupleResult result = m_obs.getResult();
-
-      final TupleResultLineChartLayer layer = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ), null );
-      return new IChartLayer[] { layer };
+      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ));
     }
-    else
-      return null;
+    return icl;
   }
 }

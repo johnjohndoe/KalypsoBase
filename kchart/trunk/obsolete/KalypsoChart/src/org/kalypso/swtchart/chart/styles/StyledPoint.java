@@ -108,6 +108,7 @@ public class StyledPoint implements IStyledElement
   {
     ChartUtilities.resetGC( gc.m_gc, dev );
     gc.setAlpha( m_alpha );
+    
     Color borderColor = new Color( dev, m_borderColor );
     Color fillColor = new Color( dev, m_fillColor );
     if( m_path != null )
@@ -132,6 +133,11 @@ public class StyledPoint implements IStyledElement
   public SE_TYPE getType( )
   {
     return SE_TYPE.POINT;
+  }
+  
+  public static StyledPoint getDefault()
+  {
+    return new StyledPoint( 3, 3, new RGB(230, 230, 230), 1, new RGB(0,0,0), 255 );
   }
 
 }

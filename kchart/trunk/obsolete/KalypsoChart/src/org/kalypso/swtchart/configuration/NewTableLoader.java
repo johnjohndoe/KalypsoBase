@@ -56,24 +56,25 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.kalypso.swtchart.table.ITableProvider;
 import org.kalypso.swtchart.table.KalypsoTableExtensions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.ksp.chart.tableconfiguration.ComponentType;
-import org.ksp.chart.tableconfiguration.DataSourceType;
-import org.ksp.chart.tableconfiguration.DateComponentType;
-import org.ksp.chart.tableconfiguration.ObjectFactory;
-import org.ksp.chart.tableconfiguration.TableType;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.configuration.ObjectFactory;
+import org.ksp.chart.configuration.TableType;
+
 
 /**
  * @author burtscher
  *
  * reads an observation and transforms its values into an html table
  */
-public class TableLoader
+public class NewTableLoader
 {
   public final static ObjectFactory OF = new ObjectFactory();
 
@@ -82,45 +83,41 @@ public class TableLoader
    * tries to load the data, creates an html table and returns it as string. Otherwise, it throws a
    * ConfigTableNotFound Exception
    */
-  public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
+  public static String createTable( NewConfigLoader cl, String configTableName, final URL context ) throws ConfigTableNotFoundException
+//  public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
   {
-    List<TableType> tables = config.getTable();
-    TableType foundTable = null;
-    if( tables != null )
-    {
-      for( TableType table : tables )
-      {
-        if( table.getName().compareTo( tableName ) == 0 )
-        {
-          foundTable = table;
-        }
-      }
-    }
+    TableType configTable = null;
+    String tableString="";
 
-    if( foundTable != null )
+    // ChartConfig auslesen
+    if( cl != null )
     {
-      String tableProviderId=foundTable.getTableProvider();
-      try
-      {
-        String htmltable="";
-        ITableProvider provider = KalypsoTableExtensions.createProvider( tableProviderId );
-        if (provider!=null)
-        {
-          provider.init( foundTable );
-          htmltable = provider.getTable().showTable();
-        }
-        return htmltable;
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
+      configTable = cl.getTables().get( configTableName );
+    }
+    if( configTable == null )
+    {
+      throw new ConfigTableNotFoundException( configTableName );
     }
     else
     {
-      throw new ConfigTableNotFoundException( tableName );
-    }
-    return null;
+        String tableProviderId=configTable.getProvider();
+        try
+        {
+          String htmltable="";
+          ITableProvider provider = KalypsoTableExtensions.createProvider( tableProviderId );
+          if (provider!=null)
+          {
+            provider.init( configTable, context );
+            htmltable = provider.getTable().showTable();
+          }
+          return htmltable;
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    return tableString;
   }
 
 

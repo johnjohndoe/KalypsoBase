@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.table;
 
-import org.ksp.chart.tableconfiguration.TableType;
+import java.net.URL;
+
+import org.ksp.chart.configuration.TableType;
+
 
 /**
  * @author burtscher1
@@ -50,6 +53,6 @@ public interface ITableProvider
 {
     public ITable getTable();
     
-    public void init(TableType tableType);
+    public void init(TableType tableType, URL context);
     
 }

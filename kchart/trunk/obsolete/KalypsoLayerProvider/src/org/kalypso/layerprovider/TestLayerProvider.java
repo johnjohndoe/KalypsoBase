@@ -41,23 +41,16 @@
 package org.kalypso.layerprovider;
 
 import java.net.URL;
-import java.util.List;
-import java.util.Vector;
 
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.chart.styles.ILayerStyle;
-import org.kalypso.swtchart.configuration.StyleLoader;
-import org.ksp.chart.layerstyle.StyleType;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.AxisMappingType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
-import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
-import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.LayerType;
+
 
 /**
  * @author burtscher
@@ -66,7 +59,7 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.StyleLink;
 public class TestLayerProvider implements ILayerProvider
 {
 
-  private LayerProviderType m_lpt;
+  private LayerType m_lt;
 
   private Chart m_chart;
 
@@ -75,69 +68,32 @@ public class TestLayerProvider implements ILayerProvider
 
   }
 
-  public TestLayerProvider( LayerProviderType lpt, Chart chart )
-  {
-    m_lpt = lpt;
-    m_chart = chart;
-  }
-
-  public void init( Chart m_chart, LayerProviderType lpt )
+  public void init( Chart m_chart, LayerType lt )
   {
     this.m_chart = m_chart;
-    this.m_lpt = lpt;
+    this.m_lt = lt;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer[] getLayers( URL context )
+  public IChartLayer getLayer( URL context )
   {
     IAxisRegistry ar = m_chart.getAxisRegistry();
-
-    Vector<IChartLayer> layers = new Vector<IChartLayer>();
-
-    List<ChartElementType> ces = m_lpt.getChartElement();
-    for( ChartElementType ce : ces )
-    {
-      // Achsen für Layer herausfinden
-      AxisMapping am = ce.getAxisMapping();
-      // DomainAxis
-      AxisMappingType amt_domain = am.getDomain();
-      AbstractAxisType domainAxis = (AbstractAxisType) amt_domain.getAxisLink();
-      String domainId = domainAxis.getId();
-      // ValueAxis
-      AxisMappingType amt_value = am.getValue();
-      AbstractAxisType valueAxis = (AbstractAxisType) amt_value.getAxisLink();
-      String valueId = valueAxis.getId();
-
-      IAxis domain = ar.getAxis( domainId );
-      IAxis value = ar.getAxis( valueId );
-      IChartLayer cl = null;
-
-      cl = new TestLayer( domain, value );
-
-      final List<StyleLink> styleList = ce.getStyleLink();
-      if( styleList.size() > 0 )
-      {
-        StyleType st = (StyleType) (styleList.get( 0 ).getRef());
-
-        ILayerStyle ls = StyleLoader.createStyle( st );
-
-        cl.setStyle( ls );
-      }
-      cl.setName( ce.getName() );
-
-      layers.add( cl );
-
-    }
-
-    // Und jetzt noch von Vector in Array umrechnen
-    // TODO: Das geht klüger - oder evtl. Interface verändern
-    IChartLayer[] icl = new IChartLayer[layers.size()];
-    for( int i = 0; i < layers.size(); i++ )
-    {
-      icl[i] = layers.get( i );
-    }
+    IChartLayer icl=null;
+    String configLayerId=m_lt.getName();
+    
+    ParameterHelper ph=new ParameterHelper();
+    ph.addParameters(m_lt.getParameters(), configLayerId );
+    
+    // Achsen für Layer herausfinden
+    String domainAxisId= (  (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+    String valueAxisId= (  (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+    
+    IAxis domain = ar.getAxis( domainAxisId );
+    IAxis value = ar.getAxis( valueAxisId );
+    icl = new TestLayer( domain, value );
+    icl.setName( m_lt.getTitle() );
     return icl;
   }
 

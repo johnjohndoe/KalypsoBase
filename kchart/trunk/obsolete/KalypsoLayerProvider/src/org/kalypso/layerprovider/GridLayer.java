@@ -60,7 +60,8 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.logging.Logger;
-import org.ksp.chart.viewerconfiguration.ParameterType;
+import org.ksp.chart.configuration.ParameterType;
+import org.ksp.chart.configuration.Parameters;
 
 /**
  * @author schlienger
@@ -90,7 +91,12 @@ public class GridLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-  private final List<ParameterType> m_parameters;
+  public enum GridOrientation
+  {
+    HORIZONTAL,
+    VERTICAL,
+    BOTH
+  };
 
   private String m_name;
 
@@ -98,11 +104,13 @@ public class GridLayer implements IChartLayer
 
   private boolean m_isVisible=true;
 
-  public GridLayer( IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
+  private GridOrientation m_orientation;
+
+  public GridLayer( IAxis domAxis, IAxis valAxis, GridOrientation orientation )
   {
     m_domAxis = domAxis;
     m_valAxis = valAxis;
-    m_parameters = parameters;
+    m_orientation=orientation;
   }
 
   /**
@@ -126,20 +134,10 @@ public class GridLayer implements IChartLayer
     IAxis valueAxis = getValueAxis();
     Collection valTicks = valueAxis.getRenderer().calcTicks( gc, dev, valueAxis );
 
-    //Orientierung aus Config auswerten; geschieht über den Parameter orientation ("horizontal", "vertical" oder "both")
-    String paramOri="BOTH";
-    for( ParameterType param : m_parameters )
-    {
-      if (param.getName().compareTo("orientation")==0)
-      {
-        paramOri=param.getValue();
-        break;
-      }
-    }
 
     if (domainAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL)
     {
-      if (paramOri.compareTo( "BOTH" )== 0 || paramOri.compareTo( "HORIZONTAL" )== 0)
+      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
       {
         for( Object valtick : valTicks )
         {
@@ -150,7 +148,7 @@ public class GridLayer implements IChartLayer
           sl.paint( gc, dev );
         }
       }
-      if (paramOri.compareTo( "BOTH" )== 0 || paramOri.compareTo( "VERTICAL" )== 0)
+      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL)
       {
         for( Object domtick : domTicks )
         {
@@ -164,7 +162,7 @@ public class GridLayer implements IChartLayer
     }
     else
     {
-      if (paramOri.compareTo( "BOTH" )== 0 || paramOri.compareTo( "HORIZONTAL" )== 0)
+      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
       {
         for( Object valtick : valTicks )
         {
@@ -175,7 +173,7 @@ public class GridLayer implements IChartLayer
           sl.paint( gc, dev );
         }
       }
-      if (paramOri.compareTo( "BOTH" )== 0 || paramOri.compareTo( "VERTICAL" )== 0)
+      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL )
       {
         for( Object domtick : domTicks )
         {

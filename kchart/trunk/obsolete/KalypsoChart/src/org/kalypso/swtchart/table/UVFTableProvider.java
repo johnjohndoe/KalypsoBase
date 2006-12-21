@@ -19,8 +19,8 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.ksp.chart.tableconfiguration.ComponentType;
-import org.ksp.chart.tableconfiguration.TableType;
+import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -38,7 +38,13 @@ public class UVFTableProvider extends ObservationTableProvider implements ITable
   
   public TupleResult createObservation()
   {
-    String url = m_tableType.getDataSource().getUrl();
+    String id=m_tableType.getName();
+    
+    ParameterHelper pm=new ParameterHelper();
+    pm.addParameters( m_tableType.getParameters(), id);
+    
+    
+    String url = pm.getParameterValue( "url", id, "");
     try
     {
 
@@ -46,14 +52,6 @@ public class UVFTableProvider extends ObservationTableProvider implements ITable
         Component comp_date=new Component("date", "Datum", "das Datum", "", "frame_datum", new QName( "Datum" ), null);
         Component comp_pegel=new Component("pegel", "Wasserstand", "der Wasserstand", "cmNN", "frame_pegel",  new QName( "Wasserstand" ), null);
         TupleResult result = new TupleResult(new Component[] {comp_date, comp_pegel});
-        
-        //Config-Components auswerten
-        List<JAXBElement< ? extends ComponentType>> configComponents = m_tableType.getComponent();
-        for( JAXBElement< ? extends ComponentType> configComponent : configComponents )
-        {
-          ComponentType comp= configComponent.getValue();
-          comp.getName();
-        }
         
         
 //      TODO: umschreiben, damit auch urls verwendet werden können
