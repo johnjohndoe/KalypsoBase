@@ -43,7 +43,10 @@ package org.kalypso.services.ods.operation;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,11 +61,13 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.ChartType;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
-import org.ksp.chart.viewerconfiguration.ObjectFactory;
+import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.ObjectFactory;
+import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 
 /**
  * @author burtscher
@@ -75,8 +80,8 @@ public class GetAxesInfo implements IODSOperation
   private HttpServletRequest m_request;
   private HttpServletResponse m_response;
 
-  public final static ObjectFactory m_of = new org.ksp.chart.viewerconfiguration.ObjectFactory();
-  private static final JAXBContext m_JC = JaxbUtilities.createQuiet( org.ksp.chart.viewerconfiguration.ObjectFactory.class );
+  public final static ObjectFactory m_of = new org.ksp.chart.configuration.ObjectFactory();
+  private static final JAXBContext m_JC = JaxbUtilities.createQuiet( org.ksp.chart.configuration.ObjectFactory.class );
   
   public GetAxesInfo()
   {
@@ -100,52 +105,46 @@ public class GetAxesInfo implements IODSOperation
       //    HTMLTabelle erzeugen
       String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
       
-      ConfigurationLoader cl=null;
+      NewConfigLoader cl=null;
         try
         {
-          /*
-          AxisInfoType ait=m_of.createAxisInfoType();
-          */
-          ChartType ct = m_of.createChartType();
-          cl = new ConfigurationLoader(pathVC);
+          ConfigurationType ct = m_of.createConfigurationType();
+          cl = new NewConfigLoader(pathVC);
           ConfigurationType c = cl.getConfiguration();
-          List<ChartType> charts = c.getChart();
-          for( ChartType chart : charts )
+          ChartType configChart = cl.getCharts().get( name );
+          HashMap<String, AxisType> addedAxes=new HashMap<String, AxisType>();
+          
+          List<LayerRef> layerRefs = configChart.getLayers().getLayerRef();
+          for( LayerRef layerRef : layerRefs )
           {
-            if (chart.getName().compareTo( name)==0)
-            {
-             // Chart aic = m_of.createChart();
-              //aic.setName( name );
-              ct.setName( name );
-              
-              //ait.getChart().add( aic );
-              
-              
-                List<JAXBElement< ? extends AbstractAxisType>> axes = chart.getAxis();
-                for( JAXBElement< ? extends AbstractAxisType> axis : axes )
-                {
-                  ct.getAxis().add( axis );
-                   
-//                  ait.getAxis().add( axis );
-                }
-                
-                
-            }
+            LayerType layerType= (LayerType) layerRef.getRef();
+            AxisType domainAxis=(AxisType) layerType.getAxes().getDomainAxisRef().getRef();
+            AxisType valueAxis=(AxisType) layerType.getAxes().getValueAxisRef().getRef();
+            
+            //Die Achsen werden einfach in die Map geschrieben- 
+            //falls eine schon drin ist, wird sie halt überschrieben
+            addedAxes.put( domainAxis.getName(), domainAxis);
+            addedAxes.put( valueAxis.getName(), valueAxis);
+            
           }
           
+          Set<String> axisNames = addedAxes.keySet();
+          for( String axisName : axisNames )
+          {
+            ct.getChartOrLayerOrAxis().add( addedAxes.get(axisName) );
+          }
           
           
           final PrintWriter out=m_response.getWriter();
           m_response.setContentType( "text/xml" );
           
           StringWriter sw=new StringWriter();
-        //  JAXBContext jc=JAXBContext.newInstance( "org.ksp.ods.axesinfo" );
-        //  Marshaller m= jc.createMarshaller();
+        
           
-          JAXBElement<ChartType> chart = m_of.createChart( ct );
+          JAXBElement<ConfigurationType> outputConfigType = m_of.createConfiguration( ct );
           Marshaller m= m_JC.createMarshaller();
           m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-          m.marshal(chart, sw);
+          m.marshal(outputConfigType, sw);
           String infoString=sw.toString();
           
           sw.close();

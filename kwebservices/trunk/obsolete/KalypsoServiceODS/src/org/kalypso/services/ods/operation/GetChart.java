@@ -169,13 +169,14 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
             }
 
           }
+   //       cc.dispose();
         }
         else
         {
           ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
         }
       }
-
+      
 
     }
     else

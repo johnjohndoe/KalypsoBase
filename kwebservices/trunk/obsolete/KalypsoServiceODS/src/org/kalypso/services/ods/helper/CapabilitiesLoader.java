@@ -43,8 +43,10 @@ package org.kalypso.services.ods.helper;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
@@ -53,12 +55,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.swtchart.configuration.NewChartLoader;
+import org.kalypso.swtchart.configuration.NewConfigLoader;
 import org.kalypso.swtchart.logging.Logger;
-import org.ksp.chart.tableconfiguration.TableType;
-import org.ksp.chart.viewerconfiguration.ChartElementType;
-import org.ksp.chart.viewerconfiguration.ChartType;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
-import org.ksp.chart.viewerconfiguration.LayerProviderType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.configuration.TableType;
+import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 import org.ksp.ods.capabilities.DCPType;
 import org.ksp.ods.capabilities.DataURL;
 import org.ksp.ods.capabilities.Diagram;
@@ -85,15 +88,14 @@ import org.ksp.ods.capabilities.Table;
 public class CapabilitiesLoader
 {
   public final static org.ksp.ods.capabilities.ObjectFactory m_ofCap = new org.ksp.ods.capabilities.ObjectFactory();
-  public final static org.ksp.chart.viewerconfiguration.ObjectFactory m_ofVC = new org.ksp.chart.viewerconfiguration.ObjectFactory();
   private static final JAXBContext JCCaps = JaxbUtilities.createQuiet( org.ksp.ods.capabilities.ObjectFactory.class );
-  private static final JAXBContext JCVC = JaxbUtilities.createQuiet( org.ksp.chart.viewerconfiguration.ObjectFactory.class );
+  private static final JAXBContext JCVC = JaxbUtilities.createQuiet( org.ksp.chart.configuration.ObjectFactory.class );
   
   private String m_configPathCaps;
   private String m_configPathVC;
   private ODSCapabilities m_caps=null;
-  private ConfigurationType m_vc=null;
   private HttpServletRequest m_request=null;
+  private NewConfigLoader m_cl;
   
   
 
@@ -130,20 +132,8 @@ public class CapabilitiesLoader
           Logger.trace("Klasse von Objekt: "+o.getClass().getName());
         Logger.trace("CapabilityDokument geladen");
         
-        //      ViewerConf
-        Object o2 = JCVC.createUnmarshaller().unmarshal( new File(m_configPathVC) );
-        if (o2 instanceof JAXBElement)
-        {
-          Object child=((JAXBElement) o2).getValue();
-          m_vc=(ConfigurationType) child;
-        }
-        else if (o2 instanceof ConfigurationType)
-        {
-          m_vc=(ConfigurationType)  o2;
-        }
-        else
-          Logger.trace("Klasse von Objekt: "+o2.getClass().getName());
-        Logger.trace("ConfDokument geladen");
+        //ViewerConf
+        m_cl=new NewConfigLoader(m_configPathVC);
         
       }
       catch( JAXBException e )
@@ -156,10 +146,6 @@ public class CapabilitiesLoader
         e.printStackTrace();
       }
       Logger.trace("loadFile End");
-      if (m_vc!=null)
-        Logger.trace("ViewerConf != null");
-      else
-        Logger.trace("ViewerConf == null");
   }
   
   /**
@@ -237,17 +223,18 @@ public class CapabilitiesLoader
     
 
     
-    
     //Diagramme anhängen
-    List<ChartType> charts = m_vc.getChart();
+    HashMap<String, ChartType> charts = m_cl.getCharts();    
+    Set<String> chartIds = charts.keySet();
     List<Diagram> diagrams = new LinkedList<Diagram>();
     if (charts!=null)
     {
-      for( ChartType chart : charts )
+      for( String chartId : chartIds )
       {
+        ChartType chart=charts.get(chartId);
         String name= chart.getName();
         String title = chart.getTitle();
-        String cabstract = chart.getAbstract();
+        String cabstract = chart.getDescription();
         
 //      URL und Format erzeugen 
         String operation="GetDiagram";
@@ -266,26 +253,21 @@ public class CapabilitiesLoader
         //Layers layersElt = diagram.getLayers();
         
         Layers layers = m_ofCap.createLayers();
-   //     Layers layers = diagram.getLayers();
-        
-        
         List<LayerType> layerTypes = layers.getLayer();
         
-        List<LayerProviderType> layerProviders = chart.getLayerProvider();
-        for( LayerProviderType lp : layerProviders )
+        List<LayerRef> layerRefs = chart.getLayers().getLayerRef();
+        for( LayerRef layerRef : layerRefs )
         {
-          List<ChartElementType> ces = lp.getChartElement();
-          for( ChartElementType ce : ces )
-          {
-            String ceName = ce.getName();
-            LayerType layer = m_ofCap.createLayerType(); 
-            layer.setLayerName( ceName );
-            layer.setLayerDescription( "" );
-            layerTypes.add( layer );
-          }
+          org.ksp.chart.configuration.LayerType lt = (org.ksp.chart.configuration.LayerType) layerRef.getRef();
+          String ltName = lt.getTitle();
+          String ltDescription = lt.getDescription();
+          LayerType layer = m_ofCap.createLayerType(); 
+          layer.setLayerName( ltName );
+          layer.setLayerDescription( ltDescription );
+          layerTypes.add( layer );
         }
-        diagram.setLayers( layers );
         
+        diagram.setLayers( layers );
         diagrams.add(diagram);
       }
     }
@@ -301,11 +283,12 @@ public class CapabilitiesLoader
     List<Legend> legends = new LinkedList<Legend>();
     if (charts!=null)
     {
-      for( ChartType chart : charts )
+      for( String chartId : chartIds )
       {
+        ChartType chart=charts.get(chartId);
         String name= chart.getName();
         String title = chart.getTitle();
-        String cabstract = chart.getAbstract();
+        String cabstract = chart.getDescription();
         
 //      URL und Format erzeugen 
         String operation="GetLegend";
@@ -332,15 +315,18 @@ public class CapabilitiesLoader
     
 
     //Tabellen anhängen
-    List<TableType> vctables = m_vc.getTable();
+    HashMap<String, TableType> vctables = m_cl.getTables();
+    Set<String> tableIds = vctables.keySet();
+    
     List<Table> captables = new LinkedList<Table>();
     if (vctables!=null)
     {
-      for( TableType table : vctables )
+      for (String tableId:tableIds)
       {
-        String name= table.getName();
-        String title = table.getTitle();
-        String tabstract = table.getAbstract();
+        TableType vctable=vctables.get(tableId);
+        String name= vctable.getName();
+        String title = vctable.getHeaderText();
+        String tabstract = vctable.getDescriptionText();
         
         Table captable = m_ofCap.createTable();
         captable.setName(name);
@@ -356,7 +342,6 @@ public class CapabilitiesLoader
         captable.getDataURL().add( dataURL );
         
         captables.add(captable);
-        
       }
     }
     if (captables.size()>0)
