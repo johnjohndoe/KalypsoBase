@@ -1,11 +1,14 @@
 package org.kalypso.contribs.eclipse.swt.graphics;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.GCData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
@@ -388,5 +391,146 @@ public class GCWrapper
   public void setTransform( Transform transform )
   {
     m_gc.setTransform( transform );
+  }
+
+  /**
+   * @param srcX
+   * @param srcY
+   * @param width
+   * @param height
+   * @param destX
+   * @param destY
+   * @param paint
+   * @see org.eclipse.swt.graphics.GC#copyArea(int, int, int, int, int, int, boolean)
+   */
+  public void copyArea( int srcX, int srcY, int width, int height, int destX, int destY, boolean paint )
+  {
+    m_gc.copyArea( srcX, srcY, width, height, destX, destY, paint );
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getAdvanced()
+   */
+  public boolean getAdvanced( )
+  {
+    return m_gc.getAdvanced();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getAntialias()
+   */
+  public int getAntialias( )
+  {
+    return m_gc.getAntialias();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getBackgroundPattern()
+   */
+  public Pattern getBackgroundPattern( )
+  {
+    return m_gc.getBackgroundPattern();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.Resource#getDevice()
+   */
+  public Device getDevice( )
+  {
+    return m_gc.getDevice();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getForegroundPattern()
+   */
+  public Pattern getForegroundPattern( )
+  {
+    return m_gc.getForegroundPattern();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getGCData()
+   */
+  public GCData getGCData( )
+  {
+    return m_gc.getGCData();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getInterpolation()
+   */
+  public int getInterpolation( )
+  {
+    return m_gc.getInterpolation();
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.swt.graphics.GC#getTextAntialias()
+   */
+  public int getTextAntialias( )
+  {
+    return m_gc.getTextAntialias();
+  }
+
+  /**
+   * @param advanced
+   * @see org.eclipse.swt.graphics.GC#setAdvanced(boolean)
+   */
+  public void setAdvanced( boolean advanced )
+  {
+    m_gc.setAdvanced( advanced );
+  }
+
+  /**
+   * @param antialias
+   * @see org.eclipse.swt.graphics.GC#setAntialias(int)
+   */
+  public void setAntialias( int antialias )
+  {
+    m_gc.setAntialias( antialias );
+  }
+
+  /**
+   * @param pattern
+   * @see org.eclipse.swt.graphics.GC#setBackgroundPattern(org.eclipse.swt.graphics.Pattern)
+   */
+  public void setBackgroundPattern( Pattern pattern )
+  {
+    m_gc.setBackgroundPattern( pattern );
+  }
+
+  /**
+   * @param pattern
+   * @see org.eclipse.swt.graphics.GC#setForegroundPattern(org.eclipse.swt.graphics.Pattern)
+   */
+  public void setForegroundPattern( Pattern pattern )
+  {
+    m_gc.setForegroundPattern( pattern );
+  }
+
+  /**
+   * @param interpolation
+   * @see org.eclipse.swt.graphics.GC#setInterpolation(int)
+   */
+  public void setInterpolation( int interpolation )
+  {
+    m_gc.setInterpolation( interpolation );
+  }
+
+  /**
+   * @param antialias
+   * @see org.eclipse.swt.graphics.GC#setTextAntialias(int)
+   */
+  public void setTextAntialias( int antialias )
+  {
+    m_gc.setTextAntialias( antialias );
   }
 }
