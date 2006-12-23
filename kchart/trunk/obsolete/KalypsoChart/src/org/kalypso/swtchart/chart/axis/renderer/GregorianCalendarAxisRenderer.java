@@ -126,7 +126,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
 
 
 
-    SimpleDateFormat dfDate=new SimpleDateFormat( "dd.MM.yy" );
+    SimpleDateFormat dfDate=new SimpleDateFormat( "dd.MM.yy\nHH:mm:ss" );
     SimpleDateFormat dfTime=new SimpleDateFormat( "HH:mm:ss" );
 
     Calendar cal=Calendar.getInstance();
@@ -154,7 +154,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
         textXTime = tickPos - tickExtentTime.x / 2;
         textYTime = y2 + tickExtentDate.y + m_tickLabelInsets.top;
         drawText( gc, dev, labelDate, textXDate, textYDate, m_fontDataTick );
-        drawText( gc, dev, labelTime, textXTime, textYTime, m_fontDataTick );
+    //    drawText( gc, dev, labelTime, textXTime, textYTime, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -186,7 +186,8 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = tickPos - x2 - tickExtent.x - m_tickLabelInsets.top;
+       // textXDate = tickPos - x2 - tickExtent.x - m_tickLabelInsets.top;
+        textXDate = x1 - tickExtent.x - m_tickLabelInsets.right - m_tickLength;
         textYDate = tickPos - tickExtent.y / 2;
         drawText( gc, dev, label, textXDate, textYDate, m_fontDataTick );
       }
@@ -203,7 +204,8 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
         final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = x2 + m_tickLabelInsets.top;
+        textXDate = tickPos - x2 + m_tickLabelInsets.top;
+        textXDate = x1 + m_tickLabelInsets.left + m_tickLength;
         textYDate = tickPos - tickExtent.y / 2;
         drawText( gc, dev, label, textXDate, textYDate, m_fontDataTick );
       }
@@ -537,7 +539,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
       if( axis.getPosition() == POSITION.RIGHT )
         startX = screen.x + m_gap;
       else
-        startX = screen.x + screen.width - m_gap;
+        startX = screen.x + screen.width - m_gap -1;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
