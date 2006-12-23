@@ -128,61 +128,50 @@ public class GridLayer implements IChartLayer
 
     ArrayList<Point> path = new ArrayList<Point>();
 
-    IAxis domainAxis = getDomainAxis();
-    Collection domTicks = domainAxis.getRenderer().calcTicks( gc, dev, domainAxis );
+    IAxis hAxis = null;
+    IAxis vAxis = null;
 
-    IAxis valueAxis = getValueAxis();
-    Collection valTicks = valueAxis.getRenderer().calcTicks( gc, dev, valueAxis );
-
-
-    if (domainAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL)
+    //Welche ist die horizontale, welche die horizontale Achse?
+    if (getDomainAxis().getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
     {
-      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
-      {
-        for( Object valtick : valTicks )
-        {
-          path.clear();
-          path.add( new Point(domainAxis.logicalToScreen(domainAxis.getFrom()), valueAxis.logicalToScreen( valtick )) );
-          path.add( new Point(domainAxis.logicalToScreen(domainAxis.getTo()), (int) valueAxis.logicalToScreen( valtick )) );
-          sl.setPath( path );
-          sl.paint( gc, dev );
-        }
-      }
-      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL)
-      {
-        for( Object domtick : domTicks )
-        {
-          path.clear();
-          path.add( new Point(domainAxis.logicalToScreen(domtick), valueAxis.logicalToScreen( valueAxis.getFrom() )) );
-          path.add( new Point(domainAxis.logicalToScreen(domtick), (int) valueAxis.logicalToScreen( valueAxis.getTo() )) );
-          sl.setPath( path );
-          sl.paint( gc, dev );
-        }
-      }
+       hAxis=getDomainAxis();
+       vAxis=getValueAxis();
     }
     else
     {
-      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
-      {
-        for( Object valtick : valTicks )
+      hAxis=getValueAxis();
+      vAxis=getDomainAxis();
+    }
+
+
+    //von links nach rechts zeichnen
+    if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
+    {
+        Collection vTicks = vAxis.getRenderer().getTicks( vAxis );
+        int xfrom=hAxis.logicalToScreen(hAxis.getFrom());
+        int xto=hAxis.logicalToScreen(hAxis.getTo());
+        for( Object vTick : vTicks )
         {
           path.clear();
-          path.add( new Point(valueAxis.logicalToScreen( valtick ), domainAxis.logicalToScreen(domainAxis.getFrom()) ));
-          path.add( new Point((int) valueAxis.logicalToScreen( valtick ), domainAxis.logicalToScreen(domainAxis.getTo()) ));
+          path.add( new Point(xfrom, vAxis.logicalToScreen( vTick )) );
+          path.add( new Point(xto, vAxis.logicalToScreen( vTick )) );
           sl.setPath( path );
           sl.paint( gc, dev );
         }
-      }
-      if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL )
+    }
+    //von unten nach oben zeichnen
+    if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL)
+    {
+      Collection hTicks = hAxis.getRenderer().getTicks( hAxis );
+      int yfrom= vAxis.logicalToScreen(vAxis.getFrom() ) ;
+      int yto=vAxis.logicalToScreen(vAxis.getTo() );
+      for( Object hTick : hTicks )
       {
-        for( Object domtick : domTicks )
-        {
-          path.clear();
-          path.add( new Point(valueAxis.logicalToScreen( valueAxis.getFrom() ), domainAxis.logicalToScreen(domtick) ));
-          path.add( new Point((int) valueAxis.logicalToScreen( valueAxis.getTo() ), domainAxis.logicalToScreen(domtick)) );
-          sl.setPath( path );
-          sl.paint( gc, dev );
-        }
+        path.clear();
+        path.add( new Point(hAxis.logicalToScreen( hTick ),yfrom) );
+        path.add( new Point(hAxis.logicalToScreen( hTick ), yto ) );
+        sl.setPath( path );
+        sl.paint( gc, dev );
       }
     }
 

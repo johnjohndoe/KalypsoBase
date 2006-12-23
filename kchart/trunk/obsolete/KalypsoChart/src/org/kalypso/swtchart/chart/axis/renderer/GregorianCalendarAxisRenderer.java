@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TimeZone;
@@ -60,6 +61,8 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
   private FontData m_fontDataLabel = new FontData( "Arial", 11, SWT.BOLD );;
 
   private FontData m_fontDataTick = new FontData( "Arial", 8, SWT.NONE );
+
+  private HashMap<IAxis<GregorianCalendar>, Collection<GregorianCalendar>> m_tickMap=new HashMap<IAxis<GregorianCalendar>, Collection<GregorianCalendar>>();
 
   /**
    * @param foreground
@@ -223,7 +226,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
     return ihelper;
   }
 
-  
+
 
   /**
    * Calculates the ticks shown for the given Axis
@@ -276,15 +279,15 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
 
 
     //Debug-Ausgabe
-    Logger.trace("From: " + longToDateString( axis.getFrom().getTimeInMillis() ));
-    Logger.trace("To: " + longToDateString( axis.getTo().getTimeInMillis() ));
+ //   Logger.trace("From: " + longToDateString( axis.getFrom().getTimeInMillis() ));
+ //   Logger.trace("To: " + longToDateString( axis.getTo().getTimeInMillis() ));
 
 
     //logischen mini- und maximalen Wert ermitteln
     long logicalMin=axis.screenToLogical( screenMin ).getTimeInMillis();
     long logicalMax=axis.screenToLogical( screenMax ).getTimeInMillis();;
-    Logger.trace("Logical Min: " + longToDateString( logicalMin ));
-    Logger.trace("Logical Max: " + longToDateString( logicalMax ));
+ //   Logger.trace("Logical Min: " + longToDateString( logicalMin ));
+ //   Logger.trace("Logical Max: " + longToDateString( logicalMax ));
 
     double logicalRange=Math.abs( logicalMax-logicalMin) ;
 
@@ -302,11 +305,11 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
     long normmin= ( ( logicalMin/dayInMillis) -1) * dayInMillis;
     //erster Tagesbeginn NACH dem Startdatum
     long normmax= ( ( logicalMax/dayInMillis) +1) * dayInMillis;
-    Logger.trace("Normmin: " + longToDateString( normmin )+ " sind millis "+normmin);
-    Logger.trace("normmin / day: "+(normmin/dayInMillis)+" normmin % day: "+(normmin%dayInMillis  ));
+ //   Logger.trace("Normmin: " + longToDateString( normmin )+ " sind millis "+normmin);
+ //   Logger.trace("normmin / day: "+(normmin/dayInMillis)+" normmin % day: "+(normmin%dayInMillis  ));
 
-    Logger.trace("Normmax: " + longToDateString( normmax )+ " sind millis "+normmax);
-    Logger.trace("normmax / day: "+(normmax/dayInMillis)+" normmax % day: "+(normmax%dayInMillis  ));
+ //   Logger.trace("Normmax: " + longToDateString( normmax )+ " sind millis "+normmax);
+ //   Logger.trace("normmax / day: "+(normmax/dayInMillis)+" normmax % day: "+(normmax%dayInMillis  ));
 
     //Collection für Ticks
     HashSet<Long> ticks=new HashSet<Long>();
@@ -345,7 +348,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
       long ticklv=tick.longValue();
       if (ticklv>=logicalMin && ticklv<=logicalMax)
       {
-          Logger.trace("Date tick: "+ticklv);
+        //  Logger.trace("Date tick: "+ticklv);
           GregorianCalendar cal=(GregorianCalendar) GregorianCalendar.getInstance();
           cal.setTimeInMillis( ticklv );
           realticks.add(cal);
@@ -354,7 +357,7 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
 
 
 
-
+    m_tickMap.put( axis, realticks );
 
 
 
@@ -387,20 +390,20 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
         df.setCalendar( tmpcal );
         String fromString=df.format( from );
         String toString=df.format( to );
-        
+
         Logger.trace("find Betweens: from: "+from+" to: "+to+" interval: "+minInterval+ " ("+fromString+")- ("+toString+")");
-  
-  
+
+
         LinkedList<Integer> divisors=new LinkedList<Integer>();
         divisors.add(6);
         divisors.add(4);
         divisors.add(3);
         divisors.add(2);
-  
+
         for (Integer divisor:divisors)
         {
           long betweenrange=Math.abs(from-to)/divisor.intValue();
-  
+
           if (minInterval < betweenrange )
           {
               //vorher prüfen
@@ -663,6 +666,24 @@ public class GregorianCalendarAxisRenderer implements IAxisRenderer<GregorianCal
     gc.setFont( dev.getSystemFont() );
     f.dispose();
     return point;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer#getTicks(org.kalypso.swtchart.chart.axis.IAxis)
+   */
+  public Collection<GregorianCalendar> getTicks( IAxis<GregorianCalendar> axis )
+  {
+    Collection<GregorianCalendar> ticks= m_tickMap.get( axis );
+    if (ticks==null)
+    {
+        GC gc=new GC(Display.getDefault());
+        GCWrapper gcw=new GCWrapper(gc);
+        calcTicks( gcw, Display.getDefault(), axis );
+        ticks= m_tickMap.get( axis );
+        gcw.dispose();
+        gc.dispose();
+    }
+     return ticks;
   }
 
 }

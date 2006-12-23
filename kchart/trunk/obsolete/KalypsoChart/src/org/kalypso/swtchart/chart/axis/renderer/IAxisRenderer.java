@@ -11,9 +11,9 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 /**
  * @author schlienger
  * @author burtscher
- * 
+ *
  * Interface used to render an IAxis object into an IAxisComponent
- * 
+ *
  */
 public interface IAxisRenderer<T>
 {
@@ -23,21 +23,25 @@ public interface IAxisRenderer<T>
    */
   public Collection<T> calcTicks( GCWrapper gc, Device dev, IAxis<T> axis );
 
+
+
+  public Collection<T> getTicks( IAxis<T> axis );
+
   /**
    * draws the IAxis-Representation into the given GCWrapper;
-   * @param screenArea Rectangle describing the axis size and location within the drawing area  
+   * @param screenArea Rectangle describing the axis size and location within the drawing area
    */
   public void paint( GCWrapper gc, Device dev, IAxis<T> axis, Rectangle screenArea );
 
   /**
-   * @return width of the rendered axis (which means vertical extension for horizontal axes 
+   * @return width of the rendered axis (which means vertical extension for horizontal axes
    * or horizontal extension for vertical axes)
    */
   public int getAxisWidth( IAxis<T> axis );
-  
-  
+
+
   /**
-   * Calculates the maximum size of an axis label 
+   * Calculates the maximum size of an axis label
    */
   public Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<T> axis );
 }

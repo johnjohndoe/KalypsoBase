@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.kalypso.swtchart.logging.Logger;
-import org.ksp.chart.configuration.Parameter;
 import org.ksp.chart.configuration.ParameterType;
 import org.ksp.chart.configuration.Parameters;
 
@@ -64,7 +63,7 @@ public class ParameterHelper implements IParameterContainer
 
     }
 
-    public void addParameters(Parameters parameters, String ownerId)
+    public void addParameters(Parameters parameters, String namespace)
     {
       if (parameters!=null)
       {
@@ -74,11 +73,11 @@ public class ParameterHelper implements IParameterContainer
         {
           currentParams.put( p.getName(), p.getValue() );
         }
-        m_paramMap.put( ownerId, currentParams );
+        m_paramMap.put( namespace, currentParams );
       }
       else
       {
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "ParameterHelper: No parameters for "+ownerId );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "ParameterHelper: No parameters for "+namespace );
       }
   }
 
@@ -86,14 +85,14 @@ public class ParameterHelper implements IParameterContainer
     /**
      * returns the value of a parameter with the given name or the defaultValue if the parameter is not found.
      */
-    public<T> T getParsedParameterValue(String paramName, String defaultValue, String ownerId, IStringParser<T> parser)
+    public<T> T getParsedParameterValue(String paramName, String defaultValue, String namespace, IStringParser<T> parser)
     {
       T value=null;
-      String strValue=getParameterValue( paramName,  defaultValue, ownerId );
+      String strValue=getParameterValue( paramName,  defaultValue, namespace );
       if (strValue==null)
       {
         strValue=defaultValue;
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter "+ownerId+"/"+paramName+" not found in Config - using default value: "+defaultValue);
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter "+namespace+"/"+paramName+" not found in Config - using default value: "+defaultValue);
       }
       try
       {
@@ -102,7 +101,7 @@ public class ParameterHelper implements IParameterContainer
       catch( MalformedValueException e )
       {
         String hint=parser.getFormatHint();
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter "+ownerId+"/"+paramName+": "+strValue+" is wrong format - need "+hint);
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter "+namespace+"/"+paramName+": "+strValue+" is wrong format - need "+hint);
       }
       return value;
     }
@@ -111,10 +110,10 @@ public class ParameterHelper implements IParameterContainer
     /**
      * returns the String representation of a parameter with the given name or the defaultValue if the parameter is not found.
      */
-    public String getParameterValue(String paramName, String defaultValue, String ownerId)
+    public String getParameterValue(String paramName, String defaultValue, String namespace)
     {
       String value=null;
-      HashMap<String, String> keyvals = m_paramMap.get(ownerId);
+      HashMap<String, String> keyvals = m_paramMap.get(namespace);
       if (keyvals!=null)
       {
         value=keyvals.get( paramName );
@@ -122,59 +121,59 @@ public class ParameterHelper implements IParameterContainer
       if (value==null)
       {
           String domain="";
-          if (ownerId.compareTo( "" )==0)
+          if (namespace.compareTo( "" )==0)
             domain="<defaultNamespace>";
           else
-            domain=ownerId;
-          Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter "+domain+"/"+paramName+" not found in Config - using default value: "+defaultValue);
+            domain=namespace;
+          Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Parameter "+domain+"/"+paramName+" not found in Config - using default value: "+defaultValue);
           return defaultValue;
       }
       return value;
     }
 
 
-    
+
     /**
-     * returns a value without checking for the ownerId; should only be used if there's only one owner or if all parameters have unique names
+     * returns a value without checking for the namespace; should only be used if there's only one namespace or if all parameters have unique names
      */
     public String getParameterValue(String paramName, String defaultValue)
     {
       String value="";
-      String ownerId=getParameterOwner( paramName );
-      if (ownerId.compareTo( "" )!=0)
-        value= getParameterValue( paramName, defaultValue, ownerId );
+      String namespace=getParameterNamespace( paramName );
+      if (namespace.compareTo( "" )!=0)
+        value= getParameterValue( paramName, defaultValue, namespace );
       return value;
     }
 
     /**
-     * returns a value without checking for the ownerId; should only be used if there's only one owner or if all parameters have unique names
+     * returns a value without checking for the namespace; should only be used if there's only one namespace or if all parameters have unique names
      */
     public<T> T getParsedParameterValue(String paramName, String defaultValue, IStringParser<T> parser)
     {
       T value=null;
-      String ownerId=getParameterOwner( paramName );
-      if (ownerId.compareTo( "" )!=0)
-        value= getParsedParameterValue( paramName, defaultValue, ownerId, parser );
+      String namespace=getParameterNamespace( paramName );
+    //  if (namespace.compareTo( "" )!=0)
+        value= getParsedParameterValue( paramName, defaultValue, namespace, parser );
       return value;
     }
 
     /**
-     * returns the first ownerId which posseses a parameter by the name paramName 
+     * returns the first namespace which posseses a parameter by the name paramName
      */
-    public String getParameterOwner(String paramName)
+    public String getParameterNamespace(String paramName)
     {
-      String paramOwner="";
-      Set<String> owners = m_paramMap.keySet();
+      String paramNamespace="";
+      Set<String> namespaces = m_paramMap.keySet();
       boolean breakall=false;
-      for( String owner : owners )
+      for( String namespace : namespaces )
       {
-        HashMap<String, String> ownerMap = m_paramMap.get( owner );
-        Set<String> names = ownerMap.keySet();
+        HashMap<String, String> namespaceMap = m_paramMap.get( namespace );
+        Set<String> names = namespaceMap.keySet();
         for( String name : names )
         {
           if (name.compareTo( paramName )==0)
           {
-            paramOwner=owner;
+            paramNamespace=namespace;
             breakall=true;
             break;
           }
@@ -182,15 +181,15 @@ public class ParameterHelper implements IParameterContainer
         if (breakall)
           break;
       }
-      if (paramOwner.compareTo( "" )==0)
-         Logger.logError( Logger.TOPIC_LOG_GENERAL, "No owner found for parameter '"+paramName+"'" );
-      return paramOwner;
+      if (paramNamespace.compareTo( "" )==0)
+         Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "No namespace found for parameter '"+paramName+"' -> using default namespace" );
+      return paramNamespace;
     }
-    
-    public HashMap<String, String> getParametersForOwner(String ownerId)
+
+    public HashMap<String, String> getParametersForNamespace(String namespace)
     {
-      HashMap<String, String> paramMap=m_paramMap.get( ownerId );
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No parameters found for  "+ownerId);
+      HashMap<String, String> paramMap=m_paramMap.get( namespace );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No parameters found for  "+namespace);
       return paramMap;
     }
 }

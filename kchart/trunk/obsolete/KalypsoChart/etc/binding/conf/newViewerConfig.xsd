@@ -3,9 +3,9 @@
      xmlns:kcc="http://www.ksp.org/chart/configuration"
      targetNamespace="http://www.ksp.org/chart/configuration"
      elementFormDefault="qualified">
-     
+
      <element name="Configuration" type="kcc:ConfigurationType"></element>
-     
+
     <complexType name="ConfigurationType">
         <choice minOccurs="0" maxOccurs="unbounded">
             <element ref="kcc:Chart"></element>
@@ -19,7 +19,7 @@
 <!-- Eigentlich ein abstrakter Typ, den alle Elemente von Configuration erweitern sollten;
     allerdings würde dadurch der ParameterPart ganz oben stehen, und das ist unschön
     => Jedes Element definiert diese Aspekte für sich selbst -->
-    
+
     <complexType name="AbstractConfigurationElement" abstract="true">
         <sequence>
             <element ref="kcc:parameters" minOccurs="0"></element>
@@ -28,11 +28,11 @@
     </complexType>
 
     <element name="Chart" type="kcc:ChartType"></element>
-    
+
        <complexType name="ChartType">
         <sequence>
-            <element name="title" type="string" />            
-            <element name="description" type="string" />            
+            <element name="title" type="string" />
+            <element name="description" type="string" />
             <element name="layers">
                 <complexType>
                     <sequence>
@@ -43,7 +43,7 @@
                         </element>
                     </sequence>
                 </complexType>
-            </element>            
+            </element>
         </sequence>
         <attribute name="name" type="ID" use="required"></attribute>
     </complexType>
@@ -55,18 +55,18 @@
                 <element name="title" type="string"></element>
                 <element name="description" type="string"></element>
                 <element ref="kcc:provider"></element>
-                <element name="style">
-                    <complexType>
-                        <sequence>
-                            <element name="StyleRef" type="kcc:RefType" maxOccurs="unbounded" />
-                        </sequence>
-                    </complexType>
-                </element>
                 <element name="axes">
                     <complexType>
                         <sequence>
                             <element name="DomainAxisRef" type="kcc:RefType" />
                             <element name="ValueAxisRef" type="kcc:RefType" />
+                        </sequence>
+                    </complexType>
+                </element>
+                <element name="style">
+                    <complexType>
+                        <sequence>
+                            <element name="StyleRef" type="kcc:RefType" maxOccurs="unbounded" />
                         </sequence>
                     </complexType>
                 </element>
@@ -81,11 +81,11 @@
             <attribute name="id" type="string" use="required"></attribute>
         </complexType>
     </element>
-    
+
     <complexType name="RefType">
         <attribute name="ref" type="IDREF" use="required"></attribute>
     </complexType>
-    
+
     <element name="Axis" type="kcc:AxisType" />
         <complexType name="AxisType">
             <sequence>
@@ -123,7 +123,7 @@
             </sequence>
             <attribute name="name" type="ID" use="required"></attribute>
         </complexType>
-  
+
         <element name="Style" type="kcc:StyleType" />
         <complexType name="StyleType">
             <sequence>
@@ -142,7 +142,7 @@
             </sequence>
             <attribute name="name" type="ID"></attribute>
         </complexType>
-    
+
     <element name="parameters">
         <complexType>
             <sequence>
@@ -156,7 +156,7 @@
             <attribute name="name" type="string" use="required"></attribute>
             <attribute name="value" type="string" use="required"></attribute>
         </complexType>
-    
+
     <element name="Table" type="kcc:TableType" />
         <complexType name="TableType">
             <sequence>

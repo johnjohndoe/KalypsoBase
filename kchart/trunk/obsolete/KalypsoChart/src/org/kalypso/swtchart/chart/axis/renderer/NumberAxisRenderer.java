@@ -3,6 +3,7 @@ package org.kalypso.swtchart.chart.axis.renderer;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -55,6 +56,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   private FontData m_fontDataLabel;
 
   private FontData m_fontDataTick;
+
+  private HashMap<IAxis<Number>, Collection<Number>> m_tickMap=new HashMap<IAxis<Number>, Collection<Number>>();
 
   /**
    * @param foreground
@@ -405,9 +408,9 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
         rangepow++;
       }
     }
-    
+
     Logger.trace(axis.getIdentifier()+" logicalRange: "+logicalRange);
-    
+
 
      Logger.trace(axis.getIdentifier()+" Normrange: "+normrange);
      Logger.trace(axis.getIdentifier()+" Rangepow: "+rangepow);
@@ -476,8 +479,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       m_nf.setMinimumFractionDigits( rangepow + 1 );
     }
 
-    
-    
+    m_tickMap.put( axis, realticks );
+
     return realticks;
   }
 
@@ -496,7 +499,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       // @Alex:check if this is ok
       if( betweenrange < 0.0001 )
         return;
-      
+
       if( interval < betweenrange )
       {
         // vorher prüfen
@@ -694,6 +697,25 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     img.dispose();
 
     return width;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer#getTicks(org.kalypso.swtchart.chart.axis.IAxis)
+   */
+  public Collection<Number> getTicks( IAxis<Number> axis )
+  {
+    Collection<Number> ticks= m_tickMap.get( axis );
+    if (ticks==null)
+    {
+        GC gc=new GC(Display.getDefault());
+        GCWrapper gcw=new GCWrapper(gc);
+        calcTicks( gcw, Display.getDefault(), axis );
+        ticks= m_tickMap.get( axis );
+        gcw.dispose();
+        gc.dispose();
+    }
+
+     return ticks;
   }
 
 }

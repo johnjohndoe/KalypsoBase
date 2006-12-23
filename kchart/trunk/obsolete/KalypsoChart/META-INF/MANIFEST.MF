@@ -27,8 +27,8 @@ Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.configuration.parameters,
  org.kalypso.swtchart.exception,
  org.kalypso.swtchart.logging,
+ org.kalypso.swtchart.math,
  org.kalypso.swtchart.preferences,
  org.kalypso.swtchart.table,
  org.ksp.chart.configuration,
- org.ksp.chart.layerstyle,
- org.ksp.chart.tableconfiguration
+ org.ksp.chart.layerstyle
