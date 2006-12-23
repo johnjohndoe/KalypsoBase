@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.ksp.org/ods/capabilities" 
+<schema targetNamespace="http://www.ksp.org/ods/capabilities"
      xmlns="http://www.w3.org/2001/XMLSchema"
-     xmlns:ods="http://www.ksp.org/ods/capabilities" 
+     xmlns:ods="http://www.ksp.org/ods/capabilities"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      elementFormDefault="qualified"
      >
@@ -61,22 +61,22 @@
                     type.
                </documentation>
                <documentation>
-                    Fuer WMS ist hier lediglich derTyp "string" vorgegeben; fuer den ods sollen die 
+                    Fuer WMS ist hier lediglich derTyp "string" vorgegeben; fuer den ods sollen die
                     verschiedenen Typen vorgegeben werden, damit im Capabilites-Dokument kein
                     Quatsch steht
                </documentation>
           </annotation>
           <simpleType>
                <restriction base="string">
-                  <enumeration value="text/html"></enumeration>  
-                  <enumeration value="text/xml"></enumeration>  
-                  <enumeration value="image/gif"></enumeration>  
-                  <enumeration value="image/png"></enumeration>  
-                  <enumeration value="image/jpeg"></enumeration>  
+                  <enumeration value="text/html"></enumeration>
+                  <enumeration value="text/xml"></enumeration>
+                  <enumeration value="image/gif"></enumeration>
+                  <enumeration value="image/png"></enumeration>
+                  <enumeration value="image/jpeg"></enumeration>
                </restriction>
           </simpleType>
      </element>
-     
+
      <!-- ********************************************************************* -->
      <!-- ** General Service Metadata. ** -->
      <!-- ********************************************************************* -->
@@ -286,8 +286,8 @@
                <attribute name="queryable" type="boolean" default="0"/>
           </complexType>
      </element>
-     
-     
+
+
 
 
      <element name="Layers">
@@ -302,9 +302,10 @@
 
      <complexType name="LayerType">
           <sequence>
-               <element name="LayerName" type="string"></element>
-               <element name="LayerDescription" type="string"></element>
+               <element name="title" type="string"></element>
+               <element name="description" type="string"></element>
           </sequence>
+          <attribute name="name" type="string" />
      </complexType>
 
 
@@ -333,7 +334,7 @@
      <!-- ********************************************************************* -->
      <element name="Legend">
           <annotation>
-               <documentation> 
+               <documentation>
                List of zero or more Legends offered by this server.
                </documentation>
           </annotation>

@@ -137,14 +137,14 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
 
         if (chartImg!=null )
         {
-          m_response.setContentType( "image/jpeg" );
+          m_response.setContentType( "image/png" );
           ImageLoader il=new ImageLoader();
           ImageData id=chartImg.getImageData();
           il.data=new ImageData[]{id};
           try
           {
             outputStream = new BufferedOutputStream( m_response.getOutputStream() );
-            il.save( outputStream, SWT.IMAGE_JPEG );
+            il.save( outputStream, SWT.IMAGE_PNG );
           }
           catch( IOException e )
           {
@@ -176,7 +176,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
         }
       }
-      
+
 
     }
     else
