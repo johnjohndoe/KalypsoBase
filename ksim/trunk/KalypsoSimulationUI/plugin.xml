@@ -257,4 +257,13 @@
          </possibleChildren>
          </navigatorContent>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.simulation.ui.logview.views.LogViewer"
+            icon="icons/logview/problems_view.gif"
+            id="org.kalypso.simulation.ui.logview.views.LogViewer"
+            name="Log Ansicht"/>
+   </extension>
 </plugin>
