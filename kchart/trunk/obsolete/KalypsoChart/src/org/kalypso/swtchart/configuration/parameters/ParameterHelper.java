@@ -55,7 +55,6 @@ import org.ksp.chart.configuration.Parameters;
  */
 public class ParameterHelper implements IParameterContainer
 {
-    private Parameters m_parameters;
     private HashMap<String,HashMap<String, String>> m_paramMap=new HashMap<String,HashMap<String, String>>();
 
     public ParameterHelper()
