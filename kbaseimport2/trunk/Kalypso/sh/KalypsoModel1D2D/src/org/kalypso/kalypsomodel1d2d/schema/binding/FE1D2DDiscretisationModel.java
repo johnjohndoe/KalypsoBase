@@ -71,7 +71,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
     for( final Object object : edgeList )
     {
       final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
-      final FE1D2DNode[] nodes = edge.getNodes();
+      final FE1D2DNode[] nodes = edge.getNodesAsArray();
 
       if( nodes.length != 2 )
         return null;
