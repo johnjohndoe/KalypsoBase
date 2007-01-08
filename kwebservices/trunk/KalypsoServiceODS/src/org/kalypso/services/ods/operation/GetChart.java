@@ -144,6 +144,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           try
           {
             outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+            //INFO: if you get an swt_error, you need to include swt-plugin 3.3 or greater
             il.save( outputStream, SWT.IMAGE_PNG );
           }
           catch( IOException e )
