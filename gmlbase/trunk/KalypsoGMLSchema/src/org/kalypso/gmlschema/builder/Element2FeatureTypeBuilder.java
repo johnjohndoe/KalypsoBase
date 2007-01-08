@@ -61,25 +61,26 @@ public class Element2FeatureTypeBuilder implements IBuilder
   public Object[] build( GMLSchema gmlSchema, Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
-    final QName ref = element.getElement().getRef();
-    if( ref != null )
+    final Element theElement = element.getElement();
+    final QName ref = theElement.getRef();
+    
+    final Element ftElement;
+    if( ref == null )
+      ftElement = theElement;
+    else
     {
-      final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      return build( reference );
-    }
-    final FeatureType result = new FeatureType( gmlSchema, element.getElement() );
-    gmlSchema.register( element.getElement(), result );
-    return new Object[] { result };
-  }
+      // We should normally never come to this point, because now we have a property whose type is
+      // a feature, that is forbidden
+      // TODO: maybe this should be handled earlier
+      System.out.println( "Property of type feature (probably you must insert a feature-property): " + theElement );
 
-  /**
-   * @param reference
-   */
-  private Object[] build( ElementReference reference ) throws GMLSchemaException
-  {
-    final GMLSchema schema = reference.getGMLSchema();
-    final Element element = reference.getElement();
-    return build( schema, element );
+      final ElementReference reference = gmlSchema.resolveElementReference( ref );
+      ftElement = reference.getElement();
+    }
+    
+    final FeatureType result = new FeatureType( gmlSchema, ftElement );
+    gmlSchema.register( ftElement, result );
+    return new Object[] { result };
   }
 
   /**
