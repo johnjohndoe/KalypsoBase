@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
-import org.kalypso.swtchart.configuration.NewTableLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
+import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 
 /**
@@ -89,11 +89,11 @@ public class GetHTMLTable implements IODSOperation
       //    HTMLTabelle erzeugen
       String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
 
-      NewConfigLoader cl=null;
+      ConfigLoader cl=null;
         try
         {
-          cl = new NewConfigLoader(pathVC);
-          String htmltable = NewTableLoader.createTable(cl, name, null);
+          cl = new ConfigLoader(pathVC);
+          String htmltable = TableLoader.createTable(cl, name, null);
           final PrintWriter out=m_response.getWriter();
           m_response.setContentType( "text/html" );
           if (htmltable!=null)

@@ -169,7 +169,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
             }
 
           }
-   //       cc.dispose();
+          cc.dispose();
         }
         else
         {
@@ -181,7 +181,6 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
     }
     else
         ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-
   }
 
 

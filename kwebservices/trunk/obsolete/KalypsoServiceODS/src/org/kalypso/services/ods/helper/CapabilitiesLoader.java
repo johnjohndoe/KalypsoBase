@@ -55,8 +55,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.swtchart.configuration.NewChartLoader;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.ChartType;
 import org.ksp.chart.configuration.ConfigurationType;
@@ -95,7 +95,7 @@ public class CapabilitiesLoader
   private String m_configPathVC;
   private ODSCapabilities m_caps=null;
   private HttpServletRequest m_request=null;
-  private NewConfigLoader m_cl;
+  private ConfigLoader m_cl;
 
 
 
@@ -133,7 +133,7 @@ public class CapabilitiesLoader
         Logger.trace("CapabilityDokument geladen");
 
         //ViewerConf
-        m_cl=new NewConfigLoader(m_configPathVC);
+        m_cl=new ConfigLoader(m_configPathVC);
 
       }
       catch( JAXBException e )

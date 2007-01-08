@@ -46,8 +46,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.configuration.NewChartLoader;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.logging.Logger;
 
@@ -74,9 +74,9 @@ public class CachedChart
       try
       {
         String path=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-        NewConfigLoader cl=new NewConfigLoader(path);
+        ConfigLoader cl=new ConfigLoader(path);
         Logger.trace("Config-Pfad: "+path);
-        NewChartLoader.createChart( m_chart, cl, id, null );
+        ChartLoader.createChart( m_chart, cl, id, null );
       }
       catch( ConfigChartNotFoundException e )
       {

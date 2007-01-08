@@ -61,7 +61,7 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.ChartType;
 import org.ksp.chart.configuration.ConfigurationType;
@@ -105,11 +105,11 @@ public class GetAxesInfo implements IODSOperation
       //    HTMLTabelle erzeugen
       String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
       
-      NewConfigLoader cl=null;
+      ConfigLoader cl=null;
         try
         {
           ConfigurationType ct = m_of.createConfigurationType();
-          cl = new NewConfigLoader(pathVC);
+          cl = new ConfigLoader(pathVC);
           ConfigurationType c = cl.getConfiguration();
           ChartType configChart = cl.getCharts().get( name );
           HashMap<String, AxisType> addedAxes=new HashMap<String, AxisType>();

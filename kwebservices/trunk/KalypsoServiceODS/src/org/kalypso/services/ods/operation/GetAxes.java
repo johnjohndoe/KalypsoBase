@@ -67,8 +67,8 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.configuration.NewChartLoader;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.ConfigurationType;
@@ -120,7 +120,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
       BufferedOutputStream outputStream=null;
 
-      NewConfigLoader cl=null;
+      ConfigLoader cl=null;
       Image img=null;
       
       
@@ -143,13 +143,13 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       //Chart erzeugen
       try
       {
-        cl = new NewConfigLoader(pathVC);
+        cl = new ConfigLoader(pathVC);
         Shell s=new Shell(DisplayHelper.getInstance().getDisplay());
         Canvas ca=new Canvas(s, SWT.NONE);
         Chart c=new Chart( ca, SWT.NONE );
        
         
-        NewChartLoader.createChart( c, cl, reqName, null);
+        ChartLoader.createChart( c, cl, reqName, null);
         
         c.setSize(width, height);
         
