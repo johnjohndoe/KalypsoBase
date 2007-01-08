@@ -81,7 +81,7 @@ public class ChartMath
   }
 
   /**
-   * Implementation of Doublas-Peuker-Algorithm
+   * Implementation of Douglas-Peuker-Algorithm
    */
   public static List<Point> douglasPeucker(List<Point> path, double epsilon)
   {

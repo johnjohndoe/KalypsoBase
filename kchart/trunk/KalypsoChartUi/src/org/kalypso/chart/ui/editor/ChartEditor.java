@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.chart.ui.editor;
 
@@ -35,8 +35,8 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.configuration.NewChartLoader;
-import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.ksp.chart.configuration.ChartType;
 import org.ksp.chart.configuration.ConfigurationType;
 
@@ -86,7 +86,7 @@ public class ChartEditor extends EditorPart
       if( is == null )
         return;
 
-      final Unmarshaller unmarshaller = NewConfigLoader.JC.createUnmarshaller();
+      final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
 
       final Object o = unmarshaller.unmarshal( is );
 
@@ -226,7 +226,7 @@ public class ChartEditor extends EditorPart
         {
           final URL context = ResourceUtilities.createURL( file );
           m_chart = new Chart( m_composite, SWT.BORDER );
-          NewChartLoader.configureChart( m_chart, chartType, context );
+          ChartLoader.configureChart( m_chart, chartType, context );
 
           m_chart.setAutoscale( true );
         }
@@ -249,10 +249,10 @@ public class ChartEditor extends EditorPart
   {
     if( m_config == null )
       return null;
-    
-    
+
+
     ChartType ct=null;
-    
+
     List<Object> chartOrLayerOrAxis = m_config.getChartOrLayerOrAxis();
     for( Object o: chartOrLayerOrAxis )
     {

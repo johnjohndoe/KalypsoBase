@@ -19,8 +19,8 @@
                class="org.kalypso.layerprovider.WasserstandLayerProvider"
                id="org.kalypso.layerprovider.Wasserstand"/>
          <provider
-               class="org.kalypso.layerprovider.observation.WasserstandLayerProvider"
-               id="org.kalypso.layerprovider.observation.WasserstandLayerProvider"/>
+               class="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"
+               id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"/>
          <provider
                class="org.kalypso.layerprovider.UvfPegelLP"
                id="org.kalypso.layerprovider.UvfPegel"/>

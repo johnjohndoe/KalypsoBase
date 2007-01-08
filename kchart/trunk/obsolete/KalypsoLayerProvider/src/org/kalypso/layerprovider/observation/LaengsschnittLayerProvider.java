@@ -74,7 +74,7 @@ import org.ksp.chart.layerstyle.StyleType;
 /**
  * @author Gernot Belger
  */
-public class WasserstandLayerProvider implements ILayerProvider
+public class LaengsschnittLayerProvider implements ILayerProvider
 {
 
   private LayerType m_lt;
@@ -132,7 +132,7 @@ public class WasserstandLayerProvider implements ILayerProvider
         final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
         String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
-        String valueComponentId = ph.getParameterValue( "valueComponent", "" );
+        String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
 
         final IComponent domainComponent = TupleResultUtilities.findComponentById( result, domainComponentId );
 
@@ -146,6 +146,7 @@ public class WasserstandLayerProvider implements ILayerProvider
           icl = new TupleResultLineChartLayer( result, domainComponent, valueComponent, domAxis, valAxis);
 
           icl.setName( m_lt.getTitle() );
+          icl.setVisibility( true );
         }
 
     }

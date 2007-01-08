@@ -50,7 +50,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.ChartUtilities;
-import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
@@ -61,8 +60,6 @@ public class StyledLine implements IStyledElement
   List<Point> m_path;
 
   private int m_width = 0;
-
-  private SE_LINESTYLE m_style;
 
   private int m_swtStyle;
 
@@ -96,6 +93,7 @@ public class StyledLine implements IStyledElement
     ChartUtilities.resetGC( gcw.m_gc, dev );
     gcw.setAlpha( m_alpha );
     Color lineColor = new Color( dev, m_lineColor );
+
 
     int[] intPath = StyleHelper.pointListToIntArray( m_path );
     gcw.setForeground( lineColor );

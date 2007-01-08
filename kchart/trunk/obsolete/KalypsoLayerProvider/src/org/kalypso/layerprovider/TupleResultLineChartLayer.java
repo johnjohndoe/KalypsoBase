@@ -43,10 +43,12 @@ package org.kalypso.layerprovider;
 import java.util.ArrayList;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
@@ -107,12 +109,11 @@ public class TupleResultLineChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc, final Device dev )
+  public void paint( GCWrapper gc, final Device dev )
   {
     int size = m_result.size();
-    gc.setLineWidth( 5 );
+    gc.setLineWidth( 1 );
 
-    StyledPoint sp = (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 );
     StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
 
     ArrayList<Point> path = new ArrayList<Point>();
@@ -133,11 +134,6 @@ public class TupleResultLineChartLayer implements IChartLayer
     {
       sl.setPath( path );
       sl.paint( gc, dev );
-    }
-    if( sp != null )
-    {
-      sp.setPath( path );
-      sp.paint( gc, dev );
     }
   }
 
