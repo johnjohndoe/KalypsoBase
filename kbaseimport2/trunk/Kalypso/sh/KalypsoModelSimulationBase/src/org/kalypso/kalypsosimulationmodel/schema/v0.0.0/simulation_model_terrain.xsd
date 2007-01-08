@@ -337,14 +337,27 @@
 					<!--xs:element
 						ref="simBase:polygonProperty"
 						minOccurs="0" maxOccurs="1"/-->
-					<xs:element ref="simBase:polygonProperty"/>
+						
+						
+					<!-- <xs:element ref="simBase:polygonProperty"/> -->
+					
+					
+					
 					<!-- xs:element
 						name="polygonProperty"
 						type="gml:SurfacePropertyType"
 						minOccurs="0" maxOccurs="1"/-->
+					<!-- By Patrice: -->
+					<!-- 
 					<xs:element
 						name="polygonPropertyQQ"
 						type="gml:MultiPolygonType"
+						minOccurs="0" maxOccurs="1"/>
+					-->
+					<!-- By Dejan: -->
+					<xs:element
+						name="polygonProperty"
+						type="gml:PolygonPropertyType"
 						minOccurs="0" maxOccurs="1"/>
 					<!--xs:element
 						ref="gml:surfaceProperty"/-->	
