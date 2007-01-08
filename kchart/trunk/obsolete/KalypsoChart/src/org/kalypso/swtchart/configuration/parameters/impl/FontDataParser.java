@@ -2,87 +2,85 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.preferences;
+package org.kalypso.swtchart.configuration.parameters.impl;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
- * @author burtscher
- * manages preference concerns using the eclipse preference mechanism
- * 
- * @TODO: check if constants should be extracted to IChartPreferences
+ * @author alibu
+ *
  */
-public class ChartPreferences
+public class FontDataParser implements IStringParser<FontData>
 {
-  private static final String DEFAULT_CONFIG_PATH = Platform.getInstanceLocation().getURL().getPath() + "KalypsoChart/";
 
-  private static final String DEFAULT_CONFIG_NAME = "Configuration.xml";
+  String m_defaultFontName="Times New Roman";
 
-  private static IEclipsePreferences m_prefs = new InstanceScope().getNode( "org.kalypso.chart" );
-
-  public ChartPreferences( )
+  /**
+   * @see org.kalypso.swtchart.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   */
+  public FontData createValueFromString( String value )
   {
-    init();
+    FontData fd=null;
+    try
+    {
+      //if no Exception is thrown when construction fontData,
+      fd=new FontData(value, 10, SWT.NORMAL);
+    }
+    catch (IllegalArgumentException iae)
+    {
+         Logger.logError(Logger.TOPIC_LOG_CONFIG, "invalid font name; using font "+m_defaultFontName);
+         fd=new FontData(m_defaultFontName, 10, SWT.NORMAL);
+    }
+    return fd;
   }
 
   /**
-   * initializes the preferences with standard values, if no preference file was found 
+   * @see org.kalypso.swtchart.configuration.parameters.IStringParser#getFormatHint()
    */
-  public void init( )
+  public String getFormatHint( )
   {
-    // Mit Standarddaten initialisieren, falls keine Inhalte drin sind
-    if( m_prefs != null )
-    {
-      String tmp = m_prefs.get( IChartPreferences.CONFIG_PATH, "" );
-      if( tmp.compareTo( "" ) == 0 )
-        m_prefs.put( IChartPreferences.CONFIG_PATH, DEFAULT_CONFIG_PATH );
-
-      tmp = m_prefs.get( IChartPreferences.CONFIG_NAME, "" );
-      if( tmp.compareTo( "" ) == 0 )
-        m_prefs.put( IChartPreferences.CONFIG_NAME, DEFAULT_CONFIG_NAME );
-    }
+    String formatHint="font name - for example "+Display.getDefault().getSystemFont().getFontData()[0].name;
+    return formatHint;
   }
 
-  public IEclipsePreferences getPreferences( )
-  {
-    return m_prefs;
-  }
 }

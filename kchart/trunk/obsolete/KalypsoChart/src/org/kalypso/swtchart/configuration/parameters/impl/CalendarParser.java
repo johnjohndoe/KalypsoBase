@@ -38,15 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.configuration.parameters;
+package org.kalypso.swtchart.configuration.parameters.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
 import org.kalypso.swtchart.logging.Logger;
 
 /**
@@ -59,18 +58,23 @@ import org.kalypso.swtchart.logging.Logger;
  * Not complete, so do not use
  *
  */
-public class GregorianCalendarParser implements IStringParser<GregorianCalendar>
+public class CalendarParser implements IStringParser<Calendar>
 {
 
   private String m_formatHint="yyyy-MM-dd HH:mm";
 
+  public CalendarParser()
+  {
+
+  }
+
   /**
    * @see org.kalypso.swtchart.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
    */
-  public GregorianCalendar createValueFromString( String value )
+  public Calendar createValueFromString( String value ) throws MalformedValueException
   {
     //erst mal versuchen, ein korrektes Datum zu parsen
-    GregorianCalendar gc=new GregorianCalendar();
+    Calendar c=Calendar.getInstance();
     SimpleDateFormat sdf=null;
     Date date=null;
     try
@@ -90,14 +94,17 @@ public class GregorianCalendarParser implements IStringParser<GregorianCalendar>
       {
         //TODO: nichts machen - wir probieren mal, das über die anderer Syntax an das Datum zu kommen
         Logger.logError(Logger.TOPIC_LOG_GENERAL, "Unable to parse date: "+value);
+        throw new MalformedValueException();
       }
     }
 
     if (date!=null)
-      gc.setTime( date );
+      c.setTime( date );
+    c.set( Calendar.DST_OFFSET, 0);
+    c.set( Calendar.ZONE_OFFSET, 0);
 
-
-    return gc;
+    Logger.logInfo(Logger.TOPIC_LOG_GENERAL, "CalendarParser Offset: "+ (c.getTimeInMillis() % (1000*60*60*24)));
+    return c;
   }
 
   public String getFormatHint()

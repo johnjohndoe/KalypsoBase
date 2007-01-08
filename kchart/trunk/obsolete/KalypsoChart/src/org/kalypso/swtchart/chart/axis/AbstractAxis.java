@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis;
 
+import java.util.Calendar;
 import java.util.Comparator;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
@@ -49,6 +50,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
+import org.kalypso.swtchart.logging.Logger;
 
 /**
  * @author schlienger
@@ -73,9 +75,9 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
   private final Comparator<T> m_dataComparator;
 
-  private T m_min;
+  protected T m_min;
 
-  private T m_max;
+  protected T m_max;
 
   private final Class< ? > m_dataClass;
 
@@ -197,6 +199,11 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 //    if( m_max != null && m_dataComparator.compare( min, m_max ) == 0 )
 //      throw new IllegalArgumentException( "min == max" );
 
+    if (min instanceof Calendar)
+    {
+      Calendar minC=(Calendar) min;
+      Logger.logInfo(Logger.TOPIC_LOG_GENERAL, "CalendarAxis Offset: "+(minC.getTimeInMillis() % (1000*60*60*24)));
+    }
     m_min = min;
   }
 

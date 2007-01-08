@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.configuration.parameters;
+package org.kalypso.swtchart.configuration.parameters.impl;
 
 /**
  * @author burtscher1

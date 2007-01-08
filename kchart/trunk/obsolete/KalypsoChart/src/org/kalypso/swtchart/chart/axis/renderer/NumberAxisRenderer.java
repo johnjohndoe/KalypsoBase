@@ -3,23 +3,21 @@ package org.kalypso.swtchart.chart.axis.renderer;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.swtchart.chart.ChartUtilities;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
@@ -31,33 +29,15 @@ import org.kalypso.swtchart.logging.Logger;
  * @author schlienger
  * @author burtscher * IAxisRenderer-Implementation for displaying numeric values
  */
-public class NumberAxisRenderer implements IAxisRenderer<Number>
+public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 {
   private final NumberFormat m_nf = NumberFormat.getInstance();
 
-  protected final int m_tickLength;
-
-  protected final Insets m_labelInsets;
 
   protected final int m_maxDigits;
-
-  protected final int m_lineWidth;
-
-  private final Insets m_tickLabelInsets;
-
-  private final Color m_foreground;
-
-  private final Color m_background;
-
   private Collection<Number> m_ticks;
 
-  private final int m_gap;
 
-  private FontData m_fontDataLabel;
-
-  private FontData m_fontDataTick;
-
-  private HashMap<IAxis<Number>, Collection<Number>> m_tickMap=new HashMap<IAxis<Number>, Collection<Number>>();
 
   /**
    * @param foreground
@@ -77,30 +57,20 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
    * @param gap
    *          space between axis and component border
    */
-  public NumberAxisRenderer( final Color foreground, final Color background, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
+  public NumberAxisRenderer( final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
   {
-    Logger.trace( "Test Axis Renderer" );
-    m_foreground = foreground;
-    m_background = background;
-    m_tickLength = tickLength;
-    m_lineWidth = lineWidth;
-    m_tickLabelInsets = tickLabelInsets;
-    m_labelInsets = labelInsets;
+    super(rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick);
     m_maxDigits = maxDigits;
-    m_gap = gap;
-    m_fontDataLabel = fdLabel;
-    m_fontDataTick = fdTick;
-
     m_nf.setMinimumFractionDigits( 0 );
     m_nf.setMaximumFractionDigits( 20 );
 
   }
 
   /**
-   * calculates the size of the biggest tick label by assiuming that the width of all labels is strictly monotonic -
+   * calculates the size of the biggest tick label by assuming that the width of all labels is strictly monotonic -
    * this means that either the lowest or the highest axis value has the biggest label
    */
-  public Point calcTickLabelSize( GCWrapper gc, Device dev, final IAxis<Number> axis )
+  public Point calcTickLabelSize( GCWrapper gc, final IAxis<Number> axis )
   {
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();
@@ -130,24 +100,23 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       m_nf.setMinimumFractionDigits( rangepow + 1 );
     }
 
-    final Point fromTextExtent = getTextExtent( gc, dev, logicalfrom, m_fontDataTick );
-    final Point toTextExtent = getTextExtent( gc, dev, logicalto, m_fontDataTick );
+    final Point fromTextExtent = getTextExtent( gc, logicalfrom, m_fontDataTick );
+    final Point toTextExtent = getTextExtent( gc, logicalto, m_fontDataTick );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
     final Insets ihelper = getConvertedInsets( axis, m_tickLabelInsets );
 
     final int x = tickLabelSize.x + ihelper.left + ihelper.right;
     final int y = tickLabelSize.y + ihelper.top + ihelper.bottom;
-    // Logger.trace("ticklabelSize: "+x+" : "+y);
     return new Point( x, y );
   }
 
   /**
    * doubleBuffered painting
    */
-  public void paint( GCWrapper gc, final Device dev, final IAxis<Number> axis, final Rectangle screen )
+  public void paint( GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
   {
-    Image img = paintBuffered( dev, axis, screen );
+    Image img = paintBuffered( gc, axis, screen );
     gc.drawImage( img, 0, 0 );
     img.dispose();
   }
@@ -155,24 +124,32 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   /**
    * @return Image containing the rendered Axis
    */
-  public Image paintBuffered( final Device dev, final IAxis<Number> axis, final Rectangle screen )
+  public Image paintBuffered( GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
   {
+    Device dev=gc.getDevice();
     Image bufImg = new Image( dev, dev.getBounds() );
     GC bufGc = new GC( bufImg );
     GCWrapper bufGcw = new GCWrapper( bufGc );
+    Color fgColor=new Color(dev, m_rgbForeground);
+    Color bgColor=new Color(dev, m_rgbBackground);
+    bufGcw.setForeground( fgColor );
+    bufGcw.setBackground( bgColor );
+
     // paint axis line
     int[] coords = createAxisSegment( axis, screen );
     assert coords != null && coords.length == 4;
     drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
     // final Collection<Number> ticks = calcTicks( gc, axis );
-    m_ticks = calcTicks( bufGcw, dev, axis );
-    drawTicks( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3], m_ticks );
+    m_ticks = calcTicks( bufGcw, axis );
+    drawTicks( bufGcw, axis, coords[0], coords[1], m_ticks );
 
-    drawAxisLabel( bufGcw, dev, axis, coords[0], coords[1], coords[2], coords[3] );
+    drawAxisLabel( bufGcw, axis, coords[0], coords[1], coords[2], coords[3] );
 
     bufGc.dispose();
     bufGcw.dispose();
+    fgColor.dispose();
+    bgColor.dispose();
     return bufImg;
   }
 
@@ -230,11 +207,10 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   /**
    * draws the Axis ticks into the given GCWrapper
    */
-  private void drawTicks( GCWrapper gc, Device dev, IAxis<Number> axis, int startX, int startY, int endX, int endY, Collection<Number> ticks )
+  private void drawTicks( GCWrapper gc, IAxis<Number> axis, int startX, int startY, Collection<Number> ticks )
   {
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
-    gc.setForeground( m_foreground );
 
 
     int textX = 0;
@@ -249,13 +225,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
-       // final String label=value.toString();
-        final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textX = tickPos - tickExtent.x / 2;
         textY = y2 + m_tickLabelInsets.top;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        drawText( gc, label, textX, textY, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -267,13 +242,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
-        // final String label=value.toString();
-        final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textX = tickPos - tickExtent.x / 2;
         textY = y2 - m_tickLabelInsets.top - tickExtent.y;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        drawText( gc, label, textX, textY, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.LEFT )
@@ -285,13 +259,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
-        // final String label=value.toString();
-        final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
         textX = x2 - tickExtent.x - m_tickLabelInsets.top;
         textY = tickPos - tickExtent.y / 2;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        drawText( gc, label, textX, textY, m_fontDataTick );
       }
     }
     else if( axis.getPosition() == POSITION.RIGHT )
@@ -303,13 +276,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
-        // final String label=value.toString();
-        final Point tickExtent = getTextExtent( gc, dev, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
         textX = x2 + m_tickLabelInsets.top;
         textY = tickPos - tickExtent.y / 2;
-        drawText( gc, dev, label, textX, textY, m_fontDataTick );
+        drawText( gc, label, textX, textY, m_fontDataTick );
       }
     }
   }
@@ -335,11 +307,11 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   /**
    * Calculates the ticks shown for the given Axis
    */
-  public Collection<Number> calcTicks( GCWrapper gc, Device dev, final IAxis<Number> axis )
+  public Collection<Number> calcTicks( GCWrapper gc, final IAxis<Number> axis )
   {
 
     // größtes Tick<-Label berechnen
-    final Point ticklabelSize = calcTickLabelSize( gc, dev, axis );
+    final Point ticklabelSize = calcTickLabelSize( gc, axis );
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
@@ -528,43 +500,29 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   {
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
-    gc.setForeground( m_foreground );
     gc.drawLine( x1, y1, x2, y2 );
   }
 
-  /**
-   * draws a given text at the position using special fontData
-   */
-  private void drawText( GCWrapper gc, Device dev, String text, int x, int y, FontData fd )
-  {
-    Font f = new Font( dev, fd );
-    gc.m_gc.setTextAntialias( SWT.ON );
-    gc.setFont( f );
-    gc.drawText( text, x, y );
-    gc.setFont( dev.getSystemFont() );
-    f.dispose();
-  }
+
 
   /**
    * draws the axis label - if the axis is oriented vertical, the text is also drawn vertical
    */
-  private void drawAxisLabel( GCWrapper gc, Device dev, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
+  private void drawAxisLabel( GCWrapper gc, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
   {
-    ChartUtilities.resetGC( gc.m_gc, dev );
+    //ChartUtilities.resetGC( gc.m_gc, dev );
 
-    gc.setForeground( m_foreground );
-    gc.setBackground( m_background );
 
     if( axis.getLabel() != null )
     {
-      final Point textExtent = getTextExtent( gc, dev, axis.getLabel(), m_fontDataLabel );
+      final Point textExtent = getTextExtent( gc, axis.getLabel(), m_fontDataLabel );
 
-      final Point tickLabelExtent = calcTickLabelSize( gc, dev, axis );
+      final Point tickLabelExtent = calcTickLabelSize( gc, axis );
 
       int x = 0;
       int y = 0;
 
-      Transform tr = new Transform( dev );
+      Transform tr = new Transform( gc.getDevice() );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -574,14 +532,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
 
           if( axis.getPosition() == POSITION.TOP )
             y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.bottom;// +
-          // m_labelInsets.bottom
-          // +
-          // 2*textExtent.y;
           else
             y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.top;// +
-          // m_labelInsets.bottom
-          // +
-          // textExtent.y;
         }
         else
         {
@@ -611,7 +563,7 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
         {
           gc.setTransform( tr );
         }
-        drawText( gc, dev, axis.getLabel(), x, y, m_fontDataLabel );
+        drawText( gc, axis.getLabel(), x, y, m_fontDataLabel );
       }
       finally
       {
@@ -624,7 +576,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
   /**
    * calculates the extent of a number using a certain fontdata
    */
-  private Point getTextExtent( GCWrapper gc, Device dev, Number value, FontData fd )
+  @Override
+  protected Point getTextExtent( GCWrapper gc, Number value, FontData fd )
   {
     String label = "";
     try
@@ -635,24 +588,29 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     {
       e.printStackTrace();
     }
-    return getTextExtent( gc, dev, label, fd );
+    return getTextExtent( gc, label, fd );
   }
 
   /**
-   * calculates the extent of text using certain fontdata TODO: should be extracted into a general helper Method
+   * @see org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer#getTicks(org.kalypso.swtchart.chart.axis.IAxis)
    */
-  private Point getTextExtent( GCWrapper gc, Device dev, String label, FontData fd )
+  public Collection<Number> getGridTicks( IAxis<Number> axis )
   {
-    Font f = new Font( dev, fd );
-    gc.setFont( f );
-    Point point = gc.textExtent( label );
-    gc.setFont( dev.getSystemFont() );
-    f.dispose();
-    return point;
+    Collection<Number> ticks= m_tickMap.get( axis );
+    if (ticks==null)
+    {
+        GC gc=new GC(Display.getDefault());
+        GCWrapper gcw=new GCWrapper(gc);
+        calcTicks( gcw, axis );
+        ticks= m_tickMap.get( axis );
+        gcw.dispose();
+        gc.dispose();
+    }
+     return ticks;
   }
 
   /**
-   * @see org.kalypso.swtchart.axis.renderer.IAxisRenderer#getAxisWidth(org.kalypso.swtchart.axis.IAxis)
+   * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
   public int getAxisWidth( IAxis<Number> axis )
   {
@@ -660,12 +618,12 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     int label = 0;
 
     // Testutensilien erzeugen
-    Display d = Display.getCurrent();
-    Image img = new Image( d, 1, 1 );
+    Display dev = Display.getCurrent();
+    Image img = new Image( dev, 1, 1 );
     GC gc = new GC( img );
     GCWrapper gcw = new GCWrapper( gc );
 
-    Point tls = calcTickLabelSize( gcw, d, axis );
+    Point tls = calcTickLabelSize( gcw, axis );
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -673,23 +631,20 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
       width += m_tickLabelInsets.top + m_tickLabelInsets.bottom;
       width += m_labelInsets.top + m_labelInsets.bottom;
       label = tls.y;
-      // Toleranzwert
-      width += 5;
     }
     else
     {
       width += m_tickLabelInsets.left + m_tickLabelInsets.right;
       width += m_labelInsets.left + m_labelInsets.right;
       label = tls.x;
-
     }
     width += label;
+    width += m_gap;
     width += m_lineWidth;
     width += m_tickLength;
-    width += m_gap;
 
     // Jetzt noch den Text
-    Point labelExtent = getTextExtent( gcw, d, axis.getLabel(), m_fontDataLabel );
+    Point labelExtent = getTextExtent( gcw, axis.getLabel(), m_fontDataLabel );
     width += labelExtent.y;
 
     gcw.dispose();
@@ -699,23 +654,8 @@ public class NumberAxisRenderer implements IAxisRenderer<Number>
     return width;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer#getTicks(org.kalypso.swtchart.chart.axis.IAxis)
-   */
-  public Collection<Number> getTicks( IAxis<Number> axis )
-  {
-    Collection<Number> ticks= m_tickMap.get( axis );
-    if (ticks==null)
-    {
-        GC gc=new GC(Display.getDefault());
-        GCWrapper gcw=new GCWrapper(gc);
-        calcTicks( gcw, Display.getDefault(), axis );
-        ticks= m_tickMap.get( axis );
-        gcw.dispose();
-        gc.dispose();
-    }
 
-     return ticks;
-  }
+
+
 
 }

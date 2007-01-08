@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 
 import org.ksp.chart.configuration.*;
@@ -58,7 +58,7 @@ import javax.xml.bind.JAXBException;
  * @author alibu
  *
  */
-public class NewConfigLoader
+public class ConfigLoader
 {
   private String m_configPath;
 
@@ -83,7 +83,7 @@ public class NewConfigLoader
   /**
    * @param path file system path or url where the configuration file can be found
    */
-  public NewConfigLoader( String path ) throws JAXBException
+  public ConfigLoader( String path ) throws JAXBException
   {
     m_configPath = path;
     loadFile();

@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="LayerProvider" name="ChartLayerProvider" schema="schema/LayerProvider.exsd"/>
    <extension-point id="TableProvider" name="ChartTableProvider" schema="schema/TableProvider.exsd"/>
+   <extension-point id="AxisProvider" name="ChartAxis" schema="schema/AxisProvider.exsd"/>
    <extension
          point="org.kalypso.chart.TableProvider">
       <provider
@@ -11,5 +12,17 @@
       <provider
             class="org.kalypso.swtchart.table.UVFTableProvider"
             id="org.kalypso.tableprovider.uvf"/>
+   </extension>
+   <extension
+         point="org.kalypso.chart.AxisProvider">
+      <provider
+            class="org.kalypso.swtchart.chart.axis.provider.CalendarAxisProvider"
+            id="org.kalypso.axisprovider.Calendar"/>
+      <provider
+            class="org.kalypso.swtchart.chart.axis.provider.NumberAxisProvider"
+            id="org.kalypso.axisprovider.Number"/>
+      <provider
+            class="org.kalypso.swtchart.chart.axis.provider.CalendarIntervalAxisProvider"
+            id="org.kalypso.axisprovider.CalendarInterval"/>
    </extension>
 </plugin>

@@ -48,10 +48,16 @@ import javax.xml.bind.JAXBElement;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.KalypsoChartExtensions;
+import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.axis.IAxisProvider;
+import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.chart.layer.LayerProviderException;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
+import org.kalypso.swtchart.exception.AxisProviderException;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
+import org.kalypso.swtchart.exception.LayerProviderException;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.ChartType;
@@ -66,7 +72,7 @@ import org.ksp.chart.configuration.LayerType.Axes;
  *
  * Creates a chart object from a configration
  */
-public class NewChartLoader
+public class ChartLoader
 {
 
 
@@ -79,7 +85,7 @@ public class NewChartLoader
    * @param configChartName
    *          name of ChartConfiguration that is to be used
    */
-  public static Chart createChart( Chart chart, NewConfigLoader cl, String configChartName, final URL context ) throws ConfigChartNotFoundException
+  public static Chart createChart( Chart chart, ConfigLoader cl, String configChartName, final URL context ) throws ConfigChartNotFoundException
   {
     ChartType configChart = null;
 
@@ -105,7 +111,7 @@ public class NewChartLoader
     List<LayerRef> layerRefs = configChart.getLayers().getLayerRef();
     for( LayerRef layerRef: layerRefs )
     {
-      
+
       LayerType layerType=(LayerType) layerRef.getRef();
       String providerId = layerType.getProvider().getId();
       layerType.getParameters();
@@ -113,14 +119,14 @@ public class NewChartLoader
       //Achsen hinzufügen
       Axes axes = layerType.getAxes();
       AxisType domainAxisType=(AxisType) axes.getDomainAxisRef().getRef();
-      AxisFactory.addConfigAxis( chart, domainAxisType );
+      addConfigAxis( chart, domainAxisType );
       AxisType valueAxisType=(AxisType) axes.getValueAxisRef().getRef();
-      AxisFactory.addConfigAxis( chart, valueAxisType );
-      
-      
+      addConfigAxis( chart, valueAxisType );
+
+
       try
       {
-        final ILayerProvider provider = KalypsoChartExtensions.createProvider( providerId );
+        final ILayerProvider provider = KalypsoChartExtensions.createLayerProvider( providerId );
         if( provider != null )
         {
           Logger.logInfo( Logger.TOPIC_LOG_GENERAL,  "LayerProvider loaded:" + provider.getClass().toString() );
@@ -149,6 +155,59 @@ public class NewChartLoader
     }
 
 
+  }
+
+
+  /**
+   * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
+   * corresponding renderer and adds both to a given Chart
+   */
+  public static void addConfigAxis( Chart chart, AxisType a )
+  {
+    IAxisRegistry ar = chart.getAxisRegistry();
+
+    if (a!=null)
+    {
+      ParameterHelper ph=new ParameterHelper();
+      ph.addParameters( a.getParameters(), a.getName() );
+
+      String provider=a.getProvider().getId();
+      IAxis axis=null;
+      if (provider.compareTo( "" )!=0)
+      {
+          try
+          {
+            IAxisProvider ap=KalypsoChartExtensions.createAxisProvider( provider );
+            ap.init( a );
+            axis=ap.getAxis();
+            if( ar.getRenderer( axis ) == null )
+            {
+              IAxisRenderer axisRenderer = ap.getRenderer();
+              Class<?> dataClass=ap.getDataClass();
+              ar.setRenderer( dataClass, axisRenderer );
+            }
+            ar.addAxis( axis );
+          }
+          catch( CoreException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          catch( AxisProviderException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+      }
+      else
+      {
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider "+provider+" not known" );
+      }
+    }
+    else
+    {
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
+    }
   }
 
 }

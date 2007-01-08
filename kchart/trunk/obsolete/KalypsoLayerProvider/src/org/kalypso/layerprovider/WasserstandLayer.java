@@ -64,10 +64,9 @@ import org.kalypso.swtchart.chart.styles.IStyledElement;
 import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.swtchart.chart.util.AliComparator;
-import org.kalypso.swtchart.configuration.parameters.BooleanParser;
 import org.kalypso.swtchart.configuration.parameters.IParameterContainer;
-import org.kalypso.swtchart.configuration.parameters.NumberParser;
+import org.kalypso.swtchart.configuration.parameters.impl.BooleanParser;
+import org.kalypso.swtchart.configuration.parameters.impl.NumberParser;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypso.swtchart.math.ChartMath;
 import org.ksp.chart.configuration.Parameters;
@@ -166,7 +165,7 @@ public class WasserstandLayer implements IChartLayer
     if( sp != null )
     {
       sp.setPath( path );
-      sp.paint( gc, dev );
+    //  sp.paint( gc, dev );
     }
   }
 
@@ -250,16 +249,16 @@ public class WasserstandLayer implements IChartLayer
   {
     Object min = null;
     Object max = null;
-    final AliComparator ac = new AliComparator();
+    ComparableComparator cc=new ComparableComparator();
     for( int i = 0; i < m_result.size(); i++ )
     {
       final IRecord rec = m_result.get( i );
       final Object val = rec.getValue( m_domComp );
       if( val != null )
       {
-        if( min == null || ac.compare( min, val ) < 0 )
+        if( min == null || cc.compare( min, val ) < 0 )
           min = val;
-        if( max == null || ac.compare( max, val ) > 0 )
+        if( max == null || cc.compare( max, val ) > 0 )
           max = val;
       }
     }

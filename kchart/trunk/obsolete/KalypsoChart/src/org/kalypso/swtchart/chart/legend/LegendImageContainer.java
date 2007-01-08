@@ -48,7 +48,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.configuration.NewChartLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.ksp.chart.configuration.ConfigurationType;
 

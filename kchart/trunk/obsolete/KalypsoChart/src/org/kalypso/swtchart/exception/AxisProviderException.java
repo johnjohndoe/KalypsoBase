@@ -38,31 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.chart.layer;
+package org.kalypso.swtchart.exception;
 
 /**
  * Exception class for exception within the {@link org.kalypso.swtchart.chart.layer.ILayerProvider} framework.
  * 
  * @author Gernot Belger
  */
-public class LayerProviderException extends Exception
+public class AxisProviderException extends Exception
 {
-  public LayerProviderException( )
+  public AxisProviderException( )
   {
     super();
   }
 
-  public LayerProviderException( String message )
+  public AxisProviderException( String message )
   {
     super( message );
   }
 
-  public LayerProviderException( String message, Throwable cause )
+  public AxisProviderException( String message, Throwable cause )
   {
     super( message, cause );
   }
 
-  public LayerProviderException( Throwable cause )
+  public AxisProviderException( Throwable cause )
   {
     super( cause );
   }

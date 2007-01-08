@@ -55,7 +55,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.StyleLoader;
-import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -121,7 +121,6 @@ public class WasserstandLayerProvider implements ILayerProvider
 
         String domainAxisId = ( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
         String valueAxisId = ( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
-
           IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
           IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
@@ -148,13 +147,8 @@ public class WasserstandLayerProvider implements ILayerProvider
             if( map.size() == 2 )
               break;
           }
-
-
           icl = new WasserstandLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis, ph );
-
           icl.setName( m_lt.getTitle() );
-
-
       }
       catch( MalformedURLException e )
       {

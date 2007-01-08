@@ -59,11 +59,10 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.LayerType;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author burtscher

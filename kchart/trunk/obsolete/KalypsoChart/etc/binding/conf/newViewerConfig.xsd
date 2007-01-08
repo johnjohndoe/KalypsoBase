@@ -90,15 +90,7 @@
         <complexType name="AxisType">
             <sequence>
                 <element name="label" type="string" />
-                <element name="type">
-                    <simpleType>
-                        <restriction base="string">
-                            <enumeration value="NUMBER" />
-                            <enumeration value="DATE" />
-                            <enumeration value="DATETIME" />
-                        </restriction>
-                    </simpleType>
-                </element>
+                <element ref="kcc:provider" />
                 <element name="direction">
                     <simpleType>
                             <restriction base="string">

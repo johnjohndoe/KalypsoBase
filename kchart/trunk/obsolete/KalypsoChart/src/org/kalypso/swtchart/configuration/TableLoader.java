@@ -74,7 +74,7 @@ import org.ksp.chart.configuration.TableType;
  *
  * reads an observation and transforms its values into an html table
  */
-public class NewTableLoader
+public class TableLoader
 {
   public final static ObjectFactory OF = new ObjectFactory();
 
@@ -83,7 +83,7 @@ public class NewTableLoader
    * tries to load the data, creates an html table and returns it as string. Otherwise, it throws a
    * ConfigTableNotFound Exception
    */
-  public static String createTable( NewConfigLoader cl, String configTableName, final URL context ) throws ConfigTableNotFoundException
+  public static String createTable( ConfigLoader cl, String configTableName, final URL context ) throws ConfigTableNotFoundException
 //  public static String createTable( ConfigurationType config, String tableName ) throws ConfigTableNotFoundException
   {
     TableType configTable = null;

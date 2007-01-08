@@ -19,7 +19,7 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;

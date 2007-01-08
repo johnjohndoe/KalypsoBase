@@ -38,27 +38,28 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.configuration.parameters;
+package org.kalypso.swtchart.configuration.parameters.impl;
+
+import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
 
 /**
  * @author alibu
  *
  */
-public class BooleanParser implements IStringParser<Boolean>
+public class AxisDirectionParser implements IStringParser<DIRECTION>
 {
-  final String m_formatHint="one of 'true' or 'false'";
 
+  String m_formatHint="one of 'POSITIVE' or 'NEGATIVE'";
   /**
    * @see org.kalypso.swtchart.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
    */
-  public Boolean createValueFromString( String value ) throws MalformedValueException
+  public DIRECTION createValueFromString( String value )
   {
-    if (value.compareTo( "true" )==0)
-        return Boolean.TRUE;
-    else if (value.compareTo( "false" )==0)
-        return Boolean.FALSE;
-    else
-        throw new MalformedValueException();
+    DIRECTION dir = DIRECTION.POSITIVE;
+    if( value.compareTo( "NEGATIVE" ) == 0 )
+      dir = DIRECTION.NEGATIVE;
+    return dir;
   }
 
   /**

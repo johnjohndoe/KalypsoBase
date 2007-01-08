@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.configuration.parameters;
+package org.kalypso.swtchart.configuration.parameters.impl;
 
 import org.eclipse.swt.SWT;
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
 
 /**
  * @author burtscher1

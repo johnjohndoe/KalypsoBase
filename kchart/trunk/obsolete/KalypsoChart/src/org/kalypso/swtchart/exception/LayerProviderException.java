@@ -38,18 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.preferences;
+package org.kalypso.swtchart.exception;
 
 /**
- * @author burtscher
- * Some constants to use with chart preferences:
- *  <ul>
- *  <li>names of preference variables</li>
- *  </ul> 
+ * Exception class for exception within the {@link org.kalypso.swtchart.chart.layer.ILayerProvider} framework.
+ * 
+ * @author Gernot Belger
  */
-public interface IChartPreferences
+public class LayerProviderException extends Exception
 {
-  public static final String CONFIG_PATH = "kalypso.chart.configpath";
+  public LayerProviderException( )
+  {
+    super();
+  }
 
-  public static final String CONFIG_NAME = "kalypso.chart.configname";
+  public LayerProviderException( String message )
+  {
+    super( message );
+  }
+
+  public LayerProviderException( String message, Throwable cause )
+  {
+    super( message, cause );
+  }
+
+  public LayerProviderException( Throwable cause )
+  {
+    super( cause );
+  }
+
 }

@@ -58,7 +58,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.swtchart.configuration.parameters.ParameterHelper;
+import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

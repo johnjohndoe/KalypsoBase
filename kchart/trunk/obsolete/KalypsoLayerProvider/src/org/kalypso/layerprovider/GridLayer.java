@@ -147,31 +147,37 @@ public class GridLayer implements IChartLayer
     //von links nach rechts zeichnen
     if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
     {
-        Collection vTicks = vAxis.getRenderer().getTicks( vAxis );
+        Collection vTicks = vAxis.getRenderer().getGridTicks( vAxis );
         int xfrom=hAxis.logicalToScreen(hAxis.getFrom());
         int xto=hAxis.logicalToScreen(hAxis.getTo());
-        for( Object vTick : vTicks )
+        if (vTicks!=null)
         {
-          path.clear();
-          path.add( new Point(xfrom, vAxis.logicalToScreen( vTick )) );
-          path.add( new Point(xto, vAxis.logicalToScreen( vTick )) );
-          sl.setPath( path );
-          sl.paint( gc, dev );
+          for( Object vTick : vTicks )
+          {
+            path.clear();
+            path.add( new Point(xfrom, vAxis.logicalToScreen( vTick )) );
+            path.add( new Point(xto, vAxis.logicalToScreen( vTick )) );
+            sl.setPath( path );
+            sl.paint( gc, dev );
+          }
         }
     }
     //von unten nach oben zeichnen
     if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL)
     {
-      Collection hTicks = hAxis.getRenderer().getTicks( hAxis );
+      Collection hTicks = hAxis.getRenderer().getGridTicks( hAxis );
       int yfrom= vAxis.logicalToScreen(vAxis.getFrom() ) ;
       int yto=vAxis.logicalToScreen(vAxis.getTo() );
-      for( Object hTick : hTicks )
+      if (hTicks!=null)
       {
-        path.clear();
-        path.add( new Point(hAxis.logicalToScreen( hTick ),yfrom) );
-        path.add( new Point(hAxis.logicalToScreen( hTick ), yto ) );
-        sl.setPath( path );
-        sl.paint( gc, dev );
+        for( Object hTick : hTicks )
+        {
+          path.clear();
+          path.add( new Point(hAxis.logicalToScreen( hTick ),yfrom) );
+          path.add( new Point(hAxis.logicalToScreen( hTick ), yto ) );
+          sl.setPath( path );
+          sl.paint( gc, dev );
+        }
       }
     }
 

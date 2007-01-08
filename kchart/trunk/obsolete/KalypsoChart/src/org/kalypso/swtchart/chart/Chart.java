@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart;
 
@@ -70,10 +70,10 @@ import org.kalypso.swtchart.chart.layer.ILayerManager;
 /**
  * @author schlienger
  * @author burtscher
- * 
+ *
  * Chart widget; parent for AxisComponent and Plot
- * also acts as LayerManager and contains the AxisRegistry; 
- * 
+ * also acts as LayerManager and contains the AxisRegistry;
+ *
  */
 public class Chart extends Composite implements IAxisRegistryEventListener, Listener, ILayerManager
 {
@@ -131,6 +131,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 1.1 - wird ins erste Feld der ersten Zeile gefüllt
     final Label lbl11 = new Label( parent, SWT.NONE );
+    lbl11.setSize( 0,0 );
     lbl11.setVisible( false );
 
     // 1.2
@@ -142,6 +143,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 1.3 - wird ins letzte Feld der ersten Zeile gefüllt
     final Label lbl13 = new Label( parent, SWT.NONE );
+    lbl13.setSize( 0,0 );
     lbl13.setVisible( false );
 
     // 2.1
@@ -167,6 +169,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 3.1 - wird ins erste Feld der letzten Zeile gefüllt
     final Label lbl31 = new Label( parent, SWT.NONE );
+    lbl31.setSize( 0,0 );
     lbl31.setVisible( false );
 
     // 3.2
@@ -178,6 +181,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 3.3 - wird ins letzte Feld der lezten Zeile gefüllt
     final Label lbl33 = new Label( parent, SWT.NONE );
+    lbl33.setSize( 0,0 );
     lbl33.setVisible( false );
   }
 
@@ -199,7 +203,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   * 
+   *
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
@@ -215,8 +219,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisAdded(org.kalypso.swtchart.axis.IAxis)
-   * 
-   * adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry 
+   *
+   * adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
    */
   public void onAxisAdded( final IAxis axis )
   {
@@ -229,7 +233,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisRemoved(org.kalypso.swtchart.axis.IAxis)
-   * 
+   *
    * TODO: not implemented yet (or is it? - irght now there's no way to remove an axis, so this should be checked in the future)
    */
   public void onAxisRemoved( final IAxis axis )
@@ -244,7 +248,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   {
     if( event.type == SWT.Resize )
     {
-      
+
     }
   }
 
@@ -342,7 +346,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * @return DataRange of all domain or value data available in the given layer 
+   * @return DataRange of all domain or value data available in the given layer
    */
   private IDataRange getRangeFor( final IChartLayer layer, final IAxis axis )
   {
@@ -374,7 +378,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * sets autoscaling
-   * @param b if true, axes are automatically scaled to show the layers full data range 
+   * @param b if true, axes are automatically scaled to show the layers full data range
    */
   public void setAutoscale( boolean b )
   {
@@ -458,7 +462,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
       ac.redraw();
     }
   }
-  
+
   /**
    * resizes the chart according to a given plot size;
    */
@@ -468,21 +472,21 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
      Composite r = m_axisPlaces.get( POSITION.RIGHT );
      Composite t = m_axisPlaces.get( POSITION.TOP );
      Composite b = m_axisPlaces.get( POSITION.BOTTOM );
-     
+
     // setSize( width, height );
      //TODO: check if border-width must be included
      int chartwidth=width+l.getBounds().width+r.getBounds().width+ (2*l.getBorderWidth())+ (2*r.getBorderWidth());
      int chartheight=height+b.getBounds().height+t.getBounds().height+ (2*b.getBorderWidth())+ (2*t.getBorderWidth());
-     
+
      //getParent().setSize( chartwidth, chartheight );
      setSize( chartwidth, chartheight );
      layout();
-     
+
      /**
       * Leider funktioniert die obige Vergrößerung nicht problemlos, es muss daher noch etwas handarbeit erfolgen;
       * TODO: überprüfen, ob es da einen besseren Weg geben könnte
       */
-     
+
      //Vergrössern, falls zu klein
      while (m_plot.getBounds().width<width)
        setSize(getBounds().width+1, getBounds().height);
@@ -493,7 +497,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
        setSize(getBounds().width-1, getBounds().height);
      while (m_plot.getBounds().height>height)
        setSize(getBounds().width, getBounds().height-1);
-     
+
   }
 
 }

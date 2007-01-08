@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.configuration.parameters;
 
+import org.kalypso.swtchart.configuration.parameters.impl.MalformedValueException;
+
 /**
  * Interface for classes creating objects from strings
  *

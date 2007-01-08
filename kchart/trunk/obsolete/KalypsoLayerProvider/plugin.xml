@@ -27,6 +27,9 @@
          <provider
                class="org.kalypso.layerprovider.GridLayerProvider"
                id="org.kalypso.layerprovider.Grid"/>
+         <provider
+               class="org.kalypso.layerprovider.TestCSVLayerProvider"
+               id="org.kalypso.layerprovider.TestCSV"/>
    </extension>
 
 </plugin>

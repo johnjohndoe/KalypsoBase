@@ -38,12 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.swtchart.configuration.parameters;
+package org.kalypso.swtchart.configuration.parameters.impl;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.swtchart.configuration.parameters.IParameterContainer;
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.ParameterType;
 import org.ksp.chart.configuration.Parameters;
@@ -55,6 +57,7 @@ import org.ksp.chart.configuration.Parameters;
  */
 public class ParameterHelper implements IParameterContainer
 {
+    private Parameters m_parameters;
     private HashMap<String,HashMap<String, String>> m_paramMap=new HashMap<String,HashMap<String, String>>();
 
     public ParameterHelper()
@@ -141,6 +144,8 @@ public class ParameterHelper implements IParameterContainer
       String namespace=getParameterNamespace( paramName );
       if (namespace.compareTo( "" )!=0)
         value= getParameterValue( paramName, defaultValue, namespace );
+      else
+        return defaultValue;
       return value;
     }
 
