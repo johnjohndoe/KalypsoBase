@@ -10,6 +10,6 @@ import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActio
  */
 public class CreateFEElementDelegate extends AbstractGisMapEditorActionDelegate {
 	public CreateFEElementDelegate() {
-		super(new FE2DElementEditWidget());
+		super(new CreateFE2DElementWidget());
 	}
 }
