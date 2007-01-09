@@ -1,12 +1,8 @@
-/**
- *
- */
 package org.kalypso.chart.ui.editor;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;

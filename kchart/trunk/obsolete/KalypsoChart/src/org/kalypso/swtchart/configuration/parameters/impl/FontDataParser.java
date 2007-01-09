@@ -79,7 +79,7 @@ public class FontDataParser implements IStringParser<FontData>
    */
   public String getFormatHint( )
   {
-    String formatHint="font name - for example "+Display.getDefault().getSystemFont().getFontData()[0].name;
+    String formatHint="font name - for example "+Display.getDefault().getSystemFont().getFontData()[0].getName();
     return formatHint;
   }
 
