@@ -2,7 +2,6 @@ package org.kalypso.gmlschema;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
@@ -44,22 +43,15 @@ public class KalypsoGMLSchemaPlugin extends Plugin
     m_schemaCatalog = null;
   }
 
-  public GMLSchemaCatalog getSchemaCatalog( )
+  public synchronized GMLSchemaCatalog getSchemaCatalog( )
   {
     if( m_schemaCatalog == null )
     {
-      try
-      {
-        final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
-        final IPath stateLocation = getStateLocation();
-        final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
-        cacheDir.mkdir();
-        m_schemaCatalog = new GMLSchemaCatalog( theCatalog, cacheDir );
-      }
-      catch( final CoreException e )
-      {
-        getLog().log( e.getStatus() );
-      }
+      final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
+      final IPath stateLocation = getStateLocation();
+      final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
+      cacheDir.mkdir();
+      m_schemaCatalog = new GMLSchemaCatalog( theCatalog, cacheDir );
     }
 
     return m_schemaCatalog;
