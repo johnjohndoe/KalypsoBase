@@ -36,7 +36,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 
@@ -49,10 +51,10 @@ public class JavaApiContributionsExtension
 
   private static Map<Object, IUrlCatalog> m_catalogs;
 
-  private static synchronized void initRegistry( ) throws CoreException
+  private static synchronized void initRegistry( )
   {
     m_catalogs = new HashMap<Object, IUrlCatalog>();
-    
+
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( URL_CATALOG_EXTENSION_POINT );
@@ -61,19 +63,28 @@ public class JavaApiContributionsExtension
 
     for( int i = 0; i < configurationElements.length; i++ )
     {
-      final IConfigurationElement element = configurationElements[i];
-      String id = element.getAttribute( "id" );
-      IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
-      m_catalogs.put( id, catalog );
+      try
+      {
+        final IConfigurationElement element = configurationElements[i];
+        final String id = element.getAttribute( "id" );
+        final IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
+        m_catalogs.put( id, catalog );
+      }
+      catch( final Exception e )
+      {
+        final String pluginId = JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName();
+        final IStatus status = new Status( IStatus.ERROR, pluginId, -1, "Error loading a catalog", e );
+        JavaApiContributionsPlugin.getDefault().getLog().log( status );
+      }
     }
   }
 
-  public static IUrlCatalog getAllRegisteredCatalogs( ) throws CoreException
+  public static IUrlCatalog getAllRegisteredCatalogs( ) 
   {
     return new MultiUrlCatalog( getRegistredCatalogs() );
   }
 
-  private static synchronized IUrlCatalog[] getRegistredCatalogs( ) throws CoreException
+  private static synchronized IUrlCatalog[] getRegistredCatalogs( ) 
   {
     if( m_catalogs == null )
       initRegistry();
