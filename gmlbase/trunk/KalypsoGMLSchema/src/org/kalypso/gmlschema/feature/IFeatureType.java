@@ -95,24 +95,4 @@ public interface IFeatureType extends IInitialize, IAdaptable
   public IValuePropertyType[] getAllGeomteryProperties( );
 
   public IValuePropertyType getDefaultGeometryProperty( );
-
-  /*
-   * public Annotation getAnnotation( String langKey ); public Map getAnnotationMap(); public void
-   * setVirtualFeatureTypeProperty( FeatureTypeProperty[] properties ); public FeatureTypeProperty[]
-   * getVirtualFeatureTypeProperty(); public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
-   * public boolean isVirtuelProperty( String propertyName ); public boolean hasGeometryProperty();
-   */
-  // m_name = name;
-  // m_namespace = namespace;
-  // m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
-  // m_annotationMap.put( Annotation.UNSUPPORTED_LANG_KEY, new Annotation( Annotation.UNSUPPORTED_LANG_KEY, m_name, "",
-  // m_namespace + ":" + m_name ) );
-  // public final Annotation getAnnotation( String lang )
-  // {
-  // final Annotation annotation = (Annotation)m_annotationMap.get( lang );
-  // if( annotation == null )
-  // return (Annotation)m_annotationMap.get( Annotation.UNSUPPORTED_LANG_KEY );
-  // return annotation;
-  //
-  // }
 }
