@@ -73,6 +73,9 @@ public class ResourceUtilities
     return findFileFromPath( path );
   }
 
+  /**
+   * Only works with absolute paths. (?)
+   */
   public static IFile findFileFromPath( IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -94,6 +97,12 @@ public class ResourceUtilities
 
   }
 
+  /**
+   * Only works with relative paths. The location (absolute) of the workspace root is used as parent, the resources path
+   * (relative) is used as child.
+   * 
+   * @return A Java-File representing the resource.
+   */
   public static File makeFileFromPath( final IPath resource )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -226,5 +235,38 @@ public class ResourceUtilities
     final FindParentProjectVisitor visitor = new FindParentProjectVisitor();
     start.accept( visitor );
     return visitor.getParentProject();
+  }
+
+  /**
+   * This function tries to construct an Eclipse-File from a path with a relative path to the workspace.<br/> <br/>
+   * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
+   * segment, you get an IFile.
+   * 
+   * @param path
+   *          The path of the file. It must be relative to the workspace.
+   * @return The Eclipse-File representing the path.
+   */
+  public static IFile getFileFromPath( IPath path )
+  {
+    /* Need all segments of this path. */
+    String[] segments = path.segments();
+    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    IProject project = root.getProject( segments[0] );
+
+    if( project == null )
+      return null;
+
+    /* Get all folders, until the element before the last element. */
+    IFolder tmpFolder = null;
+    for( int i = 1; i < segments.length - 1; i++ )
+      if( i == 1 )
+        tmpFolder = project.getFolder( segments[1] );
+      else
+        tmpFolder = tmpFolder.getFolder( segments[i] );
+
+    /* At least, get the IFile. */
+    IFile file = tmpFolder.getFile( segments[segments.length - 1] );
+
+    return file;
   }
 }
