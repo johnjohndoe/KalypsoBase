@@ -263,9 +263,9 @@ public class CapabilitiesLoader
           String ltTitle = lt.getTitle();
           String ltDescription = lt.getDescription();
           LayerType layer = m_ofCap.createLayerType();
-          layer.setName( ltName );
-          layer.setTitle( ltTitle );
-          layer.setDescription( ltDescription );
+          layer.setLayerName( ltName );
+//          layer.setTitle( ltTitle );
+          layer.setLayerDescription( ltDescription );
           layerTypes.add( layer );
         }
 
