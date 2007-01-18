@@ -25,8 +25,10 @@ public class ResourceContentProvider implements ITreeContentProvider
 
   private String[] m_allowedResourceExtensions;
 
-  /*
-   * abgeleitet von ContainerContentProvider @author N. Peiler
+  /**
+   * abgeleitet von ContainerContentProvider 
+   * @author N. Peiler
+   * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
    */
   public ResourceContentProvider( String[] allowedResourceExtensions )
   {
