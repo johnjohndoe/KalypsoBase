@@ -386,6 +386,7 @@ public class ExcelTableCursor extends TableCursor
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
     cellEditor.addListener( new ValidateCellEditorListener( cellEditor, m_errorColor ) );
+    cellEditor.addListener( new StopEditingCellEditorListener( cellEditor, this, m_viewer ) );
 
     // remove potential old listener
     final Control control = cellEditor.getControl();
@@ -439,8 +440,15 @@ public class ExcelTableCursor extends TableCursor
     return modifier.canModify( row.getData(), property );
   }
 
-  public void stopEditing( )
+  public void stopEditing( final Control cellEditorControl )
   {
+    // leaf cell
+    if( cellEditorControl != null )
+    {
+      cellEditorControl.removeKeyListener( m_keyListenerOnCell );
+      cellEditorControl.removeTraverseListener( m_dontTraverseListener );
+    }
+
     setVisible( true );
 
     setFocus();
@@ -472,7 +480,7 @@ public class ExcelTableCursor extends TableCursor
   {
     if( dx != 0 || dy != 0 )
     {
-      stopEditing();
+      stopEditing( control );
 
       final Table table = getViewer().getTable();
       final TableItem row2 = getRow();
@@ -483,16 +491,7 @@ public class ExcelTableCursor extends TableCursor
       final int columnCount = table.getColumnCount();
 
       if( col >= 0 && col < columnCount && row >= 0 && row < rowCount )
-      {
         setSelection( row, col, true );
-
-        // leaf cell
-        if( control != null )
-        {
-          control.removeKeyListener( m_keyListenerOnCell );
-          control.removeTraverseListener( m_dontTraverseListener );
-        }
-      }
     }
   }
 }
