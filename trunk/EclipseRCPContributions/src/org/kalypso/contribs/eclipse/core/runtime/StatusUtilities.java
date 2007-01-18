@@ -77,7 +77,7 @@ public final class StatusUtilities
    */
   public static MultiStatus createMultiStatusFromMessage( final int severity, final String pluginId, final int code, final String message, final String delim, final Throwable throwable )
   {
-    final StringTokenizer strTok = new StringTokenizer( message, delim );
+    final StringTokenizer strTok = new StringTokenizer( message == null ? "<unknown>" : message, delim );
     final Collection<IStatus> stati = new ArrayList<IStatus>( strTok.countTokens() - 1 > 0 ? strTok.countTokens() - 1 : 0 );
 
     String sMainMessage;
