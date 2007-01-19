@@ -41,7 +41,6 @@
 package org.kalypso.swtchart.configuration.parameters.impl;
 
 import org.eclipse.swt.SWT;
-import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_LINESTYLE;
 import org.kalypso.swtchart.configuration.parameters.IStringParser;
 
 /**
@@ -54,7 +53,7 @@ public class LineStyleParser implements IStringParser<Integer>
   /**
    * @see org.kalypso.swtchart.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
    */
-  public Integer createValueFromString( String value ) throws MalformedValueException
+  public Integer createValueFromString( String value ) 
   {
     if( value.compareTo( "DASH" )==0)
       return SWT.LINE_DASH;

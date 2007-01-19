@@ -45,8 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.kalypso.swtchart.configuration.parameters.IStringParser;
 import org.kalypso.swtchart.logging.Logger;
 

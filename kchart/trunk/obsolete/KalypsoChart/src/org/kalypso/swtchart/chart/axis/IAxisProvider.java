@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis;
 
-import java.net.URL;
-
-import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.exception.AxisProviderException;
 import org.ksp.chart.configuration.AxisType;

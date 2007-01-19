@@ -183,6 +183,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#getMin()
    */
+  @Override
   public Calendar getFrom( )
   {
     //das muss geklont werden, da der Wert sonst von aussen veränderbar ist
@@ -192,6 +193,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#getMin()
    */
+  @Override
   public Calendar getTo( )
   {
     //das muss geklont werden, da der Wert sonst von aussen veränderbar ist

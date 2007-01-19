@@ -44,15 +44,19 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
-import org.kalypso.swtchart.logging.Logger;
-
-import org.ksp.chart.configuration.*;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+
+import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.swtchart.logging.Logger;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.ObjectFactory;
+import org.ksp.chart.configuration.StyleType;
+import org.ksp.chart.configuration.TableType;
 
 /**
  * @author alibu

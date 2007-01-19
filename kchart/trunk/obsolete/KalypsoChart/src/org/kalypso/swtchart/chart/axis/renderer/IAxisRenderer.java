@@ -2,7 +2,6 @@ package org.kalypso.swtchart.chart.axis.renderer;
 
 import java.util.Collection;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;

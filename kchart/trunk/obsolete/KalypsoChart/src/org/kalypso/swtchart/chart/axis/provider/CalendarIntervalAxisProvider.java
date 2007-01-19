@@ -52,7 +52,6 @@ import org.kalypso.swtchart.chart.axis.IAxisProvider;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
-import org.kalypso.swtchart.chart.axis.renderer.CalendarAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.CalendarIntervalAxisRenderer;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 import org.kalypso.swtchart.configuration.parameters.IParameterContainer;

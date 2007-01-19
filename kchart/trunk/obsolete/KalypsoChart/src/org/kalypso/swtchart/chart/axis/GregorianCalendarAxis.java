@@ -44,7 +44,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;

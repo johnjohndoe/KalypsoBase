@@ -43,8 +43,6 @@ package org.kalypso.swtchart.configuration;
 import java.net.URL;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.KalypsoChartExtensions;

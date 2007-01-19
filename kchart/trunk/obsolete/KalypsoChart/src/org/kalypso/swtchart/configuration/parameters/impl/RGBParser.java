@@ -43,8 +43,6 @@ package org.kalypso.swtchart.configuration.parameters.impl;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.swtchart.configuration.parameters.IStringParser;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
-
 /**
  * @author burtscher1
  *
@@ -57,7 +55,7 @@ public class RGBParser implements IStringParser<RGB>
   /**
    * @see org.kalypso.swtchart.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
    */
-  public RGB createValueFromString( String value ) throws MalformedValueException
+  public RGB createValueFromString( String value ) 
   {
     RGB rgb=null;
     //Hexadezimalwert

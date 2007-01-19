@@ -41,30 +41,10 @@
 package org.kalypso.swtchart.configuration;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 import org.kalypso.swtchart.table.ITableProvider;
 import org.kalypso.swtchart.table.KalypsoTableExtensions;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.ksp.chart.configuration.ChartType;
-import org.ksp.chart.configuration.ConfigurationType;
 import org.ksp.chart.configuration.ObjectFactory;
 import org.ksp.chart.configuration.TableType;
 
