@@ -192,7 +192,7 @@ public class GMLSchemaUtilities
     }
     else
     {
-//      System.out.println( "unknown type:" + complexType.getName() );
+      // System.out.println( "unknown type:" + complexType.getName() );
       return null;
       // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
     }
@@ -205,7 +205,7 @@ public class GMLSchemaUtilities
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
     if( reference == null )
     {
-//      System.out.println( "unknown name: " + base );
+      // System.out.println( "unknown name: " + base );
       return null;
     }
 
@@ -510,10 +510,10 @@ public class GMLSchemaUtilities
           if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
             result.add( newPath + "[" + type.getQName().getLocalPart() + "]" );
           String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
-//          for( String string : strings )
-//          {
-//           // TODO complete 
-//          }
+          // for( String string : strings )
+          // {
+          // // TODO complete
+          // }
         }
       }
     }
@@ -573,8 +573,11 @@ public class GMLSchemaUtilities
     {
       final Import import_ = importArray[i];
       final String oldSchemaLocation = import_.getSchemaLocation();
-      final URL absolteSchemaLocation = urlResolver.resolveURL( oldSchemaLocation );
-      import_.setSchemaLocation( absolteSchemaLocation.toString() );
+      if( oldSchemaLocation != null )
+      {
+        final URL absolteSchemaLocation = urlResolver.resolveURL( oldSchemaLocation );
+        import_.setSchemaLocation( absolteSchemaLocation.toString() );
+      }
     }
     // includes
     final Include[] includeArray = schemaDocument.getSchema().getIncludeArray();
