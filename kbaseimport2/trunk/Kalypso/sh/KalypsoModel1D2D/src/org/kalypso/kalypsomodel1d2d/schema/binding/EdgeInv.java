@@ -61,7 +61,7 @@ public class EdgeInv implements IEdgeInv
     Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" );
     Feature feature=edge.getWrappedFeature();
     Assert.throwIAEOnNotDirectInstanceOf( 
-          feature, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
+          feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
     
     this.edge=edge;
   }
