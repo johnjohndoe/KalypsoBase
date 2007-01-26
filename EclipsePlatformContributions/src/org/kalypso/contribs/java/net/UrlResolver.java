@@ -112,49 +112,6 @@ public class UrlResolver implements IUrlResolver
       return new URL( projectURL + "/" + relPath );
     }
     
-    //else if( baseURL.getProtocol().equals( "http" ) || baseURL.getProtocol().equals( "file" ) )
-//    {
-//      String base = baseURL.toString();
-//      String path = baseURL.getPath();
-//      String[] baseSplit = path.split( "/" );
-//      String[] relativeSplit = relativeURL.split( "/" );
-//      int i = 0;
-//      int upDirCounter = 0;
-//      boolean match = false;
-
-//      for( int j = 0; j < relativeSplit.length; j++ )
-//      {
-//        if( relativeSplit[j].equals( ".." ) )
-//          upDirCounter = j + 1;
-//        else
-//          break;
-//      }
-//      if( relativeSplit.length == 1 || upDirCounter > 0 )
-//        i = baseSplit.length - 1;
-//      else
-//      {
-//        for( i = 0; i < baseSplit.length; i++ )
-//        {
-//          for( int j = 0; j < relativeSplit.length; j++ )
-//          {
-//            if( relativeSplit[j].equals( baseSplit[i] ) )
-//            {
-//              match = true;
-//              break;
-//            }
-//          }
-//          if( match )
-//            break;
-//        }
-//      }
-//      int baseIndex = base.indexOf( baseSplit[i - upDirCounter] );
-//      int relativeIndex = relativeURL.lastIndexOf( ".." );
-//      if( relativeIndex == -1 )
-//        relativeIndex = -3;
-//      path = base.substring( 0, baseIndex ).concat( relativeURL.substring( relativeIndex + 3, relativeURL.length() ) );
-//      return new URL( path );
-//    }
-
     return new URL( baseURL, relativeURL );
   }
 
