@@ -197,7 +197,7 @@ public final class StatusUtilities
     }
 
     if( t instanceof InvocationTargetException )
-      return statusFromThrowable( ((InvocationTargetException) t).getCause(), message );
+      return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), message );
     if( t instanceof CoreException )
       return ((CoreException) t).getStatus();
 
