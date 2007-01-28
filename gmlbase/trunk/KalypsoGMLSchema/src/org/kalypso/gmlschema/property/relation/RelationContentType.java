@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
@@ -56,9 +57,11 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
+
   /** TODO move this one to a constants class. */
   protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
-  
+
   protected final static String DOCREF_XPATH = XPATH_APPINFO_NAMESPACE_DECL + "xs:annotation/xs:appinfo/kapp:documentReference";
 
   private final GMLSchema m_gmlSchema;
@@ -129,7 +132,10 @@ public abstract class RelationContentType implements IRelationContentType, IInit
             break;
           }
           else
-            System.out.println( "schema error: links not to a feature:" + element );
+          {
+            if( DO_DEBUG_TRACE )
+              System.out.println( "schema error: links not to a feature:" + element );
+          }
         }
         if( result.size() != 1 )
           throw new UnsupportedOperationException( "An object relation must reference exactly one element" );

@@ -53,6 +53,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
@@ -268,7 +270,8 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      System.out.println( "could not resolve element reference to " + qName );
+      final IStatus status = StatusUtilities.createErrorStatus( "could not resolve element reference to " + qName );
+      KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
     return gmlschema.resolveElementReference( qName );
@@ -283,7 +286,8 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      System.out.println( "could not resolve group reference to " + qName );
+      final IStatus status = StatusUtilities.createErrorStatus( "could not resolve group reference to " + qName );
+      KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
     return gmlschema.resolveGroupReference( qName );

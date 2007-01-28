@@ -72,6 +72,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleContentDocument.SimpleContent;
 import org.apache.xmlbeans.impl.xb.xsdschema.UnionDocument.Union;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -102,6 +103,8 @@ import org.w3c.dom.Text;
  */
 public class GMLSchemaUtilities
 {
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
+
   public static final String BASE_SCHEMA_IN_JAR = "base.xsd";
 
   private static final int CONSTRUCTION_REFERENCED_TYPE = 1;
@@ -192,7 +195,8 @@ public class GMLSchemaUtilities
     }
     else
     {
-      // System.out.println( "unknown type:" + complexType.getName() );
+      if( DO_DEBUG_TRACE )
+        System.out.println( "unknown type:" + complexType.getName() );
       return null;
       // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
     }
@@ -205,7 +209,8 @@ public class GMLSchemaUtilities
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
     if( reference == null )
     {
-      // System.out.println( "unknown name: " + base );
+      if( DO_DEBUG_TRACE )
+        System.out.println( "unknown name: " + base );
       return null;
     }
 
@@ -360,7 +365,8 @@ public class GMLSchemaUtilities
         final ElementReference elementReference = schema.resolveElementReference( qName );
         if( elementReference == null )
         {
-          System.out.println( "could not resolve element reference to " + qName );
+          if( DO_DEBUG_TRACE )
+            System.out.println( "could not resolve element reference to " + qName );
           return null;
         }
         return findBaseType( elementReference, gmlVersion );

@@ -38,6 +38,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
@@ -53,6 +54,8 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class FeatureContentType implements IFeatureContentType
 {
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
+
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
@@ -110,9 +113,9 @@ public abstract class FeatureContentType implements IFeatureContentType
             final QName ref = elementItem.getRef();
             if( ref == null )
             {
-//              final String message = "no typeHandler for " + elementItem.getType();
-//              System.out.println( message );
-//              System.out.println();
+              // final String message = "no typeHandler for " + elementItem.getType();
+              // System.out.println( message );
+              // System.out.println();
             }
             else
             {
@@ -124,14 +127,17 @@ public abstract class FeatureContentType implements IFeatureContentType
                 buildedObject = schema.getBuildedObjectFor( element );
               }
               else
-                System.out.println( "debug" );
+              {
+                if( DO_DEBUG_TRACE )
+                  System.out.println( "debug" );
+              }
             }
           }
           // why are alle buildedObjects of type IPropertyType ?
           if( buildedObject != null && buildedObject instanceof IPropertyType )
             propertyTypes.add( (IPropertyType) buildedObject );
-//          else
-//            System.out.println( "no valid property found for " + elementItem );
+          // else
+          // System.out.println( "no valid property found for " + elementItem );
         }
         m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
         break;
