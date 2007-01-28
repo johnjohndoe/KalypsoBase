@@ -26,7 +26,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -35,6 +34,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -91,18 +91,19 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     {
       pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
 
-      pwSimuLog.println( "Parsing GMLXPath: " + geometryXPath );
-      monitor.setMessage( "Parsing GMLXPath: " + geometryXPath );
+      final LogHelper log = new LogHelper( pwSimuLog, monitor );
+
+      log.log( true, "Parsing GMLXPath: %s", geometryXPath );
+
       final GMLXPath calcpath = new GMLXPath( geometryXPath );
 
       // load gml
-      pwSimuLog.println( "Loading GML: " + gmlURL );
-      monitor.setMessage( "Loading GML: " + gmlURL );
+      log.log( true, "Loading GML: %s", gmlURL );
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
       // get calculation via path
-      pwSimuLog.println( "Loading geometries: " + geometryXPath );
-      monitor.setMessage( "Loading geometries: " + geometryXPath );
+      log.log( true, "Loading geometries: %s", geometryXPath );
 
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof List) )
@@ -112,8 +113,12 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       }
 
       monitor.setProgress( 10 );
-      pwSimuLog.println( "Writing .poly file for triangle.exe" );
-      monitor.setMessage( "Writing .poly file for triangle.exe" );
+
+      if( log.checkCanceled() )
+        return;
+
+      log.log( true, "Schreibe .poly Datei für triangle.exe..." );
+
       final File polyfile = new File( tmpdir, "input.poly" );
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
       final CS_CoordinateSystem crs = writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
@@ -141,19 +146,42 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       cmd.append( polyfile.getName() );
 
       monitor.setProgress( 20 );
-      monitor.setMessage( "Executing triangle.exe" );
+      if( log.checkCanceled() )
+        return;
 
       // start calculation
-      ProcessHelper.startProcess( cmd.toString(), null, tmpdir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
-      // TODO: abfangen, wenn der Prozess fehltschlägt!
+      log.log( true, "Triangle.exe wird ausgeführt..." );
+
+      try
+      {
+        ProcessHelper.startProcess( cmd.toString(), null, tmpdir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
+      }
+      catch( final Throwable e )
+      {
+        log.log( false, "Fehler beim Ausführen von triangle.exe: %s", e.getLocalizedMessage() );
+        log.log( e, "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
+        monitor.setFinishInfo( IStatus.ERROR, "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        return;
+      }
 
       // load results + copy to result folder
       monitor.setProgress( 60 );
-      monitor.setMessage( "Loading mesh into gml." );
-      pwSimuLog.println( "Loading mesh into gml." );
+      if( log.checkCanceled() )
+        return;
+      
+      log.log( true, "Netz wird als GML geschrieben..." );
 
       final File nodeFile = new File( tmpdir, "input.1.node" );
       final File eleFile = new File( tmpdir, "input.1.ele" );
+      
+      if( !nodeFile.exists() || !eleFile.exists() )
+      {
+        log.log( false, "Fehler beim Ausführen von triangle.exe" );
+        log.log( false, "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
+        monitor.setFinishInfo( IStatus.ERROR, "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        return;
+      }
+      
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
@@ -181,10 +209,8 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
   }
 
-  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, CS_CoordinateSystem crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
+  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final CS_CoordinateSystem crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
   {
-    final TimeLogger logger = new TimeLogger( "Start reading mesh points" );
-
     // ignore first line, we don't check the file format
     final String firstLine = nodeReader.readLine();
     final StringTokenizer firstTokenizer = new StringTokenizer( firstLine );
@@ -211,14 +237,10 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       points[id] = position;
     }
 
-    logger.showElapsedTime( "Nodes read." );
-
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null, null );
     final Feature rootFeature = workspace.getRootFeature();
     final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" );
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );
-
-    logger.showElapsedTime( "Start reading elements." );
 
     eleReader.readLine(); // ignore first line
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
@@ -245,8 +267,6 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       newFeature.setProperty( geomName, surface );
     }
-
-    logger.showElapsedTime( "Elements read." );
 
     return workspace;
   }
