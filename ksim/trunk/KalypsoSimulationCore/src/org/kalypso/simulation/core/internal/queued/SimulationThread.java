@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
@@ -58,6 +59,14 @@ final class SimulationThread extends Thread
 {
   private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() );
 
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+
+  static
+  {
+    if( !DO_DEBUG_TRACE )
+      LOGGER.setUseParentHandlers( false );
+  }
+  
   private final ISimulation m_job;
 
   private final SimulationInfo m_jobBean;

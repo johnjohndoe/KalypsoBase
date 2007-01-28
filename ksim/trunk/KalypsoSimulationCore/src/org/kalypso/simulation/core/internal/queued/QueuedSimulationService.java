@@ -55,6 +55,7 @@ import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
@@ -76,6 +77,14 @@ public class QueuedSimulationService implements ISimulationService
 {
   private static final Logger LOGGER = Logger.getLogger( QueuedSimulationService.class.getName() );
 
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+
+  static
+  {
+    if( !DO_DEBUG_TRACE )
+      LOGGER.setUseParentHandlers( false );
+  }
+  
   /** Vector of {@link CalcJobThread}s */
   private final Vector<SimulationThread> m_threads = new Vector<SimulationThread>();
 
