@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBContext;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.performance.TimeLogger;
@@ -79,7 +80,11 @@ public class JAXBContextLoaderJob extends Job
     final String classesString = Arrays.toString( m_classes );
     monitor.beginTask( "Loading JAXBContext for classes: " + classesString, 1000 );
 
-    final TimeLogger logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
+    final TimeLogger logger;
+    if( Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) ) )
+      logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
+    else
+      logger = null;
 
     try
     {
@@ -91,7 +96,11 @@ public class JAXBContextLoaderJob extends Job
     }
     finally
     {
-      logger.showElapsedTime( "JAXBContext was loaded for: " + classesString );
+      if( logger != null )
+      {
+        logger.takeInterimTime();
+        logger.printCurrentInterim( "JAXBContext was loaded in " );
+      }
       monitor.done();
     }
 

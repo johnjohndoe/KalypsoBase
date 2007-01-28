@@ -50,6 +50,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.xml.NSPrefixProvider;
 
@@ -68,13 +69,18 @@ public final class JaxbUtilities
   public static JAXBContext createQuiet( final Class... objectFactoryClasses )
   {
     final String classesString = Arrays.toString( objectFactoryClasses );
-    final TimeLogger logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
+
+    final TimeLogger logger;
+    if( Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) ) )
+      logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
+    else
+      logger = null;
+
     try
     {
       // TODO Performanzproblem hier:
-      // Ursache ist Zeile 210 von javax.xml.bind.ContextFinder
-      // die Reflection API wird benutzt und dort dauert das instanzieren so lange...
-
+      // Ursache ist der Konstruktor der JAXBContextImpl der anscheinend rekrusiv per
+      // reflektion alle classen sucht, für die er verantworltich ist
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
@@ -84,7 +90,11 @@ public final class JaxbUtilities
     }
     finally
     {
-      logger.showElapsedTime( "JAXBContext was loaded for: " + classesString );
+      if( logger != null )
+      {
+        logger.takeInterimTime();
+        logger.printCurrentInterim( "JAXBContext was loaded in " );
+      }
     }
   }
 
