@@ -6,13 +6,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public abstract class RunnableWithException implements IRunnableWithProgress
 {
   public abstract void runWithException( final IProgressMonitor monitor ) throws Throwable;
-  
-  public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+
+  public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
   {
     try
     {

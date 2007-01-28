@@ -40,10 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.operation;
 
-import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -59,35 +56,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public final class RunnableContextHelper
 {
-  public static final class CoreRunnableWrapper implements IRunnableWithProgress
-  {
-    private final ICoreRunnableWithProgress m_runnable;
-
-    private IStatus m_status = Status.OK_STATUS;
-
-    public CoreRunnableWrapper( final ICoreRunnableWithProgress runnable )
-    {
-      m_runnable = runnable;
-    }
-
-    public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
-    {
-      try
-      {
-        m_status = m_runnable.execute( monitor );
-      }
-      catch( final CoreException e )
-      {
-        throw new InvocationTargetException( e );
-      }
-    }
-
-    public IStatus getStatus()
-    {
-      return m_status;
-    }
-  }
-
   private final IRunnableContext m_context;
 
   private RunnableContextHelper( final IRunnableContext context )
