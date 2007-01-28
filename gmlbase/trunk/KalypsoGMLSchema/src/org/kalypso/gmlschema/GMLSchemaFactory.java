@@ -39,7 +39,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
@@ -71,8 +70,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
  */
 public class GMLSchemaFactory
 {
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
-
   private static Map<String, GMLSchemaBuilder> m_gmlSchemaBuilderRegister = new HashMap<String, GMLSchemaBuilder>();
 
   private static GMLSchemaBuilder getBuilderForVersion( String version )
@@ -196,7 +193,7 @@ public class GMLSchemaFactory
     else
       version = gmlVersion;
 
-    if( DO_DEBUG_TRACE )
+    if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
       System.out.println( "USING GML VERSION " + version + " on Schema: " + schemaDocument.getSchema().getTargetNamespace() );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );

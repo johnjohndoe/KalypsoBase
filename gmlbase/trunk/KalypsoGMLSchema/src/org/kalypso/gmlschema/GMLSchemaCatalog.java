@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
@@ -20,9 +19,12 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
  */
 public final class GMLSchemaCatalog
 {
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
-  
   private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
+
+  static
+  {
+    LOGGER.setUseParentHandlers( KalypsoGmlSchemaTracing.traceSchemaParsing() );
+  }
 
   private IUrlCatalog m_urlCatalog;
 
@@ -43,12 +45,12 @@ public final class GMLSchemaCatalog
 
     LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
   }
-  
-  public IUrlCatalog getDefaultCatalog()
+
+  public IUrlCatalog getDefaultCatalog( )
   {
     return m_urlCatalog;
   }
-  
+
   /**
    * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
    * 
@@ -114,8 +116,8 @@ public final class GMLSchemaCatalog
     }
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
-    if( schemaUrl == null && DO_DEBUG_TRACE)
-      System.out.println( "No location for namespace: " + namespace + " - trying to load from cache." );
+    if( schemaUrl == null )
+      LOGGER.log( Level.WARNING, "No location for namespace: " + namespace + " - trying to load from cache." );
 
     // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache

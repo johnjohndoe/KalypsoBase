@@ -76,8 +76,13 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
  */
 public class GMLSchemaCache
 {
-  protected final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
+  private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
 
+  static
+  {
+    LOGGER.setUseParentHandlers( KalypsoGmlSchemaTracing.traceSchemaParsing() );
+  }
+  
   private final static int TIMEOUT = Integer.MAX_VALUE;
 
   private final static int SIZE = 30;

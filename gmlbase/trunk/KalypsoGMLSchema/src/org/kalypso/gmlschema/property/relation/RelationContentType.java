@@ -39,12 +39,12 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.KalypsoGmlSchemaTracing;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -57,8 +57,6 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
-
   /** TODO move this one to a constants class. */
   protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
 
@@ -133,7 +131,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           }
           else
           {
-            if( DO_DEBUG_TRACE )
+            if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
               System.out.println( "schema error: links not to a feature:" + element );
           }
         }

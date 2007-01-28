@@ -38,11 +38,11 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.KalypsoGmlSchemaTracing;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
@@ -54,8 +54,6 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public abstract class FeatureContentType implements IFeatureContentType
 {
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) );
-
   private final GMLSchema m_gmlSchema;
 
   private final ComplexType m_complexType;
@@ -128,7 +126,7 @@ public abstract class FeatureContentType implements IFeatureContentType
               }
               else
               {
-                if( DO_DEBUG_TRACE )
+                if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
                   System.out.println( "debug" );
               }
             }

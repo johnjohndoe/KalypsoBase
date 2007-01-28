@@ -270,8 +270,12 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( "could not resolve element reference to " + qName );
-      KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
+      if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+      {
+        final IStatus status = StatusUtilities.createErrorStatus( "Could not resolve element reference to " + qName );
+        System.out.println( status.getMessage() );
+        KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
+      }
       return null;
     }
     return gmlschema.resolveElementReference( qName );
