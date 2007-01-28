@@ -147,7 +147,9 @@ public class CalcJobHandler
           throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler" ) );
         }
 
-        int progress = bean.getProgress();
+        final int progress = bean.getProgress();
+        final String message = bean.getMessage();
+        calcMonitor.subTask( message );
         calcMonitor.worked( progress - oldProgess );
         oldProgess = progress;
 
@@ -222,7 +224,7 @@ public class CalcJobHandler
           if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationFiles" ) ) )
           {
             m_calcService.disposeJob( m_jobID );
-            
+
             if( m_zipFile != null )
               m_zipFile.delete();
           }
@@ -327,13 +329,9 @@ public class CalcJobHandler
     for( final SimulationDescription desc : inputDescription )
       inputdescriptionMap.put( desc.getId(), desc );
 
-    
-
     ZipResourceVisitor zipper = null;
     try
     {
-      zipper = new ZipResourceVisitor( zipFile );
-
       final IProject project = calcCaseFolder.getProject();
 
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
@@ -348,7 +346,7 @@ public class CalcJobHandler
 
         if( inputType.equals( QNAME_ANY_URI ) )
         {
-          // if the type is a uri, put the content as fiel into the zip
+          // if the type is a uri, put the content as file into the zip
 
           // alles relativ zum Projekt auflösen!
           final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
@@ -362,6 +360,11 @@ public class CalcJobHandler
           }
 
           final IPath projectRelativePath = inputResource.getProjectRelativePath();
+
+          /* Create zipper very lazy, in order to prevent exception because zip stream is empty */
+          if( zipper == null )
+            zipper = new ZipResourceVisitor( zipFile );
+
           inputResource.accept( zipper );
           beanValue = projectRelativePath.toString();
         }

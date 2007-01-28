@@ -393,7 +393,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
 
       // TODO: timeout konfigurierbar machen?
-      final int minutes = 5;
+      final int minutes = 30;
       monitor.subTask( "Warte auf Ende der Berechnung..." );
       for( int i = 0; i < 60 * minutes; i++ )
       {
