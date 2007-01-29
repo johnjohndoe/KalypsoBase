@@ -127,4 +127,24 @@ public class ShapeConst
    */
   public static final int PARTS_START = 44;
 
+  /**
+   * The indicator for a point shape type. (11)
+   */
+  public static final int SHAPE_TYPE_POINTZ = 11;
+  
+  /**
+   * The indicator for an polyline shape type. (13)
+   */
+  public static final int SHAPE_TYPE_POLYLINEZ = 13;
+
+  /**
+   * The indicator for a polygon shape type. (15)
+   */
+  public static final int SHAPE_TYPE_POLYGONZ = 15;  
+  
+  /**
+   * The indicator for a multipoint shape type. (18)
+   */
+  public static final int SHAPE_TYPE_MULTIPOINTZ = 18;
+  
 }
