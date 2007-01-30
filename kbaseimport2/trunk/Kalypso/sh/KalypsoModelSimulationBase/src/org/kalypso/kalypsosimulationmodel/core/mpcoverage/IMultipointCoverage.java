@@ -18,7 +18,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public interface IMultipointCoverage<RangeCls extends IFeatureWrapper> 
 				extends IFeatureWrapper
 {
-	public MultiPoint getDomain();
+	public IMultiPoint getDomain();
 	
 	/**
 	 * Returns the applying range value  the given position
