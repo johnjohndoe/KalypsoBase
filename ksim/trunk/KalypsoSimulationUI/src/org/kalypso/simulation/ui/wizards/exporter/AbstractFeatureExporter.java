@@ -65,15 +65,16 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
   private ArrayChooserPage m_page = null;
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     if( m_page == null )
     {
-      final FeatureList features = (FeatureList)getFromSupplier( "features" );
-      final FeatureList selectedFeatures = (FeatureList)getFromSupplier( "selectedFeatures" );
-      final String nameProperty = (String)getFromSupplier( "propertyName" );
+      final FeatureList features = (FeatureList) getFromSupplier( "features" );
+      final FeatureList selectedFeatures = (FeatureList) getFromSupplier( "selectedFeatures" );
+      final String nameProperty = (String) getFromSupplier( "propertyName" );
 
       if( features == null )
         return new IWizardPage[0];
@@ -82,9 +83,9 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       final List selItems = new ArrayList( selectedFeatures.size() );
       for( int count = 0; count < features.size(); count++ )
       {
-        final Feature f = (Feature)features.get( count );
+        final Feature f = (Feature) features.get( count );
 
-        final FeatureItem fi = new FeatureItem( f, (String)f.getProperty( nameProperty ) );
+        final FeatureItem fi = new FeatureItem( f, (String) f.getProperty( nameProperty ) );
         items[count] = fi;
 
         if( selectedFeatures.contains( f ) )
@@ -95,20 +96,11 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
 
       if( features.size() == 0 )
       {
-        m_page = new ArrayChooserPage(
-            items,
-            array,
-            array,
-            "chooseFeatures",
-            "Warnung: es konnte keine Vorhersagepegel gefunden werden.\nPrüfen Sie ob Berechnungen richtig durchgeführt wurden.",
-            AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(),
-                "icons/wizban/bericht_wiz.gif" ) );
+        m_page = new ArrayChooserPage( items, array, array, 0, "chooseFeatures", "Warnung: es konnte keine Vorhersagepegel gefunden werden.\nPrüfen Sie ob Berechnungen richtig durchgeführt wurden.", AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
       }
       else
       {
-        m_page = new ArrayChooserPage( items, array, array, "chooseFeatures",
-            "Für diese Vorhersagepegel werden die Berichte erzeugt:", AbstractUIPlugin.imageDescriptorFromPlugin(
-                KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
+        m_page = new ArrayChooserPage( items, array, array, 0, "chooseFeatures", "Für diese Vorhersagepegel werden die Berichte erzeugt:", AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
       }
     }
 
@@ -121,19 +113,18 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     // let subclasses insert their specific pages
     contributeWizardPages( pages, configuration );
 
-    return (IWizardPage[])pages.toArray( new IWizardPage[pages.size()] );
+    return (IWizardPage[]) pages.toArray( new IWizardPage[pages.size()] );
   }
 
   /**
    * Must be implemented by subclasses in order to insert their own pages
    */
-  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration )
-      throws CoreException;
+  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration ) throws CoreException;
 
   /**
    * @return selected features
    */
-  public Feature[] getSelectedFeatures()
+  public Feature[] getSelectedFeatures( )
   {
     if( m_page == null )
       return new Feature[0];
@@ -141,7 +132,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     final Object[] objects = m_page.getChoosen();
     final Feature[] features = new Feature[objects.length];
     for( int i = 0; i < features.length; i++ )
-      features[i] = ( (FeatureItem)objects[i] ).getFeature();
+      features[i] = ((FeatureItem) objects[i]).getFeature();
 
     return features;
   }
@@ -163,12 +154,12 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
       m_name = name;
     }
 
-    public Feature getFeature()
+    public Feature getFeature( )
     {
       return m_feature;
     }
 
-    public String getName()
+    public String getName( )
     {
       return m_name;
     }
@@ -176,7 +167,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString()
+    public String toString( )
     {
       return getName();
     }

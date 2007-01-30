@@ -66,26 +66,26 @@ import org.kalypsodeegree.model.feature.Feature;
  * The typical arguments syntax for this kind of exporter is as follows:
  * 
  * <pre>
- &lt;arg name="exporterSomeName"&gt;
- &lt;arg name="id" value="featureWithTemplateExporter" /&gt; 
- &lt;arg name="name" value="Vorhersage Export" /&gt;
- &lt;arg name="nameproperty" value="Name" /&gt; 
- &lt;arg name="width" value="1024" /&gt; 
- &lt;arg name="height" value="768" /&gt; 
- &lt;arg name="imageFormat" value="png" /&gt; 
- &lt;arg name="tokens"&gt;
- &lt;arg name="title" value="Name" /&gt; 
- &lt;arg name="href1" value="Wasserstand_gemessen" /&gt; 
- &lt;arg name="href2" value="Wasserstand_gerechnet" /&gt; 
- &lt;arg name="href3" value="Wasserstand_vorhersage" /&gt; 
- &lt;arg name="href4" value="Niederschlag_rechnung" /&gt; 
- &lt;/arg&gt;
- &lt;arg name="templateDiagQ"&gt;
- &lt;arg name="label" value="Abfluﬂgrafik" /&gt; 
- &lt;arg name="category" value="Abfluﬂgrafik" /&gt;
- &lt;arg name="templateFile" value="project:/.templates/calcCase/berichtDiagQ.odt" /&gt; 
- &lt;/arg&gt;
- &lt;/arg&gt;
+ *  &lt;arg name=&quot;exporterSomeName&quot;&gt;
+ *  &lt;arg name=&quot;id&quot; value=&quot;featureWithTemplateExporter&quot; /&gt; 
+ *  &lt;arg name=&quot;name&quot; value=&quot;Vorhersage Export&quot; /&gt;
+ *  &lt;arg name=&quot;nameproperty&quot; value=&quot;Name&quot; /&gt; 
+ *  &lt;arg name=&quot;width&quot; value=&quot;1024&quot; /&gt; 
+ *  &lt;arg name=&quot;height&quot; value=&quot;768&quot; /&gt; 
+ *  &lt;arg name=&quot;imageFormat&quot; value=&quot;png&quot; /&gt; 
+ *  &lt;arg name=&quot;tokens&quot;&gt;
+ *  &lt;arg name=&quot;title&quot; value=&quot;Name&quot; /&gt; 
+ *  &lt;arg name=&quot;href1&quot; value=&quot;Wasserstand_gemessen&quot; /&gt; 
+ *  &lt;arg name=&quot;href2&quot; value=&quot;Wasserstand_gerechnet&quot; /&gt; 
+ *  &lt;arg name=&quot;href3&quot; value=&quot;Wasserstand_vorhersage&quot; /&gt; 
+ *  &lt;arg name=&quot;href4&quot; value=&quot;Niederschlag_rechnung&quot; /&gt; 
+ *  &lt;/arg&gt;
+ *  &lt;arg name=&quot;templateDiagQ&quot;&gt;
+ *  &lt;arg name=&quot;label&quot; value=&quot;Abfluﬂgrafik&quot; /&gt; 
+ *  &lt;arg name=&quot;category&quot; value=&quot;Abfluﬂgrafik&quot; /&gt;
+ *  &lt;arg name=&quot;templateFile&quot; value=&quot;project:/.templates/calcCase/berichtDiagQ.odt&quot; /&gt; 
+ *  &lt;/arg&gt;
+ *  &lt;/arg&gt;
  * </pre>
  * 
  * <p>
@@ -93,7 +93,6 @@ import org.kalypsodeegree.model.feature.Feature;
  * ExportableObject that can be created based on the given template. If it is not specified, then the category defaults
  * to the value of the "label" argument.
  * </p>
- * 
  * <p>
  * This exporter has two wizard pages:
  * <nl>
@@ -111,19 +110,16 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
    * @see org.kalypso.simulation.ui.wizards.exporter.AbstractFeatureExporter#contributeWizardPages(java.util.List,
    *      org.kalypso.metadoc.configuration.IPublishingConfiguration)
    */
-  protected void contributeWizardPages( final List pages, final IPublishingConfiguration configuration )
-      throws CoreException
+  protected void contributeWizardPages( final List pages, final IPublishingConfiguration configuration ) throws CoreException
   {
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
-    final URL context = (URL)getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
+    final URL context = (URL) getFromSupplier( "context" );
 
     // create the possible template items
     final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
 
     // create wizard page for selecting the templates
-    m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, "templateSelection",
-        "W‰hlen Sie die Exportarten", AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(),
-            "icons/wizban/bericht_wiz.gif" ) );
+    m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, 0, "templateSelection", "W‰hlen Sie die Exportarten", AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" ) );
 
     pages.add( m_page );
   }
@@ -137,9 +133,9 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( (UrlArgument)templates[i], objects );
+      createExportableObjectsWith( (UrlArgument) templates[i], objects );
 
-    return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
+    return (IExportableObject[]) objects.toArray( new IExportableObject[objects.size()] );
   }
 
   /**
@@ -148,8 +144,8 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
   private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
-    final URL context = (URL)getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
+    final URL context = (URL) getFromSupplier( "context" );
 
     // from arguments
     final Arguments tokens = arguments.getArguments( "tokens" );
@@ -158,7 +154,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
     String category = item.getProperty( "category" );
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
-    
+
     final Feature[] features = getSelectedFeatures();
     for( int i = 0; i < features.length; i++ )
     {
@@ -176,8 +172,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
 
         final String id = getClass().getName() + templateUrl.getFile();
 
-        final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-            replacetokens, id, category );
+        final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl, replacetokens, id, category );
 
         objects.add( exportable );
       }
@@ -186,7 +181,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
         e.printStackTrace();
 
         if( e instanceof CoreException )
-          throw (CoreException)e;
+          throw (CoreException) e;
 
         throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
       }
