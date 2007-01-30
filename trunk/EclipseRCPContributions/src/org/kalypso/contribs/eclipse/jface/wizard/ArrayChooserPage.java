@@ -58,51 +58,119 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * @author belger
+ * This page lists a list of objects from which the user can choose from.
+ * 
+ * @author Gernot Belger, Holger Albert
  */
 public class ArrayChooserPage extends WizardPage
 {
-  private Object m_chooseables;
+  /**
+   * The objects, that are available to the user.
+   */
+  private Object m_chooseables = null;
 
+  /**
+   * The viewer, that presents the objects to choose from.
+   */
   protected CheckboxTableViewer m_viewer = null;
 
+  /**
+   * The list of the selected objects.
+   */
   private Object[] m_selected = null;
 
+  /**
+   * The list of the checked objects.
+   */
   protected Object[] m_checked = null;
 
+  /**
+   * The number of objects, that must be selected, before the page can continue.
+   */
+  protected int m_numToSelect = 0;
+
+  /**
+   * This listener updates the internal list of the checked objects, if a selection change has occured.
+   */
   private final ICheckStateListener m_checkStateListener = new ICheckStateListener()
   {
     public void checkStateChanged( final CheckStateChangedEvent event )
     {
+      /* Update the list of checked elements. */
       m_checked = m_viewer.getCheckedElements();
+
+      /* Check, if the page can continue. */
+      chkPageComplete( false );
     }
   };
 
+  /**
+   * A default LabelProvider.
+   */
   private IBaseLabelProvider m_labelProvider = new LabelProvider();
 
   /**
+   * The constructor.
+   * 
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
+   * @param pageName
+   *          The name of this page (internal use).
+   * @param title
+   *          The title is displayed in the title bar of the wizard window.
+   * @param titleImage
+   *          This image is displayed in the page.
    */
   public ArrayChooserPage( final Object chooseables, final String pageName, final String title, final ImageDescriptor titleImage )
   {
-    this( chooseables, null, null, pageName, title, titleImage );
+    this( chooseables, null, null, 0, pageName, title, titleImage );
   }
 
-  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final String pageName, final String title, final ImageDescriptor titleImage )
+  /**
+   * The constructor.
+   * 
+   * @param chooseables
+   *          Used as input for {@link ArrayContentProvider}
+   * @param selected
+   *          A list of objects from the chooseables-list, which should be preselected.
+   * @param checked
+   *          A list of objects from the chooseables-list, which should be prechecked.
+   * @param numToSelect
+   *          This number specifies, how much of the objects are to be selected, before the page can continue. If 0, the
+   *          page will continue without having an object selected.
+   * @param pageName
+   *          The name of this page (internal use).
+   * @param title
+   *          The title is displayed in the title bar of the wizard window.
+   * @param titleImage
+   *          This image is displayed in the page.
+   */
+  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
     m_chooseables = chooseables;
     m_selected = selected;
     m_checked = checked;
+    m_numToSelect = numToSelect;
   }
 
+  /**
+   * This function sets a LabelProvider, that will be used generate the list names of the objects.
+   * 
+   * @param labelProvider
+   *          The new LabelProvider.
+   */
   public void setLabelProvider( final IBaseLabelProvider labelProvider )
   {
     m_labelProvider = labelProvider;
   }
 
+  /**
+   * This function returns the current LabelProvider, that will be used to generate the list names of the objects.
+   * 
+   * @return The current LabelProvider.
+   */
   public IBaseLabelProvider getLabelProvider( )
   {
     return m_labelProvider;
@@ -150,8 +218,16 @@ public class ArrayChooserPage extends WizardPage
     createSelectButton( buttonpanel, m_viewer, false );
 
     setControl( panel );
+
+    /* Check if the page could be completed. */
+    chkPageComplete( true );
   }
 
+  /**
+   * This function returns a list of selected objects from the chooseable list.
+   * 
+   * @return All selected objects.
+   */
   public Object[] getChoosen( )
   {
     if( m_checked == null )
@@ -160,6 +236,19 @@ public class ArrayChooserPage extends WizardPage
     return m_checked;
   }
 
+  /**
+   * This function creates one type of button from two available types. Each type of button will change the check-state
+   * of all chooseables.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @param viewer
+   *          The viewer, which will be manipulated from this button.
+   * @param select
+   *          The type of the created button.<br>
+   *          If true, a button which will select all chooseables, will be created.<br>
+   *          If false, a button which will unselect all chooseables, will be created.
+   */
   private void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
   {
     final Button button = new Button( parent, SWT.PUSH );
@@ -174,11 +263,22 @@ public class ArrayChooserPage extends WizardPage
       {
         viewer.setAllChecked( select );
 
+        /* Update the list of checked elements. */
         m_checked = viewer.getCheckedElements();
+
+        /* Check, if the page can continue. */
+        chkPageComplete( false );
       }
     } );
   }
 
+  /**
+   * This function sets the list of chooseables. If one is already set via the construtor, it will be replaced by this
+   * list.
+   * 
+   * @param input
+   *          The new list of chooseables.
+   */
   public void setInput( final Object input )
   {
     /* Also set chooseable for the case this method is invoked before the page was created. */
@@ -186,5 +286,32 @@ public class ArrayChooserPage extends WizardPage
 
     if( m_viewer != null )
       m_viewer.setInput( input );
+  }
+
+  /**
+   * This function will check, if all requirements of this page are met.
+   * 
+   * @param firstTime
+   *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
+   *          will be checked, but no error-message will be displayed.
+   */
+  public void chkPageComplete( boolean firstTime )
+  {
+    /* Reset all messages. */
+    WizardPageUtilities.appendWarning( null, this );
+    WizardPageUtilities.appendError( null, this );
+    setPageComplete( true );
+
+    /* If the number of selected objects does not matter, the page will always be finishable. */
+    if( m_numToSelect == 0 )
+      return;
+
+    /* If there are less objects selected, than required, set an error message. */
+    if( m_checked.length < m_numToSelect )
+    {
+      if( !firstTime )
+        WizardPageUtilities.appendError( "Sie müssen mindestens " + String.valueOf( m_numToSelect ) + " Element(e) auswählen.", this );
+      setPageComplete( false );
+    }
   }
 }
