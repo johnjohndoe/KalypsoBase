@@ -40,14 +40,21 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
+import java.util.ArrayList;
+
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -90,6 +97,11 @@ public class ArrayChooserPage extends WizardPage
   protected int m_numToSelect = 0;
 
   /**
+   * The dialog-settings for saving the state of the wizard.
+   */
+  private IDialogSettings m_dialogSettings = null;
+
+  /**
    * This listener updates the internal list of the checked objects, if a selection change has occured.
    */
   private final ICheckStateListener m_checkStateListener = new ICheckStateListener()
@@ -98,6 +110,9 @@ public class ArrayChooserPage extends WizardPage
     {
       /* Update the list of checked elements. */
       m_checked = m_viewer.getCheckedElements();
+
+      /* Update the dialog settings. */
+      updateDialogSettings();
 
       /* Check, if the page can continue. */
       chkPageComplete( false );
@@ -193,6 +208,9 @@ public class ArrayChooserPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
+    /* Init the dialog settings. */
+    initDialogSettings();
+
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
@@ -218,6 +236,9 @@ public class ArrayChooserPage extends WizardPage
     createSelectButton( buttonpanel, m_viewer, false );
 
     setControl( panel );
+
+    /* Apply the dialog settings. */
+    chkDialogSettings();
 
     /* Check if the page could be completed. */
     chkPageComplete( true );
@@ -266,6 +287,9 @@ public class ArrayChooserPage extends WizardPage
         /* Update the list of checked elements. */
         m_checked = viewer.getCheckedElements();
 
+        /* Update the dialog settings. */
+        updateDialogSettings();
+
         /* Check, if the page can continue. */
         chkPageComplete( false );
       }
@@ -295,7 +319,7 @@ public class ArrayChooserPage extends WizardPage
    *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
    *          will be checked, but no error-message will be displayed.
    */
-  public void chkPageComplete( boolean firstTime )
+  protected void chkPageComplete( boolean firstTime )
   {
     /* Reset all messages. */
     WizardPageUtilities.appendWarning( null, this );
@@ -311,7 +335,103 @@ public class ArrayChooserPage extends WizardPage
     {
       if( !firstTime )
         WizardPageUtilities.appendError( "Sie müssen mindestens " + String.valueOf( m_numToSelect ) + " Element(e) auswählen.", this );
+
       setPageComplete( false );
+    }
+  }
+
+  /**
+   * This function will init the dialog settings, if any.
+   */
+  private void initDialogSettings( )
+  {
+    IWizard wizard = getWizard();
+
+    IDialogSettings dialogSettings = wizard.getDialogSettings();
+    if( dialogSettings == null )
+    {
+      m_dialogSettings = null;
+      return;
+    }
+
+    m_dialogSettings = dialogSettings;
+  }
+
+  /**
+   * This function will check the dialog settings, if any, and applys the settings to the page.
+   */
+  private void chkDialogSettings( )
+  {
+    /* Check the dialog settings. */
+    if( m_dialogSettings == null )
+      return;
+
+    /* Get the section for this page. */
+    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage" );
+    if( section == null )
+      return;
+
+    final ArrayList<Object> checked = new ArrayList<Object>();
+    final Object[] elements = ((IStructuredContentProvider) m_viewer.getContentProvider()).getElements( m_viewer.getInput() );
+
+    /* Check all elements of the viewer. */
+    for( int i = 0; i < elements.length; i++ )
+    {
+      String name = "";
+      if( m_labelProvider instanceof ILabelProvider )
+      {
+        ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
+        name = labelProvider.getText( elements[i] );
+      }
+      else if( m_labelProvider instanceof ITableLabelProvider )
+      {
+        ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
+        name = labelProvider.getColumnText( elements[i], 0 );
+      }
+
+      if( name.equals( "" ) )
+        continue;
+
+      /* If they do exist in the dialog settings, the element is added. */
+      String state = section.get( name );
+
+      if( state == null )
+        continue;
+
+      /* The element is added, regardless the value it has. */
+      checked.add( elements[i] );
+    }
+
+    m_viewer.setCheckedElements( checked.toArray() );
+    m_checked = m_viewer.getCheckedElements();
+  }
+
+  /**
+   * This function applies the settings of the page to the dialog settings, if any.
+   */
+  protected void updateDialogSettings( )
+  {
+    if( m_dialogSettings == null )
+      return;
+
+    /* Get the section for this page in creating a new emtpy one, so that no old values will remain. */
+    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage" );
+
+    for( int i = 0; i < m_checked.length; i++ )
+    {
+      String name = "";
+      if( m_labelProvider instanceof ILabelProvider )
+      {
+        ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
+        name = labelProvider.getText( m_checked[i] );
+      }
+      else if( m_labelProvider instanceof ITableLabelProvider )
+      {
+        ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
+        name = labelProvider.getColumnText( m_checked[i], 0 );
+      }
+
+      section.put( name, "checked" );
     }
   }
 }
