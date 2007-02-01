@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.LinearRing;
  * Each linear ring must be a closed triangle, which will be oriented counter clock wise before writing.
  * </p>
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class ZweiDMWriter
 {
@@ -41,8 +41,6 @@ public class ZweiDMWriter
     pw.println( "T2" );
     pw.println( "T3" );
 
-    final RobustCGAlgorithms robustCGAlgorithms = new RobustCGAlgorithms();
-
     // write triangles
     // IMPORTANT: use linked hashmap, so the orering of insertion stays the same
     final LinkedHashMap<Coordinate, Integer> crdSet = new LinkedHashMap<Coordinate, Integer>( m_rings.length * 3 );
@@ -58,7 +56,7 @@ public class ZweiDMWriter
       if( coordinates == null || coordinates.length != 4 )
         throw new IllegalArgumentException( "Ring with wrong number of coordinates.\nMust be a closed ring with 4 coordinates.\n" + ring );
 
-      if( !robustCGAlgorithms.isCCW( coordinates ) )
+      if( !RobustCGAlgorithms.isCCW( coordinates ) )
         ArrayUtils.reverse( coordinates );
 
       for( int j = 0; j < coordinates.length - 1; j++ )

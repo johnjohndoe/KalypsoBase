@@ -38,47 +38,29 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class TriangleDoubleProvider implements DoubleProvider
 {
-  // private final SpatialIndex m_index;
-
   private FeatureList m_triangleList;
+
   public final QName QN_GEOM_TRIANGLE;
 
   public TriangleDoubleProvider( final FeatureList triangleList )
   {
     m_triangleList = triangleList;
     QN_GEOM_TRIANGLE = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
-
-    // m_index = new STRtree( );
-    //
-    // final int num = lrs.length;
-    //
-    // if( pm != null )
-    // pm.reset( 0, num );
-    //			
-    // for( int i = 0; i < num; i++ )
-    // {
-    // m_index.insert( lrs[i].getEnvelopeInternal(), lrs[i] );
-    //					
-    // if( pm != null )
-    // pm.setCurrent( i );
-    // }
-    //
-    // // den Index abschliessen, kann sehr lange dauern
-    // ((STRtree)m_index).build();
   }
 
+  @SuppressWarnings("unchecked")
   private final LinearRing[] getAllContaining( final Coordinate c ) throws GM_Exception
   {
     final Vector<LinearRing> results = new Vector<LinearRing>();
 
     final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
     final List list = m_triangleList.query( position, null );
-    
+
     for( final Object listItem : list )
     {
       final Feature feature = (Feature) listItem;
       final GM_Surface surface = (GM_Surface) feature.getProperty( QN_GEOM_TRIANGLE );
-      
+
       final Geometry geometry = JTSAdapter.export( surface );
       if( geometry instanceof Polygon )
       {
