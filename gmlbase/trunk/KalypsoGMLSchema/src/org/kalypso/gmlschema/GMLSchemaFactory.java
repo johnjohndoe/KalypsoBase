@@ -88,7 +88,7 @@ public class GMLSchemaFactory
       // complex type ...
       gmlSchemaBuilder.registerBuilder( new ComplexType2FeatureContentTypeBuilder( version ) );// OK
       // for local elelments
-      gmlSchemaBuilder.registerBuilder( new FeatureContentType2ElementBuilder( version ) ); // OK
+      gmlSchemaBuilder.registerBuilder( new FeatureContentType2ElementBuilder(  ) ); // OK
 
       // element ...
       gmlSchemaBuilder.registerBuilder( new Element2FeatureTypeBuilder( version ) ); // ok
