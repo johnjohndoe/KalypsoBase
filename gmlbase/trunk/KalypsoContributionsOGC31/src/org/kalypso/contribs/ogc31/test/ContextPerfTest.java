@@ -65,6 +65,7 @@ public class ContextPerfTest extends TestCase
     final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
 
     JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-    logger.showElapsedTime( "JAXBContext was loaded" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "JAXBContext was loaded" );
   }
 }
