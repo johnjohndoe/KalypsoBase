@@ -109,7 +109,7 @@ public final class RunnableContextHelper
 
   /**
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
-   * {@Link IStatus}object.
+   * {@Link IStatus} object.
    */
   public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable,
       final ICoreRunnableWithProgress runnable )
