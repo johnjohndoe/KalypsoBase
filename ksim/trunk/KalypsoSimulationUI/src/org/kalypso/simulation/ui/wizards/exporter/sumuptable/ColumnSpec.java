@@ -112,6 +112,7 @@ public final class ColumnSpec implements Comparable
     return ObsViewUtils.replaceTokens( content, obs, null );
   }
 
+  @Override
   public String toString()
   {
     return getLabel();
@@ -119,7 +120,7 @@ public final class ColumnSpec implements Comparable
 
   public static ColumnSpec[] getColumns( final Arguments args )
   {
-    final List cols = new ArrayList();
+    final List<ColumnSpec> cols = new ArrayList<ColumnSpec>();
 
     for( final Iterator it = args.entrySet().iterator(); it.hasNext(); )
     {
@@ -130,7 +131,7 @@ public final class ColumnSpec implements Comparable
         cols.add( new ColumnSpec( (Arguments)entry.getValue() ) );
     }
 
-    final ColumnSpec[] columns = (ColumnSpec[])cols.toArray( new ColumnSpec[cols.size()] );
+    final ColumnSpec[] columns = cols.toArray( new ColumnSpec[cols.size()] );
     Arrays.sort( columns );
 
     return columns;

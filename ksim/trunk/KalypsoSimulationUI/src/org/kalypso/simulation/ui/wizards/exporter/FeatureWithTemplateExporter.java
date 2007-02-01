@@ -48,6 +48,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -110,7 +111,9 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
    * @see org.kalypso.simulation.ui.wizards.exporter.AbstractFeatureExporter#contributeWizardPages(java.util.List,
    *      org.kalypso.metadoc.configuration.IPublishingConfiguration)
    */
-  protected void contributeWizardPages( final List pages, final IPublishingConfiguration configuration ) throws CoreException
+  @Override
+  protected void contributeWizardPages( final List<IWizardPage> pages, final IPublishingConfiguration configuration )
+      throws CoreException
   {
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
     final URL context = (URL) getFromSupplier( "context" );
@@ -129,19 +132,19 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final List objects = new ArrayList();
+    final List<IExportableObject> objects = new ArrayList<IExportableObject>();
 
     final Object[] templates = m_page.getChoosen();
     for( int i = 0; i < templates.length; i++ )
       createExportableObjectsWith( (UrlArgument) templates[i], objects );
 
-    return (IExportableObject[]) objects.toArray( new IExportableObject[objects.size()] );
+    return objects.toArray( new IExportableObject[objects.size()] );
   }
 
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List<IExportableObject> objects ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );

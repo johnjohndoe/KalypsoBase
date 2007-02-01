@@ -87,6 +87,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  * </ul>
  * </p>
  */
+@SuppressWarnings("restriction")
 public class NewCalculationCaseCreateFolderPage extends WizardPage implements Listener, IProjectProvider
 {
   protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseCreateFolderPage.class.getName() );

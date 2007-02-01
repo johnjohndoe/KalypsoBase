@@ -80,7 +80,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
         return new IWizardPage[0];
 
       final FeatureItem[] items = new FeatureItem[features.size()];
-      final List selItems = new ArrayList( selectedFeatures.size() );
+      final List<FeatureItem> selItems = new ArrayList<FeatureItem>( selectedFeatures.size() );
       for( int count = 0; count < features.size(); count++ )
       {
         final Feature f = (Feature) features.get( count );
@@ -105,7 +105,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     }
 
     // create the list of pages
-    final List pages = new ArrayList();
+    final List<IWizardPage> pages = new ArrayList<IWizardPage>();
 
     // add our feature selection page
     pages.add( m_page );
@@ -113,13 +113,14 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     // let subclasses insert their specific pages
     contributeWizardPages( pages, configuration );
 
-    return (IWizardPage[]) pages.toArray( new IWizardPage[pages.size()] );
+    return pages.toArray( new IWizardPage[pages.size()] );
   }
 
   /**
    * Must be implemented by subclasses in order to insert their own pages
    */
-  protected abstract void contributeWizardPages( List pages, IPublishingConfiguration configuration ) throws CoreException;
+  protected abstract void contributeWizardPages( List<IWizardPage> pages, IPublishingConfiguration configuration )
+      throws CoreException;
 
   /**
    * @return selected features
@@ -167,7 +168,8 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString( )
+    @Override
+    public String toString()
     {
       return getName();
     }

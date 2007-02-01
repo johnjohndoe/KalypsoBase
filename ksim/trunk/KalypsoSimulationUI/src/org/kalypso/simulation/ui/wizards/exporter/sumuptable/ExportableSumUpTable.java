@@ -122,7 +122,7 @@ public final class ExportableSumUpTable implements IExportableObject
           CalendarUtilities.getCalendarField( timeUnit ), Integer.valueOf( timeStep ).intValue(), Double
               .valueOf( delta ).doubleValue() );
 
-      final List stati = new ArrayList();
+      final List<IStatus> stati = new ArrayList<IStatus>();
 
       // for each observation
       final UrlArgument[] items = ExporterHelper.createUrlItems( "obs", m_args, m_context );

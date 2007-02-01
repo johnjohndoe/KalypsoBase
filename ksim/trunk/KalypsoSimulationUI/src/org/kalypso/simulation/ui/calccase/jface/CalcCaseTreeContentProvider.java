@@ -108,7 +108,7 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
       try
       {
         final IContainer container = (IContainer)element;
-        if( container instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)container ) )
+        if( container instanceof IFolder && ModelNature.isCalcCalseFolder( container ) )
           return new Object[0];
         
         if( !container.exists() )
