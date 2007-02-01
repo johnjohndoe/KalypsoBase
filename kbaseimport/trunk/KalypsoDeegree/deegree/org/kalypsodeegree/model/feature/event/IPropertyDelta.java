@@ -41,35 +41,14 @@
 package org.kalypsodeegree.model.feature.event;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public interface IPropertyDelta
 {
-  public Feature getFeature( );
+  /** The feature delta this property delta is part of. */
+  public IFeatureDelta getFeatureDelta( );
 
   public IPropertyType getProperty( );
-
-  /**
-   * Returns the objects which where added to this list-property.
-   * <p>
-   * Applies only to list properties.
-   */
-  public Object[] getAdded( );
-
-  /**
-   * Returns the objects which where remove from this list-property.
-   * <p>
-   * Applies only to list properties.
-   */
-  public Object[] getRemoved( );
-
-  /**
-   * Returns the objects which where changed within this list-property.
-   * <p>
-   * Applies only to list properties.
-   */
-  public Object[] getChanged( );
 }
