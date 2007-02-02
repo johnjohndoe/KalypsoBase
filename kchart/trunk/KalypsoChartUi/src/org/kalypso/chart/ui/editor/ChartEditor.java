@@ -1,6 +1,7 @@
 package org.kalypso.chart.ui.editor;
 
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -15,7 +16,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -26,11 +30,14 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
+import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.ksp.chart.configuration.ChartType;
@@ -41,13 +48,17 @@ import org.ksp.chart.configuration.ConfigurationType;
  */
 public class ChartEditor extends EditorPart
 {
-  private ConfigurationType m_config;
+  private Composite m_composite = null;
 
-  private Composite m_composite;
+  private ConfigurationType m_configuration = null;
 
-  private Chart m_chart;
+  private Chart m_chart = null;
 
-  private ChartEditorOutlinePage m_outlinePage;
+  private ChartType m_chartType = null;
+
+  private ChartEditorOutlinePage m_outlinePage = null;
+
+  private boolean m_isSaving;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -71,7 +82,10 @@ public class ChartEditor extends EditorPart
     super.setInput( input );
 
     // TODO: release old input and control
-    m_config = null;
+
+    // prepare for exception
+    m_chartType = null;
+    m_configuration = null;
 
     InputStream is = null;
     try
@@ -86,10 +100,16 @@ public class ChartEditor extends EditorPart
 
       final Object o = unmarshaller.unmarshal( is );
 
+      final ConfigurationType config;
       if( o instanceof JAXBElement )
-        m_config = (ConfigurationType) ((JAXBElement) o).getValue();
+        config = (ConfigurationType) ((JAXBElement) o).getValue();
       else if( o instanceof ChartType )
-        m_config = (ConfigurationType) o;
+        config = (ConfigurationType) o;
+      else
+        config = null;
+
+      m_chartType = findCurrentChart( config );
+      m_configuration = config;
     }
     catch( final JAXBException e )
     {
@@ -132,8 +152,48 @@ public class ChartEditor extends EditorPart
   @Override
   public void doSave( final IProgressMonitor monitor )
   {
-    // TODO Auto-generated method stub
+    // save only possible when input is a file
+    if( !(getEditorInput() instanceof FileEditorInput) )
+    {
+      // given user a chance to use save-as
+      MessageDialog.openInformation( getSite().getShell(), "Speichern", "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" + "keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n"
+          + "sich möglicherweise um eine 'virtuelle' Vorlage\n" + "Bitte benutzen Sie das 'Speichern als' Kommando." );
 
+      return;
+    }
+
+    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
+    if( input == null )
+      return; // should never happen
+
+    try
+    {
+      m_isSaving = true;
+      
+      final ConfigurationType config = m_configuration;
+      SetContentHelper helper = new SetContentHelper()
+      {
+        @Override
+        protected void write( final OutputStreamWriter writer ) throws Throwable
+        {
+          ConfigLoader.writeConfig( config, writer );
+        }
+      };
+      
+      helper.setFileContents( input.getFile(), false, true, monitor );
+
+      firePropertyChange( PROP_DIRTY );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
+    }
+    finally
+    {
+      m_isSaving = false;
+    }
   }
 
   /**
@@ -142,8 +202,7 @@ public class ChartEditor extends EditorPart
   @Override
   public void doSaveAs( )
   {
-    // TODO Auto-generated method stub
-
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -152,8 +211,7 @@ public class ChartEditor extends EditorPart
   @Override
   public boolean isDirty( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   /**
@@ -162,7 +220,7 @@ public class ChartEditor extends EditorPart
   @Override
   public boolean isSaveAsAllowed( )
   {
-    return true;
+    return false;
   }
 
   /**
@@ -186,7 +244,10 @@ public class ChartEditor extends EditorPart
     m_composite.setFocus();
   }
 
-  private void updateControl( )
+  /**
+   * Totally refreshes the control besed on the contents of {@link m_config.}
+   */
+  public void updateControl( )
   {
     if( m_composite == null || m_composite.isDisposed() )
       return;
@@ -198,63 +259,51 @@ public class ChartEditor extends EditorPart
     for( final Control control : children )
       control.dispose();
 
-    final ChartType chartType = getCurrentChart();
-    if( m_config == null )
+    if( m_chartType == null )
     {
-      /* No config set */
       final Label label = new Label( m_composite, SWT.NONE );
-      label.setText( "No configuration set" );
+      label.setText( "No chart set" );
     }
     else
     {
-      if( chartType == null )
+      /* Create chart */
+      final IEditorInput editorInput = getEditorInput();
+      final IFile file = (IFile) editorInput.getAdapter( IFile.class );
+      try
       {
-        final Label label = new Label( m_composite, SWT.NONE );
-        label.setText( "No chart set" );
+        final URL context = ResourceUtilities.createURL( file );
+        m_chart = new Chart( m_composite, SWT.BORDER );
+        ChartLoader.configureChart( m_chart, m_chartType, context );
+
+        m_chart.setAutoscale( true );
       }
-      else
+      catch( final MalformedURLException e )
       {
-        /* Create chart */
-
-        final IEditorInput editorInput = getEditorInput();
-        final IFile file = (IFile) editorInput.getAdapter( IFile.class );
-        try
-        {
-          final URL context = ResourceUtilities.createURL( file );
-          m_chart = new Chart( m_composite, SWT.BORDER );
-          ChartLoader.configureChart( m_chart, chartType, context );
-
-          m_chart.setAutoscale( true );
-        }
-        catch( final MalformedURLException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
+
     }
 
     m_composite.layout();
 
     if( m_outlinePage != null )
-      m_outlinePage.setChart( m_chart );
+      m_outlinePage.updateControl();
   }
 
-  private ChartType getCurrentChart( )
+  private ChartType findCurrentChart( final ConfigurationType config )
   {
-    if( m_config == null )
+    if( config == null )
       return null;
 
+    ChartType ct = null;
 
-    ChartType ct=null;
-
-    List<Object> chartOrLayerOrAxis = m_config.getChartOrLayerOrAxis();
-    for( Object o: chartOrLayerOrAxis )
+    final List<Object> chartOrLayerOrAxis = config.getChartOrLayerOrAxis();
+    for( final Object o : chartOrLayerOrAxis )
     {
-      if (o instanceof ChartType)
+      if( o instanceof ChartType )
       {
-        ct=(ChartType) o;
+        ct = (ChartType) o;
         break;
       }
     }
@@ -266,6 +315,11 @@ public class ChartEditor extends EditorPart
     return m_chart;
   }
 
+  public ChartType getChartType( )
+  {
+    return m_chartType;
+  }
+
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
@@ -275,14 +329,26 @@ public class ChartEditor extends EditorPart
     if( IContentOutlinePage.class.equals( adapter ) )
     {
       if( m_outlinePage == null )
-      {
-        m_outlinePage = new ChartEditorOutlinePage( );
-        m_outlinePage.setChart( m_chart );
-      }
+        m_outlinePage = new ChartEditorOutlinePage( this );
 
       return m_outlinePage;
     }
 
     return super.getAdapter( adapter );
+  }
+
+  public void drawLegendIcon( final String name, final Image img )
+  {
+    final List<IChartLayer> layers = m_chart.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      // TODO: change this to get id!
+      if( layer.getName().equals( name ) )
+      {
+        final Rectangle bounds = img.getBounds();
+        layer.drawIcon( img, bounds.width, bounds.height );
+        break;
+      }
+    }
   }
 }

@@ -77,6 +77,8 @@ public class StyledLine implements IStyledElement
   }
 
   /**
+   * todo. why setPath instead of paint( ..., path ) ??
+   * 
    * @see org.kalypso.swtchart.chart.styles.IStyledElement#setPath(java.util.ArrayList)
    */
   public void setPath( List<Point> path )

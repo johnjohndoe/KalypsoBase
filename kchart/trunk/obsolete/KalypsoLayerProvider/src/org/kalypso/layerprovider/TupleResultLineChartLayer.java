@@ -58,6 +58,7 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.impl.DataRange;
+import org.kalypso.swtchart.chart.legend.DefaultLegendItem;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
@@ -258,7 +259,7 @@ public class TupleResultLineChartLayer implements IChartLayer
     return new DataRange( min, max );
   }
 
-  public void drawIcon( Image img, int width, int height )
+  public void drawIcon( final Image img, final int width, final int height )
   {
     GC gc = new GC( img );
     GCWrapper gcw = new GCWrapper( gc );

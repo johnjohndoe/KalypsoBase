@@ -57,8 +57,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.ChartType.Layers;
+import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 
 /**
  * @author Gernot Belger
@@ -67,9 +68,12 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 {
   private CheckboxTableViewer m_viewer;
 
-  private Chart m_chart;
+  private final ChartEditor m_editor;
 
-  // private Composite m_composite;
+  public ChartEditorOutlinePage( final ChartEditor editor )
+  {
+    m_editor = editor;
+  }
 
   /**
    * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
@@ -98,27 +102,28 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     m_viewer = new CheckboxTableViewer( table );
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new ChartLabelProvider() );
+    m_viewer.setLabelProvider( new ChartLabelProvider(  m_editor ) );
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IChartLayer layer = (IChartLayer) event.getElement();
-        System.out.println( layer.getName() + " visible: " + event.getChecked() );
+        handleCheckStateChanged( (LayerType) event.getElement(), event.getChecked() );
       }
     } );
 
     updateControl();
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#dispose()
-   */
+  protected void handleCheckStateChanged( final LayerType layer, final boolean checked )
+  {
+    layer.setVisible( checked );
+
+    m_editor.updateControl();
+  }
+
   public void dispose( )
   {
-    if( m_viewer != null )
-      m_viewer.getLabelProvider().dispose();
   }
 
   /**
@@ -177,23 +182,19 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     m_viewer.setSelection( selection );
   }
 
-  public void setChart( final Chart chart )
+  /* default-visible */void updateControl( )
   {
-    m_chart = chart;
+    final Layers layers = m_editor.getChartType().getLayers();
 
-    updateControl();
-  }
+    final List<LayerRef> layerRefList = layers.getLayerRef();
+    final LayerType[] layerArray = new LayerType[layerRefList.size()];
+    for( int i = 0; i < layerArray.length; i++ )
+      layerArray[i] = (LayerType) layerRefList.get( i ).getRef();
 
-  private void updateControl( )
-  {
-    if( m_viewer != null )
-    {
-      final List<IChartLayer> layers = m_chart.getLayers();
-      m_viewer.setInput( layers );
+    m_viewer.setInput( layerArray );
 
-//      for( final IChartLayer layer : layers )
-//        m_viewer.setChecked( layer, layer.isVisible() );
-    }
+    for( int i = 0; i < layerArray.length; i++ )
+      m_viewer.setChecked( layerArray[i], layerArray[i].isVisible() );
   }
 
 }

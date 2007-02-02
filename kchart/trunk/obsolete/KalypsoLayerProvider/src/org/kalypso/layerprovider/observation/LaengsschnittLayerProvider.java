@@ -42,9 +42,6 @@ package org.kalypso.layerprovider.observation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.kalypso.layerprovider.TupleResultLineChartLayer;
 import org.kalypso.observation.IObservation;
@@ -57,7 +54,6 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypso.swtchart.exception.LayerProviderException;
 import org.kalypso.swtchart.logging.Logger;
@@ -68,7 +64,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.LayerType;
-import org.ksp.chart.layerstyle.StyleType;
 
 
 /**

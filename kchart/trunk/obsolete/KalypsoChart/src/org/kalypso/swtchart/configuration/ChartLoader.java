@@ -60,23 +60,14 @@ import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.ChartType;
 import org.ksp.chart.configuration.LayerType;
-import org.ksp.chart.configuration.ChartType.Layers;
 import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 import org.ksp.chart.configuration.LayerType.Axes;
 
-
 /**
- * @author burtscher
- *
- * Creates a chart object from a configration
+ * @author burtscher Creates a chart object from a configration
  */
 public class ChartLoader
 {
-
-
-  private static Layers layers;
-
-
   /**
    * @param chart
    *          the (empty) chart widget which is to be filled
@@ -98,48 +89,48 @@ public class ChartLoader
     }
     else
     {
-      configureChart( chart, configChart, context);
+      configureChart( chart, configChart, context );
     }
     return chart;
   }
 
-
-  public static void configureChart( final Chart chart, final ChartType configChart, final URL context)
+  public static void configureChart( final Chart chart, final ChartType configChart, final URL context )
   {
-    List<LayerRef> layerRefs = configChart.getLayers().getLayerRef();
-    for( LayerRef layerRef: layerRefs )
+    final List<LayerRef> layerRefs = configChart.getLayers().getLayerRef();
+    for( final LayerRef layerRef : layerRefs )
     {
-
-      LayerType layerType=(LayerType) layerRef.getRef();
+      final LayerType layerType = (LayerType) layerRef.getRef();
+      
+      /* Just ignore invisible layer */
       String providerId = layerType.getProvider().getId();
       layerType.getParameters();
 
-      //Achsen hinzufügen
+      // Achsen hinzufügen
       Axes axes = layerType.getAxes();
-      AxisType domainAxisType=(AxisType) axes.getDomainAxisRef().getRef();
+      AxisType domainAxisType = (AxisType) axes.getDomainAxisRef().getRef();
       addConfigAxis( chart, domainAxisType );
-      AxisType valueAxisType=(AxisType) axes.getValueAxisRef().getRef();
+      AxisType valueAxisType = (AxisType) axes.getValueAxisRef().getRef();
       addConfigAxis( chart, valueAxisType );
-
 
       try
       {
         final ILayerProvider provider = KalypsoChartExtensions.createLayerProvider( providerId );
         if( provider != null )
         {
-          Logger.logInfo( Logger.TOPIC_LOG_GENERAL,  "LayerProvider loaded:" + provider.getClass().toString() );
-          provider.init( chart, layerType  );
+          Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
+          provider.init( chart, layerType );
           IChartLayer icl = provider.getLayer( context );
           if( icl != null )
           {
-               Logger.trace( "Adding Layer " + icl.getName() );
-               icl.setStyle( StyleLoader.createStyle(layerType) );
-               chart.addLayer( icl );
+            Logger.trace( "Adding Layer " + icl.getName() );
+            icl.setStyle( StyleLoader.createStyle( layerType ) );
+            icl.setVisibility( layerType.isVisible() );
+            chart.addLayer( icl );
           }
         }
         else
         {
-          Logger.logError( Logger.TOPIC_LOG_GENERAL,  "No LayerProvider for " + providerId );
+          Logger.logError( Logger.TOPIC_LOG_GENERAL, "No LayerProvider for " + providerId );
         }
       }
       catch( final CoreException e )
@@ -152,9 +143,7 @@ public class ChartLoader
       }
     }
 
-
   }
-
 
   /**
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
@@ -164,42 +153,42 @@ public class ChartLoader
   {
     IAxisRegistry ar = chart.getAxisRegistry();
 
-    if (a!=null)
+    if( a != null )
     {
-      ParameterHelper ph=new ParameterHelper();
+      ParameterHelper ph = new ParameterHelper();
       ph.addParameters( a.getParameters(), a.getName() );
 
-      String provider=a.getProvider().getId();
-      IAxis axis=null;
-      if (provider.compareTo( "" )!=0)
+      String provider = a.getProvider().getId();
+      IAxis axis = null;
+      if( provider.compareTo( "" ) != 0 )
       {
-          try
+        try
+        {
+          IAxisProvider ap = KalypsoChartExtensions.createAxisProvider( provider );
+          ap.init( a );
+          axis = ap.getAxis();
+          if( ar.getRenderer( axis ) == null )
           {
-            IAxisProvider ap=KalypsoChartExtensions.createAxisProvider( provider );
-            ap.init( a );
-            axis=ap.getAxis();
-            if( ar.getRenderer( axis ) == null )
-            {
-              IAxisRenderer axisRenderer = ap.getRenderer();
-              Class<?> dataClass=ap.getDataClass();
-              ar.setRenderer( dataClass, axisRenderer );
-            }
-            ar.addAxis( axis );
+            IAxisRenderer axisRenderer = ap.getRenderer();
+            Class< ? > dataClass = ap.getDataClass();
+            ar.setRenderer( dataClass, axisRenderer );
           }
-          catch( CoreException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-          catch( AxisProviderException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+          ar.addAxis( axis );
+        }
+        catch( CoreException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( AxisProviderException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
       else
       {
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider "+provider+" not known" );
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + provider + " not known" );
       }
     }
     else

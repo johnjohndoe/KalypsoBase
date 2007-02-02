@@ -41,12 +41,14 @@
 package org.kalypso.swtchart.configuration;
 
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.swtchart.logging.Logger;
@@ -60,32 +62,30 @@ import org.ksp.chart.configuration.TableType;
 
 /**
  * @author alibu
- *
  */
 public class ConfigLoader
 {
-  private String m_configPath;
-
-  private HashMap<String, ChartType> m_charts=new HashMap<String, ChartType>();
-
-  private HashMap<String, AxisType> m_axes=new HashMap<String, AxisType>();
-
-  private HashMap<String, LayerType> m_layers=new HashMap<String, LayerType>();
-
-  private HashMap<String, StyleType> m_styles=new HashMap<String, StyleType>();
-
-  private HashMap<String, TableType> m_tables=new HashMap<String, TableType>();
-
-
-  private ConfigurationType m_config;
-
-
   public final static ObjectFactory OF = new ObjectFactory();
 
   public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
+  private String m_configPath;
+
+  private HashMap<String, ChartType> m_charts = new HashMap<String, ChartType>();
+
+  private HashMap<String, AxisType> m_axes = new HashMap<String, AxisType>();
+
+  private HashMap<String, LayerType> m_layers = new HashMap<String, LayerType>();
+
+  private HashMap<String, StyleType> m_styles = new HashMap<String, StyleType>();
+
+  private HashMap<String, TableType> m_tables = new HashMap<String, TableType>();
+
+  private ConfigurationType m_config;
+
   /**
-   * @param path file system path or url where the configuration file can be found
+   * @param path
+   *          file system path or url where the configuration file can be found
    */
   public ConfigLoader( String path ) throws JAXBException
   {
@@ -94,13 +94,13 @@ public class ConfigLoader
   }
 
   /**
-   *  reads and loads the configuration file
+   * reads and loads the configuration file
    */
   public void loadFile( ) throws JAXBException
   {
-      File file = new File( m_configPath );
-      if (file.exists())
-      {
+    File file = new File( m_configPath );
+    if( file.exists() )
+    {
       Object o = JC.createUnmarshaller().unmarshal( file );
       if( o instanceof JAXBElement )
       {
@@ -115,9 +115,9 @@ public class ConfigLoader
       Logger.trace( "loadFile End" );
       divideObjects();
     }
-      else
+    else
     {
-      Logger.trace("ERROR: Der Pfad zur Konfigurationsdatei konnte nicht aufgelöst werden. Bitte überprüfen Sie die Einstellungen. \n"+m_configPath);
+      Logger.trace( "ERROR: Der Pfad zur Konfigurationsdatei konnte nicht aufgelöst werden. Bitte überprüfen Sie die Einstellungen. \n" + m_configPath );
     }
   }
 
@@ -129,34 +129,34 @@ public class ConfigLoader
     return m_config;
   }
 
-  public void divideObjects()
+  public void divideObjects( )
   {
     List<Object> chartOrLayerOrAxis = m_config.getChartOrLayerOrAxis();
     for( Object object : chartOrLayerOrAxis )
     {
-      if (object instanceof ChartType)
+      if( object instanceof ChartType )
       {
-        ChartType o=(ChartType) object;
+        ChartType o = (ChartType) object;
         m_charts.put( o.getName(), o );
       }
-      else if (object instanceof AxisType)
+      else if( object instanceof AxisType )
       {
-        AxisType o=(AxisType) object;
+        AxisType o = (AxisType) object;
         m_axes.put( o.getName(), o );
       }
-      else if (object instanceof LayerType)
+      else if( object instanceof LayerType )
       {
-        LayerType o=(LayerType) object;
+        LayerType o = (LayerType) object;
         m_layers.put( o.getName(), o );
       }
-      else if (object instanceof StyleType)
+      else if( object instanceof StyleType )
       {
-        StyleType o=(StyleType) object;
+        StyleType o = (StyleType) object;
         m_styles.put( o.getName(), o );
       }
-      else if (object instanceof TableType)
+      else if( object instanceof TableType )
       {
-        TableType o=(TableType) object;
+        TableType o = (TableType) object;
         m_tables.put( o.getName(), o );
       }
     }
@@ -187,7 +187,6 @@ public class ConfigLoader
     return m_layers;
   }
 
-
   public HashMap<String, StyleType> getStyles( )
   {
     return m_styles;
@@ -196,5 +195,15 @@ public class ConfigLoader
   public HashMap<String, TableType> getTables( )
   {
     return m_tables;
+  }
+  
+  public static void writeConfig( final ConfigurationType config, final OutputStreamWriter writer ) throws JAXBException
+  {
+    final Marshaller marshaller = JC.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.setProperty( Marshaller.JAXB_ENCODING, writer.getEncoding() );
+
+    final JAXBElement<ConfigurationType> configElement = OF.createConfiguration( config );
+    marshaller.marshal( configElement, writer );
   }
 }

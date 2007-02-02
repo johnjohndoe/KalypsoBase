@@ -46,14 +46,35 @@ import java.util.Map;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.eclipse.swt.graphics.Rectangle;
+import org.ksp.chart.configuration.LayerType;
 
 /**
  * @author Gernot Belger
  */
 public class ChartLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  private Map<IChartLayer, Image> m_images = new HashMap<IChartLayer, Image>();
+  private Map<LayerType, Image> m_images = new HashMap<LayerType, Image>();
+
+  private final ChartEditor m_editor;
+
+  public ChartLabelProvider( final ChartEditor editor )
+  {
+    m_editor = editor;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+
+    for( final Image img : m_images.values() )
+      img.dispose();
+    m_images.clear();
+  }
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -61,8 +82,8 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof IChartLayer )
-      return ((IChartLayer) element).getName();
+    if( element instanceof LayerType )
+      return ((LayerType) element).getTitle();
 
     return super.getText( element );
   }
@@ -73,15 +94,17 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof IChartLayer )
+    if( element instanceof LayerType )
     {
-      final IChartLayer chartLayer = (IChartLayer) element;
+      final LayerType chartLayer = (LayerType) element;
       if( m_images.containsKey( chartLayer ) )
         return m_images.get( chartLayer );
 
-//      chartLayer.drawIcon( img, width, height );
-
-      return null;
+      final Image img = new Image( m_editor.getChart().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
+      // TODO: change this to getName
+      m_editor.drawLegendIcon( chartLayer.getTitle(), img );
+      m_images.put( chartLayer, img );
+      return img;
     }
 
     return super.getImage( element );

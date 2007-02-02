@@ -57,7 +57,6 @@ import org.kalypso.swtchart.logging.Logger;
  */
 public class DefaultLegendItem implements ILegendItem
 {
-
   private IChartLayer m_layer;
 
   private int m_inset = 5;
@@ -66,9 +65,7 @@ public class DefaultLegendItem implements ILegendItem
 
   private int m_iconWidth;
 
-  private Point m_size;
-  
-  private FontData m_fd=new FontData("Arial", 10, SWT.NONE);
+  private FontData m_fd = new FontData( "Arial", 10, SWT.NONE );
 
   public DefaultLegendItem( IChartLayer l, int iconWidth, int iconHeight, int inset )
   {
@@ -90,8 +87,7 @@ public class DefaultLegendItem implements ILegendItem
     f.dispose();
     return point;
   }
-  
-  
+
   /**
    * @see org.kalypso.swtchart.chart.legend.ILegendItem#getName()
    */
@@ -130,16 +126,16 @@ public class DefaultLegendItem implements ILegendItem
     GC gc = new GC( Display.getDefault() );
     GCWrapper gcw = new GCWrapper( gc );
 
-    Point nameWidth=getTextExtent( gcw, Display.getCurrent(), getName(), m_fd );
+    Point nameWidth = getTextExtent( gcw, Display.getCurrent(), getName(), m_fd );
 
     int width = m_inset + m_iconWidth + m_inset + nameWidth.x + m_inset;
     int height = m_inset + m_iconHeight + m_inset;
-   // Logger.trace("LegendTextWidth (computeSize): "+nameWidth+" LegendText: "+getName());
-    
+    // Logger.trace("LegendTextWidth (computeSize): "+nameWidth+" LegendText: "+getName());
+
     gcw.dispose();
     gc.dispose();
-    
-    return m_size = new Point( width, height );
+
+    return new Point( width, height );
   }
 
   /**
@@ -147,7 +143,7 @@ public class DefaultLegendItem implements ILegendItem
    */
   public Point getSize( )
   {
-    return computeSize( 0, 0);
+    return computeSize( 0, 0 );
   }
 
   /**
@@ -157,10 +153,10 @@ public class DefaultLegendItem implements ILegendItem
   {
     GC gc = new GC( img );
     Point p0 = new Point( m_inset, m_inset );
-    GCWrapper gcw=new GCWrapper(gc);
-    
-    Point nameBounds=getTextExtent( gcw, Display.getCurrent(), getName(), m_fd );
-    
+    GCWrapper gcw = new GCWrapper( gc );
+
+    Point nameBounds = getTextExtent( gcw, Display.getCurrent(), getName(), m_fd );
+
     gc.setBackground( Display.getDefault().getSystemColor( (int) (Math.random() * 20.0) ) );
 
     // Icon holen
@@ -177,26 +173,25 @@ public class DefaultLegendItem implements ILegendItem
 
     // Jetzt den Layernamen
     gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
-    
+
     // an Mitte von icon anpassen
-  //  int width=getName().length()*fm.getAverageCharWidth();
-    int width=nameBounds.x;
-    Logger.trace("LegendTextWidth (paint) : "+width+" LegendText: "+getName());
-    
+    // int width=getName().length()*fm.getAverageCharWidth();
+    int width = nameBounds.x;
+    Logger.trace( "LegendTextWidth (paint) : " + width + " LegendText: " + getName() );
+
     int fontheight = nameBounds.y;
     int fontTop = (m_iconHeight - fontheight) / 2;
-    
-    int textX=p0.x + m_iconWidth + m_inset;
-    int textY=p0.y + fontTop;
-  //  gc.drawString( getName(), textX , textY );
 
-    drawText(gcw, gc.getDevice(), getName(),textX, textY, m_fd );
-    
+    int textX = p0.x + m_iconWidth + m_inset;
+    int textY = p0.y + fontTop;
+    // gc.drawString( getName(), textX , textY );
+
+    drawText( gcw, gc.getDevice(), getName(), textX, textY, m_fd );
+
     gcw.dispose();
     gc.dispose();
   }
-  
-  
+
   /**
    * draws a given text at the position using special fontData
    */
