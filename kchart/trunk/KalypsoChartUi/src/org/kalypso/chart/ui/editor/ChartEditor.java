@@ -60,6 +60,8 @@ public class ChartEditor extends EditorPart
 
   private boolean m_isSaving;
 
+  private boolean m_dirty = false;
+
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
@@ -129,6 +131,9 @@ public class ChartEditor extends EditorPart
     }
 
     updateControl();
+
+    m_dirty = false;
+    firePropertyChange( PROP_DIRTY );
   }
 
   /**
@@ -169,7 +174,7 @@ public class ChartEditor extends EditorPart
     try
     {
       m_isSaving = true;
-      
+
       final ConfigurationType config = m_configuration;
       SetContentHelper helper = new SetContentHelper()
       {
@@ -179,16 +184,17 @@ public class ChartEditor extends EditorPart
           ConfigLoader.writeConfig( config, writer );
         }
       };
-      
+
       helper.setFileContents( input.getFile(), false, true, monitor );
 
+      m_dirty = false;
       firePropertyChange( PROP_DIRTY );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
-      e.printStackTrace();
-
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
+      final IStatus status = e.getStatus();
+      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
     }
     finally
     {
@@ -211,7 +217,7 @@ public class ChartEditor extends EditorPart
   @Override
   public boolean isDirty( )
   {
-    return true;
+    return m_dirty;
   }
 
   /**
@@ -232,7 +238,15 @@ public class ChartEditor extends EditorPart
     m_composite = new Composite( parent, SWT.NONE );
     m_composite.setLayout( new FillLayout() );
 
+    final boolean isDirty = m_dirty;
+
     updateControl();
+
+    /*
+     * Update controle sets dirty to true, so we reset it here, in order to have a non dirty editor when opened.
+     */
+    m_dirty = isDirty;
+    firePropertyChange( PROP_DIRTY );
   }
 
   /**
@@ -289,6 +303,10 @@ public class ChartEditor extends EditorPart
 
     if( m_outlinePage != null )
       m_outlinePage.updateControl();
+
+    // HACK: at the moment, we always set dirty, when updateControl is called
+    m_dirty = true;
+    firePropertyChange( PROP_DIRTY );
   }
 
   private ChartType findCurrentChart( final ConfigurationType config )

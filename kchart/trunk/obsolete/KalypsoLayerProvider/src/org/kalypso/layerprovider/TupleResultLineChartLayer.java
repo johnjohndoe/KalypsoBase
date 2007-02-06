@@ -43,12 +43,10 @@ package org.kalypso.layerprovider;
 import java.util.ArrayList;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
@@ -58,7 +56,6 @@ import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.impl.DataRange;
-import org.kalypso.swtchart.chart.legend.DefaultLegendItem;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
@@ -115,9 +112,10 @@ public class TupleResultLineChartLayer implements IChartLayer
     int size = m_result.size();
     gc.setLineWidth( 1 );
 
-    StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
+    final StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
+    final StyledPoint sp = (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 );
 
-    ArrayList<Point> path = new ArrayList<Point>();
+    final ArrayList<Point> path = new ArrayList<Point>();
 
     for( int i = 0; i < size; i++ )
     {
@@ -128,13 +126,20 @@ public class TupleResultLineChartLayer implements IChartLayer
 
       int ix1 = m_domAxis.logicalToScreen( x1 );
       int iy1 = m_valAxis.logicalToScreen( y1 );
-      path.add( new Point( ix1, iy1 ) );
+      final Point point = new Point( ix1, iy1 );
+      path.add( point );
     }
 
     if( sl != null )
     {
       sl.setPath( path );
       sl.paint( gc, dev );
+    }
+    
+    if( sp != null )
+    {
+      sp.setPath( path );
+      sp.paint( gc, dev );
     }
   }
 
