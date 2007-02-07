@@ -1,10 +1,11 @@
-package kalypso.service.ogc;
+package org.kalypso.service.ogc;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.ogc.exception.OWSException;
+
 
 public interface IService {
 

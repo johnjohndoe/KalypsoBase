@@ -1,4 +1,4 @@
-package kalypso.service.ogc;
+package org.kalypso.service.ogc;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

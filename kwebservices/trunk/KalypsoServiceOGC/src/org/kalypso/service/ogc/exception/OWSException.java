@@ -1,4 +1,4 @@
-package kalypso.service.ogc.exception;
+package org.kalypso.service.ogc.exception;
 
 
 public class OWSException extends Exception{

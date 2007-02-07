@@ -1,4 +1,4 @@
-package kalypso.service.ogc;
+package org.kalypso.service.ogc;
 
 import java.io.IOException;
 
@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.ogc.exception.OWSException;
+
 
 /**
  * @author Gernot Belger
