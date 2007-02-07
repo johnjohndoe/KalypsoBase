@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="kalypso.webservices.ogc">
+<schema targetNamespace="kalypso.service.ogc">
 <annotation>
       <appInfo>
-         <meta.schema plugin="kalypso.webservices.ogc" id="org.kalypso.webservices.ogc" name="org.kalypso.webservices.ogc"/>
+         <meta.schema plugin="kalypso.service.ogc" id="org.kalypso.service.ogc" name="org.kalypso.service.ogc"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

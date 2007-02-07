@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="org.kalypso.webservices.ogc" name="org.kalypso.webservices.ogc" schema="schema/org.kalypso.webservices.ogc.exsd"/>
+   <extension-point id="org.kalypso.service.ogc" name="org.kalypso.service.ogc" schema="schema/org.kalypso.service.ogc.exsd"/>
 
 </plugin>
