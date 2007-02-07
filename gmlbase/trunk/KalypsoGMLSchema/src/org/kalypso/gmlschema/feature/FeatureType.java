@@ -230,9 +230,15 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return m_defaultGeometryPosition;
   }
 
+  /**
+   * Returns -1 if the property does not exist.
+   * 
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getPropertyPosition(org.kalypso.gmlschema.property.IPropertyType)
+   */
   public int getPropertyPosition( final IPropertyType propertyType )
   {
-    return m_positionMap.get( propertyType ).intValue();
+    final Integer pos = m_positionMap.get( propertyType );
+    return pos == null ? -1 : pos.intValue();
   }
 
   /**
