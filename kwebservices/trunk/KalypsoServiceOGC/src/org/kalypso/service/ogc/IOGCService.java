@@ -4,22 +4,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.kalypso.service.ogc.exception.OWSException;
 
+public interface IOGCService
+{
 
-public interface IOGCService {
+  /**
+   * @param parameters
+   * @param response
+   * @throws OWSException
+   */
+  public void executeOperation( RequestBean request, HttpServletResponse response ) throws OWSException;
 
-	/**
-	 * 
-	 * @param parameters
-	 * @param response
-	 * @throws OWSException
-	 */
-	public void executeOperation(RequestBean request, HttpServletResponse response) throws OWSException;
-	
-	/**
-	 * method will be called when the main servlet is unloaded; 
-	 * can be used to dispose swt-objects, etc.
-	 */
-	public void destroy();
-	
-	
+  /**
+   * method will be called when the main servlet is unloaded; can be used to dispose swt-objects, etc.
+   */
+  public void destroy( );
+
 }

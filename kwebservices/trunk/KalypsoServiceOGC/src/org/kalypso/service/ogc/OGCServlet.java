@@ -12,84 +12,67 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.kalypso.service.ogc.exception.OWSException;
 
-
-
 /**
  * @author Gernot Belger
  */
 @SuppressWarnings("serial")
 public class OGCServlet extends HttpServlet implements Servlet
 {
-  
 
-
-  
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-   *      javax.servlet.http.HttpServletResponse)
-   *      
-   *      this method has to be synchronized as it uses graphics on an environment without a running display;
-   *      therefore, the display has to be created (Display.getDefault()) and disposed synchronously (or using
-   *      the display generates an illegal Access Error)
-   *      The Display.getCurrent()-method is of no use here.
-   *      
-   *      @TODO: integrate operations extension
+   *      javax.servlet.http.HttpServletResponse) this method has to be synchronized as it uses graphics on an
+   *      environment without a running display; therefore, the display has to be created (Display.getDefault()) and
+   *      disposed synchronously (or using the display generates an illegal Access Error) The
+   *      Display.getCurrent()-method is of no use here.
+   * @TODO: integrate operations extension
    */
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     String service = request.getParameter( "SERVICE" );
-    if( service != null  )
+    if( service != null )
     {
-    	IOGCService ogcService=null;
-    	//Service-Klasse laden
-    	
-    	
-    	if (ogcService!=null)
-    	{
-    		//Operation ausführen
-    		try
-    		{
-    			ogcService.executeOperation(parametersToBean(request), response);
-    		}
-    		catch (OWSException e)
-    		{
-    			//Fehler ausgeben: Operation nicht gefunden
-    			
-    			//Fehler ausgeben: Parameterwert nicht gültig
-    		}
-    	}
-    	else
-    	{
-    		//Fehler ausgeben: Service nicht gefunden
-    	}
-    	
+      IOGCService ogcService = null;
+      // Service-Klasse laden
+
+      if( ogcService != null )
+      {
+        // Operation ausführen
+        try
+        {
+          ogcService.executeOperation( parametersToBean( request ), response );
+        }
+        catch( OWSException e )
+        {
+          // Fehler ausgeben: Operation nicht gefunden
+
+          // Fehler ausgeben: Parameterwert nicht gültig
+        }
+      }
+      else
+      {
+        // Fehler ausgeben: Service nicht gefunden
+      }
+
     }
     else
     {
-    	//Fehler ausgeben: Kein Service spezifiziert
+      // Fehler ausgeben: Kein Service spezifiziert
     }
-    
+
   }
-  
+
   /**
    */
-  private RequestBean parametersToBean(HttpServletRequest request)
+  private RequestBean parametersToBean( HttpServletRequest request )
   {
-	  /*
-	  HashMap<String, String> newParameters=new HashMap<String, String>();
-	 
-	  Set set = parameters.keySet();
-	  for (Object object : set) {
-		String key=(String) object;
-		String value= (String) parameters.get(key);
-		newParameters.put(key, value);
-	  }
-	  
-	  return newParameters;
-	  */
-	  return null;
+    /*
+     * HashMap<String, String> newParameters=new HashMap<String, String>(); Set set = parameters.keySet(); for (Object
+     * object : set) { String key=(String) object; String value= (String) parameters.get(key); newParameters.put(key,
+     * value); } return newParameters;
+     */
+    return null;
   }
-    
-  
+
 }
