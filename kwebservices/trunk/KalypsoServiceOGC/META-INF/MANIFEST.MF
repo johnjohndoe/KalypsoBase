@@ -7,6 +7,7 @@ Bundle-Activator: kalypso.service.ogc.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime
 Eclipse-LazyStart: true
-Export-Package: kalypso.service.ogc
+Export-Package: kalypso.service.ogc,
+ kalypso.service.ogc.exception
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"

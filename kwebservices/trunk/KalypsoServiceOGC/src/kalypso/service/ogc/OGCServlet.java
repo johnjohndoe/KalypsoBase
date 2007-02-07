@@ -35,7 +35,7 @@ public class OGCServlet extends HttpServlet implements Servlet
    *      @TODO: integrate operations extension
    */
   @Override
-  protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
+  protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     String service = request.getParameter( "SERVICE" );
     if( service != null  )
