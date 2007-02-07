@@ -11,7 +11,7 @@ public class OWSException extends Exception
     VERSION_NEGPTIOATON_FAILED,
     INVALID_UPDATE_SEQUENCE,
     NO_APPLICABLE_CODE
-  };
+  }
 
   private static final long serialVersionUID = 1L;
 

@@ -1,9 +1,6 @@
 package org.kalypso.service.ogc;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
