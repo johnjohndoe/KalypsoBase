@@ -2,5 +2,11 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="org.kalypso.service.ogc" name="org.kalypso.service.ogc" schema="schema/org.kalypso.service.ogc.exsd"/>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/ods"
+            class="org.kalypso.service.ogc.OGCServlet"/>
+   </extension>
 
 </plugin>
