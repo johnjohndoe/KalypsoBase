@@ -43,9 +43,11 @@ package org.kalypso.services.ods.helper;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.NumberAxis;
@@ -67,14 +69,14 @@ public class ODSUtils
   /**
    * sets the charts axes values as given by the request parameters AXIS_MIN and AXIS_MAX
    */
-  public static void setAxisValues(Chart c, HttpServletRequest request )
+  public static void setAxisValues(Chart c, RequestBean requestBean )
   {
     String minstring=null;
     String maxstring=null;
-    if (request!=null)
+    if (requestBean!=null)
     {
-      minstring=request.getParameter( "AXIS_MIN" );
-      maxstring=request.getParameter( "AXIS_MAX" );
+      minstring=requestBean.getParameterValue( "AXIS_MIN" );
+      maxstring=requestBean.getParameterValue( "AXIS_MAX" );
     } 
     if (minstring!=null)
     {
@@ -147,9 +149,9 @@ public class ODSUtils
    * is not empty, all those layers which are not mentioned in the comma separated list
    * are set invisible
    */
-  public static void setLayerVisibility(Chart chart, HttpServletRequest request)
+  public static void setLayerVisibility(Chart chart, RequestBean requestBean)
   {
-    String reqLayerString=request.getParameter( "LAYERS" );
+    String reqLayerString=requestBean.getParameterValue( "LAYERS" );
     if (reqLayerString!=null)
     {
       String[] reqLayers=reqLayerString.split( "," );

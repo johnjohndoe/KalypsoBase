@@ -4,14 +4,20 @@
 package org.kalypso.services.ods;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypso.service.ogc.IOGCService;
+import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
@@ -21,10 +27,10 @@ import org.kalypso.services.ods.operation.ODSOperationExtensions;
 import org.kalypso.swtchart.logging.Logger;
 
 /**
- * @author Gernot Belger
+ * @author Alex Burtscher
  */
 @SuppressWarnings("serial")
-public class ODSServlet extends HttpServlet implements Servlet
+public class ODSServlet implements IOGCService
 {
   
 
@@ -41,29 +47,6 @@ public class ODSServlet extends HttpServlet implements Servlet
    *      
    *      @TODO: integrate operations extension
    */
-  @Override
-  protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
-  {
-    //Gewünschte Operation ausführen
-    String odsrequest = request.getParameter( "REQUEST" );
-    //Natürlich nur, wenn als Service auch ODS angegeben ist
-    String service = request.getParameter( "SERVICE" );
-    if( service != null  )
-    {
-      if (service.compareTo( "ODS" ) == 0)
-      {
-        if( odsrequest != null )
-            executeOperation(request, response, odsrequest);
-        else
-          ODSException.showException(request,  response, ERROR_CODE.OPERATION_NOT_SPECIFIED );
-      }
-      else
-        ODSException.showException( request, response, ERROR_CODE.SERVICE_NOT_SUPPORTED );
-    }
-    else
-      ODSException.showException( request, response, ERROR_CODE.SERVICE_NOT_SPECIFIED );
-    
-  }
 
     
   /**
@@ -71,61 +54,41 @@ public class ODSServlet extends HttpServlet implements Servlet
    * is demanded in order to stop getting swt errors (in second case, its possible to easily integrate new methods
    * by using an extension point
    */
-   private void executeOperation(final HttpServletRequest request, final HttpServletResponse response, String odsrequest) throws IOException
-   {
-     /*  
-      * PROBLEM:
-      * System-Properties can't be set using the config.ini when running eclipse inside Tomcat;
-      * instead of System.getProperty() you have to us FrameworkProperties.getProperty();
-      * to make the proxy work, the framework properties have to be written to system properties
-      */
-      System.setProperty( "proxySet", FrameworkProperties.getProperty( "proxySet", "true" ));
-      System.setProperty( "proxyHost", FrameworkProperties.getProperty( "proxyHost", "172.16.0.253" ));
-      System.setProperty( "proxyPort", FrameworkProperties.getProperty( "proxyPort", "8080" ));
-      
-      /**
-		For Testing Purposes only - remove if used in different environment
-		*/
-    //  System.setProperty( "proxyHost",  "172.16.0.253" );
-    //  System.setProperty( "proxyPort",  "8080" );
-    //  System.setProperty( "proxySet",  "true" );
-     
-     Logger.trace("Operation:  "+odsrequest);
-     
-     //bei Anfrage Cache löschen
-     String clearcache = request.getParameter( "CLEARCACHE" );
-     if (clearcache!=null && clearcache.compareTo( "1" )==0)
-     {
-       ChartCache.getInstance().clear();
-       Logger.trace("Cache cleared");
-     }
-     try
-      {
-       
-       //Load Operatione from ExtensionPoint
-        IODSOperation op=ODSOperationExtensions.createOperation( odsrequest );
-        if (op!=null)
-        {
-          op.operate( request, response );
-        }
-        else
-        {
-          ODSException.showException( request, response, ERROR_CODE.OPERATION_NOT_SUPPORTED );
-        }
-      }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    
-   }
    
-   
-  @Override
-  public void destroy()
+
+
+
+  /**
+   * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean, javax.servlet.http.HttpServletResponse)
+   */
+  public synchronized void executeOperation( RequestBean requestBean, HttpServletResponse response ) throws OWSException
   {
-    DisplayHelper.getInstance().dispose();
-    ChartCache.getInstance().clear();
+      String operationName = requestBean.getParameterValue( "REQUEST" );
+      
+     //Load Operatione from ExtensionPoint
+      IODSOperation op=null;
+      try
+      {
+        op = ODSOperationExtensions.createOperation( operationName );
+      }
+      catch( CoreException e )
+      {
+        throw new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation "+operationName+" not found", "");
+      }
+      if (op!=null)
+      {
+        op.operate( requestBean, response );
+      }
+
   }
+
+  /**
+   * @see org.kalypso.service.ogc.IOGCService#destroy()
+   */
+  public void destroy( )
+  {
+    
+    
+  }
+    
 }

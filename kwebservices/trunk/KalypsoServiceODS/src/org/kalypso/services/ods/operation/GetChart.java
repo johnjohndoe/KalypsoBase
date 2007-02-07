@@ -53,6 +53,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
@@ -71,9 +73,10 @@ public class GetChart implements IODSOperation, Runnable
 {
 
 
-    private HttpServletRequest m_request;
     private HttpServletResponse m_response;
+    private RequestBean m_requestBean;
 
+    private OWSException m_exception=null;
 
     public GetChart()
     {
@@ -81,11 +84,15 @@ public class GetChart implements IODSOperation, Runnable
     }
 
 
-public void operate( HttpServletRequest request, final HttpServletResponse response )
+public void operate( RequestBean requestBean, final HttpServletResponse response ) throws OWSException
  {
-    m_request=request;
+    m_requestBean=requestBean;
     m_response=response;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
+    if (m_exception!=null)
+    {
+      throw m_exception;
+    }
  }
 
   /**
@@ -98,9 +105,9 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
 
     int width=500;
     int height=400;
-    String reqWidth=m_request.getParameter( "WIDTH" );
-    String reqHeight=m_request.getParameter( "HEIGHT" );
-    String reqName=m_request.getParameter( "NAME" );
+    String reqWidth=m_requestBean.getParameterValue( "WIDTH" );
+    String reqHeight=m_requestBean.getParameterValue( "HEIGHT" );
+    String reqName=m_requestBean.getParameterValue( "NAME" );
     if (reqWidth!=null)
       width=Integer.parseInt( reqWidth );
     if (reqHeight!=null)
@@ -114,7 +121,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       Chart chart=null;
 
       CachedChart cc=ChartCache.getInstance().getObject( reqName );
-      if (cc!=null)
+      if (false && cc!=null)
       {
           chart=cc.getChart();
           Logger.trace("GetChart: Using cached chart");
@@ -126,8 +133,8 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
         ChartCache.getInstance().addObject( reqName, cc );
         chart=cc.getChart();
       }
-      ODSUtils.setLayerVisibility( chart, m_request );
-      ODSUtils.setAxisValues(  chart, m_request );
+      ODSUtils.setLayerVisibility( chart, m_requestBean );
+      ODSUtils.setAxisValues(  chart, m_requestBean );
 
       //Gecachetes Chart verwenden
       if (chart!=null )
@@ -137,7 +144,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
 
         if (chartImg!=null )
         {
-          m_response.setContentType( "image/png" );
+          m_response.setContentType( "image/jpg" );
           ImageLoader il=new ImageLoader();
           ImageData id=chartImg.getImageData();
           il.data=new ImageData[]{id};
@@ -145,7 +152,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           {
             outputStream = new BufferedOutputStream( m_response.getOutputStream() );
             //INFO: if you get an swt_error, you need to include swt-plugin 3.3 or greater
-            il.save( outputStream, SWT.IMAGE_PNG );
+            il.save( outputStream, SWT.IMAGE_JPEG );
           }
           catch( IOException e )
           {
@@ -174,14 +181,18 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
         }
         else
         {
-          ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
+          m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+          return;
         }
       }
 
 
     }
     else
-        ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+    {
+      m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+      return;
+    }
   }
 
 

@@ -57,6 +57,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
@@ -74,8 +75,8 @@ public class GetPlot implements IODSOperation, Runnable
 {
 
 
-    private HttpServletRequest m_request;
     private HttpServletResponse m_response;
+    private RequestBean m_requestBean;
 
 
     public GetPlot()
@@ -84,9 +85,9 @@ public class GetPlot implements IODSOperation, Runnable
     }
 
 
-public void operate( HttpServletRequest request, final HttpServletResponse response )
+public void operate( RequestBean requestBean, final HttpServletResponse response )
  {
-    m_request=request;
+    m_requestBean=requestBean;
     m_response=response;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
  }
@@ -99,9 +100,9 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetPlot", null ) );
     int width=500;
     int height=400;
-    String reqWidth=m_request.getParameter( "WIDTH" );
-    String reqHeight=m_request.getParameter( "HEIGHT" );
-    String reqName=m_request.getParameter( "NAME" );
+    String reqWidth=m_requestBean.getParameterValue( "WIDTH" );
+    String reqHeight=m_requestBean.getParameterValue( "HEIGHT" );
+    String reqName=m_requestBean.getParameterValue( "NAME" );
     if (reqWidth!=null)
       width=Integer.parseInt( reqWidth );
     if (reqHeight!=null)
@@ -138,8 +139,8 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
 
 
           chart.setPlotSize( width, height );
-          ODSUtils.setAxisValues( chart, m_request );
-          ODSUtils.setLayerVisibility( chart, m_request );
+          ODSUtils.setAxisValues( chart, m_requestBean );
+          ODSUtils.setLayerVisibility( chart, m_requestBean );
 
           gc=new GC(img);
           gcw=new GCWrapper(gc);
@@ -156,7 +157,7 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
           }
           else
           {
-            ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
+        //    ODSException.showException( m_request, m_response, ERROR_CODE.DIAGRAM_NOT_DEFINED );
           }
       }
       catch( Exception e )
@@ -191,8 +192,9 @@ public void operate( HttpServletRequest request, final HttpServletResponse respo
       }
     }
     else
-        ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-
+    {
+       //ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+    }
   }
 
 

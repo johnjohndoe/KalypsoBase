@@ -8,11 +8,9 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp,
  org.kalypso.chart,
- org.eclipse.equinox.http.registry,
- org.kalypso.gmlschema
+ org.kalypso.gmlschema,
+ org.kalypso.service.ogc
 Eclipse-LazyStart: true
-Import-Package: javax.servlet,
- javax.servlet.http
 Export-Package: net.opengis.ows,
  org.kalypso.services.ods,
  org.kalypso.services.ods.helper,

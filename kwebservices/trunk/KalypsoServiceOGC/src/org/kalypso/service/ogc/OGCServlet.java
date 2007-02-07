@@ -1,6 +1,7 @@
 package org.kalypso.service.ogc;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,9 @@ public class OGCServlet extends HttpServlet implements Servlet
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     String service = request.getParameter( "SERVICE" );
+    
+    PrintWriter writer = response.getWriter();
+    
     if( service != null  )
     {
     	IOGCService ogcService=null;
@@ -77,7 +81,10 @@ public class OGCServlet extends HttpServlet implements Servlet
     else
     {
     	//Fehler ausgeben: Kein Service spezifiziert
+        writer.write( (new OWSException(OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", request.getRequestURL().toString())).toXMLString() );
+      
     }    
+    writer.close();
   }
   
 

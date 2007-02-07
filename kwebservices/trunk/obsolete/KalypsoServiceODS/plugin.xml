@@ -3,13 +3,6 @@
 <plugin>
    <extension-point id="ODSOperation" name="ODSOperation" schema="schema/ODSOperation.exsd"/>
    <extension
-         point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-            name="ObservationDiagramService"
-            alias="/ods"
-            class="org.kalypso.services.ods.ODSServlet"/>
-   </extension>
-   <extension
          point="org.kalypso.services.ods.ODSOperation">
          <odsoperation
          	class="org.kalypso.services.ods.operation.GetCapabilites"
@@ -37,10 +30,11 @@
                class="org.kalypso.services.ods.operation.GetAxes"
                id="GetAxes"/> id="getLayers"/>
    </extension>
+   <extension
+         point="org.kalypso.service.ogc">
+      <service
+            class="org.kalypso.services.ods.ODSServlet"
+            serviceName="ODS"/>
+   </extension>
    
-  <extension point="org.eclipse.equinox.http.registry.resources">
-    <resource
-      alias="/"
-      base-name="/web_files"/>
-  </extension>
 </plugin>

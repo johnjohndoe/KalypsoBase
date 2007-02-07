@@ -7,7 +7,8 @@ Bundle-Activator: org.kalypso.service.ogc.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  javax.servlet;visibility:=reexport,
- org.eclipse.equinox.http.registry
+ org.eclipse.equinox.http.registry,
+ org.kalypso.jwsdp
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.service.ogc,
  org.kalypso.service.ogc.exception

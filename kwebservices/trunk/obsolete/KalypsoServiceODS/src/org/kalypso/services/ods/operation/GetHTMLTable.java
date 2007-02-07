@@ -49,6 +49,8 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
@@ -64,8 +66,8 @@ import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 public class GetHTMLTable implements IODSOperation
 {
 
-  private HttpServletRequest m_request;
   private HttpServletResponse m_response;
+  private RequestBean m_requestBean;
 
   public GetHTMLTable()
   {
@@ -76,14 +78,14 @@ public class GetHTMLTable implements IODSOperation
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate(HttpServletRequest request, HttpServletResponse response ) throws IOException
+  public void operate(RequestBean requestBean, HttpServletResponse response ) throws OWSException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
-    m_request=request;
+    m_requestBean=requestBean;
     m_response=response;
 
-    String name=m_request.getParameter( "NAME" );
+    String name=m_requestBean.getParameterValue( "NAME" );
     if (name!=null)
     {
       //    HTMLTabelle erzeugen
@@ -106,12 +108,18 @@ public class GetHTMLTable implements IODSOperation
         }
         catch( ConfigTableNotFoundException e )
         {
-          ODSException.showException( m_request, m_response, ERROR_CODE.TABLE_NOT_DEFINED );
+        //  ODSException.showException( m_request, m_response, ERROR_CODE.TABLE_NOT_DEFINED );
+        }
+        catch( IOException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
         }
     }
     else
-      ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-
+    {
+     // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+    }
   }
 
 }

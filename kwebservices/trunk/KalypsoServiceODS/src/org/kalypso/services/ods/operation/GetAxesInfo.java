@@ -46,6 +46,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,8 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
@@ -77,8 +80,9 @@ import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 public class GetAxesInfo implements IODSOperation
 {
 
-  private HttpServletRequest m_request;
   private HttpServletResponse m_response;
+
+  private RequestBean m_requestBean;
 
   public final static ObjectFactory m_of = new org.ksp.chart.configuration.ObjectFactory();
   private static final JAXBContext m_JC = JaxbUtilities.createQuiet( org.ksp.chart.configuration.ObjectFactory.class );
@@ -92,14 +96,14 @@ public class GetAxesInfo implements IODSOperation
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate(HttpServletRequest request, HttpServletResponse response ) throws IOException
+  public void operate(RequestBean requestBean, HttpServletResponse response ) throws OWSException
   {
-    m_request=request;
     m_response=response;
+    m_requestBean=requestBean;
     
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
-    String name=m_request.getParameter( "NAME" );
+    String name=m_requestBean.getParameterValue( "NAME" );
     if (name!=null)
     {
       //    HTMLTabelle erzeugen
@@ -135,7 +139,16 @@ public class GetAxesInfo implements IODSOperation
           }
           
           
-          final PrintWriter out=m_response.getWriter();
+          PrintWriter out=null;
+          try
+          {
+            out = m_response.getWriter();
+          }
+          catch( IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           m_response.setContentType( "text/xml" );
           
           StringWriter sw=new StringWriter();
@@ -147,7 +160,15 @@ public class GetAxesInfo implements IODSOperation
           m.marshal(outputConfigType, sw);
           String infoString=sw.toString();
           
-          sw.close();
+          try
+          {
+            sw.close();
+          }
+          catch( IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           out.write( infoString );
           out.close();
         }
@@ -158,8 +179,12 @@ public class GetAxesInfo implements IODSOperation
 
     }
     else
-      ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+    {
+      throw new OWSException(OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "", "");
+    }
     
   }
-  
+
+
+
 }

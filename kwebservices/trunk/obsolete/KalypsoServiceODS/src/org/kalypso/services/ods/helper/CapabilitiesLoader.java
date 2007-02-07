@@ -46,6 +46,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.logging.Logger;
@@ -94,17 +96,17 @@ public class CapabilitiesLoader
   private String m_configPathCaps;
   private String m_configPathVC;
   private ODSCapabilities m_caps=null;
-  private HttpServletRequest m_request=null;
   private ConfigLoader m_cl;
+  private RequestBean m_requestBean;
 
 
 
 
-  public CapabilitiesLoader(HttpServletRequest request,String pathCaps, String pathVC)
+  public CapabilitiesLoader(RequestBean requestBean, String pathCaps, String pathVC)
   {
+      m_requestBean=requestBean;
       m_configPathCaps=pathCaps;
       m_configPathVC=pathVC;
-      m_request=request;
       loadFile();
       mergeConfigIntoODS();
   }
@@ -193,9 +195,9 @@ public class CapabilitiesLoader
 
     //get actual service root from URL
     String serviceRoot="";
-    if (m_request!=null)
+    if (m_requestBean!=null)
     {
-      serviceRoot=m_request.getRequestURL().toString();
+      serviceRoot=m_requestBean.getUrl();
     }
     String service="ODS";
 
@@ -263,9 +265,9 @@ public class CapabilitiesLoader
           String ltTitle = lt.getTitle();
           String ltDescription = lt.getDescription();
           LayerType layer = m_ofCap.createLayerType();
-          layer.setLayerName( ltName );
+          layer.setName( ltName );
 //          layer.setTitle( ltTitle );
-          layer.setLayerDescription( ltDescription );
+          layer.setDescription( ltDescription );
           layerTypes.add( layer );
         }
 

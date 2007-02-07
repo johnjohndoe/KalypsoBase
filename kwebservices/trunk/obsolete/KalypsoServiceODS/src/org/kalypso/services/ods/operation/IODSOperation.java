@@ -41,9 +41,13 @@
 package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.exception.OWSException;
 
 /**
  * @author burtscher
@@ -55,7 +59,7 @@ public interface IODSOperation
   /**
    * starts ods operation - used for ods operation extension point
    */
-  public void operate(HttpServletRequest request, final HttpServletResponse response) throws IOException;
+  public void operate(RequestBean requestBean, final HttpServletResponse response) throws OWSException;
   
   
 }

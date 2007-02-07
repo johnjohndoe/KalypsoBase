@@ -53,6 +53,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
@@ -71,8 +72,8 @@ import org.kalypso.swtchart.logging.Logger;
 public class GetLegend implements IODSOperation, Runnable
 {
 
-  private HttpServletRequest m_request;
   private HttpServletResponse m_response;
+  private RequestBean m_requestBean;
 
 
   public GetLegend()
@@ -83,9 +84,9 @@ public class GetLegend implements IODSOperation, Runnable
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
- public void operate( HttpServletRequest request, HttpServletResponse response )
+ public void operate( RequestBean requestBean, HttpServletResponse response )
   {
-     m_request=request;
+     m_requestBean=requestBean;
      m_response=response;
      Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
      DisplayHelper.getInstance().getDisplay().syncExec( this );
@@ -97,7 +98,7 @@ public class GetLegend implements IODSOperation, Runnable
    */
   public void run( )
   {
-    String reqName = m_request.getParameter( "NAME" );
+    String reqName = m_requestBean.getParameterValue( "NAME" );
     //der Name muss da sein, sonst kann kein Chart ausgewählt werden
     if (reqName!=null)
     {
@@ -108,7 +109,7 @@ public class GetLegend implements IODSOperation, Runnable
       try
       {
           CachedChart cc=ChartCache.getInstance().getObject( reqName );
-          if (cc!=null)
+          if (false && cc!=null)
           {
               chart=cc.getChart();
               Logger.trace("GetLegend: Using cached chart");
@@ -120,16 +121,16 @@ public class GetLegend implements IODSOperation, Runnable
             ChartCache.getInstance().addObject( reqName, cc );
             chart=cc.getChart();
           }
-          ODSUtils.setLayerVisibility( chart, m_request );
+          ODSUtils.setLayerVisibility( chart, m_requestBean );
           display=DisplayHelper.getInstance().getDisplay();
           lic = new LegendImageContainer(chart, display);
           Image legendImg=lic.getImage();
-          m_response.setContentType( "image/png" );
+          m_response.setContentType( "image/jpeg" );
           ImageLoader il=new ImageLoader();
           ImageData id=legendImg.getImageData();
           il.data=new ImageData[]{id};
           outputStream = new BufferedOutputStream( m_response.getOutputStream() );
-          il.save( outputStream, SWT.IMAGE_PNG );
+          il.save( outputStream, SWT.IMAGE_JPEG );
           outputStream.close();
       }
       catch( Exception e )
@@ -156,7 +157,8 @@ public class GetLegend implements IODSOperation, Runnable
 
     }
     else
-      ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-
+    {
+    // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+    }
   }
 }
