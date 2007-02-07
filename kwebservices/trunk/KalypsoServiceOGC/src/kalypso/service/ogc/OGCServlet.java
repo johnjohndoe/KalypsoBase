@@ -1,0 +1,75 @@
+package kalypso.service.ogc;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import kalypso.service.ogc.exception.OWSException;
+
+
+
+/**
+ * @author Gernot Belger
+ */
+@SuppressWarnings("serial")
+public class OGCServlet extends HttpServlet implements Servlet
+{
+  
+
+
+  
+  /**
+   * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
+   *      javax.servlet.http.HttpServletResponse)
+   *      
+   *      this method has to be synchronized as it uses graphics on an environment without a running display;
+   *      therefore, the display has to be created (Display.getDefault()) and disposed synchronously (or using
+   *      the display generates an illegal Access Error)
+   *      The Display.getCurrent()-method is of no use here.
+   *      
+   *      @TODO: integrate operations extension
+   */
+  @Override
+  protected synchronized void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
+  {
+    String service = request.getParameter( "SERVICE" );
+    if( service != null  )
+    {
+    	IService ogcService=null;
+    	//Service-Klasse laden
+    	
+    	
+    	if (ogcService!=null)
+    	{
+    		//Operation ausführen
+    		try
+    		{
+    			ogcService.executeOperation(request.getParameterMap(), response);
+    		}
+    		catch (OWSException e)
+    		{
+    			//Fehler ausgeben: Operation nicht gefunden
+    			
+    			//Fehler ausgeben: Parameterwert nicht gültig
+    		}
+    	}
+    	else
+    	{
+    		//Fehler ausgeben: Service nicht gefunden
+    	}
+    	
+    }
+    else
+    {
+    	//Fehler ausgeben: Kein Service spezifiziert
+    }
+    
+  }
+    
+  
+}
