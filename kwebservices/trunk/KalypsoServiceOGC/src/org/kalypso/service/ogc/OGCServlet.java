@@ -50,7 +50,7 @@ public class OGCServlet extends HttpServlet implements Servlet
     		//Operation ausführen
     		try
     		{
-    			ogcService.executeOperation(parametersToHashMap(request.getParameterMap()), response);
+    			ogcService.executeOperation(parametersToBean(request), response);
     		}
     		catch (OWSException e)
     		{
@@ -73,14 +73,10 @@ public class OGCServlet extends HttpServlet implements Servlet
   }
   
   /**
-   * creates a typed HashMap<String, String> from untyped Map; by transforming 
-   * the parameter-Map into a typed one, no casting needs to be done when accessing 
-   * parameter values
-   * @param parameters
-   * @return
    */
-  private HashMap<String, String> parametersToHashMap(Map parameters)
+  private RequestBean parametersToBean(HttpServletRequest request)
   {
+	  /*
 	  HashMap<String, String> newParameters=new HashMap<String, String>();
 	 
 	  Set set = parameters.keySet();
@@ -91,6 +87,8 @@ public class OGCServlet extends HttpServlet implements Servlet
 	  }
 	  
 	  return newParameters;
+	  */
+	  return null;
   }
     
   
