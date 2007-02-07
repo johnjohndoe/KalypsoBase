@@ -3,26 +3,20 @@ package org.kalypso.service.ogc.exception;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
-import org.kalypso.jwsdp.JaxbUtilities;
-
-import sun.security.action.GetLongAction;
-
 
 import net.opengis.ows.ExceptionReport;
 import net.opengis.ows.ExceptionType;
 import net.opengis.ows.ObjectFactory;
 
-
+import org.kalypso.jwsdp.JaxbUtilities;
 
 public class OWSException extends Exception
 {
-  
-  private static ObjectFactory OF=new ObjectFactory();
+  private static ObjectFactory OF = new ObjectFactory();
+
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public static enum ExceptionCode
@@ -62,12 +56,11 @@ public class OWSException extends Exception
   {
     return m_locator;
   }
-  
-  
+
   /**
    * @return error document as formatted XML string
    */
-  public String toXMLString()
+  public String toXMLString( )
   {
     ExceptionReport report = OF.createExceptionReport();
     ExceptionType extype = OF.createExceptionType();
@@ -76,15 +69,15 @@ public class OWSException extends Exception
     extype.getExceptionText().add( getMessage() );
     report.getException().add( extype );
     Marshaller m;
-    String excString="";
-    StringWriter sw=null;
+    String excString = "";
+    StringWriter sw = null;
     try
     {
-      sw=new StringWriter();
+      sw = new StringWriter();
       m = JC.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      m.marshal(report, sw);
-      excString=sw.toString();
+      m.marshal( report, sw );
+      excString = sw.toString();
     }
     catch( JAXBException e1 )
     {
@@ -93,7 +86,7 @@ public class OWSException extends Exception
     }
     finally
     {
-      if (sw!=null)
+      if( sw != null )
         try
         {
           sw.close();
@@ -106,6 +99,4 @@ public class OWSException extends Exception
     }
     return excString;
   }
-
-
 }
