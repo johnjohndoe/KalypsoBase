@@ -61,7 +61,11 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Problem in internal execution", e );
+      throw new ExecutionException( "Problem in internal execution: " + e.getLocalizedMessage(), e );
+    }
+    catch( final Throwable t )
+    {
+      throw new ExecutionException( "Problem in internal execution: " + t.getLocalizedMessage(), t );
     }
 
     if( !status.isOK() )
