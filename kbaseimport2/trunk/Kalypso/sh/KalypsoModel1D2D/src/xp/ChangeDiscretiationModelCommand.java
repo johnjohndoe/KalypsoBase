@@ -1,0 +1,152 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package xp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+
+/**
+ * Composite command used to change the discretisation command.
+ * This composite takes the responsibility to nodifies the 
+ * commandable workspace about the chnage introduced by its
+ * sub command 
+ * 
+ * 
+ * @author Patrice Congo
+ *
+ */
+public class ChangeDiscretiationModelCommand implements ICommand
+{
+  public static final String DEFAULT_DESCRIPTION=
+                            "Change Discretisation model";
+  
+  private String description;
+  
+  private IFEDiscretisationModel1d2d model1d2d;
+  
+  private CommandableWorkspace commandableWorkspace;
+  
+  private List<IDiscrMode1d2dlChangeCommand> commands = 
+                      new ArrayList<IDiscrMode1d2dlChangeCommand>();
+  private boolean isUndoable=false;
+
+  public ChangeDiscretiationModelCommand( 
+                          CommandableWorkspace commandableWorkspace,   
+                          IFEDiscretisationModel1d2d model1d2d)
+  {
+    this(   
+        commandableWorkspace,
+        model1d2d,  
+        DEFAULT_DESCRIPTION );
+  }
+  
+  public ChangeDiscretiationModelCommand(
+                      CommandableWorkspace commandableWorkspace,
+                      IFEDiscretisationModel1d2d model1d2d,
+                      String description)
+  {
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( description, "description" );
+    this.description=description;
+    this.model1d2d=model1d2d;
+    this.commandableWorkspace=commandableWorkspace;
+  }
+  
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
+  public String getDescription( )
+  {
+    return description;
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   */
+  public boolean isUndoable( )
+  {
+    return isUndoable;
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#process()
+   */
+  public void process( ) throws Exception
+  {
+    for(IDiscrMode1d2dlChangeCommand command:commands)
+    {
+      try
+      {
+        command.process();
+      }
+      catch (Exception e) 
+      {
+        
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#redo()
+   */
+  public void redo( ) throws Exception
+  {
+    
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#undo()
+   */
+  public void undo( ) throws Exception
+  {
+    
+  }
+  
+  public void addCommand(IDiscrMode1d2dlChangeCommand command)
+  {
+    
+  }
+}

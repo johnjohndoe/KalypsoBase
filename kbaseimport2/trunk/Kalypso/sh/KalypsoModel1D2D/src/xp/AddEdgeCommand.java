@@ -45,13 +45,14 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
  * Unduable add edge command.
  * 
  * @author Patrice Congo
  */
-public class AddEdgeCommand implements ICommand
+public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
 {
   private AddNodeCommand node1Command;
   private AddNodeCommand node2Command;
@@ -123,5 +124,19 @@ public class AddEdgeCommand implements ICommand
       //TODO remove edges from node add method to node interface
     }
   }
-
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
+   */
+  public IFeatureWrapper getChangedFeature( )
+  {
+    return addedEdge;
+  }
+  
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
+   */
+  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
+  {
+    return model;
+  }
 }
