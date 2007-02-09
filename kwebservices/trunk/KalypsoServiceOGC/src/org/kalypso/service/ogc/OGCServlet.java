@@ -60,6 +60,7 @@ public class OGCServlet extends HttpServlet implements Servlet
           // Fehler ausgeben: Parameter fehlt
 
           // Fehler ausgeben: Parameterwert nicht gültig
+          writer.write( e.toXMLString() );
         }
       }
       else
