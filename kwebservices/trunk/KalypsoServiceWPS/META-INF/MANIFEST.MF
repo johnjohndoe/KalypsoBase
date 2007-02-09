@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoServiceWPS Plug-in
+Bundle-SymbolicName: org.kalypso.service.wps;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.service.wps.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.service.ogc,
+ org.kalypso.simulation.core,
+ org.eclipse.core.resources,
+ org.kalypso.contribs.eclipsercp,
+ org.kalypso.jwsdp
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.service.wps,
+ org.kalypso.service.wps.client,
+ org.kalypso.service.wps.server,
+ org.kalypso.service.wps.server.operations,
+ org.kalypso.service.wps.utils,
+ org.kalypso.service.wps.utils.extensions
+Bundle-ClassPath: .

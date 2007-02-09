@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.kalypso.service.wps" name="org.kalypso.service.wps" schema="schema/org.kalypso.service.wps.exsd"/>
+   <extension
+         id="org.kalypso.service.wps"
+         name="WPS"
+         point="org.kalypso.service.ogc">
+      <service
+            class="org.kalypso.service.wps.server.WPSService"
+            serviceName="WPS"/>
+   </extension>
+
+</plugin>
