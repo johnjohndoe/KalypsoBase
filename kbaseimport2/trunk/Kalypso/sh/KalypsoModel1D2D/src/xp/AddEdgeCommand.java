@@ -144,4 +144,26 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
   {
     return model;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append("AddEdgeCommand[");
+    buf.append( node1Command );
+    buf.append( node2Command );
+    buf.append( ']' );
+    return buf.toString();
+  }
+  public AddNodeCommand getNode1Command( )
+  {
+    return node1Command;
+  }
+  public AddNodeCommand getNode2Command( )
+  {
+    return node2Command;
+  }
 }
