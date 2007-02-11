@@ -30,7 +30,7 @@ public class OGCServlet extends HttpServlet implements Servlet
   {
     String service = request.getParameter( "SERVICE" );
 
-    PrintWriter writer = response.getWriter();
+    
 
     if( service != null )
     {
@@ -60,7 +60,9 @@ public class OGCServlet extends HttpServlet implements Servlet
           // Fehler ausgeben: Parameter fehlt
 
           // Fehler ausgeben: Parameterwert nicht gültig
+          PrintWriter writer = response.getWriter();
           writer.write( e.toXMLString() );
+          writer.close();
         }
       }
       else
@@ -71,8 +73,10 @@ public class OGCServlet extends HttpServlet implements Servlet
     else
     {
       // Fehler ausgeben: Kein Service spezifiziert
+      PrintWriter writer = response.getWriter();
       writer.write( (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", request.getRequestURL().toString() )).toXMLString() );
+      writer.close();
     }
-    writer.close();
+    
   }
 }
