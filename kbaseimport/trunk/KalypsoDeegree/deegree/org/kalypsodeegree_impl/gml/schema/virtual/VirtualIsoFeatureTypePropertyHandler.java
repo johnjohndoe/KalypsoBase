@@ -1,8 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,14 +38,17 @@ import org.kalypso.gmlschema.property.IPropertyType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+
+
+/**
+ * @author doemming
+ */
 public class VirtualIsoFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
 {
-
-  /*
-   * 
-   * @author doemming
-   */
   public VirtualIsoFeatureTypePropertyHandler()
   {
     super();
