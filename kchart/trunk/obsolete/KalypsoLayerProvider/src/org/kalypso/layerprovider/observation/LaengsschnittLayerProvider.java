@@ -65,7 +65,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.LayerType;
 
-
 /**
  * @author Gernot Belger
  */
@@ -87,13 +86,13 @@ public class LaengsschnittLayerProvider implements ILayerProvider
    */
   public IChartLayer getLayer( final URL context ) throws LayerProviderException
   {
-    IChartLayer icl=null;
-    String configLayerId=m_lt.getName();
+    IChartLayer icl = null;
+    final String configLayerId = m_lt.getName();
 
-    ParameterHelper ph=new ParameterHelper();
+    final ParameterHelper ph = new ParameterHelper();
     ph.addParameters( m_lt.getParameters(), configLayerId );
 
-    final String href = ph.getParameterValue( "href", "" );
+    final String href = ph.getParameterValue( "href", null );
     final String xpath = ph.getParameterValue( "gmlxpath", "" );
 
     try
@@ -121,28 +120,27 @@ public class LaengsschnittLayerProvider implements ILayerProvider
       final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
       final TupleResult result = obs.getResult();
 
-      String domainAxisId= ( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
-      String valueAxisId= ( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+      final String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+      final String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
 
-        final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
+      final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
 
-        String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
-        String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
+      final String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
+      final String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
 
-        final IComponent domainComponent = TupleResultUtilities.findComponentById( result, domainComponentId );
+      final IComponent domainComponent = TupleResultUtilities.findComponentById( result, domainComponentId );
 
-        final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
+      final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
-        final IComponent valueComponent = TupleResultUtilities.findComponentById( result, valueComponentId );
+      final IComponent valueComponent = TupleResultUtilities.findComponentById( result, valueComponentId );
 
-        if( domainComponent != null && valueComponent != null )
-        {
+      if( domainComponent != null && valueComponent != null )
+      {
+        icl = new TupleResultLineChartLayer( result, domainComponent, valueComponent, domAxis, valAxis );
 
-          icl = new TupleResultLineChartLayer( result, domainComponent, valueComponent, domAxis, valAxis);
-
-          icl.setName( m_lt.getTitle() );
-          icl.setVisibility( true );
-        }
+        icl.setName( m_lt.getTitle() );
+        icl.setVisibility( m_lt.isVisible() );
+      }
 
     }
     catch( final MalformedURLException e )

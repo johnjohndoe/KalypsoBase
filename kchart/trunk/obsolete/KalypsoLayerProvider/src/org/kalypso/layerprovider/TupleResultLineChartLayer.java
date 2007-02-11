@@ -65,13 +65,9 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author schlienger
- * @author burtscher
- *
- * Visualization of TupleResult data as line chart
- *
- *  The following styled elements are used:
- *  Line:         used to draw the line connecting the individual data points
- *  Point:        used to draw the individual data points; the points are draw after the line
+ * @author burtscher Visualization of TupleResult data as line chart The following styled elements are used: Line: used
+ *         to draw the line connecting the individual data points Point: used to draw the individual data points; the
+ *         points are draw after the line
  */
 public class TupleResultLineChartLayer implements IChartLayer
 {
@@ -87,14 +83,13 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-
   private String m_name = "No name given";
 
   private String m_description = "No description given";
 
-  private boolean m_isVisible=true;
+  private boolean m_isVisible = true;
 
-  public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis)
+  public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis )
   {
     m_result = result;
     m_domComp = domComp;
@@ -107,7 +102,7 @@ public class TupleResultLineChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc, final Device dev )
+  public void paint( final GCWrapper gc, final Device dev )
   {
     int size = m_result.size();
     gc.setLineWidth( 1 );
@@ -135,7 +130,7 @@ public class TupleResultLineChartLayer implements IChartLayer
       sl.setPath( path );
       sl.paint( gc, dev );
     }
-    
+
     if( sp != null )
     {
       sp.setPath( path );
@@ -222,7 +217,7 @@ public class TupleResultLineChartLayer implements IChartLayer
   {
     Object min = null;
     Object max = null;
-    ComparableComparator cc=new ComparableComparator();
+    ComparableComparator cc = new ComparableComparator();
     for( int i = 0; i < m_result.size(); i++ )
     {
       IRecord rec = m_result.get( i );
@@ -230,7 +225,7 @@ public class TupleResultLineChartLayer implements IChartLayer
 
       if( val == null )
       {
-//        Logger.trace( rec );
+        // Logger.trace( rec );
       }
       else
       {
@@ -241,7 +236,6 @@ public class TupleResultLineChartLayer implements IChartLayer
       }
     }
     return new DataRange( min, max );
-
   }
 
   /**
@@ -305,12 +299,12 @@ public class TupleResultLineChartLayer implements IChartLayer
     m_description = description;
   }
 
-  public void setVisibility(boolean isVisible)
+  public void setVisibility( boolean isVisible )
   {
-    m_isVisible=isVisible;
+    m_isVisible = isVisible;
   }
 
-  public boolean getVisibility()
+  public boolean getVisibility( )
   {
     return m_isVisible;
   }

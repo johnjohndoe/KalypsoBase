@@ -52,12 +52,10 @@ import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.ksp.chart.configuration.LayerType;
 
 /**
- * @author schlienger
- * @author burtscher
- * 
  * LayerProvider for TupleResult Data - provides a TupleResultLineChartLayer
  * 
- * 
+ * @author schlienger
+ * @author burtscher
  */
 public class DefaultTupleResultLayerProvider implements ILayerProvider
 {
@@ -115,11 +113,11 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
    */
   public IChartLayer getLayer( URL context )
   {
-    IChartLayer icl=null;
+    IChartLayer icl = null;
     if( m_obs != null )
     {
       final TupleResult result = m_obs.getResult();
-      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ));
+      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
     }
     return icl;
   }
