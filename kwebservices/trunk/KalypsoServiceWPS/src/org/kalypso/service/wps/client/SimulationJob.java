@@ -75,6 +75,20 @@ import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 
+// TODO Get the simulation via the extension manager of simulation core.
+// TODO Transform modelspec into an OGC conform xml.
+// TODO Copy each single file separately to the dav. Do not zip them.
+// TODO Therefore use a unique temp-directory for this calc job.
+// TODO The response of the server should have an OGC conform format.
+// TODO The response should be evaluated, not the status.properties.
+// TODO Change the parameters for adressing the server. Use OGC conform parameters.
+// TODO The server should be able to handle more than one simulation simultanliously. Needs a thread manager.
+// TODO More important as any other operation is the execute operation. Do it first.
+// TODO Change monitor update function, that it understands percent values.
+// TODO The server should answer with xml-responses, as described in OGC standarts.
+// TODO Therefore use an output stream he should get with the parameters in his execute function.
+// TODO The main service has to be changed to understood that. (Think of Alex' ODSService!).
+
 /**
  * This class manages the connect between the client and the server.<br>
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
@@ -371,20 +385,6 @@ public class SimulationJob extends WorkspaceJob
    */
   private File zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    // TODO Get the simulation via the extension manager of simulation core.
-    // TODO Transform modelspec into an OGC conform xml.
-    // TODO Copy each single file separately to the dav. Do not zip them.
-    // TODO Therefore use a unique temp-directory for this calc job.
-    // TODO The response of the server should have an OGC conform format.
-    // TODO The response should be evaluated, not the status.properties.
-    // TODO Change the parameters for adressing the server. Use OGC conform parameters.
-    // TODO The server should be able to handle more than one simulation simultanliously. Needs a thread manager.
-    // TODO More important as any other operation is the execute operation. Do it first.
-    // TODO Change monitor update function, that it understands percent values.
-    // TODO The server should answer with xml-responses, as described in OGC standarts.
-    // TODO Therefore use an output stream he should get with the parameters in his execute function.
-    // TODO The main service has to be changed to understood that. (Think of Alex' ODSService!).
-
     /* Get the list with the input. */
     List<Modeldata.Input> inputList = m_data.getInput();
 
