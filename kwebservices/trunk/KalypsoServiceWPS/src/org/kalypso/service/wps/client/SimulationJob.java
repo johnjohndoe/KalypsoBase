@@ -70,8 +70,8 @@ import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.extensions.SimulationExtensions;
 import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 
@@ -116,10 +116,9 @@ public class SimulationJob extends WorkspaceJob
   private final File m_modelSpec;
 
   /**
-   * The short name identifying the simulation. It is the attribute literal in the extension point, where the
-   * ISimulation has to register.
+   * The id identifying the simulation.
    */
-  private final String m_literal;
+  private final String m_simulation;
 
   /**
    * After this period of time, the job gives up, waiting for a result of the service.
@@ -160,20 +159,19 @@ public class SimulationJob extends WorkspaceJob
   /**
    * The constructor.
    * 
-   * @param literal
-   *          The short name identifying the simulation. It is the attribute literal in the extension point, where the
-   *          ISimulation has to register.
+   * @param simulation
+   *          The id identifying the simulation.
    * @param timeout
    *          After this period of time, the job gives up, waiting for a result of the service.
    */
-  public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String literal, final long timeout )
+  public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String simulation, final long timeout )
   {
-    super( literal );
+    super( simulation );
 
     m_calcCaseFolder = calcCaseFolder;
     m_modelSpec = modelSpec;
 
-    m_literal = literal;
+    m_simulation = simulation;
     m_timeout = timeout;
     m_id = null;
 
@@ -196,13 +194,13 @@ public class SimulationJob extends WorkspaceJob
     monitor.beginTask( "Berechnung vorbereiten ...", 600 );
 
     /* Check if the simulation is available. */
-    Debug.println( "Checking for simulation \"" + m_literal + "\" ..." );
-    SimulationExtensions instance = SimulationExtensions.getInstance();
-    ISimulation simulation = instance.getSimulation( m_literal );
+    Debug.println( "Checking for simulation \"" + m_simulation + "\" ..." );
+    ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( m_simulation );
+
     if( simulation == null )
     {
-      Debug.println( "No simulation with the literal \"" + m_literal + " available.\"" );
-      throw new CoreException( StatusUtilities.createErrorStatus( "No simulation with the literal \"" + m_literal + " available.\"" ) );
+      Debug.println( "No simulation with the id \"" + m_simulation + " available.\"" );
+      throw new CoreException( StatusUtilities.createErrorStatus( "No simulation with the id \"" + m_simulation + " available.\"" ) );
     }
 
     Debug.println( "Checking for webdav URL ..." );
@@ -217,8 +215,24 @@ public class SimulationJob extends WorkspaceJob
     if( monitor.isCanceled() )
       return canceled();
 
-    /* Generate a job id. */
-    m_id = String.valueOf( System.currentTimeMillis() );
+    /* Copy the data to the dav. */
+    // TODO
+    
+    /* Convert the input data to the ogc conform request. */
+
+    /* Build the execute request. */
+
+    /* Send the request. */
+
+    /* Handle the execute response. */
+
+    /* Polling. */
+
+    /* Handle updated execute response. */
+
+    /* Copy all data from the given URLs to the client. */
+
+    /* Finish. */
 
     try
     {
@@ -271,12 +285,12 @@ public class SimulationJob extends WorkspaceJob
 
       /* Start calculation. */
       monitor.setTaskName( "Starte die Simulation ..." );
-      Debug.println( "Calling " + m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_literal + " ..." );
+      Debug.println( "Calling " + m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation + " ..." );
 
       /* TODO: Proxy? */
       HttpClient client = new HttpClient();
       client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
-      GetMethod get = new GetMethod( m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_literal );
+      GetMethod get = new GetMethod( m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation );
       client.executeMethod( get );
 
       /* If the user aborted the job. */
