@@ -40,23 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.io.File;
+
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author Madan
+ * Provide the implementaion of {@link ITerrainElevationModel} for 
+ * simBase:NativeTerrainElevationModelWrapper model.
+ * This class colaboratewith ... 
+ * 
+ * @author Madanagopal
+ * @author Patrice Congo
  *
  */
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
 {
 
+  ITerrainElevationModel wrappedNativeTerrainElevationModel;
+  
+  public NativeTerrainElevationModelWrapper( Feature featureToBind )
+  {
+    super( featureToBind );
+    
+  }
+  /**
+   * Return the file property of the terrain elevation model
+   */
+  private final File getFile()
+  {
+    return null;
+  }
+  
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public double getElevation( GM_Point location )
   {
-    // TODO Auto-generated method stub
     return 0;
   }
 
+  
 }
