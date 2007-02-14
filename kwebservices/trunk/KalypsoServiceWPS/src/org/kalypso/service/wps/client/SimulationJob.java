@@ -218,7 +218,8 @@ public class SimulationJob extends WorkspaceJob
     /* Copy the data to the dav. */
     // TODO
     
-    /* Convert the input data to the ogc conform request. */
+    /* Convert the input data to the ogc conform data input. */
+    
 
     /* Build the execute request. */
 
