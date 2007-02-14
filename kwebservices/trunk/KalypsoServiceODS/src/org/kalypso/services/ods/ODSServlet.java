@@ -4,6 +4,7 @@
 package org.kalypso.services.ods;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -17,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.service.ogc.IOGCService;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
@@ -61,7 +63,7 @@ public class ODSServlet implements IOGCService
   /**
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean, javax.servlet.http.HttpServletResponse)
    */
-  public synchronized void executeOperation( RequestBean requestBean, HttpServletResponse response ) throws OWSException
+  public synchronized void executeOperation( RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
       String operationName = requestBean.getParameterValue( "REQUEST" );
       
@@ -77,7 +79,7 @@ public class ODSServlet implements IOGCService
       }
       if (op!=null)
       {
-        op.operate( requestBean, response );
+        op.operate( requestBean, responseBean );
       }
 
   }

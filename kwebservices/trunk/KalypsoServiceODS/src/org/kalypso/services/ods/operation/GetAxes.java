@@ -42,6 +42,7 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +61,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.DisplayHelper;
@@ -83,10 +85,9 @@ import org.ksp.chart.configuration.ConfigurationType;
 public class GetAxes implements IODSOperation, Runnable
 {
 
- 
-    private HttpServletResponse m_response;
     private Image m_img;
     private RequestBean m_requestBean;
+    private ResponseBean m_responseBean;
     
     
     public GetAxes()
@@ -182,11 +183,12 @@ public class GetAxes implements IODSOperation, Runnable
         
         if (m_img!=null)
         {
-          m_response.setContentType( "image/jpeg" );
+          m_responseBean.setContentType( "image/jpeg" );
+          
           ImageLoader il=new ImageLoader();
           ImageData id=m_img.getImageData();
           il.data=new ImageData[]{id};
-          outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+          outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
           il.save( outputStream, SWT.IMAGE_JPEG );
         }
         else
@@ -195,11 +197,6 @@ public class GetAxes implements IODSOperation, Runnable
         }
       }
       catch( JAXBException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( IOException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -238,10 +235,10 @@ public class GetAxes implements IODSOperation, Runnable
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(org.kalypso.service.ogc.RequestBean, javax.servlet.http.HttpServletResponse)
    */
-  public void operate( RequestBean requestBean, HttpServletResponse response ) throws OWSException
+  public void operate( RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
     m_requestBean=requestBean;
-    m_response=response;
+    m_responseBean=responseBean;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
     
   }  

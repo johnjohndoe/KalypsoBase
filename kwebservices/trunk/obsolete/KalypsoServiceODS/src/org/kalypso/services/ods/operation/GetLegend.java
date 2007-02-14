@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
@@ -72,8 +73,8 @@ import org.kalypso.swtchart.logging.Logger;
 public class GetLegend implements IODSOperation, Runnable
 {
 
-  private HttpServletResponse m_response;
   private RequestBean m_requestBean;
+  private ResponseBean m_responseBean;
 
 
   public GetLegend()
@@ -84,10 +85,10 @@ public class GetLegend implements IODSOperation, Runnable
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
- public void operate( RequestBean requestBean, HttpServletResponse response )
+ public void operate( RequestBean requestBean, ResponseBean responseBean )
   {
      m_requestBean=requestBean;
-     m_response=response;
+     m_responseBean=responseBean;
      Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
      DisplayHelper.getInstance().getDisplay().syncExec( this );
   }
@@ -125,11 +126,11 @@ public class GetLegend implements IODSOperation, Runnable
           display=DisplayHelper.getInstance().getDisplay();
           lic = new LegendImageContainer(chart, display);
           Image legendImg=lic.getImage();
-          m_response.setContentType( "image/jpeg" );
+          m_responseBean.setContentType( "image/jpeg" );
           ImageLoader il=new ImageLoader();
           ImageData id=legendImg.getImageData();
           il.data=new ImageData[]{id};
-          outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+          outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
           il.save( outputStream, SWT.IMAGE_JPEG );
           outputStream.close();
       }

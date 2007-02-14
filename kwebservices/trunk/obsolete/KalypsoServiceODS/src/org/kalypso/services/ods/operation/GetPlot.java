@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
@@ -73,10 +74,8 @@ import org.kalypso.swtchart.logging.Logger;
  */
 public class GetPlot implements IODSOperation, Runnable
 {
-
-
-    private HttpServletResponse m_response;
     private RequestBean m_requestBean;
+    private ResponseBean m_responseBean;
 
 
     public GetPlot()
@@ -85,10 +84,10 @@ public class GetPlot implements IODSOperation, Runnable
     }
 
 
-public void operate( RequestBean requestBean, final HttpServletResponse response )
+public void operate( RequestBean requestBean, ResponseBean responseBean )
  {
     m_requestBean=requestBean;
-    m_response=response;
+    m_responseBean=responseBean;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
  }
 
@@ -148,11 +147,11 @@ public void operate( RequestBean requestBean, final HttpServletResponse response
 
           if (img!=null)
           {
-            m_response.setContentType( "image/png" );
+            m_responseBean.setContentType( "image/png" );
             ImageLoader il=new ImageLoader();
             ImageData id=img.getImageData();
             il.data=new ImageData[]{id};
-            outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+            outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
             il.save( outputStream, SWT.IMAGE_PNG );
           }
           else

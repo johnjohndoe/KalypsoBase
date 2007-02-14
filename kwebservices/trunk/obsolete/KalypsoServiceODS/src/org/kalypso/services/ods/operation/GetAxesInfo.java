@@ -41,6 +41,7 @@
 package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
@@ -80,9 +82,10 @@ import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 public class GetAxesInfo implements IODSOperation
 {
 
-  private HttpServletResponse m_response;
 
   private RequestBean m_requestBean;
+
+  private ResponseBean m_responseBean;
 
   public final static ObjectFactory m_of = new org.ksp.chart.configuration.ObjectFactory();
   private static final JAXBContext m_JC = JaxbUtilities.createQuiet( org.ksp.chart.configuration.ObjectFactory.class );
@@ -96,9 +99,9 @@ public class GetAxesInfo implements IODSOperation
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate(RequestBean requestBean, HttpServletResponse response ) throws OWSException
+  public void operate(RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
-    m_response=response;
+    m_responseBean=responseBean;
     m_requestBean=requestBean;
     
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
@@ -139,17 +142,10 @@ public class GetAxesInfo implements IODSOperation
           }
           
           
-          PrintWriter out=null;
-          try
-          {
-            out = m_response.getWriter();
-          }
-          catch( IOException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-          m_response.setContentType( "text/xml" );
+          OutputStreamWriter out=null;
+          out = new OutputStreamWriter(m_responseBean.getOutputStream());
+          
+          m_responseBean.setContentType( "text/xml" );
           
           StringWriter sw=new StringWriter();
         
@@ -169,8 +165,18 @@ public class GetAxesInfo implements IODSOperation
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
-          out.write( infoString );
-          out.close();
+          try
+          {
+            out.write( infoString );
+            out.close();
+          }
+          catch( IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          
+          
         }
         catch( JAXBException e )
         {

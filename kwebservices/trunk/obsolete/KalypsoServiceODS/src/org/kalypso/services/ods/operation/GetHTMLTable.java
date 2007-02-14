@@ -41,6 +41,7 @@
 package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,7 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
@@ -66,8 +68,8 @@ import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
 public class GetHTMLTable implements IODSOperation
 {
 
-  private HttpServletResponse m_response;
   private RequestBean m_requestBean;
+  private ResponseBean m_responseBean;
 
   public GetHTMLTable()
   {
@@ -78,12 +80,12 @@ public class GetHTMLTable implements IODSOperation
   /**
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
-  public void operate(RequestBean requestBean, HttpServletResponse response ) throws OWSException
+  public void operate(RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetHTMLTable", null ) );
 
     m_requestBean=requestBean;
-    m_response=response;
+    m_responseBean=responseBean;
 
     String name=m_requestBean.getParameterValue( "NAME" );
     if (name!=null)
@@ -96,8 +98,8 @@ public class GetHTMLTable implements IODSOperation
         {
           cl = new ConfigLoader(pathVC);
           String htmltable = TableLoader.createTable(cl, name, null);
-          final PrintWriter out=m_response.getWriter();
-          m_response.setContentType( "text/html" );
+          OutputStreamWriter out=new OutputStreamWriter(m_responseBean.getOutputStream());
+          m_responseBean.setContentType( "text/html" );
           if (htmltable!=null)
             out.write( htmltable );
           out.close();

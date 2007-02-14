@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ods.operation;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import java.io.OutputStream;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 
 /**
@@ -59,7 +55,7 @@ public interface IODSOperation
   /**
    * starts ods operation - used for ods operation extension point
    */
-  public void operate(RequestBean requestBean, final HttpServletResponse response) throws OWSException;
+  public void operate(RequestBean requestBean, ResponseBean responseBean) throws OWSException;
   
   
 }

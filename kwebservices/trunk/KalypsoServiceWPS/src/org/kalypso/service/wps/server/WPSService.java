@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.kalypso.service.ogc.IOGCService;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.server.operations.CancelSimulation;
 import org.kalypso.service.wps.server.operations.DescribeProcess;
@@ -31,7 +32,7 @@ public class WPSService implements IOGCService
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean,
    *      javax.servlet.http.HttpServletResponse)
    */
-  public void executeOperation( RequestBean request, HttpServletResponse response ) throws OWSException
+  public void executeOperation( RequestBean request, ResponseBean responseBean ) throws OWSException
   {
     /* Get the REQUEST parameter. With it the operation which should be executed is determined. */
     String parameterValue = request.getParameterValue( "REQUEST" );

@@ -1,5 +1,6 @@
 package org.kalypso.debug.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
@@ -9,10 +10,20 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnection;
+import org.apache.commons.httpclient.HttpConnectionManager;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
@@ -24,6 +35,8 @@ public class DebugServlet extends HttpServlet
   public final static String PARAM_INFO_SYSPROPS = "sysProps";
   public final static String PARAM_INFO_FWPROPS = "fwProps";
   public final static String PARAM_INFO_TEST = "test";
+  public final static String PARAM_INFO_POSTCLIENT = "testPostClient";
+  public final static String PARAM_INFO_POSTSERVER = "testPostServer";
 
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
@@ -43,10 +56,23 @@ public class DebugServlet extends HttpServlet
       doLogs( request, response );
     else if( PARAM_INFO_TEST.equals( type ) )
       doTest( request, response );
+    else if( PARAM_INFO_POSTCLIENT.equals( type ) )
+      doPostClientInfo( request, response );
+    else if( PARAM_INFO_POSTSERVER.equals( type ) )
+      doPostServerInfo( request, response );
+    else if( PARAM_INFO_POSTCLIENT.equals( type ) )
+      doPostClientInfo( request, response );
     else
       doMainPage( request, response );
   }
 
+  
+  @Override
+  protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+  {
+    doGet(request, response);
+  }
+  
   private void doLogs( HttpServletRequest request, HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
@@ -165,6 +191,10 @@ public class DebugServlet extends HttpServlet
     printAnchor( baseUrl + PARAM_INFO_FWPROPS, "Framework Properties", pw );
     pw.println( "<br/>" );
     printAnchor( baseUrl + PARAM_INFO_PLATFORM, "Platform Properties", pw );
+    pw.println( "<br/>" );
+    printAnchor( baseUrl + PARAM_INFO_POSTCLIENT, "Post Client Test", pw );
+    pw.println( "<br/>" );
+    printAnchor( baseUrl + PARAM_INFO_POSTSERVER, "Post Server Test", pw );
     pw.println( "<br/>" );
     printAnchor( baseUrl + PARAM_INFO_TEST, "Test Stuff", pw );
     pw.println( "<br/>" );
@@ -290,5 +320,107 @@ public class DebugServlet extends HttpServlet
       pw.println( "</th>" );
     else
       pw.println( "</td>" );
+  }
+  
+  
+  private void doPostClientInfo( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  {
+    final PrintWriter pw = doDefaultHeader( request, response );
+    pw.print( "<h2>Post-Test (client-side)</h2>" );
+
+    try
+    {
+    PostMethod filePost = new PostMethod("http://127.0.0.1:8080/sp_debug?info=testPostServer");
+    File file=new File("C:/testfile.txt");
+    Part[] parts = { new StringPart("param_name", "value"), new FilePart(file.getName(), file) }; 
+    filePost.setRequestEntity( new MultipartRequestEntity(parts, filePost.getParams()) ); 
+    HostConfiguration hc=new HostConfiguration();
+    
+    HttpClient client = new HttpClient(); 
+    client.setHostConfiguration( hc );
+    int status = client.executeMethod(filePost);
+    
+    byte[] responseBody = filePost.getResponseBody();
+    
+    if (responseBody != null)
+    {
+      pw.print( "ResponseBody: "+responseBody.toString() +"<br>");
+      for (int i=0; i<responseBody.length; i++)
+      {
+        pw.print( responseBody[i] );
+        StringBuffer sb=new StringBuffer();
+      }
+      pw.print( "<br>" );
+    }
+    pw.print("ResponseBody as String: <div style='border-width:1px;border-color:black;border-style:solid'>"+filePost.getResponseBodyAsString()+"</div>");
+    
+    pw.print("HTTP status: "+status+"<br>");
+    
+    filePost.releaseConnection();
+    
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+    
+    pw.close();
+
+    
+   
+  }
+  
+  
+  private void doPostServerInfo( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  {
+    final PrintWriter pw = doDefaultHeader( request, response );
+    pw.print( "<h2>Post-Test (server-side)</h2>" );
+    
+    pw.print( "ContentType (request): "+request.getContentType()+"<br/>" );
+    pw.print( "ContextPath (request): "+request.getContextPath()+"<br/>" );
+    pw.print( "Method (request): "+request.getMethod()+"<br/>" );
+
+    
+    //Headers
+    pw.print( "<h3>Headers:</h3>" );
+    pw.print("<table border='1'>");
+    Enumeration headerNames = request.getHeaderNames();
+    while (headerNames.hasMoreElements())
+    {
+      String headerName=(String)headerNames.nextElement();
+      Enumeration headerVals=request.getHeaders( headerName );
+      String valTable="";
+      valTable="<table>";
+      while (headerVals.hasMoreElements())
+      {
+        valTable+=(String) headerVals.nextElement();
+      }
+      valTable+="</table>";
+      printTableRow( pw, headerName, valTable);
+    }
+    pw.print( "</table>");
+    
+    
+    //Parameters
+    pw.print( "<h3>Parameters:</h3>" );
+    pw.print("<table border='1'>");
+    Enumeration parameterNames = request.getParameterNames();
+    while (parameterNames.hasMoreElements())
+    {
+      String keyStr=(String)parameterNames.nextElement();
+      String[] values=request.getParameterValues( keyStr );
+      String valuesStr="<table>";
+      for (int i=0;i<values.length; i++)
+      {
+        valuesStr+="<tr><td>"+values[i] + "</td></tr>" ;
+      }
+      valuesStr+="</table>";
+      printTableRow( pw, keyStr, valuesStr);
+      
+    }
+    pw.print( "</table>");
+    pw.close();
+
+    doDefaultFooter( request.getContextPath(), pw );
   }
 }

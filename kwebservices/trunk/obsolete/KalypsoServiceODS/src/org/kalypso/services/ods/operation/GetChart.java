@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
@@ -73,10 +74,10 @@ public class GetChart implements IODSOperation, Runnable
 {
 
 
-    private HttpServletResponse m_response;
     private RequestBean m_requestBean;
 
     private OWSException m_exception=null;
+    private ResponseBean m_responseBean;
 
     public GetChart()
     {
@@ -84,10 +85,10 @@ public class GetChart implements IODSOperation, Runnable
     }
 
 
-public void operate( RequestBean requestBean, final HttpServletResponse response ) throws OWSException
+public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
  {
     m_requestBean=requestBean;
-    m_response=response;
+    m_responseBean=responseBean;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
     if (m_exception!=null)
     {
@@ -144,20 +145,15 @@ public void operate( RequestBean requestBean, final HttpServletResponse response
 
         if (chartImg!=null )
         {
-          m_response.setContentType( "image/jpg" );
+          m_responseBean.setContentType( "image/jpg" );
           ImageLoader il=new ImageLoader();
           ImageData id=chartImg.getImageData();
           il.data=new ImageData[]{id};
           try
           {
-            outputStream = new BufferedOutputStream( m_response.getOutputStream() );
+            outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
             //INFO: if you get an swt_error, you need to include swt-plugin 3.3 or greater
             il.save( outputStream, SWT.IMAGE_JPEG );
-          }
-          catch( IOException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
           }
           finally
           {

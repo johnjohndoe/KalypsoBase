@@ -41,6 +41,7 @@
 package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -50,6 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.service.ogc.RequestBean;
+import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CapabilitiesLoader;
@@ -74,15 +76,24 @@ public class GetCapabilites implements IODSOperation
    * @see org.kalypso.services.ods.operation.IODSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 
    */
-  public void operate( RequestBean requestBean, final HttpServletResponse response ) throws OWSException
+  public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing GetCapabilities", null ) );
 
-    response.setContentType("text/xml");
-    PrintWriter writer=null;
+    String pathConfig=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
+    String pathCaps=pathConfig+IODSConstants.ODS_CAPABILITIES_NAME;
+    String pathVC=pathConfig+IODSConstants.ODS_CONFIG_NAME;
+    
+    CapabilitiesLoader pf = new CapabilitiesLoader(requestBean, pathCaps, pathVC);
+    pf.mergeConfigIntoODS();
+    
+    responseBean.setContentType("text/xml");
+    OutputStreamWriter writer=null;
     try
     {
-      writer = response.getWriter();
+      writer = new OutputStreamWriter(responseBean.getOutputStream());
+      writer.write(pf.getXMLString());
+      writer.close();
     }
     catch( IOException e )
     {
@@ -90,14 +101,7 @@ public class GetCapabilites implements IODSOperation
       e.printStackTrace();
     }
     
-    String pathConfig=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
-    String pathCaps=pathConfig+IODSConstants.ODS_CAPABILITIES_NAME;
-    String pathVC=pathConfig+IODSConstants.ODS_CONFIG_NAME;
     
-    CapabilitiesLoader pf = new CapabilitiesLoader(requestBean, pathCaps, pathVC);
-   // pf.mergeConfigIntoODS();
-    writer.println(pf.getXMLString());
-    writer.close();
   }
 
 }
