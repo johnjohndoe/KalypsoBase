@@ -61,7 +61,7 @@ import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.configuration.AxisType;
-import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.configuration.LayerType; 
 
 /**
  * @author burtscher

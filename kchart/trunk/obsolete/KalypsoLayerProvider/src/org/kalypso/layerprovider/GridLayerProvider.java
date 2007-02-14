@@ -127,10 +127,6 @@ public class GridLayerProvider implements ILayerProvider
             go=GridOrientation.BOTH;
 
           icl = new GridLayer(domAxis, valAxis, go );
-
-          icl.setName( m_lt.getTitle() );
-
-
       }
 
       catch( Exception e )
