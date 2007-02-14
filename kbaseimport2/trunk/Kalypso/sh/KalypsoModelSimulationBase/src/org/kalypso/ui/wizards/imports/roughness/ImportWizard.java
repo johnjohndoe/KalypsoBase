@@ -42,7 +42,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     super();
     m_data = new DataContainer();
     setNeedsProgressMonitor( true );
-    m_operation = new TransformerShapeToIRoughnessCollection( m_data ); //$NON-NLS-1$
+    m_operation = new Transformer( m_data ); //$NON-NLS-1$
   }
 
   /**

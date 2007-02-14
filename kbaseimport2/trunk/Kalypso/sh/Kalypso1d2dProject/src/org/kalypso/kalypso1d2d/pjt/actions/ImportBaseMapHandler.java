@@ -13,12 +13,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
@@ -26,7 +24,7 @@ import de.renew.workflow.WorkflowCommandHandler;
 /**
  * Starts the import roughness wizard
  * 
- * @author Stefan Kurzbach
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class ImportBaseMapHandler extends WorkflowCommandHandler
 {

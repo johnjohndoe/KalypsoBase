@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -47,14 +46,14 @@ public class PageMain extends WizardPage implements Listener
    */
   public PageMain( DataContainer data )
   {
-    this( Messages.getString( "PageMain.0" ), data );//$NON-NLS-1$
+    this( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.0" ), data );//$NON-NLS-1$
   }
 
   protected PageMain( final String name, DataContainer data )
   {
     super( name );
-    setTitle( Messages.getString( "PageMain.1" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "PageMain.2" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.2" ) ); //$NON-NLS-1$
     msg_StatusLine = new Status( IStatus.OK, "not_used", 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_data = data;
   }
@@ -73,7 +72,7 @@ public class PageMain extends WizardPage implements Listener
     composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
 
     // Input shape file
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "PageMain.5" ) ); //$NON-NLS-1$
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.5" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( composite, SWT.BORDER );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -81,14 +80,14 @@ public class PageMain extends WizardPage implements Listener
     // gd.horizontalSpan = ncol - 1;
     txt_InputFile.setLayoutData( gd );
     btn_inputFileBrowse = new Button( composite, SWT.PUSH );
-    btn_inputFileBrowse.setText( Messages.getString( "PageMain.6" ) ); //$NON-NLS-1$
+    btn_inputFileBrowse.setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.6" ) ); //$NON-NLS-1$
     gd = new GridData( GridData.END );
     // gd.horizontalSpan = ncol;
     btn_inputFileBrowse.setLayoutData( gd );
     // createLine(composite, ncol);
 
     // Roughness parameter combo box
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "PageMain.7" ) ); //$NON-NLS-1$
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.7" ) ); //$NON-NLS-1$
     cmb_ShapeProperty = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -99,7 +98,7 @@ public class PageMain extends WizardPage implements Listener
     createLine( composite, ncol );
 
     // Coordinate system combo box
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "PageMain.8" ) ); //$NON-NLS-1$
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
     final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
@@ -165,9 +164,9 @@ public class PageMain extends WizardPage implements Listener
       }
       catch( Exception e )
       {
-        StringBuffer sb = new StringBuffer( Messages.getString( "PageMain.9" ) ); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.9" ) ); //$NON-NLS-1$
         sb.append( txt_InputFile.getText().substring( txt_InputFile.getText().lastIndexOf( File.separator ) + 1 ) );
-        sb.append( "\n" ).append( Messages.getString( "PageMain.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append( "\n" ).append( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         status = new Status( IStatus.ERROR, "not_used", 0, sb.toString(), null ); //$NON-NLS-1$
         msg_StatusLine = status;
         e.printStackTrace();
@@ -267,7 +266,7 @@ public class PageMain extends WizardPage implements Listener
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
       try
       {
-        ((TransformerShapeToIRoughnessCollection)((ImportWizard)getWizard()).m_operation).prepare(true);
+        ((Transformer)((ImportWizard)getWizard()).m_operation).prepare(true);
         ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
       }
       catch( Exception e )
