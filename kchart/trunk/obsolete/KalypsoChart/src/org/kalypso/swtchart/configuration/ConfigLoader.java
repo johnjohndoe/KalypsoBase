@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.configuration;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +52,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.AxisType;
@@ -196,7 +203,7 @@ public class ConfigLoader
   {
     return m_tables;
   }
-  
+
   public static void writeConfig( final ConfigurationType config, final OutputStreamWriter writer ) throws JAXBException
   {
     final Marshaller marshaller = JC.createMarshaller();
@@ -205,5 +212,35 @@ public class ConfigLoader
 
     final JAXBElement<ConfigurationType> configElement = OF.createConfiguration( config );
     marshaller.marshal( configElement, writer );
+  }
+
+  public static ConfigurationType loadConfig( IStorage configFile ) throws CoreException, JAXBException, IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( configFile.getContents() );
+      ConfigurationType type = loadConfig( is );
+      is.close();
+
+      return type;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+  public static ConfigurationType loadConfig( InputStream inputStream ) throws JAXBException
+  {
+    Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
+    final Object o = unmarshaller.unmarshal( inputStream );
+
+    if( o instanceof JAXBElement )
+      return (ConfigurationType) ((JAXBElement) o).getValue();
+    else if( o instanceof ChartType )
+      return (ConfigurationType) o;
+
+    return null;
   }
 }

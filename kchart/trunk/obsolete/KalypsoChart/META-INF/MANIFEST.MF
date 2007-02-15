@@ -9,7 +9,8 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.core
+ org.kalypso.core,
+ org.eclipse.core.resources
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.swtchart,
  org.kalypso.swtchart.chart,

@@ -1,17 +1,12 @@
 package org.kalypso.chart.ui.editor;
 
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -89,45 +84,23 @@ public class ChartEditor extends EditorPart
     m_chartType = null;
     m_configuration = null;
 
-    InputStream is = null;
     try
     {
       if( input instanceof IFileEditorInput )
-        is = ((IStorageEditorInput) input).getStorage().getContents();
+      {
+        final IStorage storage = ((IStorageEditorInput) input).getStorage();
 
-      if( is == null )
-        return;
+        final ConfigurationType config = ConfigLoader.loadConfig( storage );
 
-      final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
-
-      final Object o = unmarshaller.unmarshal( is );
-
-      final ConfigurationType config;
-      if( o instanceof JAXBElement )
-        config = (ConfigurationType) ((JAXBElement) o).getValue();
-      else if( o instanceof ChartType )
-        config = (ConfigurationType) o;
-      else
-        config = null;
-
-      m_chartType = findCurrentChart( config );
-      m_configuration = config;
+        m_chartType = ChartLoader.findFirstChart( config );
+        m_configuration = config;
+      }
     }
-    catch( final JAXBException e )
+    catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editr input", status );
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editr input", status );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
+      ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editor input", status );
     }
 
     updateControl();
@@ -307,25 +280,6 @@ public class ChartEditor extends EditorPart
     // HACK: at the moment, we always set dirty, when updateControl is called
     m_dirty = true;
     firePropertyChange( PROP_DIRTY );
-  }
-
-  private ChartType findCurrentChart( final ConfigurationType config )
-  {
-    if( config == null )
-      return null;
-
-    ChartType ct = null;
-
-    final List<Object> chartOrLayerOrAxis = config.getChartOrLayerOrAxis();
-    for( final Object o : chartOrLayerOrAxis )
-    {
-      if( o instanceof ChartType )
-      {
-        ct = (ChartType) o;
-        break;
-      }
-    }
-    return ct;
   }
 
   public Chart getChart( )

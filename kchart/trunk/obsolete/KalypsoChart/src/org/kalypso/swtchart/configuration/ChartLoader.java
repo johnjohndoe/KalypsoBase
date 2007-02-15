@@ -59,6 +59,7 @@ import org.kalypso.swtchart.exception.LayerProviderException;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
 import org.ksp.chart.configuration.LayerType;
 import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 import org.ksp.chart.configuration.LayerType.Axes;
@@ -100,7 +101,7 @@ public class ChartLoader
     for( final LayerRef layerRef : layerRefs )
     {
       final LayerType layerType = (LayerType) layerRef.getRef();
-      
+
       /* Just ignore invisible layer */
       String providerId = layerType.getProvider().getId();
       layerType.getParameters();
@@ -124,8 +125,8 @@ public class ChartLoader
           {
             Logger.trace( "Adding Layer " + icl.getName() );
             icl.setStyle( StyleLoader.createStyle( layerType ) );
-            icl.setName( layerType.getTitle());
-            icl.setDescription( layerType.getDescription());
+            icl.setName( layerType.getTitle() );
+            icl.setDescription( layerType.getDescription() );
             icl.setVisibility( layerType.isVisible() );
             chart.addLayer( icl );
           }
@@ -197,6 +198,28 @@ public class ChartLoader
     {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
     }
+  }
+
+  /**
+   * returns the first chartType of a configurationType
+   */
+  static public ChartType findFirstChart( final ConfigurationType config )
+  {
+    if( config == null )
+      return null;
+
+    ChartType ct = null;
+
+    final List<Object> chartOrLayerOrAxis = config.getChartOrLayerOrAxis();
+    for( final Object o : chartOrLayerOrAxis )
+    {
+      if( o instanceof ChartType )
+      {
+        ct = (ChartType) o;
+        break;
+      }
+    }
+    return ct;
   }
 
 }
