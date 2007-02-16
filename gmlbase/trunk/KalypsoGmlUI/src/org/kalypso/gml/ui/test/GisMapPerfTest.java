@@ -100,7 +100,7 @@ public class GisMapPerfTest extends TestCase
 
     logger.showElapsedTime( "Map data was loaded" );
 
-    final MapPanel panel = new MapPanel( null, crs, featureSelectionManager2, null );
+    final MapPanel panel = new MapPanel( null, crs, featureSelectionManager2 );
     panel.setMapModell( modell0 );
     panel.setBoundingBox( modell0.getFullExtentBoundingBox() );
     final GeoTransform transform = panel.getProjection();
