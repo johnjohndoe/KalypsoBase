@@ -31,7 +31,7 @@
                id="GetAxes"/> id="getLayers"/>
    </extension>
    <extension
-         point="org.kalypso.service.ogc">
+         point="org.kalypso.service.ogc.ogcService">
       <service
             class="org.kalypso.services.ods.ODSServlet"
             serviceName="ODS"/>

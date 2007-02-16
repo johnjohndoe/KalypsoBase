@@ -2,8 +2,6 @@ package org.kalypso.service.wps.server;
 
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.kalypso.service.ogc.IOGCService;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;

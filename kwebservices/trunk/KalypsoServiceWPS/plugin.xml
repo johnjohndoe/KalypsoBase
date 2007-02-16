@@ -4,7 +4,7 @@
    <extension
          id="org.kalypso.service.wps"
          name="WPS"
-         point="org.kalypso.service.ogc">
+         point="org.kalypso.service.ogc.ogcService">
       <service
             class="org.kalypso.service.wps.server.WPSService"
             serviceName="WPS"/>

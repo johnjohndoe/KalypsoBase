@@ -1,9 +1,5 @@
 package org.kalypso.service.ogc;
 
-import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.kalypso.service.ogc.exception.OWSException;
 
 public interface IOGCService

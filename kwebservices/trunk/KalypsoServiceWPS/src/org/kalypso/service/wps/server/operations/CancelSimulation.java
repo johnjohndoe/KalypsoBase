@@ -41,7 +41,6 @@
 package org.kalypso.service.wps.server.operations;
 
 import org.kalypso.service.ogc.RequestBean;
-import org.kalypso.service.ogc.exception.OWSException;
 
 /**
  * This operation will cancel a specific simulation via its id.
@@ -60,7 +59,7 @@ public class CancelSimulation implements IOperation
   /**
    * @see org.kalypso.service.wps.operations.IOperation#executeOperation(org.kalypso.service.ogc.RequestBean)
    */
-  public StringBuffer executeOperation( RequestBean request ) throws OWSException
+  public StringBuffer executeOperation( RequestBean request ) 
   {
     return null;
   }

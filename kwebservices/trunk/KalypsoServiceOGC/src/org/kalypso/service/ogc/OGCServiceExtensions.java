@@ -83,7 +83,7 @@ public class OGCServiceExtensions
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.service.ogc" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.service.ogc.ogcService" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "serviceName" );
