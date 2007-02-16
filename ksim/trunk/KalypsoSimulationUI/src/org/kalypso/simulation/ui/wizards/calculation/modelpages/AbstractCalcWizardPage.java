@@ -92,6 +92,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.contexts.IContextService;
@@ -527,10 +528,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
 
     // TODO this might cause problems with active map contexts?
-    final IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService( IContextService.class );
     m_mapModell = new GisTemplateMapModell( context, crs, mapFile.getProject(), m_selectionManager );
     m_mapModell.createFromTemplate( gisview );
-    m_mapPanel = new MapPanel( this, crs, m_selectionManager, contextService );
+    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    m_mapPanel = new MapPanel( this, crs, m_selectionManager );
 
     m_mapPanel.addSelectionChangedListener( this );
 
