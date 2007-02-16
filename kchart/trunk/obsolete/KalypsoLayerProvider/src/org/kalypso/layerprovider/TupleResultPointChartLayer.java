@@ -43,12 +43,10 @@ package org.kalypso.layerprovider;
 import java.util.ArrayList;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
@@ -61,11 +59,12 @@ import org.kalypso.swtchart.chart.layer.impl.DataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
-import org.kalypso.swtchart.chart.styles.StyledLine;
 import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
+ * TODO: what is the difference to the TupleResultLineChartLayer, why do we need both?
+ * 
  * @author schlienger
  * @author burtscher
  *
