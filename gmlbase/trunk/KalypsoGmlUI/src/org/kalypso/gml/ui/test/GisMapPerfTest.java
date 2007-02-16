@@ -100,7 +100,7 @@ public class GisMapPerfTest extends TestCase
 
     logger.showElapsedTime( "Map data was loaded" );
 
-    final MapPanel panel = new MapPanel( null, crs, featureSelectionManager2 );
+    final MapPanel panel = new MapPanel( null, crs, featureSelectionManager2, null );
     panel.setMapModell( modell0 );
     panel.setBoundingBox( modell0.getFullExtentBoundingBox() );
     final GeoTransform transform = panel.getProjection();
@@ -145,7 +145,8 @@ public class GisMapPerfTest extends TestCase
   {
     logger.showElapsedTime( "Loading map modell..." );
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gismapview, resource, crs, null, selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
+    mapModell.createFromTemplate( gismapview );
 
     int maxWait = 100000;
     while( true )
