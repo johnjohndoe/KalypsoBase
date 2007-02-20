@@ -55,9 +55,6 @@ public class PrefixSuffixFilter implements FilenameFilter
 
   private final String m_suffix;
 
-  /**
-   * constructor
-   */
   public PrefixSuffixFilter( String prefix, String suffix )
   {
     if( prefix == null || suffix == null )
