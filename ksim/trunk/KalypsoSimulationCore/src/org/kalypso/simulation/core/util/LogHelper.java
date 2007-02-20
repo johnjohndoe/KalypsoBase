@@ -63,6 +63,11 @@ public class LogHelper
     m_log = log;
     m_monitor = monitor;
   }
+  
+  public ISimulationMonitor getMonitor( )
+  {
+    return m_monitor;
+  }
 
   /**
    * @param updateMonitor
