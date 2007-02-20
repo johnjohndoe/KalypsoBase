@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ReachSegmentsFeatureviewControlFactory implements IFeatureviewControlFactory
 {
@@ -60,5 +60,4 @@ public class ReachSegmentsFeatureviewControlFactory implements IFeatureviewContr
   {
     return new ReachSegmentFeatureControl( feature, pt );
   }
-
 }
