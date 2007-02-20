@@ -83,7 +83,7 @@ public class LogHelper
   }
 
   /**
-   * If the monito is canceled, return true and print and log error message.
+   * If the monitor is canceled, return true and print and log error message.
    */
   public boolean checkCanceled( )
   {
