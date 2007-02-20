@@ -71,4 +71,6 @@ public interface IChartLayer
    *          the data entry of the {@link EditInfo}return by {@link #getHoverInfo(Point)}
    */
   public void setActivePoint( final Object data );
+  
+  public String getId();
 }
