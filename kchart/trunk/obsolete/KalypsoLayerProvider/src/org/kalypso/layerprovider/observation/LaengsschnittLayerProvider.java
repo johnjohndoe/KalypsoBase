@@ -45,9 +45,7 @@ import java.net.URL;
 
 import org.kalypso.layerprovider.TupleResultLineChartLayer;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.swtchart.chart.Chart;
@@ -128,20 +126,12 @@ public class LaengsschnittLayerProvider implements ILayerProvider
       final String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
       final String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
 
-      final IComponent domainComponent = TupleResultUtilities.findComponentById( result, domainComponentId );
-
       final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
-      final IComponent valueComponent = TupleResultUtilities.findComponentById( result, valueComponentId );
+      icl = new TupleResultLineChartLayer( result, domainComponentId, valueComponentId, domAxis, valAxis );
 
-      if( domainComponent != null && valueComponent != null )
-      {
-        icl = new TupleResultLineChartLayer( result, domainComponent, valueComponent, domAxis, valAxis );
-
-        icl.setName( m_lt.getTitle() );
-        icl.setVisibility( m_lt.isVisible() );
-      }
-
+      icl.setName( m_lt.getTitle() );
+      icl.setVisibility( m_lt.isVisible() );
     }
     catch( final MalformedURLException e )
     {

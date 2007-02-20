@@ -117,7 +117,8 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
     if( m_obs != null )
     {
       final TupleResult result = m_obs.getResult();
-      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
+//      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
+      icl = new TupleResultLineChartLayer( result, m_domainComponent.getId(), m_valueComponent.getId(), m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
     }
     return icl;
   }

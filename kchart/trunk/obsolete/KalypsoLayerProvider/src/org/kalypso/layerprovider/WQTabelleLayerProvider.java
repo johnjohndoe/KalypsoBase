@@ -42,10 +42,7 @@ package org.kalypso.layerprovider;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.TreeMap;
-
-import javax.xml.namespace.QName;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -56,34 +53,23 @@ import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.StyleLoader;
 import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypso.swtchart.logging.Logger;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.LayerType;
-import org.ksp.chart.layerstyle.StyleType;
-
 
 /**
- * @author burtscher
- * 
- * Layer Provider for precipitation data from O&M data;
- * it's looking for a feature named "wq_table1", then tries to
- * transform it into an IObservation, creates a DefaultTupleResultLayer
- *  and uses the result components which go by the name "Wasserstand" (domain data) and 
- *  "Abfluss" (value data) as data input for the layer; the DefaultTupleResultLayer draws 
- *  its data as line chart
- *  
- *  @TODO: change named feature to "wq_table" or - even better - move feature name
- *  to parameter section 
- *  
- *  The following configuration parameters are needed for this LayerProvider:
- *  dataSource:     URL or relative path leading to observation data
- *  @TODO: dataSource is an independent configuration tag right now - it should be
- *      moved into the parameter section as not every layer provider needs an url
- *  
+ * @author burtscher Layer Provider for precipitation data from O&M data; it's looking for a feature named "wq_table1",
+ *         then tries to transform it into an IObservation, creates a DefaultTupleResultLayer and uses the result
+ *         components which go by the name "Wasserstand" (domain data) and "Abfluss" (value data) as data input for the
+ *         layer; the DefaultTupleResultLayer draws its data as line chart
+ * @TODO: change named feature to "wq_table" or - even better - move feature name to parameter section The following
+ *        configuration parameters are needed for this LayerProvider: dataSource: URL or relative path leading to
+ *        observation data
+ * @TODO: dataSource is an independent configuration tag right now - it should be moved into the parameter section as
+ *        not every layer provider needs an url
  */
 public class WQTabelleLayerProvider implements ILayerProvider
 {
@@ -108,63 +94,61 @@ public class WQTabelleLayerProvider implements ILayerProvider
    */
   public IChartLayer getLayer( URL context )
   {
-    IChartLayer icl=null;
-    String configLayerId=m_lt.getName();
-    
-    ParameterHelper ph=new ParameterHelper();
-    
-    ph.addParameters( m_lt.getParameters(), configLayerId);
-    String url=ph.getParameterValue( "url", configLayerId, "" );
-    String observationId=ph.getParameterValue( "observationId", configLayerId, "" );
-    String domainAxisId=( (AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
-    String valueAxisId=( (AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
-    
+    IChartLayer icl = null;
+    String configLayerId = m_lt.getName();
 
-      try
+    ParameterHelper ph = new ParameterHelper();
+
+    ph.addParameters( m_lt.getParameters(), configLayerId );
+    String url = ph.getParameterValue( "url", configLayerId, "" );
+    String observationId = ph.getParameterValue( "observationId", configLayerId, "" );
+    String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
+    String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+
+    try
+    {
+      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
+      Feature feature = workspace.getFeature( observationId );
+      if( feature != null )
       {
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( url ), null );
-        Feature feature = workspace.getFeature( observationId );
-        if( feature != null )
-        {
-          Logger.trace( "Found feature: " + feature.getId() );
-        }
-        IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-
-
-          IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
-
-          IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
-
-          TupleResult result = obs.getResult();
-
-          // ResultComponent rausfinden
-          final IComponent[] comps = result.getComponents();
-          final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
-          for( int i = 0; i < comps.length; i++ )
-          {
-            final QName qn = comps[i].getValueTypeName();
-            IComponent c = comps[i];
-            if( c.getName().compareTo( "Wasserstand" ) == 0 )
-              map.put( "domain", c );
-            else if( c.getName().compareTo( "Abfluss" ) == 0 )
-              map.put( "value", c );
-            if( map.size() == 2 )
-              break;
-          }
-          TupleResultLineChartLayer trcl = new TupleResultLineChartLayer( result, map.get( "domain" ), map.get( "value" ), domAxis, valAxis);
-
-        
-          trcl.setName( m_lt.getTitle() );
-          
+        Logger.trace( "Found feature: " + feature.getId() );
       }
-      catch( MalformedURLException e )
+      IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+
+      IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
+
+      IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
+
+      TupleResult result = obs.getResult();
+
+      // ResultComponent rausfinden
+      final IComponent[] comps = result.getComponents();
+      final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
+      for( int i = 0; i < comps.length; i++ )
       {
-        e.printStackTrace();
+        // final QName qn = comps[i].getValueTypeName();
+        IComponent c = comps[i];
+        if( c.getName().compareTo( "Wasserstand" ) == 0 )
+          map.put( "domain", c );
+        else if( c.getName().compareTo( "Abfluss" ) == 0 )
+          map.put( "value", c );
+        if( map.size() == 2 )
+          break;
       }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
+
+      TupleResultLineChartLayer trcl = new TupleResultLineChartLayer( result, map.get( "domain" ).getId(), map.get( "value" ).getId(), domAxis, valAxis );
+
+      trcl.setName( m_lt.getTitle() );
+
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     return icl;
   }
 

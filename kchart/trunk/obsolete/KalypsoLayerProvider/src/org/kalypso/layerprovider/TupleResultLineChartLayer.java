@@ -52,6 +52,8 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
+import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
@@ -71,13 +73,16 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
  */
 public class TupleResultLineChartLayer implements IChartLayer
 {
-  private final TupleResult m_result;
+  private TupleResult m_result;
+
+  /* needed for chart update / redraw event */
+  private Chart m_chart = null;
+
+  private String m_domainComponentId;
+
+  private String m_valueComponentId;
 
   private final IAxis m_valAxis;
-
-  private final IComponent m_domComp;
-
-  private final IComponent m_valComp;
 
   private final IAxis m_domAxis;
 
@@ -89,11 +94,17 @@ public class TupleResultLineChartLayer implements IChartLayer
 
   private boolean m_isVisible = true;
 
-  public TupleResultLineChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis )
+  public TupleResultLineChartLayer( Chart chart, TupleResult result, String domainComponentId, String valueComponentId, IAxis domAxis, IAxis valAxis )
+  {
+    this( result, domainComponentId, valueComponentId, domAxis, valAxis );
+    m_chart = chart;
+  }
+
+  public TupleResultLineChartLayer( TupleResult result, String domainComponentId, String valueComponentId, IAxis domAxis, IAxis valAxis )
   {
     m_result = result;
-    m_domComp = domComp;
-    m_valComp = valComp;
+    m_domainComponentId = domainComponentId;
+    m_valueComponentId = valueComponentId;
     m_domAxis = domAxis;
     m_valAxis = valAxis;
   }
@@ -112,17 +123,23 @@ public class TupleResultLineChartLayer implements IChartLayer
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
-    for( int i = 0; i < size; i++ )
+    final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
+    final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
+
+    if( domainComponent != null && valueComponent != null )
     {
-      final IRecord r1 = m_result.get( i );
+      for( int i = 0; i < size; i++ )
+      {
+        final IRecord r1 = m_result.get( i );
 
-      Object x1 = m_result.getValue( r1, m_domComp );
-      Object y1 = m_result.getValue( r1, m_valComp );
+        Object x1 = m_result.getValue( r1, domainComponent );
+        Object y1 = m_result.getValue( r1, valueComponent );
 
-      int ix1 = m_domAxis.logicalToScreen( x1 );
-      int iy1 = m_valAxis.logicalToScreen( y1 );
-      final Point point = new Point( ix1, iy1 );
-      path.add( point );
+        int ix1 = m_domAxis.logicalToScreen( x1 );
+        int iy1 = m_valAxis.logicalToScreen( y1 );
+        final Point point = new Point( ix1, iy1 );
+        path.add( point );
+      }
     }
 
     if( sl != null )
@@ -218,10 +235,13 @@ public class TupleResultLineChartLayer implements IChartLayer
     Object min = null;
     Object max = null;
     ComparableComparator cc = new ComparableComparator();
+
+    final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
+
     for( int i = 0; i < m_result.size(); i++ )
     {
       IRecord rec = m_result.get( i );
-      Object val = rec.getValue( m_domComp );
+      Object val = rec.getValue( domainComponent );
 
       if( val == null )
       {
@@ -246,10 +266,13 @@ public class TupleResultLineChartLayer implements IChartLayer
     Object min = null;
     Object max = null;
     ComparableComparator cc = new ComparableComparator();
+
+    final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
+
     for( int i = 0; i < m_result.size(); i++ )
     {
       IRecord rec = m_result.get( i );
-      Object val = rec.getValue( m_valComp );
+      Object val = rec.getValue( valueComponent );
       if( min == null || cc.compare( min, val ) > 0 )
         min = val;
       if( max == null || cc.compare( max, val ) < 0 )
@@ -307,5 +330,17 @@ public class TupleResultLineChartLayer implements IChartLayer
   public boolean getVisibility( )
   {
     return m_isVisible;
+  }
+
+  public void updateResult( TupleResult result, String domainComponentId, String valueComponentId )
+  {
+    m_result = result;
+    m_domainComponentId = domainComponentId;
+    m_valueComponentId = valueComponentId;
+    if( m_chart != null )
+    {
+      m_chart.repaint();
+    }
+
   }
 }
