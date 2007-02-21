@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import java.util.Comparator;
+
 import javax.xml.namespace.QName;
 
 /**
  * @author schlienger
  */
-public interface IComponent
+public interface IComponent extends Comparator<Object>
 {
   /**
    * Id or internal name of this component. For example if this component really was read from a dictionary, the id
