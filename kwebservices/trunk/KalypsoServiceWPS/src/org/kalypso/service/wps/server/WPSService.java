@@ -50,7 +50,7 @@ public class WPSService implements IOGCService
     if( operation == null )
     {
       Debug.println( "Unsupported operation \"" + parameterValue + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Invalid operation " + parameterValue + " ...", request.getUrl() );
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Invalid operation " + parameterValue + " ...", request.getUrl() );
     }
 
     Debug.println( "Found operation \"" + parameterValue + "\"." );

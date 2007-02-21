@@ -10,12 +10,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.simulation.core,
  org.eclipse.core.resources,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.jwsdp
+ org.kalypso.jwsdp,
+ org.junit4
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.service.wps,
  org.kalypso.service.wps.client,
  org.kalypso.service.wps.server,
  org.kalypso.service.wps.server.operations,
- org.kalypso.service.wps.utils,
- org.kalypso.service.wps.utils.extensions
+ org.kalypso.service.wps.utils
 Bundle-ClassPath: .

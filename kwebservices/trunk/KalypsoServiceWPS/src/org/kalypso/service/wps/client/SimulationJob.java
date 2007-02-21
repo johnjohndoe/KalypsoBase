@@ -40,25 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.OutputDefinitionType;
+import net.opengeospatial.wps.OutputDefinitionsType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.VFS;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -66,14 +84,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
+import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
+import org.kalypso.service.wps.utils.OGCNamespacePrefixMapper;
+import org.kalypso.service.wps.utils.OGCUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
+import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
 // TODO Get the simulation via the extension manager of simulation core.
 // TODO Transform modelspec into an OGC conform xml.
@@ -118,17 +137,12 @@ public class SimulationJob extends WorkspaceJob
   /**
    * The id identifying the simulation.
    */
-  private final String m_simulation;
+  private final String m_simulationType;
 
   /**
    * After this period of time, the job gives up, waiting for a result of the service.
    */
   private final long m_timeout;
-
-  /**
-   * The id for this simulation running on the server.
-   */
-  private String m_id;
 
   /**
    * The modelspec for this simulation.
@@ -141,9 +155,10 @@ public class SimulationJob extends WorkspaceJob
   private FileSystemManager m_fsManager;
 
   /**
-   * The path to the webdav, as configured in the config.ini from Kalypso.
+   * The path to the place on the server, where the client can put his files, as configured in the config.ini from
+   * Kalypso.
    */
-  private String m_dav;
+  private String m_server;
 
   /**
    * The URL to the wps service.
@@ -157,32 +172,42 @@ public class SimulationJob extends WorkspaceJob
   private Integer m_alreadyWorked;
 
   /**
+   * The temporary directory on the server.
+   */
+  private FileObject m_serverTmpDirectory;
+
+  /**
    * The constructor.
    * 
+   * @param calcCaseFolder
+   *          The folder of the calc case.
+   * @param modelSpec
+   *          The file to the model specification.
    * @param simulation
    *          The id identifying the simulation.
    * @param timeout
    *          After this period of time, the job gives up, waiting for a result of the service.
    */
-  public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String simulation, final long timeout )
+  public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String simulationType, final long timeout )
   {
-    super( simulation );
+    super( simulationType );
 
+    /* Initializing of the given variables. */
     m_calcCaseFolder = calcCaseFolder;
     m_modelSpec = modelSpec;
-
-    m_simulation = simulation;
+    m_simulationType = simulationType;
     m_timeout = timeout;
-    m_id = null;
 
+    /* Initializing the other variables. */
+    // TODO Remove default, it is only for testing now!
+    m_service = System.getProperty( "org.kalypso.service.wps.service", "http://localhost:8080/ods" );
+    m_server = System.getProperty( "org.kalypso.service.wps.server", "file://c:/temp/webdav" );
+    m_alreadyWorked = new Integer( 0 );
+
+    /* Variables that are initialized during run time. */
     m_data = null;
     m_fsManager = null;
-
-    // TODO Remove default, it is only for testing now!
-    m_dav = System.getProperty( "org.kalypso.service.wps.dav", "file://c:/temp/webdav" );
-    m_service = System.getProperty( "org.kalypso.service.wps.service", "http://localhost:8080/ods" );
-
-    m_alreadyWorked = new Integer( 0 );
+    m_serverTmpDirectory = null;
   }
 
   /**
@@ -193,21 +218,11 @@ public class SimulationJob extends WorkspaceJob
   {
     monitor.beginTask( "Berechnung vorbereiten ...", 600 );
 
-    /* Check if the simulation is available. */
-    Debug.println( "Checking for simulation \"" + m_simulation + "\" ..." );
-    ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( m_simulation );
-
-    if( simulation == null )
+    Debug.println( "Checking for server URL, where the input data can be copied ..." );
+    if( m_server == null )
     {
-      Debug.println( "No simulation with the id \"" + m_simulation + " available.\"" );
-      throw new CoreException( StatusUtilities.createErrorStatus( "No simulation with the id \"" + m_simulation + " available.\"" ) );
-    }
-
-    Debug.println( "Checking for webdav URL ..." );
-    if( m_dav == null )
-    {
-      Debug.println( "No URL to the webdav of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.dav property." );
-      throw new CoreException( StatusUtilities.createErrorStatus( "No URL to the webdav of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.dav property." ) );
+      Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
+      throw new CoreException( StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." ) );
     }
 
     /* If the user aborted the job. */
@@ -215,166 +230,155 @@ public class SimulationJob extends WorkspaceJob
     if( monitor.isCanceled() )
       return canceled();
 
-    /* Copy the data to the dav. */
-    // TODO
-    
-    /* Convert the input data to the ogc conform data input. */
-    
-
-    /* Build the execute request. */
-
-    /* Send the request. */
-
-    /* Handle the execute response. */
-
-    /* Polling. */
-
-    /* Handle updated execute response. */
-
-    /* Copy all data from the given URLs to the client. */
-
-    /* Finish. */
-
     try
     {
-      /* Get input data. */
-      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-      m_data = (Modeldata) unmarshaller.unmarshal( m_modelSpec );
+      /* Init the neccessary components. */
+      init();
 
-      /* Zip everything. */
-      monitor.setTaskName( "Zippe die Eingangs-Daten ..." );
-      Debug.println( "Zip everything ..." );
-      File zipFile = zipData( m_calcCaseFolder, monitor );
+      /* Get the process description. */
 
-      /* If the user aborted the job. */
-      monitor.worked( 100 );
-      if( monitor.isCanceled() )
-        return canceled();
+      /* Use the process description for building the DataInputs and the OutputDefinitions. */
 
-      /* The filesystem manager needs to be set. */
-      m_fsManager = VFS.getManager();
+      /* During this, check, if every input is given, using the model spec. */
 
+      /* Collect the data. */
+      IFile[] inputFiles = getInputFiles( m_calcCaseFolder );
+
+      /* Copy the data to the server. */
       monitor.setTaskName( "Kopiere auf den Server ..." );
-      Debug.println( "Copying ..." );
+      Debug.println( "Copy to the server ..." );
 
-      /* Convert the zip file. */
-      FileObject zip = m_fsManager.resolveFile( zipFile.getParentFile(), zipFile.getName() );
-
-      /* Get the directory for dav access. */
-      FileObject davDirectory = m_fsManager.resolveFile( m_dav );
-      FileObject davTmpDirectory = m_fsManager.resolveFile( davDirectory, "CalcJob-" + m_id );
-
-      if( !davTmpDirectory.exists() )
-      {
-        Debug.println( "Creating folder " + davTmpDirectory.getName().getPath() + " ..." );
-        davTmpDirectory.createFolder();
-      }
-
-      /* Copy the input data to the dav. */
-      copy( zip, davTmpDirectory );
-
-      /* Convert the modelspec file. */
-      FileObject modelSpec = m_fsManager.resolveFile( m_modelSpec.toURL().toExternalForm() );
-
-      /* Copy the modelspec to the dav. */
-      copy( modelSpec, davTmpDirectory );
+      /* Copy ... */
+      copyInputFiles( inputFiles );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
       if( monitor.isCanceled() )
         return canceled();
 
-      /* Start calculation. */
-      monitor.setTaskName( "Starte die Simulation ..." );
-      Debug.println( "Calling " + m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation + " ..." );
+      /* Get the input data. */
+      DataInputsType dataInputs = getDataInputs( m_calcCaseFolder );
 
-      /* TODO: Proxy? */
+      /* Get the output data. */
+      OutputDefinitionsType outputDefinitions = getOutputDefinitions();
+
+      /* Build the execute request. */
+      Execute execute = OGCUtilities.buildExecuteOperationRequest( OGCUtilities.buildCodeType( "", m_simulationType ), dataInputs, outputDefinitions, true, true );
+
+      /* If the user aborted the job. */
+      monitor.worked( 100 );
+      if( monitor.isCanceled() )
+        return canceled();
+
+      /* Send the request. */
+      monitor.setTaskName( "Starte die Simulation ..." );
+      Debug.println( "Calling " + m_service + " ..." );
+
       HttpClient client = new HttpClient();
       client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
-      GetMethod get = new GetMethod( m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation );
-      client.executeMethod( get );
+      PostMethod post = new PostMethod( m_service );
+      post.setRequestEntity( new InputStreamRequestEntity( getInputStream( execute ) ) );
+      client.executeMethod( post );
 
-      /* If the user aborted the job. */
-      monitor.worked( 100 );
-      if( monitor.isCanceled() )
-        return canceled();
+      /* Handle the execute response. */
 
-      /* Poll all few seconds to update the status. */
-      boolean run = true;
-      long executed = 0;
+      /* Polling. */
 
-      /* Loop, until an result is available, a timeout is reached or the user has canceled the job. */
-      monitor.setTaskName( "Warte auf Status ..." );
-      while( run )
-      {
-        Debug.println( "Checking state file on dav ..." );
-        FileObject status = m_fsManager.resolveFile( davTmpDirectory, "status.properties" );
+      /* Handle updated execute response. */
 
-        if( status.exists() )
-        {
-          monitor.setTaskName( "Status" );
-          InputStream inputStream = status.getContent().getInputStream();
-          Properties prop = new Properties();
-          prop.load( inputStream );
-          inputStream.close();
+      /* Copy all data from the given URLs to the client. */
 
-          Debug.println( prop.toString() );
+      /* Finish. */
 
-          /* Update the monitor values. */
-          updateMonitor( prop, monitor );
-
-          /* The state of the simulation. */
-          String simulation_status = prop.getProperty( "SIMULATION_STATUS" );
-          if( simulation_status.equals( "FINISHED" ) )
-          {
-            Debug.println( "The simulation has finished ..." );
-            break;
-          }
-        }
-        else
-          Debug.println( "Not started yet ..." );
-
-        Thread.sleep( 1000 );
-        executed += 1000;
-
-        /* If the timeout is reached. */
-        if( executed >= m_timeout )
-        {
-          Debug.println( "Timeout reached ..." );
-          return StatusUtilities.createErrorStatus( "Timeout reached ..." );
-        }
-
-        /* If the user aborted the job. */
-        if( monitor.isCanceled() )
-          return canceled();
-      }
-
-      /* Check if the results are ready. */
-      monitor.setTaskName( "Prüfe Ergebnisse ..." );
-      Debug.println( "Check the results ..." );
-      FileObject resultDir = m_fsManager.resolveFile( davTmpDirectory, "Result" );
-      if( !resultDir.exists() )
-      {
-        Debug.println( "The result directory does not exist." );
-        throw new CoreException( StatusUtilities.createErrorStatus( "The result directory does not exist." ) );
-      }
-
-      FileObject[] results = resultDir.getChildren();
-      if( results.length == 0 )
-      {
-        Debug.println( "No results found." );
-        throw new CoreException( StatusUtilities.createErrorStatus( "No results found." ) );
-      }
-
-      /* If the user aborted the job. */
-      if( monitor.isCanceled() )
-        return canceled();
-
-      /* Retrieve the results and copy them to their specific destination. */
-      for( int i = 0; i < results.length; i++ )
-        copy( results[i], zip.getParent() );
-
-      monitor.worked( 100 );
+      // /* TODO: Proxy? */
+      // HttpClient client = new HttpClient();
+      // client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true )
+      // );
+      // GetMethod get = new GetMethod( m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation
+      // );
+      // client.executeMethod( get );
+      //
+      // /* If the user aborted the job. */
+      // monitor.worked( 100 );
+      // if( monitor.isCanceled() )
+      // return canceled();
+      //
+      // /* Poll all few seconds to update the status. */
+      // boolean run = true;
+      // long executed = 0;
+      //
+      // /* Loop, until an result is available, a timeout is reached or the user has canceled the job. */
+      // monitor.setTaskName( "Warte auf Status ..." );
+      // while( run )
+      // {
+      // Debug.println( "Checking state file on dav ..." );
+      // FileObject status = m_fsManager.resolveFile( davTmpDirectory, "status.properties" );
+      //
+      // if( status.exists() )
+      // {
+      // monitor.setTaskName( "Status" );
+      // InputStream inputStream = status.getContent().getInputStream();
+      // Properties prop = new Properties();
+      // prop.load( inputStream );
+      // inputStream.close();
+      //
+      // Debug.println( prop.toString() );
+      //
+      // /* Update the monitor values. */
+      // updateMonitor( prop, monitor );
+      //
+      // /* The state of the simulation. */
+      // String simulation_status = prop.getProperty( "SIMULATION_STATUS" );
+      // if( simulation_status.equals( "FINISHED" ) )
+      // {
+      // Debug.println( "The simulation has finished ..." );
+      // break;
+      // }
+      // }
+      // else
+      // Debug.println( "Not started yet ..." );
+      //
+      // Thread.sleep( 1000 );
+      // executed += 1000;
+      //
+      // /* If the timeout is reached. */
+      // if( executed >= m_timeout )
+      // {
+      // Debug.println( "Timeout reached ..." );
+      // return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+      // }
+      //
+      // /* If the user aborted the job. */
+      // if( monitor.isCanceled() )
+      // return canceled();
+      // }
+      //
+      // /* Check if the results are ready. */
+      // monitor.setTaskName( "Prüfe Ergebnisse ..." );
+      // Debug.println( "Check the results ..." );
+      // FileObject resultDir = m_fsManager.resolveFile( davTmpDirectory, "Result" );
+      // if( !resultDir.exists() )
+      // {
+      // Debug.println( "The result directory does not exist." );
+      // throw new CoreException( StatusUtilities.createErrorStatus( "The result directory does not exist." ) );
+      // }
+      //
+      // FileObject[] results = resultDir.getChildren();
+      // if( results.length == 0 )
+      // {
+      // Debug.println( "No results found." );
+      // throw new CoreException( StatusUtilities.createErrorStatus( "No results found." ) );
+      // }
+      //
+      // /* If the user aborted the job. */
+      // if( monitor.isCanceled() )
+      // return canceled();
+      //
+      // /* Retrieve the results and copy them to their specific destination. */
+      // for( int i = 0; i < results.length; i++ )
+      // copy( results[i], zip.getParent() );
+      //
+      // monitor.worked( 100 );
     }
     catch( Exception e )
     {
@@ -390,67 +394,122 @@ public class SimulationJob extends WorkspaceJob
   }
 
   /**
-   * This function will zip all input data.
+   * This function initializes everything.
+   */
+  private void init( ) throws FileSystemException, JAXBException
+  {
+    /* Init the model spec. */
+    initData();
+
+    /* The filesystem manager needs to be set. */
+    initVFSManager();
+
+    /* Get the directory for server access. */
+    initServerTmpDirectory();
+  }
+
+  /**
+   * This function inits the model data.
+   */
+  private void initData( ) throws JAXBException
+  {
+    /* Init the model spec. */
+    if( m_data == null )
+    {
+      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
+      m_data = (Modeldata) unmarshaller.unmarshal( m_modelSpec );
+    }
+  }
+
+  /**
+   * This function inits the VFS manager.
+   */
+  private void initVFSManager( ) throws FileSystemException
+  {
+    if( m_fsManager == null )
+    {
+      /* The filesystem manager needs to be set. */
+      m_fsManager = VFS.getManager();
+    }
+  }
+
+  /**
+   * This function inits the temporary directory of the server, where the client has to put his files.
+   */
+  private void initServerTmpDirectory( ) throws FileSystemException
+  {
+    /* If the directory is not initialized, it will be generated and created (if necessary). */
+    if( m_serverTmpDirectory == null )
+    {
+      /* Get the directory for server access. */
+      FileObject davDirectory = m_fsManager.resolveFile( m_server );
+      m_serverTmpDirectory = m_fsManager.resolveFile( davDirectory, "CalcJob-" + "1234" );
+
+      if( !m_serverTmpDirectory.exists() )
+      {
+        Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." );
+        m_serverTmpDirectory.createFolder();
+      }
+    }
+  }
+
+  /**
+   * This function collects all input files.
    * 
    * @param calcCaseFolder
    *          The folder of the calc case.
-   * @param monitor
-   *          The progress monitor.
-   * @return The new temporary zip file.
+   * @return The input files list.
    */
-  private File zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException, IOException
+  private IFile[] getInputFiles( final IContainer calcCaseFolder ) throws CoreException
   {
     /* Get the list with the input. */
     List<Modeldata.Input> inputList = m_data.getInput();
 
-    /* Create the zip file. */
-    File zipFile = File.createTempFile( "CalcJobData_", ".zip" );
-    zipFile.deleteOnExit();
+    /* Create a resource visitor. */
+    CollectFilesVisitor visitor = new CollectFilesVisitor();
 
-    /* Zip everything. */
-    ZipResourceVisitor zipper = null;
-
-    try
+    final IProject project = calcCaseFolder.getProject();
+    for( final Input input : inputList )
     {
-      final IProject project = calcCaseFolder.getProject();
-      for( final Input input : inputList )
+      final String inputPath = input.getPath();
+
+      /* Alles relativ zum Projekt auflösen! */
+      final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+      final IResource inputResource = baseresource.findMember( inputPath );
+      if( inputResource == null )
       {
-        final String inputPath = input.getPath();
+        if( input.isOptional() )
+          continue;
 
-        /* alles relativ zum Projekt auflösen! */
-        final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-        final IResource inputResource = baseresource.findMember( inputPath );
-        if( inputResource == null )
-        {
-          if( input.isOptional() )
-            continue;
-
-          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
-        }
-
-        /* Create zipper very lazy, in order to prevent exception because zip stream is empty. */
-        if( zipper == null )
-          zipper = new ZipResourceVisitor( zipFile );
-
-        inputResource.accept( zipper );
+        throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
       }
-    }
-    finally
-    {
-      if( zipper != null )
-      {
-        try
-        {
-          zipper.close();
-        }
-        catch( final IOException e )
-        {
-          e.printStackTrace();
-        }
-      }
+
+      inputResource.accept( visitor );
     }
 
-    return zipFile;
+    return visitor.getFiles();
+  }
+
+  /**
+   * This function copies all input data to a place, where the WPS can read it.
+   * 
+   * @param files
+   *          The files to copy.
+   */
+  private void copyInputFiles( IFile[] files ) throws IOException
+  {
+    Debug.println( "Copying ..." );
+    for( int i = 0; i < files.length; i++ )
+    {
+      File file = files[i].getLocation().toFile();
+      final String relativePathTo = files[i].getProjectRelativePath().toString();
+
+      FileObject source = m_fsManager.resolveFile( file.toURL().toExternalForm() );
+      FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+
+      /* Copy file. */
+      copy( source, destination );
+    }
   }
 
   /**
@@ -490,6 +549,100 @@ public class SimulationJob extends WorkspaceJob
       IOUtils.closeQuietly( is );
       IOUtils.closeQuietly( os );
     }
+  }
+
+  /**
+   * This function creates the data inputs for the wps.
+   * 
+   * @param calcCaseFolder
+   *          The folder of the calc case.
+   * @return The data input from the model spec in wps format.
+   */
+  private DataInputsType getDataInputs( final IContainer calcCaseFolder ) throws CoreException, FileSystemException
+  {
+    /* Get the list with the input. */
+    List<Input> inputList = m_data.getInput();
+
+    /* The storage for the input values. */
+    List<IOValueType> inputValues = new LinkedList<IOValueType>();
+
+    final IProject project = calcCaseFolder.getProject();
+    for( final Input input : inputList )
+    {
+      final String inputPath = input.getPath();
+
+      /* Alles relativ zum Projekt auflösen! */
+      final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+      final IResource inputResource = baseresource.findMember( inputPath );
+      if( inputResource == null )
+      {
+        if( input.isOptional() )
+          continue;
+
+        throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+      }
+
+      /* Build the URL to this input. */
+      String relativePathTo = inputResource.getProjectRelativePath().toString();
+      FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+      URL url = destination.getURL();
+
+      /* Build the complex value reference. */
+      CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
+      ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( url.toExternalForm(), null, null, null );
+      IOValueType ioValue = OGCUtilities.buildIOValueType( code, input.getId(), "", valueReference );
+
+      /* Add the input. */
+      inputValues.add( ioValue );
+    }
+
+    return OGCUtilities.buildDataInputs( inputValues );
+  }
+
+  /**
+   * This function creates the data outputs for the wps.
+   * 
+   * @return The output of the model spec in wps format.
+   */
+  private OutputDefinitionsType getOutputDefinitions( )
+  {
+    /* Get the list with the output. */
+    List<Output> outputList = m_data.getOutput();
+
+    /* The storage for the output values. */
+    List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
+
+    for( final Output output : outputList )
+    {
+      CodeType code = OGCUtilities.buildCodeType( null, output.getId() );
+      OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, output.getId(), "", null, null, null, null );
+
+      /* Add the output. */
+      outputValues.add( outputDefinition );
+    }
+
+    return OGCUtilities.buildOutputDefinitions( outputValues );
+  }
+
+  /**
+   * This function returns an input stream from the execute request.
+   * 
+   * @param execute
+   *          The execute request.
+   * @return The inputstream.
+   */
+  private InputStream getInputStream( Execute execute ) throws JAXBException, IOException
+  {
+    JAXBContext context = JaxbUtilities.createQuiet( net.opengeospatial.ows.ObjectFactory.class, net.opengeospatial.wps.ObjectFactory.class );
+    StringWriter sw = new StringWriter();
+    Marshaller m = context.createMarshaller();
+    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new OGCNamespacePrefixMapper() );
+    m.marshal( execute, sw );
+    ByteArrayInputStream is = new ByteArrayInputStream( sw.toString().getBytes() );
+    sw.close();
+
+    return is;
   }
 
   /**

@@ -44,8 +44,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.extensions.SimulationExtensions;
 import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 
 /**
  * This operation will execute a specific simulation.
@@ -80,10 +80,8 @@ public class Execute implements IOperation
     try
     {
       /* Get the simulation. */
-      SimulationExtensions instance = SimulationExtensions.getInstance();
-
       Debug.println( "Searching for simulation \"" + literal + "\" ..." );
-      ISimulation simulation = instance.getSimulation( literal );
+      ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( literal );
 
       if( simulation == null )
       {

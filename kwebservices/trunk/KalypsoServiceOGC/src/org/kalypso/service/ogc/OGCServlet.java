@@ -1,10 +1,12 @@
 package org.kalypso.service.ogc;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,96 +31,114 @@ public class OGCServlet extends HttpServlet implements Servlet
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    //Operationsparameter für Service, Request und Version
+    // Operationsparameter für Service, Request und Version
     String opService = request.getParameter( "SERVICE" );
     String opRequest = request.getParameter( "REQUEST" );
     String opVersion = request.getParameter( "VERSION" );
-    
+
     OutputStream out = response.getOutputStream();
 
-    
     String locator = request.getRequestURL().toString();
 
-    locator=request.getRequestURL().toString()+"?"+request.getQueryString();
-    
-    if (opService == null)
+    locator = request.getRequestURL().toString() + "?" + request.getQueryString();
+
+    if( opService == null )
     {
-      //Fehler ausgeben: Kein Service spezifiziert
+      // Fehler ausgeben: Kein Service spezifiziert
       String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw=new OutputStreamWriter(out);
+      OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
       return;
     }
-    if (opRequest == null)
+    if( opRequest == null )
     {
-      //Fehler ausgeben: Keine Operation spezifiziert
+      // Fehler ausgeben: Keine Operation spezifiziert
       String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'REQUEST is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw=new OutputStreamWriter(out);
+      OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
       return;
     }
-    if (opVersion == null)
+    if( opVersion == null )
     {
-      //Fehler ausgeben: Keine Version spezifiziert
+      // Fehler ausgeben: Keine Version spezifiziert
       String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'VERSION' is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw=new OutputStreamWriter(out);
+      OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
       return;
     }
-    
-    
-      //Wenn wir hier ankommen, sind alle OWS-Pflicht-Parameter vorhanden
-      IOGCService ogcService = null;
-      // Service-Klasse laden
+
+    // Wenn wir hier ankommen, sind alle OWS-Pflicht-Parameter vorhanden
+    IOGCService ogcService = null;
+    // Service-Klasse laden
+    try
+    {
+      ogcService = OGCServiceExtensions.createService( opService );
+    }
+    catch( CoreException e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+
+    if( ogcService != null )
+    {
+      // Operation ausführen
       try
       {
-        ogcService = OGCServiceExtensions.createService( opService );
+        ogcService.executeOperation( new RequestBean( request ), new ResponseBean( response ) );
       }
-      catch( CoreException e1 )
+      catch( OWSException e )
       {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-
-      if( ogcService != null )
-      {
-        // Operation ausführen
-        try
-        {
-          ogcService.executeOperation( new RequestBean( request ), new ResponseBean(response) );
-        }
-        catch( OWSException e )
-        {
-          // geworfene Fehlermeldung als XML ausgeben
-          String str= e.toXMLString();
-          OutputStreamWriter osw=new OutputStreamWriter(out);
-          osw.write( str );
-          osw.close();
-        }
-      }
-      else
-      {
-        //  Fehler ausgeben: Service nicht vorhanden
-        String str = (new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "SERVICE '"+opService+"' not found", locator )).toXMLString();
-        OutputStreamWriter osw=new OutputStreamWriter(out);
+        // geworfene Fehlermeldung als XML ausgeben
+        String str = e.toXMLString();
+        OutputStreamWriter osw = new OutputStreamWriter( out );
         osw.write( str );
         osw.close();
       }
+    }
+    else
+    {
+      // Fehler ausgeben: Service nicht vorhanden
+      String str = (new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "SERVICE '" + opService + "' not found", locator )).toXMLString();
+      OutputStreamWriter osw = new OutputStreamWriter( out );
+      osw.write( str );
+      osw.close();
+    }
     out.close();
-    
+
   }
-  
+
   /**
    * doPost gets redirected to doGet - GET and POST are handled the same way
    * 
-   * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
+   *      javax.servlet.http.HttpServletResponse)
    */
   @Override
-  public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+  public void doPost( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    doGet(request, response);
+    ServletInputStream inputStream = request.getInputStream();
+
+    byte[] buffer = new byte[4096];
+    OutputStream outputStream = new ByteArrayOutputStream();
+
+    while( true )
+    {
+      int read = inputStream.read( buffer );
+      
+      if( read == -1 )
+        break;
+
+      outputStream.write( buffer, 0, read );
+    }
+
+    outputStream.close();
+    inputStream.close();
+
+    String s = outputStream.toString();
+    System.out.println( s );
   }
 }

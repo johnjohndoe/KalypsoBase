@@ -89,14 +89,18 @@ public class OGCUtilities
    * dictionary from which it is taken.
    * 
    * @param codeSpace
+   *          [optional]
    * @param value
    */
   public static CodeType buildCodeType( String codeSpace, String value )
   {
-    CodeType code = new CodeType();
+    /* Create the instance via the factory. */
+    net.opengeospatial.ows.ObjectFactory factory = new net.opengeospatial.ows.ObjectFactory();
+    CodeType code = factory.createCodeType();
 
     /* Attributes. */
-    code.setCodeSpace( codeSpace );
+    if( codeSpace != null )
+      code.setCodeSpace( codeSpace );
 
     /* Values. */
     code.setValue( value );
@@ -109,36 +113,42 @@ public class OGCUtilities
    * <br>
    * Reference to an input or output value that is a web accessible resource.
    * 
-   * @param format
-   *          The Format of this input or requested for this output (e.g., text/XML). This element shall be omitted when
-   *          the Format is indicated in the http header of the output. When included, this format shall be one
-   *          published for this output or input in the Process full description.
-   * @param encoding
-   *          The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be included
-   *          whenever the encoding required is not the default encoding indicated in the Process full description. When
-   *          included, this encoding shall be one published for this output or input in the Process full description.
-   * @param schema
-   *          Web-accessible XML Schema Document that defines the content model of this complex resource (e.g., encoded
-   *          using GML 2.2 Application Schema). This reference should be included for XML encoded complex resources to
-   *          facilitate validation.
    * @param reference
    *          Reference to data or metadata recorded elsewhere, either external to this XML document or within it.
    *          Whenever practical, this attribute should be a URL from which this metadata can be electronically
    *          retrieved. Alternately, this attribute can reference a URN for well-known metadata. For example, such a
    *          URN could be a URN defined in the "ogc" URN namespace.
+   * @param format
+   *          [optional] The Format of this input or requested for this output (e.g., text/XML). This element shall be
+   *          omitted when the Format is indicated in the http header of the output. When included, this format shall be
+   *          one published for this output or input in the Process full description.
+   * @param encoding
+   *          [optional] The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be
+   *          included whenever the encoding required is not the default encoding indicated in the Process full
+   *          description. When included, this encoding shall be one published for this output or input in the Process
+   *          full description.
+   * @param schema
+   *          [optional] Web-accessible XML Schema Document that defines the content model of this complex resource
+   *          (e.g., encoded using GML 2.2 Application Schema). This reference should be included for XML encoded
+   *          complex resources to facilitate validation.
    */
   public static ComplexValueReference buildComplexValueReference( String reference, String format, String encoding, String schema )
   {
-    IOValueType valueType = new IOValueType();
-
-    /* TODO: Is that working, because of static class. */
-    ComplexValueReference complexValueReference = valueType.getComplexValueReference();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    ComplexValueReference complexValueReference = factory.createIOValueTypeComplexValueReference();
 
     /* Attributes. */
     complexValueReference.setReference( reference );
-    complexValueReference.setFormat( format );
-    complexValueReference.setEncoding( encoding );
-    complexValueReference.setSchema( schema );
+
+    if( format != null )
+      complexValueReference.setFormat( format );
+
+    if( encoding != null )
+      complexValueReference.setEncoding( encoding );
+
+    if( schema != null )
+      complexValueReference.setSchema( schema );
 
     return complexValueReference;
   }
@@ -150,27 +160,35 @@ public class OGCUtilities
    * format, and encoding).
    * 
    * @param format
-   *          The Format of this input or requested for this output (e.g., text/XML). This element shall be omitted when
-   *          the Format is indicated in the http header of the output. When included, this format shall be one
-   *          published for this output or input in the Process full description.
+   *          [optional] The Format of this input or requested for this output (e.g., text/XML). This element shall be
+   *          omitted when the Format is indicated in the http header of the output. When included, this format shall be
+   *          one published for this output or input in the Process full description.
    * @param encoding
-   *          The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be included
-   *          whenever the encoding required is not the default encoding indicated in the Process full description. When
-   *          included, this encoding shall be one published for this output or input in the Process full description.
+   *          [optional] The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be
+   *          included whenever the encoding required is not the default encoding indicated in the Process full
+   *          description. When included, this encoding shall be one published for this output or input in the Process
+   *          full description.
    * @param schema
-   *          Web-accessible XML Schema Document that defines the content model of this complex resource (e.g., encoded
-   *          using GML 2.2 Application Schema). This reference should be included for XML encoded complex resources to
-   *          facilitate validation.
+   *          [optional] Web-accessible XML Schema Document that defines the content model of this complex resource
+   *          (e.g., encoded using GML 2.2 Application Schema). This reference should be included for XML encoded
+   *          complex resources to facilitate validation.
    * @param value
    */
   public static ComplexValueType buildComplexValueType( String format, String encoding, String schema, List<Object> value )
   {
-    ComplexValueType complexValue = new ComplexValueType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    ComplexValueType complexValue = factory.createComplexValueType();
 
     /* Attributes. */
-    complexValue.setFormat( format );
-    complexValue.setEncoding( encoding );
-    complexValue.setSchema( schema );
+    if( format != null )
+      complexValue.setFormat( format );
+
+    if( encoding != null )
+      complexValue.setEncoding( encoding );
+
+    if( schema != null )
+      complexValue.setSchema( schema );
 
     /* Elements. */
     complexValue.getContent().addAll( value );
@@ -187,23 +205,28 @@ public class OGCUtilities
    * @param value
    *          String containing the Literal value (e.g., "49").
    * @param dataType
-   *          Identifies the data type of this literal input or output. This dataType should be included for each
-   *          quantity whose value is not a simple string.
+   *          [optional] Identifies the data type of this literal input or output. This dataType should be included for
+   *          each quantity whose value is not a simple string.
    * @param uom
-   *          Identifies the unit of measure of this literal input or output. This unit of measure should be referenced
-   *          for any numerical value that has units (e.g., "meters", but not a more complete reference system). Shall
-   *          be a UOM identified in the Process description for this input or output.
+   *          [optional] Identifies the unit of measure of this literal input or output. This unit of measure should be
+   *          referenced for any numerical value that has units (e.g., "meters", but not a more complete reference
+   *          system). Shall be a UOM identified in the Process description for this input or output.
    */
   public static LiteralValueType buildLiteralValueType( String value, String dataType, String uom )
   {
-    LiteralValueType literalValue = new LiteralValueType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    LiteralValueType literalValue = factory.createLiteralValueType();
 
     /* Values. */
     literalValue.setValue( value );
 
     /* Attributes. */
-    literalValue.setDataType( dataType );
-    literalValue.setUom( uom );
+    if( dataType != null )
+      literalValue.setDataType( dataType );
+
+    if( uom != null )
+      literalValue.setUom( uom );
 
     return literalValue;
   }
@@ -222,29 +245,34 @@ public class OGCUtilities
    *          maximum within this bounding box. In some cases, this position is normally displayed at the bottom, such
    *          as the bottom right for some image coordinates. For more information, see Subclauses 10.2.5 and C.13.
    * @param crs
-   *          Usually references the definition of a CRS, as specified in [OGC Topic 2]. Such a CRS definition can be
-   *          XML encoded using the gml:CoordinateReferenceSystemType in [GML 3.1]. For well known references, it is not
-   *          required that a CRS definition exist at the location the URI points to. If no anyURI value is included,
-   *          the applicable CRS must be either:<br>
+   *          [optional] Usually references the definition of a CRS, as specified in [OGC Topic 2]. Such a CRS
+   *          definition can be XML encoded using the gml:CoordinateReferenceSystemType in [GML 3.1]. For well known
+   *          references, it is not required that a CRS definition exist at the location the URI points to. If no anyURI
+   *          value is included, the applicable CRS must be either:<br>
    *          a) Specified outside the bounding box, but inside a data structure that includes this bounding box, as
    *          specified for a specific OWS use of this bounding box type.<br>
    *          b) Fixed and specified in the Implementation Specification for a specific OWS use of the bounding box
    *          type.
    * @param dimensions
-   *          The number of dimensions in this CRS (the length of a coordinate sequence in this use of the
+   *          [optional] The number of dimensions in this CRS (the length of a coordinate sequence in this use of the
    *          PositionType). This number is specified by the CRS definition, but can also be specified here.
    */
   public static BoundingBoxType buildBoundingBoxType( List<Double> lowerCorner, List<Double> upperCorner, String crs, BigInteger dimensions )
   {
-    BoundingBoxType boundingBox = new BoundingBoxType();
+    /* Create the instance via the factory. */
+    net.opengeospatial.ows.ObjectFactory factory = new net.opengeospatial.ows.ObjectFactory();
+    BoundingBoxType boundingBox = factory.createBoundingBoxType();
 
     /* Elements. */
     boundingBox.getLowerCorner().addAll( lowerCorner );
     boundingBox.getUpperCorner().addAll( upperCorner );
 
     /* Attributes. */
-    boundingBox.setCrs( crs );
-    boundingBox.setDimensions( dimensions );
+    if( crs != null )
+      boundingBox.setCrs( crs );
+
+    if( dimensions != null )
+      boundingBox.setDimensions( dimensions );
 
     return boundingBox;
   }
@@ -273,7 +301,9 @@ public class OGCUtilities
    */
   public static IOValueType buildIOValueType( CodeType identifier, String title, String abstrakt, Object valueFormChoice )
   {
-    IOValueType ioValue = new IOValueType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    IOValueType ioValue = factory.createIOValueType();
 
     /* Elements. */
     ioValue.setIdentifier( identifier );
@@ -303,7 +333,10 @@ public class OGCUtilities
    */
   public static DataInputsType buildDataInputs( List<IOValueType> ioValues )
   {
-    DataInputsType dataInputs = new DataInputsType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    DataInputsType dataInputs = factory.createDataInputsType();
+
     dataInputs.getInput().addAll( ioValues );
 
     return dataInputs;
@@ -325,25 +358,28 @@ public class OGCUtilities
    *          should be used if the client wishes to customize the Abstract in the execute response. This element should
    *          not be used if the Abstract provided for this output in the ProcessDescription is adequate.
    * @param uom
-   *          Reference to the unit of measure (if any) requested for this output. A uom can be referenced when a client
-   *          wants to specify one of the units of measure supported for this output. This uom shall be a unit of
-   *          measure referenced for this output of this process in the Process full description.
+   *          [optional] Reference to the unit of measure (if any) requested for this output. A uom can be referenced
+   *          when a client wants to specify one of the units of measure supported for this output. This uom shall be a
+   *          unit of measure referenced for this output of this process in the Process full description.
    * @param format
-   *          The Format of this input or requested for this output (e.g., text/XML). This element shall be omitted when
-   *          the Format is indicated in the http header of the output. When included, this format shall be one
-   *          published for this output or input in the Process full description.
+   *          [optional] The Format of this input or requested for this output (e.g., text/XML). This element shall be
+   *          omitted when the Format is indicated in the http header of the output. When included, this format shall be
+   *          one published for this output or input in the Process full description.
    * @param encoding
-   *          The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be included
-   *          whenever the encoding required is not the default encoding indicated in the Process full description. When
-   *          included, this encoding shall be one published for this output or input in the Process full description.
+   *          [optional] The encoding of this input or requested for this output (e.g., UTF-8). This "encoding" shall be
+   *          included whenever the encoding required is not the default encoding indicated in the Process full
+   *          description. When included, this encoding shall be one published for this output or input in the Process
+   *          full description.
    * @param schema
-   *          Web-accessible XML Schema Document that defines the content model of this complex resource (e.g., encoded
-   *          using GML 2.2 Application Schema). This reference should be included for XML encoded complex resources to
-   *          facilitate validation.
+   *          [optional] Web-accessible XML Schema Document that defines the content model of this complex resource
+   *          (e.g., encoded using GML 2.2 Application Schema). This reference should be included for XML encoded
+   *          complex resources to facilitate validation.
    */
   public static OutputDefinitionType buildOutputDefinitionType( CodeType identifier, String title, String abstrakt, String uom, String format, String encoding, String schema )
   {
-    OutputDefinitionType outputDefinition = new OutputDefinitionType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    OutputDefinitionType outputDefinition = factory.createOutputDefinitionType();
 
     /* Elements. */
     outputDefinition.setIdentifier( identifier );
@@ -351,10 +387,17 @@ public class OGCUtilities
     outputDefinition.setAbstract( abstrakt );
 
     /* Attributes. */
-    outputDefinition.setUom( uom );
-    outputDefinition.setEncoding( encoding );
-    outputDefinition.setFormat( format );
-    outputDefinition.setSchema( schema );
+    if( uom != null )
+      outputDefinition.setUom( uom );
+
+    if( encoding != null )
+      outputDefinition.setEncoding( encoding );
+
+    if( format != null )
+      outputDefinition.setFormat( format );
+
+    if( schema != null )
+      outputDefinition.setSchema( schema );
 
     return outputDefinition;
   }
@@ -372,7 +415,10 @@ public class OGCUtilities
    */
   public static OutputDefinitionsType buildOutputDefinitions( List<OutputDefinitionType> outputDefinition )
   {
-    OutputDefinitionsType outputDefinitions = new OutputDefinitionsType();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    OutputDefinitionsType outputDefinitions = factory.createOutputDefinitionsType();
+
     outputDefinitions.getOutput().addAll( outputDefinition );
 
     return outputDefinitions;
@@ -398,27 +444,33 @@ public class OGCUtilities
    *          the alternatives identified in the process description, or wishes to customize the descriptive information
    *          about the output.
    * @param store
-   *          Specifies if the complex valued output(s) of this process should be stored by the process as
+   *          [optional] Specifies if the complex valued output(s) of this process should be stored by the process as
    *          web-accessible resources. If store is "true", the server shall store all the complex valued output(s) of
    *          the process so that the client can retrieve them as required. If store is "false", all the complex valued
    *          output(s) shall be encoded in the Execute operation response. This parameter shall not be included unless
    *          the corresponding "storeSupported" parameter is included and is "true" in the ProcessDescription for this
    *          process.
    * @param status
-   *          Specifies if the Execute operation response shall be returned quickly with status information, or not
-   *          returned until process execution is complete. This parameter shall not be included unless the
+   *          [optional] Specifies if the Execute operation response shall be returned quickly with status information,
+   *          or not returned until process execution is complete. This parameter shall not be included unless the
    *          corresponding "statusSupported" parameter is included and is "true" in the ProcessDescription for this
    *          process.
    */
-  public static Execute buildExecuteOperationRequest( CodeType identifier, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, boolean store, boolean status )
+  public static Execute buildExecuteOperationRequest( CodeType identifier, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, Boolean store, Boolean status )
   {
-    Execute execute = new Execute();
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    Execute execute = factory.createExecute();
 
     /* Attributes. */
     execute.setService( SERVICE );
     execute.setVersion( VERSION );
-    execute.setStore( store );
-    execute.setStatus( status );
+
+    if( store != null )
+      execute.setStore( store );
+
+    if( store != null )
+      execute.setStatus( status );
 
     /* Elements. */
     execute.setIdentifier( identifier );
