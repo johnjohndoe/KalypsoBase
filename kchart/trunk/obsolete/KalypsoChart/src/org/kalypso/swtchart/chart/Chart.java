@@ -191,9 +191,12 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   @Override
   public void dispose( )
   {
+    m_axisRegistry.removeAxisRegistryEventListener( this );
+
     m_axis2Layers.clear();
     m_axisRegistry.clear();
     m_axisPlaces.clear();
+
 
     super.dispose();
 
@@ -234,7 +237,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisRemoved(org.kalypso.swtchart.axis.IAxis)
    *
-   * TODO: not implemented yet (or is it? - irght now there's no way to remove an axis, so this should be checked in the future)
+   * TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked in the future)
    */
   public void onAxisRemoved( final IAxis axis )
   {

@@ -93,14 +93,18 @@ public class TupleResultLineChartLayer implements IChartLayer
   private String m_description = "No description given";
 
   private boolean m_isVisible = true;
+  
+  private boolean m_showPoints = true;
+  
+  private boolean m_showLines = true;
 
-  public TupleResultLineChartLayer( Chart chart, TupleResult result, String domainComponentId, String valueComponentId, IAxis domAxis, IAxis valAxis )
+  public TupleResultLineChartLayer( final Chart chart, final TupleResult result, final String domainComponentId, final String valueComponentId, final IAxis domAxis, final IAxis valAxis )
   {
     this( result, domainComponentId, valueComponentId, domAxis, valAxis );
     m_chart = chart;
   }
 
-  public TupleResultLineChartLayer( TupleResult result, String domainComponentId, String valueComponentId, IAxis domAxis, IAxis valAxis )
+  public TupleResultLineChartLayer( final TupleResult result, final String domainComponentId, final String valueComponentId, final IAxis domAxis, final IAxis valAxis )
   {
     m_result = result;
     m_domainComponentId = domainComponentId;
@@ -109,17 +113,26 @@ public class TupleResultLineChartLayer implements IChartLayer
     m_valAxis = valAxis;
   }
 
+  public void setShowPoints( final boolean showPoints )
+  {
+    m_showPoints = showPoints;
+  }
+  
+  public void setShowLines( final boolean showLines )
+  {
+    m_showLines = showLines;
+  }
+  
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
   public void paint( final GCWrapper gc, final Device dev )
   {
-    int size = m_result.size();
     gc.setLineWidth( 1 );
 
-    final StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
-    final StyledPoint sp = (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 );
+    final StyledLine sl = m_showLines ? (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 ) : null;
+    final StyledPoint sp = m_showPoints ? (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 ) : null;
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -128,16 +141,14 @@ public class TupleResultLineChartLayer implements IChartLayer
 
     if( domainComponent != null && valueComponent != null )
     {
-      for( int i = 0; i < size; i++ )
+      for( final IRecord r : m_result )
       {
-        final IRecord r1 = m_result.get( i );
+        final Object xVal = m_result.getValue( r, domainComponent );
+        final Object yVal = m_result.getValue( r, valueComponent );
 
-        Object x1 = m_result.getValue( r1, domainComponent );
-        Object y1 = m_result.getValue( r1, valueComponent );
-
-        int ix1 = m_domAxis.logicalToScreen( x1 );
-        int iy1 = m_valAxis.logicalToScreen( y1 );
-        final Point point = new Point( ix1, iy1 );
+        final int x = m_domAxis.logicalToScreen( xVal );
+        final int y = m_valAxis.logicalToScreen( yVal );
+        final Point point = new Point( x, y );
         path.add( point );
       }
     }
@@ -238,10 +249,9 @@ public class TupleResultLineChartLayer implements IChartLayer
 
     final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
 
-    for( int i = 0; i < m_result.size(); i++ )
+    for( final IRecord rec : m_result )
     {
-      IRecord rec = m_result.get( i );
-      Object val = rec.getValue( domainComponent );
+      final Object val = rec.getValue( domainComponent );
 
       if( val == null )
       {
@@ -269,10 +279,9 @@ public class TupleResultLineChartLayer implements IChartLayer
 
     final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
 
-    for( int i = 0; i < m_result.size(); i++ )
+    for( final IRecord rec : m_result )
     {
-      IRecord rec = m_result.get( i );
-      Object val = rec.getValue( valueComponent );
+      final Object val = rec.getValue( valueComponent );
       if( min == null || cc.compare( min, val ) > 0 )
         min = val;
       if( max == null || cc.compare( max, val ) < 0 )
@@ -338,9 +347,6 @@ public class TupleResultLineChartLayer implements IChartLayer
     m_domainComponentId = domainComponentId;
     m_valueComponentId = valueComponentId;
     if( m_chart != null )
-    {
       m_chart.repaint();
-    }
-
   }
 }

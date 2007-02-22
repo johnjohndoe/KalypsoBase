@@ -55,14 +55,8 @@ import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
 
 /**
  * @author schlienger
- * @author burtscher
- *
- * Implementation of IAxisComponent;
- * AxisComponent is a widget displaying the charts' axes; its used
- * to calculate screen coordinates for normalized values
- *
- *
- *
+ * @author burtscher Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
+ *         to calculate screen coordinates for normalized values
  */
 public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComponent<T>
 {
@@ -73,12 +67,12 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   private final Color m_white;
 
-/**
- * width (or height) of the margin
- */
-  private int m_margin=0;
+  /**
+   * width (or height) of the margin
+   */
+  private int m_margin = 0;
 
-  private boolean m_useMargin=false;
+  private boolean m_useMargin = false;
 
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
@@ -96,20 +90,18 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   @Override
   public void dispose( )
   {
-    removePaintListener( this );
+    // should not be necessary, this happens automatically when the parent gets disposed
+    // Moreover: sometimes a 'Widet is disposed' exception happens
+    // removePaintListener( this );
     m_white.dispose();
     super.dispose();
   }
 
-
-
   /**
    * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
-   *
-   * @return Point p where p.x is the widgets width and p.y is its height;
-   * as there is only 1 dimension in which the axis size needs to be fixed
-   * - width for horizontal, height for vertical axes- the variable dimension
-   * is set to 0
+   * @return Point p where p.x is the widgets width and p.y is its height; as there is only 1 dimension in which the
+   *         axis size needs to be fixed - width for horizontal, height for vertical axes- the variable dimension is set
+   *         to 0
    */
   @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
@@ -134,25 +126,25 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
    */
   public void paintControl( final PaintEvent e )
   {
-    paint( new GCWrapper( e.gc ));
+    paint( new GCWrapper( e.gc ) );
   }
 
   private void paint( final GCWrapper gc )
   {
     final Rectangle bounds = getClientArea();
-    int startx=0, starty=0, width=0, height =0;
+    int startx = 0, starty = 0, width = 0, height = 0;
 
-    if (m_axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+    if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      startx=m_margin;
-      width=-2*m_margin;
+      startx = m_margin;
+      width = -2 * m_margin;
     }
     else
     {
-      starty=m_margin;
-      height=-2*m_margin;
+      starty = m_margin;
+      height = -2 * m_margin;
     }
-    final Rectangle b=new Rectangle( startx, starty, bounds.width+width, bounds.height+height );
+    final Rectangle b = new Rectangle( startx, starty, bounds.width + width, bounds.height + height );
     IAxisRenderer<T> renderer = m_axis.getRenderer();
     if( renderer != null )
       renderer.paint( gc, m_axis, b );
@@ -160,7 +152,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
 
   /**
    * Uses the widgets' complete extension to alculates the screen value in correspondance to a normalized value
-   *
+   * 
    * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#normalizedToScreen(double)
    */
   public int normalizedToScreen( double normValue )
@@ -168,12 +160,13 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final int range = getRange();
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
       normValue = 1 - normValue;
-    final int screenValue = (int) (range * normValue)+m_margin;
+    final int screenValue = (int) (range * normValue) + m_margin;
     return screenValue;
   }
 
   /**
    * Uses the widgets' complete extension to alculates the normalized value in correspondance to a screen value
+   * 
    * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#screenToNormalized(int)
    */
   public double screenToNormalized( int screenValue )
@@ -196,9 +189,9 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final Rectangle bounds = getBounds();
     final int range;
     if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      range = bounds.width-2*m_margin; // horizontal
+      range = bounds.width - 2 * m_margin; // horizontal
     else
-      range = bounds.height-2*m_margin; // vertical
+      range = bounds.height - 2 * m_margin; // vertical
     return range;
   }
 
@@ -207,7 +200,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
    */
   public void useMargin( boolean useIt )
   {
-    m_useMargin=useIt;
+    m_useMargin = useIt;
   }
 
 }

@@ -102,9 +102,7 @@ public class ChartLoader
     {
       final LayerType layerType = (LayerType) layerRef.getRef();
 
-      /* Just ignore invisible layer */
-      String providerId = layerType.getProvider().getId();
-      layerType.getParameters();
+      final String providerId = layerType.getProvider().getId();
 
       // Achsen hinzufügen
       Axes axes = layerType.getAxes();
@@ -152,24 +150,26 @@ public class ChartLoader
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public static void addConfigAxis( Chart chart, AxisType a )
+  public static void addConfigAxis( final Chart chart, final AxisType axisType )
   {
-    IAxisRegistry ar = chart.getAxisRegistry();
+    final IAxisRegistry ar = chart.getAxisRegistry();
 
-    if( a != null )
+    if( axisType != null )
     {
-      ParameterHelper ph = new ParameterHelper();
-      ph.addParameters( a.getParameters(), a.getName() );
+      final ParameterHelper ph = new ParameterHelper();
+      ph.addParameters( axisType.getParameters(), axisType.getName() );
 
-      String provider = a.getProvider().getId();
-      IAxis axis = null;
-      if( provider.compareTo( "" ) != 0 )
+      final String provider = axisType.getProvider().getId();
+      if( provider != null && provider.length() > 0 )
       {
         try
         {
-          IAxisProvider ap = KalypsoChartExtensions.createAxisProvider( provider );
-          ap.init( a );
-          axis = ap.getAxis();
+          final IAxisProvider ap = KalypsoChartExtensions.createAxisProvider( provider );
+          ap.init( axisType );
+          final IAxis axis = ap.getAxis() ;
+          
+          // TODO: only add renderer if there is at least one layer associated with it
+          // update, if layers where added/remove/visibility changed
           if( ar.getRenderer( axis ) == null )
           {
             IAxisRenderer axisRenderer = ap.getRenderer();

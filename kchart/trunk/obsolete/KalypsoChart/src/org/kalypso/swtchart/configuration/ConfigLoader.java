@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -214,7 +215,7 @@ public class ConfigLoader
     marshaller.marshal( configElement, writer );
   }
 
-  public static ConfigurationType loadConfig( IStorage configFile ) throws CoreException, JAXBException, IOException
+  public static ConfigurationType loadConfig( final IStorage configFile ) throws CoreException, JAXBException, IOException
   {
     InputStream is = null;
     try
@@ -231,9 +232,9 @@ public class ConfigLoader
     }
   }
 
-  public static ConfigurationType loadConfig( InputStream inputStream ) throws JAXBException
+  public static ConfigurationType loadConfig( final InputStream inputStream ) throws JAXBException
   {
-    Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
+    final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
     final Object o = unmarshaller.unmarshal( inputStream );
 
     if( o instanceof JAXBElement )
@@ -242,5 +243,22 @@ public class ConfigLoader
       return (ConfigurationType) o;
 
     return null;
+  }
+
+  public static ConfigurationType loadConfig( final URL configUrl ) throws IOException, JAXBException
+  {
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( configUrl.openStream() );
+      ConfigurationType type = loadConfig( is );
+      is.close();
+
+      return type;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 }

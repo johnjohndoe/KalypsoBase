@@ -56,7 +56,7 @@ public class AxisRegistryEventHandler implements IAxisRegistryEventProvider
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventProvider#addAxisRegistryEventListener(org.kalypso.swtchart.axis.IAxisRegistryEventListener)
    */
-  public void addAxisRegistryEventListener( IAxisRegistryEventListener l )
+  public void addAxisRegistryEventListener( final IAxisRegistryEventListener l )
   {
     m_listeners.add( l );
   }
@@ -64,20 +64,20 @@ public class AxisRegistryEventHandler implements IAxisRegistryEventProvider
   /**
    * @see org.kalypso.swtchart.axis.IAxisRegistryEventProvider#removeAxisRegistryEventListener(org.kalypso.swtchart.axis.IAxisRegistryEventListener)
    */
-  public void removeAxisRegistryEventListener( IAxisRegistryEventListener l )
+  public void removeAxisRegistryEventListener( final IAxisRegistryEventListener l )
   {
     m_listeners.remove( l );
   }
 
-  protected void fireAxisAdded( IAxis axis )
+  protected void fireAxisAdded( final IAxis axis )
   {
     for( IAxisRegistryEventListener l : m_listeners )
       l.onAxisAdded( axis );
   }
 
-  protected void fireAxisRemoved( IAxis axis )
+  protected void fireAxisRemoved( final IAxis axis )
   {
-    for( IAxisRegistryEventListener l : m_listeners )
+    for( final IAxisRegistryEventListener l : m_listeners )
       l.onAxisRemoved( axis );
   }
 }

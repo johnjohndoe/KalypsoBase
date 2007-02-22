@@ -56,7 +56,6 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
  */
 public class StyledPoint implements IStyledElement
 {
-
   private int m_width = 5;
 
   private int m_height = 7;
