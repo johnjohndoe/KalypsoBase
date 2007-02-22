@@ -59,7 +59,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   private IPropertyContentType m_propertyContentType = null;
 
-  public PropertyType( GMLSchema gmlSchema, ElementWithOccurs element )
+  public PropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element )
   {
     super( gmlSchema, element );
   }

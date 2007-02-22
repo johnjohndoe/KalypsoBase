@@ -35,38 +35,33 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.property.PropertyType;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
  */
 public class PropertyType2SimpleTypeBuilder implements IBuilder
 {
-
-  private final String m_version;
-
-  public PropertyType2SimpleTypeBuilder( String version )
+  public PropertyType2SimpleTypeBuilder( @SuppressWarnings("unused")
+  String version )
   {
-    m_version = version;
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object typeObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject )
   {
-    final PropertyType propertyType = (PropertyType)typeObject;
+    final PropertyType propertyType = (PropertyType) typeObject;
     final Element element = propertyType.getElement();
     final SimpleType simpleType = element.getSimpleType();
-    return new Object[]
-    { simpleType };
+    return new Object[] { simpleType };
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof PropertyType;
   }
@@ -74,7 +69,7 @@ public class PropertyType2SimpleTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

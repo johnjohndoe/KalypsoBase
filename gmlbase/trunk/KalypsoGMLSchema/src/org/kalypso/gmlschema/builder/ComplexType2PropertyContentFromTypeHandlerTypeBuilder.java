@@ -63,8 +63,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
    */
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
-    final ITypeHandler typeHandler = getTypeHandler( gmlSchema, typeObject );
-    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, typeHandler, m_version );
+    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, m_version );
     gmlSchema.register( typeObject, pct );
     return new Object[] { pct };
   }

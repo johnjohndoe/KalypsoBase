@@ -36,6 +36,7 @@ import java.util.Set;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.IInitialize;
@@ -75,13 +76,23 @@ public class GMLSchemaBuilder
   private IBuilder getBuilderFor( final GMLSchema gmlSchema, final Object object )
   {
     IBuilder result = null;
+
+    if( object instanceof ElementWithOccurs )
+    {
+      final Element element = ((ElementWithOccurs) object).getElement();
+
+      final String toString = element.toString();
+      if( toString.contains( "coefficients" ) )
+        System.out.println( toString );
+    }
+
     for( final IBuilder builder : m_registeredBuilders )
     {
       try
       {
         if( builder.isBuilderFor( gmlSchema, object, null ) )
         {
-          // if allready a builder found, new one must replace the old one
+          // if already a builder found, new one must replace the old one
           if( result == null )
             result = builder;
           else if( builder.replaces( result ) )
@@ -101,7 +112,7 @@ public class GMLSchemaBuilder
         // nothing
       }
     }
-    
+
     return result;
   }
 

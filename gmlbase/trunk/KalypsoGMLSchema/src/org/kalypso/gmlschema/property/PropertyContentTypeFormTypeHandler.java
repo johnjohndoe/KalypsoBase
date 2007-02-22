@@ -33,13 +33,19 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.kalypso.contribs.javax.xml.namespace.ListQName;
+import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.ListSimpleTypeHandler;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 
 /**
  * representation of a property content definition from xml schema
@@ -58,26 +64,46 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
 
   private final String m_gmlVersion;
 
-  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final ITypeHandler typeHandler, final String gmlVersion ) throws GMLSchemaException
+  public PropertyContentTypeFormTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final String gmlVersion ) throws GMLSchemaException
   {
     // TODO check for restriction
     m_gmlSchema = gmlSchema;
-    m_typeHandler = typeHandler;
     m_gmlVersion = gmlVersion;
+
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     if( typeObject instanceof ComplexType )
     {
       m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject, m_gmlVersion );
       m_valueRestriction = new IRestriction[0];
+      m_typeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
     }
     else if( typeObject instanceof SimpleType )
     {
       final SimpleType simpleType = (SimpleType) typeObject;
       m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, simpleType, m_gmlVersion );
+      
+      final IMarshallingTypeHandler baseTypeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
+      
+      if( m_valueQName instanceof ListQName )
+      {
+        m_typeHandler = new ListSimpleTypeHandler( baseTypeHandler );
+      }
+      else if( m_valueQName instanceof MixedQName )
+      {
+        final MixedQName mixedQName = (MixedQName) m_valueQName;
+        final QName[] mixedModel = mixedQName.getMixedModel();
+        // TODO: use MixedSimpleTypeHandler for that
+        m_typeHandler = baseTypeHandler;
+      }
+      else
+        m_typeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
+      
       if( simpleType.isSetRestriction() )
         m_valueRestriction = ContentRestrictionFactory.createRestrictions( simpleType.getRestriction() );
       else
         m_valueRestriction = new IRestriction[0];
+
     }
     else
       throw new UnsupportedOperationException();

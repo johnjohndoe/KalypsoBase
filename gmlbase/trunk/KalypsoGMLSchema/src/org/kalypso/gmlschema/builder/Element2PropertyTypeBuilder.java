@@ -72,7 +72,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
       gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
-    // final IPropertyType pt = new PropertyType( gmlSchema, element );
+
     final IPropertyType pt = new PropertyType( gmlSchema, element );
     gmlSchema.register( element.getElement(), pt );
     return new Object[] { pt };
@@ -90,6 +90,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
+    
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
     return typeHandler != null;
