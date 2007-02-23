@@ -67,9 +67,7 @@ import org.kalypso.swtchart.chart.mouse.IChartMouseHandler;
 
 /**
  * @author schlienger
- * @author burtscher
- *
- * widget in which the layers' content is paintet
+ * @author burtscher widget in which the layers' content is paintet
  */
 public class Plot extends Canvas implements PaintListener, Listener, MouseListener, MouseMoveListener
 {
@@ -79,20 +77,29 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
 
   private IChartMouseHandler m_mouseHandler;
 
-  public Plot( final Chart chart, final Composite parent, final int style )
+  public Plot( final Chart chart, final Composite parent, final int style, final boolean mouseSupported )
   {
     super( parent, style );
     m_chart = chart;
 
     addPaintListener( this );
 
-    // TODO: set mouse handler from outside
-    m_mouseHandler = new DragMouseHandler( this );
+    if( mouseSupported )
+    {
+      // TODO: set mouse handler from outside
+      m_mouseHandler = new DragMouseHandler( this );
 
-    addMouseListener( this );
-    addMouseMoveListener( this );
+      addMouseListener( this );
+      addMouseMoveListener( this );
+    }
 
     addListener( SWT.Resize, this );
+
+  }
+
+  public Plot( final Chart chart, final Composite parent, final int style )
+  {
+    this( chart, parent, style, true );
   }
 
   /**
@@ -111,10 +118,9 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
   }
 
   /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   *
-   * Draws all layers if a PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a
-   * MouseDrag-Action, a buffered plot image is used
+   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent) Draws all layers if a
+   *      PaintEvent is thrown; only exeption: if the PaintEvent is thrown by a MouseDrag-Action, a buffered plot image
+   *      is used
    */
   public void paintControl( final PaintEvent e )
   {
@@ -126,16 +132,17 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
     final Rectangle screenArea = getClientArea();
 
     m_bufferImg = paintChart( e.display, gcw, screenArea, m_bufferImg );
-    m_mouseHandler.paint( gcw );
+    if( m_mouseHandler != null )
+    {
+      m_mouseHandler.paint( gcw );
+    }
 
     gcw.dispose();
 
   }
 
   /**
-   *
-   * double-buffered paint method; set to public in order to be used from ouside, e.g. from
-   * ChartImageContainer
+   * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
    */
   public Image paintChart( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
@@ -144,7 +151,7 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
     {
       usedBufferImage = new Image( dev, screen.width, screen.height );
 
-      GC buffGc= new GC( usedBufferImage );
+      GC buffGc = new GC( usedBufferImage );
       final GCWrapper buffGcw = new GCWrapper( buffGc );
 
       try
@@ -152,7 +159,7 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
         final List<IChartLayer> layers = m_chart.getLayers();
         for( final IChartLayer layer : layers )
         {
-          if (layer.getVisibility())
+          if( layer.getVisibility() )
           {
             ChartUtilities.resetGC( buffGcw.m_gc, dev );
             layer.paint( buffGcw, dev );
@@ -251,7 +258,6 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
     }
     repaint();
   }
-
 
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)

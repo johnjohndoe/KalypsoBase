@@ -69,11 +69,8 @@ import org.kalypso.swtchart.chart.layer.ILayerManager;
 
 /**
  * @author schlienger
- * @author burtscher
- *
- * Chart widget; parent for AxisComponent and Plot
- * also acts as LayerManager and contains the AxisRegistry;
- *
+ * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
+ *         AxisRegistry;
  */
 public class Chart extends Composite implements IAxisRegistryEventListener, Listener, ILayerManager
 {
@@ -99,7 +96,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   private final Color m_black;
 
-  public Chart( final Composite parent, final int style )
+  public Chart( final Composite parent, final int style, final boolean mouseSupported )
   {
     super( parent, style );
 
@@ -107,17 +104,22 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_black = new Color( null, 0, 0, 0 );
 
     setBackground( m_white );
-    createControl( this );
+    createControl( this, mouseSupported );
 
     addListener( SWT.Resize, this );
 
     m_axisRegistry.addAxisRegistryEventListener( this );
   }
 
+  public Chart( final Composite parent, final int style )
+  {
+    this( parent, style, true );
+  }
+
   /**
-   * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP)  and Plot
+   * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP) and Plot
    */
-  private final void createControl( final Composite parent )
+  private final void createControl( final Composite parent, final boolean mouseSupported )
   {
     final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.horizontalSpacing = 0;
@@ -131,7 +133,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 1.1 - wird ins erste Feld der ersten Zeile gefüllt
     final Label lbl11 = new Label( parent, SWT.NONE );
-    lbl11.setSize( 0,0 );
+    lbl11.setSize( 0, 0 );
     lbl11.setVisible( false );
 
     // 1.2
@@ -143,7 +145,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 1.3 - wird ins letzte Feld der ersten Zeile gefüllt
     final Label lbl13 = new Label( parent, SWT.NONE );
-    lbl13.setSize( 0,0 );
+    lbl13.setSize( 0, 0 );
     lbl13.setVisible( false );
 
     // 2.1
@@ -154,7 +156,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_axisPlaces.put( POSITION.LEFT, leftAxes );
 
     // 2.2
-    m_plot = new Plot( this, parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.NO_FOCUS );
+    m_plot = new Plot( this, parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.NO_FOCUS, mouseSupported );
     m_plot.setLayout( new FillLayout() );
     final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_plot.setLayoutData( pad );
@@ -169,7 +171,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 3.1 - wird ins erste Feld der letzten Zeile gefüllt
     final Label lbl31 = new Label( parent, SWT.NONE );
-    lbl31.setSize( 0,0 );
+    lbl31.setSize( 0, 0 );
     lbl31.setVisible( false );
 
     // 3.2
@@ -181,7 +183,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
     // 3.3 - wird ins letzte Feld der lezten Zeile gefüllt
     final Label lbl33 = new Label( parent, SWT.NONE );
-    lbl33.setSize( 0,0 );
+    lbl33.setSize( 0, 0 );
     lbl33.setVisible( false );
   }
 
@@ -197,7 +199,6 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     m_axisRegistry.clear();
     m_axisPlaces.clear();
 
-
     super.dispose();
 
     m_white.dispose();
@@ -206,7 +207,7 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   *
+   * 
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
@@ -221,9 +222,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisAdded(org.kalypso.swtchart.axis.IAxis)
-   *
-   * adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
+   * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisAdded(org.kalypso.swtchart.axis.IAxis) adds an
+   *      AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
    */
   public void onAxisAdded( final IAxis axis )
   {
@@ -235,9 +235,9 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisRemoved(org.kalypso.swtchart.axis.IAxis)
-   *
-   * TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked in the future)
+   * @see org.kalypso.swtchart.axis.IAxisRegistryEventListener#onAxisRemoved(org.kalypso.swtchart.axis.IAxis) TODO: not
+   *      implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked in the
+   *      future)
    */
   public void onAxisRemoved( final IAxis axis )
   {
@@ -271,7 +271,9 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * adds layers to or removes layers from the chart
-   * @param bAdding if true, the layer will be added; if false, the layer will be removed
+   * 
+   * @param bAdding
+   *          if true, the layer will be added; if false, the layer will be removed
    */
   private void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
   {
@@ -362,8 +364,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.ILayerManager#removeLayer(org.kalypso.swtchart.layer.IChartLayer)
-   * reomves layer from chart
+   * @see org.kalypso.swtchart.layer.ILayerManager#removeLayer(org.kalypso.swtchart.layer.IChartLayer) reomves layer
+   *      from chart
    */
   public void removeLayer( final IChartLayer layer )
   {
@@ -381,7 +383,9 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
 
   /**
    * sets autoscaling
-   * @param b if true, axes are automatically scaled to show the layers full data range
+   * 
+   * @param b
+   *          if true, axes are automatically scaled to show the layers full data range
    */
   public void setAutoscale( boolean b )
   {
@@ -392,8 +396,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   }
 
   /**
-   * @param b if true, axes in the AxisRegistry which are not used by any layer are hidden; if false,
-   * all axes are shown
+   * @param b
+   *          if true, axes in the AxisRegistry which are not used by any layer are hidden; if false, all axes are shown
    */
   public void setHideUnusedAxes( boolean b )
   {
@@ -469,37 +473,37 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
   /**
    * resizes the chart according to a given plot size;
    */
-  public void setPlotSize(int width, int height)
+  public void setPlotSize( int width, int height )
   {
-     Composite l = m_axisPlaces.get( POSITION.LEFT );
-     Composite r = m_axisPlaces.get( POSITION.RIGHT );
-     Composite t = m_axisPlaces.get( POSITION.TOP );
-     Composite b = m_axisPlaces.get( POSITION.BOTTOM );
+    Composite l = m_axisPlaces.get( POSITION.LEFT );
+    Composite r = m_axisPlaces.get( POSITION.RIGHT );
+    Composite t = m_axisPlaces.get( POSITION.TOP );
+    Composite b = m_axisPlaces.get( POSITION.BOTTOM );
 
     // setSize( width, height );
-     //TODO: check if border-width must be included
-     int chartwidth=width+l.getBounds().width+r.getBounds().width+ (2*l.getBorderWidth())+ (2*r.getBorderWidth());
-     int chartheight=height+b.getBounds().height+t.getBounds().height+ (2*b.getBorderWidth())+ (2*t.getBorderWidth());
+    // TODO: check if border-width must be included
+    int chartwidth = width + l.getBounds().width + r.getBounds().width + (2 * l.getBorderWidth()) + (2 * r.getBorderWidth());
+    int chartheight = height + b.getBounds().height + t.getBounds().height + (2 * b.getBorderWidth()) + (2 * t.getBorderWidth());
 
-     //getParent().setSize( chartwidth, chartheight );
-     setSize( chartwidth, chartheight );
-     layout();
+    // getParent().setSize( chartwidth, chartheight );
+    setSize( chartwidth, chartheight );
+    layout();
 
-     /**
-      * Leider funktioniert die obige Vergrößerung nicht problemlos, es muss daher noch etwas handarbeit erfolgen;
-      * TODO: überprüfen, ob es da einen besseren Weg geben könnte
-      */
+    /**
+     * Leider funktioniert die obige Vergrößerung nicht problemlos, es muss daher noch etwas handarbeit erfolgen; TODO:
+     * überprüfen, ob es da einen besseren Weg geben könnte
+     */
 
-     //Vergrössern, falls zu klein
-     while (m_plot.getBounds().width<width)
-       setSize(getBounds().width+1, getBounds().height);
-     while (m_plot.getBounds().height<height)
-       setSize(getBounds().width, getBounds().height+1);
-     //Verkleinern, falls zu gross
-     while (m_plot.getBounds().width>width)
-       setSize(getBounds().width-1, getBounds().height);
-     while (m_plot.getBounds().height>height)
-       setSize(getBounds().width, getBounds().height-1);
+    // Vergrössern, falls zu klein
+    while( m_plot.getBounds().width < width )
+      setSize( getBounds().width + 1, getBounds().height );
+    while( m_plot.getBounds().height < height )
+      setSize( getBounds().width, getBounds().height + 1 );
+    // Verkleinern, falls zu gross
+    while( m_plot.getBounds().width > width )
+      setSize( getBounds().width - 1, getBounds().height );
+    while( m_plot.getBounds().height > height )
+      setSize( getBounds().width, getBounds().height - 1 );
 
   }
 
