@@ -33,11 +33,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 {
   private final NumberFormat m_nf = NumberFormat.getInstance();
 
-
   protected final int m_maxDigits;
+
   private Collection<Number> m_ticks;
-
-
 
   /**
    * @param foreground
@@ -59,7 +57,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public NumberAxisRenderer( final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final int maxDigits, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
   {
-    super(rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick);
+    super( rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
     m_maxDigits = maxDigits;
     m_nf.setMinimumFractionDigits( 0 );
     m_nf.setMaximumFractionDigits( 20 );
@@ -67,11 +65,16 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   }
 
   /**
-   * calculates the size of the biggest tick label by assuming that the width of all labels is strictly monotonic -
-   * this means that either the lowest or the highest axis value has the biggest label
+   * calculates the size of the biggest tick label by assuming that the width of all labels is strictly monotonic - this
+   * means that either the lowest or the highest axis value has the biggest label
    */
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Number> axis )
   {
+    if( gc == null || axis == null || axis.getFrom() == null || axis.getTo() == null )
+    {
+      return null;
+    }
+
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();
 
@@ -126,12 +129,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Image paintBuffered( GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
   {
-    Device dev=gc.getDevice();
+    Device dev = gc.getDevice();
     Image bufImg = new Image( dev, dev.getBounds() );
     GC bufGc = new GC( bufImg );
     GCWrapper bufGcw = new GCWrapper( bufGc );
-    Color fgColor=new Color(dev, m_rgbForeground);
-    Color bgColor=new Color(dev, m_rgbBackground);
+    Color fgColor = new Color( dev, m_rgbForeground );
+    Color bgColor = new Color( dev, m_rgbBackground );
     bufGcw.setForeground( fgColor );
     bufGcw.setBackground( bgColor );
 
@@ -209,9 +212,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   private void drawTicks( GCWrapper gc, IAxis<Number> axis, int startX, int startY, Collection<Number> ticks )
   {
+    if( gc == null || axis == null || ticks == null )
+    {
+      return;
+    }
+
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
-
 
     int textX = 0;
     int textY = 0;
@@ -309,9 +316,18 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Collection<Number> calcTicks( GCWrapper gc, final IAxis<Number> axis )
   {
+    if( gc == null || axis == null || axis.getPosition() == null )
+    {
+      return null;
+    }
 
     // größtes Tick<-Label berechnen
     final Point ticklabelSize = calcTickLabelSize( gc, axis );
+
+    if( ticklabelSize == null )
+    {
+      return null;
+    }
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
@@ -353,7 +369,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       }
 
     }
-     Logger.trace(axis.getIdentifier()+" ScreenMin: "+screenMin+" ScreenMax:"+screenMax+" ( "+axis.logicalToScreen( axis.getFrom())+" : "+axis.logicalToScreen( axis.getTo())+") ");
+    Logger.trace( axis.getIdentifier() + " ScreenMin: " + screenMin + " ScreenMax:" + screenMax + " ( " + axis.logicalToScreen( axis.getFrom() ) + " : " + axis.logicalToScreen( axis.getTo() ) + ") " );
     // logischen Mini- und Maximalen wert
     double logicalMin = axis.screenToLogical( screenMin ).doubleValue();
     double logicalMax = axis.screenToLogical( screenMax ).doubleValue();
@@ -381,27 +397,26 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       }
     }
 
-    Logger.trace(axis.getIdentifier()+" logicalRange: "+logicalRange);
+    Logger.trace( axis.getIdentifier() + " logicalRange: " + logicalRange );
 
-
-     Logger.trace(axis.getIdentifier()+" Normrange: "+normrange);
-     Logger.trace(axis.getIdentifier()+" Rangepow: "+rangepow);
+    Logger.trace( axis.getIdentifier() + " Normrange: " + normrange );
+    Logger.trace( axis.getIdentifier() + " Rangepow: " + rangepow );
 
     // Das Minimum normalisieren und abrunden
     double normmin = Math.floor( axis.getFrom().doubleValue() * Math.pow( 10, rangepow ) );
     // Das Minimum wieder zurückrechnen
     normmin = normmin * Math.pow( 10, rangepow * (-1) );
-     Logger.trace(axis.getIdentifier()+" Normmin: "+normmin);
+    Logger.trace( axis.getIdentifier() + " Normmin: " + normmin );
 
     // Das Maximum normalisieren und aufrunden
     double normmax = Math.ceil( axis.getTo().doubleValue() * Math.pow( 10, rangepow ) );
     // Das Maximum wieder zurückrechnen
     normmax = normmax * Math.pow( 10, rangepow * (-1) );
-     Logger.trace(axis.getIdentifier()+" Normmax: "+normmax);
+    Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
 
     // Das Intervall verwendet zunächst nur 10er Schritte
     double interval = Math.pow( 10, rangepow * (-1) );
-     Logger.trace(axis.getIdentifier()+" Interval ("+axis.getIdentifier()+"): "+interval);
+    Logger.trace( axis.getIdentifier() + " Interval (" + axis.getIdentifier() + "): " + interval );
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 würde z.B. schnell krumme werte erzeugen
@@ -447,7 +462,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     // Für das Number-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
     if( rangepow >= 0 )
     {
-      m_nf.setMaximumFractionDigits( rangepow + 2);
+      m_nf.setMaximumFractionDigits( rangepow + 2 );
       m_nf.setMinimumFractionDigits( rangepow + 1 );
     }
 
@@ -503,21 +518,23 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     gc.drawLine( x1, y1, x2, y2 );
   }
 
-
-
   /**
    * draws the axis label - if the axis is oriented vertical, the text is also drawn vertical
    */
   private void drawAxisLabel( GCWrapper gc, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
   {
-    //ChartUtilities.resetGC( gc.m_gc, dev );
-
+    // ChartUtilities.resetGC( gc.m_gc, dev );
 
     if( axis.getLabel() != null )
     {
       final Point textExtent = getTextExtent( gc, axis.getLabel(), m_fontDataLabel );
 
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
+
+      if( tickLabelExtent == null )
+      {
+        return;
+      }
 
       int x = 0;
       int y = 0;
@@ -596,17 +613,17 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Collection<Number> getGridTicks( IAxis<Number> axis )
   {
-    Collection<Number> ticks= m_tickMap.get( axis );
-    if (ticks==null)
+    Collection<Number> ticks = m_tickMap.get( axis );
+    if( ticks == null )
     {
-        GC gc=new GC(Display.getDefault());
-        GCWrapper gcw=new GCWrapper(gc);
-        calcTicks( gcw, axis );
-        ticks= m_tickMap.get( axis );
-        gcw.dispose();
-        gc.dispose();
+      GC gc = new GC( Display.getDefault() );
+      GCWrapper gcw = new GCWrapper( gc );
+      calcTicks( gcw, axis );
+      ticks = m_tickMap.get( axis );
+      gcw.dispose();
+      gc.dispose();
     }
-     return ticks;
+    return ticks;
   }
 
   /**
@@ -624,6 +641,11 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     GCWrapper gcw = new GCWrapper( gc );
 
     Point tls = calcTickLabelSize( gcw, axis );
+
+    if( tls == null )
+    {
+      return 0;
+    }
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -653,9 +675,5 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     return width;
   }
-
-
-
-
 
 }
