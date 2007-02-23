@@ -179,9 +179,15 @@ public class StyledPolygon implements IStyledElement
     return SE_TYPE.POLYGON;
   }
 
-  public static StyledPolygon getDefault()
+  public static StyledPolygon getDefault( )
   {
-    return new StyledPolygon( new RGB(230, 230, 230), 1, new RGB(0,0,0), 255);
+    return new StyledPolygon( new RGB( 230, 230, 230 ), 1, new RGB( 0, 0, 0 ), 255 );
+  }
+
+  /* to set alternating colors of an style, for instance needed for a histogram */
+  public void setFillColor( RGB fillColor )
+  {
+    m_fillColor = fillColor;
   }
 
 }
