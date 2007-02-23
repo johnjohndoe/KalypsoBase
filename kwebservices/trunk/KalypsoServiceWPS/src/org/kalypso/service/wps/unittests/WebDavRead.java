@@ -40,14 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.unittests;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 
 /**
  * Testcase for reading a file from a webdav using vfs.
@@ -60,12 +67,41 @@ public class WebDavRead
    * This function tries to copy a file from a webdav.
    */
   @Test
-  public void testWebDavRead( ) throws FileSystemException
+  public void testWebDavRead( ) throws IOException
   {
-    FileSystemManager fsManager = VFS.getManager();
-    FileObject davFile = fsManager.resolveFile( "webdav://pc132/webdav/kalypso-client.ini" );
+    DefaultFileSystemManager manager = new DefaultFileSystemManager();
+    manager.addProvider( "webdav", new WebdavFileProvider() );
+    manager.addProvider( "file", new DefaultLocalFileProvider() );
+    manager.init();
 
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/test.txt" );
     Assert.assertNotNull( davFile );
+
+    File file = new File( FileUtilities.TMP_DIR, "dav.tmp" );
+    FileObject tmpFile = manager.resolveFile( file.toURL().toExternalForm() );
+    Assert.assertNotNull( tmpFile );
+
+    InputStream is = null;
+    OutputStream os = null;
+
+    try
+    {
+      is = davFile.getContent().getInputStream();
+      os = tmpFile.getContent().getOutputStream();
+
+      /* Copying ... */
+      IOUtils.copy( is, os );
+
+      is.close();
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+      IOUtils.closeQuietly( os );
+    }
+
+    Assert.assertTrue( tmpFile.exists() );
   }
 
   /**

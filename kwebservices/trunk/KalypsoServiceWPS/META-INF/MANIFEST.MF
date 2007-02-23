@@ -6,10 +6,10 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.service.wps.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.service.ogc,
- org.kalypso.simulation.core,
  org.eclipse.core.resources,
  org.kalypso.contribs.eclipsercp,
+ org.kalypso.service.ogc,
+ org.kalypso.simulation.core,
  org.kalypso.jwsdp,
  org.junit4
 Eclipse-LazyStart: true

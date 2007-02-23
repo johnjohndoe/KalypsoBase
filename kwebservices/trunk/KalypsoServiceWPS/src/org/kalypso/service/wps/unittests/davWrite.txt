@@ -1,0 +1,1 @@
+Testfile for the unittest of writing a file to a wevdav using the apache commons vfs.

@@ -47,6 +47,7 @@ import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.LiteralValueType;
@@ -478,5 +479,31 @@ public class OGCUtilities
     execute.setOutputDefinitions( outputDefinitions );
 
     return execute;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsDescribeProcess.xsd for this type.<br>
+   * <br>
+   * WPS DescribeProcess operation request.
+   * 
+   * @param identifier
+   *          Unordered list of one or more identifiers of the processes for which the client is requesting detailed
+   *          descriptions. This element shall be repeated for each process for which a description is requested. These
+   *          Identifiers are unordered, but the WPS shall return the descriptions in the order in which they were
+   *          requested.
+   */
+  public static DescribeProcess buildDescribeProcessOperationRequest( List<CodeType> identifier )
+  {
+    /* Create the instance via the factory. */
+    ObjectFactory factory = new ObjectFactory();
+    DescribeProcess describeProcess = factory.createDescribeProcess();
+
+    /* Attributes. */
+    describeProcess.setService( SERVICE );
+    describeProcess.setVersion( VERSION );
+
+    describeProcess.getIdentifier().addAll( identifier );
+
+    return describeProcess;
   }
 }

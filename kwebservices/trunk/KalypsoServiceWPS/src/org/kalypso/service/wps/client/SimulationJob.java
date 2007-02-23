@@ -41,6 +41,7 @@
 package org.kalypso.service.wps.client;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,10 +59,12 @@ import javax.xml.bind.Unmarshaller;
 
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
+import net.opengeospatial.wps.RequestBaseType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -235,7 +238,18 @@ public class SimulationJob extends WorkspaceJob
       /* Init the neccessary components. */
       init();
 
-      /* Get the process description. */
+      /* Build the describe process request. */
+      List<CodeType> identifier = new LinkedList<CodeType>();
+      identifier.add( OGCUtilities.buildCodeType( "", m_simulationType ) );
+      DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcessOperationRequest( identifier );
+
+      /* Send the request. */
+      monitor.setTaskName( "Frage nach der Prozess-Beschreibung ..." );
+      Debug.println( "Asking for a process describtion ..." );
+      String response = sendRequest( descripeProcess );
+      
+      /* Handle the response. */
+      Debug.println( "Response:\n"+response );
 
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
 
@@ -272,13 +286,8 @@ public class SimulationJob extends WorkspaceJob
 
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
-      Debug.println( "Calling " + m_service + " ..." );
-
-      HttpClient client = new HttpClient();
-      client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
-      PostMethod post = new PostMethod( m_service );
-      post.setRequestEntity( new InputStreamRequestEntity( getInputStream( execute ) ) );
-      client.executeMethod( post );
+      Debug.println( "Start the simulation ..." );
+      sendRequest( execute );
 
       /* Handle the execute response. */
 
@@ -625,24 +634,99 @@ public class SimulationJob extends WorkspaceJob
   }
 
   /**
-   * This function returns an input stream from the execute request.
+   * This function sends the request to the server.
    * 
-   * @param execute
-   *          The execute request.
+   * @param request
+   *          The request.
+   * @return The response.
+   */
+  private String sendRequest( RequestBaseType request ) throws JAXBException, IOException, CoreException
+  {
+    /* Send the request. */
+    Debug.println( "Calling " + m_service + " ..." );
+
+    /* Create the client. */
+    HttpClient client = new HttpClient();
+    client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
+
+    /* Build the method. */
+    PostMethod post = new PostMethod( m_service );
+    post.setRequestEntity( new InputStreamRequestEntity( getInputStream( request ) ) );
+
+    /* Execute the method. */
+    int status = client.executeMethod( post );
+
+    /* Handle the response. */
+    Debug.println( "Status code: " + String.valueOf( status ) );
+
+    if( status != 200 )
+      throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
+
+    InputStream is = post.getResponseBodyAsStream();
+    if( is == null )
+      return null;
+
+    return fromInputStream( is );
+  }
+
+  /**
+   * This function returns an input stream from one request.
+   * 
+   * @param request
+   *          The request.
    * @return The inputstream.
    */
-  private InputStream getInputStream( Execute execute ) throws JAXBException, IOException
+  private InputStream getInputStream( RequestBaseType request ) throws JAXBException, IOException
   {
     JAXBContext context = JaxbUtilities.createQuiet( net.opengeospatial.ows.ObjectFactory.class, net.opengeospatial.wps.ObjectFactory.class );
     StringWriter sw = new StringWriter();
     Marshaller m = context.createMarshaller();
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new OGCNamespacePrefixMapper() );
-    m.marshal( execute, sw );
+    m.marshal( request, sw );
     ByteArrayInputStream is = new ByteArrayInputStream( sw.toString().getBytes() );
     sw.close();
 
     return is;
+  }
+
+  /**
+   * This function reads from an input stream and returns a string representation.
+   * 
+   * @param is
+   *          The input stream.
+   * @return The string.
+   */
+  private String fromInputStream( InputStream is ) throws IOException
+  {
+    String value = null;
+    byte[] buffer = new byte[4096];
+    OutputStream os = new ByteArrayOutputStream();
+
+    try
+    {
+      while( true )
+      {
+        int read = is.read( buffer );
+
+        if( read == -1 )
+          break;
+
+        os.write( buffer, 0, read );
+      }
+
+      os.close();
+      is.close();
+
+      value = os.toString();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+      IOUtils.closeQuietly( os );
+    }
+
+    return value;
   }
 
   /**
