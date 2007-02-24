@@ -71,9 +71,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Number> axis )
   {
     if( gc == null || axis == null || axis.getFrom() == null || axis.getTo() == null )
-    {
       return null;
-    }
 
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();
@@ -641,6 +639,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     GCWrapper gcw = new GCWrapper( gc );
 
     Point tls = calcTickLabelSize( gcw, axis );
+    if( tls == null )
+      return 5;
 
     if( tls == null )
     {

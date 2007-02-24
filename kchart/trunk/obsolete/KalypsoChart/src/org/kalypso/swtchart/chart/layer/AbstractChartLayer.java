@@ -38,31 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.layerprovider;
+package org.kalypso.swtchart.chart.layer;
 
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.chart.layer.IDataRange;
-import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.ILayerStyle;
 
 /**
  * @author alibu
- *
  */
-abstract class AbstractChartLayer implements IChartLayer
+public abstract class AbstractChartLayer implements IChartLayer
 {
+  private boolean m_isVisible = true;
 
-  protected boolean m_isVisible=true;
-  protected ILayerStyle m_style;
-  protected String m_name;
-  protected String m_description;
-  protected boolean m_isActive;
-  protected IAxis m_valueAxis;
-  protected IAxis m_domainAxis;
+  private ILayerStyle m_style;
+
+  private String m_name;
+
+  private String m_description;
+
+  private boolean m_isActive;
+
+  private IAxis m_valueAxis;
+
+  private IAxis m_domainAxis;
+
+  public AbstractChartLayer( )
+  {
+  }
+
+  // TODO; add everything to constructor
+  public AbstractChartLayer( final String name, final String description, final IAxis domainAxis, final IAxis valueAxis )
+  {
+    m_name = name;
+    m_description = description;
+    m_domainAxis = domainAxis;
+    m_valueAxis = valueAxis;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
@@ -79,7 +90,6 @@ abstract class AbstractChartLayer implements IChartLayer
   {
     return m_domainAxis;
   }
-
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getName()
@@ -121,13 +131,12 @@ abstract class AbstractChartLayer implements IChartLayer
     return m_isActive;
   }
 
-
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
    */
   public void setDescription( String description )
   {
-    m_description=description;
+    m_description = description;
   }
 
   /**
@@ -143,7 +152,7 @@ abstract class AbstractChartLayer implements IChartLayer
    */
   public void setStyle( ILayerStyle style )
   {
-    m_style=style;
+    m_style = style;
   }
 
   /**
@@ -151,9 +160,8 @@ abstract class AbstractChartLayer implements IChartLayer
    */
   public void setVisibility( boolean isVisible )
   {
-    m_isVisible=isVisible;
+    m_isVisible = isVisible;
 
   }
-
 
 }

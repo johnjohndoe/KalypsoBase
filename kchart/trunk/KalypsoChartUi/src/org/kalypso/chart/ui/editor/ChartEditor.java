@@ -53,7 +53,7 @@ public class ChartEditor extends EditorPart
 
   private ChartEditorOutlinePage m_outlinePage = null;
 
-  private boolean m_isSaving;
+//  private boolean m_isSaving;
 
   private boolean m_dirty = false;
 
@@ -146,7 +146,7 @@ public class ChartEditor extends EditorPart
 
     try
     {
-      m_isSaving = true;
+//      m_isSaving = true;
 
       final ConfigurationType config = m_configuration;
       SetContentHelper helper = new SetContentHelper()
@@ -171,7 +171,7 @@ public class ChartEditor extends EditorPart
     }
     finally
     {
-      m_isSaving = false;
+//      m_isSaving = false;
     }
   }
 

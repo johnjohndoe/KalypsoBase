@@ -127,6 +127,8 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     super.setLayout( gridLayout );
+    
+    // TODO: remove this; the layout this component is inside is not known here!
     setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final int axisContainerStyle = SWT.NONE;

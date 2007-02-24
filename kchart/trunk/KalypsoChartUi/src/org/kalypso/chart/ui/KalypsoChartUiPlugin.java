@@ -9,13 +9,9 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoChartUiPlugin extends AbstractUIPlugin
 {
-
   // The shared instance.
   private static KalypsoChartUiPlugin plugin;
 
-  /**
-   * The constructor.
-   */
   public KalypsoChartUiPlugin( )
   {
     plugin = this;
@@ -25,7 +21,7 @@ public class KalypsoChartUiPlugin extends AbstractUIPlugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -47,6 +43,7 @@ public class KalypsoChartUiPlugin extends AbstractUIPlugin
   {
     return plugin;
   }
+
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path.

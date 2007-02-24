@@ -66,10 +66,16 @@ import org.kalypso.swtchart.chart.styles.StyledPoint;
 import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
+ * Visualization of TupleResult data as line chart
+ * <p>
+ * The following styled elements are used:
+ * <ul>
+ * <li> Line: used to draw the line connecting the individual data points </li>
+ * <li>Point: used to draw the individual data points; the points are drawn after the line</li>
+ * </ul>
+ * 
  * @author schlienger
- * @author burtscher Visualization of TupleResult data as line chart The following styled elements are used: Line: used
- *         to draw the line connecting the individual data points Point: used to draw the individual data points; the
- *         points are draw after the line
+ * @author burtscher
  */
 public class TupleResultLineChartLayer implements IChartLayer
 {
@@ -93,9 +99,9 @@ public class TupleResultLineChartLayer implements IChartLayer
   private String m_description = "No description given";
 
   private boolean m_isVisible = true;
-  
+
   private boolean m_showPoints = true;
-  
+
   private boolean m_showLines = true;
 
   public TupleResultLineChartLayer( final Chart chart, final TupleResult result, final String domainComponentId, final String valueComponentId, final IAxis domAxis, final IAxis valAxis )
@@ -117,12 +123,12 @@ public class TupleResultLineChartLayer implements IChartLayer
   {
     m_showPoints = showPoints;
   }
-  
+
   public void setShowLines( final boolean showLines )
   {
     m_showLines = showLines;
   }
-  
+
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
@@ -265,7 +271,7 @@ public class TupleResultLineChartLayer implements IChartLayer
           max = val;
       }
     }
-    return new DataRange( min, max );
+    return new DataRange<Object>( min, max );
   }
 
   /**
@@ -287,7 +293,7 @@ public class TupleResultLineChartLayer implements IChartLayer
       if( max == null || cc.compare( max, val ) < 0 )
         max = val;
     }
-    return new DataRange( min, max );
+    return new DataRange<Object>( min, max );
   }
 
   public void drawIcon( final Image img, final int width, final int height )

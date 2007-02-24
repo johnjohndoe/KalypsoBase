@@ -54,6 +54,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
+import org.kalypso.swtchart.chart.layer.AbstractChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.legend.ILegendItem;
 import org.kalypso.swtchart.chart.styles.IStyledElement;
@@ -61,23 +62,21 @@ import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
- *
  */
 public class TestBarLayer extends AbstractChartLayer
 {
-
   private IComponent m_domComp;
+
   private IComponent m_valComp;
+
   private TupleResult m_result;
 
-
-  public TestBarLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis)
+  public TestBarLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis )
   {
-    m_domainAxis=domAxis;
-    m_valueAxis=valAxis;
-    m_domComp=domComp;
-    m_valComp=valComp;
-    m_result=result;
+    super( null, null, domAxis, valAxis );
+    m_domComp = domComp;
+    m_valComp = valComp;
+    m_result = result;
   }
 
   /**
@@ -87,7 +86,6 @@ public class TestBarLayer extends AbstractChartLayer
   {
 
   }
-
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
@@ -116,69 +114,69 @@ public class TestBarLayer extends AbstractChartLayer
     return null;
   }
 
-
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Device)
    */
   public void paint( GCWrapper gc, Device dev )
   {
-      HashMap<Calendar, Integer> dailyLevel=new HashMap<Calendar, Integer>();
+    HashMap<Calendar, Integer> dailyLevel = new HashMap<Calendar, Integer>();
 
-      for(int i=0;i<m_result.size();i++)
+    for( int i = 0; i < m_result.size(); i++ )
+    {
+      ArrayList<Point> path = new ArrayList<Point>( 4 );
+      IRecord record = m_result.get( i );
+      Calendar domValue = (Calendar) record.getValue( m_domComp );
+      Number valValue = (Number) record.getValue( m_valComp );
+
+      Calendar startCal = domValue;
+      startCal.set( Calendar.HOUR_OF_DAY, 0 );
+      startCal.set( Calendar.MINUTE, 0 );
+      startCal.set( Calendar.SECOND, 0 );
+      startCal.set( Calendar.MILLISECOND, 0 );
+
+      Integer curVal = null;
+      if( (curVal = dailyLevel.get( startCal )) == null )
+        dailyLevel.put( startCal, valValue.intValue() );
+      else
       {
-        ArrayList<Point> path=new ArrayList<Point>(4);
-        IRecord record = m_result.get( i );
-        Calendar domValue = (Calendar) record.getValue( m_domComp );
-        Number valValue = (Number) record.getValue( m_valComp );
-
-        Calendar startCal=domValue;
-        startCal.set( Calendar.HOUR_OF_DAY, 0 );
-        startCal.set( Calendar.MINUTE, 0 );
-        startCal.set( Calendar.SECOND, 0 );
-        startCal.set( Calendar.MILLISECOND, 0 );
-
-
-        Integer curVal=null;
-        if ( (curVal=dailyLevel.get( startCal ) )==null)
-          dailyLevel.put(startCal, valValue.intValue());
-        else
-        {
-          dailyLevel.put(startCal, curVal.intValue() + valValue.intValue());
-        }
+        dailyLevel.put( startCal, curVal.intValue() + valValue.intValue() );
       }
+    }
 
-      long dayInMillis=1000*60*60*24;
-      ArrayList<Point> path=new ArrayList<Point>();
-      IStyledElement poly=m_style.getElement( SE_TYPE.POLYGON, 1);
-      Set<Calendar> cals = dailyLevel.keySet();
-      for( Calendar startCal : cals )
+    long dayInMillis = 1000 * 60 * 60 * 24;
+    ArrayList<Point> path = new ArrayList<Point>();
+    IStyledElement poly = getStyle().getElement( SE_TYPE.POLYGON, 1 );
+    Set<Calendar> cals = dailyLevel.keySet();
+    for( Calendar startCal : cals )
+    {
+      Number valValue = dailyLevel.get( startCal );
+      long startTime = startCal.getTimeInMillis();
+
+      Calendar endCal = Calendar.getInstance();
+
+      endCal.setTimeInMillis( startTime + dayInMillis );
+
+      final IAxis domainAxis = getDomainAxis();
+      final IAxis valueAxis = getValueAxis();
+      if( domainAxis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        Number valValue=dailyLevel.get( startCal );
-        long startTime=startCal.getTimeInMillis();
+        path.add( new Point( domainAxis.logicalToScreen( startCal ), valueAxis.logicalToScreen( 0 ) ) );
+        path.add( new Point( domainAxis.logicalToScreen( startCal ), valueAxis.logicalToScreen( valValue ) ) );
+        path.add( new Point( domainAxis.logicalToScreen( endCal ), valueAxis.logicalToScreen( valValue ) ) );
+        path.add( new Point( domainAxis.logicalToScreen( endCal ), valueAxis.logicalToScreen( 0 ) ) );
 
-        Calendar endCal=Calendar.getInstance();
-
-        endCal.setTimeInMillis( startTime+dayInMillis);
-
-        if (m_domainAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL )
-        {
-          path.add( new Point( m_domainAxis.logicalToScreen( startCal), m_valueAxis.logicalToScreen( 0 ) ) );
-          path.add( new Point( m_domainAxis.logicalToScreen( startCal), m_valueAxis.logicalToScreen( valValue ) ) );
-          path.add( new Point( m_domainAxis.logicalToScreen( endCal), m_valueAxis.logicalToScreen( valValue ) ) );
-          path.add( new Point( m_domainAxis.logicalToScreen( endCal), m_valueAxis.logicalToScreen( 0 ) ) );
-
-        }
-        else
-        {
-          path.add( new Point( m_valueAxis.logicalToScreen( 0 ), m_domainAxis.logicalToScreen( startCal) ) );
-          path.add( new Point( m_valueAxis.logicalToScreen( valValue ), m_domainAxis.logicalToScreen( startCal) ) );
-          path.add( new Point( m_valueAxis.logicalToScreen( valValue ),  m_domainAxis.logicalToScreen( endCal) ) );
-          path.add( new Point( m_valueAxis.logicalToScreen( 0), m_domainAxis.logicalToScreen( endCal) ) );
-        }
-        poly.setPath( path );
-        poly.paint( gc, dev );
       }
+      else
+      {
+        path.add( new Point( valueAxis.logicalToScreen( 0 ), domainAxis.logicalToScreen( startCal ) ) );
+        path.add( new Point( valueAxis.logicalToScreen( valValue ), domainAxis.logicalToScreen( startCal ) ) );
+        path.add( new Point( valueAxis.logicalToScreen( valValue ), domainAxis.logicalToScreen( endCal ) ) );
+        path.add( new Point( valueAxis.logicalToScreen( 0 ), domainAxis.logicalToScreen( endCal ) ) );
+      }
+      poly.setPath( path );
+      poly.paint( gc, dev );
+    }
   }
-
 
 }

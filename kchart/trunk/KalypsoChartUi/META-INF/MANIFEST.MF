@@ -14,3 +14,6 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.jwsdp,
  org.eclipse.ui.views
 Eclipse-LazyStart: true
+Export-Package: org.kalypso.chart.ui,
+ org.kalypso.chart.ui.editor,
+ org.kalypso.chart.ui.editor.actions
