@@ -47,38 +47,38 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author burtscher1
- *
  */
 public class ResponseBean
 {
-    private OutputStream m_out=null;
-    private String m_contentType=null;
-  
-   public ResponseBean(HttpServletResponse response)
-   {
-       try
-      {
-        m_out=response.getOutputStream();
-      }
-      catch( IOException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-   }
-   
-   /**
-    * sets the content type (e.g. "text/xml") for the outputStream
-    */
-   
-   public void setContentType(String contentType)
-   {
-     m_contentType=contentType;
-   }
-   
-   public OutputStream getOutputStream()
-   {
-     return m_out;
-   }
-  
+  private OutputStream m_out = null;
+
+  private String m_contentType = null;
+
+  public ResponseBean( HttpServletResponse response )
+  {
+    try
+    {
+      m_out = response.getOutputStream();
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * sets the content type (e.g. "text/xml") for the outputStream
+   */
+
+  public void setContentType( String contentType )
+  {
+    m_contentType = contentType;
+  }
+
+  public OutputStream getOutputStream( )
+  {
+    return m_out;
+  }
+
 }
