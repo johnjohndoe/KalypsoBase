@@ -42,31 +42,29 @@ package org.kalypso.model.wspm.tuhh.schema.schemata;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * Constants for the use of the QIntervall-Schema
  * 
  * @author Gernot Belger
- *
  */
 public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
 {
   public static final QName QNAME_F_QIntervallResultCollection = new QName( NS_WSPM_TUHH, "QIntervallResultCollection" );
 
   public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( NS_WSPM_TUHH, "resultMember" );
-  
-  
-  
+
   public static final QName QNAME_F_QIntervallResult = new QName( NS_WSPM_TUHH, "QIntervallResult" );
-  
-  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
 
   public static final QName QNAME_P_QIntervallResult_station = new QName( NS_WSPM_TUHH, "station" );
 
-  
-  
+  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
+
+  public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( NS_WSPM_TUHH, "polynomialMember" );
+
+  public static final QName QNAME_P_QIntervallResult_profileMember = new QName( NS_WSPM_TUHH, "profileMember" );
+
   public static final QName QNAME_F_WPointsObservation = new QName( NS_WSPM_TUHH, "WPointsObservation" );
-  
+
 }

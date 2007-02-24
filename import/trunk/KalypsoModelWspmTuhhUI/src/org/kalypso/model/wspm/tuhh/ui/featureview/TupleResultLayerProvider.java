@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.featureview;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.kalypso.layerprovider.TupleResultLineChartLayer;
 import org.kalypso.observation.IObservation;
@@ -62,8 +60,6 @@ import org.ksp.chart.configuration.LayerType;
  */
 public class TupleResultLayerProvider implements ILayerProvider
 {
-  public static Map<String, Feature> FEATURE_MAP = new HashMap<String, Feature>();
-
   private LayerType m_lt;
 
   private Chart m_chart;
@@ -84,11 +80,12 @@ public class TupleResultLayerProvider implements ILayerProvider
     final ParameterHelper ph = new ParameterHelper();
     ph.addParameters( m_lt.getParameters(), configLayerId );
 
-    final String featureKey = ph.getParameterValue( "featureKey", null );
     final boolean showPoints = Boolean.valueOf( ph.getParameterValue( "showPoints", "true" ) );
     final Boolean showLines = Boolean.valueOf( ph.getParameterValue( "showLines", "true" ) );
 
-    final Feature feature = FEATURE_MAP.get( featureKey );
+    // TODO: More generel concept to retrieve data for the layer
+    final String featureKey = ph.getParameterValue( "featureKey", null );
+    final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
     final TupleResult result = obs.getResult();
