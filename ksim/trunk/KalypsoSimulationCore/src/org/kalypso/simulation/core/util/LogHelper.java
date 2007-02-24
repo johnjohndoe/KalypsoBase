@@ -106,4 +106,11 @@ public class LogHelper
     e.printStackTrace( System.out );
   }
 
+  /** Logs the message and sets the finish status of the monitor. */
+  public void finish( final int status, final String message )
+  {
+    log( false, message );
+    m_monitor.setFinishInfo( status, message );
+  }
+
 }
