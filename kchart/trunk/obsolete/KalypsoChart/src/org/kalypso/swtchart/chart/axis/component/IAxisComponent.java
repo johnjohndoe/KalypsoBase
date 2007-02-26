@@ -44,23 +44,19 @@ import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * @author schlienger
- * @author burtscher
- * 
- * Widget to display chart axes; it also helps 
- * to calculate screen values from normalized values 
- * 
+ * @author burtscher Widget to display chart axes; it also helps to calculate screen values from normalized values
  */
 public interface IAxisComponent<T>
 {
   /**
-   *  converts a double value into the corresponding screen value  
+   * converts a double value into the corresponding screen value
    */
-  public int normalizedToScreen( double d );
+  public Integer normalizedToScreen( Double d );
 
   /**
    * converts a screen value into a normalized value
    */
-  public double screenToNormalized( int value );
+  public Double screenToNormalized( Integer value );
 
   /**
    * disposes the widget
@@ -81,10 +77,10 @@ public interface IAxisComponent<T>
    * redraws and resizes the widget
    */
   public void layout( );
-  
+
   /**
    * 
    */
-  public void useMargin(boolean useIt);
+  public void useMargin( boolean useIt );
 
 }

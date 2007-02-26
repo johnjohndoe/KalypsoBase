@@ -68,10 +68,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    * calculates the size of the biggest tick label by assuming that the width of all labels is strictly monotonic - this
    * means that either the lowest or the highest axis value has the biggest label
    */
-  public Point calcTickLabelSize( GCWrapper gc, final IAxis<Number> axis )
+  public Point calcTickLabelSize( final GCWrapper gc, final IAxis<Number> axis )
   {
-    if( gc == null || axis == null || axis.getFrom() == null || axis.getTo() == null )
+    if( (gc == null) || (axis == null) || (axis.getFrom() == null) || (axis.getTo() == null) )
+    {
       return null;
+    }
 
     final double logicalfrom = axis.getFrom().doubleValue();
     final double logicalto = axis.getTo().doubleValue();
@@ -80,7 +82,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     int rangepow = 0;
     // Normalisierte Range
     double normrange = Math.abs( logicalfrom - logicalto );
-    if( normrange != 0 )
+    if( (normrange != 0.0) && !Double.isInfinite( normrange ) )
     {
       while( normrange >= 10 )
       {
@@ -115,9 +117,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * doubleBuffered painting
    */
-  public void paint( GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
+  public void paint( final GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
   {
-    Image img = paintBuffered( gc, axis, screen );
+    final Image img = paintBuffered( gc, axis, screen );
     gc.drawImage( img, 0, 0 );
     img.dispose();
   }
@@ -125,20 +127,20 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * @return Image containing the rendered Axis
    */
-  public Image paintBuffered( GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
+  public Image paintBuffered( final GCWrapper gc, final IAxis<Number> axis, final Rectangle screen )
   {
-    Device dev = gc.getDevice();
-    Image bufImg = new Image( dev, dev.getBounds() );
-    GC bufGc = new GC( bufImg );
-    GCWrapper bufGcw = new GCWrapper( bufGc );
-    Color fgColor = new Color( dev, m_rgbForeground );
-    Color bgColor = new Color( dev, m_rgbBackground );
+    final Device dev = gc.getDevice();
+    final Image bufImg = new Image( dev, dev.getBounds() );
+    final GC bufGc = new GC( bufImg );
+    final GCWrapper bufGcw = new GCWrapper( bufGc );
+    final Color fgColor = new Color( dev, m_rgbForeground );
+    final Color bgColor = new Color( dev, m_rgbBackground );
     bufGcw.setForeground( fgColor );
     bufGcw.setBackground( bgColor );
 
     // paint axis line
-    int[] coords = createAxisSegment( axis, screen );
-    assert coords != null && coords.length == 4;
+    final int[] coords = createAxisSegment( axis, screen );
+    assert (coords != null) && (coords.length == 4);
     drawAxisLine( bufGcw, coords[0], coords[1], coords[2], coords[3] );
 
     // final Collection<Number> ticks = calcTicks( gc, axis );
@@ -171,14 +173,18 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
+      {
         startY = screen.y + m_gap;
+      }
       else
+      {
         startY = screen.y + screen.height - 1 - m_gap;
+      }
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
       {
-        int tmp = startX;
+        final int tmp = startX;
         startX = endX;
         endX = tmp;
       }
@@ -189,14 +195,18 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
+      {
         startX = screen.x + m_gap;
+      }
       else
+      {
         startX = screen.x + screen.width - 1 - m_gap;
+      }
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
       {
-        int tmp = startY;
+        final int tmp = startY;
         startY = endY;
         endY = tmp;
       }
@@ -208,9 +218,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * draws the Axis ticks into the given GCWrapper
    */
-  private void drawTicks( GCWrapper gc, IAxis<Number> axis, int startX, int startY, Collection<Number> ticks )
+  private void drawTicks( final GCWrapper gc, final IAxis<Number> axis, final int startX, final int startY, final Collection<Number> ticks )
   {
-    if( gc == null || axis == null || ticks == null )
+    if( (gc == null) || (axis == null) || (ticks == null) )
     {
       return;
     }
@@ -223,8 +233,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
-      int y1 = startY;
-      int y2 = y1 + m_tickLength;
+      final int y1 = startY;
+      final int y2 = y1 + m_tickLength;
 
       for( final Number value : ticks )
       {
@@ -240,8 +250,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.TOP )
     {
-      int y1 = startY;
-      int y2 = y1 - m_tickLength;
+      final int y1 = startY;
+      final int y2 = y1 - m_tickLength;
 
       for( final Number value : ticks )
       {
@@ -257,8 +267,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.LEFT )
     {
-      int x1 = startX;
-      int x2 = x1 - m_tickLength;
+      final int x1 = startX;
+      final int x2 = x1 - m_tickLength;
 
       for( final Number value : ticks )
       {
@@ -274,8 +284,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.RIGHT )
     {
-      int x1 = startX;
-      int x2 = x1 + m_tickLength;
+      final int x1 = startX;
+      final int x2 = x1 + m_tickLength;
 
       for( final Number value : ticks )
       {
@@ -300,11 +310,17 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     InsetsHelper ihelper = new InsetsHelper( insets );
 
     if( axis.getPosition() == POSITION.TOP )
+    {
       ihelper = ihelper.mirrorTopBottom();
+    }
     if( axis.getPosition() == POSITION.LEFT )
+    {
       ihelper = ihelper.hor2vert();
+    }
     if( axis.getPosition() == POSITION.RIGHT )
+    {
       ihelper = ihelper.hor2vert().mirrorLeftRight();
+    }
 
     return ihelper;
   }
@@ -312,9 +328,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * Calculates the ticks shown for the given Axis
    */
-  public Collection<Number> calcTicks( GCWrapper gc, final IAxis<Number> axis )
+  public Collection<Number> calcTicks( final GCWrapper gc, final IAxis<Number> axis )
   {
-    if( gc == null || axis == null || axis.getPosition() == null )
+    if( (gc == null) || (axis == null) || (axis.getPosition() == null) )
     {
       return null;
     }
@@ -330,9 +346,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
       minScreenInterval = 3 + ticklabelSize.x;
+    }
     else
+    {
       minScreenInterval = 3 + ticklabelSize.y;
+    }
 
     // Collection für Ticks
     final HashSet<Number> ticks = new HashSet<Number>();
@@ -369,13 +389,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     Logger.trace( axis.getIdentifier() + " ScreenMin: " + screenMin + " ScreenMax:" + screenMax + " ( " + axis.logicalToScreen( axis.getFrom() ) + " : " + axis.logicalToScreen( axis.getTo() ) + ") " );
     // logischen Mini- und Maximalen wert
-    double logicalMin = axis.screenToLogical( screenMin ).doubleValue();
-    double logicalMax = axis.screenToLogical( screenMax ).doubleValue();
+    final double logicalMin = axis.screenToLogical( screenMin ).doubleValue();
+    final double logicalMax = axis.screenToLogical( screenMax ).doubleValue();
 
-    double logicalRange = Math.abs( logicalMax - logicalMin );
+    final double logicalRange = Math.abs( logicalMax - logicalMin );
 
     // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
-    double minLogInterval = Math.abs( axis.screenToLogical( minScreenInterval ).doubleValue() - axis.screenToLogical( 0 ).doubleValue() );
+    final double minLogInterval = Math.abs( axis.screenToLogical( minScreenInterval ).doubleValue() - axis.screenToLogical( 0 ).doubleValue() );
 
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
     int rangepow = 0;
@@ -413,12 +433,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
 
     // Das Intervall verwendet zunächst nur 10er Schritte
-    double interval = Math.pow( 10, rangepow * (-1) );
+    final double interval = Math.pow( 10, rangepow * (-1) );
     Logger.trace( axis.getIdentifier() + " Interval (" + axis.getIdentifier() + "): " + interval );
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 würde z.B. schnell krumme werte erzeugen
-    LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
+    final LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
 
     goodDivisors.add( 10 );
     goodDivisors.add( 5 );
@@ -441,14 +461,14 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     // in realticks sind jetzt nur die wirklich zu zeichnenden werte drin
     // wenn man das nicht über neues objekt, sondern ticks.remove macht, gibts eine concurrentmodificationexception
-    LinkedList<Number> realticks = new LinkedList<Number>();
-    for( Number tick : ticks )
+    final LinkedList<Number> realticks = new LinkedList<Number>();
+    for( final Number tick : ticks )
     {
       // "Unnötige" Zahlen abschneiden - dadurch werden Werte wie -0.0 (von -0.00000000000000001) und unnötige
       // Nachkommastellen entfernt
       // unnötig ist alles, was mehr als 2 Stellen länger als Rangepow ist
       double tickdv = tick.doubleValue();
-      int tickNorm = (int) (tickdv * Math.pow( 10, (rangepow + 2) ));
+      final int tickNorm = (int) (tickdv * Math.pow( 10, (rangepow + 2) ));
       tickdv = tickNorm * Math.pow( 10, -(rangepow + 2) );
 
       if( (tickdv >= logicalMin) && (tickdv <= logicalMax) )
@@ -473,17 +493,19 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    * recursive function which divides in interval into a number of "divisions" and adds the values to a linked list the
    * divisions have to have a larger range than the param interval
    */
-  private void findBetweens( double from, double to, double interval, LinkedList<Integer> divisors, HashSet<Number> ticks )
+  private void findBetweens( final double from, final double to, final double interval, final LinkedList<Integer> divisors, final HashSet<Number> ticks )
   {
 
-    for( Integer divisor : divisors )
+    for( final Integer divisor : divisors )
     {
-      double betweenrange = Math.abs( from - to ) / divisor.intValue();
+      final double betweenrange = Math.abs( from - to ) / divisor.intValue();
 
       // TODO: this prevents an endles loop below, if from == to
       // @Alex:check if this is ok
       if( betweenrange < 0.0001 )
+      {
         return;
+      }
 
       if( interval < betweenrange )
       {
@@ -509,7 +531,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * draws the axis' main line
    */
-  private void drawAxisLine( GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
+  private void drawAxisLine( final GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
   {
     gc.setLineWidth( m_lineWidth );
     gc.setLineStyle( SWT.LINE_SOLID );
@@ -519,7 +541,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * draws the axis label - if the axis is oriented vertical, the text is also drawn vertical
    */
-  private void drawAxisLabel( GCWrapper gc, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
+  private void drawAxisLabel( final GCWrapper gc, final IAxis<Number> axis, final int x1, final int y1, final int x2, final int y2 )
   {
     // ChartUtilities.resetGC( gc.m_gc, dev );
 
@@ -537,7 +559,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       int x = 0;
       int y = 0;
 
-      Transform tr = new Transform( gc.getDevice() );
+      final Transform tr = new Transform( gc.getDevice() );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -546,9 +568,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
           y = y1;
 
           if( axis.getPosition() == POSITION.TOP )
+          {
             y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.bottom;// +
+          }
           else
+          {
             y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.top;// +
+          }
         }
         else
         {
@@ -583,7 +609,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       finally
       {
         if( tr != null )
+        {
           tr.dispose();
+        }
       }
     }
   }
@@ -592,14 +620,14 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    * calculates the extent of a number using a certain fontdata
    */
   @Override
-  protected Point getTextExtent( GCWrapper gc, Number value, FontData fd )
+  protected Point getTextExtent( final GCWrapper gc, final Number value, final FontData fd )
   {
     String label = "";
     try
     {
       label = m_nf.format( value );
     }
-    catch( java.lang.IllegalArgumentException e )
+    catch( final java.lang.IllegalArgumentException e )
     {
       e.printStackTrace();
     }
@@ -609,13 +637,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * @see org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer#getTicks(org.kalypso.swtchart.chart.axis.IAxis)
    */
-  public Collection<Number> getGridTicks( IAxis<Number> axis )
+  public Collection<Number> getGridTicks( final IAxis<Number> axis )
   {
     Collection<Number> ticks = m_tickMap.get( axis );
     if( ticks == null )
     {
-      GC gc = new GC( Display.getDefault() );
-      GCWrapper gcw = new GCWrapper( gc );
+      final GC gc = new GC( Display.getDefault() );
+      final GCWrapper gcw = new GCWrapper( gc );
       calcTicks( gcw, axis );
       ticks = m_tickMap.get( axis );
       gcw.dispose();
@@ -627,20 +655,22 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
-  public int getAxisWidth( IAxis<Number> axis )
+  public int getAxisWidth( final IAxis<Number> axis )
   {
     int width = 0;
     int label = 0;
 
     // Testutensilien erzeugen
-    Display dev = Display.getCurrent();
-    Image img = new Image( dev, 1, 1 );
-    GC gc = new GC( img );
-    GCWrapper gcw = new GCWrapper( gc );
+    final Display dev = Display.getCurrent();
+    final Image img = new Image( dev, 1, 1 );
+    final GC gc = new GC( img );
+    final GCWrapper gcw = new GCWrapper( gc );
 
-    Point tls = calcTickLabelSize( gcw, axis );
+    final Point tls = calcTickLabelSize( gcw, axis );
     if( tls == null )
+    {
       return 5;
+    }
 
     if( tls == null )
     {
@@ -666,7 +696,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     width += m_tickLength;
 
     // Jetzt noch den Text
-    Point labelExtent = getTextExtent( gcw, axis.getLabel(), m_fontDataLabel );
+    final Point labelExtent = getTextExtent( gcw, axis.getLabel(), m_fontDataLabel );
     width += labelExtent.y;
 
     gcw.dispose();

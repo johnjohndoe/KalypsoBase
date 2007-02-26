@@ -57,34 +57,31 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 /**
  * @author schlienger
- * @author burtscher
- * 
- * Concrete IAxis implementation - to be used for calendar data from XML documents
- * 
+ * @author burtscher Concrete IAxis implementation - to be used for calendar data from XML documents
  */
 public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
 {
-  public XMLGregorianCalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
+  public XMLGregorianCalendarAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir )
   {
     super( id, label, prop, pos, dir, XMLGregorianCalendar.class );
   }
 
-  public XMLGregorianCalendarAxis( String id, String label, PROPERTY prop, POSITION pos, Comparator<XMLGregorianCalendar> comp, DIRECTION dir )
+  public XMLGregorianCalendarAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final Comparator<XMLGregorianCalendar> comp, final DIRECTION dir )
   {
     super( id, label, prop, pos, dir, comp, XMLGregorianCalendar.class );
   }
 
   public double logicalToNormalized( final XMLGregorianCalendar value )
   {
-    XMLGregorianCalendar xgcTo = getTo();
-    GregorianCalendar gcTo = xgcTo.toGregorianCalendar();
-    long toMillis = gcTo.getTimeInMillis();
+    final XMLGregorianCalendar xgcTo = getTo();
+    final GregorianCalendar gcTo = xgcTo.toGregorianCalendar();
+    final long toMillis = gcTo.getTimeInMillis();
 
-    XMLGregorianCalendar xgcFrom = getFrom();
-    GregorianCalendar gcFrom = xgcFrom.toGregorianCalendar();
-    long fromMillis = gcFrom.getTimeInMillis();
+    final XMLGregorianCalendar xgcFrom = getFrom();
+    final GregorianCalendar gcFrom = xgcFrom.toGregorianCalendar();
+    final long fromMillis = gcFrom.getTimeInMillis();
 
-    long valueMillis = value.toGregorianCalendar().getTimeInMillis();
+    final long valueMillis = value.toGregorianCalendar().getTimeInMillis();
 
     // r should not be 0 here (see AbstractAxis)
     final long r = toMillis - fromMillis;
@@ -101,7 +98,7 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
 
     final long logical = (long) (value * r + getFrom().toGregorianCalendar().getTimeInMillis());
 
-    GregorianCalendar c = new GregorianCalendar();
+    final GregorianCalendar c = new GregorianCalendar();
     c.setTime( new Date( logical ) );
 
     return new XMLGregorianCalendarImpl( c );
@@ -113,28 +110,36 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
   public int logicalToScreen( final XMLGregorianCalendar value )
   {
     if( m_registry == null )
+    {
       return 0;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return 0;
+    }
 
-    double norm = logicalToNormalized( value );
-    int screen = comp.normalizedToScreen( norm );
+    final double norm = logicalToNormalized( value );
+    final int screen = comp.normalizedToScreen( norm );
     return screen;
   }
 
   /**
    * @see org.kalypso.swtchart.axis.IAxis#screenToLogical(int)
    */
-  public XMLGregorianCalendar screenToLogical( final int value )
+  public XMLGregorianCalendar screenToLogical( final Integer value )
   {
     if( m_registry == null )
+    {
       return null;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
@@ -142,49 +147,54 @@ public class XMLGregorianCalendarAxis extends AbstractAxis<XMLGregorianCalendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
    */
-  public Point logicalToScreenInterval( XMLGregorianCalendar value, XMLGregorianCalendar fixedPoint, double intervalSize )
+  public Point logicalToScreenInterval( final XMLGregorianCalendar value, final XMLGregorianCalendar fixedPoint, final double intervalSize )
   {
     // intervalSize wird als Millisecond-Angabe interpretiert
-    long intervalMillis = (long) intervalSize;
-    long fixedMillis = fixedPoint.toGregorianCalendar().getTimeInMillis();
-    long valueMillis = value.toGregorianCalendar().getTimeInMillis();
+    final long intervalMillis = (long) intervalSize;
+    final long fixedMillis = fixedPoint.toGregorianCalendar().getTimeInMillis();
+    final long valueMillis = value.toGregorianCalendar().getTimeInMillis();
     /*
-     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
-     *  gesehen liegt  
-     */ 
+     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint gesehen liegt
+     */
     long start = fixedMillis;
     long end = fixedMillis;
     Logger.trace( "Axis (" + getIdentifier() + "): starting IntervalCalculation" );
     if( start >= valueMillis )
     {
       while( start > valueMillis )
+      {
         start -= intervalMillis;
+      }
       end = start + intervalMillis;
     }
     else
     {
       while( end < valueMillis )
+      {
         end += intervalMillis;
+      }
       start = end - intervalMillis;
     }
     Logger.trace( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
 
     // Start-Zeitpunkt des Wert-Intervalls
-    GregorianCalendar startCal = new GregorianCalendar();
+    final GregorianCalendar startCal = new GregorianCalendar();
     startCal.setTimeInMillis( start );
-    XMLGregorianCalendar startXMLCal = new XMLGregorianCalendarImpl( startCal );
+    final XMLGregorianCalendar startXMLCal = new XMLGregorianCalendarImpl( startCal );
 
     // End-Zeitpunkt des Wert-Intervalls
-    GregorianCalendar endCal = new GregorianCalendar();
+    final GregorianCalendar endCal = new GregorianCalendar();
     endCal.setTimeInMillis( end );
-    XMLGregorianCalendar endXMLCal = new XMLGregorianCalendarImpl( endCal );
+    final XMLGregorianCalendar endXMLCal = new XMLGregorianCalendarImpl( endCal );
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
-    int startPoint = comp.normalizedToScreen( logicalToNormalized( startXMLCal ) );
-    int endPoint = comp.normalizedToScreen( logicalToNormalized( endXMLCal ) );
+    final int startPoint = comp.normalizedToScreen( logicalToNormalized( startXMLCal ) );
+    final int endPoint = comp.normalizedToScreen( logicalToNormalized( endXMLCal ) );
     Logger.trace( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
     return new Point( startPoint, endPoint );
   }

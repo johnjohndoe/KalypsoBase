@@ -50,31 +50,26 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.logging.Logger;
 
-
-
 /**
  * @author schlienger
- * @author burtscher
- *
- * Concrete IAxis implementation - to be used for calendar data from XML documents
- *
+ * @author burtscher Concrete IAxis implementation - to be used for calendar data from XML documents
  */
 public class CalendarAxis extends AbstractAxis<Calendar>
 {
-  public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
+  public CalendarAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir )
   {
     super( id, label, prop, pos, dir, Calendar.class );
   }
 
   public double logicalToNormalized( final Calendar value )
   {
-    Calendar gcTo = getTo();
-    long toMillis = gcTo.getTimeInMillis();
+    final Calendar gcTo = getTo();
+    final long toMillis = gcTo.getTimeInMillis();
 
-    Calendar gcFrom = getFrom();
-    long fromMillis = gcFrom.getTimeInMillis();
+    final Calendar gcFrom = getFrom();
+    final long fromMillis = gcFrom.getTimeInMillis();
 
-    long valueMillis = value.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
 
     // r should not be 0 here (see AbstractAxis)
     final long r = toMillis - fromMillis;
@@ -91,8 +86,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
     final long logical = (long) (value * r + getFrom().getTimeInMillis());
 
-    Calendar c = Calendar.getInstance();
-
+    final Calendar c = Calendar.getInstance();
 
     c.setTime( new Date( logical ) );
 
@@ -102,32 +96,39 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreen(T)
    */
-  public int logicalToScreen( Calendar value )
+  public int logicalToScreen( final Calendar value )
   {
     if( m_registry == null )
+    {
       return 0;
-
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return 0;
+    }
 
-    double norm = logicalToNormalized( value );
-    int screen = comp.normalizedToScreen( norm );
+    final double norm = logicalToNormalized( value );
+    final int screen = comp.normalizedToScreen( norm );
     return screen;
   }
 
   /**
    * @see org.kalypso.swtchart.axis.IAxis#screenToLogical(int)
    */
-  public Calendar screenToLogical( final int value )
+  public Calendar screenToLogical( final Integer value )
   {
     if( m_registry == null )
+    {
       return null;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
@@ -135,15 +136,14 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
    */
-  public Point logicalToScreenInterval( Calendar value, Calendar fixedPoint, double intervalSize )
+  public Point logicalToScreenInterval( final Calendar value, final Calendar fixedPoint, final double intervalSize )
   {
     // intervalSize wird als Millisecond-Angabe interpretiert
-    long intervalMillis = (long) intervalSize;
-    long fixedMillis = fixedPoint.getTimeInMillis();
-    long valueMillis = value.getTimeInMillis();
+    final long intervalMillis = (long) intervalSize;
+    final long fixedMillis = fixedPoint.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
     /*
-     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
-     *  gesehen liegt
+     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint gesehen liegt
      */
     long start = fixedMillis;
     long end = fixedMillis;
@@ -151,31 +151,37 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( start >= valueMillis )
     {
       while( start > valueMillis )
+      {
         start -= intervalMillis;
+      }
       end = start + intervalMillis;
     }
     else
     {
       while( end < valueMillis )
+      {
         end += intervalMillis;
+      }
       start = end - intervalMillis;
     }
     Logger.trace( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
 
     // Start-Zeitpunkt des Wert-Intervalls
-    Calendar startCal = Calendar.getInstance();
+    final Calendar startCal = Calendar.getInstance();
     startCal.setTimeInMillis( start );
 
     // End-Zeitpunkt des Wert-Intervalls
-    Calendar endCal = Calendar.getInstance();
+    final Calendar endCal = Calendar.getInstance();
     endCal.setTimeInMillis( end );
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
-    int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
-    int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
+    final int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
+    final int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
     Logger.trace( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
     return new Point( startPoint, endPoint );
   }
@@ -186,7 +192,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   @Override
   public Calendar getFrom( )
   {
-    //das muss geklont werden, da der Wert sonst von aussen veränderbar ist
+    // das muss geklont werden, da der Wert sonst von aussen veränderbar ist
     return (Calendar) m_min.clone();
   }
 
@@ -196,10 +202,8 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   @Override
   public Calendar getTo( )
   {
-    //das muss geklont werden, da der Wert sonst von aussen veränderbar ist
+    // das muss geklont werden, da der Wert sonst von aussen veränderbar ist
     return (Calendar) m_max.clone();
   }
-
-
 
 }

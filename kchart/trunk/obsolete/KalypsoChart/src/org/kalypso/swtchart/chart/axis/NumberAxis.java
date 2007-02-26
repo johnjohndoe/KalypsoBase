@@ -50,28 +50,35 @@ import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 
 /**
  * @author schlienger
- * @author burtscher
- * 
- * Concrete IAxis implementation - to be used for numeric data 
+ * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class NumberAxis extends AbstractAxis<Number>
 {
-  public NumberAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, Comparator<Number> comp )
+  public NumberAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<Number> comp )
   {
     super( id, label, prop, pos, dir, comp, Number.class );
   }
 
-  public double logicalToNormalized( final Number value )
+  public Double logicalToNormalized( final Number value )
   {
+    /* NullPointer Exception, empty Oberservation */
+    final Number nTo = getTo();
+    final Number nFrom = getFrom();
+
+    if( (nTo == null) || (nFrom == null) )
+    {
+      return null;
+    }
+
     // r should not be 0 here (see AbstractAxis)
-    final double r = getTo().doubleValue() - getFrom().doubleValue();
+    final double r = nTo.doubleValue() - nFrom.doubleValue();
 
     final double norm = (value.doubleValue() - getFrom().doubleValue()) / r;
 
     return norm;
   }
 
-  public Number normalizedToLogical( final double value )
+  public Number normalizedToLogical( final Double value )
   {
     final double r = getTo().doubleValue() - getFrom().doubleValue();
 
@@ -85,12 +92,16 @@ public class NumberAxis extends AbstractAxis<Number>
    */
   public int logicalToScreen( final Number value )
   {
-    if( m_registry == null )
+    if( (m_registry == null) || (value == null) )
+    {
       return 0;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return 0;
+    }
 
     return comp.normalizedToScreen( logicalToNormalized( value ) );
   }
@@ -98,14 +109,18 @@ public class NumberAxis extends AbstractAxis<Number>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#screenToLogical(int)
    */
-  public Number screenToLogical( final int value )
+  public Number screenToLogical( final Integer value )
   {
     if( m_registry == null )
+    {
       return Double.NaN;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return Double.NaN;
+    }
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
@@ -113,7 +128,7 @@ public class NumberAxis extends AbstractAxis<Number>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double) TODO Not implemented yet
    */
-  public Point logicalToScreenInterval( Number value, Number fixedPoint, double intervalSize )
+  public Point logicalToScreenInterval( final Number value, final Number fixedPoint, final double intervalSize )
   {
 
     return null;

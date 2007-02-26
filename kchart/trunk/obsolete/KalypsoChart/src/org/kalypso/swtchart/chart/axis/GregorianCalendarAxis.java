@@ -51,35 +51,31 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
 import org.kalypso.swtchart.logging.Logger;
 
-
 /**
  * @author schlienger
- * @author burtscher
- * 
- * Concrete IAxis implementation - to be used for calendar data from XML documents
- * 
+ * @author burtscher Concrete IAxis implementation - to be used for calendar data from XML documents
  */
 public class GregorianCalendarAxis extends AbstractAxis<GregorianCalendar>
 {
-  public GregorianCalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
+  public GregorianCalendarAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir )
   {
     super( id, label, prop, pos, dir, GregorianCalendar.class );
   }
 
-  public GregorianCalendarAxis( String id, String label, PROPERTY prop, POSITION pos, Comparator<GregorianCalendar> comp, DIRECTION dir )
+  public GregorianCalendarAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final Comparator<GregorianCalendar> comp, final DIRECTION dir )
   {
     super( id, label, prop, pos, dir, comp, GregorianCalendar.class );
   }
 
   public double logicalToNormalized( final GregorianCalendar value )
   {
-    GregorianCalendar gcTo = getTo();
-    long toMillis = gcTo.getTimeInMillis();
+    final GregorianCalendar gcTo = getTo();
+    final long toMillis = gcTo.getTimeInMillis();
 
-    GregorianCalendar gcFrom = getFrom();
-    long fromMillis = gcFrom.getTimeInMillis();
+    final GregorianCalendar gcFrom = getFrom();
+    final long fromMillis = gcFrom.getTimeInMillis();
 
-    long valueMillis = value.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
 
     // r should not be 0 here (see AbstractAxis)
     final long r = toMillis - fromMillis;
@@ -96,7 +92,7 @@ public class GregorianCalendarAxis extends AbstractAxis<GregorianCalendar>
 
     final long logical = (long) (value * r + getFrom().getTimeInMillis());
 
-    GregorianCalendar c = new GregorianCalendar();
+    final GregorianCalendar c = new GregorianCalendar();
     c.setTime( new Date( logical ) );
 
     return c;
@@ -108,28 +104,36 @@ public class GregorianCalendarAxis extends AbstractAxis<GregorianCalendar>
   public int logicalToScreen( final GregorianCalendar value )
   {
     if( m_registry == null )
+    {
       return 0;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return 0;
+    }
 
-    double norm = logicalToNormalized( value );
-    int screen = comp.normalizedToScreen( norm );
+    final double norm = logicalToNormalized( value );
+    final int screen = comp.normalizedToScreen( norm );
     return screen;
   }
 
   /**
    * @see org.kalypso.swtchart.axis.IAxis#screenToLogical(int)
    */
-  public GregorianCalendar screenToLogical( final int value )
+  public GregorianCalendar screenToLogical( final Integer value )
   {
     if( m_registry == null )
+    {
       return null;
+    }
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
@@ -137,47 +141,52 @@ public class GregorianCalendarAxis extends AbstractAxis<GregorianCalendar>
   /**
    * @see org.kalypso.swtchart.axis.IAxis#logicalToScreenInterval(T, T, double)
    */
-  public Point logicalToScreenInterval( GregorianCalendar value, GregorianCalendar fixedPoint, double intervalSize )
+  public Point logicalToScreenInterval( final GregorianCalendar value, final GregorianCalendar fixedPoint, final double intervalSize )
   {
     // intervalSize wird als Millisecond-Angabe interpretiert
-    long intervalMillis = (long) intervalSize;
-    long fixedMillis = fixedPoint.getTimeInMillis();
-    long valueMillis = value.getTimeInMillis();
+    final long intervalMillis = (long) intervalSize;
+    final long fixedMillis = fixedPoint.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
     /*
-     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
-     *  gesehen liegt  
-     */ 
+     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint gesehen liegt
+     */
     long start = fixedMillis;
     long end = fixedMillis;
     Logger.trace( "Axis (" + getIdentifier() + "): starting IntervalCalculation" );
     if( start >= valueMillis )
     {
       while( start > valueMillis )
+      {
         start -= intervalMillis;
+      }
       end = start + intervalMillis;
     }
     else
     {
       while( end < valueMillis )
+      {
         end += intervalMillis;
+      }
       start = end - intervalMillis;
     }
     Logger.trace( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
 
     // Start-Zeitpunkt des Wert-Intervalls
-    GregorianCalendar startCal = new GregorianCalendar();
+    final GregorianCalendar startCal = new GregorianCalendar();
     startCal.setTimeInMillis( start );
 
     // End-Zeitpunkt des Wert-Intervalls
-    GregorianCalendar endCal = new GregorianCalendar();
+    final GregorianCalendar endCal = new GregorianCalendar();
     endCal.setTimeInMillis( end );
 
     final IAxisComponent comp = m_registry.getComponent( this );
     if( comp == null )
+    {
       return null;
+    }
 
-    int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
-    int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
+    final int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
+    final int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
     Logger.trace( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
     return new Point( startPoint, endPoint );
   }

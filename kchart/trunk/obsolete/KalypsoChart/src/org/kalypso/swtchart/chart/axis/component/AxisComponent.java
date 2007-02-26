@@ -70,9 +70,7 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
   /**
    * width (or height) of the margin
    */
-  private int m_margin = 0;
-
-  private boolean m_useMargin = false;
+  private final int m_margin = 0;
 
   public AxisComponent( final IAxis<T> axis, final Composite parent, final int style )
   {
@@ -104,18 +102,22 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
    *         to 0
    */
   @Override
-  public Point computeSize( int wHint, int hHint, boolean changed )
+  public Point computeSize( final int wHint, final int hHint, final boolean changed )
   {
     if( m_axis != null )
     {
-      IAxisRenderer<T> renderer = m_axis.getRenderer();
+      final IAxisRenderer<T> renderer = m_axis.getRenderer();
       if( renderer != null )
       {
-        int axisWidth = renderer.getAxisWidth( m_axis );
+        final int axisWidth = renderer.getAxisWidth( m_axis );
         if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+        {
           return new Point( 0, axisWidth );
+        }
         else
+        {
           return new Point( axisWidth, 0 );
+        }
       }
     }
     return new Point( 0, 0 );
@@ -145,9 +147,11 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
       height = -2 * m_margin;
     }
     final Rectangle b = new Rectangle( startx, starty, bounds.width + width, bounds.height + height );
-    IAxisRenderer<T> renderer = m_axis.getRenderer();
+    final IAxisRenderer<T> renderer = m_axis.getRenderer();
     if( renderer != null )
+    {
       renderer.paint( gc, m_axis, b );
+    }
   }
 
   /**
@@ -155,12 +159,21 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
    * 
    * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#normalizedToScreen(double)
    */
-  public int normalizedToScreen( double normValue )
+  public Integer normalizedToScreen( Double normValue )
   {
+    /* nullpointer exception, empty observation */
+    if( normValue == null )
+    {
+      return null;
+    }
+
     final int range = getRange();
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
+    {
       normValue = 1 - normValue;
+    }
     final int screenValue = (int) (range * normValue) + m_margin;
+
     return screenValue;
   }
 
@@ -169,14 +182,26 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
    * 
    * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#screenToNormalized(int)
    */
-  public double screenToNormalized( int screenValue )
+  public Double screenToNormalized( final Integer screenValue )
   {
+    /* Nullpointer exception, empty observation */
+    if( screenValue == null )
+    {
+      return null;
+    }
+
     final int range = getRange();
+
     if( range == 0 )
-      return 0;
+    {
+      return 0.0;
+    }
+
     final double normValue = (double) screenValue / range;
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
+    {
       return 1 - normValue;
+    }
 
     return normValue;
   }
@@ -189,18 +214,21 @@ public class AxisComponent<T> extends Canvas implements PaintListener, IAxisComp
     final Rectangle bounds = getBounds();
     final int range;
     if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
       range = bounds.width - 2 * m_margin; // horizontal
+    }
     else
+    {
       range = bounds.height - 2 * m_margin; // vertical
+    }
     return range;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.axis.component.IAxisComponent#useMargin(boolean)
    */
-  public void useMargin( boolean useIt )
+  public void useMargin( final boolean useIt )
   {
-    m_useMargin = useIt;
   }
 
 }

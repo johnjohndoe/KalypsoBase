@@ -72,7 +72,7 @@ public interface IAxis<T>
   public IAxisConstants.PROPERTY getProperty( );
 
   /**
-   *  @return axis position - left, right, top, bottom
+   * @return axis position - left, right, top, bottom
    */
   public IAxisConstants.POSITION getPosition( );
 
@@ -110,7 +110,7 @@ public interface IAxis<T>
 
   /**
    * Gibt ein Intervall von Bildschrimkoordinaten mit der logischen Breite zurück, in dem der übergebene Wert liegt
-   *
+   * 
    * @param value
    *          ein Wert, der im zurückgegebenen Intervall liegt
    * @param fixedPoint
@@ -121,11 +121,11 @@ public interface IAxis<T>
    */
   public Point logicalToScreenInterval( T value, T fixedPoint, double intervalSize );
 
-  public T screenToLogical( int value );
+  public T screenToLogical( Integer value );
 
   public void setRegistry( IAxisRegistry axisRegistry );
 
-  public IAxisRegistry getRegistry(  );
+  public IAxisRegistry getRegistry( );
 
   public IAxisRenderer<T> getRenderer( );
 }
