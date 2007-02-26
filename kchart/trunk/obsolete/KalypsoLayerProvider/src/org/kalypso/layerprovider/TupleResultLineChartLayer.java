@@ -145,15 +145,15 @@ public class TupleResultLineChartLayer implements IChartLayer
     final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
     final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
 
-    if( domainComponent != null && valueComponent != null )
+    if( (domainComponent != null) && (valueComponent != null) )
     {
       for( final IRecord r : m_result )
       {
         final Object xVal = m_result.getValue( r, domainComponent );
         final Object yVal = m_result.getValue( r, valueComponent );
 
-        final int x = m_domAxis.logicalToScreen( xVal );
-        final int y = m_valAxis.logicalToScreen( yVal );
+        final Integer x = m_domAxis.logicalToScreen( xVal );
+        final Integer y = m_valAxis.logicalToScreen( yVal );
         final Point point = new Point( x, y );
         path.add( point );
       }
@@ -239,7 +239,7 @@ public class TupleResultLineChartLayer implements IChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
-  public void setStyle( ILayerStyle style )
+  public void setStyle( final ILayerStyle style )
   {
     m_style = style;
   }
@@ -251,7 +251,7 @@ public class TupleResultLineChartLayer implements IChartLayer
   {
     Object min = null;
     Object max = null;
-    ComparableComparator cc = new ComparableComparator();
+    final ComparableComparator cc = new ComparableComparator();
 
     final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
 
@@ -265,10 +265,14 @@ public class TupleResultLineChartLayer implements IChartLayer
       }
       else
       {
-        if( min == null || cc.compare( min, val ) > 0 )
+        if( (min == null) || (cc.compare( min, val ) > 0) )
+        {
           min = val;
-        if( max == null || cc.compare( max, val ) < 0 )
+        }
+        if( (max == null) || (cc.compare( max, val ) < 0) )
+        {
           max = val;
+        }
       }
     }
     return new DataRange<Object>( min, max );
@@ -281,32 +285,42 @@ public class TupleResultLineChartLayer implements IChartLayer
   {
     Object min = null;
     Object max = null;
-    ComparableComparator cc = new ComparableComparator();
-
+    final ComparableComparator cc = new ComparableComparator();
+    
     final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
 
     for( final IRecord rec : m_result )
     {
       final Object val = rec.getValue( valueComponent );
-      if( min == null || cc.compare( min, val ) > 0 )
+      
+      if (val == null)
+      {
+        continue;
+      }
+      
+      if( (min == null) || (cc.compare( min, val ) > 0) )
+      {
         min = val;
-      if( max == null || cc.compare( max, val ) < 0 )
+      }
+      if( (max == null) || (cc.compare( max, val ) < 0) )
+      {
         max = val;
+      }
     }
     return new DataRange<Object>( min, max );
   }
 
   public void drawIcon( final Image img, final int width, final int height )
   {
-    GC gc = new GC( img );
-    GCWrapper gcw = new GCWrapper( gc );
+    final GC gc = new GC( img );
+    final GCWrapper gcw = new GCWrapper( gc );
 
-    IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
-    IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
+    final IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+    final IStyledElement point = m_style.getElement( SE_TYPE.POINT, 0 );
 
     if( line != null )
     {
-      ArrayList<Point> points = new ArrayList<Point>();
+      final ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
       points.add( new Point( 0, height / 2 ) );
       points.add( new Point( width, height / 2 ) );
@@ -316,7 +330,7 @@ public class TupleResultLineChartLayer implements IChartLayer
 
     if( point != null )
     {
-      ArrayList<Point> points = new ArrayList<Point>();
+      final ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
       points.add( new Point( width / 2, height / 2 ) );
       point.setPath( points );
@@ -327,17 +341,17 @@ public class TupleResultLineChartLayer implements IChartLayer
     gcw.dispose();
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
   }
 
-  public void setDescription( String description )
+  public void setDescription( final String description )
   {
     m_description = description;
   }
 
-  public void setVisibility( boolean isVisible )
+  public void setVisibility( final boolean isVisible )
   {
     m_isVisible = isVisible;
   }
@@ -347,12 +361,14 @@ public class TupleResultLineChartLayer implements IChartLayer
     return m_isVisible;
   }
 
-  public void updateResult( TupleResult result, String domainComponentId, String valueComponentId )
+  public void updateResult( final TupleResult result, final String domainComponentId, final String valueComponentId )
   {
     m_result = result;
     m_domainComponentId = domainComponentId;
     m_valueComponentId = valueComponentId;
     if( m_chart != null )
+    {
       m_chart.repaint();
+    }
   }
 }
