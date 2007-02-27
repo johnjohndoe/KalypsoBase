@@ -44,12 +44,17 @@ import javax.xml.bind.JAXBException;
 
 import net.opengeospatial.ows.CodeType;
 
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
+import org.kalypso.service.wps.utils.SimulationManager;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
+import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
+import org.kalypso.simulation.core.internal.queued.QueuedSimulationService;
 
 /**
  * This operation will execute a specific simulation.
@@ -82,8 +87,12 @@ public class Execute implements IOperation
     ISimulation simulation = WPSUtilities.getSimulation( getIdentifier( request ) );
 
     /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-    // TODO
+    SimulationManager manager = SimulationManager.getInstance();
+    manager.startSimulation( m_executeRequest.getIdentifier().getValue(), m_executeRequest.getIdentifier().getValue(), m_executeRequest );
+
+    /* Prepare the execute response. */
     
+    /* And send it back. */
     return null;
   }
 

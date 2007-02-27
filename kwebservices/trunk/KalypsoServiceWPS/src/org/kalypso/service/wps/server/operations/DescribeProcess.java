@@ -117,91 +117,8 @@ public class DescribeProcess implements IOperation
         /* This is the simulation. */
         ISimulation simulation = simulations.get( i );
 
-        /* Build all content for the process description. */
-        CodeType code = OGCUtilities.buildCodeType( "", identifier.get( i ) );
-        String title = identifier.get( i );
-
-        /* Get the specification for that simulation. */
-        URL spezifikation = simulation.getSpezifikation();
-        Modelspec modelData;
-        modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
-
-        /* Get the input from the model spec. */
-        List<DataType> input = modelData.getInput();
-
-        /* Build the data inputs. */
-        List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
-        for( int j = 0; j < input.size(); j++ )
-        {
-          DataType data = input.get( i );
-          CodeType inputCode = OGCUtilities.buildCodeType( "", data.getId() );
-          String inputTitle = data.getId();
-          String inputAbstrakt = data.getDescription();
-
-          InputDescriptionType inputDescription = null;
-          if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
-          {
-            /* Literal. */
-            LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadata( "Any", null ), null, OGCUtilities.buildAnyValue(), null );
-            if( data.isOptional() )
-              inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-            else
-              inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
-          }
-          else
-          {
-            /* Reference. */
-            ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
-            List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
-            complexDatas.add( complexData );
-
-            SupportedComplexDataType inputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
-            if( data.isOptional() )
-              inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-            else
-              inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
-          }
-
-          /* Füge die neue Beschreibung hinzu. */
-          inputDescriptions.add( inputDescription );
-        }
-        DataInputs dataInputs = OGCUtilities.buildDataInputs( inputDescriptions );
-
-        /* Get the output from the model spec. */
-        List<DataType> output = modelData.getOutput();
-
-        /* Build the output descriptions. */
-        List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
-        for( int j = 0; j < output.size(); j++ )
-        {
-          DataType data = output.get( i );
-
-          CodeType outputCode = OGCUtilities.buildCodeType( "", data.getId() );
-          String outputTitle = data.getId();
-          String outputAbstrakt = data.getDescription();
-
-          OutputDescriptionType outputDescription = null;
-          if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
-          {
-            /* Literal. */
-            outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadata( "Any", null ), null ) );
-          }
-          else
-          {
-            /* Reference. */
-            ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
-            List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
-            complexDatas.add( complexData );
-
-            outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, complexDatas );
-          }
-
-          /* Füge die neue Beschreibung hinzu. */
-          outputDescriptions.add( outputDescription );
-        }
-        ProcessOutputs processOutputs = OGCUtilities.buildProcessOutputs( outputDescriptions );
-
-        ProcessDescriptionType processDescription = OGCUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
+        /* Build the process description. */
+        ProcessDescriptionType processDescription = buildProcessDescriptionType( simulation, identifier.get( i ) );
 
         /* Save the process description. */
         processDescriptions.add( processDescription );
@@ -210,8 +127,10 @@ public class DescribeProcess implements IOperation
       /* Build the process descriptions response. */
       ProcessDescriptions processDescriptionsResponse = OGCUtilities.buildProcessDescriptions( processDescriptions );
 
+      /* Marshall it into one XML string. */
       String xml = MarshallUtilities.marshall( processDescriptionsResponse );
 
+      /* Build the response. */
       StringBuffer response = new StringBuffer();
       response.append( xml );
 
@@ -278,5 +197,105 @@ public class DescribeProcess implements IOperation
     }
 
     return simulationTypes;
+  }
+
+  /**
+   * This function builds the process description for one simulation.
+   * 
+   * @param simulation
+   *          The simulation
+   * @param identifier
+   *          The identifier of the simulation.
+   * @return The process description.
+   */
+  public static ProcessDescriptionType buildProcessDescriptionType( ISimulation simulation, String identifier ) throws JAXBException
+  {
+    /* Build all content for the process description. */
+    CodeType code = OGCUtilities.buildCodeType( "", identifier );
+    String title = identifier;
+
+    /* Get the specification for that simulation. */
+    URL spezifikation = simulation.getSpezifikation();
+    Modelspec modelData;
+    modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
+
+    /* Get the input from the model spec. */
+    List<DataType> input = modelData.getInput();
+
+    /* Build the data inputs. */
+    List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
+    for( int j = 0; j < input.size(); j++ )
+    {
+      DataType data = input.get( j );
+      CodeType inputCode = OGCUtilities.buildCodeType( "", data.getId() );
+      String inputTitle = data.getId();
+      String inputAbstrakt = data.getDescription();
+
+      InputDescriptionType inputDescription = null;
+      if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
+      {
+        /* Literal. */
+        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadata( "Any", null ), null, OGCUtilities.buildAnyValue(), null );
+        if( data.isOptional() )
+          inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
+        else
+          inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
+      }
+      else
+      {
+        /* Reference. */
+        ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
+        List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
+        complexDatas.add( complexData );
+
+        SupportedComplexDataType inputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
+        if( data.isOptional() )
+          inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
+        else
+          inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
+      }
+
+      /* Füge die neue Beschreibung hinzu. */
+      inputDescriptions.add( inputDescription );
+    }
+
+    DataInputs dataInputs = OGCUtilities.buildDataInputs( inputDescriptions );
+
+    /* Get the output from the model spec. */
+    List<DataType> output = modelData.getOutput();
+
+    /* Build the output descriptions. */
+    List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
+    for( int j = 0; j < output.size(); j++ )
+    {
+      DataType data = output.get( j );
+
+      CodeType outputCode = OGCUtilities.buildCodeType( "", data.getId() );
+      String outputTitle = data.getId();
+      String outputAbstrakt = data.getDescription();
+
+      OutputDescriptionType outputDescription = null;
+      if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
+      {
+        /* Literal. */
+        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadata( "Any", null ), null ) );
+      }
+      else
+      {
+        /* Reference. */
+        ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
+        List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
+        complexDatas.add( complexData );
+
+        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, complexDatas );
+      }
+
+      /* Füge die neue Beschreibung hinzu. */
+      outputDescriptions.add( outputDescription );
+    }
+
+    ProcessOutputs processOutputs = OGCUtilities.buildProcessOutputs( outputDescriptions );
+
+    return OGCUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
   }
 }
