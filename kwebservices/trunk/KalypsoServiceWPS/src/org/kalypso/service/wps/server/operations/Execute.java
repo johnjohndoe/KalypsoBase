@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.server.operations;
 
-import org.eclipse.core.runtime.CoreException;
+import javax.xml.bind.JAXBException;
+
+import net.opengeospatial.ows.CodeType;
+
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.MarshallUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 
 /**
  * This operation will execute a specific simulation.
@@ -54,6 +58,11 @@ import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
  */
 public class Execute implements IOperation
 {
+  /**
+   * The execute request. If this variable is set, the execute request came via xml. Otherwise it was only a get.
+   */
+  private net.opengeospatial.wps.Execute m_executeRequest = null;
+
   /**
    * The constructor.
    */
@@ -67,38 +76,61 @@ public class Execute implements IOperation
   public StringBuffer executeOperation( RequestBean request ) throws OWSException
   {
     /* Start the operation. */
-    Debug.println( "Operation \"ExecuteSimulation\" started." );
+    Debug.println( "Operation \"Execute\" started." );
 
-    /* Search for the parameter SIMULATION. */
-    String literal = request.getParameterValue( "SIMULATION" );
-    if( literal == null )
-    {
-      Debug.println( "Missing parameter SIMULATION!" );
-      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter SIMULATION is missing ...", request.getUrl() );
-    }
-
-    try
-    {
-      /* Get the simulation. */
-      Debug.println( "Searching for simulation \"" + literal + "\" ..." );
-      ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( literal );
-
-      if( simulation == null )
-      {
-        Debug.println( "Unsupported simulation \"" + literal + "\"!" );
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "The simulation with the literal \"" + literal + "\" is not available.", request.getUrl() );
-      }
-    }
-    catch( CoreException e )
-    {
-      Debug.println( "Unsupported simulation \"" + literal + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), request.getUrl() );
-    }
-
-    Debug.println( "Found simulation \"" + literal + "\"." );
+    /* Get the simulation. */
+    ISimulation simulation = WPSUtilities.getSimulation( getIdentifier( request ) );
 
     /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-
+    // TODO
+    
     return null;
+  }
+
+  /**
+   * Checks for the parameter or attribute Identifier and returns it. Furthermore it sets the member m_xxxRequest.
+   * 
+   * @param request
+   *          The request.
+   * @return The Identifier parameter or null if not present.
+   */
+  private String getIdentifier( RequestBean request ) throws OWSException
+  {
+    String simulationType = null;
+    if( request.isPost() )
+    {
+      try
+      {
+        /* POST with XML. */
+        String xml = request.getBody();
+
+        /* Check if ALL parameter are available. */
+        m_executeRequest = (net.opengeospatial.wps.Execute) MarshallUtilities.unmarshall( xml );
+
+        /* Need the XML attribute service. */
+        CodeType identifier = m_executeRequest.getIdentifier();
+        if( identifier != null )
+          simulationType = identifier.getValue();
+      }
+      catch( JAXBException e )
+      {
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      }
+    }
+    else
+    {
+      /* GET or simple POST. */
+
+      /* Search for the parameter Identifier. */
+      simulationType = request.getParameterValue( "Identifier" );
+    }
+
+    if( simulationType == null || simulationType.length() == 0 )
+    {
+      Debug.println( "Missing parameter Identifier!" );
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter Identifier is missing ...", "Identifier" );
+    }
+
+    return simulationType;
   }
 }

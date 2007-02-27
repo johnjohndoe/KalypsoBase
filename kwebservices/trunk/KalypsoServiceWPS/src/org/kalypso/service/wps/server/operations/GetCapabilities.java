@@ -2,6 +2,7 @@ package org.kalypso.service.wps.server.operations;
 
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.utils.Debug;
 
 /**
  * The implementation of the GetCapabilities function.
@@ -15,6 +16,8 @@ public class GetCapabilities implements IOperation
    */
   public GetCapabilities( )
   {
+    /* Start the operation. */
+    Debug.println( "Operation \"GetCapabilities\" started." );
   }
 
   /**

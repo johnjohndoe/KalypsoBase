@@ -41,6 +41,10 @@
 package org.kalypso.service.ogc;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -49,29 +53,77 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 /**
- * @author burtscher
+ * @author Alex Burtscher, Holger Albert
  */
 public class OGCServiceExtensions
 {
   private static Map<String, IConfigurationElement> THE_MAP = null;
-  
 
   private OGCServiceExtensions( )
   {
     // will not be instantiated
   }
 
+  /**
+   * This function will return all Parameters, that are mandatory for the given service.
+   */
+  public static List<String> getMandadoryParameters( final String id )
+  {
+    final List<String> parameters = new LinkedList<String>();
+    final Map<String, IConfigurationElement> elts = getOperations();
+
+    IConfigurationElement element = elts.get( id );
+    if( element == null )
+      return null;
+
+    IConfigurationElement[] children = element.getChildren( "parameter" );
+    if( children.length == 0 )
+      return parameters;
+
+    for( int i = 0; i < children.length; i++ )
+    {
+      IConfigurationElement child = children[i];
+      parameters.add( child.getAttribute( "parameterName" ) );
+    }
+
+    return parameters;
+  }
+
   public static IOGCService createService( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> elts = getOperations();
-   	System.out.println("looking for service: "+id);
-    
+    System.out.println( "looking for service: " + id );
+
     final IConfigurationElement element = elts.get( id );
     if( element == null )
       return null;
 
-    System.out.println("Found service: "+id);
+    System.out.println( "Found service: " + id );
     return (IOGCService) element.createExecutableExtension( "class" );
+  }
+
+  /**
+   * This function returns all registered services.
+   * 
+   * @return All known services.
+   */
+  public static Map<String, IOGCService> createServices( ) throws CoreException
+  {
+    /* A list for the services. */
+    final Map<String, IOGCService> services = new LinkedHashMap<String, IOGCService>();
+
+    /* The map containing the registered elements. */
+    final Map<String, IConfigurationElement> elts = getOperations();
+
+    Iterator<String> itr = elts.keySet().iterator();
+    while( itr.hasNext() )
+    {
+      String key = itr.next();
+      IConfigurationElement element = elts.get( key );
+      services.put( key, (IOGCService) element.createExecutableExtension( "class" ) );
+    }
+
+    return services;
   }
 
   private synchronized static Map<String, IConfigurationElement> getOperations( )
@@ -80,6 +132,7 @@ public class OGCServiceExtensions
       return THE_MAP;
 
     THE_MAP = new HashMap<String, IConfigurationElement>();
+
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
@@ -88,14 +141,15 @@ public class OGCServiceExtensions
       {
         final String id = element.getAttribute( "serviceName" );
         THE_MAP.put( id, element );
-        System.out.println("adding service: "+id);
+
+        System.out.println( "adding service: " + id );
       }
     }
     else
     {
-    // Logger.trace( "Error: cant find ExtensionRegistry" );
+      // Logger.trace( "Error: cant find ExtensionRegistry" );
     }
+
     return THE_MAP;
   }
-
 }

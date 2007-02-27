@@ -40,22 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.ods.operation;
 
-import java.io.OutputStream;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 
 /**
- * @author burtscher
- * simple interface to define service operations
- *
+ * @author burtscher simple interface to define service operations
  */
 public interface IODSOperation
 {
   /**
    * starts ods operation - used for ods operation extension point
    */
-  public void operate(RequestBean requestBean, ResponseBean responseBean) throws OWSException;
-  
-  
+  public void operate( RequestBean requestBean, ResponseBean responseBean ) throws OWSException;
 }

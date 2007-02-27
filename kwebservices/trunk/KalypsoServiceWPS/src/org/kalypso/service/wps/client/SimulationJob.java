@@ -40,21 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import net.opengeospatial.ows.CodeType;
@@ -62,16 +57,16 @@ import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
-import net.opengeospatial.wps.RequestBaseType;
+import net.opengeospatial.wps.OutputDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
+import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -91,8 +86,9 @@ import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.OGCNamespacePrefixMapper;
+import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.OGCUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
@@ -241,19 +237,18 @@ public class SimulationJob extends WorkspaceJob
       /* Build the describe process request. */
       List<CodeType> identifier = new LinkedList<CodeType>();
       identifier.add( OGCUtilities.buildCodeType( "", m_simulationType ) );
-      DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcessOperationRequest( identifier );
+      DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
       /* Send the request. */
       monitor.setTaskName( "Frage nach der Prozess-Beschreibung ..." );
       Debug.println( "Asking for a process describtion ..." );
-      String response = sendRequest( descripeProcess );
-      
+      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), m_service );
+
       /* Handle the response. */
-      Debug.println( "Response:\n"+response );
+      Debug.println( "Response:\n" + describeProcessResponse );
 
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
-
-      /* During this, check, if every input is given, using the model spec. */
+      ProcessDescriptions processDescriptions = (ProcessDescriptions) MarshallUtilities.unmarshall( describeProcessResponse );
 
       /* Collect the data. */
       IFile[] inputFiles = getInputFiles( m_calcCaseFolder );
@@ -271,13 +266,13 @@ public class SimulationJob extends WorkspaceJob
         return canceled();
 
       /* Get the input data. */
-      DataInputsType dataInputs = getDataInputs( m_calcCaseFolder );
+      DataInputsType dataInputs = getDataInputs( m_calcCaseFolder, processDescriptions );
 
       /* Get the output data. */
-      OutputDefinitionsType outputDefinitions = getOutputDefinitions();
+      OutputDefinitionsType outputDefinitions = getOutputDefinitions( processDescriptions );
 
       /* Build the execute request. */
-      Execute execute = OGCUtilities.buildExecuteOperationRequest( OGCUtilities.buildCodeType( "", m_simulationType ), dataInputs, outputDefinitions, true, true );
+      Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", m_simulationType ), dataInputs, outputDefinitions, true, true );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
@@ -287,7 +282,7 @@ public class SimulationJob extends WorkspaceJob
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
       Debug.println( "Start the simulation ..." );
-      sendRequest( execute );
+      String executeResponse = WPSUtilities.send( MarshallUtilities.marshall( execute ), m_service );
 
       /* Handle the execute response. */
 
@@ -567,7 +562,7 @@ public class SimulationJob extends WorkspaceJob
    *          The folder of the calc case.
    * @return The data input from the model spec in wps format.
    */
-  private DataInputsType getDataInputs( final IContainer calcCaseFolder ) throws CoreException, FileSystemException
+  private DataInputsType getDataInputs( final IContainer calcCaseFolder, ProcessDescriptions processDescriptions ) throws CoreException, FileSystemException
   {
     /* Get the list with the input. */
     List<Input> inputList = m_data.getInput();
@@ -575,9 +570,37 @@ public class SimulationJob extends WorkspaceJob
     /* The storage for the input values. */
     List<IOValueType> inputValues = new LinkedList<IOValueType>();
 
+    /* The descriptions of all processes from the process descriptions response. */
+    List<ProcessDescriptionType> processDescription = processDescriptions.getProcessDescription();
+
+    /* There could be only one description, because we have asked for a special one. */
+    ProcessDescriptionType description = processDescription.get( 0 );
+
+    /* Get the input list. */
+    DataInputs dataInputs = description.getDataInputs();
+    List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+
+    /* Iterate over all inputs and build the data inputs for the execute request. */
     final IProject project = calcCaseFolder.getProject();
-    for( final Input input : inputList )
+    for( InputDescriptionType inputDescription : inputDescriptions )
     {
+      CodeType identifier = inputDescription.getIdentifier();
+
+      /* Check if the input is in our model data, too. */
+      Input input = findInput( identifier.getValue(), inputList );
+      if( input == null )
+      {
+        /* Check, if it is an optional one. */
+        if( inputDescription.getMinimumOccurs().intValue() == 1 )
+        {
+          /* Ooops, it is a mandatory one, but it is missing in our model data. */
+          throw new CoreException( StatusUtilities.createErrorStatus( "The data input " + identifier.getValue() + " is mandatory. Check your model data." ) );
+        }
+
+        continue;
+      }
+
+      /* Input is here. */
       final String inputPath = input.getPath();
 
       /* Alles relativ zum Projekt auflösen! */
@@ -585,7 +608,7 @@ public class SimulationJob extends WorkspaceJob
       final IResource inputResource = baseresource.findMember( inputPath );
       if( inputResource == null )
       {
-        if( input.isOptional() )
+        if( inputDescription.getMinimumOccurs().intValue() == 0 )
           continue;
 
         throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
@@ -599,13 +622,32 @@ public class SimulationJob extends WorkspaceJob
       /* Build the complex value reference. */
       CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
       ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( url.toExternalForm(), null, null, null );
-      IOValueType ioValue = OGCUtilities.buildIOValueType( code, input.getId(), "", valueReference );
+      IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
       /* Add the input. */
       inputValues.add( ioValue );
     }
 
-    return OGCUtilities.buildDataInputs( inputValues );
+    return OGCUtilities.buildDataInputsType( inputValues );
+  }
+
+  /**
+   * This function searches an input in the model data.
+   * 
+   * @param ID
+   *          The ID of the input to search for.
+   * @return The found input or null, if none is found for that ID.
+   */
+  private Input findInput( String ID, List<Input> inputList )
+  {
+    for( int i = 0; i < inputList.size(); i++ )
+    {
+      Input input = inputList.get( i );
+      if( input.getId().equals( ID ) )
+        return input;
+    }
+
+    return null;
   }
 
   /**
@@ -613,7 +655,7 @@ public class SimulationJob extends WorkspaceJob
    * 
    * @return The output of the model spec in wps format.
    */
-  private OutputDefinitionsType getOutputDefinitions( )
+  private OutputDefinitionsType getOutputDefinitions( ProcessDescriptions processDescriptions ) throws CoreException
   {
     /* Get the list with the output. */
     List<Output> outputList = m_data.getOutput();
@@ -621,112 +663,57 @@ public class SimulationJob extends WorkspaceJob
     /* The storage for the output values. */
     List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
 
-    for( final Output output : outputList )
+    /* The descriptions of all processes from the process descriptions response. */
+    List<ProcessDescriptionType> processDescription = processDescriptions.getProcessDescription();
+
+    /* There could be only one description, because we have asked for a special one. */
+    ProcessDescriptionType description = processDescription.get( 0 );
+
+    /* Get the output list. */
+    ProcessOutputs processOutputs = description.getProcessOutputs();
+    List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
+
+    /* Iterate over all outputs and build the data inputs for the execute request. */
+    for( OutputDescriptionType outputDescription : outputDescriptions )
     {
-      CodeType code = OGCUtilities.buildCodeType( null, output.getId() );
-      OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, output.getId(), "", null, null, null, null );
+      CodeType identifier = outputDescription.getIdentifier();
+
+      /* Check if the output is in our model data, too. */
+      Output output = findOutput( identifier.getValue(), outputList );
+
+      if( output == null )
+      {
+        /* Ooops, it is missing in our model data. */
+        throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+      }
+
+      CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
+      OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
 
       /* Add the output. */
       outputValues.add( outputDefinition );
     }
 
-    return OGCUtilities.buildOutputDefinitions( outputValues );
+    return OGCUtilities.buildOutputDefinitionsType( outputValues );
   }
 
   /**
-   * This function sends the request to the server.
+   * This function searches an output out in the model data.
    * 
-   * @param request
-   *          The request.
-   * @return The response.
+   * @param ID
+   *          The ID of the output to search for.
+   * @return The found output or null, if none is found for that ID.
    */
-  private String sendRequest( RequestBaseType request ) throws JAXBException, IOException, CoreException
+  private Output findOutput( String ID, List<Output> outputList )
   {
-    /* Send the request. */
-    Debug.println( "Calling " + m_service + " ..." );
-
-    /* Create the client. */
-    HttpClient client = new HttpClient();
-    client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
-
-    /* Build the method. */
-    PostMethod post = new PostMethod( m_service );
-    post.setRequestEntity( new InputStreamRequestEntity( getInputStream( request ) ) );
-
-    /* Execute the method. */
-    int status = client.executeMethod( post );
-
-    /* Handle the response. */
-    Debug.println( "Status code: " + String.valueOf( status ) );
-
-    if( status != 200 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
-
-    InputStream is = post.getResponseBodyAsStream();
-    if( is == null )
-      return null;
-
-    return fromInputStream( is );
-  }
-
-  /**
-   * This function returns an input stream from one request.
-   * 
-   * @param request
-   *          The request.
-   * @return The inputstream.
-   */
-  private InputStream getInputStream( RequestBaseType request ) throws JAXBException, IOException
-  {
-    JAXBContext context = JaxbUtilities.createQuiet( net.opengeospatial.ows.ObjectFactory.class, net.opengeospatial.wps.ObjectFactory.class );
-    StringWriter sw = new StringWriter();
-    Marshaller m = context.createMarshaller();
-    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new OGCNamespacePrefixMapper() );
-    m.marshal( request, sw );
-    ByteArrayInputStream is = new ByteArrayInputStream( sw.toString().getBytes() );
-    sw.close();
-
-    return is;
-  }
-
-  /**
-   * This function reads from an input stream and returns a string representation.
-   * 
-   * @param is
-   *          The input stream.
-   * @return The string.
-   */
-  private String fromInputStream( InputStream is ) throws IOException
-  {
-    String value = null;
-    byte[] buffer = new byte[4096];
-    OutputStream os = new ByteArrayOutputStream();
-
-    try
+    for( int i = 0; i < outputList.size(); i++ )
     {
-      while( true )
-      {
-        int read = is.read( buffer );
-
-        if( read == -1 )
-          break;
-
-        os.write( buffer, 0, read );
-      }
-
-      os.close();
-      is.close();
-
-      value = os.toString();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-      IOUtils.closeQuietly( os );
+      Output output = outputList.get( i );
+      if( output.getId().equals( ID ) )
+        return output;
     }
 
-    return value;
+    return null;
   }
 
   /**

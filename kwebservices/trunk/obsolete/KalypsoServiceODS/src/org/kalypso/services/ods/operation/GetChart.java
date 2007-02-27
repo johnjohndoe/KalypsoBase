@@ -43,9 +43,6 @@ package org.kalypso.services.ods.operation;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
@@ -61,40 +58,35 @@ import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.ODSUtils;
-import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
 import org.kalypso.swtchart.logging.Logger;
 
 /**
- * @author burtscher
- * IODS operation to display an image containing a chart
+ * @author burtscher IODS operation to display an image containing a chart
  */
 public class GetChart implements IODSOperation, Runnable
 {
+  private RequestBean m_requestBean;
 
+  private OWSException m_exception = null;
 
-    private RequestBean m_requestBean;
+  private ResponseBean m_responseBean;
 
-    private OWSException m_exception=null;
-    private ResponseBean m_responseBean;
+  public GetChart( )
+  {
+  }
 
-    public GetChart()
-    {
-
-    }
-
-
-public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
- {
-    m_requestBean=requestBean;
-    m_responseBean=responseBean;
+  public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
+  {
+    m_requestBean = requestBean;
+    m_responseBean = responseBean;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
-    if (m_exception!=null)
+    if( m_exception != null )
     {
       throw m_exception;
     }
- }
+  }
 
   /**
    * @see java.lang.Runnable#run()
@@ -104,62 +96,62 @@ public void operate( RequestBean requestBean, final ResponseBean responseBean ) 
 
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
 
-    int width=500;
-    int height=400;
-    String reqWidth=m_requestBean.getParameterValue( "WIDTH" );
-    String reqHeight=m_requestBean.getParameterValue( "HEIGHT" );
-    String reqName=m_requestBean.getParameterValue( "NAME" );
-    if (reqWidth!=null)
-      width=Integer.parseInt( reqWidth );
-    if (reqHeight!=null)
-      height=Integer.parseInt( reqHeight );
-    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
-    if (reqName!=null)
+    int width = 500;
+    int height = 400;
+    String reqWidth = m_requestBean.getParameterValue( "WIDTH" );
+    String reqHeight = m_requestBean.getParameterValue( "HEIGHT" );
+    String reqName = m_requestBean.getParameterValue( "NAME" );
+    if( reqWidth != null )
+      width = Integer.parseInt( reqWidth );
+    if( reqHeight != null )
+      height = Integer.parseInt( reqHeight );
+    // der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if( reqName != null )
     {
-      Display display=DisplayHelper.getInstance().getDisplay();
-      BufferedOutputStream outputStream=null;
+      Display display = DisplayHelper.getInstance().getDisplay();
+      BufferedOutputStream outputStream = null;
       ChartImageContainer cic = null;
-      Chart chart=null;
+      Chart chart = null;
 
-      CachedChart cc=ChartCache.getInstance().getObject( reqName );
-      if (false && cc!=null)
+      CachedChart cc = ChartCache.getInstance().getObject( reqName );
+      if( false && cc != null )
       {
-          chart=cc.getChart();
-          Logger.trace("GetChart: Using cached chart");
+        chart = cc.getChart();
+        Logger.trace( "GetChart: Using cached chart" );
       }
       else
       {
-        Logger.trace("GetChart: Creating new chart");
-        cc=new CachedChart(reqName);
+        Logger.trace( "GetChart: Creating new chart" );
+        cc = new CachedChart( reqName );
         ChartCache.getInstance().addObject( reqName, cc );
-        chart=cc.getChart();
+        chart = cc.getChart();
       }
       ODSUtils.setLayerVisibility( chart, m_requestBean );
-      ODSUtils.setAxisValues(  chart, m_requestBean );
+      ODSUtils.setAxisValues( chart, m_requestBean );
 
-      //Gecachetes Chart verwenden
-      if (chart!=null )
+      // Gecachetes Chart verwenden
+      if( chart != null )
       {
-        cic = new ChartImageContainer(chart, display, width, height);
-        Image chartImg=cic.getImage();
+        cic = new ChartImageContainer( chart, display, width, height );
+        Image chartImg = cic.getImage();
 
-        if (chartImg!=null )
+        if( chartImg != null )
         {
           m_responseBean.setContentType( "image/jpg" );
-          ImageLoader il=new ImageLoader();
-          ImageData id=chartImg.getImageData();
-          il.data=new ImageData[]{id};
+          ImageLoader il = new ImageLoader();
+          ImageData id = chartImg.getImageData();
+          il.data = new ImageData[] { id };
           try
           {
             outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
-            //INFO: if you get an swt_error, you need to include swt-plugin 3.3 or greater
+            // INFO: if you get an swt_error, you need to include swt-plugin 3.3 or greater
             il.save( outputStream, SWT.IMAGE_JPEG );
           }
           finally
           {
-            if (cic!=null)
+            if( cic != null )
               cic.dispose();
-            if (outputStream!=null)
+            if( outputStream != null )
             {
               try
               {
@@ -177,19 +169,17 @@ public void operate( RequestBean requestBean, final ResponseBean responseBean ) 
         }
         else
         {
-          m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+          m_exception = new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "" );
           return;
         }
       }
 
-
     }
     else
     {
-      m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+      m_exception = new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "" );
       return;
     }
   }
-
 
 }

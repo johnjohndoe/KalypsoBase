@@ -46,14 +46,28 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author burtscher1
+ * This is a objetc, holding the information to send an output to the requesting client.
+ * 
+ * @author Alex Burtscher, Holger Albert
  */
 public class ResponseBean
 {
+  /**
+   * The output stream to write to.
+   */
   private OutputStream m_out = null;
 
+  /**
+   * The content type to use.
+   */
   private String m_contentType = null;
 
+  /**
+   * The constructor.
+   * 
+   * @param response
+   *          The servlet response.
+   */
   public ResponseBean( HttpServletResponse response )
   {
     try
@@ -62,7 +76,6 @@ public class ResponseBean
     }
     catch( IOException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

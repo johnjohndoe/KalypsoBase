@@ -1,17 +1,19 @@
 package org.kalypso.service.ogc;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.service.ogc.RequestBean.TYPE;
 import org.kalypso.service.ogc.exception.OWSException;
 
 /**
@@ -22,123 +24,134 @@ public class OGCServlet extends HttpServlet implements Servlet
 {
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-   *      javax.servlet.http.HttpServletResponse) this method has to be synchronized as it uses graphics on an
-   *      environment without a running display; therefore, the display has to be created (Display.getDefault()) and
-   *      disposed synchronously (or using the display generates an illegal Access Error) The
-   *      Display.getCurrent()-method is of no use here.
-   * @TODO: integrate operations extension
+   *      javax.servlet.http.HttpServletResponse)
    */
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    // Operationsparameter für Service, Request und Version
-    String opService = request.getParameter( "SERVICE" );
-    String opRequest = request.getParameter( "REQUEST" );
-    String opVersion = request.getParameter( "VERSION" );
+    RequestBean requestBean = new RequestBean( TYPE.GET, request );
+    ResponseBean responseBean = new ResponseBean( response );
 
-    OutputStream out = response.getOutputStream();
-
-    String locator = request.getRequestURL().toString();
-
-    locator = request.getRequestURL().toString() + "?" + request.getQueryString();
-
-    if( opService == null )
-    {
-      // Fehler ausgeben: Kein Service spezifiziert
-      String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw = new OutputStreamWriter( out );
-      osw.write( str );
-      osw.close();
-      return;
-    }
-    if( opRequest == null )
-    {
-      // Fehler ausgeben: Keine Operation spezifiziert
-      String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'REQUEST is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw = new OutputStreamWriter( out );
-      osw.write( str );
-      osw.close();
-      return;
-    }
-    if( opVersion == null )
-    {
-      // Fehler ausgeben: Keine Version spezifiziert
-      String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'VERSION' is mandatory", locator )).toXMLString();
-      OutputStreamWriter osw = new OutputStreamWriter( out );
-      osw.write( str );
-      osw.close();
-      return;
-    }
-
-    // Wenn wir hier ankommen, sind alle OWS-Pflicht-Parameter vorhanden
-    IOGCService ogcService = null;
-    // Service-Klasse laden
+    /* Check the request. */
     try
     {
-      ogcService = OGCServiceExtensions.createService( opService );
+      executeRequests( requestBean, responseBean );
     }
-    catch( CoreException e1 )
+    catch( OWSException e )
     {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-
-    if( ogcService != null )
-    {
-      // Operation ausführen
-      try
-      {
-        ogcService.executeOperation( new RequestBean( request ), new ResponseBean( response ) );
-      }
-      catch( OWSException e )
-      {
-        // geworfene Fehlermeldung als XML ausgeben
-        String str = e.toXMLString();
-        OutputStreamWriter osw = new OutputStreamWriter( out );
-        osw.write( str );
-        osw.close();
-      }
-    }
-    else
-    {
-      // Fehler ausgeben: Service nicht vorhanden
-      String str = (new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "SERVICE '" + opService + "' not found", locator )).toXMLString();
-      OutputStreamWriter osw = new OutputStreamWriter( out );
-      osw.write( str );
+      OutputStream os = responseBean.getOutputStream();
+      OutputStreamWriter osw = new OutputStreamWriter( os );
+      osw.write( e.toXMLString() );
       osw.close();
+      os.close();
     }
-    out.close();
-
   }
 
   /**
-   * doPost gets redirected to doGet - GET and POST are handled the same way
-   * 
    * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
    *      javax.servlet.http.HttpServletResponse)
    */
   @Override
   public void doPost( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    ServletInputStream inputStream = request.getInputStream();
+    RequestBean requestBean = new RequestBean( TYPE.POST, request );
+    ResponseBean responseBean = new ResponseBean( response );
 
-    byte[] buffer = new byte[4096];
-    OutputStream outputStream = new ByteArrayOutputStream();
-
-    while( true )
+    /* Check the request. */
+    try
     {
-      int read = inputStream.read( buffer );
-      
-      if( read == -1 )
-        break;
-
-      outputStream.write( buffer, 0, read );
+      executeRequests( requestBean, responseBean );
     }
+    catch( OWSException e )
+    {
+      OutputStream os = responseBean.getOutputStream();
+      OutputStreamWriter osw = new OutputStreamWriter( os );
+      osw.write( e.toXMLString() );
+      osw.close();
+      os.close();
+    }
+  }
 
-    outputStream.close();
-    inputStream.close();
+  /**
+   * This function checks the given requests, and if a service could handle it.
+   * 
+   * @param request
+   *          The request.
+   * @param response
+   *          The response.
+   */
+  private void executeRequests( RequestBean request, ResponseBean response ) throws OWSException
+  {
+    try
+    {
+      /* Get all registered services. */
+      Map<String, IOGCService> services = OGCServiceExtensions.createServices();
 
-    String s = outputStream.toString();
-    System.out.println( s );
+      /* Ask everyone, if he could handle the request. The first which says yes, is taken. */
+      String foundKey = null;
+      IOGCService foundService = null;
+      Iterator<String> itr = services.keySet().iterator();
+      while( itr.hasNext() )
+      {
+        String key = itr.next();
+        IOGCService service = services.get( key );
+        System.out.println( "Asking service " + key + " ..." );
+        if( service.responsibleFor( request ) )
+        {
+          /* Found a service. */
+          System.out.println( "Service " + key + " answered positivly." );
+          foundKey = key;
+          foundService = service;
+          break;
+        }
+      }
+
+      /* No suitable service found. */
+      if( foundService == null || foundKey == null )
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "No service found, which can handle this request.", "" );
+
+      /* Check, if all required parameters are there. But only, if the request was send via the get method. */
+      if( !request.isPost() )
+      {
+        System.out.println( "GET detected: Checking if all mandatory parameters are available ..." );
+        checkMandadoryParameter( request, foundKey );
+      }
+      else if( request.isPost() && request.getBody() == null )
+      {
+        System.out.println( "POST without XML detected: Checking if all mandatory parameters are available ..." );
+        checkMandadoryParameter( request, foundKey );
+      }
+      else
+      {
+        /* The service itself should check his parameters in the XML. */
+        System.out.println( "POST with XML detected: Let the service check if all mandatory parameters are available ..." );
+      }
+
+      /* Execute the operation. */
+      foundService.executeOperation( request, response );
+    }
+    catch( CoreException e )
+    {
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+    }
+  }
+
+  /**
+   * This function checks, if the parameter which are mandatory for the given service exists.
+   * 
+   * @param request
+   *          The request.
+   * @param id
+   *          The id of the service.
+   */
+  private void checkMandadoryParameter( RequestBean request, String id ) throws OWSException
+  {
+    List<String> mandadoryParameters = OGCServiceExtensions.getMandadoryParameters( id );
+    for( int i = 0; i < mandadoryParameters.size(); i++ )
+    {
+      String parameterName = mandadoryParameters.get( i );
+      if( request.getParameterValue( parameterName ) == null )
+        throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter '" + parameterName + "' is mandatory", parameterName );
+    }
   }
 }

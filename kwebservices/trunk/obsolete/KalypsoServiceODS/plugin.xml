@@ -34,7 +34,11 @@
          point="org.kalypso.service.ogc.ogcService">
       <service
             class="org.kalypso.services.ods.ODSServlet"
-            serviceName="ODS"/>
+            serviceName="ODS">
+         <parameter parameterName="Service"/>
+         <parameter parameterName="Request"/>
+         <parameter parameterName="Version"/>
+      </service>
    </extension>
    
 </plugin>
