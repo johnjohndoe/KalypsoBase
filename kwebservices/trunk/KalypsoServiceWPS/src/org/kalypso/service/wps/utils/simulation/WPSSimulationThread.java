@@ -66,8 +66,14 @@ import org.kalypso.simulation.core.SimulationInfo;
  */
 final class WPSSimulationThread extends Thread
 {
+  /**
+   * Logger.
+   */
   private static final Logger LOGGER = Logger.getLogger( WPSSimulationThread.class.getName() );
 
+  /**
+   * Debug on?
+   */
   private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
 
   static
@@ -76,16 +82,51 @@ final class WPSSimulationThread extends Thread
       LOGGER.setUseParentHandlers( false );
   }
 
+  /**
+   * The simulation.
+   */
   private final ISimulation m_job;
 
+  /**
+   * The info about the running simulation.
+   */
   private final SimulationInfo m_jobInfo;
 
+  /**
+   * The input data provider.
+   */
   private final ISimulationDataProvider m_inputData;
 
+  /**
+   * The results will go in here.
+   */
   private final WPSSimulationResultEater m_resultEater;
 
+  /**
+   * The temporary directory.
+   */
   private final File m_tmpDir;
 
+  /**
+   * The constructor.
+   * 
+   * @param id
+   *          The id of the thread.
+   * @param description
+   *          A description.
+   * @param typeID
+   *          The id of the simulation.
+   * @param job
+   *          The simulation.
+   * @param execute
+   *          The execute request.
+   * @param processDescription
+   *          The process description.
+   * @param tmpDir
+   *          The temporary directory.
+   * @param resultDir
+   *          The job can put his results here.
+   */
   public WPSSimulationThread( final String id, final String description, final String typeID, final ISimulation job, Execute execute, ProcessDescriptionType processDescription, final File tmpDir, final FileObject resultDir ) throws SimulationException
   {
     m_job = job;

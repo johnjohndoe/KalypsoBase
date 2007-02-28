@@ -104,15 +104,15 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * @param resultDir
    *          The FileObject contains information, where the results should be put, so that the client can read them.
    */
-  public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, FileObject resultDir ) throws SimulationException
+  public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, FileObject resultDir )
   {
     m_processDescription = processDescription;
     m_execute = execute;
     m_resultDir = resultDir;
     m_results = new Vector<OutputDefinitionType>();
 
-    m_outputList = index( processDescription );
-    m_outputListClient = indexClient( execute );
+    m_outputList = index( m_processDescription );
+    m_outputListClient = indexClient( m_execute );
   }
 
   /**
@@ -144,6 +144,9 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     return results;
   }
 
+  /**
+   * This function copys the result to the result dir, along with a status.
+   */
   public void copyCurrentResults( )
   {
 
@@ -156,7 +159,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          The process description, containing the input data.
    * @return The indexed map.
    */
-  private Map<String, Object> index( ProcessDescriptionType processDescription ) throws SimulationException
+  private Map<String, Object> index( ProcessDescriptionType processDescription )
   {
     Map<String, Object> outputList = new LinkedHashMap<String, Object>();
 
