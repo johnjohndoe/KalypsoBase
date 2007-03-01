@@ -99,7 +99,7 @@ public class Execute implements IOperation
       FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
       String statusLocation = resultFile.getURL().toExternalForm();
       StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
-      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), statusLocation, OGCUtilities.VERSION );
+      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, statusLocation, OGCUtilities.VERSION );
       JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
 
       /* Marshall it into one XML string. */

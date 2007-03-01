@@ -43,19 +43,27 @@ package org.kalypso.service.wps.utils.simulation;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
+import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.VFS;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -77,7 +85,12 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   private Execute m_execute = null;
 
   /**
-   * The temporary directory, where the results should be copied. The client is told that URL + [path to files].
+   * The temporary directory.
+   */
+  private File m_tmpDir;
+
+  /**
+   * The directory, where the results should be copied. The client is told that URL + [path to files].
    */
   private FileObject m_resultDir = null;
 
@@ -89,7 +102,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * Contains the id of the outputs as key and the output itself as value.
    */
-  private Map<String, Object> m_outputList = null;
+  private Map<String, OutputDescriptionType> m_outputList = null;
 
   /**
    * Contains the id of the output as key and the output that is expected from the client as value.
@@ -103,13 +116,16 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          The process description.
    * @param execute
    *          The execute request.
+   * @param tmpDir
+   *          The temporary directory for that simulation.
    * @param resultDir
    *          The FileObject contains information, where the results should be put, so that the client can read them.
    */
-  public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, FileObject resultDir )
+  public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, File tmpDir, FileObject resultDir )
   {
     m_processDescription = processDescription;
     m_execute = execute;
+    m_tmpDir = tmpDir;
     m_resultDir = resultDir;
     m_resultFiles = new LinkedHashMap<String, File>();
 
@@ -140,25 +156,66 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   }
 
   /**
-   * This function copys the result to the result dir, along with a status.
+   * This function copys the result to the result dir.
+   * 
+   * @return The descriptions of the outputs with the URLs.
    */
-  public void copyCurrentResults( ) throws SimulationException
+  public List<IOValueType> copyCurrentResults( ) throws SimulationException
   {
     try
     {
+      Debug.println( "Copying the results ..." );
+
+      /* Get a file system manager. */
       FileSystemManager manager = VFS.getManager();
+
+      /* Stores the output descriptions. */
+      List<IOValueType> ioValues = new LinkedList<IOValueType>();
 
       Iterator<String> itr = m_resultFiles.keySet().iterator();
       while( itr.hasNext() )
       {
         String key = itr.next();
-        File file = m_resultFiles.get( key );
-        String url = file.toURL().toExternalForm();
 
+        /* Getting the source file. */
+        File sourceFile = m_resultFiles.get( key );
+
+        /* Getting the relative path to the source file. */
+        String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
+
+        /* Converting the source file to a file object from VFS. */
+        String url = sourceFile.toURL().toExternalForm();
         FileObject source = manager.resolveFile( url );
-        // TODO
-        //FileUtil.copyContent( source, m_resultDir );
+
+        /* Resolving the result file object. */
+        FileObject destination = m_resultDir.resolveFile( relativePathToSource );
+
+        if( FileType.FOLDER.equals( source.getType() ) )
+        {
+          /* Directory copy. */
+          Debug.println( "Copy Directory " + source.getName() + " to " + destination.getName() + " ..." );
+
+          // TODO Copy the directorys as well ...
+        }
+        else if( FileType.FILE.equals( source.getType() ) )
+        {
+          /* File copy. */
+          Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
+          destination.copyFrom( source, new AllFileSelector() );
+
+          /* Get for reference. */
+          OutputDescriptionType outputDescription = m_outputList.get( key );
+
+          /* Build complex value reference. */
+          ComplexValueReference complexValueReference = OGCUtilities.buildComplexValueReference( destination.getURL().toExternalForm(), null, null, null );
+
+          /* Build io value. */
+          IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), complexValueReference );
+          ioValues.add( ioValue );
+        }
       }
+
+      return ioValues;
     }
     catch( Exception e )
     {
@@ -173,9 +230,9 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          The process description, containing the input data.
    * @return The indexed map.
    */
-  private Map<String, Object> index( ProcessDescriptionType processDescription )
+  private Map<String, OutputDescriptionType> index( ProcessDescriptionType processDescription )
   {
-    Map<String, Object> outputList = new LinkedHashMap<String, Object>();
+    Map<String, OutputDescriptionType> outputList = new LinkedHashMap<String, OutputDescriptionType>();
 
     ProcessOutputs processOutputs = processDescription.getProcessOutputs();
     List<OutputDescriptionType> outputs = processOutputs.getOutput();

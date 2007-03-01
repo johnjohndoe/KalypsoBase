@@ -294,7 +294,7 @@ public class DescribeProcess implements IOperation
       outputDescriptions.add( outputDescription );
     }
 
-    ProcessOutputs processOutputs = OGCUtilities.buildProcessOutputs( outputDescriptions );
+    ProcessOutputs processOutputs = OGCUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
 
     return OGCUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
   }

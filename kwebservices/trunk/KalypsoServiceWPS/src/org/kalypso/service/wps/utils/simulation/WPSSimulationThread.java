@@ -133,7 +133,7 @@ public class WPSSimulationThread extends Thread
 
     m_jobInfo = new WPSSimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
     m_inputData = new WPSSimulationDataProvider( execute );
-    m_resultEater = new WPSSimulationResultEater( processDescription, execute, resultDir );
+    m_resultEater = new WPSSimulationResultEater( processDescription, execute, tmpDir, resultDir );
 
     /* Check, if the required input is available. */
     checkInput( execute, processDescription );
@@ -256,9 +256,9 @@ public class WPSSimulationThread extends Thread
     }
   }
 
-  public void copyCurrentResults( ) throws SimulationException
+  public List<IOValueType> copyCurrentResults( ) throws SimulationException
   {
-    m_resultEater.copyCurrentResults();
+    return m_resultEater.copyCurrentResults();
   }
 
   public String[] getCurrentResults( )

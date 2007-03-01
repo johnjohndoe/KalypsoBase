@@ -42,8 +42,6 @@ package org.kalypso.service.wps.client;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.LinkedList;
@@ -74,11 +72,9 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.VFS;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -100,26 +96,17 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
-// TODO Get the simulation via the extension manager of simulation core.
-// TODO Transform modelspec into an OGC conform xml.
-// TODO Copy each single file separately to the dav. Do not zip them.
-// TODO Therefore use a unique temp-directory for this calc job.
-// TODO The response of the server should have an OGC conform format.
-// TODO The response should be evaluated, not the status.properties.
-// TODO Change the parameters for adressing the server. Use OGC conform parameters.
-// TODO The server should be able to handle more than one simulation simultanliously. Needs a thread manager.
-// TODO More important as any other operation is the execute operation. Do it first.
-// TODO Change monitor update function, that it understands percent values.
-// TODO The server should answer with xml-responses, as described in OGC standarts.
-// TODO Therefore use an output stream he should get with the parameters in his execute function.
-// TODO The main service has to be changed to understood that. (Think of Alex' ODSService!).
+// TODO Use a unique temp-directory for the input data of this calc job.
+// TODO Set the properties in the config.ini and remove the default values here.
 
 /**
  * This class manages the connect between the client and the server.<br>
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
  * Furthermore it has the ability to cancel its running simulation.<br>
  * <br>
- * It is somehow a wrapper on an ISimulation on the server side.
+ * It is somehow a wrapper on an ISimulation on the server side. <br>
+ * <br>
+ * Currently it understands only files in sending and receiving.
  * 
  * @author Holger Albert
  */
@@ -128,7 +115,7 @@ public class SimulationJob extends WorkspaceJob
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
    */
-  private int MONITOR_SERVER_VALUE = 100;
+  private int MONITOR_SERVER_VALUE = 200;
 
   /**
    * The calc case folder.
@@ -222,13 +209,20 @@ public class SimulationJob extends WorkspaceJob
   @Override
   public IStatus runInWorkspace( IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung vorbereiten ...", 600 );
+    monitor.beginTask( "Berechnung vorbereiten ...", 700 );
 
     Debug.println( "Checking for server URL, where the input data can be copied ..." );
     if( m_server == null )
     {
       Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
-      throw new CoreException( StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." ) );
+      return StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
+    }
+
+    Debug.println( "Checking for service URL ..." );
+    if( m_service == null )
+    {
+      Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
+      return StatusUtilities.createErrorStatus( "No URL to the the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
     }
 
     /* If the user aborted the job. */
@@ -295,11 +289,11 @@ public class SimulationJob extends WorkspaceJob
       Debug.println( "Response:\n" + executeResponse );
 
       if( executeResponse == null || executeResponse.length() == 0 )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
+        return StatusUtilities.createErrorStatus( "Got an empty response ..." );
 
       Object response = MarshallUtilities.unmarshall( executeResponse );
       if( response instanceof ExceptionReport )
-        throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( (ExceptionReport) response ) ) );
+        return StatusUtilities.createErrorStatus( createErrorString( (ExceptionReport) response ) );
 
       JAXBElement<ExecuteResponseType> exResponse = (JAXBElement<ExecuteResponseType>) response;
       ExecuteResponseType value = exResponse.getValue();
@@ -307,7 +301,7 @@ public class SimulationJob extends WorkspaceJob
 
       ProcessFailedType processFailed = status.getProcessFailed();
       if( processFailed != null )
-        throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( processFailed.getExceptionReport() ) ) );
+        return StatusUtilities.createErrorStatus( createErrorString( processFailed.getExceptionReport() ) );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
@@ -317,11 +311,12 @@ public class SimulationJob extends WorkspaceJob
       /* Retrieve the path to the status file of the process. */
       String statusLocation = value.getStatusLocation();
       if( statusLocation == null || statusLocation.length() == 0 )
-        throw new CoreException( StatusUtilities.createErrorStatus( "The server responded without a status-location." ) );
+        return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
 
       /* Poll all few seconds to update the status. */
       boolean run = true;
       long executed = 0;
+      ExecuteResponseType exState = null;
 
       /* Loop, until an result is available, a timeout is reached or the user has canceled the job. */
       monitor.setTaskName( "Warte auf Status ..." );
@@ -350,7 +345,7 @@ public class SimulationJob extends WorkspaceJob
           String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
           Object object = MarshallUtilities.unmarshall( xml );
           JAXBElement<ExecuteResponseType> executeState = (JAXBElement<ExecuteResponseType>) object;
-          ExecuteResponseType exState = executeState.getValue();
+          exState = executeState.getValue();
           StatusType state = exState.getStatus();
 
           if( state.getProcessAccepted() != null )
@@ -386,37 +381,21 @@ public class SimulationJob extends WorkspaceJob
         else
           Debug.println( "Not started yet ..." );
       }
-      //
-      // /* Check if the results are ready. */
-      // monitor.setTaskName( "Prüfe Ergebnisse ..." );
-      // Debug.println( "Check the results ..." );
-      // FileObject resultDir = m_fsManager.resolveFile( davTmpDirectory, "Result" );
-      // if( !resultDir.exists() )
-      // {
-      // Debug.println( "The result directory does not exist." );
-      // throw new CoreException( StatusUtilities.createErrorStatus( "The result directory does not exist." ) );
-      // }
-      //
-      // FileObject[] results = resultDir.getChildren();
-      // if( results.length == 0 )
-      // {
-      // Debug.println( "No results found." );
-      // throw new CoreException( StatusUtilities.createErrorStatus( "No results found." ) );
-      // }
-      //
-      // /* If the user aborted the job. */
-      // if( monitor.isCanceled() )
-      // return canceled();
-      //
-      // /* Retrieve the results and copy them to their specific destination. */
-      // for( int i = 0; i < results.length; i++ )
-      // copy( results[i], zip.getParent() );
-      //
-      // monitor.worked( 100 );
 
-      /* Copy all data from the given URLs to the client. */
+      /* Check if the results are ready. */
+      monitor.setTaskName( "Prüfe Ergebnisse ..." );
+      Debug.println( "Check the results ..." );
+
+      /* Get the process outputs. */
+      net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+      if( processOutputs == null )
+        return StatusUtilities.createErrorStatus( "The server responded without any outputs ..." );
+
+      /* Copy all process output to their destination. */
+      copyOutputFiles( m_calcCaseFolder, processOutputs );
 
       /* Finish. */
+      monitor.worked( 100 );
     }
     catch( Exception e )
     {
@@ -546,46 +525,7 @@ public class SimulationJob extends WorkspaceJob
       FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
 
       /* Copy file. */
-      copy( source, destination );
-    }
-  }
-
-  /**
-   * This function copies a source file to a given destination. If no filename is given in the destination file handle,
-   * the filename of the source is used.
-   * 
-   * @param source
-   *          The source file.
-   * @param destination
-   *          The destination file or path.
-   */
-  private void copy( FileObject source, FileObject destination ) throws IOException
-  {
-    InputStream is = null;
-    OutputStream os = null;
-
-    if( source.getType().equals( FileType.FOLDER ) )
-      throw new IllegalArgumentException( "The source-file is a directory ..." );
-
-    /* If the destination is only a directory, use the sources filename for the destination file. */
-    if( destination.getType().equals( FileType.FOLDER ) )
-      destination = m_fsManager.resolveFile( destination, source.getName().getBaseName() );
-
-    try
-    {
-      is = source.getContent().getInputStream();
-      os = destination.getContent().getOutputStream();
-
-      /* Copying ... */
-      IOUtils.copy( is, os );
-
-      is.close();
-      os.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-      IOUtils.closeQuietly( os );
+      WPSUtilities.copy( source, destination );
     }
   }
 
@@ -755,8 +695,8 @@ public class SimulationJob extends WorkspaceJob
    * 
    * @param percentCompleted
    *          The amount of work done, reaching from 0 to 100.
-   * @param The
-   *          description to set.
+   * @param description
+   *          The description to set.
    * @param monitor
    *          The progressmonitor to be updated.
    */
@@ -777,6 +717,49 @@ public class SimulationJob extends WorkspaceJob
 
     /* Set the message. */
     monitor.subTask( description );
+  }
+
+  /**
+   * Copys the process outputs to their destination.
+   * 
+   * @param calcCaseFolder
+   *          The calc case folder.
+   * @param processOutputs
+   *          The process outputs contains the info of the files, which are to copy.
+   */
+  private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws IOException
+  {
+    /* Get the mordel spec outputs. */
+    List<Output> outputs = m_data.getOutput();
+
+    /* Copy all data from the given URLs to the client. */
+    List<IOValueType> ioValues = processOutputs.getOutput();
+    for( IOValueType ioValue : ioValues )
+    {
+      ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
+      if( complexValueReference == null )
+        continue;
+
+      /* Building the source object. */
+      String reference = complexValueReference.getReference();
+      FileObject source = m_fsManager.resolveFile( reference );
+
+      /* Building the destination object. */
+      String id = ioValue.getIdentifier().getValue();
+      Output output = findOutput( id, outputs );
+
+      /* Everything should be relative to the project! */
+      final IProject project = calcCaseFolder.getProject();
+      String outputPath = output.getPath();
+      final IContainer baseresource = output.isRelativeToCalcCase() ? calcCaseFolder : project;
+      File baseFile = baseresource.getLocation().toFile();
+      File outputFile = new File( baseFile, outputPath );
+      FileObject destination = m_fsManager.resolveFile( outputFile.getAbsolutePath() );
+
+      /* Copy ... */
+      Debug.println( "Copy " + source.getName() + " to " + destination.getName() + " ..." );
+      WPSUtilities.copy( source, destination );
+    }
   }
 
   /**

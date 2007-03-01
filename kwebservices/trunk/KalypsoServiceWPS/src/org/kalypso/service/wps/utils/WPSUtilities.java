@@ -153,6 +153,45 @@ public class WPSUtilities
   }
 
   /**
+   * This function copies a source file to a given destination. If no filename is given in the destination file handle,
+   * the filename of the source is used.
+   * 
+   * @param source
+   *          The source file.
+   * @param destination
+   *          The destination file or path.
+   */
+  public static void copy( FileObject source, FileObject destination ) throws IOException
+  {
+    InputStream is = null;
+    OutputStream os = null;
+
+    if( source.getType().equals( FileType.FOLDER ) )
+      throw new IllegalArgumentException( "The source-file is a directory ..." );
+
+    /* If the destination is only a directory, use the sources filename for the destination file. */
+    if( destination.getType().equals( FileType.FOLDER ) )
+      destination = destination.resolveFile( source.getName().getBaseName() );
+
+    try
+    {
+      is = source.getContent().getInputStream();
+      os = destination.getContent().getOutputStream();
+
+      /* Copying ... */
+      IOUtils.copy( is, os );
+
+      is.close();
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+      IOUtils.closeQuietly( os );
+    }
+  }
+
+  /**
    * This function copies a string to a vfs file object.
    * 
    * @param value
@@ -163,7 +202,7 @@ public class WPSUtilities
   public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
   {
     if( FileType.FOLDER.equals( destination.getType() ) )
-      throw new IOException( "Destination is a folder." );
+      throw new IllegalArgumentException( "Destination is a folder." );
 
     /* Copy the string to this url. */
     OutputStream outputStream = null;

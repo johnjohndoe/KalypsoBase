@@ -1054,7 +1054,7 @@ public class OGCUtilities
    *          Unordered list of one or more descriptions of all the outputs that can result from executing this process.
    *          At least one output is required from each process.
    */
-  public static ProcessOutputs buildProcessOutputs( List<OutputDescriptionType> outputDescriptions )
+  public static ProcessOutputs buildProcessDescriptionTypeProcessOutputs( List<OutputDescriptionType> outputDescriptions )
   {
     /* Create the instance via the factory. */
     ProcessOutputs processOutputs = WPS_OF.createProcessDescriptionTypeProcessOutputs();
@@ -1339,6 +1339,28 @@ public class OGCUtilities
   /**
    * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
    * <br>
+   * List of values of the Process output parameters. Normally there would be at least one output when the process has
+   * completed successfully. If the process has not finished executing, the implementer can choose to include whatever
+   * final results are ready at the time the Execute response is provided. If the reference locations of outputs are
+   * known in advance, these URLs may be provided before they are populated.
+   * 
+   * @param ioValues
+   *          Unordered list of values of all the outputs produced by this process. It is not necessary to include an
+   *          output until the Status is ProcessSucceeded.
+   */
+  public static net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs buildExecuteResponseTypeProcessOutputs( List<IOValueType> ioValues )
+  {
+    /* Create the instance via the factory. */
+    net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = WPS_OF.createExecuteResponseTypeProcessOutputs();
+
+    processOutputs.getOutput().addAll( ioValues );
+
+    return processOutputs;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
+   * <br>
    * Response to an Execute operation request.
    * 
    * @param identifier
@@ -1357,6 +1379,12 @@ public class OGCUtilities
    *          have the response include this information, so the client can confirm that the request was received
    *          correctly, and to provide a source of metadata if the client wishes to store the result for future
    *          reference.
+   * @param processOutputs
+   *          [optional] List of values of the Process output parameters. Normally there would be at least one output
+   *          when the process has completed successfully. If the process has not finished executing, the implementer
+   *          can choose to include whatever final results are ready at the time the Execute response is provided. If
+   *          the reference locations of outputs are known in advance, these URLs may be provided before they are
+   *          populated.
    * @param statusLocation
    *          [optional] The URL referencing the location from which the ExecuteResponse can be retrieved. If "status"
    *          is "true" in the Execute request, the ExecuteResponse should also be found here as soon as the process
@@ -1371,7 +1399,7 @@ public class OGCUtilities
    * @param version
    *          Version of the WPS interface specification implemented by the server.
    */
-  public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, String statusLocation, String version )
+  public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs, String statusLocation, String version )
   {
     /* Create the instance via the factory. */
     ExecuteResponseType executeResponse = WPS_OF.createExecuteResponseType();
@@ -1385,6 +1413,9 @@ public class OGCUtilities
 
     if( outputDefinitions != null )
       executeResponse.setOutputDefinitions( outputDefinitions );
+
+    if( processOutputs != null )
+      executeResponse.setProcessOutputs( processOutputs );
 
     /* Attributes. */
     if( statusLocation != null )

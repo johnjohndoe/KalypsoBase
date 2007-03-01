@@ -45,6 +45,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,6 +56,7 @@ import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 
 import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
@@ -392,10 +394,10 @@ public class WPSQueuedSimulationService
     super.finalize();
   }
 
-  public void transferCurrentResults( final String jobID ) throws SimulationException
+  public List<IOValueType> transferCurrentResults( final String jobID ) throws SimulationException
   {
     final WPSSimulationThread thread = findJobThread( jobID );
-    thread.copyCurrentResults();
+    return thread.copyCurrentResults();
   }
 
   public String[] getCurrentResults( String jobID ) throws SimulationException

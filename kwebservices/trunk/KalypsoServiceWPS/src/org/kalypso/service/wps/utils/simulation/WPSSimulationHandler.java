@@ -49,9 +49,11 @@ import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
+import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.IStatus;
@@ -119,11 +121,11 @@ public class WPSSimulationHandler extends Thread
         {
           case FINISHED:
             /* Copy all files. */
-            m_service.transferCurrentResults( m_jobID );
+            List<IOValueType> ioValues = m_service.transferCurrentResults( m_jobID );
 
             /* Send user a message. */
             if( jobInfo.getFinishStatus() != IStatus.ERROR )
-              createExecuteResponse( OGCUtilities.buildStatusType( "Process ended successfull.", false ) );
+              createExecuteResponse( OGCUtilities.buildStatusType( "Process ended successfull.", false ), ioValues );
             else
               createProcessFailedExecuteResponse( jobInfo.getFinishText() );
 
@@ -132,14 +134,14 @@ public class WPSSimulationHandler extends Thread
             break;
           case CANCELED:
             /* Delete all files. */
-            /* TODO */
+            /* TODO Eventually delete all files in the temp direcory on cancel. */
 
             /* End loop. */
             bEnd = true;
             break;
           case ERROR:
             /* Delete all files? */
-            /* TODO */
+            /* TODO Eventually delete all files in the temp direcory on an error. */
 
             /* Send user a message. */
             createProcessFailedExecuteResponse( jobInfo.getFinishText() );
@@ -149,7 +151,7 @@ public class WPSSimulationHandler extends Thread
             break;
           default:
             ProcessStartedType processStarted = OGCUtilities.buildProcessStartedType( jobInfo.getMessage(), jobInfo.getProgress() );
-            createExecuteResponse( OGCUtilities.buildStatusType( processStarted, false ) );
+            createExecuteResponse( OGCUtilities.buildStatusType( processStarted, false ), null );
 
             break;
         }
@@ -183,19 +185,28 @@ public class WPSSimulationHandler extends Thread
     ExceptionReport exceptionReport = OGCUtilities.buildExceptionReport( exceptions, OGCUtilities.VERSION, null );
     ProcessFailedType processFailed = OGCUtilities.buildProcessFailedType( exceptionReport );
 
-    createExecuteResponse( OGCUtilities.buildStatusType( processFailed, false ) );
+    createExecuteResponse( OGCUtilities.buildStatusType( processFailed, false ), null );
   }
 
   /**
    * This function creates the execute response in the location for the given thread.
+   * 
+   * @param status
+   *          The status of the process.
+   * @param ioValues
+   *          The ioValues for creating the process outputs, if any are here. Otherwise leave it null.
    */
-  private synchronized void createExecuteResponse( StatusType status ) throws Exception
+  private synchronized void createExecuteResponse( StatusType status, List<IOValueType> ioValues ) throws Exception
   {
     /* Prepare the execute response. */
     FileObject resultFile = m_service.getResultDir( m_jobID ).resolveFile( "executeResponse.xml" );
     String statusLocation = resultFile.getURL().toExternalForm();
 
-    ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), statusLocation, OGCUtilities.VERSION );
+    ProcessOutputs processOutputs = null;
+    if( ioValues != null )
+      processOutputs = OGCUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
+
+    ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, OGCUtilities.VERSION );
     JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
 
     /* Marshall it into one XML string. */
