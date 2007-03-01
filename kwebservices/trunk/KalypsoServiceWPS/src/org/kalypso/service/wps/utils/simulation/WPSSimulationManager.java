@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.utils;
+package org.kalypso.service.wps.utils.simulation;
 
 import javax.xml.bind.JAXBException;
 
@@ -49,9 +49,7 @@ import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.server.operations.DescribeProcess;
-import org.kalypso.service.wps.utils.simulation.WPSQueuedSimulationService;
-import org.kalypso.service.wps.utils.simulation.WPSSimulationHandler;
-import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
@@ -62,7 +60,7 @@ import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
  * 
  * @author Holger Albert
  */
-public class SimulationManager
+public class WPSSimulationManager
 {
   /**
    * The simulations will be handled here.
@@ -72,12 +70,12 @@ public class SimulationManager
   /**
    * The instance of this class.
    */
-  private static SimulationManager INSTANCE = null;
+  private static WPSSimulationManager INSTANCE = null;
 
   /**
    * The constructor.
    */
-  private SimulationManager( )
+  private WPSSimulationManager( )
   {
     m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), 1, 2000, FileUtilities.TMP_DIR );
   }
@@ -87,10 +85,10 @@ public class SimulationManager
    * 
    * @return The instance of this manager.
    */
-  public static SimulationManager getInstance( )
+  public static WPSSimulationManager getInstance( )
   {
     if( INSTANCE == null )
-      INSTANCE = new SimulationManager();
+      INSTANCE = new WPSSimulationManager();
 
     return INSTANCE;
   }
@@ -126,11 +124,11 @@ public class SimulationManager
     }
     catch( JAXBException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }
     catch( SimulationException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }
   }
 

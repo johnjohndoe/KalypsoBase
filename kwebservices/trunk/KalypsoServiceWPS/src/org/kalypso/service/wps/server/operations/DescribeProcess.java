@@ -61,8 +61,8 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.OGCUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.simspec.DataType;
@@ -138,7 +138,7 @@ public class DescribeProcess implements IOperation
     }
     catch( Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }
   }
 
@@ -177,7 +177,7 @@ public class DescribeProcess implements IOperation
       }
       catch( JAXBException e )
       {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
       }
     }
     else

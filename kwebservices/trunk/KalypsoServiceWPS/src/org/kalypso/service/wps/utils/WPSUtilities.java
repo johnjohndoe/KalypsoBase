@@ -42,8 +42,6 @@ package org.kalypso.service.wps.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
 
 import javax.xml.namespace.QName;
 
@@ -53,9 +51,6 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileType;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -145,81 +140,10 @@ public class WPSUtilities
     catch( CoreException e )
     {
       Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }
 
     Debug.println( "Found simulation \"" + simulationType + "\"." );
     return simulation;
-  }
-
-  /**
-   * This function copies a source file to a given destination. If no filename is given in the destination file handle,
-   * the filename of the source is used.
-   * 
-   * @param source
-   *          The source file.
-   * @param destination
-   *          The destination file or path.
-   */
-  public static void copy( FileObject source, FileObject destination ) throws IOException
-  {
-    InputStream is = null;
-    OutputStream os = null;
-
-    if( source.getType().equals( FileType.FOLDER ) )
-      throw new IllegalArgumentException( "The source-file is a directory ..." );
-
-    /* If the destination is only a directory, use the sources filename for the destination file. */
-    if( destination.getType().equals( FileType.FOLDER ) )
-      destination = destination.resolveFile( source.getName().getBaseName() );
-
-    try
-    {
-      is = source.getContent().getInputStream();
-      os = destination.getContent().getOutputStream();
-
-      /* Copying ... */
-      IOUtils.copy( is, os );
-
-      is.close();
-      os.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-      IOUtils.closeQuietly( os );
-    }
-  }
-
-  /**
-   * This function copies a string to a vfs file object.
-   * 
-   * @param value
-   *          This string will be copied to the file.
-   * @param destination
-   *          The destination. It must be a file.
-   */
-  public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
-  {
-    if( FileType.FOLDER.equals( destination.getType() ) )
-      throw new IllegalArgumentException( "Destination is a folder." );
-
-    /* Copy the string to this url. */
-    OutputStream outputStream = null;
-    StringReader stringReader = null;
-
-    try
-    {
-      outputStream = destination.getContent().getOutputStream( false );
-      stringReader = new StringReader( value );
-      IOUtils.copy( stringReader, outputStream );
-      outputStream.close();
-      stringReader.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( outputStream );
-      IOUtils.closeQuietly( stringReader );
-    }
   }
 }

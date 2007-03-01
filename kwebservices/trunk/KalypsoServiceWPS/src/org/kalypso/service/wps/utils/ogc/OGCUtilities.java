@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.utils;
+package org.kalypso.service.wps.utils.ogc;
 
 import java.math.BigInteger;
 import java.util.List;

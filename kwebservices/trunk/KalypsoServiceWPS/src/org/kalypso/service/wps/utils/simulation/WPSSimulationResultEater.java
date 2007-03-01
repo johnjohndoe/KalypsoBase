@@ -60,10 +60,10 @@ import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.VFS;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.OGCUtilities;
+import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -167,7 +167,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       Debug.println( "Copying the results ..." );
 
       /* Get a file system manager. */
-      FileSystemManager manager = VFS.getManager();
+      FileSystemManager manager = VFSUtilities.getManager();
 
       /* Stores the output descriptions. */
       List<IOValueType> ioValues = new LinkedList<IOValueType>();
@@ -184,8 +184,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
 
         /* Converting the source file to a file object from VFS. */
-        String url = sourceFile.toURL().toExternalForm();
-        FileObject source = manager.resolveFile( url );
+        FileObject source = manager.toFileObject( sourceFile );
 
         /* Resolving the result file object. */
         FileObject destination = m_resultDir.resolveFile( relativePathToSource );
@@ -219,7 +218,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( Exception e )
     {
-      throw new SimulationException( e.getMessage(), e );
+      throw new SimulationException( e.getLocalizedMessage(), e );
     }
   }
 

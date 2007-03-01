@@ -1,0 +1,173 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.service.wps.utils;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.FileUtil;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+
+/**
+ * Helpfull functions when dealing with VFS.
+ * 
+ * @author Holger Albert
+ */
+public class VFSUtilities
+{
+  /**
+   * The constructor.
+   */
+  private VFSUtilities( )
+  {
+  }
+
+  /**
+   * This function returns a single FileSystemManager with support for webdav.
+   * 
+   * @return The FileSystemManager.
+   */
+  public static FileSystemManager getManager( ) throws FileSystemException
+  {
+    DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
+
+    return fsManager;
+  }
+
+  /**
+   * This function copies a source file to a given destination. If no filename is given in the destination file handle,
+   * the filename of the source is used.
+   * 
+   * @param source
+   *          The source file.
+   * @param destination
+   *          The destination file or path.
+   */
+  public static void copy( FileObject source, FileObject destination ) throws IOException
+  {
+    if( source.getType().equals( FileType.FOLDER ) )
+      throw new IllegalArgumentException( "The source-file is a directory ..." );
+
+    /* If the destination is only a directory, use the sources filename for the destination file. */
+    if( destination.getType().equals( FileType.FOLDER ) )
+      destination = destination.resolveFile( source.getName().getBaseName() );
+
+    FileUtil.copyContent( source, destination );
+  }
+
+  /**
+   * This function will copy one directory to another one.
+   * 
+   * @param source
+   *          The source directory.
+   * @param destination
+   *          The destination directory.
+   */
+  public static void copyDirectoryToDirectory( FileObject source, FileObject destination )
+  {
+    if( !FileType.FOLDER.equals( source ) || !FileType.FOLDER.equals( destination ) )
+      throw new IllegalArgumentException( "Both source and destination must be directories ..." );
+    
+    //TODO
+  }
+
+  /**
+   * This function copies a string to a vfs file object.
+   * 
+   * @param value
+   *          This string will be copied to the file.
+   * @param destination
+   *          The destination. It must be a file.
+   */
+  public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
+  {
+    if( FileType.FOLDER.equals( destination.getType() ) )
+      throw new IllegalArgumentException( "Destination is a folder." );
+
+    /* Copy the string to this url. */
+    OutputStream outputStream = null;
+    StringReader stringReader = null;
+
+    try
+    {
+      outputStream = destination.getContent().getOutputStream( false );
+      stringReader = new StringReader( value );
+      IOUtils.copy( stringReader, outputStream );
+      outputStream.close();
+      stringReader.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( outputStream );
+      IOUtils.closeQuietly( stringReader );
+    }
+  }
+
+  /**
+   * This function creates a temporary directory, which has a unique file name.
+   * 
+   * @param prefix
+   *          This prefix will be used for the temporary directory.
+   * @param parentDir
+   *          The parent directory. In it the new directory will be created.
+   * @return The new unique directory.
+   */
+  public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
+  {
+    while( true )
+    {
+      FileObject newDir = parentDir.resolveFile( prefix + String.valueOf( System.currentTimeMillis() ) );
+      if( newDir.exists() )
+        continue;
+
+      Debug.println( "Creating folder " + newDir.getName().getPath() + " ..." );
+      newDir.createFolder();
+      return newDir;
+    }
+  }
+}

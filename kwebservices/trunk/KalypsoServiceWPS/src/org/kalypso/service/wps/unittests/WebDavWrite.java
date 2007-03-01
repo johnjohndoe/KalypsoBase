@@ -41,14 +41,12 @@
 package org.kalypso.service.wps.unittests;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.cache.DefaultFilesCache;
 import org.apache.commons.vfs.impl.DefaultFileReplicator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
@@ -81,31 +79,13 @@ public class WebDavWrite
     manager.setTemporaryFileStore( new DefaultFileReplicator() );
     manager.init();
 
-    FileObject testFile = manager.resolveFile( "C:/Albert/Work/workspace/KalypsoServiceWPS/src/org/kalypso/service/wps/unittests/davWrite.txt" );
+    FileObject testFile = manager.resolveFile( "C:/Albert/Work/runtime-informdss.product/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
     Assert.assertNotNull( testFile );
 
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/davWrite.txt" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
     Assert.assertNotNull( davFile );
 
-    InputStream is = null;
-    OutputStream os = null;
-
-    try
-    {
-      is = testFile.getContent().getInputStream();
-      os = davFile.getContent().getOutputStream();
-
-      /* Copying ... */
-      IOUtils.copy( is, os );
-
-      is.close();
-      os.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-      IOUtils.closeQuietly( os );
-    }
+    FileUtil.copyContent( testFile, davFile );
 
     Assert.assertTrue( davFile.exists() );
   }

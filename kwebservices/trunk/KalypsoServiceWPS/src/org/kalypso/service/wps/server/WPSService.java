@@ -81,7 +81,7 @@ public class WPSService implements IOGCService
       }
       catch( JAXBException e )
       {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
       }
     }
     else
@@ -126,8 +126,8 @@ public class WPSService implements IOGCService
       }
       catch( IOException e )
       {
-        Debug.println( "Sending the response failed: " + e.getMessage() );
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "Sending the response failed: " + e.getMessage(), "" );
+        Debug.println( "Sending the response failed: " + e.getLocalizedMessage() );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "Sending the response failed: " + e.getLocalizedMessage(), "" );
       }
     }
   }
@@ -164,7 +164,7 @@ public class WPSService implements IOGCService
       }
       catch( JAXBException e )
       {
-        Debug.println( "No, marshalling has failed: " + e.getMessage() );
+        Debug.println( "No, marshalling has failed: " + e.getLocalizedMessage() );
         return false;
       }
     }

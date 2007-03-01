@@ -58,8 +58,8 @@ import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.OGCUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationConstants.STATE;
 
 /**
@@ -213,6 +213,6 @@ public class WPSSimulationHandler extends Thread
     String xml = MarshallUtilities.marshall( executeResponse );
 
     /* Copy the execute response to this url. */
-    WPSUtilities.copyStringToFileObject( xml, resultFile );
+    VFSUtilities.copyStringToFileObject( xml, resultFile );
   }
 }

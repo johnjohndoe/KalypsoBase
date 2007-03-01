@@ -78,7 +78,7 @@ public class WebDavRead
     Assert.assertNotNull( davFile );
 
     File file = new File( FileUtilities.TMP_DIR, "dav.tmp" );
-    FileObject tmpFile = manager.resolveFile( file.toURL().toExternalForm() );
+    FileObject tmpFile = manager.toFileObject( file );
     Assert.assertNotNull( tmpFile );
 
     InputStream is = null;

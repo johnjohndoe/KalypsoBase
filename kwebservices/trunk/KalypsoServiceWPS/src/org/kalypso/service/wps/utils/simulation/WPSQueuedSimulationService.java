@@ -64,10 +64,10 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.service.wps.utils.VFSUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.SimulationException;
@@ -163,7 +163,7 @@ public class WPSQueuedSimulationService
     m_tmpDir = tmpDir;
 
     // TODO This is for test purposes, remove default later.
-    m_resultSpace = System.getProperty( "org.kalypso.service.wps.results", "file://c:/temp/webdav_result" );
+    m_resultSpace = System.getProperty( "org.kalypso.service.wps.results", "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub" );
   }
 
   public int getServiceVersion( )
@@ -294,7 +294,7 @@ public class WPSQueuedSimulationService
       FileObject resultDir = null;
       try
       {
-        FileSystemManager manager = VFS.getManager();
+        FileSystemManager manager = VFSUtilities.getManager();
         resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
         resultDir.createFolder();
       }

@@ -75,7 +75,6 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,20 +83,21 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.OGCUtilities;
+import org.kalypso.service.wps.utils.VFSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
 // TODO Use a unique temp-directory for the input data of this calc job.
-// TODO Set the properties in the config.ini and remove the default values here.
 
 /**
  * This class manages the connect between the client and the server.<br>
@@ -192,9 +192,8 @@ public class SimulationJob extends WorkspaceJob
     m_timeout = timeout;
 
     /* Initializing the other variables. */
-    // TODO Remove default, it is only for testing now!
-    m_service = System.getProperty( "org.kalypso.service.wps.service", "http://localhost:8080/ods" );
-    m_server = System.getProperty( "org.kalypso.service.wps.server", "file://c:/temp/webdav" );
+    m_service = System.getProperty( "org.kalypso.service.wps.service" );
+    m_server = System.getProperty( "org.kalypso.service.wps.server" );
     m_alreadyWorked = new Integer( 0 );
 
     /* Variables that are initialized during run time. */
@@ -206,23 +205,24 @@ public class SimulationJob extends WorkspaceJob
   /**
    * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public IStatus runInWorkspace( IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnung vorbereiten ...", 700 );
-
-    Debug.println( "Checking for server URL, where the input data can be copied ..." );
-    if( m_server == null )
-    {
-      Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
-      return StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
-    }
 
     Debug.println( "Checking for service URL ..." );
     if( m_service == null )
     {
       Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
       return StatusUtilities.createErrorStatus( "No URL to the the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
+    }
+
+    Debug.println( "Checking for server URL, where the input data can be copied ..." );
+    if( m_server == null )
+    {
+      Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
+      return StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
     }
 
     /* If the user aborted the job. */
@@ -399,6 +399,7 @@ public class SimulationJob extends WorkspaceJob
     }
     catch( Exception e )
     {
+      Debug.println( "Error occured with the message: " + e.getLocalizedMessage() );
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     finally
@@ -446,7 +447,7 @@ public class SimulationJob extends WorkspaceJob
     if( m_fsManager == null )
     {
       /* The filesystem manager needs to be set. */
-      m_fsManager = VFS.getManager();
+      m_fsManager = VFSUtilities.getManager();
     }
   }
 
@@ -459,8 +460,8 @@ public class SimulationJob extends WorkspaceJob
     if( m_serverTmpDirectory == null )
     {
       /* Get the directory for server access. */
-      FileObject davDirectory = m_fsManager.resolveFile( m_server );
-      m_serverTmpDirectory = m_fsManager.resolveFile( davDirectory, "CalcJob-" + "1234" );
+      FileObject serverDirectory = m_fsManager.resolveFile( m_server );
+      m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
 
       if( !m_serverTmpDirectory.exists() )
       {
@@ -521,11 +522,11 @@ public class SimulationJob extends WorkspaceJob
       File file = files[i].getLocation().toFile();
       final String relativePathTo = files[i].getProjectRelativePath().toString();
 
-      FileObject source = m_fsManager.resolveFile( file.toURL().toExternalForm() );
+      FileObject source = m_fsManager.toFileObject( file );
       FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
 
       /* Copy file. */
-      WPSUtilities.copy( source, destination );
+      VFSUtilities.copy( source, destination );
     }
   }
 
@@ -727,10 +728,12 @@ public class SimulationJob extends WorkspaceJob
    * @param processOutputs
    *          The process outputs contains the info of the files, which are to copy.
    */
-  private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws IOException
+  private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws IOException, CoreException
   {
-    /* Get the mordel spec outputs. */
+    /* Get the model spec outputs. */
     List<Output> outputs = m_data.getOutput();
+
+    final IProject project = calcCaseFolder.getProject();
 
     /* Copy all data from the given URLs to the client. */
     List<IOValueType> ioValues = processOutputs.getOutput();
@@ -749,17 +752,18 @@ public class SimulationJob extends WorkspaceJob
       Output output = findOutput( id, outputs );
 
       /* Everything should be relative to the project! */
-      final IProject project = calcCaseFolder.getProject();
       String outputPath = output.getPath();
       final IContainer baseresource = output.isRelativeToCalcCase() ? calcCaseFolder : project;
       File baseFile = baseresource.getLocation().toFile();
       File outputFile = new File( baseFile, outputPath );
-      FileObject destination = m_fsManager.resolveFile( outputFile.getAbsolutePath() );
+      FileObject destination = m_fsManager.toFileObject( outputFile );
 
       /* Copy ... */
       Debug.println( "Copy " + source.getName() + " to " + destination.getName() + " ..." );
-      WPSUtilities.copy( source, destination );
+      VFSUtilities.copy( source, destination );
     }
+
+    project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 
   /**

@@ -132,7 +132,10 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       {
         ComplexValueReference complexValueReference = (ComplexValueReference) input;
         String reference = complexValueReference.getReference();
-        URL url = new URL( reference );
+
+        /* TODO: Short workaround, to get the URL (in case it is a webdav URL). */
+        String newReference = reference.replaceFirst( "webdav", "http" );
+        URL url = new URL( newReference );
         return url;
       }
       else
@@ -144,7 +147,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     }
     catch( Exception e )
     {
-      throw new SimulationException( e.getMessage(), null );
+      throw new SimulationException( e.getLocalizedMessage(), null );
     }
   }
 

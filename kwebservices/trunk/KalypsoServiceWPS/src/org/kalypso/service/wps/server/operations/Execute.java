@@ -52,11 +52,10 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.OGCUtilities;
-import org.kalypso.service.wps.utils.SimulationManager;
-import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
-import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationManager;
 
 /**
  * This operation will execute a specific simulation.
@@ -87,11 +86,11 @@ public class Execute implements IOperation
       /* Start the operation. */
       Debug.println( "Operation \"Execute\" started." );
 
-      /* Get the simulation. */
-      ISimulation simulation = WPSUtilities.getSimulation( getIdentifier( request ) );
+      /* Gets the identifier, but also unmarshalls the request, so it has to be done! */
+      getIdentifier( request );
 
       /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-      SimulationManager manager = SimulationManager.getInstance();
+      WPSSimulationManager manager = WPSSimulationManager.getInstance();
       WPSSimulationInfo info = manager.startSimulation( m_executeRequest.getIdentifier().getValue(), m_executeRequest.getIdentifier().getValue(), m_executeRequest );
 
       /* Prepare the execute response. */
@@ -106,7 +105,7 @@ public class Execute implements IOperation
       String xml = MarshallUtilities.marshall( executeResponse );
 
       /* Copy the execute response to this url. */
-      WPSUtilities.copyStringToFileObject( xml, resultFile );
+      VFSUtilities.copyStringToFileObject( xml, resultFile );
 
       /* Build the response. */
       StringBuffer response = new StringBuffer();
@@ -116,7 +115,7 @@ public class Execute implements IOperation
     }
     catch( Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }
   }
 
@@ -147,7 +146,7 @@ public class Execute implements IOperation
       }
       catch( JAXBException e )
       {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
       }
     }
     else

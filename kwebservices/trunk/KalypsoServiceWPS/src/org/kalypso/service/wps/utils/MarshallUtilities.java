@@ -55,6 +55,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCNamespacePrefixMapper;
 
 /**
  * This class should help with handling XMLs and Binding-Objects.
