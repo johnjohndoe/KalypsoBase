@@ -44,18 +44,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.ows.ExceptionReport;
+import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.OutputDefinitionType;
@@ -63,6 +67,9 @@ import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptions;
+import net.opengeospatial.wps.ProcessFailedType;
+import net.opengeospatial.wps.ProcessStartedType;
+import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
@@ -285,77 +292,100 @@ public class SimulationJob extends WorkspaceJob
       String executeResponse = WPSUtilities.send( MarshallUtilities.marshall( execute ), m_service );
 
       /* Handle the execute response. */
+      Debug.println( "Response:\n" + executeResponse );
 
-      /* Polling. */
+      if( executeResponse == null || executeResponse.length() == 0 )
+        throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
 
-      /* Handle updated execute response. */
+      Object response = MarshallUtilities.unmarshall( executeResponse );
+      if( response instanceof ExceptionReport )
+        throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( (ExceptionReport) response ) ) );
 
-      /* Copy all data from the given URLs to the client. */
+      JAXBElement<ExecuteResponseType> exResponse = (JAXBElement<ExecuteResponseType>) response;
+      ExecuteResponseType value = exResponse.getValue();
+      StatusType status = value.getStatus();
 
-      /* Finish. */
+      ProcessFailedType processFailed = status.getProcessFailed();
+      if( processFailed != null )
+        throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( processFailed.getExceptionReport() ) ) );
 
-      // /* TODO: Proxy? */
-      // HttpClient client = new HttpClient();
-      // client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true )
-      // );
-      // GetMethod get = new GetMethod( m_service + "?SERVICE=WPS&REQUEST=ExecuteSimulation&SIMULATION=" + m_simulation
-      // );
-      // client.executeMethod( get );
-      //
-      // /* If the user aborted the job. */
-      // monitor.worked( 100 );
-      // if( monitor.isCanceled() )
-      // return canceled();
-      //
-      // /* Poll all few seconds to update the status. */
-      // boolean run = true;
-      // long executed = 0;
-      //
-      // /* Loop, until an result is available, a timeout is reached or the user has canceled the job. */
-      // monitor.setTaskName( "Warte auf Status ..." );
-      // while( run )
-      // {
-      // Debug.println( "Checking state file on dav ..." );
-      // FileObject status = m_fsManager.resolveFile( davTmpDirectory, "status.properties" );
-      //
-      // if( status.exists() )
-      // {
-      // monitor.setTaskName( "Status" );
-      // InputStream inputStream = status.getContent().getInputStream();
-      // Properties prop = new Properties();
-      // prop.load( inputStream );
-      // inputStream.close();
-      //
-      // Debug.println( prop.toString() );
-      //
-      // /* Update the monitor values. */
-      // updateMonitor( prop, monitor );
-      //
-      // /* The state of the simulation. */
-      // String simulation_status = prop.getProperty( "SIMULATION_STATUS" );
-      // if( simulation_status.equals( "FINISHED" ) )
-      // {
-      // Debug.println( "The simulation has finished ..." );
-      // break;
-      // }
-      // }
-      // else
-      // Debug.println( "Not started yet ..." );
-      //
-      // Thread.sleep( 1000 );
-      // executed += 1000;
-      //
-      // /* If the timeout is reached. */
-      // if( executed >= m_timeout )
-      // {
-      // Debug.println( "Timeout reached ..." );
-      // return StatusUtilities.createErrorStatus( "Timeout reached ..." );
-      // }
-      //
-      // /* If the user aborted the job. */
-      // if( monitor.isCanceled() )
-      // return canceled();
-      // }
+      /* If the user aborted the job. */
+      monitor.worked( 100 );
+      if( monitor.isCanceled() )
+        return canceled();
+
+      /* Retrieve the path to the status file of the process. */
+      String statusLocation = value.getStatusLocation();
+      if( statusLocation == null || statusLocation.length() == 0 )
+        throw new CoreException( StatusUtilities.createErrorStatus( "The server responded without a status-location." ) );
+
+      /* Poll all few seconds to update the status. */
+      boolean run = true;
+      long executed = 0;
+
+      /* Loop, until an result is available, a timeout is reached or the user has canceled the job. */
+      monitor.setTaskName( "Warte auf Status ..." );
+      while( run )
+      {
+        Thread.sleep( 1000 );
+        executed += 1000;
+
+        /* If the timeout is reached. */
+        if( executed >= m_timeout )
+        {
+          Debug.println( "Timeout reached ..." );
+          return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+        }
+
+        /* If the user aborted the job. */
+        if( monitor.isCanceled() )
+          return canceled();
+
+        Debug.println( "Checking state file of the server ..." );
+        FileObject statusFile = m_fsManager.resolveFile( statusLocation );
+
+        if( statusFile.exists() )
+        {
+          monitor.setTaskName( "Status" );
+          String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
+          Object object = MarshallUtilities.unmarshall( xml );
+          JAXBElement<ExecuteResponseType> executeState = (JAXBElement<ExecuteResponseType>) object;
+          ExecuteResponseType exState = executeState.getValue();
+          StatusType state = exState.getStatus();
+
+          if( state.getProcessAccepted() != null )
+          {
+            /* Do nothing, but waiting of an other response. */
+            continue;
+          }
+          else if( state.getProcessFailed() != null )
+          {
+            String messages = createErrorString( state.getProcessFailed().getExceptionReport() );
+            return StatusUtilities.createErrorStatus( messages );
+          }
+          else if( state.getProcessStarted() != null )
+          {
+            ProcessStartedType processStarted = state.getProcessStarted();
+            String description = processStarted.getValue();
+            BigInteger percent = processStarted.getPercentCompleted();
+            int percentCompleted = 0;
+            if( percent != null )
+              percentCompleted = percent.intValue();
+
+            /* Update the monitor values. */
+            updateMonitor( percentCompleted, description, monitor );
+          }
+          else if( state.getProcessSucceeded() != null )
+          {
+            Debug.println( "The simulation has finished ..." );
+            break;
+          }
+          else
+            return StatusUtilities.createErrorStatus( "The server responded with an unknown state ..." );
+        }
+        else
+          Debug.println( "Not started yet ..." );
+      }
       //
       // /* Check if the results are ready. */
       // monitor.setTaskName( "Prüfe Ergebnisse ..." );
@@ -383,6 +413,10 @@ public class SimulationJob extends WorkspaceJob
       // copy( results[i], zip.getParent() );
       //
       // monitor.worked( 100 );
+
+      /* Copy all data from the given URLs to the client. */
+
+      /* Finish. */
     }
     catch( Exception e )
     {
@@ -719,44 +753,30 @@ public class SimulationJob extends WorkspaceJob
   /**
    * This function refreshs the monitor.
    * 
-   * @param prop
-   *          The properties, containing the status of the simulation in the server.
+   * @param percentCompleted
+   *          The amount of work done, reaching from 0 to 100.
+   * @param The
+   *          description to set.
    * @param monitor
    *          The progressmonitor to be updated.
    */
-  private void updateMonitor( Properties prop, IProgressMonitor monitor )
+  private void updateMonitor( Integer percentCompleted, String description, IProgressMonitor monitor )
   {
-    /* Get the properties. */
-    String monitor_min = prop.getProperty( "MONITOR_MIN" );
-    String monitor_max = prop.getProperty( "MONITOR_MAX" );
-    String monitor_worked = prop.getProperty( "MONITOR_WORKED" );
-    String monitor_message = prop.getProperty( "MONITOR_MESSAGE" );
-
-    /* Cast to Integers. */
-    Integer min = new Integer( monitor_min );
-    Integer max = new Integer( monitor_max );
-    Integer worked = new Integer( monitor_worked );
-
-    /* Calculating the monitor values on the server side. */
-    Integer xMax = max - min;
-    Integer xWorked = worked - min;
-
     /* If the already updated value is not equal to the new value. Update the monitor values. */
-    if( !xWorked.equals( m_alreadyWorked ) )
+    if( !percentCompleted.equals( m_alreadyWorked ) )
     {
       /* Check, what is already updated here, and update the rest. */
-      Integer xRest = xWorked - m_alreadyWorked;
-      Integer percentWorked = 100 * xRest / xMax;
+      Integer percentWorked = percentCompleted - m_alreadyWorked;
 
       /* Project percentWorked to the left monitor value. */
       Integer realValue = MONITOR_SERVER_VALUE * percentWorked / 100;
       monitor.worked( realValue );
 
-      m_alreadyWorked = xWorked;
+      m_alreadyWorked = percentCompleted;
     }
 
     /* Set the message. */
-    monitor.subTask( monitor_message );
+    monitor.subTask( description );
   }
 
   /**
@@ -767,5 +787,22 @@ public class SimulationJob extends WorkspaceJob
   {
     // TODO Tell the server, that the job should be canceled.
     return Status.OK_STATUS;
+  }
+
+  /**
+   * This function will create an error string, containing all error messages.
+   * 
+   * @param exceptionReport
+   *          The exception report.
+   * @return The error messages as one string.
+   */
+  private String createErrorString( ExceptionReport exceptionReport )
+  {
+    List<ExceptionType> exceptions = exceptionReport.getException();
+    String messages = "";
+    for( ExceptionType exception : exceptions )
+      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exception.getExceptionText() + "\nLocator: " + exception.getLocator();
+
+    return messages;
   }
 }

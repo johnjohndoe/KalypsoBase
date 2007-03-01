@@ -41,10 +41,10 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.OutputDefinitionType;
@@ -54,6 +54,8 @@ import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -82,7 +84,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * The result files. Should be synchronized
    */
-  private Vector<OutputDefinitionType> m_results = null;
+  private Map<String, File> m_resultFiles = null;
 
   /**
    * Contains the id of the outputs as key and the output itself as value.
@@ -109,7 +111,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     m_processDescription = processDescription;
     m_execute = execute;
     m_resultDir = resultDir;
-    m_results = new Vector<OutputDefinitionType>();
+    m_resultFiles = new LinkedHashMap<String, File>();
 
     m_outputList = index( m_processDescription );
     m_outputListClient = indexClient( m_execute );
@@ -129,27 +131,39 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     OutputDefinitionType outputDefinition = m_outputListClient.get( id );
 
     if( outputDefinition != null )
-      m_results.add( outputDefinition );
+      m_resultFiles.put( id, file );
   }
 
   public String[] getCurrentResults( )
   {
-    final String[] results = new String[m_results.size()];
-    for( int i = 0; i < results.length; i++ )
-    {
-      OutputDefinitionType result = m_results.get( i );
-      results[i] = result.getIdentifier().getValue();
-    }
-
-    return results;
+    return m_resultFiles.keySet().toArray( new String[] {} );
   }
 
   /**
    * This function copys the result to the result dir, along with a status.
    */
-  public void copyCurrentResults( )
+  public void copyCurrentResults( ) throws SimulationException
   {
+    try
+    {
+      FileSystemManager manager = VFS.getManager();
 
+      Iterator<String> itr = m_resultFiles.keySet().iterator();
+      while( itr.hasNext() )
+      {
+        String key = itr.next();
+        File file = m_resultFiles.get( key );
+        String url = file.toURL().toExternalForm();
+
+        FileObject source = manager.resolveFile( url );
+        // TODO
+        //FileUtil.copyContent( source, m_resultDir );
+      }
+    }
+    catch( Exception e )
+    {
+      throw new SimulationException( e.getMessage(), e );
+    }
   }
 
   /**
@@ -192,5 +206,22 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
 
     return outputListClient;
+  }
+
+  /**
+   * Disposes everything.
+   */
+  public void dispose( )
+  {
+  }
+
+  /**
+   * This function returns the result dir of this result eater.
+   * 
+   * @return The result dir.
+   */
+  public FileObject getResultDir( )
+  {
+    return m_resultDir;
   }
 }

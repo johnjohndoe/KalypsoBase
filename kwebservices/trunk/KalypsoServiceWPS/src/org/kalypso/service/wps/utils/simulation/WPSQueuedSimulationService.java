@@ -53,10 +53,11 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
-import javax.xml.bind.JAXBException;
 
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
+import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -67,14 +68,8 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
-import org.kalypso.simulation.core.ISimulationService;
-import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
-import org.kalypso.simulation.core.SimulationDataPath;
-import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
 
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
@@ -82,10 +77,16 @@ import org.kalypso.simulation.core.internal.queued.ModelspecData;
  * 
  * @author Gernot Belger (original), Holger Albert (changes for WPS)
  */
-public class WPSQueuedSimulationService implements ISimulationService
+public class WPSQueuedSimulationService
 {
+  /**
+   * Logger.
+   */
   private static final Logger LOGGER = Logger.getLogger( WPSQueuedSimulationService.class.getName() );
 
+  /**
+   * Debug on?
+   */
   private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
 
   static
@@ -97,24 +98,60 @@ public class WPSQueuedSimulationService implements ISimulationService
   /** Vector of {@link CalcJobThread}s */
   private final Vector<WPSSimulationThread> m_threads = new Vector<WPSSimulationThread>();
 
+  /**
+   * Retrieves the simulation.
+   */
   private final ISimulationFactory m_calcJobFactory;
 
+  /**
+   * After this timer has finished, the job is startet.
+   */
   private Timer m_timer = null;
 
-  /** maximale Anzahl von parallel laufenden Job */
+  /**
+   * Maximal count of parallel running jobs.
+   */
   private final int m_maxThreads;
 
-  /** So oft (in ms) wird die queue nach wartenden Jobs durchsucht */
+  /**
+   * Time (in ms) where the queue is searched for waiting jobs.
+   */
   private final long m_schedulingPeriod;
 
-  private final Map<String, ModelspecData> m_modelspecMap = new HashMap<String, ModelspecData>();
+  /**
+   * Stores the process description of each simulation.
+   */
+  private final Map<String, ProcessDescriptionType> m_descriptions = new HashMap<String, ProcessDescriptionType>();
 
+  /**
+   * The URL catalog.
+   */
   private final IUrlCatalog m_catalog;
 
+  /**
+   * The temporary directory will be used by the jobs to copy their running data.
+   */
   private final File m_tmpDir;
 
+  /**
+   * URL to space, where the jobs can put their results, so that the client can read them.
+   */
   private String m_resultSpace;
 
+  /**
+   * The constructor.
+   * 
+   * @param factory
+   *          Retrieves the simulation.
+   * @param catalog
+   *          The URL catalog.
+   * @param maxThreads
+   *          Maximal count of parallel running jobs.
+   * @param schedulingPeriod
+   *          Time (in ms) where the queue is searched for waiting jobs.
+   * @param tmpDir
+   *          The temporary directory will be used by the jobs to copy their running data.
+   */
   public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
   {
     m_calcJobFactory = factory;
@@ -127,9 +164,6 @@ public class WPSQueuedSimulationService implements ISimulationService
     m_resultSpace = System.getProperty( "org.kalypso.service.wps.results", "file://c:/temp/webdav_result" );
   }
 
-  /**
-   * @see org.kalypso.services.IKalypsoService#getServiceVersion()
-   */
   public int getServiceVersion( )
   {
     return 0;
@@ -140,11 +174,11 @@ public class WPSQueuedSimulationService implements ISimulationService
     return m_calcJobFactory.getSupportedTypes();
   }
 
-  public synchronized SimulationInfo[] getJobs( )
+  public synchronized WPSSimulationInfo[] getJobs( )
   {
     synchronized( m_threads )
     {
-      final SimulationInfo[] jobInfos = new SimulationInfo[m_threads.size()];
+      final WPSSimulationInfo[] jobInfos = new WPSSimulationInfo[m_threads.size()];
       int count = 0;
 
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
@@ -157,11 +191,7 @@ public class WPSQueuedSimulationService implements ISimulationService
     }
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#getJob(java.lang.String)
-   */
-  public SimulationInfo getJob( final String jobID ) throws SimulationException
+  public WPSSimulationInfo getJob( final String jobID ) throws SimulationException
   {
     return findJobThread( jobID ).getJobInfo();
   }
@@ -196,17 +226,11 @@ public class WPSQueuedSimulationService implements ISimulationService
     }
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#cancelJob(java.lang.String)
-   */
   public void cancelJob( final String jobID ) throws SimulationException
   {
     findJobThread( jobID ).getJobInfo().cancel();
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#disposeJob(java.lang.String)
-   */
   public void disposeJob( final String jobID ) throws SimulationException
   {
     final WPSSimulationThread cjt = findJobThread( jobID );
@@ -240,11 +264,7 @@ public class WPSQueuedSimulationService implements ISimulationService
     throw new SimulationException( "Job not found: " + jobID, null );
   }
 
-  /**
-   * Please use this function, instead of the other startJob() function. The other function complies to the interface,
-   * but not all parameters are needed.
-   */
-  public SimulationInfo startJob( final String typeID, final String description, final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
+  public WPSSimulationInfo startJob( final String typeID, final String description, final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
   {
     WPSSimulationThread cjt = null;
     synchronized( m_threads )
@@ -274,6 +294,7 @@ public class WPSQueuedSimulationService implements ISimulationService
       {
         FileSystemManager manager = VFS.getManager();
         resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
+        resultDir.createFolder();
       }
       catch( FileSystemException e )
       {
@@ -287,23 +308,15 @@ public class WPSQueuedSimulationService implements ISimulationService
       else
         m_threads.set( id, cjt );
 
+      /* Need the description and the result directory. */
+      m_descriptions.put( typeID, processDescription );
+
       LOGGER.info( "Job waiting for scheduling: " + id );
     }
 
     startScheduling();
 
     return cjt == null ? null : cjt.getJobInfo();
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String, java.lang.String,
-   *      javax.activation.DataHandler,
-   *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
-   */
-  public final SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
-  {
-    /* Do NOT use this function anymore. Use the second one. */
-    throw new IllegalStateException( "This function is not implemented. Use the other startJob() function ..." );
   }
 
   public void scheduleJobs( )
@@ -319,7 +332,7 @@ public class WPSQueuedSimulationService implements ISimulationService
         if( cjt.isAlive() )
           runningCount++;
 
-        final SimulationInfo jobInfo = cjt.getJobInfo();
+        final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
           waitingCount++;
       }
@@ -345,7 +358,7 @@ public class WPSQueuedSimulationService implements ISimulationService
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
 
-        final SimulationInfo jobInfo = cjt.getJobInfo();
+        final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
         {
           LOGGER.info( "Scheduler: Starting job: " + jobInfo.getId() );
@@ -370,7 +383,7 @@ public class WPSQueuedSimulationService implements ISimulationService
       for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) iter.next();
-        final SimulationInfo jobInfo = cjt.getJobInfo();
+        final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         disposeJob( jobInfo.getId() );
       }
 
@@ -379,77 +392,34 @@ public class WPSQueuedSimulationService implements ISimulationService
     super.finalize();
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
-   */
-  public DataHandler transferCurrentResults( final String jobID ) throws SimulationException
+  public void transferCurrentResults( final String jobID ) throws SimulationException
   {
     final WPSSimulationThread thread = findJobThread( jobID );
-    thread.packCurrentResults();
-
-    return null;
+    thread.copyCurrentResults();
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
-   */
   public String[] getCurrentResults( String jobID ) throws SimulationException
   {
     final WPSSimulationThread thread = findJobThread( jobID );
     return thread.getCurrentResults();
   }
 
-  private ModelspecData getModelspec( final String typeID ) throws SimulationException
+  private ProcessDescriptionType getProcessDescription( final String typeID )
   {
-    ModelspecData data = m_modelspecMap.get( typeID );
-    if( data != null )
-      return data;
-
-    final ISimulation job = m_calcJobFactory.createJob( typeID );
-    final URL modelspecURL = job.getSpezifikation();
-
-    try
-    {
-      data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e );
-    }
-    catch( IllegalArgumentException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Error while reading sim-service specs", e );
-    }
-
-    m_modelspecMap.put( typeID, data );
-
-    return data;
+    ProcessDescriptionType processDescription = m_descriptions.get( typeID );
+    return processDescription;
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#getRequiredInput(java.lang.String)
-   */
-  public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
+  public ProcessOutputs getRequiredInput( final String typeID )
   {
-    return getModelspec( typeID ).getInput();
+    return getProcessDescription( typeID ).getProcessOutputs();
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
-   */
-  public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
+  public DataInputs getDeliveringResults( final String typeID )
   {
-    return getModelspec( typeID ).getOutput();
+    return getProcessDescription( typeID ).getDataInputs();
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
-   */
   public DataHandler getSchema( final String namespace )
   {
     final URL url = m_catalog.getURL( namespace );
@@ -459,9 +429,6 @@ public class WPSQueuedSimulationService implements ISimulationService
     return new DataHandler( new URLDataSource( url ) );
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSchemaValidity(java.lang.String)
-   */
   public long getSchemaValidity( final String namespace ) throws SimulationException
   {
     try
@@ -481,9 +448,6 @@ public class WPSQueuedSimulationService implements ISimulationService
     }
   }
 
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
-   */
   public String[] getSupportedSchemata( )
   {
     final Map catalog = m_catalog.getCatalog();
@@ -493,5 +457,10 @@ public class WPSQueuedSimulationService implements ISimulationService
       namespaces[count++] = (String) mapIt.next();
 
     return namespaces;
+  }
+
+  public FileObject getResultDir( String jobID ) throws SimulationException
+  {
+    return findJobThread( jobID ).getResultDir();
   }
 }

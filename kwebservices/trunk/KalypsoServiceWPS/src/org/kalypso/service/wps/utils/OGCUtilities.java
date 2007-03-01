@@ -43,11 +43,15 @@ package org.kalypso.service.wps.utils;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import net.opengeospatial.ows.AllowedValues;
 import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.ows.DomainMetadataType;
+import net.opengeospatial.ows.ExceptionReport;
+import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.ows.MetadataType;
 import net.opengeospatial.ows.RangeType;
 import net.opengeospatial.ows.ValueType;
@@ -57,6 +61,7 @@ import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
@@ -68,6 +73,9 @@ import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptions;
+import net.opengeospatial.wps.ProcessFailedType;
+import net.opengeospatial.wps.ProcessStartedType;
+import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.SupportedUOMsType;
@@ -1145,5 +1153,271 @@ public class OGCUtilities
     processDescriptions.getProcessDescription().addAll( processDescription );
 
     return processDescriptions;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
+   * <br>
+   * Indicates that this process has been has been accepted by the server, and processing has begun.
+   * 
+   * @param value
+   *          A human-readable text string whose contents are left open to definition by each WPS server, but is
+   *          expected to include any messages the server may wish to let the clients know. Such information could
+   *          include how much longer the process may take to execute, or any warning conditions that may have been
+   *          encountered to date. The client may display this text to a human user.
+   * @param percentCompleted
+   *          [optional] Percentage of the process that has been completed, where 0 means the process has just started,
+   *          and 100 means the process is complete. This attribute should be included if the process is expected to
+   *          execute for a long time (i.e. more than a few minutes). This percentage is expected to be accurate to
+   *          within ten percent.
+   */
+  public static ProcessStartedType buildProcessStartedType( String value, int percentCompleted )
+  {
+    /* Create the instance via the factory. */
+    ProcessStartedType processStarted = WPS_OF.createProcessStartedType();
+
+    /* Values. */
+    processStarted.setValue( value );
+
+    /* Attributes. */
+    if( percentCompleted >= 0 && percentCompleted <= 100 )
+      processStarted.setPercentCompleted( BigInteger.valueOf( percentCompleted ) );
+
+    return processStarted;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsExceptionReport.xsd for this type.<br>
+   * <br>
+   * An Exception element describes one detected error that a server chooses to convey to the client.
+   * 
+   * @param exceptionText
+   *          Ordered sequence of text strings that describe this specific exception or error. The contents of these
+   *          strings are left open to definition by each server implementation. A server is strongly encouraged to
+   *          include at least one ExceptionText value, to provide more information about the detected error than
+   *          provided by the exceptionCode. When included, multiple ExceptionText values shall provide hierarchical
+   *          information about one detected error, with the most significant information listed first.
+   * @param exceptionCode
+   *          A code representing the type of this exception, which shall be selected from a set of exceptionCode values
+   *          specified for the specific service operation and server.
+   * @param locator
+   *          [optional] When included, this locator shall indicate to the client where an exception was encountered in
+   *          servicing the client's operation request. This locator should be included whenever meaningful information
+   *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
+   *          OWS service, and shall be specified in the OWS Implementation Specification.
+   */
+  public static ExceptionType buildExceptionType( List<String> exceptionText, String exceptionCode, String locator )
+  {
+    /* Create the instance via the factory. */
+    ExceptionType exception = OWS_OF.createExceptionType();
+
+    exception.getExceptionText().addAll( exceptionText );
+
+    /* Attributes. */
+    exception.setExceptionCode( exceptionCode );
+
+    if( locator != null )
+      exception.setLocator( locator );
+
+    return exception;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsExceptionReport.xsd for this type.<br>
+   * <br>
+   * Report message returned to the client that requested any OWS operation when the server detects an error while
+   * processing that operation request.
+   * 
+   * @param exceptions
+   *          Unordered list of one or more Exception elements that each describes an error. These Exception elements
+   *          shall be interpreted by clients as being independent of one another (not hierarchical).
+   * @param version
+   *          Specification version for OWS operation. The string value shall contain one x.y.z "version" value (e.g.,
+   *          "2.1.3"). A version number shall contain three non-negative integers separated by decimal points, in the
+   *          form "x.y.z". The integers y and z shall not exceed 99. Each version shall be for the Implementation
+   *          Specification (document) and the associated XML Schemas to which requested operations will conform. An
+   *          Implementation Specification version normally specifies XML Schemas against which an XML encoded operation
+   *          response must conform and should be validated. See Version negotiation subclause for more information.
+   * @param language
+   *          [optional] Identifier of the language used by all included exception text values. These language
+   *          identifiers shall be as specified in IETF RFC 1766. When this attribute is omitted, the language used is
+   *          not identified.
+   */
+  public static ExceptionReport buildExceptionReport( List<ExceptionType> exceptions, String version, String language )
+  {
+    /* Create the instance via the factory. */
+    ExceptionReport exceptionReport = OWS_OF.createExceptionReport();
+
+    exceptionReport.getException().addAll( exceptions );
+
+    /* Attributes. */
+    exceptionReport.setVersion( version );
+
+    if( language != null )
+      exceptionReport.setLanguage( language );
+
+    return exceptionReport;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd, owsExceptionReport.xsd for this type.<br>
+   * <br>
+   * Indicator that the process has failed to execute successfully. The reason for failure is given in the exception
+   * report.
+   * 
+   * @param exceptionReport
+   *          Report message returned to the client that requested any OWS operation when the server detects an error
+   *          while processing that operation request.
+   */
+  public static ProcessFailedType buildProcessFailedType( ExceptionReport exceptionReport )
+  {
+    /* Create the instance via the factory. */
+    ProcessFailedType processFailed = WPS_OF.createProcessFailedType();
+
+    /* Elements. */
+    processFailed.setExceptionReport( exceptionReport );
+
+    return processFailed;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
+   * <br>
+   * Description of the status of process execution.
+   * 
+   * @param value
+   *          <br>
+   *          Possible are
+   *          <ol>
+   *          <li>ProcessAccepted (as String)<br>
+   *          Indicates that this process has been accepted by the server, but is in a queue and has not yet started to
+   *          execute. The contents of this human-readable text string is left open to definition by each server
+   *          implementation, but is expected to include any messages the server may wish to let the clients know. Such
+   *          information could include how long the queue is, or any warning conditions that may have been encountered.
+   *          The client may display this text to a human user.</li>
+   *          <li>ProcessStartedType<br>
+   *          Indicates that this process has been has been accepted by the server, and processing has begun.</li>
+   *          <li>ProcessSucceeded (as String)<br>
+   *          Indicates that this process has successfully completed execution. The contents of this human-readable text
+   *          string is left open to definition by each server, but is expected to include any messages the server may
+   *          wish to let the clients know, such as how long the process took to execute, or any warning conditions that
+   *          may have been encountered. The client may display this text string to a human user. The client should make
+   *          use of the presence of this element to trigger automated or manual access to the results of the process.
+   *          If manual access is intended, the client should use the presence of this element to present the results as
+   *          downloadable links to the user. </li>
+   *          <li>ProcessFailedType<br>
+   *          Indicates that execution of this process has failed, and includes error information.</li>
+   *          </ol>
+   * @param accepted
+   *          ATTENTION: This flag is not part of the wpsExecute.xsd. I introduced it to this function, because it is
+   *          not possible to decide which value should be set in case of ProcessAccepted and ProcessSucceeded, because
+   *          they are both strings.<br>
+   *          If you want to set a ProcessAccepted, set this flag to true.<br>
+   *          If you want to set a ProcessSucceeded, set this flag to false.<br>
+   *          In both other cases, this flag will not be evaluated.
+   */
+  public static StatusType buildStatusType( Object value, boolean accepted )
+  {
+    /* Create the instance via the factory. */
+    StatusType status = WPS_OF.createStatusType();
+
+    if( value instanceof String )
+    {
+      if( accepted )
+        status.setProcessAccepted( (String) value );
+      else
+        status.setProcessSucceeded( (String) value );
+    }
+    else if( value instanceof ProcessStartedType )
+      status.setProcessStarted( (ProcessStartedType) value );
+    else if( value instanceof ProcessFailedType )
+      status.setProcessFailed( (ProcessFailedType) value );
+
+    return status;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
+   * <br>
+   * Response to an Execute operation request.
+   * 
+   * @param identifier
+   *          Identifier of the Process requested to be executed. This Process identifier shall be as listed in the
+   *          ProcessOfferings section of the WPS Capabilities document.
+   * @param status
+   *          Execution status of this process.
+   * @param dataInputs
+   *          [optional] Inputs that were provided as part of the execute request. This element can be omitted as an
+   *          implementation decision by the WPS server. However, it is often advisable to have the response include
+   *          this information, so the client can confirm that the request was received correctly, and to provide a
+   *          source of metadata if the client wishes to store the result for future reference.
+   * @param outputDefinitions
+   *          [optional] Complete list of Output data types that were requested as part of the Execute request. This
+   *          element can be omitted as an implementation decision by the WPS server. However, it is often advisable to
+   *          have the response include this information, so the client can confirm that the request was received
+   *          correctly, and to provide a source of metadata if the client wishes to store the result for future
+   *          reference.
+   * @param statusLocation
+   *          [optional] The URL referencing the location from which the ExecuteResponse can be retrieved. If "status"
+   *          is "true" in the Execute request, the ExecuteResponse should also be found here as soon as the process
+   *          returns the initial response to the client. It should persist at this location as long as the outputs are
+   *          accessible from the server. The outputs may be stored for as long as the implementer of the server
+   *          decides. If the process takes a long time, this URL can be repopulated on an ongoing basis in order to
+   *          keep the client updated on progress. Before the process has succeeded, the ExecuteResponse contains
+   *          information about the status of the process, including whether or not processing has started, and the
+   *          percentage completed. It may also optionally contain the inputs and any ProcessStartedType interim
+   *          results. When the process has succeeded, the ExecuteResponse found at this URL shall contain the output
+   *          values or references to them.
+   * @param version
+   *          Version of the WPS interface specification implemented by the server.
+   */
+  public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, String statusLocation, String version )
+  {
+    /* Create the instance via the factory. */
+    ExecuteResponseType executeResponse = WPS_OF.createExecuteResponseType();
+
+    /* Elements. */
+    executeResponse.setIdentifier( identifier );
+    executeResponse.setStatus( status );
+
+    if( dataInputs != null )
+      executeResponse.setDataInputs( dataInputs );
+
+    if( outputDefinitions != null )
+      executeResponse.setOutputDefinitions( outputDefinitions );
+
+    /* Attributes. */
+    if( statusLocation != null )
+      executeResponse.setStatusLocation( statusLocation );
+
+    executeResponse.setVersion( version );
+
+    return executeResponse;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
+   * <br>
+   * WPS Execute operation response. By default, this XML document is delivered to the client in response to an Execute
+   * request. If "status" is "false" in the Execute operation request, this document is normally returned when process
+   * execution has been completed. If "status" in the Execute request is "true", this response shall be returned as soon
+   * as the Execute request has been accepted for processing. In this case, the same XML document is also made available
+   * as a web-accessible resource from the URL identified in the statusLocation, and the WPS server shall repopulate it
+   * once the process has completed. It may repopulate it on an ongoing basis while the process is executing. However,
+   * the response to an Execute request will not include this element in the special case where the output is a single
+   * complex value result and the Execute request indicates that "store" is "false". Instead, the server shall return
+   * the complex result (e.g., GIF image or GML) directly, without encoding it in the ExecuteResponse. If processing
+   * fails in this special case, the normal ExecuteResponse shall be sent, with the error condition indicated. This
+   * option is provided to simplify the programming required for simple clients and for service chaining.
+   * 
+   * @param value
+   *          Response to an Execute operation request.
+   */
+  public static JAXBElement<ExecuteResponseType> buildExecuteResponse( ExecuteResponseType value )
+  {
+    /* Create the instance via the factory. */
+    JAXBElement<ExecuteResponseType> executeResponse = WPS_OF.createExecuteResponse( value );
+
+    return executeResponse;
   }
 }

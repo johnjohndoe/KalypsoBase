@@ -42,6 +42,8 @@ package org.kalypso.service.wps.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 import javax.xml.namespace.QName;
 
@@ -51,6 +53,9 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileType;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -145,5 +150,37 @@ public class WPSUtilities
 
     Debug.println( "Found simulation \"" + simulationType + "\"." );
     return simulation;
+  }
+
+  /**
+   * This function copies a string to a vfs file object.
+   * 
+   * @param value
+   *          This string will be copied to the file.
+   * @param destination
+   *          The destination. It must be a file.
+   */
+  public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
+  {
+    if( FileType.FOLDER.equals( destination.getType() ) )
+      throw new IOException( "Destination is a folder." );
+
+    /* Copy the string to this url. */
+    OutputStream outputStream = null;
+    StringReader stringReader = null;
+
+    try
+    {
+      outputStream = destination.getContent().getOutputStream( false );
+      stringReader = new StringReader( value );
+      IOUtils.copy( stringReader, outputStream );
+      outputStream.close();
+      stringReader.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( outputStream );
+      IOUtils.closeQuietly( stringReader );
+    }
   }
 }

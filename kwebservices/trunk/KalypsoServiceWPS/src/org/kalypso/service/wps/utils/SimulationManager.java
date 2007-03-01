@@ -45,10 +45,13 @@ import javax.xml.bind.JAXBException;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.server.operations.DescribeProcess;
 import org.kalypso.service.wps.utils.simulation.WPSQueuedSimulationService;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationHandler;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
@@ -102,7 +105,7 @@ public class SimulationManager
    * @param execute
    *          The execute request of the WPS.
    */
-  public void startSimulation( String typeID, String description, Execute execute ) throws OWSException
+  public WPSSimulationInfo startSimulation( String typeID, String description, Execute execute ) throws OWSException
   {
     /* Get the Simulation.. */
     ISimulation simulation = WPSUtilities.getSimulation( typeID );
@@ -113,7 +116,13 @@ public class SimulationManager
       ProcessDescriptionType processDescription = DescribeProcess.buildProcessDescriptionType( simulation, typeID );
 
       /* Start the job. */
-      m_service.startJob( typeID, description, execute, processDescription );
+      WPSSimulationInfo info = m_service.startJob( typeID, description, execute, processDescription );
+
+      /* This thread will check for the status of the other one. */
+      WPSSimulationHandler handler = new WPSSimulationHandler( m_service, info.getId(), execute );
+      handler.start();
+
+      return info;
     }
     catch( JAXBException e )
     {
@@ -123,5 +132,17 @@ public class SimulationManager
     {
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
     }
+  }
+
+  /**
+   * This function returns the file object, containing the path to the results for the given job.
+   * 
+   * @param jobID
+   *          The id of the current running job.
+   * @return The FileObject containing the path to the result space of this job.
+   */
+  public FileObject getResultDir( String jobID ) throws SimulationException
+  {
+    return m_service.getResultDir( jobID );
   }
 }

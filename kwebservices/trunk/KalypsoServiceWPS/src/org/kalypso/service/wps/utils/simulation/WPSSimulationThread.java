@@ -57,14 +57,13 @@ import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.SimulationInfo;
 
 /**
- * This thread executes a simulation in thw WPS service.
+ * This thread executes a simulation in the WPS service.
  * 
  * @author Gernot Belger (original), Holger Albert (changes)
  */
-final class WPSSimulationThread extends Thread
+public class WPSSimulationThread extends Thread
 {
   /**
    * Logger.
@@ -90,7 +89,7 @@ final class WPSSimulationThread extends Thread
   /**
    * The info about the running simulation.
    */
-  private final SimulationInfo m_jobInfo;
+  private final WPSSimulationInfo m_jobInfo;
 
   /**
    * The input data provider.
@@ -132,7 +131,7 @@ final class WPSSimulationThread extends Thread
     m_job = job;
     m_tmpDir = tmpDir;
 
-    m_jobInfo = new SimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
+    m_jobInfo = new WPSSimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
     m_inputData = new WPSSimulationDataProvider( execute );
     m_resultEater = new WPSSimulationResultEater( processDescription, execute, resultDir );
 
@@ -183,6 +182,10 @@ final class WPSSimulationThread extends Thread
   /**
    * Tries to find a input in this list.
    * 
+   * @param inputDescription
+   *          The description of one input.
+   * @param ioValues
+   *          The input list.
    * @return The input in the input list of the execute request. If it is not available it returns null.
    */
   private IOValueType findInput( InputDescriptionType inputDescription, List<IOValueType> ioValues )
@@ -202,6 +205,8 @@ final class WPSSimulationThread extends Thread
    */
   public void dispose( )
   {
+    m_inputData.dispose();
+    m_resultEater.dispose();
   }
 
   public ISimulation getJob( )
@@ -209,7 +214,7 @@ final class WPSSimulationThread extends Thread
     return m_job;
   }
 
-  public SimulationInfo getJobInfo( )
+  public WPSSimulationInfo getJobInfo( )
   {
     m_jobInfo.setCurrentResults( m_resultEater.getCurrentResults() );
 
@@ -251,7 +256,7 @@ final class WPSSimulationThread extends Thread
     }
   }
 
-  public void packCurrentResults( ) throws SimulationException
+  public void copyCurrentResults( ) throws SimulationException
   {
     m_resultEater.copyCurrentResults();
   }
@@ -259,5 +264,15 @@ final class WPSSimulationThread extends Thread
   public String[] getCurrentResults( )
   {
     return m_resultEater.getCurrentResults();
+  }
+
+  /**
+   * This function returns the result dir of its result eater.
+   * 
+   * @return The result dir.
+   */
+  public FileObject getResultDir( )
+  {
+    return m_resultEater.getResultDir();
   }
 }

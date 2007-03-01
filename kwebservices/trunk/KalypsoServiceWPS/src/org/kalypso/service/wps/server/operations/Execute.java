@@ -40,21 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.server.operations;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.StatusType;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
+import org.kalypso.service.wps.utils.OGCUtilities;
 import org.kalypso.service.wps.utils.SimulationManager;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
 import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
-import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
-import org.kalypso.simulation.core.internal.queued.QueuedSimulationService;
 
 /**
  * This operation will execute a specific simulation.
@@ -80,20 +82,42 @@ public class Execute implements IOperation
    */
   public StringBuffer executeOperation( RequestBean request ) throws OWSException
   {
-    /* Start the operation. */
-    Debug.println( "Operation \"Execute\" started." );
+    try
+    {
+      /* Start the operation. */
+      Debug.println( "Operation \"Execute\" started." );
 
-    /* Get the simulation. */
-    ISimulation simulation = WPSUtilities.getSimulation( getIdentifier( request ) );
+      /* Get the simulation. */
+      ISimulation simulation = WPSUtilities.getSimulation( getIdentifier( request ) );
 
-    /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-    SimulationManager manager = SimulationManager.getInstance();
-    manager.startSimulation( m_executeRequest.getIdentifier().getValue(), m_executeRequest.getIdentifier().getValue(), m_executeRequest );
+      /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
+      SimulationManager manager = SimulationManager.getInstance();
+      WPSSimulationInfo info = manager.startSimulation( m_executeRequest.getIdentifier().getValue(), m_executeRequest.getIdentifier().getValue(), m_executeRequest );
 
-    /* Prepare the execute response. */
-    
-    /* And send it back. */
-    return null;
+      /* Prepare the execute response. */
+      FileObject resultDir = manager.getResultDir( info.getId() );
+      FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+      String statusLocation = resultFile.getURL().toExternalForm();
+      StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
+      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), statusLocation, OGCUtilities.VERSION );
+      JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+
+      /* Marshall it into one XML string. */
+      String xml = MarshallUtilities.marshall( executeResponse );
+
+      /* Copy the execute response to this url. */
+      WPSUtilities.copyStringToFileObject( xml, resultFile );
+
+      /* Build the response. */
+      StringBuffer response = new StringBuffer();
+      response.append( xml );
+
+      return response;
+    }
+    catch( Exception e )
+    {
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+    }
   }
 
   /**
