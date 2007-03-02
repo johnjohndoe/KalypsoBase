@@ -63,8 +63,11 @@ public class EditHandler implements MouseListener, MouseMoveListener
   public void mouseDown( final MouseEvent e )
   {
     final EditInfo editInfo = m_chart.getHoverInfo();
+    if( editInfo == null )
+      return;
     m_clickPoint = new Point( e.x, e.y );
-    if( m_editingAllowed && e.button == 1 && editInfo != null )
+    final boolean allowEdit = editInfo.layer != null? editInfo.layer.alwaysAllowsEditing() : false;
+    if( (m_editingAllowed || allowEdit) && e.button == 1 )
     {
       m_chart.setHoverInfo( null );
       final Point pos = new Point( e.x, e.y );

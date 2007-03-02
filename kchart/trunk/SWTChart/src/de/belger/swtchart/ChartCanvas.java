@@ -4,6 +4,7 @@ import java.awt.Insets;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +87,18 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
 
   /** if non null, logicalRanges will resized to fit * */
   private Double m_fixAspectRatio;
+
+  private Comparator<IChartLayer> m_layerComparator = new Comparator<IChartLayer>()
+  {
+    public int compare( IChartLayer o1, IChartLayer o2 )
+    {
+      if( o1.getZOrder() > o2.getZOrder() )
+        return -1;
+      if( o1.getZOrder() < o2.getZOrder() )
+        return 1;
+      return 0;
+    }
+  };
 
   public ChartCanvas( final Composite parent, final int style, final Insets insets )
   {
@@ -243,7 +256,8 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
       {
         // leave next line out to have the nice 'outside axis' effect.
         buffGc.setClipping( layerClip );
-        // Paint layers in reverse order
+        
+        // Paint layers ordered by Z-Order (see IChartLayer.getZOrder())
         for( final ListIterator<IChartLayer> lIt = m_layers.listIterator( m_layers.size() ); lIt.hasPrevious(); )
         {
           final IChartLayer layer = lIt.previous();
@@ -357,6 +371,8 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
   public void addLayer( final IChartLayer layer, final boolean visible )
   {
     m_layers.add( layer );
+    // sort by its z-Order
+    Collections.sort( m_layers, m_layerComparator );
     m_layervisible.put( layer, visible );
     m_axisMap.addRange( layer.getDomainRange(), layer );
     m_axisMap.addRange( layer.getValueRange(), layer );

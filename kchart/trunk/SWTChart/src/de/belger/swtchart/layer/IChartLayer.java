@@ -16,8 +16,8 @@ public interface IChartLayer
   public static final Rectangle2D MINIMAL_RECT = new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN, Double.NaN );
 
   /** Returns true, if the layer should be visible when it is first shown. */
-  public boolean getInitialVisibility();
-  
+  public boolean getInitialVisibility( );
+
   /** Each layer must have a domain range */
   public AxisRange getDomainRange( );
 
@@ -71,6 +71,21 @@ public interface IChartLayer
    *          the data entry of the {@link EditInfo}return by {@link #getHoverInfo(Point)}
    */
   public void setActivePoint( final Object data );
+
+  public String getId( );
   
-  public String getId();
+  public boolean alwaysAllowsEditing();
+
+  /**
+   * return the position of this layer on the canvas (paint order)
+   * </p>
+   * high value represents foreground
+   * </p>
+   * the value zero allows the IProfilLayerProvider to order the layeres by itself
+   */
+  public int getZOrder( );
+
+
+
+  
 }
