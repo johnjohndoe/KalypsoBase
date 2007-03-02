@@ -108,12 +108,40 @@ public class VFSUtilities
    * @param destination
    *          The destination directory.
    */
-  public static void copyDirectoryToDirectory( FileObject source, FileObject destination )
+  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws IOException
   {
     if( !FileType.FOLDER.equals( source ) || !FileType.FOLDER.equals( destination ) )
       throw new IllegalArgumentException( "Both source and destination must be directories ..." );
-    
-    //TODO
+
+    FileObject[] children = source.getChildren();
+    for( int i = 0; i < children.length; i++ )
+    {
+      FileObject child = children[i];
+      if( FileType.FILE.equals( child.getType() ) )
+      {
+        /* Need a destination file with the same name as the source file. */
+        FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
+
+        /* Copy ... */
+        Debug.println( "Copy file " + child.getName() + " to " + destinationFile.getName() + " ..." );
+        copy( child, destinationFile );
+      }
+      else if( FileType.FOLDER.equals( child.getType() ) )
+      {
+        /* Need the same name for destination directory, as the source directory has. */
+        FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
+
+        /* Create directory. */
+        Debug.println( "Creating directory " + destinationDir.getName() + " ..." );
+        destinationDir.createFolder();
+
+        /* Copy ... */
+        Debug.println( "Copy directory " + child.getName() + " to " + destinationDir.getName() + " ..." );
+        copyDirectoryToDirectory( child, destinationDir );
+      }
+      else
+        Debug.println( "Could not determine the file type ..." );
+    }
   }
 
   /**
