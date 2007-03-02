@@ -194,7 +194,11 @@ public class Plot extends Canvas implements PaintListener, Listener, MouseListen
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-    redraw();
+
+    if( !this.isDisposed() )
+    {
+      redraw();
+    }
   }
 
   /**
