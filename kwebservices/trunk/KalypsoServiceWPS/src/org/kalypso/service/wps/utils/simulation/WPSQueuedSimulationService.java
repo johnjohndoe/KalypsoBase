@@ -162,8 +162,7 @@ public class WPSQueuedSimulationService
     m_schedulingPeriod = schedulingPeriod;
     m_tmpDir = tmpDir;
 
-    // TODO This is for test purposes, remove default later.
-    m_resultSpace = System.getProperty( "org.kalypso.service.wps.results", "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub" );
+    m_resultSpace = System.getProperty( "org.kalypso.service.wps.results" );
   }
 
   public int getServiceVersion( )
