@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
-import javax.xml.bind.JAXBException;
-
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
@@ -122,11 +120,7 @@ public class WPSSimulationManager
 
       return info;
     }
-    catch( JAXBException e )
-    {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
-    }
-    catch( SimulationException e )
+    catch( Exception e )
     {
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
     }

@@ -248,8 +248,16 @@ public class SimulationJob extends WorkspaceJob
       /* Handle the response. */
       Debug.println( "Response:\n" + describeProcessResponse );
 
+      /* Try to unmarshall. */
+      Object describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
+      if( describeProcessObject instanceof ExceptionReport )
+      {
+        ExceptionReport report = (ExceptionReport) describeProcessObject;
+        return StatusUtilities.createErrorStatus( createErrorString( report ) );
+      }
+
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
-      ProcessDescriptions processDescriptions = (ProcessDescriptions) MarshallUtilities.unmarshall( describeProcessResponse );
+      ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
 
       /* Collect the data. */
       IFile[] inputFiles = getInputFiles( m_calcCaseFolder );

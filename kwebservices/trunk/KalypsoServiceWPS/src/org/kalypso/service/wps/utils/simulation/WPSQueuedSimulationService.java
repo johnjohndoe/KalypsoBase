@@ -299,7 +299,7 @@ public class WPSQueuedSimulationService
       }
       catch( FileSystemException e )
       {
-        throw new SimulationException( "Error resolving the result directory for this job ...", null );
+        throw new SimulationException( "Error resolving the result directory for this job: " + e.getLocalizedMessage() + " ...", null );
       }
 
       cjt = new WPSSimulationThread( "" + id, description, typeID, job, execute, processDescription, tmpdir, resultDir );

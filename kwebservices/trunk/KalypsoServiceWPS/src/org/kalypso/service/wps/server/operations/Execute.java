@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.server.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.ows.ExceptionReport;
+import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 
 import org.apache.commons.vfs.FileObject;
@@ -115,7 +121,40 @@ public class Execute implements IOperation
     }
     catch( Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+      if( m_executeRequest == null )
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+
+      List<String> list = new ArrayList<String>();
+      list.add( e.getLocalizedMessage() );
+
+      ExceptionType exception = OGCUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
+      List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
+      exceptions.add( exception );
+
+      ExceptionReport exceptionReport = OGCUtilities.buildExceptionReport( exceptions, OGCUtilities.VERSION, null );
+      ProcessFailedType processFailed = OGCUtilities.buildProcessFailedType( exceptionReport );
+
+      StatusType status = OGCUtilities.buildStatusType( processFailed, false );
+
+      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, null, OGCUtilities.VERSION );
+      JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+
+      String xml = "";
+      try
+      {
+        /* Marshall it into one XML string. */
+        xml = MarshallUtilities.marshall( executeResponse );
+      }
+      catch( Exception ex )
+      {
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage() + " and " + ex.getLocalizedMessage(), "" );
+      }
+
+      /* Build the response. */
+      StringBuffer response = new StringBuffer();
+      response.append( xml );
+
+      return response;
     }
   }
 
