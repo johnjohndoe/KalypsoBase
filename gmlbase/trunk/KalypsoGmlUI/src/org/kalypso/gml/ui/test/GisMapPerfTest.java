@@ -51,6 +51,7 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -146,7 +147,14 @@ public class GisMapPerfTest extends TestCase
     logger.showElapsedTime( "Loading map modell..." );
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
-    mapModell.createFromTemplate( gismapview );
+    try
+    {
+      mapModell.createFromTemplate( gismapview );
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
 
     int maxWait = 100000;
     while( true )
