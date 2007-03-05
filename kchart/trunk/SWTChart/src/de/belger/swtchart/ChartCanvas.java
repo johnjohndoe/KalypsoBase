@@ -256,7 +256,7 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
       {
         // leave next line out to have the nice 'outside axis' effect.
         buffGc.setClipping( layerClip );
-        
+
         // Paint layers ordered by Z-Order (see IChartLayer.getZOrder())
         for( final ListIterator<IChartLayer> lIt = m_layers.listIterator( m_layers.size() ); lIt.hasPrevious(); )
         {
@@ -378,6 +378,16 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
     m_axisMap.addRange( layer.getValueRange(), layer );
 
     fireLayersChanged();
+  }
+
+  public IChartLayer getLayer( final String layerId )
+  {
+    for( IChartLayer layer : m_layers )
+    {
+      if( layer.getId().equals( layerId ) )
+        return layer;
+    }
+    return null;
   }
 
   public void removeLayer( final IChartLayer layer )
