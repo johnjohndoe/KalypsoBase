@@ -251,7 +251,7 @@ public class WPSSimulationThread extends Thread
       LOGGER.warning( "JOB exited with exception: " + jobID );
       t.printStackTrace();
 
-      m_jobInfo.setMessage( t.getLocalizedMessage() );
+      m_jobInfo.setFinishText( t.getLocalizedMessage() );
       m_jobInfo.setState( ISimulationConstants.STATE.ERROR );
     }
   }

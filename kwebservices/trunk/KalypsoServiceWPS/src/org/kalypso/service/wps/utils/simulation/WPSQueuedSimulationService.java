@@ -65,6 +65,7 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.service.wps.utils.VFSUtilities;
@@ -162,7 +163,7 @@ public class WPSQueuedSimulationService
     m_schedulingPeriod = schedulingPeriod;
     m_tmpDir = tmpDir;
 
-    m_resultSpace = System.getProperty( "org.kalypso.service.wps.results" );
+    m_resultSpace = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
   }
 
   public int getServiceVersion( )

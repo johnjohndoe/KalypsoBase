@@ -69,7 +69,7 @@ import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
- * This operation will describe a processF.
+ * This operation will describe a process.
  * 
  * @author Holger Albert
  */
@@ -216,8 +216,7 @@ public class DescribeProcess implements IOperation
 
     /* Get the specification for that simulation. */
     URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData;
-    modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
+    Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
 
     /* Get the input from the model spec. */
     List<DataType> input = modelData.getInput();

@@ -134,7 +134,7 @@ public class WPSSimulationHandler extends Thread
             break;
           case CANCELED:
             /* Delete all files. */
-            /* TODO Eventually delete all files in the temp direcory on cancel. */
+            /* TODO Eventually delete all files in the result & temp direcory on cancel. */
 
             /* End loop. */
             bEnd = true;

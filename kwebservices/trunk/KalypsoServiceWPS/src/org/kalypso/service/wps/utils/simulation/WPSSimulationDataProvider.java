@@ -107,6 +107,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     {
       if( input instanceof ComplexValueType )
       {
+        //TODO Return content?
         ComplexValueType complexValue = (ComplexValueType) input;
         return complexValue;
       }

@@ -52,6 +52,7 @@ import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 
 /**
  * Helpfull functions when dealing with VFS.
@@ -75,6 +76,20 @@ public class VFSUtilities
   public static FileSystemManager getManager( ) throws FileSystemException
   {
     DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
+    String[] schemes = fsManager.getSchemes();
+
+    boolean found = false;
+    for( int i = 0; i < schemes.length; i++ )
+    {
+      if( schemes[i].equals( "webdav" ) )
+        found = true;
+    }
+
+    if( found == false )
+    {
+      Debug.println( "Adding webdav file provider ..." );
+      fsManager.addProvider( "webdav", new WebdavFileProvider() );
+    }
 
     return fsManager;
   }
