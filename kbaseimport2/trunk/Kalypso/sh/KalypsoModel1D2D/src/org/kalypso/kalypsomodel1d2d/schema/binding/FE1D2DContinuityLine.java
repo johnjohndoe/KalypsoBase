@@ -138,7 +138,7 @@ public class FE1D2DContinuityLine
   {
     this(
       org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
+          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
           parentFeature, 
           propQName, 
           gmlID ));
@@ -150,81 +150,7 @@ public class FE1D2DContinuityLine
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-   if(true)
-   {
     return ModelGeometryBuilder.computeContiniutyLineGeometry( this );
-   }
-    final FE1D2DEdge[] edges = getEdgesAsArray();
-
-    if( edges.length == 0 )
-      return null;
-
-    final IFE1D2DNode[] nodes = new IFE1D2DNode[edges.length + 1];
-
-    if( edges.length == 1 )
-    {
-      final IFeatureWrapperCollection<IFE1D2DNode> edgeNodes = edges[0].getNodes();
-      nodes[0] = edgeNodes.get( 0 );
-      nodes[1] = edgeNodes.get( 1 );
-    }
-
-    for( int i = 0; i < edges.length - 1; i++ )
-    {
-      final FE1D2DEdge edge0 = edges[i];
-      final FE1D2DEdge edge1 = edges[i + 1];
-
-      final FE1D2DNode[] edge0Nodes = edge0.getNodesAsArray();
-      final FE1D2DNode[] edge1Nodes = edge1.getNodesAsArray();
-
-      final FE1D2DNode edge0node0 = edge0Nodes[0];
-      final FE1D2DNode edge0node1 = edge0Nodes[1];
-      final FE1D2DNode edge1node0 = edge1Nodes[0];
-      final FE1D2DNode edge1node1 = edge1Nodes[1];
-
-      /* Always take the node which does not fit to the next edge */
-      if( edge0node1.equals( edge1node0 ) )
-        nodes[i] = edge0node0;
-      else if( edge0node1.equals( edge1node1 ) )
-        nodes[i] = edge0node0;
-      else if( edge0node0.equals( edge1node0 ) )
-        nodes[i] = edge0node1;
-      else if( edge0node0.equals( edge1node1 ) )
-        nodes[i] = edge0node1;
-      else
-        throw new IllegalStateException();
-
-      if( i == edges.length - 2 )
-      {
-        if( nodes[i].equals( edge0node0 ) )
-          nodes[i + 1] = edge0node1;
-        else
-          nodes[i + 1] = edge0node0;
-
-        if( nodes[i + 1].equals( edge1node0 ) )
-          nodes[i + 2] = edge1node1;
-        else
-          nodes[i + 2] = edge1node0;
-      }
-    }
-
-    /* Positions from nodes */
-    final GM_Position[] poses = new GM_Position[nodes.length];
-
-    if( nodes.length < 2 )
-      return null;
-
-    // REMARK: we assume here, that all nodes live in the same coordinate
-    // system.
-    final CS_CoordinateSystem crs = nodes[0].getPoint().getCoordinateSystem();
-
-    for( int i = 0; i < poses.length; i++ )
-    {
-      final GM_Point point = nodes[i].getPoint();
-      final GM_Position position = point.getPosition();
-      poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
-    }
-
-    return GeometryFactory.createGM_Curve( poses, crs );
   }
   
   /**
@@ -263,55 +189,8 @@ public class FE1D2DContinuityLine
       }
       nodes.add( node1 );
       lastAddedNode=node1;
-//      if(edge instanceof IEdgeInv)
-//      {
-//        IFE1D2DEdge invertedEdge=((IEdgeInv)edge).getInverted();
-//        List<IFE1D2DNode> edgeNodes=invertedEdge.getNodes();
-//        IFE1D2DNode<IFE1D2DEdge> node;
-//        for(int i=edgeNodes.size()-1;i>=0;i--)
-//        {
-//          node=edgeNodes.get( i );
-//          if(node!=null)
-//          {
-//            if(!node.equals( lastAddedNode ))
-//            {
-//              nodes.add( node );
-//              lastAddedNode=node;
-//            }
-//          }
-//        }
-//        
-//      }
-//      else
-//      {
-//        for(IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes())
-//        {
-//          if(node!=null)
-//          {
-//            if(!node.equals( lastAddedNode ))
-//            {
-//              nodes.add( node );
-//              lastAddedNode=node;
-//            }
-//          }
-//        }
-//      }
     }
-//    if(lasAddedNode!=null && nodes.size()>0)
-//    {
-//      if(!lasAddedNode.equals( nodes.get( 0 ) ))
-//      {
-//        nodes.add( nodes.get( 0 ) );
-//      }
-//    }
     return nodes;
-//    List<IFE1D2DNode> list = super.getNodes();
-//    int index=list.size()-1;
-//    if(index>=0)
-//    {
-//      list.remove( index );
-//    }
-//    return list;
   }
   
 }
