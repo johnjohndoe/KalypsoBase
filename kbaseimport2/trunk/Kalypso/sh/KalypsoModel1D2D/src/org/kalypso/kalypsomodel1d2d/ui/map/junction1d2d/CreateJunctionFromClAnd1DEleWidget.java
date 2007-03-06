@@ -126,13 +126,15 @@ public class CreateJunctionFromClAnd1DEleWidget
        System.out.println(
            "Please select an 1d element and a cl:"+Arrays.asList( selectedFeatures ));
      }
-     IFEDiscretisationModel1d2d model1d2d = super.getModel1d2d();
+     IFEDiscretisationModel1d2d model1d2d = 
+         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
     AddJunctionElementFromClAndElement1DCmd junctionCmd=
        new AddJunctionElementFromClAndElement1DCmd(
            model1d2d,
            selected1DEle,
            selectedCLine);
-     CommandableWorkspace workspace = super.getTheme().getWorkspace();
+     CommandableWorkspace workspace = 
+       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT).getWorkspace();
      ChangeDiscretiationModelCommand changeModelCmd=
            new ChangeDiscretiationModelCommand(
                workspace,model1d2d);
