@@ -37,22 +37,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>Nicht definiert</Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Röhricht
@@ -85,24 +69,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Sträucher, einjährig
@@ -135,24 +101,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Sträucher, mehrjährig
@@ -185,24 +133,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Schilf, dicht
@@ -235,24 +165,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Büsche (gleichmäßiger), klein
@@ -285,24 +197,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Büsche (gleichmäßiger), mittlere Größe
@@ -335,24 +229,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Besatz, groß
@@ -385,24 +261,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Besatz, aufgelockert
@@ -435,24 +293,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Besatz, in kleineren Gruppen
@@ -485,24 +325,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Besatz, in großen Gruppen
@@ -535,24 +357,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Besatz, mit Kronenschluß
@@ -585,24 +389,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Bäume, lockerer Besatz
@@ -635,24 +421,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Bäume, dichter junger Besatz
@@ -685,24 +453,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Bäume, mehrjähriger Besatz
@@ -735,24 +485,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		Style: Bäume, dichter mehrjähriger Besatz
@@ -785,24 +517,6 @@
                             <CssParameter name="stroke-linecap">butt</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-family">Sans-Serif</CssParameter>
-                            <CssParameter name="font-style">italic</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
-                            <CssParameter name="font-color">#222222</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true"/>
-                        </LabelPlacement>
-                    </TextSymbolizer>
                 </Rule>
             	<!-- =============================================================
             		End of styles definition
