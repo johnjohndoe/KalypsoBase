@@ -49,7 +49,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
  * @author congo
  *
  */
-public class SimpleElevationColorModel implements ElevationColorModel
+public class SimpleElevationColorModel implements IElevationColorModel
 {
   public static final double DEEPEST_POINT_ON_EARTH=-10924;
   public static final double HIGHEST_POINT_ON_EARTH=8850;
