@@ -49,7 +49,6 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
-import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.logging.Logger;
 
 /**
@@ -75,9 +74,10 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
   private final Comparator<T> m_dataComparator;
 
-  protected T m_min;
+  // TODO: consider using a IDataRange instead
+  private T m_min;
 
-  protected T m_max;
+  private T m_max;
 
   private final Class< ? > m_dataClass;
 
@@ -109,6 +109,14 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     return m_dataClass;
   }
 
+  /**
+   * TODO: consider to move the dataComparater to the range class
+   */
+  public Comparator<T> getDataComparator( )
+  {
+    return m_dataComparator;
+  }
+  
   /**
    * @see org.kalypso.swtchart.axis.IAxis#setRegistry(org.kalypso.swtchart.axis.registry.IAxisRegistry)
    */
@@ -233,25 +241,5 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   public String toString( )
   {
     return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
-  }
-
-  /**
-   * @see org.kalypso.swtchart.axis.IAxis#autorange(org.kalypso.swtchart.layer.IDataRange<T>[])
-   */
-  public void autorange( final IDataRange<T>[] ranges )
-  {
-    T min = null;
-    T max = null;
-
-    for( int i = 0; i < ranges.length; i++ )
-    {
-      if( min == null || m_dataComparator.compare( min, ranges[i].getMin() ) > 0 )
-        min = ranges[i].getMin();
-      if( max == null || m_dataComparator.compare( max, ranges[i].getMax() ) < 0 )
-        max = ranges[i].getMax();
-    }
-
-    setFrom( min );
-    setTo( max );
   }
 }

@@ -60,7 +60,6 @@ import org.kalypso.swtchart.chart.layer.IChartLayer;
 
 public interface IAxisRegistry extends IAxisRegistryEventProvider
 {
-
   /**
    * @return true if an axis with the given identifier is already present in the registry, false elsewise
    */

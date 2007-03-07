@@ -42,10 +42,7 @@ package org.kalypso.swtchart.chart.layer;
 
 /**
  * @author schlienger
- * @author burtscher
- * 
- * describes min and max valuse of an (ordered) data set
- * 
+ * @author burtscher describes min and max valuse of an (ordered) data set
  */
 public interface IDataRange<T>
 {
@@ -53,6 +50,15 @@ public interface IDataRange<T>
 
   public T getMax( );
 
-  // public void setMin( T min );
-  // public void setMax( T max );
+//  /**
+//   * Zooms the range in or out by a given factor.
+//   * <p>
+//   * Example for doubles: <code>
+//   * new DataRange&lt;Double&gt;( 1, 2 ).zoom( 1.20 )</code> gives a range from 0.9 to 2.1
+//   * (that is the length of the intervall is 20% bigger).
+//   * 
+//   * @param factor
+//   *          a factor > 1 means that the range is increased, if < 1 it is decreased.
+//   */
+//  public IDataRange<T> zoom( final double factor );
 }

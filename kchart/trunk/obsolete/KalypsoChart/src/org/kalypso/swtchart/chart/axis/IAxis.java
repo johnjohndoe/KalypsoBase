@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.swtchart.chart.axis;
 
+import java.util.Comparator;
+
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.axis.renderer.IAxisRenderer;
-import org.kalypso.swtchart.chart.layer.IDataRange;
 
 /**
  * @author schlienger
@@ -65,6 +66,11 @@ public interface IAxis<T>
    * @return DataClass which is understood by this axis
    */
   public Class< ? > getDataClass( );
+
+  /**
+   * TODO: consider to move the dataComparater to the range class
+   */
+  public Comparator<T> getDataComparator( );
 
   /**
    * @return Axis property - discrete or continous
@@ -103,8 +109,6 @@ public interface IAxis<T>
    * sets maximum displayable value
    */
   public void setTo( T max );
-
-  public void autorange( IDataRange<T>[] ranges );
 
   public int logicalToScreen( T value );
 

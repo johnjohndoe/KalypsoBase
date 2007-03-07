@@ -66,6 +66,7 @@ import org.kalypso.swtchart.chart.axis.registry.IAxisRegistryEventListener;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 import org.kalypso.swtchart.chart.layer.ILayerManager;
+import org.kalypso.swtchart.chart.util.DataRangeUtils;
 
 /**
  * @author schlienger
@@ -348,7 +349,12 @@ public class Chart extends Composite implements IAxisRegistryEventListener, List
         if( range != null )
           ranges.add( range );
       }
-      axis.autorange( ranges.toArray( new IDataRange[ranges.size()] ) );
+      
+      final IDataRange[] rangeArray = ranges.toArray( new IDataRange[ranges.size()] );
+      final IDataRange range = DataRangeUtils.autorange( rangeArray, axis.getDataComparator() );
+//      range.zoom( 1.10 );
+      axis.setFrom( range.getMin() );
+      axis.setTo( range.getMax() );
     }
   }
 

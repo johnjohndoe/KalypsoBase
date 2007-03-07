@@ -43,7 +43,7 @@ package org.kalypso.swtchart.chart.layer.impl;
 import org.kalypso.swtchart.chart.layer.IDataRange;
 
 /**
- * @author schlienger
+ * @author Marc Schlienger
  */
 public class DataRange<T> implements IDataRange<T>
 {
@@ -51,7 +51,7 @@ public class DataRange<T> implements IDataRange<T>
 
   private final T m_max;
 
-  public DataRange( T min, T max )
+  public DataRange( final T min, final T max )
   {
     m_min = min;
     m_max = max;
@@ -72,4 +72,13 @@ public class DataRange<T> implements IDataRange<T>
   {
     return m_max;
   }
+
+//  /**
+//   * @see org.kalypso.swtchart.chart.layer.IDataRange#zoom(double)
+//   */
+//  public IDataRange<T> zoom( final double factor )
+//  {
+//    // TODO Auto-generated method stub
+//    return this;
+//  }
 }
