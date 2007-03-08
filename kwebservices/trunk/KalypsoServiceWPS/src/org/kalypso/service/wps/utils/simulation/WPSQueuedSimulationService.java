@@ -155,6 +155,7 @@ public class WPSQueuedSimulationService
    * @param tmpDir
    *          The temporary directory will be used by the jobs to copy their running data.
    */
+  @SuppressWarnings("restriction")
   public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
   {
     m_calcJobFactory = factory;
@@ -294,6 +295,9 @@ public class WPSQueuedSimulationService
       FileObject resultDir = null;
       try
       {
+        if( m_resultSpace == null )
+          throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
+
         FileSystemManager manager = VFSUtilities.getManager();
         resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
         resultDir.createFolder();

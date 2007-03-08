@@ -46,6 +46,7 @@ import java.io.InputStream;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -87,6 +88,7 @@ public class WPSUtilities
    *          The address of the server.
    * @return The response as String.
    */
+  @SuppressWarnings("restriction")
   public static String send( String xml, String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
@@ -99,6 +101,21 @@ public class WPSUtilities
     /* Build the method. */
     PostMethod post = new PostMethod( url );
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
+
+    String proxySet = FrameworkProperties.getProperty( "proxySet" );
+    Debug.println( "Should use proxy: " + proxySet );
+
+    if( proxySet != null && proxySet.equals( "true" ) )
+    {
+      String proxyHost = FrameworkProperties.getProperty( "proxyHost" );
+      String proxyPort = FrameworkProperties.getProperty( "proxyPort" );
+      Debug.println( "Proxy host: " + proxyHost );
+      Debug.println( "Proxy port: " + proxyPort );
+
+      HostConfiguration config = new HostConfiguration();
+      config.setProxy( proxyHost, Integer.valueOf( proxyPort ) );
+      client.setHostConfiguration( config );
+    }
 
     /* Execute the method. */
     int status = client.executeMethod( post );
@@ -161,6 +178,7 @@ public class WPSUtilities
    *          ----------------------------------------------------------------------------------<br>
    *          Result: http://informdss.bafg.de/webdav/results/xxx
    */
+  @SuppressWarnings("restriction")
   public static String convertInternalToClient( String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
@@ -170,7 +188,6 @@ public class WPSUtilities
 
     String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
     String clientUrl = serverUrl.replace( serverProperty, clientProperty );
-
     Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
 
     return clientUrl;
@@ -189,17 +206,18 @@ public class WPSUtilities
    *          clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
    *          ----------------------------------------------------------------------------------<br>
    *          Result: http://informdss.bafg.de/webdav/input/xxx
+   * @param clientProperty
+   *          The client URL.
    */
-  public static String convertInternalToServer( String clientUrl )
+  @SuppressWarnings("restriction")
+  public static String convertInternalToServer( String clientUrl, String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */
     String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
     if( serverProperty == null )
       return clientUrl;
 
-    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.input" );
     String serverUrl = clientUrl.replace( clientProperty, serverProperty );
-
     Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
 
     return serverUrl;

@@ -83,6 +83,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -150,7 +151,7 @@ public class SimulationJob
    * The path to the place on the server, where the client can put his files, as configured in the config.ini from
    * Kalypso.
    */
-  private String m_server;
+  private String m_input;
 
   /**
    * The URL to the wps service.
@@ -190,7 +191,7 @@ public class SimulationJob
 
     /* Initializing the other variables. */
     m_service = System.getProperty( "org.kalypso.service.wps.service", "http://informdss.bafg.de/bridge/ogc" );
-    m_server = System.getProperty( "org.kalypso.service.wps.input", "webdav://WebDAV:webdav@informdss.bafg.de/webdav/input" );
+    m_input = System.getProperty( "org.kalypso.service.wps.input", "webdav://WebDAV:webdav@informdss.bafg.de/webdav/input" );
     m_alreadyWorked = new Integer( 0 );
 
     /* Variables that are initialized during run time. */
@@ -218,7 +219,7 @@ public class SimulationJob
     }
 
     Debug.println( "Checking for server URL, where the input data can be copied ..." );
-    if( m_server == null )
+    if( m_input == null )
     {
       Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
       return StatusUtilities.createErrorStatus( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
@@ -257,6 +258,9 @@ public class SimulationJob
 
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
       ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
+
+      /* Get the directory for server access. */
+      initServerTmpDirectory();
 
       /* Collect the data. */
       IFile[] inputFiles = getInputFiles( m_calcCaseFolder );
@@ -344,7 +348,7 @@ public class SimulationJob
           return canceled();
 
         Debug.println( "Checking state file of the server ..." );
-        FileObject statusFile = m_fsManager.resolveFile( statusLocation );
+        FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
 
         if( statusFile.exists() )
         {
@@ -390,6 +394,7 @@ public class SimulationJob
       }
 
       /* Check if the results are ready. */
+      monitor.subTask( "" );
       monitor.setTaskName( "Prüfe Ergebnisse ..." );
       Debug.println( "Check the results ..." );
 
@@ -429,9 +434,6 @@ public class SimulationJob
 
     /* The filesystem manager needs to be set. */
     initVFSManager();
-
-    /* Get the directory for server access. */
-    initServerTmpDirectory();
   }
 
   /**
@@ -468,7 +470,7 @@ public class SimulationJob
     if( m_serverTmpDirectory == null )
     {
       /* Get the directory for server access. */
-      FileObject serverDirectory = m_fsManager.resolveFile( m_server );
+      FileObject serverDirectory = m_fsManager.resolveFile( m_input );
       m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
 
       if( !m_serverTmpDirectory.exists() )
@@ -604,7 +606,7 @@ public class SimulationJob
 
       /* Build the complex value reference. */
       CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-      ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm() ), null, null, null );
+      ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm(), m_input ), null, null, null );
       IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
       /* Add the input. */
@@ -753,7 +755,7 @@ public class SimulationJob
 
       /* Building the source object. */
       String reference = complexValueReference.getReference();
-      FileObject source = m_fsManager.resolveFile( reference );
+      FileObject source = VFSUtilities.checkProxyFor( reference );
 
       /* Building the destination object. */
       String id = ioValue.getIdentifier().getValue();
@@ -769,9 +771,17 @@ public class SimulationJob
       /* Copy ... */
       Debug.println( "Copy " + source.getName() + " to " + destination.getName() + " ..." );
       VFSUtilities.copy( source, destination );
+
+      IResource destResource = baseresource.getFile( new Path( outputPath ) );
+      if( destResource != null && destResource.getType() == IResource.FILE )
+      {
+        IFile destFile = (IFile) destResource;
+        destFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        destFile.setCharset( "UTF-8", new NullProgressMonitor() );
+      }
     }
 
-    project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    //project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 
   /**

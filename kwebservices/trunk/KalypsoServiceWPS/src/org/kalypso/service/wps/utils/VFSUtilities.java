@@ -43,6 +43,8 @@ package org.kalypso.service.wps.utils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
@@ -56,6 +58,7 @@ import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
 /**
  * Helpfull functions when dealing with VFS.
@@ -97,14 +100,6 @@ public class VFSUtilities
       Debug.println( "Adding webdav file provider ..." );
       fsManager.addProvider( "webdav", new WebdavFileProvider() );
     }
-
-    // TODO: Think of http and ftp with proxies
-    // TODO: get from kalypso settings
-    WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, "proxy.bce01.de" );
-    WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, 8080 );
-
-    HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, "proxy.bce01.de" );
-    HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, 8080 );
 
     return fsManager;
   }
@@ -233,5 +228,55 @@ public class VFSUtilities
       newDir.createFolder();
       return newDir;
     }
+  }
+
+  /**
+   * This function will check the string for protocol, and if neccessary applys an proxy object to it.
+   * 
+   * @param absoluteFile
+   *          The absolute file path to the file. It should be absolute, because this function was not testet against
+   *          relative files.
+   * @return The file object.
+   */
+  @SuppressWarnings("restriction")
+  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException
+  {
+    FileSystemManager fsManager = getManager();
+
+    String proxySet = FrameworkProperties.getProperty( "proxySet" );
+    String proxyHost = FrameworkProperties.getProperty( "proxyHost" );
+    String proxyPort = FrameworkProperties.getProperty( "proxyPort" );
+
+    Debug.println( "Should use proxy: " + proxySet );
+    Debug.println( "Proxy host: " + proxyHost );
+    Debug.println( "Proxy port: " + proxyPort );
+
+    if( proxySet != null && proxySet.equals( "true" ) )
+    {
+      final Pattern p = Pattern.compile( "(.+):/.+" );
+      final Matcher m = p.matcher( absoluteFile );
+      if( m.find() == true )
+      {
+
+        Debug.println( "File: " + absoluteFile );
+        Debug.println( "Protocol: " + m.group( 1 ) );
+
+        if( m.group( 1 ).equals( "webdav" ) )
+        {
+          WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
+          WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, Integer.valueOf( proxyPort ) );
+
+          return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
+        }
+        else if( m.group( 1 ).equals( "http" ) )
+        {
+          HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, proxyHost );
+          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, Integer.valueOf( proxyPort ) );
+          return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
+        }
+      }
+    }
+
+    return fsManager.resolveFile( absoluteFile );
   }
 }
