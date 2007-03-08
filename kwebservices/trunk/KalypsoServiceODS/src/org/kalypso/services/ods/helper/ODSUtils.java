@@ -43,9 +43,6 @@ package org.kalypso.services.ods.helper;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.swtchart.chart.Chart;

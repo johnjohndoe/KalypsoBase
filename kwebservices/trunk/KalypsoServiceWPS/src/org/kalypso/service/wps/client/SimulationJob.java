@@ -79,7 +79,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -104,13 +103,13 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
  * Furthermore it has the ability to cancel its running simulation.<br>
  * <br>
- * It is somehow a wrapper on an ISimulation on the server side. <br>
+ * It is somehow a wrapper on an ISimulation on the server side.<br>
  * <br>
  * Currently it understands only files in sending and receiving.
  * 
  * @author Holger Albert
  */
-public class SimulationJob extends WorkspaceJob
+public class SimulationJob
 {
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
@@ -183,8 +182,6 @@ public class SimulationJob extends WorkspaceJob
    */
   public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String simulationType, final long timeout )
   {
-    super( simulationType );
-
     /* Initializing of the given variables. */
     m_calcCaseFolder = calcCaseFolder;
     m_modelSpec = modelSpec;
@@ -192,8 +189,8 @@ public class SimulationJob extends WorkspaceJob
     m_timeout = timeout;
 
     /* Initializing the other variables. */
-    m_service = System.getProperty( "org.kalypso.service.wps.service" );
-    m_server = System.getProperty( "org.kalypso.service.wps.server" );
+    m_service = System.getProperty( "org.kalypso.service.wps.service", "http://informdss.bafg.de/bridge/ogc" );
+    m_server = System.getProperty( "org.kalypso.service.wps.input", "webdav://WebDAV:webdav@informdss.bafg.de/webdav/input" );
     m_alreadyWorked = new Integer( 0 );
 
     /* Variables that are initialized during run time. */
@@ -203,11 +200,13 @@ public class SimulationJob extends WorkspaceJob
   }
 
   /**
-   * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
+   * Starts the simulation.
+   * 
+   * @param monitor
+   *          The progress monitor.
    */
   @SuppressWarnings("unchecked")
-  @Override
-  public IStatus runInWorkspace( IProgressMonitor monitor ) throws CoreException
+  public IStatus run( IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnung vorbereiten ...", 700 );
 
@@ -407,6 +406,7 @@ public class SimulationJob extends WorkspaceJob
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       Debug.println( "Error occured with the message: " + e.getLocalizedMessage() );
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -604,7 +604,7 @@ public class SimulationJob extends WorkspaceJob
 
       /* Build the complex value reference. */
       CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-      ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( url.toExternalForm(), null, null, null );
+      ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm() ), null, null, null );
       IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
       /* Add the input. */

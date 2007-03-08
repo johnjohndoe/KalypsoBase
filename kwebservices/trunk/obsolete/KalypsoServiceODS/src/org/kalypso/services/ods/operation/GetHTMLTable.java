@@ -42,10 +42,7 @@ package org.kalypso.services.ods.operation;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -55,7 +52,6 @@ import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.IODSConstants;
-import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;

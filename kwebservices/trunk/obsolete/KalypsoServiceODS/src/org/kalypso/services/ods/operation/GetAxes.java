@@ -42,11 +42,7 @@ package org.kalypso.services.ods.operation;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -67,7 +63,6 @@ import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.services.ods.helper.ODSUtils;
-import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.Plot;
 import org.kalypso.swtchart.chart.axis.IAxis;
@@ -76,55 +71,50 @@ import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.logging.Logger;
-import org.ksp.chart.configuration.ConfigurationType;
 
 /**
- * @author burtscher
- * IODS operation to display an image containing a chart 
+ * @author burtscher IODS operation to display an image containing a chart
  */
 public class GetAxes implements IODSOperation, Runnable
 {
 
-    private Image m_img;
-    private RequestBean m_requestBean;
-    private ResponseBean m_responseBean;
-    
-    
-    public GetAxes()
-    {
-      
-    }
-    
+  private Image m_img;
+
+  private RequestBean m_requestBean;
+
+  private ResponseBean m_responseBean;
+
+  public GetAxes( )
+  {
+
+  }
 
   /**
    * @see java.lang.Runnable#run()
    */
-  public void run( ) 
+  public void run( )
   {
-    
+
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetChart", null ) );
 
-    int width=500;
-    int height=400;
-    String reqHeight=m_requestBean.getParameterValue("HEIGHT" );
-    String reqName=m_requestBean.getParameterValue( "NAME" );
-    if (reqHeight!=null)
-      height=Integer.parseInt( reqHeight );
-    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
-    if (reqName!=null)
+    int width = 500;
+    int height = 400;
+    String reqHeight = m_requestBean.getParameterValue( "HEIGHT" );
+    String reqName = m_requestBean.getParameterValue( "NAME" );
+    if( reqHeight != null )
+      height = Integer.parseInt( reqHeight );
+    // der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if( reqName != null )
     {
-      Display display=DisplayHelper.getInstance().getDisplay();
-      String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-      BufferedOutputStream outputStream=null;
+      Display display = DisplayHelper.getInstance().getDisplay();
+      String pathVC = System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT ) + IODSConstants.ODS_CONFIG_NAME;
+      BufferedOutputStream outputStream = null;
 
-      ConfigLoader cl=null;
-      Image img=null;
-      
-      
-      
-      
-      Display dev=DisplayHelper.getInstance().getDisplay();
-      m_img = new Image( dev , width, height );
+      ConfigLoader cl = null;
+      Image img = null;
+
+      Display dev = DisplayHelper.getInstance().getDisplay();
+      m_img = new Image( dev, width, height );
 
       GCWrapper gcw = new GCWrapper( new GC( m_img ) );
       Image tmpImg = new Image( dev, width, height );
@@ -137,63 +127,60 @@ public class GetAxes implements IODSOperation, Runnable
       gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
       gcw.fillRectangle( 0, 0, width, height );
 
-      //Chart erzeugen
+      // Chart erzeugen
       try
       {
-        cl = new ConfigLoader(pathVC);
-        Shell s=new Shell(DisplayHelper.getInstance().getDisplay());
-        Canvas ca=new Canvas(s, SWT.NONE);
-        Chart c=new Chart( ca, SWT.NONE );
-       
-        
-        ChartLoader.createChart( c, cl, reqName, null);
-        
-        c.setSize(width, height);
-        
-        
-        
+        cl = new ConfigLoader( pathVC );
+        Shell s = new Shell( DisplayHelper.getInstance().getDisplay() );
+        Canvas ca = new Canvas( s, SWT.NONE );
+        Chart c = new Chart( ca, SWT.NONE );
+
+        ChartLoader.createChart( c, cl, reqName, null );
+
+        c.setSize( width, height );
+
         // Plot zeichnen
         Plot plot = c.getPlot();
-        while ( plot.getBounds().height<height)
+        while( plot.getBounds().height < height )
         {
-          c.setSize( c.getSize().x, c.getSize().y+1 );
-          Logger.trace("Vergrössere Höhe auf "+plot.getBounds());
+          c.setSize( c.getSize().x, c.getSize().y + 1 );
+          Logger.trace( "Vergrössere Höhe auf " + plot.getBounds() );
         }
-        while ( plot.getBounds().width<width)
+        while( plot.getBounds().width < width )
         {
-          c.setSize( c.getSize().x+1, c.getSize().y );
-          Logger.trace("Vergrössere Breite auf "+plot.getBounds());
+          c.setSize( c.getSize().x + 1, c.getSize().y );
+          Logger.trace( "Vergrössere Breite auf " + plot.getBounds() );
         }
 
         ODSUtils.setAxisValues( c, m_requestBean );
-        
+
         tmpImg = plot.paintChart( dev, tmpGcw, m_img.getBounds(), null );
-        gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height,0, 0, plot.getBounds().width, plot.getBounds().height );
+        gcw.drawImage( tmpImg, 0, 0, plot.getBounds().width, plot.getBounds().height, 0, 0, plot.getBounds().width, plot.getBounds().height );
         tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
-        
-        
-        //Manuelles (kuck nach!) testen, ob die Werte auch nach der Vergrößerung noch den gewünschten Werten entsprechen 
-        IAxisRegistry ar=c.getAxisRegistry();
+
+        // Manuelles (kuck nach!) testen, ob die Werte auch nach der Vergrößerung noch den gewünschten Werten
+        // entsprechen
+        IAxisRegistry ar = c.getAxisRegistry();
         IAxis[] axes = ar.getAxes();
         for( IAxis axis : axes )
         {
-          Logger.trace(axis.getIdentifier()+": getFrom:"+axis.getFrom());
-          Logger.trace(axis.getIdentifier()+": getFrom:"+axis.getTo());
-        } 
-        
-        if (m_img!=null)
+          Logger.trace( axis.getIdentifier() + ": getFrom:" + axis.getFrom() );
+          Logger.trace( axis.getIdentifier() + ": getFrom:" + axis.getTo() );
+        }
+
+        if( m_img != null )
         {
           m_responseBean.setContentType( "image/jpeg" );
-          
-          ImageLoader il=new ImageLoader();
-          ImageData id=m_img.getImageData();
-          il.data=new ImageData[]{id};
+
+          ImageLoader il = new ImageLoader();
+          ImageData id = m_img.getImageData();
+          il.data = new ImageData[] { id };
           outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
           il.save( outputStream, SWT.IMAGE_JPEG );
         }
         else
         {
-         // throw new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "" , "");
+          // throw new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "" , "");
         }
       }
       catch( JAXBException e )
@@ -208,9 +195,9 @@ public class GetAxes implements IODSOperation, Runnable
       }
       finally
       {
-        if (m_img!=null)
+        if( m_img != null )
           m_img.dispose();
-        if (outputStream!=null)
+        if( outputStream != null )
         {
           try
           {
@@ -226,20 +213,20 @@ public class GetAxes implements IODSOperation, Runnable
     }
     else
     {
-     // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
-      //throw new OWSException(OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "" , "");
+      // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+      // throw new OWSException(OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "" , "");
     }
   }
 
-
   /**
-   * @see org.kalypso.services.ods.operation.IODSOperation#operate(org.kalypso.service.ogc.RequestBean, javax.servlet.http.HttpServletResponse)
+   * @see org.kalypso.services.ods.operation.IODSOperation#operate(org.kalypso.service.ogc.RequestBean,
+   *      javax.servlet.http.HttpServletResponse)
    */
   public void operate( RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
-    m_requestBean=requestBean;
-    m_responseBean=responseBean;
+    m_requestBean = requestBean;
+    m_responseBean = responseBean;
     DisplayHelper.getInstance().getDisplay().syncExec( this );
-    
-  }  
+
+  }
 }

@@ -107,7 +107,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     {
       if( input instanceof ComplexValueType )
       {
-        //TODO Return content?
+        // TODO Return content?
         ComplexValueType complexValue = (ComplexValueType) input;
         return complexValue;
       }
@@ -134,9 +134,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         ComplexValueReference complexValueReference = (ComplexValueReference) input;
         String reference = complexValueReference.getReference();
 
-        /* TODO: Short workaround, to get the URL (in case it is a webdav URL). */
-        String newReference = reference.replaceFirst( "webdav", "http" );
-        URL url = new URL( newReference );
+        URL url = new URL( reference );
         return url;
       }
       else

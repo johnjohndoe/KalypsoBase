@@ -43,9 +43,6 @@ package org.kalypso.services.ods.operation;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
@@ -60,7 +57,6 @@ import org.kalypso.services.ods.helper.CachedChart;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.ODSUtils;
-import org.kalypso.services.ods.helper.IODSConstants.ERROR_CODE;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.legend.LegendImageContainer;
 import org.kalypso.swtchart.logging.Logger;

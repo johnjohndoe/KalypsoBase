@@ -56,13 +56,14 @@ import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
-import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.FileUtil;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
@@ -187,12 +188,12 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         FileObject source = manager.toFileObject( sourceFile );
 
         /* Resolving the result file object. */
-        FileObject destination = m_resultDir.resolveFile( relativePathToSource );
+        FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
 
         if( FileType.FOLDER.equals( source.getType() ) )
         {
           /* Directory copy. */
-          Debug.println( "Copy Directory " + source.getName() + " to " + destination.getName() + " ..." );
+          Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." );
 
           // TODO Copy the directorys as well ...
         }
@@ -200,13 +201,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         {
           /* File copy. */
           Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
-          destination.copyFrom( source, new AllFileSelector() );
+          FileUtil.copyContent( source, destination );
 
           /* Get for reference. */
           OutputDescriptionType outputDescription = m_outputList.get( key );
 
           /* Build complex value reference. */
-          ComplexValueReference complexValueReference = OGCUtilities.buildComplexValueReference( destination.getURL().toExternalForm(), null, null, null );
+          ComplexValueReference complexValueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
 
           /* Build io value. */
           IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), complexValueReference );

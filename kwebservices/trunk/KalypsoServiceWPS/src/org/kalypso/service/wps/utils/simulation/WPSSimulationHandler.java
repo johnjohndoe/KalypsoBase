@@ -59,6 +59,7 @@ import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationConstants.STATE;
 
@@ -200,7 +201,7 @@ public class WPSSimulationHandler extends Thread
   {
     /* Prepare the execute response. */
     FileObject resultFile = m_service.getResultDir( m_jobID ).resolveFile( "executeResponse.xml" );
-    String statusLocation = resultFile.getURL().toExternalForm();
+    String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
 
     ProcessOutputs processOutputs = null;
     if( ioValues != null )

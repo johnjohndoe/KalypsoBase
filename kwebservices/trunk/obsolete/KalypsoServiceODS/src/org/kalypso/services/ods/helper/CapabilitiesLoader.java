@@ -46,10 +46,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -57,11 +55,9 @@ import javax.xml.bind.Marshaller;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.ogc.RequestBean;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.ChartType;
-import org.ksp.chart.configuration.ConfigurationType;
 import org.ksp.chart.configuration.TableType;
 import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
 import org.ksp.ods.capabilities.DCPType;

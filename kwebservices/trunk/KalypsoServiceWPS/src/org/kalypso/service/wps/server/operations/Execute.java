@@ -59,6 +59,7 @@ import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationManager;
@@ -102,7 +103,7 @@ public class Execute implements IOperation
       /* Prepare the execute response. */
       FileObject resultDir = manager.getResultDir( info.getId() );
       FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
-      String statusLocation = resultFile.getURL().toExternalForm();
+      String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
       StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
       ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, statusLocation, OGCUtilities.VERSION );
       JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );

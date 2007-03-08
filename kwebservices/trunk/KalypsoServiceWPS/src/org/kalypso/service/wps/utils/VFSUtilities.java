@@ -48,11 +48,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
+import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 
 /**
  * Helpfull functions when dealing with VFS.
@@ -61,6 +64,10 @@ import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
  */
 public class VFSUtilities
 {
+  private static final FileSystemOptions THE_WEBDAV_OPTIONS = new FileSystemOptions();
+
+  private static final FileSystemOptions THE_HTTP_OPTIONS = new FileSystemOptions();
+
   /**
    * The constructor.
    */
@@ -91,6 +98,14 @@ public class VFSUtilities
       fsManager.addProvider( "webdav", new WebdavFileProvider() );
     }
 
+    // TODO: Think of http and ftp with proxies
+    // TODO: get from kalypso settings
+    WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, "proxy.bce01.de" );
+    WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, 8080 );
+
+    HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, "proxy.bce01.de" );
+    HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, 8080 );
+
     return fsManager;
   }
 
@@ -112,6 +127,7 @@ public class VFSUtilities
     if( destination.getType().equals( FileType.FOLDER ) )
       destination = destination.resolveFile( source.getName().getBaseName() );
 
+    /* Copy ... */
     FileUtil.copyContent( source, destination );
   }
 
@@ -202,9 +218,14 @@ public class VFSUtilities
    */
   public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
   {
+    FileSystemManager fsManager = getManager();
+
     while( true )
     {
-      FileObject newDir = parentDir.resolveFile( prefix + String.valueOf( System.currentTimeMillis() ) );
+      String dirParent = parentDir.getURL().toExternalForm();
+      String dirName = prefix + String.valueOf( System.currentTimeMillis() );
+
+      FileObject newDir = fsManager.resolveFile( dirParent + "/" + dirName );
       if( newDir.exists() )
         continue;
 

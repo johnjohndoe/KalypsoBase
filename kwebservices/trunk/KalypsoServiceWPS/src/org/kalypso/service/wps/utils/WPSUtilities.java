@@ -52,6 +52,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -145,5 +146,62 @@ public class WPSUtilities
 
     Debug.println( "Found simulation \"" + simulationType + "\"." );
     return simulation;
+  }
+
+  /**
+   * This function converts the URL that, the server has used and converts it to an URL, which the client can use.
+   * 
+   * @param serverUrl
+   *          The URL, which the server has used internally to copy the results.<br>
+   *          Example:<br>
+   *          Server URL: file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results<br>
+   *          Replacement URL: http://informdss.bafg.de/webdav/results<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          serverUrl param : file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results/xxx<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          Result: http://informdss.bafg.de/webdav/results/xxx
+   */
+  public static String convertInternalToClient( String serverUrl )
+  {
+    /* If no property for the replacement is set, use the server URL and provide it to the client. */
+    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
+    if( clientProperty == null )
+      return serverUrl;
+
+    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    String clientUrl = serverUrl.replace( serverProperty, clientProperty );
+
+    Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
+
+    return clientUrl;
+  }
+
+  /**
+   * This function converts the URL, that the client has used to copy the input data and converts it to an URL, which
+   * the server can use to retrieve them.
+   * 
+   * @param clientUrl
+   *          The URL, which the client has used internally to copy the input data.<br>
+   *          Example:<br>
+   *          Client URL: webdav://informdss.bafg.de/webdav/input<br>
+   *          Replacement URL: http://informdss.bafg.de/webdav/input<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          Result: http://informdss.bafg.de/webdav/input/xxx
+   */
+  public static String convertInternalToServer( String clientUrl )
+  {
+    /* If no property for the replacement is set, use the client URL and provide it to the server. */
+    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
+    if( serverProperty == null )
+      return clientUrl;
+
+    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.input" );
+    String serverUrl = clientUrl.replace( clientProperty, serverProperty );
+
+    Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
+
+    return serverUrl;
   }
 }

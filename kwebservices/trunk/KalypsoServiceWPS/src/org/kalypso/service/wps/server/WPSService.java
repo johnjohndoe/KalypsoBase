@@ -36,7 +36,7 @@ public class WPSService implements IOGCService
 
   /**
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean,
-   *      javax.servlet.http.HttpServletResponse)
+   *      org.kalypso.service.ogc.ResponseBean)
    */
   public void executeOperation( RequestBean request, ResponseBean responseBean ) throws OWSException
   {
