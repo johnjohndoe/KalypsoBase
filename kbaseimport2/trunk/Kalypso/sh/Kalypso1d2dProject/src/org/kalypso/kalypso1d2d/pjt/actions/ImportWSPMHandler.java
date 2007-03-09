@@ -75,21 +75,11 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    // final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable(
-    // ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-    // final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
 
-    /* Open map with fe-net */
-    // final IFile file = szenarioPath.getFile( new Path( "maps/fenet.gmt" ) );
-    // if( file.exists() )
-    // {
-    // final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    // IDE.openEditor( workbenchPage, file, GisMapEditor.ID );
-    // }
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 
@@ -118,6 +108,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
 
     /* Add new layer to profile-collection-map */
     // TODO: add a new layer containing the new profiles in the profile-network map
+
     /* Zoom to new elements in fe-map? */
 
     return Status.OK_STATUS;
