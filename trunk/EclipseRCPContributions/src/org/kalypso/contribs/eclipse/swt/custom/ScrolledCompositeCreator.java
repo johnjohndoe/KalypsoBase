@@ -53,7 +53,7 @@ public abstract class ScrolledCompositeCreator
 
   public static interface SizeProvider
   {
-    public Point getSize( );
+    public Point getSize( final Point clientAreaSize );
   }
 
   public ScrolledCompositeCreator( final SizeProvider maxSizeProvider )
@@ -63,7 +63,7 @@ public abstract class ScrolledCompositeCreator
 
   public final void createControl( final Composite parent, final int style, final int contentStyle )
   {
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | style );
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, style );
 
     // Die folgende Zeile hängt vom Layout des Parent ab, wenn der Parent kein GridLayout hat,
     // kommts zu seltsamen Effekten beim Resize etc.
@@ -102,10 +102,11 @@ public abstract class ScrolledCompositeCreator
     final int psizey = clientArea.height;
     if( ignoreZeroClientSize && (psizex == 0 || psizey == 0) )
       return;
+    final Point clientareaSize = new Point( clientArea.width, clientArea.height );
 
     final int style = m_scrolledComposite.getStyle();
 
-    final Point maxSize = m_maxSizeProvider == null ? new Point( psizex, psizey ) : m_maxSizeProvider.getSize();
+    final Point maxSize = m_maxSizeProvider == null ? new Point( psizex, psizey ) : m_maxSizeProvider.getSize( clientareaSize );
     final int newX = ((style & SWT.H_SCROLL) != 0) ? Math.max( controlX, psizex ) : Math.min( psizex, maxSize.x );
     final int newY = ((style & SWT.V_SCROLL) != 0) ? Math.max( controlY, psizey ) : Math.min( psizey, maxSize.y );
 
