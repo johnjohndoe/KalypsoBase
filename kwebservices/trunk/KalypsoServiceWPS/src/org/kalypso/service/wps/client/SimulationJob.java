@@ -97,8 +97,6 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
-// TODO Use a unique temp-directory for the input data of this calc job.
-
 /**
  * This class manages the connect between the client and the server.<br>
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
@@ -115,7 +113,7 @@ public class SimulationJob
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
    */
-  private int MONITOR_SERVER_VALUE = 200;
+  private int MONITOR_SERVER_VALUE = 500;
 
   /**
    * The calc case folder.
@@ -209,7 +207,7 @@ public class SimulationJob
   @SuppressWarnings("unchecked")
   public IStatus run( IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung vorbereiten ...", 700 );
+    monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
 
     Debug.println( "Checking for service URL ..." );
     if( m_service == null )
@@ -352,7 +350,6 @@ public class SimulationJob
 
         if( statusFile.exists() )
         {
-          monitor.setTaskName( "Status" );
           String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
           Object object = MarshallUtilities.unmarshall( xml );
           JAXBElement<ExecuteResponseType> executeState = (JAXBElement<ExecuteResponseType>) object;
@@ -394,7 +391,6 @@ public class SimulationJob
       }
 
       /* Check if the results are ready. */
-      monitor.subTask( "" );
       monitor.setTaskName( "Prüfe Ergebnisse ..." );
       Debug.println( "Check the results ..." );
 
@@ -404,6 +400,7 @@ public class SimulationJob
         return StatusUtilities.createErrorStatus( "The server responded without any outputs ..." );
 
       /* Copy all process output to their destination. */
+      monitor.setTaskName( "Kopiere Ergebnisse zu Client ..." );
       copyOutputFiles( m_calcCaseFolder, processOutputs );
 
       /* Finish. */
@@ -524,9 +521,8 @@ public class SimulationJob
    * @param files
    *          The files to copy.
    */
-  private void copyInputFiles( IFile[] files ) throws IOException
+  private void copyInputFiles( IFile[] files ) throws Exception
   {
-    Debug.println( "Copying ..." );
     for( int i = 0; i < files.length; i++ )
     {
       File file = files[i].getLocation().toFile();
@@ -535,8 +531,41 @@ public class SimulationJob
       FileObject source = m_fsManager.toFileObject( file );
       FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
 
-      /* Copy file. */
-      VFSUtilities.copy( source, destination );
+      /* Some variables for handling the errors. */
+      boolean success = false;
+      int cnt = 0;
+
+      Debug.println( "Copy '" + source.getName() + " to '" + destination.getName() + "' ..." );
+      while( success == false )
+      {
+        try
+        {
+          /* Copy file. */
+          VFSUtilities.copy( source, destination );
+
+          /* End copying of this file, because it was a success. */
+          success = true;
+        }
+        catch( Exception e )
+        {
+          /* An error has occured while copying the file. */
+          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+
+          /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
+          if( cnt >= 2 )
+          {
+            Debug.println( "The second retry has failed, rethrowing the error ..." );
+            throw e;
+          }
+
+          /* Retry the copying of the file. */
+          cnt++;
+          Debug.println( "Retry: " + String.valueOf( cnt ) );
+          success = false;
+
+          wait( 1000 );
+        }
+      }
     }
   }
 
@@ -727,7 +756,7 @@ public class SimulationJob
     }
 
     /* Set the message. */
-    monitor.subTask( description );
+    monitor.setTaskName( description );
   }
 
   /**
@@ -781,7 +810,7 @@ public class SimulationJob
       }
     }
 
-    //project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    // project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 
   /**

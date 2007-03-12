@@ -56,7 +56,7 @@ public class WPSService implements IOGCService
         if( service == null || service.length() == 0 )
         {
           Debug.println( "Missing attribute Service!" );
-          throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Attribute Service is missing ...", "Service" );
+          throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Attribute 'Service' is missing ...", "Service" );
         }
 
         /* Need the XML attribute version. */
@@ -64,7 +64,7 @@ public class WPSService implements IOGCService
         if( version == null || version.length() == 0 )
         {
           Debug.println( "Missing attribute Version!" );
-          throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Attribute Version is missing ...", "Version" );
+          throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Attribute 'Version' is missing ...", "Version" );
         }
 
         /* The type of the unmarshalled object has to be the right one. */
@@ -93,7 +93,7 @@ public class WPSService implements IOGCService
       if( parameterValue == null )
       {
         Debug.println( "Missing parameter Request!" );
-        throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter REQUEST is missing ...", "Request" );
+        throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'Request' is missing ...", "Request" );
       }
     }
 
@@ -106,7 +106,7 @@ public class WPSService implements IOGCService
     if( operation == null )
     {
       Debug.println( "Unsupported operation \"" + parameterValue + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Invalid operation " + parameterValue + " ...", "Request" );
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Invalid operation '" + parameterValue + "' ...", "Request" );
     }
 
     /* Execute the operation. */

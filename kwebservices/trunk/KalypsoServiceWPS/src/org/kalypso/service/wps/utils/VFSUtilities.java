@@ -115,11 +115,11 @@ public class VFSUtilities
    */
   public static void copy( FileObject source, FileObject destination ) throws IOException
   {
-    if( source.getType().equals( FileType.FOLDER ) )
+    if( FileType.FOLDER.equals( source.getType() ) )
       throw new IllegalArgumentException( "The source-file is a directory ..." );
 
     /* If the destination is only a directory, use the sources filename for the destination file. */
-    if( destination.getType().equals( FileType.FOLDER ) )
+    if( FileType.FOLDER.equals( destination.getType() ) )
       destination = destination.resolveFile( source.getName().getBaseName() );
 
     /* Copy ... */

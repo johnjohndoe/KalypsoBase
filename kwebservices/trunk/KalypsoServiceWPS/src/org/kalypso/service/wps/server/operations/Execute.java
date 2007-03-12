@@ -200,7 +200,7 @@ public class Execute implements IOperation
     if( simulationType == null || simulationType.length() == 0 )
     {
       Debug.println( "Missing parameter Identifier!" );
-      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter Identifier is missing ...", "Identifier" );
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'Identifier' is missing ...", "Identifier" );
     }
 
     return simulationType;
