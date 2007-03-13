@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -50,6 +51,10 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface IElevationProvider
 {
+  public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
+  public static final CS_CoordinateSystem CRS_GAUSS_KRUEGER= 
+        ConvenienceCSFactory.getInstance().getOGCCSByName( 
+                            CS_KEY_GAUSS_KRUEGER );
 
   /**
    * Get the elevation provides by this model
