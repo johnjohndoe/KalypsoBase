@@ -42,6 +42,8 @@ package org.kalypso.simulation.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -131,12 +133,13 @@ public class KalypsoSimulationCoreExtensions
         }
         catch( final CoreException e )
         {
-//        element.getAttribute( "id" );
+          // element.getAttribute( "id" );
           status.add( e.getStatus() );
         }
       }
       else
-        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: " + element.getValue() );
+        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: "
+            + element.getValue() );
     }
 
     return status;
@@ -151,6 +154,29 @@ public class KalypsoSimulationCoreExtensions
       return null;
 
     return (ISimulation) element.createExecutableExtension( EXT_ATTRIB_SIMULATIONCLASS );
+  }
+
+  /**
+   * This function creates a linked list with all simulations.
+   * 
+   * @return All simulations.
+   */
+  public static List<ISimulation> createSimulations( ) throws CoreException
+  {
+    List<ISimulation> simulations = new LinkedList<ISimulation>();
+
+    final Map<String, IConfigurationElement> elements = readSimulations();
+    Iterator<String> keys = elements.keySet().iterator();
+    while( keys.hasNext() )
+    {
+      String key = keys.next();
+      IConfigurationElement element = elements.get( key );
+
+      /* Add the simulation. */
+      simulations.add( (ISimulation) element.createExecutableExtension( EXT_ATTRIB_SIMULATIONCLASS ) );
+    }
+
+    return simulations;
   }
 
   public static String[] getRegisteredTypeIDs( )

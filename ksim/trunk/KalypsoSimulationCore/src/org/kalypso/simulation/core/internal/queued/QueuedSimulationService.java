@@ -84,7 +84,7 @@ public class QueuedSimulationService implements ISimulationService
     if( !DO_DEBUG_TRACE )
       LOGGER.setUseParentHandlers( false );
   }
-  
+
   /** Vector of {@link CalcJobThread}s */
   private final Vector<SimulationThread> m_threads = new Vector<SimulationThread>();
 
@@ -233,6 +233,16 @@ public class QueuedSimulationService implements ISimulationService
    */
   public final SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
   {
+    /*
+     * TODO @Gernot I think this is wrong, because the Vector changes the indexes of its elements on adding and removing
+     * one element. Problem here is: Three threads are running, (ids 0, 1, 2) and are still in the list (indexes 0, 1,
+     * 2). Adding a new one would be ok, getting index 3 and id 3. But if lets say, the thread with the id 1 finishes
+     * and is removed from the list, the Thread with id 2 will get the new index 1. Now, starting a new thread will give
+     * it the index 2 and the id 2. Now we have two threads with the same id. In the WPSQueuedSimulationService I tried
+     * to solve this and it seems to be working. If you would like (and if you think it is the right solution) we could
+     * change it here, too, if this class should be continued to be used for local calculations with perhaps more than
+     * one thread running.
+     */
     SimulationThread cjt = null;
     synchronized( m_threads )
     {
