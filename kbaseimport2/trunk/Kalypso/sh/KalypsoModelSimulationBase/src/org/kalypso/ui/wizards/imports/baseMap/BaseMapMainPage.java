@@ -98,7 +98,7 @@ public class BaseMapMainPage extends WizardPage
     button.setText( "Browse.." );
 
     // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
     final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );

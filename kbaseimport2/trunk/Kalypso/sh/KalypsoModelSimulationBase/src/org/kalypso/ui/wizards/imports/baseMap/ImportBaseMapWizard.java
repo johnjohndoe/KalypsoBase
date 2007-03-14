@@ -151,7 +151,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     }
     else
     {
-      throw new UnsupportedOperationException( "Unsuported base map type: " + extension );
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + extension );
     }
     try
     {
