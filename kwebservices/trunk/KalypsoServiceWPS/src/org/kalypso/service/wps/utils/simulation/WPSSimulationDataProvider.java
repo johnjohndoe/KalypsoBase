@@ -92,6 +92,10 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    */
   public void dispose( )
   {
+    /*
+     * The input data will not be deleted, this is a concern of the client, because only he could have write access to
+     * this place.
+     */
   }
 
   /**

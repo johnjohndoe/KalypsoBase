@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.ogc;
 
@@ -45,17 +45,33 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengeospatial.ows.AddressType;
 import net.opengeospatial.ows.AllowedValues;
 import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.ows.ContactType;
+import net.opengeospatial.ows.DCP;
 import net.opengeospatial.ows.DomainMetadataType;
+import net.opengeospatial.ows.DomainType;
 import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
+import net.opengeospatial.ows.HTTP;
+import net.opengeospatial.ows.KeywordsType;
 import net.opengeospatial.ows.MetadataType;
+import net.opengeospatial.ows.NoValues;
+import net.opengeospatial.ows.OnlineResourceType;
+import net.opengeospatial.ows.Operation;
+import net.opengeospatial.ows.OperationsMetadata;
 import net.opengeospatial.ows.RangeType;
+import net.opengeospatial.ows.RequestMethodType;
+import net.opengeospatial.ows.ResponsiblePartySubsetType;
+import net.opengeospatial.ows.ServiceIdentification;
+import net.opengeospatial.ows.ServiceProvider;
+import net.opengeospatial.ows.TelephoneType;
 import net.opengeospatial.ows.ValueType;
 import net.opengeospatial.ows.ValuesReference;
+import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.ComplexDataType;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
@@ -71,9 +87,11 @@ import net.opengeospatial.wps.ObjectFactory;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
+import net.opengeospatial.wps.ProcessBriefType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.ProcessFailedType;
+import net.opengeospatial.wps.ProcessOfferings;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedCRSsType;
@@ -319,7 +337,8 @@ public class OGCUtilities
    * @param title
    *          Title of a process, input, or output, normally available for display to a human.
    * @param abstrakt
-   *          Brief narrative description of a process, input, or output, normally available for display to a human.
+   *          [optional] Brief narrative description of a process, input, or output, normally available for display to a
+   *          human.
    * @param valueFormChoice
    *          Identifies the form of this input or output value, and provides supporting information. <br>
    *          Possible are
@@ -338,7 +357,9 @@ public class OGCUtilities
     /* Elements. */
     ioValue.setIdentifier( identifier );
     ioValue.setTitle( title );
-    ioValue.setAbstract( abstrakt );
+
+    if( abstrakt != null )
+      ioValue.setAbstract( abstrakt );
 
     if( valueFormChoice instanceof ComplexValueReference )
       ioValue.setComplexValueReference( (ComplexValueReference) valueFormChoice );
@@ -545,9 +566,7 @@ public class OGCUtilities
    *          element. A specific server implementation, or an Implementation Specification, can define concrete
    *          elements in the AbstractMetaData substitution group.
    * @param simpleLink
-   *          TODO Change this to all of the attributes for an simple link. Reference to metadata recorded elsewhere,
-   *          either external to this XML document or within it. Whenever practical, the xlink:href attribute with type
-   *          anyURI should include a URL from which this metadata can be electronically retrieved.
+   *          TODO
    * @param about
    *          [optional] Optional reference to the aspect of the element which includes this "metadata" element that
    *          this metadata provides more information about.
@@ -568,7 +587,9 @@ public class OGCUtilities
     metadata.setShow( "" );
     metadata.setTitle( "" );
     metadata.setType( "" );
-    metadata.setAbout( about );
+
+    if( about != null )
+      metadata.setAbout( about );
 
     return metadata;
   }
@@ -677,7 +698,7 @@ public class OGCUtilities
    *          electronically retrieved. Alternately, this attribute can reference a URN for well-known metadata. For
    *          example, such a URN could be a URN defined in the "ogc" URN namespace.
    */
-  public static DomainMetadataType buildDomainMetadata( String value, String reference )
+  public static DomainMetadataType buildDomainMetadataType( String value, String reference )
   {
     /* Create the instance via the factory. */
     DomainMetadataType domainMetadata = OWS_OF.createDomainMetadataType();
@@ -922,7 +943,8 @@ public class OGCUtilities
    * @param title
    *          Title of a process, input, or output, normally available for display to a human.
    * @param abstrakt
-   *          Brief narrative description of a process, input, or output, normally available for display to a human.
+   *          [optional] Brief narrative description of a process, input, or output, normally available for display to a
+   *          human.
    * @param inputFormChoice
    *          Identifies the form of this output and provides supporting information. Possible are
    *          <ol>
@@ -943,7 +965,9 @@ public class OGCUtilities
     /* Elements. */
     inputDescription.setIdentifier( identifier );
     inputDescription.setTitle( title );
-    inputDescription.setAbstract( abstrakt );
+
+    if( abstrakt != null )
+      inputDescription.setAbstract( abstrakt );
 
     if( inputFormChoice instanceof SupportedComplexDataType )
       inputDescription.setComplexData( (SupportedComplexDataType) inputFormChoice );
@@ -1016,7 +1040,8 @@ public class OGCUtilities
    * @param title
    *          Title of a process, input, or output, normally available for display to a human.
    * @param abstrakt
-   *          Brief narrative description of a process, input, or output, normally available for display to a human.
+   *          [optional] Brief narrative description of a process, input, or output, normally available for display to a
+   *          human.
    * @param outputFormChoice
    *          Identifies the form of this output and provides supporting information. Possible are
    *          <ol>
@@ -1033,7 +1058,9 @@ public class OGCUtilities
     /* Elements. */
     outputDescription.setIdentifier( identifier );
     outputDescription.setTitle( title );
-    outputDescription.setAbstract( abstrakt );
+
+    if( abstrakt != null )
+      outputDescription.setAbstract( abstrakt );
 
     if( outputFormChoice instanceof SupportedComplexDataType )
       outputDescription.setComplexOutput( (SupportedComplexDataType) outputFormChoice );
@@ -1076,9 +1103,9 @@ public class OGCUtilities
    *          client wishes to customize the Title in the execute response. This element should not be used if the Title
    *          provided for this output in the ProcessDescription is adequate.
    * @param abstrakt
-   *          Brief narrative description of a process output, normally available for display to a human. This element
-   *          should be used if the client wishes to customize the Abstract in the execute response. This element should
-   *          not be used if the Abstract provided for this output in the ProcessDescription is adequate.
+   *          [optional] Brief narrative description of a process output, normally available for display to a human.
+   *          This element should be used if the client wishes to customize the Abstract in the execute response. This
+   *          element should not be used if the Abstract provided for this output in the ProcessDescription is adequate.
    * @param metadata
    *          [optional] Optional unordered list of additional metadata about this process. A list of optional and/or
    *          required metadata elements for this process could be specified in a specific Application Profile for this
@@ -1115,7 +1142,9 @@ public class OGCUtilities
     /* Elements. */
     processDescription.setIdentifier( identifier );
     processDescription.setTitle( title );
-    processDescription.setAbstract( abstrakt );
+
+    if( abstrakt != null )
+      processDescription.setAbstract( abstrakt );
 
     if( metadata != null )
       processDescription.getMetadata().addAll( metadata );
@@ -1450,5 +1479,700 @@ public class OGCUtilities
     JAXBElement<ExecuteResponseType> executeResponse = WPS_OF.createExecuteResponse( value );
 
     return executeResponse;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Unordered list of one or more commonly used or formalised word(s) or phrase(s) used to describe the subject. When
+   * needed, the optional "type" can name the type of the associated list of keywords that shall all have the same type.
+   * Also when needed, the codeSpace attribute of that "type" can reference the type name authority and/or thesaurus.
+   * 
+   * @param keyword
+   * @param type
+   *          [optional]
+   */
+  public static KeywordsType buildKeywordsType( List<String> keyword, CodeType type )
+  {
+    /* Create the instance via the factory. */
+    KeywordsType keywords = OWS_OF.createKeywordsType();
+
+    /* Elements. */
+    keywords.getKeyword().addAll( keyword );
+
+    if( type != null )
+      keywords.setType( type );
+
+    return keywords;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd, owsDataIdentification.xsd,
+   * owsServiceIdentification.xsd for this type.<br>
+   * <br>
+   * General metadata for this specific server. This XML Schema of this section shall be the same for all OWS.
+   * 
+   * @param title
+   *          [optional] Title of this resource, normally used for display to a human.
+   * @param abstrakt
+   *          [optional] Brief narrative description of this resource, normally used for display to a human.
+   * @param keywords
+   *          [optional] Unordered list of one or more commonly used or formalised word(s) or phrase(s) used to describe
+   *          the subject. When needed, the optional "type" can name the type of the associated list of keywords that
+   *          shall all have the same type. Also when needed, the codeSpace attribute of that "type" can reference the
+   *          type name authority and/or thesaurus.
+   * @param serviceType
+   *          A service type name from a registry of services. For example, the values of the codeSpace URI and name and
+   *          code string may be "OGC" and "catalogue." This type name is normally used for machine-to-machine
+   *          communication.
+   * @param serviceTypeVersion
+   *          Unordered list of one or more versions of this service type implemented by this server. This information
+   *          is not adequate for version negotiation, and shall not be used for that purpose.
+   * @param fees
+   *          [optional] If this element is omitted, no meaning is implied.
+   * @param accessConstraints
+   *          [optional] Unordered list of access constraints applied to assure the protection of privacy or
+   *          intellectual property, and any other restrictions on retrieving or using data from or otherwise using this
+   *          server. The reserved value NONE (case insensitive) shall be used to mean no access constraints are
+   *          imposed. If this element is omitted, no meaning is implied.
+   */
+  public static ServiceIdentification buildServiceIdentification( String title, String abstrakt, List<KeywordsType> keywords, CodeType serviceType, List<String> serviceTypeVersion, String fees, List<String> accessConstraints )
+  {
+    /* Create the instance via the factory. */
+    ServiceIdentification serviceIdentification = OWS_OF.createServiceIdentification();
+
+    /* Elements. */
+    if( title != null )
+      serviceIdentification.setTitle( title );
+
+    if( abstrakt != null )
+      serviceIdentification.setAbstract( abstrakt );
+
+    if( keywords != null )
+      serviceIdentification.getKeywords().addAll( keywords );
+
+    serviceIdentification.setServiceType( serviceType );
+    serviceIdentification.getServiceTypeVersion().addAll( serviceTypeVersion );
+
+    if( fees != null )
+      serviceIdentification.setFees( fees );
+
+    if( accessConstraints != null )
+      serviceIdentification.getAccessConstraints().addAll( accessConstraints );
+
+    return serviceIdentification;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Telephone numbers for contacting the responsible individual or organization.
+   * 
+   * @param voice
+   *          [optional] Telephone number by which individuals can speak to the responsible organization or individual.
+   * @param facsimile
+   *          [optional] Telephone number of a facsimile machine for the responsible organization or individual.
+   */
+  public static TelephoneType buildTelephoneType( List<String> voices, List<String> facsimiles )
+  {
+    /* Create the instance via the factory. */
+    TelephoneType telephone = OWS_OF.createTelephoneType();
+
+    /* Elements. */
+    if( voices != null )
+      telephone.getVoice().addAll( voices );
+
+    if( facsimiles != null )
+      telephone.getFacsimile().addAll( facsimiles );
+
+    return telephone;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Location of the responsible individual or organization.
+   * 
+   * @param deliveryPoints
+   *          [optional] Address line for the location.
+   * @param city
+   *          [optional] City of the location.
+   * @param administrativeArea
+   *          [optional] State or province of the location.
+   * @param postalCode
+   *          [optional] ZIP or other postal code.
+   * @param country
+   *          [optional] Country of the physical address.
+   * @param electronicMailAddress
+   *          [optional] Address of the electronic mailbox of the responsible organization or individual.
+   */
+  public static AddressType buildAddressType( List<String> deliveryPoints, String city, String administrativeArea, String postalCode, String country, List<String> electronicMailAddresses )
+  {
+    /* Create the instance via the factory. */
+    AddressType address = OWS_OF.createAddressType();
+
+    /* Elements. */
+    if( deliveryPoints != null )
+      address.getDeliveryPoint().addAll( deliveryPoints );
+
+    if( city != null )
+      address.setCity( city );
+
+    if( administrativeArea != null )
+      address.setAdministrativeArea( administrativeArea );
+
+    if( postalCode != null )
+      address.setPostalCode( postalCode );
+
+    if( country != null )
+      address.setCountry( country );
+
+    if( electronicMailAddresses != null )
+      address.getElectronicMailAddress().addAll( electronicMailAddresses );
+
+    return address;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Reference to on-line resource from which data can be obtained.
+   * 
+   * @param simpleLink
+   *          TODO
+   */
+  public static OnlineResourceType buildOnlineResourceType( )
+  {
+    /* Create the instance via the factory. */
+    OnlineResourceType onlineResource = OWS_OF.createOnlineResourceType();
+
+    /* Attributes. TODO This attributes has to be set. */
+    onlineResource.setActuate( "" );
+    onlineResource.setArcrole( "" );
+    onlineResource.setHref( "" );
+    onlineResource.setRole( "" );
+    onlineResource.setShow( "" );
+    onlineResource.setTitle( "" );
+    onlineResource.setType( "" );
+
+    return onlineResource;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Information required to enable contact with the responsible person and/or organization.
+   * 
+   * @param phone
+   *          [optional] Telephone numbers at which the organization or individual may be contacted.
+   * @param address
+   *          [optional] Physical and email address at which the organization or individual may be contacted.
+   * @param onlineResource
+   *          [optional] On-line information that can be used to contact the individual or organization. OWS specifics:
+   *          The xlink:href attribute in the xlink:simpleLink attribute group shall be used to reference this resource.
+   *          Whenever practical, the xlink:href attribute with type anyURI should be a URL from which more contact
+   *          information can be electronically retrieved. The xlink:title attribute with type "string" can be used to
+   *          name this set of information. The other attributes in the xlink:simpleLink attribute group should not be
+   *          used.
+   * @param hoursOfService
+   *          [optional]Time period (including time zone) when individuals can contact the organization or individual.
+   * @param contactInstructions
+   *          [optional] Supplemental instructions on how or when to contact the individual or organization.
+   */
+  public static ContactType buildContactType( TelephoneType phone, AddressType address, OnlineResourceType onlineResource, String hoursOfService, String contactInstructions )
+  {
+    /* Create the instance via the factory. */
+    ContactType contact = OWS_OF.createContactType();
+
+    /* Elements. */
+    if( phone != null )
+      contact.setPhone( phone );
+
+    if( address != null )
+      contact.setAddress( address );
+
+    if( onlineResource != null )
+      contact.setOnlineResource( onlineResource );
+
+    if( hoursOfService != null )
+      contact.setHoursOfService( hoursOfService );
+
+    if( contactInstructions != null )
+      contact.setContactInstructions( contactInstructions );
+
+    return contact;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * <br>
+   * Identification of, and means of communication with, person responsible for the server.
+   * 
+   * @param individualName
+   *          [optional] Name of the responsible person: surname, given name, title separated by a delimiter.
+   * @param positionName
+   *          [optional] Role or position of the responsible person.
+   * @param contactInfo
+   *          [optional] Address of the responsible party.
+   * @param role
+   *          [optional] Function performed by the responsible party. Possible values of this Role shall include the
+   *          values and the meanings listed in Subclause B.5.5 of ISO 19115:2003.
+   */
+  public static ResponsiblePartySubsetType buildResponsiblePartySubsetType( String individualName, String positionName, ContactType contactInfo, CodeType role )
+  {
+    /* Create the instance via the factory. */
+    ResponsiblePartySubsetType responsiblePartySubset = OWS_OF.createResponsiblePartySubsetType();
+
+    /* Elements. */
+    if( individualName != null )
+      responsiblePartySubset.setIndividualName( individualName );
+
+    if( positionName != null )
+      responsiblePartySubset.setPositionName( positionName );
+
+    if( contactInfo != null )
+      responsiblePartySubset.setContactInfo( contactInfo );
+
+    if( role != null )
+      responsiblePartySubset.setRole( role );
+
+    return responsiblePartySubset;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsServiceProvider.xsd for this type.<br>
+   * <br>
+   * Metadata about the organization that provides this specific service instance or server.
+   * 
+   * @param providerName
+   *          A unique identifier for the service provider organization.
+   * @param providerSite
+   *          [optional] Reference to the most relevant web site of the service provider.
+   * @param serviceContact
+   *          Information for contacting the service provider. The OnlineResource element within this ServiceContact
+   *          element should not be used to reference a web site of the service provider.
+   */
+  public static ServiceProvider buildServiceProvider( String providerName, OnlineResourceType providerSite, ResponsiblePartySubsetType serviceContact )
+  {
+    /* Create the instance via the factory. */
+    ServiceProvider serviceProvider = OWS_OF.createServiceProvider();
+
+    /* Elements. */
+    serviceProvider.setProviderName( providerName );
+
+    if( providerSite != null )
+      serviceProvider.setProviderSite( providerSite );
+
+    serviceProvider.setServiceContact( serviceContact );
+
+    return serviceProvider;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Connect point URL and any constraints for this HTTP request method for this operation request. In the
+   * OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to contain this
+   * URL. The other attributes in the xlink:simpleLink attribute group should not be used.
+   * 
+   * @param simpleLink
+   *          TODO
+   * @param constraints
+   *          [optional] Optional unordered list of valid domain constraints on non-parameter quantities that each apply
+   *          to this request method for this operation. If one of these Constraint elements has the same "name"
+   *          attribute as a Constraint element in the OperationsMetadata or Operation element, this Constraint element
+   *          shall override the other one for this operation. The list of required and optional constraints for this
+   *          request method for this operation shall be specified in the Implementation Specification for this service.
+   */
+  public static RequestMethodType buildRequestMethodType( List<DomainType> constraints )
+  {
+    /* Create the instance via the factory. */
+    RequestMethodType requestMethod = OWS_OF.createRequestMethodType();
+
+    /* Attributes. TODO This attributes has to be set. */
+    requestMethod.setActuate( "" );
+    requestMethod.setArcrole( "" );
+    requestMethod.setHref( "" );
+    requestMethod.setRole( "" );
+    requestMethod.setShow( "" );
+    requestMethod.setTitle( "" );
+    requestMethod.setType( "" );
+
+    /* Elements. */
+    if( constraints != null )
+      requestMethod.getConstraint().addAll( constraints );
+
+    return requestMethod;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Connect point URL prefix and any constraints for the HTTP "Get" request method for this operation request.
+   * 
+   * @param requestMethod
+   *          Connect point URL and any constraints for this HTTP request method for this operation request. In the
+   *          OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to
+   *          contain this URL. The other attributes in the xlink:simpleLink attribute group should not be used.
+   */
+  public static JAXBElement<RequestMethodType> buildHTTPGet( RequestMethodType requestMethod )
+  {
+    /* Create the instance via the factory. */
+    JAXBElement<RequestMethodType> HTTPGet = OWS_OF.createHTTPGet( requestMethod );
+
+    return HTTPGet;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Connect point URL and any constraints for the HTTP "Post" request method for this operation request.
+   * 
+   * @param requestMethod
+   *          Connect point URL and any constraints for this HTTP request method for this operation request. In the
+   *          OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to
+   *          contain this URL. The other attributes in the xlink:simpleLink attribute group should not be used.
+   */
+  public static JAXBElement<RequestMethodType> buildHTTPPost( RequestMethodType requestMethod )
+  {
+    /* Create the instance via the factory. */
+    JAXBElement<RequestMethodType> HTTPPost = OWS_OF.createHTTPPost( requestMethod );
+
+    return HTTPPost;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Connect point URLs for the HTTP Distributed Computing Platform (DCP). Normally, only one Get and/or one Post is
+   * included in this element. More than one Get and/or Post is allowed to support including alternative URLs for uses
+   * such as load balancing or backup.
+   * 
+   * @param requestMethods
+   */
+  public static HTTP buildHTTP( List<JAXBElement<RequestMethodType>> requestMethods )
+  {
+    /* Create the instance via the factory. */
+    HTTP http = OWS_OF.createHTTP();
+
+    /* Elements. */
+    http.getGetOrPost().addAll( requestMethods );
+
+    return http;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Information for one distributed Computing Platform (DCP) supported for this operation. At present, only the HTTP
+   * DCP is defined, so this element only includes the HTTP element.
+   * 
+   * @param http
+   *          Connect point URLs for the HTTP Distributed Computing Platform (DCP). Normally, only one Get and/or one
+   *          Post is included in this element. More than one Get and/or Post is allowed to support including
+   *          alternative URLs for uses such as load balancing or backup.
+   */
+  public static DCP buildDCP( HTTP http )
+  {
+    /* Create the instance via the factory. */
+    DCP dcp = OWS_OF.createDCP();
+
+    /* Elements. */
+    dcp.setHTTP( http );
+
+    return dcp;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsDomainType.xsd for this type.<br>
+   * <br>
+   * Specifies that no values are allowed for this quantity.
+   */
+  public static NoValues buildNoValues( )
+  {
+    /* Create the instance via the factory. */
+    NoValues noValues = OWS_OF.createNoValues();
+
+    return noValues;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsDomainType.xsd for this type.<br>
+   * <br>
+   * Valid domain (or allowed set of values) of one quantity, with its name or identifier.
+   * 
+   * @param possibleValues
+   *          [optional] Default value this quantity, which should be included when this quantity has a default value.
+   *          Possible are
+   *          <ol>
+   *          <li>AllowedValues</li>
+   *          <li>AnyValue</li>
+   *          <li>NoValues</li>
+   *          <li>ValuesReference</li>
+   *          </ol>
+   * @param meaning
+   *          [optional] Meaning metadata, which should be referenced for each quantity.
+   * @param dataType
+   *          [optinal] Data type metadata, which should be referenced for each quantity.
+   * @param valuesUnit
+   *          [optional] Should be included when this set of PossibleValues has units or a more complete reference
+   *          system.
+   * @param reference
+   *          True, if the valuesUnit is a Reference, false, if it is a UOM.
+   * @param metadata
+   *          [optional] Optional unordered list of other metadata about this quantity. A list of required and optional
+   *          other metadata elements for this quantity should be specified in the Implementation Specification for this
+   *          service.
+   * @param name
+   *          Name or identifier of this quantity.
+   */
+  public static DomainType buildDomainType( Object possibleValues, DomainMetadataType meaning, DomainMetadataType dataType, DomainMetadataType valuesUnit, boolean reference, List<MetadataType> metadata, String name )
+  {
+    /* Create the instance via the factory. */
+    DomainType domain = OWS_OF.createDomainType();
+
+    /* Elements. */
+    if( possibleValues != null )
+    {
+      if( possibleValues instanceof AllowedValues )
+        domain.setAllowedValues( (AllowedValues) possibleValues );
+      else if( possibleValues instanceof AnyValue )
+        domain.setAnyValue( (AnyValue) possibleValues );
+      else if( possibleValues instanceof NoValues )
+        domain.setNoValues( (NoValues) possibleValues );
+      else if( possibleValues instanceof ValuesReference )
+        domain.setValuesReference( (ValuesReference) possibleValues );
+    }
+
+    if( meaning != null )
+      domain.setMeaning( meaning );
+
+    if( dataType != null )
+      domain.setDataType( dataType );
+
+    if( valuesUnit != null )
+    {
+      if( reference == true )
+        domain.setReferenceSystem( valuesUnit );
+      else
+        domain.setUOM( valuesUnit );
+    }
+
+    if( metadata != null )
+      domain.getMetadata().addAll( metadata );
+
+    /* Attributes. */
+    domain.setName( name );
+
+    return domain;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Metadata for one operation that this server implements.
+   * 
+   * @param dcps
+   *          Unordered list of Distributed Computing Platforms (DCPs) supported for this operation. At present, only
+   *          the HTTP DCP is defined, so this element will appear only once.
+   * @param parameter
+   *          [optional] Optional unordered list of parameter domains that each apply to this operation which this
+   *          server implements. If one of these Parameter elements has the same "name" attribute as a Parameter element
+   *          in the OperationsMetadata element, this Parameter element shall override the other one for this operation.
+   *          The list of required and optional parameter domain limitations for this operation shall be specified in
+   *          the Implementation Specification for this service.
+   * @param constraints
+   *          [optional] Optional unordered list of valid domain constraints on non-parameter quantities that each apply
+   *          to this operation. If one of these Constraint elements has the same "name" attribute as a Constraint
+   *          element in the OperationsMetadata element, this Constraint element shall override the other one for this
+   *          operation. The list of required and optional constraints for this operation shall be specified in the
+   *          Implementation Specification for this service.
+   * @param metadata
+   *          [optional] Optional unordered list of additional metadata about this operation and its' implementation. A
+   *          list of required and optional metadata elements for this operation should be specified in the
+   *          Implementation Specification for this service. (Informative: This metadata might specify the operation
+   *          request parameters or provide the XML Schemas for the operation request.)
+   * @param name
+   *          Name or identifier of this operation (request) (for example, GetCapabilities). The list of required and
+   *          optional operations implemented shall be specified in the Implementation Specification for this service.
+   */
+  public static Operation buildOperation( List<DCP> dcps, List<DomainType> parameter, List<DomainType> constraints, List<MetadataType> metadata, String name )
+  {
+    /* Create the instance via the factory. */
+    Operation operation = OWS_OF.createOperation();
+
+    /* Elements. */
+    operation.getDCP().addAll( dcps );
+
+    if( parameter != null )
+      operation.getParameter().addAll( parameter );
+
+    if( constraints != null )
+      operation.getConstraint().addAll( constraints );
+
+    if( metadata != null )
+      operation.getMetadata().addAll( metadata );
+
+    /* Attributes. */
+    operation.setName( name );
+
+    return operation;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * <br>
+   * Metadata about the operations and related abilities specified by this service and implemented by this server,
+   * including the URLs for operation requests. The basic contents of this section shall be the same for all OWS types,
+   * but individual services can add elements and/or change the optionality of optional elements.
+   * 
+   * @param operations
+   *          Metadata for unordered list of all the (requests for) operations that this server interface implements.
+   *          The list of required and optional operations implemented shall be specified in the Implementation
+   *          Specification for this service.
+   * @param parameters
+   *          [optional] Optional unordered list of parameter valid domains that each apply to one or more operations
+   *          which this server interface implements. The list of required and optional parameter domain limitations
+   *          shall be specified in the Implementation Specification for this service.
+   * @param constraints
+   *          [optional] Optional unordered list of valid domain constraints on non-parameter quantities that each apply
+   *          to this server. The list of required and optional constraints shall be specified in the Implementation
+   *          Specification for this service.
+   * @param extendedCapabilities
+   *          [optional] Individual software vendors and servers can use this element to provide metadata about any
+   *          additional server abilities.
+   */
+  public static OperationsMetadata buildOperationsMetadata( List<Operation> operations, List<DomainType> parameters, List<DomainType> constraints, Object extendedCapabilities )
+  {
+    /* Create the instance via the factory. */
+    OperationsMetadata operationsMetadata = OWS_OF.createOperationsMetadata();
+
+    operationsMetadata.getOperation().addAll( operations );
+
+    if( parameters != null )
+      operationsMetadata.getParameter().addAll( parameters );
+
+    if( constraints != null )
+      operationsMetadata.getConstraint().addAll( constraints );
+
+    /* Elements. */
+    if( extendedCapabilities != null )
+      operationsMetadata.setExtendedCapabilities( extendedCapabilities );
+
+    return operationsMetadata;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsCommon.xsd for this type.<br>
+   * <br>
+   * Brief description of a Process, designed for Process discovery.
+   * 
+   * @param identifier
+   *          Unambiguous identifier or name of a process, unique for this server, or unambiguous identifier or name of
+   *          an input or output, unique for this process.
+   * @param title
+   *          Title of a process, input, or output, normally available for display to a human.
+   * @param abstrakt
+   *          [optional] Brief narrative description of a process, input, or output, normally available for display to a
+   *          human.
+   * @param metadata
+   *          [optional] Optional unordered list of additional metadata about this process. A list of optional and/or
+   *          required metadata elements for this process could be specified in a specific Application Profile for this
+   *          service.
+   * @param processVersion
+   *          [optional] Release version of this Process, included when a process version needs to be included for
+   *          clarification about the process to be used. It is possible that a WPS supports a process with different
+   *          versions due to reasons such as modifications of process algorithms. Notice that this is the version
+   *          identifier for the process, not the version of the WPS interface.
+   */
+  public static ProcessBriefType buildProcessBriefType( CodeType identifier, String title, String abstrakt, List<MetadataType> metadata, String processVersion )
+  {
+    /* Create the instance via the factory. */
+    ProcessBriefType processBrief = WPS_OF.createProcessBriefType();
+
+    /* Elements. */
+    processBrief.setIdentifier( identifier );
+    processBrief.setTitle( title );
+
+    if( abstrakt != null )
+      processBrief.setAbstract( abstrakt );
+
+    if( metadata != null )
+      processBrief.getMetadata().addAll( metadata );
+
+    if( processVersion != null )
+      processBrief.setProcessVersion( processVersion );
+
+    return processBrief;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific wpsGetCapabilities.xsd for this type.<br>
+   * <br>
+   * List of brief descriptions of the processes offered by this WPS server.
+   * 
+   * @param processBriefs
+   *          Unordered list of one or more brief descriptions of all the processes offered by this WPS server.
+   */
+  public static ProcessOfferings buildProcessOfferings( List<ProcessBriefType> processBriefs )
+  {
+    /* Create the instance via the factory. */
+    ProcessOfferings processOfferings = WPS_OF.createProcessOfferings();
+
+    processOfferings.getProcess().addAll( processBriefs );
+
+    return processOfferings;
+  }
+
+  /**
+   * Note: The documentation is taken from the specific owsGetCapabilities.xsd, owsServiceIdentification.xsd,
+   * owsServiceProvider.xsd, owsOperationsMetadata.xsd, wpsGetCapabilities.xsd for this type.<br>
+   * <br>
+   * WPS GetCapabilities operation response. This document provides clients with service metadata about a specific
+   * service instance, including metadata about the processes that can be executed. Since the server does not implement
+   * the updateSequence and Sections parameters, the server shall always return the complete Capabilities document,
+   * without the updateSequence parameter.
+   * 
+   * @param serviceIdentification
+   *          [optional] General metadata for this specific server. This XML Schema of this section shall be the same
+   *          for all OWS.
+   * @param serviceProvider
+   *          [optional] Metadata about the organization that provides this specific service instance or server.
+   * @param operationsMetadata
+   *          [optional] Metadata about the operations and related abilities specified by this service and implemented
+   *          by this server, including the URLs for operation requests. The basic contents of this section shall be the
+   *          same for all OWS types, but individual services can add elements and/or change the optionality of optional
+   *          elements.
+   * @param updateSequence
+   *          [optional] Service metadata document version, having values that are "increased" whenever any change is
+   *          made in service metadata document. Values are selected by each server, and are always opaque to clients.
+   *          See updateSequence parameter use subclause for more information.
+   * @param processOfferings
+   *          List of brief descriptions of the processes offered by this WPS server.
+   */
+  public static Capabilities buildCapabilities( ServiceIdentification serviceIdentification, ServiceProvider serviceProvider, OperationsMetadata operationsMetadata, String updateSequence, ProcessOfferings processOfferings )
+  {
+    /* Create the instance via the factory. */
+    Capabilities capabilities = WPS_OF.createCapabilities();
+
+    /* Elements. */
+    if( serviceIdentification != null )
+      capabilities.setServiceIdentification( serviceIdentification );
+
+    if( serviceProvider != null )
+      capabilities.setServiceProvider( serviceProvider );
+
+    if( operationsMetadata != null )
+      capabilities.setOperationsMetadata( operationsMetadata );
+
+    capabilities.setProcessOfferings( processOfferings );
+
+    /* Attributes. */
+    capabilities.setVersion( VERSION );
+
+    if( updateSequence != null )
+      capabilities.setVersion( updateSequence );
+
+    return capabilities;
   }
 }

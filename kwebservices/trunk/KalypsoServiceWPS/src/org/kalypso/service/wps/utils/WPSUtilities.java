@@ -42,6 +42,7 @@ package org.kalypso.service.wps.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -163,6 +164,24 @@ public class WPSUtilities
 
     Debug.println( "Found simulation \"" + simulationType + "\"." );
     return simulation;
+  }
+
+  /**
+   * This function returns all simulations.
+   * 
+   * @return All simulations.
+   */
+  public static List<ISimulation> getSimulations( ) throws OWSException
+  {
+    try
+    {
+      return KalypsoSimulationCoreExtensions.createSimulations();
+    }
+    catch( CoreException e )
+    {
+      Debug.println( "Error retrieving the simulations!" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+    }
   }
 
   /**

@@ -234,7 +234,7 @@ public class DescribeProcess implements IOperation
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
       {
         /* Literal. */
-        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadata( "Any", null ), null, OGCUtilities.buildAnyValue(), null );
+        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadataType( "Any", null ), null, OGCUtilities.buildAnyValue(), null );
         if( data.isOptional() )
           inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
         else
@@ -277,7 +277,7 @@ public class DescribeProcess implements IOperation
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
       {
         /* Literal. */
-        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadata( "Any", null ), null ) );
+        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadataType( "Any", null ), null ) );
       }
       else
       {

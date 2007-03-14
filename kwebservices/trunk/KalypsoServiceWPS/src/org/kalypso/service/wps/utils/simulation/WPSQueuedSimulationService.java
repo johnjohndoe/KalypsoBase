@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
@@ -99,7 +98,7 @@ public class WPSQueuedSimulationService
   }
 
   /** Vector of {@link CalcJobThread}s */
-  private final Vector<WPSSimulationThread> m_threads = new Vector<WPSSimulationThread>();
+  private final Map<String, WPSSimulationThread> m_threads = new HashMap<String, WPSSimulationThread>();
 
   /**
    * Retrieves the simulation.
@@ -184,7 +183,7 @@ public class WPSQueuedSimulationService
       final WPSSimulationInfo[] jobInfos = new WPSSimulationInfo[m_threads.size()];
       int count = 0;
 
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
+      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); count++ )
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
         jobInfos[count] = cjt.getJobInfo();
@@ -245,7 +244,7 @@ public class WPSQueuedSimulationService
 
     synchronized( m_threads )
     {
-      m_threads.remove( cjt );
+      m_threads.remove( jobID );
       if( m_threads.size() == 0 )
         stopScheduling();
     }
@@ -255,16 +254,12 @@ public class WPSQueuedSimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
-      {
-        final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
+      WPSSimulationThread thread = m_threads.get( jobID );
+      if( thread == null )
+        throw new SimulationException( "Job not found: " + jobID, null );
 
-        if( cjt.getJobInfo().getId().equals( jobID ) )
-          return cjt;
-      }
+      return thread;
     }
-
-    throw new SimulationException( "Job not found: " + jobID, null );
   }
 
   public WPSSimulationInfo startJob( final String typeID, final String description, final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
@@ -272,21 +267,24 @@ public class WPSQueuedSimulationService
     WPSSimulationThread cjt = null;
     synchronized( m_threads )
     {
-      // eine unbenutzte ID finden
+      /* Find an unused id. */
       int id = -1;
-      for( int i = 0; i < m_threads.size(); i++ )
+      int cnt = 0;
+      while( true )
       {
-        if( m_threads.get( i ) == null )
+        /* Check, if this particular id is free. */
+        if( !m_threads.containsKey( "" + cnt ) )
         {
-          id = i;
+          /* If yes, take it. */
+          id = cnt;
           break;
         }
+
+        /* Otherwise increase the cnt and try again. */
+        cnt++;
       }
-      if( id == -1 )
-        id = m_threads.size();
 
       final ISimulation job = m_calcJobFactory.createJob( typeID );
-
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
       tmpdir.deleteOnExit();
 
@@ -308,11 +306,7 @@ public class WPSQueuedSimulationService
       }
 
       cjt = new WPSSimulationThread( "" + id, description, typeID, job, execute, processDescription, tmpdir, resultDir );
-
-      if( id == m_threads.size() )
-        m_threads.add( cjt );
-      else
-        m_threads.set( id, cjt );
+      m_threads.put( "" + id, cjt );
 
       /* Need the description and the result directory. */
       m_descriptions.put( typeID, processDescription );
@@ -332,7 +326,7 @@ public class WPSQueuedSimulationService
       // count running thread
       int runningCount = 0;
       int waitingCount = 0;
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); )
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
         if( cjt.isAlive() )
@@ -360,7 +354,7 @@ public class WPSQueuedSimulationService
       }
 
       // start one waiting job, if maximum is not reached
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); )
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
 
@@ -386,13 +380,12 @@ public class WPSQueuedSimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
+      for( final Iterator iter = m_threads.values().iterator(); iter.hasNext(); )
       {
         final WPSSimulationThread cjt = (WPSSimulationThread) iter.next();
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         disposeJob( jobInfo.getId() );
       }
-
     }
 
     super.finalize();

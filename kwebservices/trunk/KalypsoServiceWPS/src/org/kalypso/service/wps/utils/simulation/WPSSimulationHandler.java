@@ -134,16 +134,13 @@ public class WPSSimulationHandler extends Thread
             bEnd = true;
             break;
           case CANCELED:
-            /* Delete all files. */
-            /* TODO Eventually delete all files in the result & temp direcory on cancel. */
+            /* Delete all files in result directory. */
+            /* TODO Eventually delete all files in the result on cancel. */
 
             /* End loop. */
             bEnd = true;
             break;
           case ERROR:
-            /* Delete all files? */
-            /* TODO Eventually delete all files in the temp direcory on an error. */
-
             /* Send user a message. */
             createProcessFailedExecuteResponse( jobInfo.getFinishText() );
 
@@ -161,6 +158,9 @@ public class WPSSimulationHandler extends Thread
       }
 
       /* Job has finished somehow. */
+
+      /* Delete all files of this job in the temp-directory. */
+      m_service.disposeJob( m_jobID );
     }
     catch( Exception e )
     {

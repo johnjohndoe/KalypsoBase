@@ -350,9 +350,44 @@ public class SimulationJob
 
         if( statusFile.exists() )
         {
-          String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
-          Object object = MarshallUtilities.unmarshall( xml );
-          JAXBElement<ExecuteResponseType> executeState = (JAXBElement<ExecuteResponseType>) object;
+          /* Some variables for handling the errors. */
+          boolean success = false;
+          int cnt = 0;
+
+          /* Try to read the status at least 3 times, before exiting. */
+          JAXBElement<ExecuteResponseType> executeState = null;
+          while( success == false )
+          {
+            try
+            {
+              String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
+              Object object = MarshallUtilities.unmarshall( xml );
+              executeState = (JAXBElement<ExecuteResponseType>) object;
+
+              success = true;
+            }
+            catch( Exception e )
+            {
+              /* An error has occured while copying the file. */
+              Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+
+              /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
+              if( cnt >= 2 )
+              {
+                Debug.println( "The second retry has failed, rethrowing the error ..." );
+                throw e;
+              }
+
+              /* Retry the copying of the file. */
+              cnt++;
+              Debug.println( "Retry: " + String.valueOf( cnt ) );
+              success = false;
+
+              wait( 1000 );
+            }
+          }
+
+          /* Satus was read successfull. */
           exState = executeState.getValue();
           StatusType state = exState.getStatus();
 
@@ -405,6 +440,7 @@ public class SimulationJob
 
       /* Finish. */
       monitor.worked( 100 );
+      finish();
     }
     catch( Exception e )
     {
@@ -814,13 +850,42 @@ public class SimulationJob
   }
 
   /**
+   * Deletes all input files, which have been copied so far.
+   */
+  private void deleteInputFiles( ) throws FileSystemException
+  {
+    if( m_serverTmpDirectory == null )
+      return;
+
+    if( m_serverTmpDirectory.exists() )
+      VFSUtilities.deleteFiles( m_serverTmpDirectory );
+  }
+
+  /**
    * This function is called, when the job is canceled by the user.<br>
    * A cancel request has to be send to the server, so that he can stop executing the simulation.
    */
   private IStatus canceled( )
   {
-    // TODO Tell the server, that the job should be canceled.
-    return Status.OK_STATUS;
+    /* TODO Tell the server, that the job should be canceled. */
+
+    /* TODO Delete all input files with deleteInputFiles(). */
+    /* This is omitted now, because the server isn't told, to cancel its operation, so it is likely, */
+    /* he will run in an error then, if we delete the files now. */
+    return Status.CANCEL_STATUS;
+  }
+
+  /**
+   * This function will finish the operations on this simulation.
+   * <ol>
+   * <li>All input files will be deleted.</li>
+   * <li>Other things can be disposed here.</li>
+   * </ol>
+   */
+  private void finish( ) throws FileSystemException
+  {
+    /* Delete the input files. */
+    deleteInputFiles();
   }
 
   /**

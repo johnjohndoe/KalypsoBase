@@ -59,7 +59,6 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.FileUtil;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.VFSUtilities;
@@ -194,14 +193,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         {
           /* Directory copy. */
           Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." );
-
-          // TODO Copy the directorys as well ...
+          VFSUtilities.copyDirectoryToDirectory( source, destination );
         }
         else if( FileType.FILE.equals( source.getType() ) )
         {
           /* File copy. */
           Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
-          FileUtil.copyContent( source, destination );
+          VFSUtilities.copy( source, destination );
 
           /* Get for reference. */
           OutputDescriptionType outputDescription = m_outputList.get( key );
@@ -270,6 +268,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    */
   public void dispose( )
   {
+    /* The result data will not be deleted, because the client must get the chance to copy them. */
   }
 
   /**

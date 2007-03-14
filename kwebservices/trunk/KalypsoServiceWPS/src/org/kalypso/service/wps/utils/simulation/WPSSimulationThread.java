@@ -53,6 +53,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -205,6 +206,9 @@ public class WPSSimulationThread extends Thread
    */
   public void dispose( )
   {
+    /* Delete the tmp-data. */
+    FileUtilities.deleteRecursive( m_tmpDir );
+
     m_inputData.dispose();
     m_resultEater.dispose();
   }

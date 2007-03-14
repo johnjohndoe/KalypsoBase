@@ -47,6 +47,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
@@ -127,7 +128,8 @@ public class VFSUtilities
   }
 
   /**
-   * This function will copy one directory to another one.
+   * This function will copy one directory to another one. If the destination base directory does not exist, it will be
+   * created.
    * 
    * @param source
    *          The source directory.
@@ -138,6 +140,12 @@ public class VFSUtilities
   {
     if( !FileType.FOLDER.equals( source ) || !FileType.FOLDER.equals( destination ) )
       throw new IllegalArgumentException( "Both source and destination must be directories ..." );
+
+    if( !destination.exists() )
+    {
+      Debug.println( "Creating directory " + destination.getName() + " ..." );
+      destination.createFolder();
+    }
 
     FileObject[] children = source.getChildren();
     for( int i = 0; i < children.length; i++ )
@@ -156,10 +164,6 @@ public class VFSUtilities
       {
         /* Need the same name for destination directory, as the source directory has. */
         FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
-
-        /* Create directory. */
-        Debug.println( "Creating directory " + destinationDir.getName() + " ..." );
-        destinationDir.createFolder();
 
         /* Copy ... */
         Debug.println( "Copy directory " + child.getName() + " to " + destinationDir.getName() + " ..." );
@@ -278,5 +282,39 @@ public class VFSUtilities
     }
 
     return fsManager.resolveFile( absoluteFile );
+  }
+
+  /**
+   * This function deletes the given file. If the file object is a directory, all content and the directory itself will
+   * be deleted.
+   * 
+   * @param toDel
+   *          The file or directory to be deleted.
+   * @return The number of deleted files. 0, if none has been deleted.
+   */
+  public static int deleteFiles( FileObject toDel ) throws FileSystemException
+  {
+    if( FileType.FOLDER.equals( toDel.getType() ) )
+    {
+      /* Delete the directory. */
+      Debug.println( "Deleting the directory " + toDel.getName() + " ..." );
+      return toDel.delete( new AllFileSelector() );
+    }
+    else if( FileType.FILE.equals( toDel.getType() ) )
+    {
+      /* Delete the file. */
+      Debug.println( "Deleting the file " + toDel.getName() + " ..." );
+      if( toDel.delete() )
+        return 1;
+
+      Debug.println( "Could not delete " + toDel.getName() + "!" );
+      return 0;
+    }
+    else
+    {
+      /* The type of the file could not be determined, or it is an imaginary one. */
+      Debug.println( "Could not delete " + toDel.getName() + "!" );
+      return 0;
+    }
   }
 }

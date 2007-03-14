@@ -124,7 +124,7 @@ public class RequestBean
       IOUtils.closeQuietly( reader );
     }
 
-    System.out.println( body );
+    // System.out.println( body );
 
     return body;
   }
