@@ -41,7 +41,6 @@
 package org.kalypso.service.wps.client;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.LinkedList;
@@ -205,7 +204,7 @@ public class SimulationJob
    *          The progress monitor.
    */
   @SuppressWarnings("unchecked")
-  public IStatus run( IProgressMonitor monitor ) throws CoreException
+  public IStatus run( IProgressMonitor monitor )
   {
     monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
 
@@ -383,7 +382,8 @@ public class SimulationJob
               Debug.println( "Retry: " + String.valueOf( cnt ) );
               success = false;
 
-              wait( 1000 );
+              /* Wait for some milliseconds. */
+              Thread.sleep( 1000 );
             }
           }
 
@@ -446,14 +446,13 @@ public class SimulationJob
     {
       e.printStackTrace();
       Debug.println( "Error occured with the message: " + e.getLocalizedMessage() );
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      return StatusUtilities.statusFromThrowable( e );
     }
     finally
     {
       monitor.done();
     }
 
-    /* Leave the job. */
     return Status.OK_STATUS;
   }
 
@@ -567,41 +566,8 @@ public class SimulationJob
       FileObject source = m_fsManager.toFileObject( file );
       FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
 
-      /* Some variables for handling the errors. */
-      boolean success = false;
-      int cnt = 0;
-
-      Debug.println( "Copy '" + source.getName() + " to '" + destination.getName() + "' ..." );
-      while( success == false )
-      {
-        try
-        {
-          /* Copy file. */
-          VFSUtilities.copy( source, destination );
-
-          /* End copying of this file, because it was a success. */
-          success = true;
-        }
-        catch( Exception e )
-        {
-          /* An error has occured while copying the file. */
-          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
-
-          /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
-          if( cnt >= 2 )
-          {
-            Debug.println( "The second retry has failed, rethrowing the error ..." );
-            throw e;
-          }
-
-          /* Retry the copying of the file. */
-          cnt++;
-          Debug.println( "Retry: " + String.valueOf( cnt ) );
-          success = false;
-
-          wait( 1000 );
-        }
-      }
+      /* Copy file. */
+      VFSUtilities.copy( source, destination );
     }
   }
 
@@ -803,7 +769,7 @@ public class SimulationJob
    * @param processOutputs
    *          The process outputs contains the info of the files, which are to copy.
    */
-  private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws IOException, CoreException
+  private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws Exception
   {
     /* Get the model spec outputs. */
     List<Output> outputs = m_data.getOutput();
@@ -834,7 +800,6 @@ public class SimulationJob
       FileObject destination = m_fsManager.toFileObject( outputFile );
 
       /* Copy ... */
-      Debug.println( "Copy " + source.getName() + " to " + destination.getName() + " ..." );
       VFSUtilities.copy( source, destination );
 
       IResource destResource = baseresource.getFile( new Path( outputPath ) );
@@ -882,10 +847,18 @@ public class SimulationJob
    * <li>Other things can be disposed here.</li>
    * </ol>
    */
-  private void finish( ) throws FileSystemException
+  private void finish( )
   {
-    /* Delete the input files. */
-    deleteInputFiles();
+    try
+    {
+      /* Delete the input files. */
+      deleteInputFiles();
+    }
+    catch( FileSystemException e )
+    {
+      /* If an error has occured while deleting the files, finish the job without error. A warning should be ok. */
+      // TODO
+    }
   }
 
   /**

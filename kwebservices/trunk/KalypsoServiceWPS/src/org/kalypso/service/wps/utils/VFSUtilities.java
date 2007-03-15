@@ -107,7 +107,10 @@ public class VFSUtilities
 
   /**
    * This function copies a source file to a given destination. If no filename is given in the destination file handle,
-   * the filename of the source is used.
+   * the filename of the source is used.<br>
+   * <br>
+   * It is tried to copy the file three times. If all three tries has failed, only then an IOException is thrown. <br>
+   * All other exceptions are thrown normally.
    * 
    * @param source
    *          The source file.
@@ -116,15 +119,60 @@ public class VFSUtilities
    */
   public static void copy( FileObject source, FileObject destination ) throws IOException
   {
-    if( FileType.FOLDER.equals( source.getType() ) )
-      throw new IllegalArgumentException( "The source-file is a directory ..." );
+    /* Some variables for handling the errors. */
+    boolean success = false;
+    int cnt = 0;
 
-    /* If the destination is only a directory, use the sources filename for the destination file. */
-    if( FileType.FOLDER.equals( destination.getType() ) )
-      destination = destination.resolveFile( source.getName().getBaseName() );
+    while( success == false )
+    {
+      try
+      {
+        if( FileType.FOLDER.equals( source.getType() ) )
+          throw new IllegalArgumentException( "The source-file is a directory ..." );
 
-    /* Copy ... */
-    FileUtil.copyContent( source, destination );
+        /* If the destination is only a directory, use the sources filename for the destination file. */
+        FileObject destinationFile = destination;
+        if( FileType.FOLDER.equals( destination.getType() ) )
+          destinationFile = destination.resolveFile( source.getName().getBaseName() );
+
+        /* Copy file. */
+        Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
+        FileUtil.copyContent( source, destinationFile );
+
+        /* End copying of this file, because it was a success. */
+        success = true;
+      }
+      catch( IOException e )
+      {
+        /* An error has occured while copying the file. */
+        Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+
+        /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
+        if( cnt >= 2 )
+        {
+          Debug.println( "The second retry has failed, rethrowing the error ..." );
+          throw e;
+        }
+
+        /* Retry the copying of the file. */
+        cnt++;
+        Debug.println( "Retry: " + String.valueOf( cnt ) );
+        success = false;
+
+        /* Wait for some milliseconds. */
+        try
+        {
+          Thread.sleep( 1000 );
+        }
+        catch( InterruptedException e1 )
+        {
+          /*
+           * Runs in the next loop then and if no error occurs then, it is ok. If an error occurs again, it is an
+           * exception thrown on the last failed retry or it is slept again.
+           */
+        }
+      }
+    }
   }
 
   /**
@@ -136,7 +184,7 @@ public class VFSUtilities
    * @param destination
    *          The destination directory.
    */
-  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws IOException
+  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws Exception
   {
     if( !FileType.FOLDER.equals( source ) || !FileType.FOLDER.equals( destination ) )
       throw new IllegalArgumentException( "Both source and destination must be directories ..." );
@@ -157,7 +205,6 @@ public class VFSUtilities
         FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        Debug.println( "Copy file " + child.getName() + " to " + destinationFile.getName() + " ..." );
         copy( child, destinationFile );
       }
       else if( FileType.FOLDER.equals( child.getType() ) )
