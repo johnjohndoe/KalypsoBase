@@ -206,11 +206,11 @@ public class GetCapabilities implements IOperation
     List<Object> values = new LinkedList<Object>();
     values.add( OGCUtilities.buildValueType( "WPS" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
-    
+
     List<Object> values1 = new LinkedList<Object>();
     values1.add( OGCUtilities.buildValueType( "GetCapabilities" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
-   
+
     List<Object> values2 = new LinkedList<Object>();
     values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "AcceptVersions" ) );
@@ -240,11 +240,11 @@ public class GetCapabilities implements IOperation
     List<Object> values = new LinkedList<Object>();
     values.add( OGCUtilities.buildValueType( "WPS" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
-    
+
     List<Object> values1 = new LinkedList<Object>();
     values1.add( OGCUtilities.buildValueType( "DescripeProcess" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
-    
+
     List<Object> values2 = new LinkedList<Object>();
     values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
@@ -254,11 +254,10 @@ public class GetCapabilities implements IOperation
     {
       /* Get the modelspec. */
       Modelspec modelData = m_simModelspecs.get( i );
-      allowedValues.add( modelData.getTypeID() );
+      allowedValues.add( OGCUtilities.buildValueType( modelData.getTypeID() ) );
     }
 
-    values.add( OGCUtilities.buildAllowedValues( allowedValues ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Identifier" ) );
+    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
 
     return OGCUtilities.buildOperation( dcps, parameter, null, null, "DescripeProcess" );
   }
@@ -282,11 +281,11 @@ public class GetCapabilities implements IOperation
     List<Object> values = new LinkedList<Object>();
     values.add( OGCUtilities.buildValueType( "WPS" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
-    
+
     List<Object> values1 = new LinkedList<Object>();
     values1.add( OGCUtilities.buildValueType( "Execute" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
-    
+
     List<Object> values2 = new LinkedList<Object>();
     values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
@@ -296,7 +295,7 @@ public class GetCapabilities implements IOperation
     {
       /* Get the modelspec. */
       Modelspec modelData = m_simModelspecs.get( i );
-      allowedValues.add( modelData.getTypeID() );
+      allowedValues.add( OGCUtilities.buildValueType( modelData.getTypeID() ) );
     }
 
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
