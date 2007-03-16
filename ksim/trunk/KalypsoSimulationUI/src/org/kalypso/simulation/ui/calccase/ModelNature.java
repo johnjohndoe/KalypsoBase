@@ -147,8 +147,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String CONTROL_NAME = ".calculation";
 
-  public static final String CONTROL1D2D_NAME = "control.gml";
-
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template";
 
   public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view";
@@ -322,8 +320,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static boolean isCalcCalseFolder( final IContainer folder )
   {
     final IResource calcFile = folder.findMember( CONTROL_NAME );
-    final IResource szenarioFile = folder.findMember( CONTROL1D2D_NAME );
-    if((calcFile != null && calcFile.exists() && calcFile instanceof IFile)||(szenarioFile != null && szenarioFile.exists() && szenarioFile instanceof IFile) )
+
+    if((calcFile != null && calcFile.exists() && calcFile instanceof IFile) )
     {
       return true;
     }
