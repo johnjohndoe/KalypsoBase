@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import org.eclipse.swt.graphics.Color;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 
 
 
@@ -48,7 +49,7 @@ import org.eclipse.swt.graphics.Color;
  * @author madanago
  *
  */
-public interface IElevationColorModel2
+public interface IElevationColorModel2 extends IElevationColorModel
 {
-  public Color getColor(double elevation);
+  public Color getSWTColor(double elevation);
 }
