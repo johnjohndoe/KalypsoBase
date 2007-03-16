@@ -58,6 +58,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.impl.common.JarHelper;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.cache.FileCache;
 import org.kalypso.commons.cache.StringValidityKey;
 import org.kalypso.commons.cache.StringValidityKeyFactory;
@@ -65,6 +66,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.serializer.ISerializer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 
@@ -182,6 +184,8 @@ public class GMLSchemaCache
       catch( final Exception e )
       {
         LOGGER.log( Level.WARNING, "Fehler beim Laden von Schema aus URL: " + schemaURL + "\nEs wird versucht die lokale Kopie zu laden.", e );
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       }
       finally
       {
