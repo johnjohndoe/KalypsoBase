@@ -93,6 +93,7 @@ public class StyledLine implements IStyledElement
   public void paint( GCWrapper gcw, Device dev )
   {
     ChartUtilities.resetGC( gcw.m_gc, dev );
+    gcw.setAntialias( SWT.ON );
     gcw.setAlpha( m_alpha );
     Color lineColor = new Color( dev, m_lineColor );
 

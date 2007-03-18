@@ -83,6 +83,7 @@ public class ChartUtilities
     gc.setLineWidth( 1 );
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setAlpha( 255 );
+    gc.setAntialias( SWT.DEFAULT );
   }
 
   /**

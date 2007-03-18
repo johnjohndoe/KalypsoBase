@@ -30,6 +30,9 @@
          <provider
                class="org.kalypso.layerprovider.TestCSVLayerProvider"
                id="org.kalypso.layerprovider.TestCSV"/>
+      <provider
+            class="org.kalypso.layerprovider.TupleResultLayerProvider"
+            id="org.kalypso.layerprovider.TupleResultLayerProvider"/>
    </extension>
 
 </plugin>

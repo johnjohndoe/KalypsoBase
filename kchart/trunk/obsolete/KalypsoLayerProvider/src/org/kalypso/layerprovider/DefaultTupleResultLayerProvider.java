@@ -71,13 +71,8 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
 
   private String m_valAxisID;
 
-  private LayerType m_lt;
-
-  private Chart m_chart;
-
   public DefaultTupleResultLayerProvider( )
   {
-
   }
 
   /**
@@ -104,8 +99,6 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
 
   public void init( Chart chart, LayerType lpt )
   {
-    m_lt = lpt;
-    m_chart = chart;
   }
 
   /**
@@ -117,7 +110,8 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
     if( m_obs != null )
     {
       final TupleResult result = m_obs.getResult();
-//      icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
+      // icl = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis(
+      // m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
       icl = new TupleResultLineChartLayer( result, m_domainComponent.getId(), m_valueComponent.getId(), m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
     }
     return icl;

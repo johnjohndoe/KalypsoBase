@@ -43,6 +43,7 @@ package org.kalypso.swtchart.chart.styles;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
@@ -107,8 +108,10 @@ public class StyledPoint implements IStyledElement
   public void paint( GCWrapper gc, Device dev )
   {
     ChartUtilities.resetGC( gc.m_gc, dev );
+    gc.setAntialias( SWT.ON );
     gc.setAlpha( m_alpha );
 
+    
     Color borderColor = new Color( dev, m_borderColor );
     Color fillColor = new Color( dev, m_fillColor );
     if( m_path != null )
