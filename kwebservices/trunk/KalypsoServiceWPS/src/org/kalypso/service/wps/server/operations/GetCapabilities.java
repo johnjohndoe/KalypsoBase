@@ -178,7 +178,7 @@ public class GetCapabilities implements IOperation
     operations.add( buildGetCapabilities() );
 
     /* DescribeProcess. */
-    operations.add( buildDescripeProcess() );
+    operations.add( buildDescribeProcess() );
 
     /* Execute. */
     operations.add( buildExecute() );
@@ -219,11 +219,11 @@ public class GetCapabilities implements IOperation
   }
 
   /**
-   * This function builds the DescripeProcess oepration.
+   * This function builds the DescribeProcess oepration.
    * 
-   * @return DescripeProcess operation.
+   * @return DescribeProcess operation.
    */
-  private Operation buildDescripeProcess( )
+  private Operation buildDescribeProcess( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
     RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( null );
@@ -242,7 +242,7 @@ public class GetCapabilities implements IOperation
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
 
     List<Object> values1 = new LinkedList<Object>();
-    values1.add( OGCUtilities.buildValueType( "DescripeProcess" ) );
+    values1.add( OGCUtilities.buildValueType( "DescribeProcess" ) );
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
 
     List<Object> values2 = new LinkedList<Object>();
@@ -259,7 +259,7 @@ public class GetCapabilities implements IOperation
 
     parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
 
-    return OGCUtilities.buildOperation( dcps, parameter, null, null, "DescripeProcess" );
+    return OGCUtilities.buildOperation( dcps, parameter, null, null, "DescribeProcess" );
   }
 
   /**
