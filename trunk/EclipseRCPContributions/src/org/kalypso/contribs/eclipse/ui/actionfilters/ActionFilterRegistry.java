@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actionfilters;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
@@ -68,7 +68,7 @@ public class ActionFilterRegistry implements IActionFilter
 
   private static final String ATT_TARGET_ID = "id";
 
-  private List<IActionFilterEx> m_list = null;
+  private Map<IActionFilterEx, String[]> m_list = null;
 
   private final String m_className;
 
@@ -82,23 +82,24 @@ public class ActionFilterRegistry implements IActionFilter
    */
   public boolean testAttribute( Object target, String name, String value )
   {
-    final List<IActionFilterEx> list = getList();
-
-    for( final IActionFilterEx actionFilter : list )
+    final Map<IActionFilterEx, String[]> list = getList();
+    for(final Map.Entry<IActionFilterEx, String[]> entry : list.entrySet() )
     {
-      if( Arrays.binarySearch( actionFilter.getNames(), name ) >= 0 )
+      final IActionFilterEx actionFilter = entry.getKey();
+      final String[] names = entry.getValue();
+      if( Arrays.binarySearch( names, name ) >= 0 )
         return actionFilter.testAttribute( target, name, value );
     }
 
     return false;
   }
 
-  private List<IActionFilterEx> getList( )
+  private Map<IActionFilterEx, String[]> getList( )
   {
     if( m_list != null )
       return m_list;
 
-    m_list = new ArrayList<IActionFilterEx>();
+    m_list = new HashMap<IActionFilterEx, String[]>();
 
     final IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor( ID );
     for( final IConfigurationElement element : elements )
@@ -109,7 +110,11 @@ public class ActionFilterRegistry implements IActionFilter
       {
         try
         {
-          m_list.add( (IActionFilterEx) element.createExecutableExtension( ATT_TARGET_CLASS ) );
+          final IActionFilterEx actionFilter = (IActionFilterEx) element.createExecutableExtension( ATT_TARGET_CLASS );
+          final String[] names = actionFilter.getNames();
+          /* Sort it, so binary search works later */
+          Arrays.sort( names );
+          m_list.put( actionFilter, names );
         }
         catch( final Throwable e )
         {
