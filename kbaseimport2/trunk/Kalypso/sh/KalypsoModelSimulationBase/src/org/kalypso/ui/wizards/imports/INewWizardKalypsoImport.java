@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports;
 
-import java.util.HashMap;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.INewWizard;
 
 /**
@@ -52,5 +52,5 @@ import org.eclipse.ui.INewWizard;
  */
 public interface INewWizardKalypsoImport extends INewWizard
 {
-  public void initModelProperties(HashMap<String, Object> map);
+  public void initModelProperties(IEvaluationContext context);
 }
