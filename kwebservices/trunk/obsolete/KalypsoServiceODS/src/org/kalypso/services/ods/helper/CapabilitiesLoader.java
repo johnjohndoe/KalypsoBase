@@ -117,6 +117,7 @@ public class CapabilitiesLoader
       {
         //Capabilities laden
         Object o = JCCaps.createUnmarshaller().unmarshal( new File(m_configPathCaps) );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Unmarshalling file '"+m_configPathCaps+"'" );
         if (o instanceof JAXBElement)
         {
           Object child=((JAXBElement) o).getValue();

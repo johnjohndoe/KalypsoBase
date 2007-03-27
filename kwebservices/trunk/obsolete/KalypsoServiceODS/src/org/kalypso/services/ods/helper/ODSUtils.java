@@ -46,11 +46,15 @@ import java.util.List;
 
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.axis.CalendarAxis;
 import org.kalypso.swtchart.chart.axis.IAxis;
 import org.kalypso.swtchart.chart.axis.NumberAxis;
 import org.kalypso.swtchart.chart.axis.XMLGregorianCalendarAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
+import org.kalypso.swtchart.configuration.parameters.IStringParser;
+import org.kalypso.swtchart.configuration.parameters.impl.CalendarParser;
+import org.kalypso.swtchart.configuration.parameters.impl.MalformedValueException;
 import org.kalypso.swtchart.logging.Logger;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
@@ -98,11 +102,22 @@ public class ODSUtils
             cal.set( Calendar.YEAR, Integer.parseInt( date[0]) );
             cal.set( Calendar.MONTH, Integer.parseInt( date[1])-1 );
             cal.set( Calendar.DAY_OF_MONTH, Integer.parseInt( date[2]) );
-            
             iaxis.setFrom( new XMLGregorianCalendarImpl(cal) );
           }
-          Logger.trace(iaxis.getIdentifier()+": url from: "+axinfo[1]);
-          Logger.trace(iaxis.getIdentifier()+": new from: "+iaxis.getFrom());
+          else if (iaxis instanceof CalendarAxis)
+          {
+            CalendarParser cp=new CalendarParser();
+            Calendar cal;
+            try
+            {
+              cal = cp.createValueFromString( axinfo[1] );
+              iaxis.setFrom( cal );
+            }
+            catch( MalformedValueException e )
+            {
+              e.printStackTrace();
+            }
+          }
         }
       }
     }
@@ -129,11 +144,35 @@ public class ODSUtils
             cal.set( Calendar.YEAR, Integer.parseInt( date[0]) );
             cal.set( Calendar.MONTH, Integer.parseInt( date[1])-1 );
             cal.set( Calendar.DAY_OF_MONTH, Integer.parseInt( date[2]) );
-            
             iaxis.setTo( new XMLGregorianCalendarImpl(cal) );
           }
-          Logger.trace(iaxis.getIdentifier()+": url to: "+axinfo[1]);
-          Logger.trace(iaxis.getIdentifier()+": new to: "+iaxis.getTo());
+          else if (iaxis instanceof CalendarAxis)
+          {
+            /*
+            String[] date=axinfo[1].split("-");
+            GregorianCalendar cal=new GregorianCalendar();
+            cal.set( Calendar.YEAR, Integer.parseInt( date[0]) );
+            cal.set( Calendar.MONTH, Integer.parseInt( date[1])-1 );
+            cal.set( Calendar.DAY_OF_MONTH, Integer.parseInt( date[2]) );
+            iaxis.setTo( cal );
+            */
+            CalendarParser cp=new CalendarParser();
+            Calendar cal;
+            try
+            {
+              cal = cp.createValueFromString( axinfo[1] );
+              iaxis.setTo( cal );
+            }
+            catch( MalformedValueException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+          else
+            System.out.println(iaxis.getClass().toString());
+       //   Logger.trace(iaxis.getIdentifier()+": url to: "+axinfo[1]);
+       //   Logger.trace(iaxis.getIdentifier()+": new to: "+iaxis.getTo());
         }
       }
     }
@@ -171,10 +210,12 @@ public class ODSUtils
           {
             //Es wurde nicht gefunden -> verunsichtbaren
             layer.setVisibility( false );
+            System.out.println("Unsichtbar: "+layer.getName());
           }
           else
           {
             layer.setVisibility( true );
+            System.out.println("Sichtbar: "+layer.getName());
           }
         }
       }
