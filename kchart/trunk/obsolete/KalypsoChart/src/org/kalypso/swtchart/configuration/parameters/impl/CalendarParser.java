@@ -61,7 +61,9 @@ import org.kalypso.swtchart.logging.Logger;
 public class CalendarParser implements IStringParser<Calendar>
 {
 
-  private String m_formatHint="yyyy-MM-dd HH:mm";
+  private String m_formatHint="actual date 'yyyy-MM-dd HH:mm' or relative date '\"NOW\"[+-][0-9]+[dwmy]'";
+  
+
 
   public CalendarParser()
   {
@@ -92,9 +94,48 @@ public class CalendarParser implements IStringParser<Calendar>
       }
       catch( ParseException e2 )
       {
-        //TODO: nichts machen - wir probieren mal, das über die anderer Syntax an das Datum zu kommen
-        Logger.logError(Logger.TOPIC_LOG_GENERAL, "Unable to parse date: "+value);
-        throw new MalformedValueException();
+        //wir probieren mal, das über die anderer Syntax an das Datum zu kommen
+        if (value.matches( "NOW[+-][0-9]*[dwmy]" ))
+        {
+          Calendar now=Calendar.getInstance();
+          String prefix=value.substring( 3, 4 );
+          int number;
+          if (prefix.equals( "-" ))
+            number=Integer.parseInt( prefix+value.substring( 4, value.length()-1 ) );
+          else
+            number=Integer.parseInt( value.substring( 4, value.length()-1 ) );
+          
+          String letter=value.substring( value.length()-1 );
+          
+          //Tag
+            if (letter.toLowerCase().equals( "d" ))
+            {
+              now.add(Calendar.DAY_OF_MONTH, number);
+            }
+          //Woche
+            else if (letter.toLowerCase().equals( "w" ))
+            {
+              now.add(Calendar.WEEK_OF_YEAR, number);
+            }
+          //Monat
+            else if (letter.toLowerCase().equals( "m" ))
+            {
+              now.add(Calendar.MONTH, number);
+            }
+          //Jahr
+            else if (letter.toLowerCase().equals( "y" ))
+            {
+              now.add(Calendar.YEAR, number);
+            }
+            System.out.println("Nummer: "+number);
+            System.out.println("Letter: "+letter);
+            date=now.getTime();
+        }
+        else
+        {
+          Logger.logError(Logger.TOPIC_LOG_GENERAL, "Unable to parse date: "+value);
+          throw new MalformedValueException();
+        }
       }
     }
 

@@ -193,7 +193,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   public Calendar getFrom( )
   {
     // das muss geklont werden, da der Wert sonst von aussen veränderbar ist
-    return (Calendar) getFrom().clone();
+    return (Calendar) super.getFrom().clone();
   }
 
   /**
@@ -203,7 +203,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   public Calendar getTo( )
   {
     // das muss geklont werden, da der Wert sonst von aussen veränderbar ist
-    return (Calendar) getTo().clone();
+    return (Calendar) super.getTo().clone();
   }
 
 }

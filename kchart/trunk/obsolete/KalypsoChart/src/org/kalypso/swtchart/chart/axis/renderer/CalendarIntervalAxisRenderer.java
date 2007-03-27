@@ -29,6 +29,7 @@ import org.kalypso.swtchart.chart.axis.IAxisConstants.DIRECTION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.ORIENTATION;
 import org.kalypso.swtchart.chart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.chart.axis.component.IAxisComponent;
+import org.kalypso.swtchart.logging.Logger;
 
 
 /**
@@ -132,9 +133,10 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
     Set<Long> durKeys = m_durationMap.keySet();
     for( Long durKey : durKeys )
     {
-      System.out.println("running through durationMap with duration "+durKey);
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "running through durationMap with duration "+durKey );
+      
       int screenSize=calcScreenIntervalSize( durKey.longValue(), axis );
-      System.out.println("screenSize = "+screenSize);
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "screenSize = "+screenSize);
 
       //Das gezeichnete Intervall muss eine Mindestbreite besitzen
       if (screenSize >= minScreenIntervalSize)
@@ -142,7 +144,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
         //.. nach der gewünschten Anzahl von Zeilen abbrechen
         if (col<maxColCount)
         {
-          System.out.println("Intervall der Länge "+durKey);
+          Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Intervall der Länge "+durKey);
           curTicks=calcDurationTicks( axis, m_durationMap.get(durKey).intValue());
           m_durationTickMap.put( durKey, curTicks );
 
@@ -155,7 +157,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
       else
       {
           Rectangle r=axis.getRegistry().getComponent( axis ).getBounds();
-          System.out.println(" screenSize < minScreenInterval. Component size: "+r.width+"|"+r.height);
+          Logger.logInfo( Logger.TOPIC_LOG_AXIS, " screenSize < minScreenInterval. Component size: "+r.width+"|"+r.height);
       }
     }
   }
@@ -192,7 +194,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
 
     int screenStart=axis.logicalToScreen( startCal ) ;
     int screenEnd=axis.logicalToScreen( endCal ) ;
-    System.out.println("ScreenStart = "+screenStart+ " screenEnd = "+screenEnd);
+    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "ScreenStart = "+screenStart+ " screenEnd = "+screenEnd);
 
     return Math.abs( screenEnd- screenStart);
   }
@@ -305,7 +307,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
             //Text zeichnen
             int textX=(int) (x1+( (x2-x1)/2)  -(0.5*maxLabelExtent.x));
             int textY=(int) (y1+( (y2-y1)/2)  -(0.5*maxLabelExtent.y));
-         //   System.out.println("Drawing Text "+text+ " at position "+textX+"|"+textY);
+            Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Drawing Text "+text+ " at position "+textX+"|"+textY);
             gc.setFont( font );
             gc.drawText( text,textX , textY );
 
@@ -356,7 +358,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
             }
             int textY=(int) (y1+( (y2-y1)/2)  -(0.5*maxLabelExtent.y));
             int textX=(int) (x1+( (x2-x1)/2) - (0.5*maxLabelExtent.x));
-        //    System.out.println("Drawing Text "+text+ " at position "+textX+"|"+textY);
+            Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Drawing Text "+text+ " at position "+textX+"|"+textY);
             gc.setFont( font );
             gc.drawText( text,textX , textY );
 
@@ -441,8 +443,8 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
       Calendar endCal=(Calendar) axis.getTo().clone();
       endCal.setTimeZone( TimeZone.getTimeZone("GMT+0000") );
 
-   //   System.out.println("AxisFrom: "+m_dateFormat.format( new Date(startCal.getTimeInMillis()) ));
-   //   System.out.println("AxisTo: "+m_dateFormat.format( new Date(endCal.getTimeInMillis()) ));
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "AxisFrom: "+m_dateFormat.format( new Date(startCal.getTimeInMillis()) ));
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "AxisTo: "+m_dateFormat.format( new Date(endCal.getTimeInMillis()) ));
 
 
       for (int i=0;i<m_durationHierarchy.length;i++)
@@ -465,8 +467,8 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
           break;
         }
       }
-   //   System.out.println("Start: "+m_dateFormat.format( new Date(startCal.getTimeInMillis()) ));
-   //   System.out.println("End: "+m_dateFormat.format( new Date(endCal.getTimeInMillis()) ));
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Start: "+m_dateFormat.format( new Date(startCal.getTimeInMillis()) ));
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "End: "+m_dateFormat.format( new Date(endCal.getTimeInMillis()) ));
 
       Calendar curCal=(Calendar) startCal.clone();
       curCal.setTimeZone( TimeZone.getTimeZone("GMT+0000") );
@@ -476,7 +478,7 @@ public class CalendarIntervalAxisRenderer extends AbstractAxisRenderer<Calendar>
         curCal.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
         ticks.add( tmpCal );
         m_dateFormat.setCalendar( curCal );
-//        System.out.println(m_dateFormat.format( new Date(curCal.getTimeInMillis()) ));
+        Logger.logInfo( Logger.TOPIC_LOG_AXIS, m_dateFormat.format( new Date(curCal.getTimeInMillis()) ));
         curCal.add( duration, 1);
       }
 

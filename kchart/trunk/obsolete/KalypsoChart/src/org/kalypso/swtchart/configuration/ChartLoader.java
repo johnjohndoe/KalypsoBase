@@ -123,7 +123,7 @@ public class ChartLoader
           {
             Logger.trace( "Adding Layer " + icl.getName() );
             icl.setStyle( StyleLoader.createStyle( layerType ) );
-            icl.setName( layerType.getTitle() );
+            icl.setName( layerType.getName() );
             icl.setDescription( layerType.getDescription() );
             icl.setVisibility( layerType.isVisible() );
             chart.addLayer( icl );
