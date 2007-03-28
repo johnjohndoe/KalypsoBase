@@ -43,6 +43,14 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
         e.printStackTrace();
       }
     }
+    else
+    {
+      System.out.println(
+          "Cannot get feature prop:"+
+          "\n\tfeature="+feature+
+          "\n\tproperty="+pt.getQName()+
+          "currentValue="+currentValue);
+    }
 
     return null;
   }
