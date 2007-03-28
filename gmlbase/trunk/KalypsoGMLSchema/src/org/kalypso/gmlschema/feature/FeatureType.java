@@ -30,11 +30,15 @@
 package org.kalypso.gmlschema.feature;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
@@ -45,6 +49,9 @@ import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
+import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
+import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 
@@ -61,6 +68,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
 
+  private final Map<QName, IVirtualFunctionPropertyType> virtualPropertyTypes =
+                                            new HashMap<QName, IVirtualFunctionPropertyType>();
   // will initilized in init()
   private IFeatureContentType m_featureContentType = null;
 
@@ -70,6 +79,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   private int m_defaultGeometryPosition = -1;
 
   private IValuePropertyType[] m_geoPTs = null;
+
+  private IVirtualFunctionPropertyType[] virtualFuncGeoTypes;
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
@@ -84,15 +95,40 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
+      {
         initFirst();
+        initVirtualPropertyTypes();
         break;
+      }
       case IInitialize.INITIALIZE_RUN_GEOMETRY:
+      {
         initGeometry();
         break;
+      }
       case IInitialize.INITIALIZE_RUN_DEPRECATED:
+      {
         initDeprecated();
         break;
+      }
     }
+  }
+
+  /**
+   * Get all function properties that declare themselve virtual
+   */
+  private final void initVirtualPropertyTypes() throws IllegalArgumentException, GMLSchemaException
+  {
+    Collection<IVirtualFunctionPropertyType> vfptList = 
+              VirtualFunctionPropertyFactory.createVirtualFunctionPropertyTypes( this );
+    for(IVirtualFunctionPropertyType vfpt:vfptList)
+    {
+      QName propertyQName = vfpt.getQName();
+      virtualPropertyTypes.put( propertyQName , vfpt );
+      //!Changing deprecate store here
+      m_localPartMap.put( propertyQName.getLocalPart(), vfpt );
+    }
+    
+    initVirtualFuncGeometry();
   }
 
   /**
@@ -222,7 +258,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
-    return m_localPartMap.get( propNameLocalPart );
+    IPropertyType propertyType = m_localPartMap.get( propNameLocalPart );
+    return propertyType;
   }
 
   public int getDefaultGeometryPropertyPosition( )
@@ -246,7 +283,21 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   public IValuePropertyType[] getAllGeomteryProperties( )
   {
-    return m_geoPTs;
+    final int lengthNonVir = m_geoPTs==null?0:m_geoPTs.length; 
+    final int lengthVir = virtualFuncGeoTypes==null?0:virtualFuncGeoTypes.length;
+    
+    IValuePropertyType[] allGeo= new IValuePropertyType[lengthNonVir+lengthVir];
+    if(lengthNonVir>0)
+    {
+      System.arraycopy( m_geoPTs, 0, allGeo, 0, lengthNonVir );
+    }
+    
+    if(lengthVir >0)
+    {
+//      System.out.println("Adding Virtual Geo for:"+getQName()+ " "+virtualFuncGeoTypes[0].getQName());
+      System.arraycopy( virtualFuncGeoTypes, 0, allGeo, lengthNonVir, lengthVir );
+    }
+    return allGeo;
   }
 
   /**
@@ -255,8 +306,17 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   public IValuePropertyType getDefaultGeometryProperty( )
   {
     if( m_geoPTs.length > 0 )
+    {
       return m_geoPTs[0];
-    return null;
+    }
+//    else if(virtualFuncGeoTypes.length>0)
+//    {
+//      return virtualFuncGeoTypes[0];
+//    }
+    else
+    {
+      return null;
+    }
   }
 
   @Override
@@ -272,4 +332,59 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return b.toString();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualProperty(javax.xml.namespace.QName)
+   */
+  public IPropertyType getVirtualProperty( QName propQName )
+  {
+    if(propQName == null)
+    {
+      throw new IllegalArgumentException("Parameter propQName must not be null");
+    }
+    return virtualPropertyTypes.get( propQName );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#isVirtualProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean isVirtualProperty( IPropertyType pt )
+  {
+    if(pt==null)
+    {
+      throw new IllegalArgumentException("parameter pt must not be null");
+    }
+    QName name = pt.getQName();
+    if(name==null)
+    {
+      throw new IllegalArgumentException("Qname or parameter qt must not be null");
+    }
+    return virtualPropertyTypes.containsKey( name );
+  }
+  
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualGeometryProperties()
+   */
+  public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( )
+  {
+    return virtualFuncGeoTypes;
+  }
+  
+  private final void initVirtualFuncGeometry( )
+  {
+    List<IVirtualFunctionPropertyType> geoTypes = 
+        new ArrayList<IVirtualFunctionPropertyType>();
+    for(IVirtualFunctionPropertyType type:virtualPropertyTypes.values())
+    {
+      if(type.isGeometry())
+      {
+        geoTypes.add( type );
+      }
+      else
+      {
+        System.out.println("Novirtual geo:"+type.getQName());
+      }
+    }
+    IVirtualFunctionPropertyType[] geoTypeArray = new IVirtualFunctionPropertyType[geoTypes.size()];
+    this.virtualFuncGeoTypes = geoTypes.toArray(  geoTypeArray );
+  }
 }

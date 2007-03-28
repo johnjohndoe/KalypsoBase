@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 
 /**
  * @author doemming
@@ -244,5 +245,29 @@ public class CustomFeatureType implements IFeatureType
   public IGMLSchema getGMLSchema( )
   {
     return m_schema;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualProperty(javax.xml.namespace.QName)
+   */
+  public IPropertyType getVirtualProperty( QName propQName )
+  {
+    return null;
+  }
+  
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#isVirtualProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean isVirtualProperty( IPropertyType pt )
+  {
+    return false;    
+  }
+  
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualGeometryProperties()
+   */
+  public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( )
+  {
+    return new IVirtualFunctionPropertyType[]{};    
   }
 }

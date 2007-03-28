@@ -36,6 +36,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 
 /**
  * @author doemming
@@ -95,4 +96,10 @@ public interface IFeatureType extends IInitialize, IAdaptable
   public IValuePropertyType[] getAllGeomteryProperties( );
 
   public IValuePropertyType getDefaultGeometryProperty( );
+
+  public IPropertyType getVirtualProperty( QName propQName );
+
+  public boolean isVirtualProperty( IPropertyType pt );
+
+  public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( );
 }
