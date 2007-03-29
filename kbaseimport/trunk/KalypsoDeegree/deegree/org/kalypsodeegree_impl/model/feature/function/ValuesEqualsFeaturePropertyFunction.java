@@ -50,6 +50,15 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
+ * This function property simply compares a value whith the value of a property.
+ * <p>
+ * Parameters:
+ * <ul>
+ * <li>compareToValue (Double): The value to be compared with.</li>
+ * <li>compareValueProperty (String): Property which should be compared.</li>
+ * </ul>
+ * </p>
+ * 
  * @author thuel2
  */
 public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
