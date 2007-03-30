@@ -50,6 +50,7 @@ import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
@@ -64,6 +65,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 {
   private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
+  /** virtual properties are also added to this map*/
   private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<String, IPropertyType>();
 
   private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
@@ -80,7 +82,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private IValuePropertyType[] m_geoPTs = null;
 
-  private IVirtualFunctionPropertyType[] virtualFuncGeoTypes;
+  private IVirtualFunctionValuePropertyType[] virtualFuncGeoTypes;
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
@@ -114,7 +116,14 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   }
 
   /**
-   * Get all function properties that declare themselve virtual
+   * Get all function properties that declare themselve virtual.
+   * This method must be invoke after to regular properties of the
+   * feature have been collected since 
+   * {@link VirtualFunctionPropertyFactory#createVirtualFunctionPropertyTypes(IDetailedFeatureType)}
+   * uses {@link #getProperty(QName)} to checks whether a regular
+   * property of the given name already exists
+   * @see {@link VirtualFunctionPropertyFactory#createVirtualFunctionPropertyTypes(IDetailedFeatureType)}
+   *  
    */
   private final void initVirtualPropertyTypes() throws IllegalArgumentException, GMLSchemaException
   {
@@ -248,7 +257,12 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   public IPropertyType getProperty( final QName qName )
   {
-    return m_qNameMap.get( qName );
+    IPropertyType propertyType = m_qNameMap.get( qName );
+    if(propertyType == null)
+    {
+      propertyType = virtualPropertyTypes.get( qName );
+    }
+    return propertyType;
   }
 
   /**
@@ -309,10 +323,10 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     {
       return m_geoPTs[0];
     }
-//    else if(virtualFuncGeoTypes.length>0)
-//    {
-//      return virtualFuncGeoTypes[0];
-//    }
+    else if(virtualFuncGeoTypes.length>0)
+    {
+      return virtualFuncGeoTypes[0];
+    }
     else
     {
       return null;
@@ -369,22 +383,32 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return virtualFuncGeoTypes;
   }
   
-  private final void initVirtualFuncGeometry( )
+  private final void initVirtualFuncGeometry( ) throws GMLSchemaException
   {
-    List<IVirtualFunctionPropertyType> geoTypes = 
-        new ArrayList<IVirtualFunctionPropertyType>();
+    List<IVirtualFunctionValuePropertyType> geoTypes = 
+        new ArrayList<IVirtualFunctionValuePropertyType>();
     for(IVirtualFunctionPropertyType type:virtualPropertyTypes.values())
     {
       if(type.isGeometry())
       {
-        geoTypes.add( type );
+        if(type instanceof IVirtualFunctionValuePropertyType)
+        {
+          geoTypes.add( (IVirtualFunctionValuePropertyType)type );
+        }
+        else
+        {
+          throw new GMLSchemaException(
+              "Found a virtual geometry which is not a value property:"+
+              type);
+        }
       }
       else
       {
         System.out.println("Novirtual geo:"+type.getQName());
       }
     }
-    IVirtualFunctionPropertyType[] geoTypeArray = new IVirtualFunctionPropertyType[geoTypes.size()];
+    IVirtualFunctionValuePropertyType[] geoTypeArray = 
+      new IVirtualFunctionValuePropertyType[geoTypes.size()];
     this.virtualFuncGeoTypes = geoTypes.toArray(  geoTypeArray );
   }
 }

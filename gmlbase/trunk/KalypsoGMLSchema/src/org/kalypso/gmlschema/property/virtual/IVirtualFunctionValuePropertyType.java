@@ -49,7 +49,9 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
  * Such a function property has 
  * <ul>
  *  <li/> kapp:isVirtual =  "true" to signal that its virtual nature
- *  <li/> kapp:valueType = "a supported kalypso value type"  
+ *  <li/> kapp:valueType = "a supported kalypso value type"
+ * </ul>
+ *   
  * @author Patrice Congo
  * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction
  */

@@ -49,8 +49,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
  * Such a function property has 
  * <ul>
  *  <li/> kapp:isVirtual =  "true" to signal that its virtual nature
+ * </ul>
  * @author Patrice Congo
  * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction
+ * @see IVirtualFunctionValuePropertyType
  */
 public interface IVirtualFunctionPropertyType extends IPropertyType
 {
@@ -58,7 +60,8 @@ public interface IVirtualFunctionPropertyType extends IPropertyType
    * Answer whether this function property is returning a 
    * geometry or not.
    * 
-   * Note that this attribute is just the java version of kapp.isGeometrie
+   * @return true if the virtual function property ir returning a
+   *    geometry otherwise false
    */
   public boolean isGeometry();
 }

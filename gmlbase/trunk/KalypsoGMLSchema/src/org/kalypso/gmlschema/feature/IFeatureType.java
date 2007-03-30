@@ -62,10 +62,22 @@ public interface IFeatureType extends IInitialize, IAdaptable
 
   public int getSizeOfProperties( );
 
+  /**
+   * To get a feature property of virtual function property
+   * given its {@link QName}
+   * @return a property or virtual function property of this feature 
+   *        type identified by its q-name, or <code>null</code> 
+   *        if unknown property
+   *
+   */
   public IPropertyType getProperty( QName qname );
 
   /**
-   * @return a property of this feature type identified by its name, or <code>null</code> if unknown property
+   * To get a feature property of virtual function property
+   * given its name
+   * @return a property or virtual function property of this feature 
+   *        type identified by its name, or <code>null</code> 
+   *        if unknown property
    * @deprecated use getProperty(QName qname)
    */
   @Deprecated
@@ -93,13 +105,36 @@ public interface IFeatureType extends IInitialize, IAdaptable
   // TODO: remove this method from interface, declare it private in implementation
   public int getPropertyPosition( final IPropertyType propertyType );
 
+  /**
+   * To get all geometry properties including virtual function
+   * geometry property.
+   * @return all geometry properties including the ones are array
+   */
   public IValuePropertyType[] getAllGeomteryProperties( );
 
+  /**
+   * To get the default geometry. This method may return a
+   * virtual function geometry property as default geometry
+   * @return the default geometry property
+   */
   public IValuePropertyType getDefaultGeometryProperty( );
 
+  /**
+   * To get the virtual function property given its {@link QName}
+   * @return the virtual property of the given {@link QName} or
+   *    null if there is no such virtual property
+   */
   public IPropertyType getVirtualProperty( QName propQName );
 
+  /**
+   * Checks if a property type is a virtual property
+   * @return true if the given property type is virtual property
+   */
   public boolean isVirtualProperty( IPropertyType pt );
 
+  /**
+   * To get all virtual function geometry property
+   * @return all virtual function geometry property as array 
+   */
   public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( );
 }

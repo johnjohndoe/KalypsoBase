@@ -48,6 +48,9 @@ import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.ITypeHandler;
 
 /**
+ * Default implementation of {@link IVirtualFunctionValuePropertyType}
+ * bases on the {@link ITypeHandler} associated with the property
+ * q-name
  * 
  * @author Congo Patrice 
  */
@@ -69,10 +72,26 @@ public class VirtualFunctionValuePropertyType
   private boolean isFixed = false;
   private boolean isNullable = false;
   
+  /**
+   * Creates a new {@link VirtualFunctionPropertyType} 
+   * for the given value handler and the property q-name
+   * @param handler handler for the property value 
+   * @param propertyQName the q-name of the virtual property 
+   */
   public VirtualFunctionValuePropertyType(
                             ITypeHandler handler, 
                             QName propertyQName)
+                            throws IllegalArgumentException
   {
+    if(handler == null || propertyQName == null)
+    {
+      String message = 
+        String.format( 
+            "%s %s",
+            handler==null?"null":handler.toString(),
+            propertyQName==null?"null":propertyQName.toString());
+      throw new IllegalArgumentException(message);
+    }
     this.handler = handler;
     this.typeQName = propertyQName;
   }

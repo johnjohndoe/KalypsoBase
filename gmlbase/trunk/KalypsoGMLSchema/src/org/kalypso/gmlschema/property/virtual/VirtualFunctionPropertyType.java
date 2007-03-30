@@ -46,7 +46,9 @@ import org.kalypso.gmlschema.GMLSchemaException;
 
 /**
  * Default implementation of {@link IVirtualFunctionPropertyType} 
- * based on a Q-Name and the the isGeometry property
+ * based on a Q-Name and for virtual function properties without 
+ * kapp:value specified.
+ * {@link #isGeometry()} always return false
  * 
  * @author Patrice Congo
  *
@@ -56,14 +58,13 @@ public class VirtualFunctionPropertyType
 {
   
   private final QName propertyQName;
-  private final boolean isGeometry;
+  
+//  private final boolean isGeometry=false;
   
   public VirtualFunctionPropertyType(
-                      final QName propertyQName,
-                      final boolean isGeometry)
+                      final QName propertyQName)
   {
-    this.propertyQName = propertyQName;
-    this.isGeometry = isGeometry;
+    this.propertyQName = propertyQName;    
   }
 
   /**
@@ -71,7 +72,7 @@ public class VirtualFunctionPropertyType
    */
   public boolean isGeometry( )
   {
-    return isGeometry;
+    return false;
   }
 
   /**
