@@ -52,7 +52,6 @@ import org.kalypso.swtchart.chart.axis.NumberAxis;
 import org.kalypso.swtchart.chart.axis.XMLGregorianCalendarAxis;
 import org.kalypso.swtchart.chart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.configuration.parameters.IStringParser;
 import org.kalypso.swtchart.configuration.parameters.impl.CalendarParser;
 import org.kalypso.swtchart.configuration.parameters.impl.MalformedValueException;
 import org.kalypso.swtchart.logging.Logger;

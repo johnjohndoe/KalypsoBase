@@ -57,7 +57,6 @@ import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
@@ -87,20 +86,20 @@ public class VFSUtilities
   public static FileSystemManager getManager( ) throws FileSystemException
   {
     DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
-    String[] schemes = fsManager.getSchemes();
-
-    boolean found = false;
-    for( int i = 0; i < schemes.length; i++ )
-    {
-      if( schemes[i].equals( "webdav" ) )
-        found = true;
-    }
-
-    if( found == false )
-    {
-      Debug.println( "Adding webdav file provider ..." );
-      fsManager.addProvider( "webdav", new WebdavFileProvider() );
-    }
+    // String[] schemes = fsManager.getSchemes();
+    //
+    // boolean found = false;
+    // for( int i = 0; i < schemes.length; i++ )
+    // {
+    // if( schemes[i].equals( "webdav" ) )
+    // found = true;
+    // }
+    //
+    // if( found == false )
+    // {
+    // Debug.println( "Adding webdav file provider ..." );
+    // fsManager.addProvider( "webdav", new WebdavFileProvider() );
+    // }
 
     return fsManager;
   }
@@ -316,7 +315,8 @@ public class VFSUtilities
         {
           WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
           WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, Integer.valueOf( proxyPort ) );
-
+          // UserAuthenticator authenticator = new StaticUserAuthenticator( "bce01", "albert", "" );
+          // WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
           return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
         }
         else if( m.group( 1 ).equals( "http" ) )

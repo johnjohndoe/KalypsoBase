@@ -502,7 +502,7 @@ public class SimulationJob
     if( m_serverTmpDirectory == null )
     {
       /* Get the directory for server access. */
-      FileObject serverDirectory = m_fsManager.resolveFile( m_input );
+      FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
       m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
 
       if( !m_serverTmpDirectory.exists() )
@@ -564,7 +564,7 @@ public class SimulationJob
       final String relativePathTo = files[i].getProjectRelativePath().toString();
 
       FileObject source = m_fsManager.toFileObject( file );
-      FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+      FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
 
       /* Copy file. */
       VFSUtilities.copy( source, destination );
