@@ -151,7 +151,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage, ICommandTarget,
     ISelectionChangedListener
@@ -1052,21 +1052,26 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
     if( !status.isOK() )
-      ErrorDialog.openError( getShell(), title, errorMessage, status );
+    {
+      final StringBuffer msg = new StringBuffer();
+      switch( status.getSeverity() )
+      {
+      case IStatus.ERROR:
+        msg.append( "Fehler" );
+        break;
+      case IStatus.WARNING:
+        msg.append( "Warnung(en)" );
+        break;
+      case IStatus.INFO:
+        msg.append( "Information(en)" );
+        break;
+      }
 
-    //    final WorkspaceModifyOperation op2 = new WorkspaceModifyOperation() {
-    //
-    //      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-    // InterruptedException
-    //      {
-    //        final IStatus result = calcWizard.refreshAllPages( monitor );
-    //        if( !result.isOK() )
-    //          throw new CoreException( result );
-    //        
-    //      }};
-    //      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, true, op2 );
-    //      if( !status2.isOK() )
-    //        ErrorDialog.openError( getShell(), title, errorMessage, status2 );
+      msg.append( " bei der Bearbeitung von: \n" );
+      msg.append( errorMessage );
+
+      ErrorDialog.openError( getShell(), title, msg.toString(), status );
+    }
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {

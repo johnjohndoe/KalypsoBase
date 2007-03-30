@@ -80,6 +80,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -97,7 +98,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.commons.runtime.LogStatusWrapper;
+import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.CharsetUtilities;
@@ -392,7 +393,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
             {
               final String logfile = arguments[j + 1];
-              return new LogStatusWrapper( new File( logfile ), CharsetUtilities.getDefaultCharset() ).toStatus();
+              final File logFileFile = new File( logfile );
+              final MultiStatus multiStatus = new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, "", null );
+              return LogAnalyzer.logfileToStatus( logFileFile, CharsetUtilities.getDefaultCharset(), multiStatus );
             }
           }
           return Status.OK_STATUS;
@@ -549,24 +552,23 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       TransformationList transList = null;
       switch( type )
       {
-        case TRANS_TYPE_UPDTAE:
-          transList = trans.getUpdateTransformations();
-          break;
+      case TRANS_TYPE_UPDTAE:
+        transList = trans.getUpdateTransformations();
+        break;
 
-        case TRANS_TYPE_CREATE:
-          transList = trans.getCreateTransformations();
-          break;
+      case TRANS_TYPE_CREATE:
+        transList = trans.getCreateTransformations();
+        break;
 
-        default:
-          transList = null;
-          break;
+      default:
+        transList = null;
+        break;
       }
 
       if( transList == null )
         return Status.OK_STATUS;
 
-      return TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
-          monitor, 1000 ) );
+      return TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final CoreException e )
     {
@@ -684,24 +686,24 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     switch( metadataDelta.getKind() )
     {
-      case IResourceDelta.ADDED:
-      case IResourceDelta.REMOVED:
-      case IResourceDelta.CHANGED:
+    case IResourceDelta.ADDED:
+    case IResourceDelta.REMOVED:
+    case IResourceDelta.CHANGED:
+    {
+      try
       {
-        try
-        {
-          // always test for existence before reloading data
-          // since project might have been deleted by the user
-          if( getMetadataFile().exists() )
-            reloadMetadata();
-        }
-        catch( final CoreException e )
-        {
-          // todo: error handling? -->> als job absetzen?
-          e.printStackTrace();
-        }
-        break;
+        // always test for existence before reloading data
+        // since project might have been deleted by the user
+        if( getMetadataFile().exists() )
+          reloadMetadata();
       }
+      catch( final CoreException e )
+      {
+        // todo: error handling? -->> als job absetzen?
+        e.printStackTrace();
+      }
+      break;
+    }
     }
   }
 
@@ -954,10 +956,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * Load the calculation and read the value for the given property
    * 
    * @param calcCase
-   * @param propertyName name of the property to read value for
+   * @param propertyName
+   *          name of the property to read value for
    * @return value of the property to read
    */
-  public Object loadCalculationAndReadProperty( final IFolder calcCase, final String propertyName ) throws CoreException
+  public Object loadCalculationAndReadProperty( final IFolder calcCase, final String propertyName )
+      throws CoreException
   {
     // load .calculation
     final GMLWorkspace workspace = loadOrCreateControl( calcCase );
