@@ -45,17 +45,14 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
 
 /**
  * Interface to be implemented by classes to provide a java 
- * representation compatible with the wb1d2d:FE1D2DComplexElement
+ * representation compatible with the wb1d2d:ComplexElement
  * 
  * @author Patrice Congo
  */
-public interface IFE1D2DComplexElement <
-                                  CT extends IFE1D2DComplexElement, 
-                                  ET extends IFE1D2DElement>
-                  extends IFEComplexElement<CT,ET>
+public interface IFE1D2DComplexElement <ET extends IFE1D2DElement>
+                  extends IFEComplexElement
 {
-  public IFeatureWrapperCollection<CT> getContainers( );
-
+  
   /**
    * To get the element this complex element is made of
    * 
@@ -63,5 +60,19 @@ public interface IFE1D2DComplexElement <
    *            composing this complex elements
    */
   public IFeatureWrapperCollection<ET> getElements( );
+  
+  /**
+   * Adds the given element as reference to this complex type
+   * @param element the 1d 2d element to be added as reference
+   * @return true if the element has been added  otherwise false
+   */
+  public boolean addElementAsRef(ET element);
+  
+  /**
+   * Remove all reference to this element from this complex element
+   * @return true if a referen to the given element as been added
+   *    otherwis false
+   */
+  public boolean removeElementAsRef(ET elment);
 
 }
