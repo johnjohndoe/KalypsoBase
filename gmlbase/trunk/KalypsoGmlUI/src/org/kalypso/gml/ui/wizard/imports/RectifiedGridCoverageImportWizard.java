@@ -16,7 +16,6 @@ import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
-import ogc31.www.opengis.net.gml.ObjectFactory;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.eclipse.core.resources.IContainer;
@@ -56,11 +55,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -171,16 +170,15 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           int height = tiledImage.getHeight();
           int width = tiledImage.getWidth();
 
-          final GM_Envelope envelope = GeometryFactory.createGM_Envelope( worldFile.getUlcx(), worldFile.getUlcy() + (height * worldFile.getDx()), worldFile.getUlcx() + (width * worldFile.getDx()), worldFile.getUlcy() );
-
           final double[] lows = new double[] { 0, 0 };
           final double[] highs = new double[] { width, height };
 
           final GridRange gridRange = new GridRange_Impl( lows, highs );
 
-          final GM_Point origin = GeometryFactory.createGM_Point( envelope.getMin().getX(), envelope.getMin().getY(), crs );
+          final GM_Point origin = GeometryFactory.createGM_Point( worldFile.getUlcx(), worldFile.getUlcy(), crs );
 
-          final double[] offset = new double[] { worldFile.getDx(), worldFile.getDy() };
+          final OffsetVector offsetX = new OffsetVector( worldFile.getRasterXGeoX(), worldFile.getRasterXGeoY() );
+          final OffsetVector offsetY = new OffsetVector( worldFile.getRasterYGeoX(), worldFile.getRasterYGeoY() );
 
           //
           // Workspace && create workspace
@@ -195,7 +193,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
           rangeSetFile.setMimeType( "image/" + importFileResource.getFileExtension() );
           rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
-          final RectifiedGridDomain domain = new RectifiedGridDomain( origin, offset, gridRange );
+          final RectifiedGridDomain domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
 
           final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
           rangeSet.setFile( rangeSetFile );

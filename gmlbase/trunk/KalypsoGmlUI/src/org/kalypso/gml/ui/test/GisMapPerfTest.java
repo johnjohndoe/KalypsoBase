@@ -51,7 +51,6 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -151,7 +150,7 @@ public class GisMapPerfTest extends TestCase
     {
       mapModell.createFromTemplate( gismapview );
     }
-    catch( final CoreException e1 )
+    catch( final Exception e1 )
     {
       e1.printStackTrace();
     }
