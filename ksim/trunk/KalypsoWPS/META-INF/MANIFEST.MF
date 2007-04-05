@@ -8,7 +8,6 @@ Require-Bundle: org.kalypso.jwsdp,
  org.junit,
  org.kalypso.simulation.core,
  org.kalypso.services.core,
- org.kalypso.ui,
- org.kalypso.NACalcJob
+ org.kalypso.ui
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.services.processing.KalypsoWPSPlugin

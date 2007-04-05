@@ -43,7 +43,6 @@ package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 import java.awt.Color;
 import java.awt.Frame;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -58,7 +57,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JScrollPane;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -95,7 +93,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -515,7 +512,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * Erzeugt die Karte und alle Daten die dranhängen und gibt die enthaltende Control zurück
    */
-  protected Control initMap( final Composite parent ) throws IOException, JAXBException, CoreException
+  protected Control initMap( final Composite parent ) throws Exception
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final boolean mapContextIsCalcCase = Boolean.valueOf( getArguments().getProperty( PROP_MAPTEMPLATEISCALC, Boolean.TRUE.toString() ) ).booleanValue();
