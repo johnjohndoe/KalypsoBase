@@ -55,6 +55,15 @@ public class FEComplexElement2D<ET extends IElement2D>
               implements IFEComplexElement2D<ET>
 {
 
+  /**
+   * Construct a new wrapper object for the given feature
+   * 
+   * @param featureToBind the feature to wrap
+   * @param qnameToBind the {@link QName} given the type of the feature to wrap
+   * @param elementListPropQName the {@link QName} of the list property
+   *            holding the property
+   * @param eleClass the base wrapper class for the elements
+   */
   protected FEComplexElement2D( 
                   Feature featureToBind, 
                   QName qnameToBind,
