@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 /**
- * @author madanago
+ * @author Madanagopal
  *
  */
 public interface IColorModelPreferenceConstants
