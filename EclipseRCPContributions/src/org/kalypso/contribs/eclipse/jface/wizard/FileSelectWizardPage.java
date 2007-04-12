@@ -44,9 +44,12 @@ import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * FileSelectWizardPage contains a simple FileFieldEditor that allows the user to enter the file name directly as a
@@ -78,6 +81,9 @@ public class FileSelectWizardPage extends WizardPage
 
     m_store = new PreferenceStore();
     m_store.setDefault( "FILE", fileName );
+
+    setTitle( "Rasterdaten Import" );
+    setDescription( "Bitte wählen Sie eine Datei aus, welche Sie als Rasterdaten importieren möchten." );
   }
 
   /**
@@ -87,7 +93,9 @@ public class FileSelectWizardPage extends WizardPage
   public void dispose( )
   {
     if( m_ffe != null )
+    {
       m_ffe.dispose();
+    }
 
     super.dispose();
   }
@@ -95,7 +103,7 @@ public class FileSelectWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     final Composite sub = new Composite( parent, SWT.FILL );
 
@@ -105,7 +113,7 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe.setEmptyStringAllowed( false );
     m_ffe.setFileExtensions( m_fileExtensions );
 
-    if( m_ffe.getStringValue() == null || m_ffe.getStringValue().length() == 0 )
+    if( (m_ffe.getStringValue() == null) || (m_ffe.getStringValue().length() == 0) )
     {
       final String fileName = getDialogSettings().get( "FILE" );
       if( fileName != null )
@@ -122,14 +130,27 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe.fillIntoGrid( sub, 4 );
 
     setControl( sub );
-
     setDescription( "Geben Sie einen Dateiname ein" );
+
+    final Text textControl = m_ffe.getTextControl( sub );
+    textControl.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        textControl.setEnabled( false );
+        setPageComplete( true );
+      }
+    } );
+
+    setPageComplete( false );
   }
 
   public String getFilePath( )
   {
     if( m_ffe == null )
+    {
       return null;
+    }
 
     m_ffe.store();
     final String fileName = m_store.getString( "FILE" );
