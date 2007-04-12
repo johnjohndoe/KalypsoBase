@@ -213,7 +213,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     
     // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getParentShell(), VORHERSAGEN_ORGANISIEREN,
-        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
+        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false, false ) );
     job.setUser( true );
     job.schedule();
   }

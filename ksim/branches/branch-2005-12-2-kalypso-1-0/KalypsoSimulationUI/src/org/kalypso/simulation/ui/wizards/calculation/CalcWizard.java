@@ -67,6 +67,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
@@ -401,6 +402,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       String title = "Fehler";
 
       final Throwable te = e.getTargetException();
+      final Shell shell = getContainer().getShell();
       if( te instanceof CoreException )
       {
         final IStatus status = ( (CoreException)te ).getStatus();
@@ -414,13 +416,14 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           title = "Warnung";
         }
 
-        ErrorDialog.openError( getContainer().getShell(), title, "Aktualisierung des Berechnungsfalls", status );
+        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls",
+            status, true );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
-        MessageDialog.openError( getContainer().getShell(), title, "Fehler beim Aufruf der nächsten Wizard-Seite: "
+        MessageDialog.openError( shell, title, "Fehler beim Aufruf der nächsten Wizard-Seite: "
             + te.getLocalizedMessage() );
       }
 

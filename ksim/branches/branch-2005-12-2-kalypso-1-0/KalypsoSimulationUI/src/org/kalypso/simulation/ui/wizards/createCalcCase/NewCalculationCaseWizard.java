@@ -49,10 +49,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -62,6 +62,7 @@ import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.ImageProvider;
 
@@ -135,11 +136,22 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature( ModelNature.ID );
-          nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          final IStatus createStatus = nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
+              monitor, 1000 ) );
+          if( createStatus.matches( IStatus.ERROR ) )
+            throw new CoreException( createStatus );
           if( controlPage.isUpdate() )
-            nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          {
+            final IStatus updateStatus = nature
+                .updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+            if( !updateStatus.isOK() )
+              throw new CoreException( updateStatus );
+          }
           else
+          {
             monitor.worked( 1000 );
+            throw new CoreException( createStatus );
+          }
         }
         finally
         {
@@ -160,20 +172,25 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     }
     catch( final InvocationTargetException e )
     {
-      e.printStackTrace();
-
       if( e.getTargetException() instanceof CoreException )
       {
-        ErrorDialog.openError( getContainer().getShell(), // Was
-            // Utilities.getFocusShell()
-            IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
-            null, // no special message
-            ( (CoreException)e.getTargetException() ).getStatus() );
+        final IStatus status = ( (CoreException)e.getTargetException() ).getStatus();
+        StatusUtilities.openSpecialErrorDialog( getContainer().getShell(), IDEWorkbenchMessages
+            .getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
+            null, status, true );
+
+        if( status.matches( IStatus.ERROR ) )
+        {
+          e.printStackTrace();
+          cleanup( newFolderHandle );
+          return null;
+        }
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
+        e.printStackTrace();
 
         IDEWorkbenchPlugin.log( MessageFormat.format(
             "Exception in {0}.getNewFolder(): {1}", new Object[] { getClass().getName(), e.getTargetException() } ) );//$NON-NLS-1$
@@ -181,11 +198,10 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
             .openError(
                 getContainer().getShell(),
                 IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.internalErrorTitle" ), IDEWorkbenchMessages.format( "WizardNewFolder.internalError", new Object[] { e.getTargetException().getMessage() } ) ); //$NON-NLS-2$ //$NON-NLS-1$
+
+        cleanup( newFolderHandle );
+        return null; // ie.- one of the steps resulted in a core exception
       }
-
-      cleanup( newFolderHandle );
-
-      return null; // ie.- one of the steps resulted in a core exception
     }
 
     return newFolderHandle;

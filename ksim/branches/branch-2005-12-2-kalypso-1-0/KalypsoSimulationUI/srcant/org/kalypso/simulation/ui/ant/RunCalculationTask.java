@@ -163,27 +163,31 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     final IProgressMonitor monitor = references == null ? null : (IProgressMonitor)references
         .get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
 
+    IStatus status = null;;
     try
     {
-      execute( new SubProgressMonitor( monitor, 1 ) );
+      status = execute( new SubProgressMonitor( monitor, 1 ) );
     }
     catch( final Throwable t )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( t );
-      if( PlatformUI.isWorkbenchRunning() )
-      {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        // REMARK: getActiveWorkbenchWindow return null here, because we are not in the display thread
-        // so we just take the shell from the first window, this is ok in most cases
-        final IWorkbenchWindow window = workbench.getWorkbenchWindows()[0];
-        final Shell shell = window == null ? null : window.getShell();
-        if( !status.isOK() )
-          handleError( shell, status );
-      }
-      else
-      {
+      status = StatusUtilities.statusFromThrowable( t );
+    }
+    
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      // REMARK: getActiveWorkbenchWindow return null here, because we are not in the display thread
+      // so we just take the shell from the first window, this is ok in most cases
+      final IWorkbenchWindow window = workbench.getWorkbenchWindows()[0];
+      final Shell shell = window == null ? null : window.getShell();
+      if( !status.isOK() )
+        handleError( shell, status );
+    }
+    else
+    {
+      final Throwable t = status.getException();
+      if( t != null )
         t.printStackTrace();
-      }
     }
   }
 

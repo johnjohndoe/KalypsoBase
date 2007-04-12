@@ -394,8 +394,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             {
               final String logfile = arguments[j + 1];
               final File logFileFile = new File( logfile );
-              final MultiStatus multiStatus = new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, "", null );
-              return LogAnalyzer.logfileToStatus( logFileFile, CharsetUtilities.getDefaultCharset(), multiStatus );
+              final IStatus[] logStati = LogAnalyzer
+                  .logfileToStatus( logFileFile, CharsetUtilities.getDefaultCharset() );
+              final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
+              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: "
+                  + logfile, null );
             }
           }
           return Status.OK_STATUS;

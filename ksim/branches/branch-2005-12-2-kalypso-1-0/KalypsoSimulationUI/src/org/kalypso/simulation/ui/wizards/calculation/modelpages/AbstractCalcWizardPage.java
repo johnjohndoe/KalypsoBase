@@ -1050,28 +1050,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
+    
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
-    if( !status.isOK() )
-    {
-      final StringBuffer msg = new StringBuffer();
-      switch( status.getSeverity() )
-      {
-      case IStatus.ERROR:
-        msg.append( "Fehler" );
-        break;
-      case IStatus.WARNING:
-        msg.append( "Warnung(en)" );
-        break;
-      case IStatus.INFO:
-        msg.append( "Information(en)" );
-        break;
-      }
 
-      msg.append( " bei der Bearbeitung von: \n" );
-      msg.append( errorMessage );
-
-      ErrorDialog.openError( getShell(), title, msg.toString(), status );
-    }
+    StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, true );
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
@@ -1081,8 +1063,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getShell(), "Seiten Wiederherstellen",
-        "Fehler beim Wiederherstellen der Seiten", true, StatusUtilities.ALL_STATUS_MASK ) );
-    // TRICKY: this should only happen, if the workspaces are realy reloaded.
+        "Fehler beim Wiederherstellen der Seiten", true, StatusUtilities.ALL_STATUS_MASK, false ) );
+    // TRICKY: this should only happen, if the workspaces are really reloaded.
     // This HACK just gives one second to do this. Is this always enough?
     // Better would be some code, which is called, after all Worspace-Modification events of
     // operastion 1 are handled. Is this possible?

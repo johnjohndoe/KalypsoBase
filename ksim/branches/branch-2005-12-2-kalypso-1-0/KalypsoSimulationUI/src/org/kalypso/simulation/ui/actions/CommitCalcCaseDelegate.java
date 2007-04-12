@@ -167,7 +167,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
       job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
-          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
+          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false, true ) );
 
       job.setUser( true );
       job.schedule();
