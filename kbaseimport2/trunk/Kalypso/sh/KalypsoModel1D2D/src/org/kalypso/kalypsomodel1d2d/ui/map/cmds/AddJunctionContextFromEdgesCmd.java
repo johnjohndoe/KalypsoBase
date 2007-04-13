@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
+import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
@@ -62,7 +63,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
-public class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
+class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
 {
   private IFE1D2DEdge edge1D;
   
@@ -149,7 +150,8 @@ public class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeComm
 //        }
         
         addedJunction = 
-          ModelOps.createEdgeToEdgeJunctionContext( model, edge1D, edge2D );
+          JunctionContextOps.createEdgeToEdgeJunctionContext(  
+                                                model, edge1D, edge2D );
       }
       catch( Exception e )
       {
@@ -159,43 +161,9 @@ public class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeComm
     }
   }
 
-  private IFE1D2DNode<IFE1D2DEdge> findJunctionStartNode( 
-                                          IFE1D2DEdge elementEdge )
-  {
-    IFE1D2DNode node1 = elementEdge.getNode( 1 );
-    if(node1.getContainers().size()==1)
-    {
-      return node1;
-    }
-    IFE1D2DNode node0 = elementEdge.getNode( 0 );
-    if(node0.getContainers().size()==1)
-    {
-      return node0;
-    }
-    return null;
-  }
+ 
 
-  private final IFEMiddleNode addTargetCLNode( 
-                        IFE1D2DEdge clMiddleEdge )
-  {
-    IFE1D2DNode node0 = clMiddleEdge.getNode( 0 );
-    IFE1D2DNode node1 = clMiddleEdge.getNode( 1 );
-    GM_Point point0 = node0.getPoint();
-    GM_Point point1 = node1.getPoint();
-    double x=(point0.getX()+point1.getX())/2;
-    double y=(point0.getY()+point1.getY())/2;
-    CS_CoordinateSystem crs=point0.getCoordinateSystem();
-    GM_Point middleNodePoint = 
-              GeometryFactory.createGM_Point( x, y, crs );
-    IFEMiddleNode middleNode = 
-      (IFEMiddleNode) model.getNodes().addNew( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_MIDDLE_NODE );
-    middleNode.setPoint( middleNodePoint );
-    //TODO check if this is not breaking the find egde computation
-    middleNode.addContainer( clMiddleEdge.getGmlID() );
-    return middleNode;
-  }
-
+  
   private IFE1D2DEdge findCLMiddleEdge( 
                           IFE1D2DContinuityLine continuityLine2 )
   {
