@@ -206,6 +206,9 @@ public class SimulationJob
   @SuppressWarnings("unchecked")
   public IStatus run( IProgressMonitor monitor )
   {
+    // if( true )
+    // return Status.OK_STATUS;
+
     monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
 
     Debug.println( "Checking for service URL ..." );
@@ -262,12 +265,15 @@ public class SimulationJob
       /* Collect the data. */
       IFile[] inputFiles = getInputFiles( m_calcCaseFolder );
 
-      /* Copy the data to the server. */
-      monitor.setTaskName( "Kopiere auf den Server ..." );
-      Debug.println( "Copy to the server ..." );
+      if( inputFiles.length > 0 )
+      {
+        /* Copy the data to the server. */
+        monitor.setTaskName( "Kopiere auf den Server ..." );
+        Debug.println( "Copy to the server ..." );
 
-      /* Copy ... */
-      copyInputFiles( inputFiles );
+        /* Copy ... */
+        copyInputFiles( inputFiles );
+      }
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
@@ -619,21 +625,34 @@ public class SimulationJob
       /* Input is here. */
       final String inputPath = input.getPath();
 
-      /* Alles relativ zum Projekt auflösen! */
-      final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-      final IResource inputResource = baseresource.findMember( inputPath );
-      if( inputResource == null )
+      URL url = null;
+      if( true )
       {
-        if( inputDescription.getMinimumOccurs().intValue() == 0 )
-          continue;
+        /* It is a local file resource. */
 
-        throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+        /* Alles relativ zum Projekt auflösen! */
+        final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+        final IResource inputResource = baseresource.findMember( inputPath );
+        if( inputResource == null )
+        {
+          if( inputDescription.getMinimumOccurs().intValue() == 0 )
+            continue;
+
+          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+        }
+
+        /* Build the URL for this input. */
+        String relativePathTo = inputResource.getProjectRelativePath().toString();
+        FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+        url = destination.getURL();
       }
+      else
+      {
+        /* It is a resource elsewhere. */
 
-      /* Build the URL to this input. */
-      String relativePathTo = inputResource.getProjectRelativePath().toString();
-      FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
-      URL url = destination.getURL();
+        /* Build the URL for this input */
+        // TODO
+      }
 
       /* Build the complex value reference. */
       CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
