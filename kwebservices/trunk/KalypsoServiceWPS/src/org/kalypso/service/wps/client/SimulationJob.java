@@ -42,13 +42,12 @@ package org.kalypso.service.wps.client;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.ows.ExceptionReport;
@@ -86,7 +85,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.VFSUtilities;
@@ -120,9 +118,9 @@ public class SimulationJob
   private final IContainer m_calcCaseFolder;
 
   /**
-   * The model specifications.
+   * The modelspec for this simulation.
    */
-  private final File m_modelSpec;
+  private Modeldata m_data;
 
   /**
    * The id identifying the simulation.
@@ -133,11 +131,6 @@ public class SimulationJob
    * After this period of time, the job gives up, waiting for a result of the service.
    */
   private final long m_timeout;
-
-  /**
-   * The modelspec for this simulation.
-   */
-  private Modeldata m_data;
 
   /**
    * The filesystem manager.
@@ -171,18 +164,18 @@ public class SimulationJob
    * 
    * @param calcCaseFolder
    *          The folder of the calc case.
-   * @param modelSpec
-   *          The file to the model specification.
+   * @param data
+   *          The model specification.
    * @param simulation
    *          The id identifying the simulation.
    * @param timeout
    *          After this period of time, the job gives up, waiting for a result of the service.
    */
-  public SimulationJob( final IContainer calcCaseFolder, final File modelSpec, final String simulationType, final long timeout )
+  public SimulationJob( final IContainer calcCaseFolder, final Modeldata data, final String simulationType, final long timeout )
   {
     /* Initializing of the given variables. */
     m_calcCaseFolder = calcCaseFolder;
-    m_modelSpec = modelSpec;
+    m_data = data;
     m_simulationType = simulationType;
     m_timeout = timeout;
 
@@ -192,7 +185,6 @@ public class SimulationJob
     m_alreadyWorked = new Integer( 0 );
 
     /* Variables that are initialized during run time. */
-    m_data = null;
     m_fsManager = null;
     m_serverTmpDirectory = null;
   }
@@ -206,9 +198,6 @@ public class SimulationJob
   @SuppressWarnings("unchecked")
   public IStatus run( IProgressMonitor monitor )
   {
-    // if( true )
-    // return Status.OK_STATUS;
-
     monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
 
     Debug.println( "Checking for service URL ..." );
@@ -259,14 +248,14 @@ public class SimulationJob
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
       ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
 
-      /* Get the directory for server access. */
-      initServerTmpDirectory();
-
       /* Collect the data. */
       IFile[] inputFiles = getInputFiles( m_calcCaseFolder );
 
       if( inputFiles.length > 0 )
       {
+        /* Get the directory for server access. */
+        initServerTmpDirectory();
+
         /* Copy the data to the server. */
         monitor.setTaskName( "Kopiere auf den Server ..." );
         Debug.println( "Copy to the server ..." );
@@ -465,26 +454,10 @@ public class SimulationJob
   /**
    * This function initializes everything.
    */
-  private void init( ) throws FileSystemException, JAXBException
+  private void init( ) throws FileSystemException
   {
-    /* Init the model spec. */
-    initData();
-
     /* The filesystem manager needs to be set. */
     initVFSManager();
-  }
-
-  /**
-   * This function inits the model data.
-   */
-  private void initData( ) throws JAXBException
-  {
-    /* Init the model spec. */
-    if( m_data == null )
-    {
-      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-      m_data = (Modeldata) unmarshaller.unmarshal( m_modelSpec );
-    }
   }
 
   /**
@@ -539,18 +512,22 @@ public class SimulationJob
     {
       final String inputPath = input.getPath();
 
-      /* Alles relativ zum Projekt auflösen! */
-      final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-      final IResource inputResource = baseresource.findMember( inputPath );
-      if( inputResource == null )
+      /* If it is no remote URL, collect the files. */
+      if( isURL( inputPath ) == null )
       {
-        if( input.isOptional() )
-          continue;
+        /* Alles relativ zum Projekt auflösen! */
+        final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+        final IResource inputResource = baseresource.findMember( inputPath );
+        if( inputResource == null )
+        {
+          if( input.isOptional() )
+            continue;
 
-        throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+        }
+
+        inputResource.accept( visitor );
       }
-
-      inputResource.accept( visitor );
     }
 
     return visitor.getFiles();
@@ -625,8 +602,11 @@ public class SimulationJob
       /* Input is here. */
       final String inputPath = input.getPath();
 
-      URL url = null;
-      if( true )
+      /* Get the URL if it is one. */
+      URL url = isURL( inputPath );
+
+      /* If the URL is null, it is a local file resource, otherwise it is a remote resource. */
+      if( url == null )
       {
         /* It is a local file resource. */
 
@@ -645,13 +625,6 @@ public class SimulationJob
         String relativePathTo = inputResource.getProjectRelativePath().toString();
         FileObject destination = m_fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
         url = destination.getURL();
-      }
-      else
-      {
-        /* It is a resource elsewhere. */
-
-        /* Build the URL for this input */
-        // TODO
       }
 
       /* Build the complex value reference. */
@@ -681,6 +654,41 @@ public class SimulationJob
       if( input.getId().equals( ID ) )
         return input;
     }
+
+    return null;
+  }
+
+  /**
+   * This function checks, if the path given is a remote URL.
+   * 
+   * @return An URL, if the path is an URL (and additionally no file URL), otherwise null.
+   */
+  private URL isURL( String path )
+  {
+    try
+    {
+      /* Check if it is an real URL. */
+      URL url = new URL( path );
+
+      /* If it is a file URL, it is no remote URL. */
+      if( url.getProtocol().equals( "file" ) )
+      {
+        Debug.println( "Input '" + path + "' was a local file URL ..." );
+        return null;
+      }
+
+      /* It is a remote URL. */
+      Debug.println( "Input '" + path + "' was a remote URL ..." );
+
+      return url;
+    }
+    catch( MalformedURLException e )
+    {
+      /* No need to give feedback on this error, because it was expected, if the path was no real URL. */
+    }
+
+    /* If it was no parseable URL, it is probably a file path. */
+    Debug.println( "Input '" + path + "' was no URL ..." );
 
     return null;
   }
