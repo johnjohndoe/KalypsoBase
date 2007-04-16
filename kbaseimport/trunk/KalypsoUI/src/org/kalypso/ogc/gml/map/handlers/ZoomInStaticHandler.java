@@ -91,9 +91,6 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 
     wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-    //mapPanel.setBoundingBox( wishBBox );
-    
     
     final GM_Envelope zoomBox = wishBBox;
     new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
