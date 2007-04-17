@@ -93,10 +93,10 @@ public class DefaultLegendItem implements ILegendItem
    */
   public String getName( )
   {
-    String lname = m_layer.getName();
-    if( lname != null )
+    String lname = m_layer.getDescription();
+    if( lname != null && ! lname.trim().equals( "" ))
       return lname;
-    return "no Name";
+    else return m_layer.getName();
   }
 
   /**
@@ -155,7 +155,9 @@ public class DefaultLegendItem implements ILegendItem
     Point p0 = new Point( m_inset, m_inset );
     GCWrapper gcw = new GCWrapper( gc );
 
-    Point nameBounds = getTextExtent( gcw, Display.getCurrent(), getName(), m_fd );
+    String name=getName();
+    
+    Point nameBounds = getTextExtent( gcw, Display.getCurrent(), name, m_fd );
 
     gc.setBackground( Display.getDefault().getSystemColor( (int) (Math.random() * 20.0) ) );
 
@@ -186,7 +188,7 @@ public class DefaultLegendItem implements ILegendItem
     int textY = p0.y + fontTop;
     // gc.drawString( getName(), textX , textY );
 
-    drawText( gcw, gc.getDevice(), getName(), textX, textY, m_fd );
+    drawText( gcw, gc.getDevice(), name, textX, textY, m_fd );
 
     gcw.dispose();
     gc.dispose();

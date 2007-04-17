@@ -48,19 +48,19 @@ import org.kalypso.swtchart.chart.styles.ILayerStyle;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  private boolean m_isVisible = true;
+  protected  boolean m_isVisible = true;
 
-  private ILayerStyle m_style;
+  protected  ILayerStyle m_style;
 
-  private String m_name;
+  protected  String m_name;
 
-  private String m_description;
+  protected String m_description;
 
-  private boolean m_isActive;
+  protected  boolean m_isActive;
 
-  private IAxis m_valueAxis;
+  protected  IAxis m_valueAxis;
 
-  private IAxis m_domainAxis;
+  protected  IAxis m_domainAxis;
 
   public AbstractChartLayer( )
   {

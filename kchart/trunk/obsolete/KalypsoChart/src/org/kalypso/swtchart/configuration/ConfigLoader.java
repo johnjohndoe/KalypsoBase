@@ -67,6 +67,7 @@ import org.ksp.chart.configuration.LayerType;
 import org.ksp.chart.configuration.ObjectFactory;
 import org.ksp.chart.configuration.StyleType;
 import org.ksp.chart.configuration.TableType;
+import org.w3c.dom.Node;
 
 /**
  * @author alibu
@@ -100,6 +101,28 @@ public class ConfigLoader
     m_configPath = path;
     loadFile();
   }
+
+  
+  /**
+   * Creates a Configuration-Dokument from a Node
+   */
+  public ConfigLoader( Node node ) throws JAXBException
+  {
+      Object o = JC.createUnmarshaller().unmarshal(node);
+      if( o instanceof JAXBElement )
+      {
+        Object child = ((JAXBElement) o).getValue();
+        m_config = (ConfigurationType) child;
+      }
+      else if( o instanceof ConfigurationType )
+      {
+        m_config = (ConfigurationType) o;
+      }
+      Logger.trace( "Configuration geladen" );
+      Logger.trace( "loadFile End" );
+      divideObjects();
+  }
+  
 
   /**
    * reads and loads the configuration file

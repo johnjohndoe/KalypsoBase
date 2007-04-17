@@ -124,7 +124,12 @@ public class ChartLoader
             Logger.trace( "Adding Layer " + icl.getName() );
             icl.setStyle( StyleLoader.createStyle( layerType ) );
             icl.setName( layerType.getName() );
-            icl.setDescription( layerType.getDescription() );
+            String title=layerType.getTitle();
+            if (title == null | title.trim().equals( "" ))
+              icl.setDescription( layerType.getName() );
+            else
+              icl.setDescription( title );
+     //       icl.setDescription( layerType.getDescription() );
             icl.setVisibility( layerType.isVisible() );
             chart.addLayer( icl );
           }

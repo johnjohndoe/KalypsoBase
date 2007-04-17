@@ -97,7 +97,7 @@ public class UvfPegelLP implements ILayerProvider
    */
   public IChartLayer getLayer( URL context )
   {
-    IChartLayer icl = null;
+    WasserstandLayer icl = null;
     String configLayerId=m_lt.getName();
 
     ParameterHelper ph=new ParameterHelper();

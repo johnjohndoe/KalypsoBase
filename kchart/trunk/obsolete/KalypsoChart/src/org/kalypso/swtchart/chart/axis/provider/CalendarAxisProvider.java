@@ -151,7 +151,8 @@ public class CalendarAxisProvider implements IAxisProvider
     int insetLabel=Integer.parseInt( m_pc.getParameterValue( "inset_label", "1" ));
     Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
 
-    String dateFormatString=m_pc.getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
+   // String dateFormatString=m_pc.getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
+     String dateFormatString=m_pc.getParameterValue( "dateFormat", "dd.MM.yy" );
     //Steuerzeichen aus Config ersetzen
     dateFormatString=dateFormatString.replace( "\\n", "\n" );
     IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( dateFormatString ) );

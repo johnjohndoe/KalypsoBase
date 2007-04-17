@@ -299,6 +299,10 @@ public class WasserstandLayer implements IChartLayer
       ArrayList<Point> points = new ArrayList<Point>();
       // Linie von Links nach rechts
       points.add( new Point( 0, (int) height / 2 ) );
+      points.add( new Point( width/5, (int) height / 2 ) );
+      points.add( new Point( width/5*2, (int) height / 4 ) );
+      points.add( new Point( width/5*3, (int) height / 4 *3 ) );
+      points.add( new Point( width/5*4, (int) height / 2 ) );
       points.add( new Point( width, (int) height / 2 ) );
       line.setPath( points );
       line.paint( gcw, Display.getCurrent() );
