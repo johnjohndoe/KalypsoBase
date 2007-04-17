@@ -55,12 +55,15 @@ import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
+import org.kalypso.services.ods.helper.CapabilitiesLoader;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.ODSUtils;
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.ChartImageContainer;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.logging.Logger;
+import org.w3c.dom.Node;
 
 /**
  * @author burtscher IODS operation to display an image containing a chart
@@ -122,7 +125,8 @@ public class GetChart implements IODSOperation, Runnable
       else
       {
         Logger.trace( "GetChart: Creating new chart" );
-        cc = new CachedChart( reqName );
+        Node configNode=(new CapabilitiesLoader(m_requestBean)).getConfigurationNode();
+        cc = new CachedChart( configNode, reqName );
         ChartCache.getInstance().addObject( reqName, cc );
         chart = cc.getChart();
       }
@@ -160,6 +164,7 @@ public class GetChart implements IODSOperation, Runnable
               catch( IOException e )
               {
                 // TODO Auto-generated catch block
+                
                 e.printStackTrace();
               }
             }

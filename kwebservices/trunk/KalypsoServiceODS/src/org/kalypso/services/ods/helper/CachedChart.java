@@ -50,6 +50,7 @@ import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.exception.ConfigChartNotFoundException;
 import org.kalypso.swtchart.logging.Logger;
+import org.w3c.dom.Node;
 
 /**
  * @author burtscher1
@@ -65,7 +66,7 @@ public class CachedChart
     private String m_id;
 
 
-    public CachedChart(String id)
+    public CachedChart(String chartConfigPath, String id)
     {
       Display d= DisplayHelper.getInstance().getDisplay();
       m_shell=new Shell(d);
@@ -73,9 +74,7 @@ public class CachedChart
 
       try
       {
-        String path=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-        ConfigLoader cl=new ConfigLoader(path);
-        Logger.trace("Config-Pfad: "+path);
+        ConfigLoader cl=new ConfigLoader(chartConfigPath);
         ChartLoader.createChart( m_chart, cl, id, null );
       }
       catch( ConfigChartNotFoundException e )
@@ -88,6 +87,29 @@ public class CachedChart
         e.printStackTrace();
       }
 
+    }
+
+    public CachedChart(Node chartConfigNode, String id)
+    {
+      Display d= DisplayHelper.getInstance().getDisplay();
+      m_shell=new Shell(d);
+      m_chart=new Chart( m_shell, SWT.NONE );
+      
+      try
+      {
+        ConfigLoader cl=new ConfigLoader(chartConfigNode);
+        ChartLoader.createChart( m_chart, cl, id, null );
+      }
+      catch( ConfigChartNotFoundException e )
+      {
+        Logger.trace(e.getMessage());
+        e.printStackTrace();
+      }
+      catch( JAXBException e )
+      {
+        e.printStackTrace();
+      }
+      
     }
 
 

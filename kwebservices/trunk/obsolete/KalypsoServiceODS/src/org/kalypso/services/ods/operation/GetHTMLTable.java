@@ -51,10 +51,12 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.helper.CapabilitiesLoader;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypso.swtchart.configuration.TableLoader;
 import org.kalypso.swtchart.exception.ConfigTableNotFoundException;
+import org.w3c.dom.Node;
 
 /**
  * @author burtscher
@@ -86,13 +88,12 @@ public class GetHTMLTable implements IODSOperation
     String name=m_requestBean.getParameterValue( "NAME" );
     if (name!=null)
     {
-      //    HTMLTabelle erzeugen
-      String pathVC=System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT)+IODSConstants.ODS_CONFIG_NAME;
-
+      
+      Node configurationNode=(new CapabilitiesLoader(m_requestBean)).getConfigurationNode();
       ConfigLoader cl=null;
         try
         {
-          cl = new ConfigLoader(pathVC);
+          cl = new ConfigLoader(configurationNode);
           String htmltable = TableLoader.createTable(cl, name, null);
           OutputStreamWriter out=new OutputStreamWriter(m_responseBean.getOutputStream());
           m_responseBean.setContentType( "text/html" );

@@ -54,6 +54,7 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.services.ods.Activator;
 import org.kalypso.services.ods.helper.CachedChart;
+import org.kalypso.services.ods.helper.CapabilitiesLoader;
 import org.kalypso.services.ods.helper.ChartCache;
 import org.kalypso.services.ods.helper.DisplayHelper;
 import org.kalypso.services.ods.helper.ODSUtils;
@@ -114,7 +115,7 @@ public class GetLegend implements IODSOperation, Runnable
           else
           {
             Logger.trace("GetLegend: Creating new chart");
-            cc=new CachedChart(reqName);
+            cc=new CachedChart((new CapabilitiesLoader(m_requestBean)).getConfigurationNode(), reqName);
             ChartCache.getInstance().addObject( reqName, cc );
             chart=cc.getChart();
           }

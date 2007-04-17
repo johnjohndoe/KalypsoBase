@@ -1,0 +1,33 @@
+<schema targetNamespace="http://www.ksp.org/ods/configuration"
+     xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:ods="http://www.ksp.org/ods/capabilities"
+     xmlns:kcc="http://www.ksp.org/chart/configuration"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     elementFormDefault="qualified"
+     >
+   
+<import namespace="http://www.ksp.org/ods/capabilities" schemaLocation="Capabilities.xsd"/>
+<import namespace="http://www.ksp.org/chart/configuration" schemaLocation="../../../../KalypsoChart/etc/binding/conf/newViewerConfig.xsd"/>
+     
+<element name="ODS">
+	<complexType>
+		<sequence>
+			<element name="ServiceMetadata">
+				<complexType>
+					<sequence>
+						<element ref="ods:Service"></element>
+						<element ref="ods:Capability" ></element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="Diagrams">
+				<complexType>
+					<sequence>
+						<element ref="kcc:Configuration"/>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+</element>
+</schema>

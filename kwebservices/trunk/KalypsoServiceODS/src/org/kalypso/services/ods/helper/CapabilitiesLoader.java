@@ -52,6 +52,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.ogc.RequestBean;
@@ -60,6 +63,7 @@ import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.ChartType;
 import org.ksp.chart.configuration.TableType;
 import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
+import org.ksp.ods.capabilities.Capability;
 import org.ksp.ods.capabilities.DCPType;
 import org.ksp.ods.capabilities.DataURL;
 import org.ksp.ods.capabilities.Diagram;
@@ -72,7 +76,12 @@ import org.ksp.ods.capabilities.ODSCapabilities;
 import org.ksp.ods.capabilities.OnlineResource;
 import org.ksp.ods.capabilities.OperationType;
 import org.ksp.ods.capabilities.Request;
+import org.ksp.ods.capabilities.Service;
 import org.ksp.ods.capabilities.Table;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -87,22 +96,35 @@ public class CapabilitiesLoader
 {
   public final static org.ksp.ods.capabilities.ObjectFactory m_ofCap = new org.ksp.ods.capabilities.ObjectFactory();
   private static final JAXBContext JCCaps = JaxbUtilities.createQuiet( org.ksp.ods.capabilities.ObjectFactory.class );
-  private static final JAXBContext JCVC = JaxbUtilities.createQuiet( org.ksp.chart.configuration.ObjectFactory.class );
 
-  private String m_configPathCaps;
-  private String m_configPathVC;
+  private String NS_ODS_CAPABILITIES="http://www.ksp.org/ods/capabilities";
+  private String NS_CHART_CONFIGURATION="http://www.ksp.org/chart/configuration";
+  
+  
+  private String m_configFilePath;
   private ODSCapabilities m_caps=null;
   private ConfigLoader m_cl;
   private RequestBean m_requestBean;
+  private Document m_document;
 
 
 
-
-  public CapabilitiesLoader(RequestBean requestBean, String pathCaps, String pathVC)
+/**
+ * TODO: remove RequestBean-member as only 2 values are needed
+ */
+  public CapabilitiesLoader(RequestBean requestBean)
   {
       m_requestBean=requestBean;
-      m_configPathCaps=pathCaps;
-      m_configPathVC=pathVC;
+      
+      //Nur wenn der Parameter "configFile" nicht gesetzt wurde, wird auf StandardPfade zurückgegriffen
+      String pathConfig = System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT ) +  IODSConstants.ODS_CONFIG_NAME;
+      String pathConfigFromUrl=requestBean.getParameterValue( "configFile" );
+      if (! ( "" ).equals( pathConfigFromUrl))
+      {
+        pathConfig=pathConfigFromUrl;
+      }
+      System.out.println("Path config: "+pathConfig);
+      m_configFilePath=pathConfig;
       loadFile();
       mergeConfigIntoODS();
   }
@@ -112,27 +134,94 @@ public class CapabilitiesLoader
    */
   public void loadFile()
   {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware( true );
+    
+   
+    Node configurationNode=null;
+    Node serviceNode= null;
+    Node capabilityNode= null;
+   
+    
+    /**
+     * Zunächst ODS-Node finden; der hat dann zwei Kindknoten Configuration und Service, die dann gemarshallt werden müssen
+     */
+    
+    try
+    {
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      m_document = builder.parse( m_configFilePath);
+      
+      serviceNode=getServiceNode();
+      capabilityNode=getFirstNodeByName( NS_ODS_CAPABILITIES, "Capability" );
+      configurationNode=getFirstNodeByName( NS_CHART_CONFIGURATION, "Configuration" );
+    }
+    catch( SAXException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( ParserConfigurationException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    
     Logger.trace("loadFile Start");
+    m_caps=m_ofCap.createODSCapabilities();
+    
       try
       {
-        //Capabilities laden
-        Object o = JCCaps.createUnmarshaller().unmarshal( new File(m_configPathCaps) );
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Unmarshalling file '"+m_configPathCaps+"'" );
-        if (o instanceof JAXBElement)
+        //Capabilities laden 
+        Object sn = JCCaps.createUnmarshaller().unmarshal( serviceNode);
+        Object cn = JCCaps.createUnmarshaller().unmarshal( capabilityNode);
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Unmarshalling Configuration-Node from file '"+m_configFilePath+"'" );
+        if (sn instanceof JAXBElement)
         {
-          Object child=((JAXBElement) o).getValue();
+          Object child=((JAXBElement) sn).getValue();
           m_caps=(ODSCapabilities) child;
         }
-        else if (o instanceof ODSCapabilities)
+        else if (sn instanceof ODSCapabilities)
         {
-          m_caps=(ODSCapabilities)  o;
+          m_caps=(ODSCapabilities) sn;
+        }
+        else if (sn instanceof Service)
+        {
+          Service s=(Service) sn;
+          m_caps.setService( s );
         }
         else
-          Logger.trace("Klasse von Objekt: "+o.getClass().getName());
+          Logger.trace("Klasse von Objekt: "+sn.getClass().getName());
+        
+        
+        if (cn instanceof JAXBElement)
+        {
+          Object child=((JAXBElement) cn).getValue();
+          m_caps=(ODSCapabilities) child;
+        }
+        else if (cn instanceof ODSCapabilities)
+        {
+          m_caps=(ODSCapabilities) cn;
+        }
+        else if (cn instanceof Capability)
+        {
+          Capability capability=(Capability) cn;
+          m_caps.setCapability( capability);
+        }
+        else
+          Logger.trace("Klasse von Objekt: "+sn.getClass().getName());
+        
+        
         Logger.trace("CapabilityDokument geladen");
 
         //ViewerConf
-        m_cl=new ConfigLoader(m_configPathVC);
+        m_cl=new ConfigLoader(configurationNode);
 
       }
       catch( JAXBException e )
@@ -145,6 +234,7 @@ public class CapabilitiesLoader
         e.printStackTrace();
       }
       Logger.trace("loadFile End");
+      
   }
 
   /**
@@ -188,7 +278,6 @@ public class CapabilitiesLoader
    */
   public void mergeConfigIntoODS()
   {
-    //String serviceRoot=System.getProperty( IODSConstants.ODS_SERVICE_ROOT_KEY, IODSConstants.ODS_SERVICE_ROOT_DEFAULT);
 
     //get actual service root from URL
     String serviceRoot="";
@@ -263,7 +352,7 @@ public class CapabilitiesLoader
           String ltDescription = lt.getDescription();
           LayerType layer = m_ofCap.createLayerType();
           layer.setName( ltName );
-//          layer.setTitle( ltTitle );
+          layer.setTitle( ltTitle );
           layer.setDescription( ltDescription );
           layerTypes.add( layer );
         }
@@ -386,6 +475,49 @@ public class CapabilitiesLoader
     http.setGet( get );
     dcpCaps.setHTTP( http );
     return dcpCaps;
+  }
+  
+  /**
+   * Returns the first node going by the name localName in the namespace ns 
+   */
+  private Node getFirstNodeByName(String namespace, String localName)
+  {
+    Node myNode=null;
+    if (m_document!=null)
+    {
+      NodeList foundNodes=m_document.getElementsByTagNameNS( namespace, localName );
+      if (foundNodes!=null && foundNodes.getLength()>0)
+      {
+        myNode=foundNodes.item( 0 );
+        System.out.println("Found node by name: "+myNode.getNodeName());
+      }
+    }
+    return myNode;
+  }
+  
+  
+  /**
+   * returns Service-Node from ODS-Configuration-Document
+   */
+  public Node getServiceNode()
+  {
+    return getFirstNodeByName( NS_ODS_CAPABILITIES, "Service" );
+  }
+  
+  /**
+   * returns Capability-Node from ODS-Configuration-Document
+   */
+  public Node getCapabilityNode()
+  {
+    return getFirstNodeByName( NS_ODS_CAPABILITIES, "Capabilty" );
+  }
+
+  /**
+   * returns Configuration-Node from ODS-Configuration-Document
+   */
+  public Node getConfigurationNode()
+  {
+    return getFirstNodeByName( NS_CHART_CONFIGURATION, "Configuration" );
   }
 
 }

@@ -59,6 +59,7 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.services.ods.Activator;
+import org.kalypso.services.ods.helper.CapabilitiesLoader;
 import org.kalypso.services.ods.helper.IODSConstants;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.ksp.chart.configuration.AxisType;
@@ -67,6 +68,7 @@ import org.ksp.chart.configuration.ConfigurationType;
 import org.ksp.chart.configuration.LayerType;
 import org.ksp.chart.configuration.ObjectFactory;
 import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
+import org.w3c.dom.Node;
 
 /**
  * @author burtscher IODSOperation to return O&M data as HTML table
@@ -107,8 +109,11 @@ public class GetAxesInfo implements IODSOperation
       ConfigLoader cl = null;
       try
       {
+        
+        
         ConfigurationType ct = m_of.createConfigurationType();
-        cl = new ConfigLoader( pathVC );
+        Node configNode=(new CapabilitiesLoader(m_requestBean)).getConfigurationNode();
+        cl = new ConfigLoader( configNode );
         ConfigurationType c = cl.getConfiguration();
         ChartType configChart = cl.getCharts().get( name );
         HashMap<String, AxisType> addedAxes = new HashMap<String, AxisType>();

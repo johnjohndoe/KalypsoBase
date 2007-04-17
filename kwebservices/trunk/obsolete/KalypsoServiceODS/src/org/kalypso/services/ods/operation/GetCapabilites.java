@@ -71,11 +71,7 @@ public class GetCapabilites implements IODSOperation
   {
     Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing GetCapabilities", null ) );
 
-    String pathConfig = System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
-    String pathCaps = pathConfig + IODSConstants.ODS_CAPABILITIES_NAME;
-    String pathVC = pathConfig + IODSConstants.ODS_CONFIG_NAME;
-
-    CapabilitiesLoader pf = new CapabilitiesLoader( requestBean, pathCaps, pathVC );
+    CapabilitiesLoader pf = new CapabilitiesLoader( requestBean);
     pf.mergeConfigIntoODS();
 
     responseBean.setContentType( "text/xml" );

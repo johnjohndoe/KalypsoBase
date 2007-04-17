@@ -47,12 +47,6 @@ public class ODSServlet implements IOGCService
     }
     catch( CoreException e )
     {
-      /*
-       * TODO
-       * @Alex Got not necessarly here, if the operation is not found, but op will stay null. See below exception. I
-       *       think here should be another exception type.
-       *       Holger
-       */
       throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation " + operationName + " not found", "" );
     }
 
