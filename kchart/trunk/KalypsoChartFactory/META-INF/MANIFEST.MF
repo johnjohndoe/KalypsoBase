@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DiagramFactory Plug-in
+Bundle-SymbolicName: de.openali.diagram.factory;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ de.openali.diagram.framework;visibility:=reexport,
+ de.openali.xmlbeans;visibility:=reexport
+Export-Package: de.openali.diagram.factory,
+ de.openali.diagram.factory.configuration,
+ de.openali.diagram.factory.configuration.exception,
+ de.openali.diagram.factory.configuration.parameters,
+ de.openali.diagram.factory.configuration.parameters.impl,
+ de.openali.diagram.factory.configuration.xsd,
+ de.openali.diagram.factory.provider,
+ de.openali.diagram.factory.util
