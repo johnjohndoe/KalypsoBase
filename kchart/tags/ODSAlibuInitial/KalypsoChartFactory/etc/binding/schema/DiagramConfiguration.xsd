@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:adc="http://www.openali.de/diagram/factory/configuration/xsd"
+	targetNamespace="http://www.openali.de/diagram/factory/configuration/xsd"
+	elementFormDefault="qualified">
+
+	<element name="diagramConfiguration" type="adc:ConfigurationType" />
+
+	<complexType name="ConfigurationType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element ref="adc:diagram" />
+			<element ref="adc:layer" />
+			<element ref="adc:axis" />
+			<element ref="adc:style" />
+			<element ref="adc:mapper" />
+			<element ref="adc:axisRenderer" />
+		</choice>
+	</complexType>
+
+	<complexType name="AbstractConfigurationType" abstract="true">
+		<sequence>
+			<element ref="adc:provider" minOccurs="0"></element>
+		</sequence>
+		<attribute name="id" type="ID" use="required" />
+	</complexType>
+
+	<element name="diagram" type="adc:diagramType" />
+
+	<complexType name="diagramType">
+		<complexContent>
+			<extension base="adc:AbstractConfigurationType">
+				<sequence>
+					<element name="title" type="string" />
+					<element name="description" type="string" />
+					<element name="layers">
+						<complexType>
+							<sequence>
+								<element name="layerRef" maxOccurs="unbounded" type="adc:RefType">
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<element name="layer" type="adc:LayerType" />
+	<complexType name="LayerType">
+		<complexContent>
+			<extension base="adc:AbstractConfigurationType">
+				<sequence>
+					<element name="title" type="string" />
+					<element name="description" type="string" />
+					<element name="mapper">
+						<complexType>
+							<sequence>
+								<element name="domainAxisRef"
+									type="adc:RefType" />
+								<element name="valueAxisRef"
+									type="adc:RefType" />
+								<element name="mapperRef"
+									type="adc:MapperRefType" minOccurs="0" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="style">
+						<complexType>
+							<sequence>
+								<element name="styleRef"
+									type="adc:RefType" maxOccurs="unbounded" />
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="visible" type="boolean" use="optional"
+					default="true">
+					<annotation>
+						<documentation>
+							legt die Sichtbarkeit des Layers fest
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="provider" type="adc:ProviderType" />
+	<complexType name="ProviderType">
+		<sequence>
+			<element ref="adc:parameters" minOccurs="0"></element>
+		</sequence>
+		<attribute name="epid" type="string" use="required">
+			<annotation>
+				<documentation>
+					ID der Extension, die den jeweiligen
+					Erweiterungspunkt implementiert
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="RefType">
+		<attribute name="ref" type="IDREF" use="required" />
+	</complexType>
+
+	<complexType name="MapperRefType">
+		<complexContent>
+			<extension base="adc:RefType">
+				<attribute name="role" type="string" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="mapper" type="adc:MapperType" />
+		<complexType name="MapperType">
+		<complexContent>
+			<extension base="adc:AbstractConfigurationType" />
+		</complexContent>
+	</complexType>
+		
+
+	<element name="axis" type="adc:AxisType" />
+	<complexType name="AxisType">
+		<complexContent>
+			<extension base="adc:MapperType">
+				<sequence>
+					<element name="label" type="string" />
+					<element name="direction">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="POSITIVE" />
+								<enumeration value="NEGATIVE" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="position">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="LEFT" />
+								<enumeration value="RIGHT" />
+								<enumeration value="BOTTOM" />
+								<enumeration value="TOP" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="minVal" type="string" />
+					<element name="maxVal" type="string" />
+					<element name="rendererRef" type="adc:RefType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="axisRenderer" type="adc:AxisRendererType" />
+	<complexType name="AxisRendererType">
+		<complexContent>
+			<extension base="adc:AbstractConfigurationType">
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<element name="style" type="adc:StyleType" />
+	<complexType name="StyleType">
+		<complexContent>
+			<extension base="adc:AbstractConfigurationType">
+				<sequence>
+					<element name="styleID" type="string">
+						<annotation>
+							<documentation>
+
+							</documentation>
+						</annotation>
+					</element>
+					<element name="type">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="POINT" />
+								<enumeration value="FONT" />
+								<enumeration value="LINE" />
+								<enumeration value="POLYGON" />
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="parameters" type="adc:ParametersType" />
+	
+	<complexType name="ParametersType">
+			<sequence>
+				<element ref="adc:parameter" minOccurs="0"
+					maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+
+	<element name="parameter" type="adc:ParameterType" />
+	<complexType name="ParameterType">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="value" type="string" use="required" />
+	</complexType>
+
+
+</schema>

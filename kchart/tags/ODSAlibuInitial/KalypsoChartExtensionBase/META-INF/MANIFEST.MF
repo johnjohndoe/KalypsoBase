@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DiagramBaseExtensions Plug-in
+Bundle-SymbolicName: DiagramBaseExtensions;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Require-Bundle: de.openali.diagram.factory
+Export-Package: de.openali.diagram.ext.base.axis,
+ de.openali.diagram.ext.base.axis.provider,
+ de.openali.diagram.ext.base.axisrenderer,
+ de.openali.diagram.ext.base.axisrenderer.provider,
+ de.openali.diagram.ext.base.data,
+ de.openali.diagram.ext.base.layer,
+ de.openali.diagram.ext.base.layer.provider,
+ de.openali.diagram.ext.base.style,
+ de.openali.diagram.ext.base.style.provider,
+ de.openali.diagram.ext.base.test
