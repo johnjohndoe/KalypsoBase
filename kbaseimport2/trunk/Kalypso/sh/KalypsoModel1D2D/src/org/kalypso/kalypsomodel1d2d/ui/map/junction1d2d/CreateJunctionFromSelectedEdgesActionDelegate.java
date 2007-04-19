@@ -56,6 +56,6 @@ public class CreateJunctionFromSelectedEdgesActionDelegate
 {
   public CreateJunctionFromSelectedEdgesActionDelegate( )
   {
-    super( new CreateJunctionFromSelectedEdges() );
+    super( new CreateJunctionContext1DTo2DFromSelectedEdges() );
   }
 }
