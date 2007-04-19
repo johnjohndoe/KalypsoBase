@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DiagramBaseExtensions Plug-in
-Bundle-SymbolicName: DiagramBaseExtensions;singleton:=true
+Bundle-Name: ChartBaseExtensions Plug-in
+Bundle-SymbolicName: ChartBaseExtensions;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Localization: plugin
-Require-Bundle: de.openali.diagram.factory
-Export-Package: de.openali.diagram.ext.base.axis,
- de.openali.diagram.ext.base.axis.provider,
- de.openali.diagram.ext.base.axisrenderer,
- de.openali.diagram.ext.base.axisrenderer.provider,
- de.openali.diagram.ext.base.data,
- de.openali.diagram.ext.base.layer,
- de.openali.diagram.ext.base.layer.provider,
- de.openali.diagram.ext.base.style,
- de.openali.diagram.ext.base.style.provider,
- de.openali.diagram.ext.base.test
+Export-Package: org.kalypso.chart.ext.base.axis,
+ org.kalypso.chart.ext.base.axis.provider,
+ org.kalypso.chart.ext.base.axisrenderer,
+ org.kalypso.chart.ext.base.axisrenderer.provider,
+ org.kalypso.chart.ext.base.data,
+ org.kalypso.chart.ext.base.layer,
+ org.kalypso.chart.ext.base.layer.provider,
+ org.kalypso.chart.ext.base.style,
+ org.kalypso.chart.ext.base.style.provider
+Require-Bundle: org.kalypso.contribs.java,
+ org.kalypso.chart.factory

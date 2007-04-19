@@ -1,0 +1,111 @@
+package org.kalypso.chart.framework.model.layer;
+
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.legend.ILegendItem;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.styles.ILayerStyle;
+import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+
+
+/**
+ * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
+ *         translate logical data into screen values
+ */
+public interface IChartLayer<T_domain extends Comparable, T_target extends Comparable>
+{
+  // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the LayerType)
+  
+  
+	
+	/**
+	   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
+	   */
+	public void setId( final String id );
+	
+	/**
+	   * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
+	   */
+	public String getId( );
+	
+	
+	
+	
+  /**
+   * sets the layers title (which will be shown in the legend)
+   */
+  public void setTitle( final String title );
+
+  /**
+   * @return the layers title
+   */
+  public String getTitle( );
+
+  /**
+   * sets a description for the layer
+   */
+  public void setDescription( String description );
+
+  /**
+   * @return the layers description
+   */
+  public String getDescription( );
+
+  /**
+   * @return the IAxis object used with domain data
+   */
+  public IAxis<T_domain> getDomainAxis( );
+
+
+  /**
+   * @return the IAxis object used with value data
+   */
+  public IAxis<T_target> getTargetAxis( );
+
+
+
+  /**
+   * TODO: remove this from IChartLayer interface ILegendItem should be constructed upon layers, client should always
+   * use drawIcon and getName only the legend should know about legend-items
+   * 
+   * @return ILegendItem which describes the Layers content and style
+   */
+  public ILegendItem getLegendItem( );
+
+  /**
+   * draws a picture of a given size into the given Image; the icon will be used for the legend to describe the layers
+   * visual representation
+   * TODO: remove widht and height parameters!
+   * Use img.getBounds instead
+   */
+  public void drawIcon( final Image img, final int width, final int height );
+
+  /**
+   * @return true if the layer is set active, false otherwise
+   */
+  public boolean isActive( );
+  
+  public void setActive(boolean isActive);
+
+  /**
+   * @return the layer style
+   */
+  public ILayerStyle getStyle( );
+
+  /**
+   * sets the layer's style
+   */
+  public void setStyle( final ILayerStyle style );
+
+  /**
+   * draws the layer using the given GCWrapper and Device
+   */
+  public void paint( final GCWrapper gc);
+
+  public void setVisible( final boolean isVisible );
+
+  public boolean isVisible( );
+  
+  public IDataContainer getDataContainer();
+}

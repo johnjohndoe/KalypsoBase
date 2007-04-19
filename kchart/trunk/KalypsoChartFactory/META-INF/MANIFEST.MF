@@ -1,19 +1,20 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DiagramFactory Plug-in
-Bundle-SymbolicName: de.openali.diagram.factory;singleton:=true
+Bundle-Name: ChartFactory Plug-in
+Bundle-SymbolicName: org.kalypso.chart.factory;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- de.openali.diagram.framework;visibility:=reexport,
- de.openali.xmlbeans;visibility:=reexport
-Export-Package: de.openali.diagram.factory,
- de.openali.diagram.factory.configuration,
- de.openali.diagram.factory.configuration.exception,
- de.openali.diagram.factory.configuration.parameters,
- de.openali.diagram.factory.configuration.parameters.impl,
- de.openali.diagram.factory.configuration.xsd,
- de.openali.diagram.factory.provider,
- de.openali.diagram.factory.util
+ de.openali.xmlbeans;visibility:=reexport,
+ org.kalypso.chart.framework;visibility:=reexport
+Export-Package: org.kalypso.chart.factory,
+ org.kalypso.chart.factory.configuration,
+ org.kalypso.chart.factory.configuration.exception,
+ org.kalypso.chart.factory.configuration.parameters,
+ org.kalypso.chart.factory.configuration.parameters.impl,
+ org.kalypso.chart.factory.provider,
+ org.kalypso.chart.factory.util,
+ org.ksp.chart.factory,
+ org.ksp.chart.factory.impl

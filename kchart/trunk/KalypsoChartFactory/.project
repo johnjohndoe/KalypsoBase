@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>DiagramFactory</name>
+	<name>ChartFactory</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,7 +26,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/DiagramFactory Builder.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/ChartFactory Builder.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

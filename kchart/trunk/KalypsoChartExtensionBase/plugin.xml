@@ -2,67 +2,54 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="de.openali.diagram.factory.AxisProvider">
+         point="org.kalypso.chart.factory.AxisProvider">
       <provider
-            class="de.openali.diagram.ext.base.axis.provider.DoubleAxisProvider"
-            id="de.openali.diagram.ext.axis.provider.Double"/>
+            class="org.kalypso.chart.ext.base.axis.provider.DoubleAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Double"/>
       <provider
-            class="de.openali.diagram.ext.base.axis.provider.CalendarAxisProvider"
-            id="de.openali.diagram.ext.axis.provider.Calendar"/>
+            class="org.kalypso.chart.ext.base.axis.provider.CalendarAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Calendar"/>
       <provider
-            class="de.openali.diagram.ext.base.axis.provider.LongAxisProvider"
-            id="de.openali.diagram.ext.axis.provider.Long"/>
+            class="org.kalypso.chart.ext.base.axis.provider.LongAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Long"/>
    </extension>
    <extension
-         point="de.openali.diagram.factory.LayerProvider">
+         point="org.kalypso.chart.factory.LayerProvider">
       <provider
-            class="de.openali.diagram.ext.base.layer.provider.GridLayerProvider"
-            id="de.openali.diagram.ext.layer.provider.Grid"/>
+            class="org.kalypso.chart.ext.base.layer.provider.GridLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.Grid"/>
       <provider
-            class="de.openali.diagram.ext.base.layer.provider.CSVBarLayerProvider"
-            id="de.openali.diagram.ext.layer.provider.CSVBar"/>
+            class="org.kalypso.chart.ext.base.layer.provider.CSVBarLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVBar"/>
       <provider
-            class="de.openali.diagram.ext.base.layer.provider.CSVLineLayerProvider"
-            id="de.openali.diagram.ext.layer.provider.CSVLine"/>
+            class="org.kalypso.chart.ext.base.layer.provider.CSVLineLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVLine"/>
       <provider
-            class="de.openali.diagram.ext.base.test.CircleLayer"
-            id="de.openali.diagram.ext.layer.provider.Circle"/>
-      <provider
-            class="de.openali.diagram.ext.base.test.UVFLayerProvider"
-            id="de.openali.diagram.ext.layer.provider.UVF"/>
+            class="org.kalypso.chart.ext.base.layer.provider.UVFLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.UVF"/>
    </extension>
    <extension
-         point="de.openali.diagram.factory.StyledElementProvider">
+         point="org.kalypso.chart.factory.StyledElementProvider">
       <provider
-            class="de.openali.diagram.ext.base.style.provider.DefaultStyledLineProvider"
-            id="de.openali.diagram.ext.style.provider.DefaultStyledLine"/>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledLineProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledLine"/>
       <provider
-            class="de.openali.diagram.ext.base.style.provider.DefaultStyledPointProvider"
-            id="de.openali.diagram.ext.style.provider.DefaultStyledPoint"/>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPointProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledPoint"/>
       <provider
-            class="de.openali.diagram.ext.base.style.provider.DefaultStyledPolygonProvider"
-            id="de.openali.diagram.ext.style.provider.DefaultStyledPolygon"/>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPolygonProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledPolygon"/>
       <provider
-            class="de.openali.diagram.ext.base.style.provider.DefaultStyledTextProvider"
-            id="de.openali.diagram.ext.style.provider.DefaultStyledText"/>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledTextProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledText"/>
    </extension>
    <extension
-         point="de.openali.diagram.factory.AxisRendererProvider">
+         point="org.kalypso.chart.factory.AxisRendererProvider">
       <provider
-            class="de.openali.diagram.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
-            id="de.openali.diagram.ext.axisrenderer.provider.Calendar"/>
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.Calendar"/>
       <provider
-            class="de.openali.diagram.ext.base.axisrenderer.provider.DoubleAxisRendererProvider"
-            id="de.openali.diagram.ext.axisrenderer.provider.Double"/>
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.DoubleAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.Double"/>
    </extension>
-   <extension
-         point="de.openali.diagram.factory.MapperProvider">
-      <provider
-            class="de.openali.diagram.ext.base.test.LengthMapper"
-            id="de.openali.diagram.ext.mapper.provider.Length"/>
-      <provider
-            class="de.openali.diagram.ext.base.test.AngleMapper"
-            id="de.openali.diagram.ext.mapper.provider.Angle"/>
-   </extension>
-
 </plugin>
