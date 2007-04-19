@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,12 +47,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -62,36 +59,26 @@ import com.vividsolutions.jts.geom.LinearRing;
  * @author Madanagopal
  *
  */
-public class TriangleDivider implements SurfacePatchVisitable
+public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
 { 
-  //IElevationColorModel colorModel = ElevationColorControl.getColorModel();
-  
   private LinearRing ring;
-  private double in = 0.0;
   
-  
-  private static ListRetriever _listRetriver;
-
   private Map<GM_Surface, Double> toBeVisited =  new HashMap<GM_Surface, Double>();
+  
   public TriangleDivider( LinearRing _ring)
   {
    this.ring = _ring;
   }
-
   public boolean furtherDivisionNeeded( GM_Position[] coOrds )
   {
-//    final double max = convertToTwoDecimals(
-//                       (ElevationColorControl.getMaxElevation() -
-//                        ElevationColorControl.getMinElevation()
-//                       ) / 
-//                        ElevationColorControl.getColorIndex());
+    double max = PlaneUtils.convertToTwoDecimals( SampleColorModelInterval.getInstance().getInterval());
+    System.out.println("max :" +max);
     
-    final double max = 1.0;
     double _z1 = coOrds[0].getZ();
     double _z2 = coOrds[1].getZ();
     double _z3 = coOrds[2].getZ();
     
-    GM_Position _center = calculateCenterCoOrdinate( coOrds );    
+    GM_Position _center = PlaneUtils.calculateCenterCoOrdinate( coOrds );    
 
     double _inX_1 = Math.abs(coOrds[0].getX() - coOrds[1].getX());
     double _inY_1 = Math.abs(coOrds[0].getY() - coOrds[1].getY());
@@ -101,7 +88,7 @@ public class TriangleDivider implements SurfacePatchVisitable
     double _inY_2 = Math.abs(coOrds[1].getY() - coOrds[2].getY());
     double _inZ_2 = Math.abs(coOrds[1].getZ() - coOrds[2].getZ());
     
-    double specA = convertToTwoDecimals((
+    double specA = PlaneUtils.convertToTwoDecimals((
                                          (_inX_1 * _inX_2)+
                                          (_inY_1 * _inY_2)+
                                          (_inZ_1 * _inZ_2)
@@ -112,7 +99,7 @@ public class TriangleDivider implements SurfacePatchVisitable
                                          (_inZ_1 * _inZ_2))
                                          );
     
-    double specB = convertToTwoDecimals( 
+    double specB = PlaneUtils.convertToTwoDecimals( 
                                          ((_inX_1 * _inX_1)+(_inY_1 * _inY_1)+(_inZ_1 * _inZ_1))*
                                          ((_inX_2 * _inX_2)+(_inY_2 * _inY_2)+(_inZ_2 * _inZ_2))
                                         );
@@ -127,78 +114,16 @@ public class TriangleDivider implements SurfacePatchVisitable
     return false;
   }
 
-  public GM_Position calculateCenterCoOrdinate( GM_Position[] coords )
-  {
-    
-    double[] centerCo = new double[3];
-    centerCo[0] = (coords[0].getX() + coords[1].getX() + coords[2].getX()) / 3;
-    centerCo[1] = (coords[0].getY() + coords[1].getY() + coords[2].getY()) / 3;
-    centerCo[2] = (coords[0].getZ() + coords[1].getZ() + coords[2].getZ()) / 3; 
-    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( centerCo ); 
-  }
 
-  public double computeZOfTrianglePlanePoint( GM_Position[] coords, double x, double y )
-  {
-    
-    return calculateTrianglePlaneEquation(coords)[0] * x +
-           calculateTrianglePlaneEquation(coords)[1] * y + 
-           calculateTrianglePlaneEquation(coords)[2];
-  }
+
   
-  public static final double[] calculateTrianglePlaneEquation( GM_Position[] coords )
-  {
-    Assert.throwIAEOnNullParam( coords, "coords" );
-    if( coords.length < 3 )
-    {
-      throw new IllegalArgumentException( "Param coord which represent the point of a triangle must " + "have a minimum length of 3: current length=" + coords.length );
-    }
 
-    GM_Position coord = coords[0];
-
-    double x1 = coord.getX();
-    double y1 = coord.getY();
-    double z1 = coord.getZ();
-
-    coord = coords[1];
-    double x2 = coord.getX();
-    double y2 = coord.getY();
-    double z2 = coord.getZ();
-
-    coord = coords[2];
-    double x3 = coord.getX();
-    double y3 = coord.getY();
-    double z3 = coord.getZ();
-    if( z1 == z2 && z2 == z3 )
-    {
-      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
-      return new double[] { 0, 0, z1 };
-    }
-    else
-    {
-      // build the equation Ax + By + Cz - D = 0
-      double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
-      double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
-      double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
-      double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
-
-      // C=-C;
-      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
-      return new double[] { -A / C, -B / C, D / C };
-    }
-  }
-  
-  private double convertToTwoDecimals( double r )
-  {
-    BigDecimal bd = new BigDecimal(r);
-    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-    return bd.doubleValue();   
-  }
   public HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos )
   {
     List<GM_Position[]> toSplit = new ArrayList<GM_Position[]>();
     //List<GM_Surface> notToSplit = new ArrayList<GM_Surface>();
     HashMap<GM_Surface, Double> notToSplit = new HashMap<GM_Surface, Double>();
-    toSplit.add( getGM_PositionForThisSurface(pos) );
+    toSplit.add( PlaneUtils.getGM_PositionForThisSurface(pos) );
     while( !toSplit.isEmpty() )
     {
       final GM_Position[] splitCandidate = toSplit.remove( 0 );
@@ -210,7 +135,7 @@ public class TriangleDivider implements SurfacePatchVisitable
         // for (GM_Position gm: splitCandidate) {
         // System.out.println("TOSplitCandidate : X :"+gm.getX()+" Y:"+gm.getY()+" Z:"+gm.getZ());
         // }
-        final GM_Position center = this.calculateCenterCoOrdinate( splitCandidate );
+        final GM_Position center = PlaneUtils.calculateCenterCoOrdinate( splitCandidate );
         final GM_Position[] tri1 = new GM_Position[] { center, splitCandidate[0], splitCandidate[1], center };
         final GM_Position[] tri2 = new GM_Position[] { center, splitCandidate[1], splitCandidate[2], center };
         final GM_Position[] tri3 = new GM_Position[] { center, splitCandidate[2], splitCandidate[0], center };
@@ -234,7 +159,7 @@ public class TriangleDivider implements SurfacePatchVisitable
                                           HMOTerrainElevationModel.NO_INTERIOR_POS,
                                           null,
                                           IElevationProvider.CRS_GAUSS_KRUEGER );
-          notToSplit.put( createGM_Surface, calculateCenterCoOrdinate( getGM_PositionForThisSurface( createGM_Surface )).getZ());
+          notToSplit.put( createGM_Surface, PlaneUtils.calculateCenterCoOrdinate( PlaneUtils.getGM_PositionForThisSurface( createGM_Surface )).getZ());
         }
         catch( Throwable e )
         {
@@ -248,30 +173,16 @@ public class TriangleDivider implements SurfacePatchVisitable
   }
   
 
-  public GM_Position[] getGM_PositionForThisSurface(GM_Surface surface) {
-    
-    GM_Position[] pos = null;
-    GM_SurfacePatch patch;    
-    try
-    {
-      patch = surface.getSurfacePatchAt( 0 );
-      pos = patch.getExteriorRing();    
-    }   
-    catch( GM_Exception e1 )
-    {
-      e1.printStackTrace();
-    }    
-    return pos;
-  }
+
   
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
-  {     
-  
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor) throws GM_Exception
+  {    
+    
     Coordinate[] coordinates = ring.getCoordinates();
-  double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
+    double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
         coordinates[0].x, coordinates[0].y, coordinates[0].z };
     
     GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
@@ -286,4 +197,11 @@ public class TriangleDivider implements SurfacePatchVisitable
         surfacePatchVisitor.visit((GM_Surface)entry.getKey(),(double)(Double)entry.getValue());        
     }   
   }
+
+
+
+
+
+
+ 
 }
