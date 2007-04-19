@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ChartObservationExtensions Plug-in
+Bundle-SymbolicName: ChartObservationExtensions
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.chart.factory,
+ org.kalypso.core,
+ ChartBaseExtensions
