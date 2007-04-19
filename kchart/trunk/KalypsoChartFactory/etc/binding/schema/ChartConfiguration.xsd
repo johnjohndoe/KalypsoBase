@@ -58,7 +58,7 @@
 							<sequence>
 								<element name="domainAxisRef"
 									type="kcc:RefType" />
-								<element name="valueAxisRef"
+								<element name="targetAxisRef"
 									type="kcc:RefType" />
 								<element name="mapperRef"
 									type="kcc:MapperRefType" minOccurs="0" maxOccurs="unbounded"/>

@@ -38,10 +38,10 @@ public class CSVBarLayerProvider<T_domain extends Comparable, T_target extends C
     
 
     	  String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
-    	  String valueAxisId = m_lt.getMapper().getValueAxisRef().getRef();
+    	  String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
           IAxis<T_domain> domainAxis = m_model.getAxisRegistry().getAxis( domainAxisId );
-          IAxis<T_target> targetAxis = m_model.getAxisRegistry().getAxis( valueAxisId);
+          IAxis<T_target> targetAxis = m_model.getAxisRegistry().getAxis( targetAxisId);
 
        
         

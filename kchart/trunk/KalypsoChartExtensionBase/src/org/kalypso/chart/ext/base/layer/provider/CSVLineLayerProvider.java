@@ -12,12 +12,10 @@ import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.ksp.chart.factory.LayerType;
 
 
 
@@ -38,10 +36,10 @@ public class CSVLineLayerProvider<T_domain extends Comparable, T_target extends 
 
 
 	 String domainAxisId=m_lt.getMapper().getDomainAxisRef().getRef();
-     String valueAxisId= m_lt.getMapper().getValueAxisRef().getRef();
+     String targetAxisId= m_lt.getMapper().getTargetAxisRef().getRef();
 
      IAxis domAxis = m_model.getAxisRegistry().getAxis( domainAxisId );
-     IAxis valAxis = m_model.getAxisRegistry().getAxis( valueAxisId);
+     IAxis valAxis = m_model.getAxisRegistry().getAxis( targetAxisId);
 	 
 	 AbstractDomainValueData<T_domain, T_target> data=new AbstractDomainValueData<T_domain, T_target>()
 	 {

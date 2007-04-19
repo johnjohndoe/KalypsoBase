@@ -96,8 +96,8 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
 			Mapper mapper = layerType.getMapper();
 			AxisType domainAxisType = (AxisType) rr.resolveReference(mapper.getDomainAxisRef().getRef());
 			addAxis (model.getAxisRegistry(), rr, domainAxisType);
-			AxisType valueAxisType = (AxisType) rr.resolveReference(mapper.getValueAxisRef().getRef());
-			addAxis (model.getAxisRegistry(), rr, valueAxisType);
+			AxisType targetAxisType = (AxisType) rr.resolveReference(mapper.getTargetAxisRef().getRef());
+			addAxis (model.getAxisRegistry(), rr, targetAxisType);
 			
 			//Restliche Mapper hinzufügen
 			MapperRefType[] mapperRefArray = mapper.getMapperRefArray();

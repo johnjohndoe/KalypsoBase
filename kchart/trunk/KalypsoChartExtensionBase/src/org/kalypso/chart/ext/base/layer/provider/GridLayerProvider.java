@@ -5,10 +5,8 @@ import java.net.URL;
 import org.kalypso.chart.ext.base.layer.GridLayer;
 import org.kalypso.chart.ext.base.layer.GridLayer.GridOrientation;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.ksp.chart.factory.LayerType;
 
 
 
@@ -40,10 +38,10 @@ public class GridLayerProvider extends AbstractLayerProvider
       {
 
           String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
-          String valueAxisId = m_lt.getMapper().getValueAxisRef().getRef();
+          String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
           IAxis domAxis = m_model.getAxisRegistry().getAxis( domainAxisId );
-          IAxis valAxis = m_model.getAxisRegistry().getAxis( valueAxisId );
+          IAxis valAxis = m_model.getAxisRegistry().getAxis( targetAxisId );
 
           GridOrientation go;
           String orientation=m_pc.getParameterValue( "orientation", "BOTH" );

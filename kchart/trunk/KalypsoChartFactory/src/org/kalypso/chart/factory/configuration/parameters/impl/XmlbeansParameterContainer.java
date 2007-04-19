@@ -59,19 +59,29 @@ public class XmlbeansParameterContainer implements IParameterContainer
   {
     T value = null;
     String strValue = m_parameters.get(paramName);
+    //Wert nicht vorhanden, versuche auf Default-Wert auszuweichen => Warnung
     if( strValue == null )
     {
       strValue = defaultValue;
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " not found in Config - using default value: " + defaultValue );
+      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " not found in Config - trying to use default value: "+defaultValue);
     }
-    try
+    
+    // kein Default-Wert vorhanden => Fehlermeldung
+    if (strValue == null)
     {
-      value = parser.createValueFromString( strValue );
+      Logger.logError(Logger.TOPIC_LOG_CONFIG, "No default parameter for "+m_ownerId+"/"+paramName+"; I cannot continue normally");
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() );
     }
-    catch( MalformedValueException e )
+    else
     {
-      String hint = parser.getFormatHint();
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": " + strValue + " is wrong format - need " + hint );
+	    try
+	    {
+	      value = parser.createValueFromString( strValue );
+	    }
+	    catch( MalformedValueException e )
+	    {
+	      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": " + strValue + " uses wrongly formatted  default value; blame the developer for not using:" + parser.getFormatHint() );
+	    }
     }
     return value;
   }
@@ -85,9 +95,11 @@ public class XmlbeansParameterContainer implements IParameterContainer
     String value = m_parameters.get(paramName);
     if( value == null )
     {
-      Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " not found in Config - using default value: " + defaultValue );
+      Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " trying to use default value: " + defaultValue );
       value = defaultValue;
     }
+    if (value == null)
+    	Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + ";  I cannot continue normally");
     return value;
   }
 

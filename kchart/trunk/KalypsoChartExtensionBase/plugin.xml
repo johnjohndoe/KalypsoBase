@@ -12,6 +12,9 @@
       <provider
             class="org.kalypso.chart.ext.base.axis.provider.LongAxisProvider"
             id="org.kalypso.chart.ext.axis.provider.Long"/>
+      <provider
+            class="org.kalypso.chart.ext.base.axis.provider.ComparableNumberAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Number"/>
    </extension>
    <extension
          point="org.kalypso.chart.factory.LayerProvider">
@@ -51,5 +54,8 @@
       <provider
             class="org.kalypso.chart.ext.base.axisrenderer.provider.DoubleAxisRendererProvider"
             id="org.kalypso.chart.ext.axisrenderer.provider.Double"/>
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.ComparableNumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.Number"/>
    </extension>
 </plugin>
