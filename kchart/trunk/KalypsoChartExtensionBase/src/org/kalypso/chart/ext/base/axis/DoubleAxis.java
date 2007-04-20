@@ -2,6 +2,7 @@ package org.kalypso.chart.ext.base.axis;
 
 import java.util.Comparator;
 
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -79,5 +80,15 @@ public class DoubleAxis extends AbstractAxis<Double>
   {
 	  return logicalToScreen(0.0);
   }
+
+public Double parseStringValue(String value) throws MalformedValueException {
+	try {
+		double d = Double.parseDouble(value);
+		return d;
+	}
+	catch (NumberFormatException e) {
+		throw new MalformedValueException(e);
+	}
+}
 
 }

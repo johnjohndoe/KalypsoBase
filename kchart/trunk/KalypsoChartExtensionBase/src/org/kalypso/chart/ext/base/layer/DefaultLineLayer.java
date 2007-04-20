@@ -8,8 +8,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
 import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
@@ -22,10 +20,10 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author alibu
  *
  */
-public class DefaultLineLayer<T_domain extends Comparable, T_target extends Comparable> extends AbstractChartLayer
+public class DefaultLineLayer<T_domain extends Comparable, T_target extends Comparable> extends AbstractChartLayer<T_domain, T_target>
 {
 
-  private AbstractDomainValueData<T_domain, T_target> m_dataContainer;
+  //private AbstractDomainValueData<T_domain, T_target> m_dataContainer;
 
 
 public DefaultLineLayer( AbstractDomainValueData<T_domain, T_target> dataContainer, IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis)
@@ -74,8 +72,8 @@ public void paint( GCWrapper gc )
 	  if (m_dataContainer != null )
 	  {
 		  m_dataContainer.open();
-		  List<T_domain> m_domainData = m_dataContainer.getDomainData();
-		  List<T_target> m_targetData = m_dataContainer.getTargetData();
+		  List<T_domain> m_domainData = m_dataContainer.getDomainValues();
+		  List<T_target> m_targetData = m_dataContainer.getTargetValues();
 	      ArrayList<Point> path=new ArrayList<Point>();
 	      IStyledElement line=m_style.getElement( SE_TYPE.LINE, 1);
 	      for( int i=0; i<m_domainData.size();i++)

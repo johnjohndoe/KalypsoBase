@@ -102,10 +102,10 @@ public class CSVBarLayerProvider<T_domain extends Comparable, T_target extends C
 		                  
 		                  calEnd.add(Calendar.DAY_OF_MONTH, +1);
 		                  
-		                  m_domainData.add((T_domain) calData);
-		                  m_domainDataIntervalStart.add((T_domain) calStart);
-		                  m_domainDataIntervalEnd.add((T_domain) calEnd);
-		                  m_targetData.add((T_target) (Object) Double.parseDouble( cols[1]));
+		                  m_domainValues.add((T_domain) calData);
+		                  m_domainIntervalStartValues.add((T_domain) calStart);
+		                  m_domainIntervalEndValues.add((T_domain) calEnd);
+		                  m_targetValues.add((T_target) (Object) Double.parseDouble( cols[1]));
 		                }
 		          }
 				} catch (FileNotFoundException e)
@@ -127,11 +127,11 @@ public class CSVBarLayerProvider<T_domain extends Comparable, T_target extends C
 			}
 
 			public IDataRange<T_domain> getDomainRange() {
-				return new ComparableDataRange<T_domain>(m_domainData);
+				return new ComparableDataRange<T_domain>(m_domainValues);
 			}
 
 			public IDataRange<T_target> getTargetRange() {
-				return new ComparableDataRange<T_target>(m_targetData);
+				return new ComparableDataRange<T_target>(m_targetValues);
 			}
 
 

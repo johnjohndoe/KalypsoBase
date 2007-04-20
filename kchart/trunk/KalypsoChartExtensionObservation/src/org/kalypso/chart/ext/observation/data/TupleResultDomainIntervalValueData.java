@@ -1,5 +1,7 @@
 package org.kalypso.chart.ext.observation.data;
 
+import java.util.List;
+
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
@@ -26,6 +28,16 @@ public class TupleResultDomainIntervalValueData implements IDataContainer {
 	}
 
 	public IDataRange getTargetRange() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List getDomainValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List getTargetValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}

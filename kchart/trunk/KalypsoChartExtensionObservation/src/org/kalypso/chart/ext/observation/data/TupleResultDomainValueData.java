@@ -14,6 +14,7 @@ import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.util.math.ComparableNumber;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -22,7 +23,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-public class TupleResultDomainValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer<T_domain, T_target> {
+public class TupleResultDomainValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer<T_domain, T_target>
+{
 
 	
 	final private String m_observationId;
@@ -178,5 +180,6 @@ public class TupleResultDomainValueData<T_domain extends Comparable, T_target ex
 	{
 		return m_result;
 	}
+
 	
 }

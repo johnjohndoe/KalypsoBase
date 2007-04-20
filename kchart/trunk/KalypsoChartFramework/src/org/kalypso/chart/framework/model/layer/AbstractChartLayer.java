@@ -26,7 +26,7 @@ public abstract class AbstractChartLayer<T_domain extends Comparable, T_target e
   protected boolean m_isActive=false;
   protected IAxis<T_target> m_targetAxis=null;
   protected IAxis<T_domain> m_domainAxis=null;
-  protected IDataContainer m_dataContainer=null;
+  protected IDataContainer<T_domain, T_target> m_dataContainer=null;
 
   
   public AbstractChartLayer()

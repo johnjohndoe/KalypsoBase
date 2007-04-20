@@ -7,12 +7,12 @@ import java.util.List;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 
 
-public abstract class AbstractDomainValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer
+public abstract class AbstractDomainValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer<T_domain, T_target>
 {
 
 	private boolean m_isOpen=false;
-	protected List<T_domain> m_domainData=new ArrayList<T_domain>();
-	protected List<T_target> m_targetData=new ArrayList<T_target>();
+	protected List<T_domain> m_domainValues=new ArrayList<T_domain>();
+	protected List<T_target> m_targetValues=new ArrayList<T_target>();
 	protected File m_file;
 
 	public boolean isOpen()
@@ -32,15 +32,6 @@ public abstract class AbstractDomainValueData<T_domain extends Comparable, T_tar
 	
 	public abstract boolean openData();
 	
-	public List<T_domain> getDomainData()
-	{
-		return m_domainData;
-	}
-
-	public List<T_target> getTargetData()
-	{
-		return m_targetData;
-	}
 	
 	public void setInputFile(File f)
 	{
@@ -49,9 +40,21 @@ public abstract class AbstractDomainValueData<T_domain extends Comparable, T_tar
 	
 	public void close()
 	{
-		m_domainData=null;
-		m_targetData=null;
+		m_domainValues=null;
+		m_targetValues=null;
 		m_isOpen=false;
+	}
+	
+	public List<T_domain> getDomainValues()
+	{
+		open();
+		return m_domainValues;
+	}
+	
+	public List<T_target> getTargetValues()
+	{
+		open();
+		return m_targetValues;
 	}
 
 }

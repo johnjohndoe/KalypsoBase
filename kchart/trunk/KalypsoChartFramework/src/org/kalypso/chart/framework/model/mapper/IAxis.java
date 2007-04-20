@@ -1,5 +1,6 @@
 package org.kalypso.chart.framework.model.mapper;
 
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
 /**
@@ -40,30 +41,6 @@ public interface IAxis<T_logical extends Comparable> extends IMapper<T_logical, 
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
 
-  
-  
-  
-  
-  /**
-   * @return minimal displayable value
-  
-  public T_logical getFrom( );
-
-  /**
-   * sets minimal displayable value
-  
-  public void setFrom( T_logical min );
-
-  /**
-   * @return maximum displayable value
-  
-  public T_logical getTo( );
-
-  /**
-   * sets maximum displayable value
-  
-  public void setTo( T_logical max );
-*/
   public void autorange( IDataRange<T_logical>[] ranges );
 
   public int logicalToScreen( T_logical value );
@@ -74,6 +51,16 @@ public interface IAxis<T_logical extends Comparable> extends IMapper<T_logical, 
   
   public IDataRange<T_logical> getDataRange();
   
+  /**
+   * sets visible range of axis
+   * @param dataRange
+   */
   public void setDataRange(IDataRange<T_logical> dataRange);
+  
+  /**
+   * parses a String and returns a value the axis can understand
+   * @throws MalformedValueException if the String cannot be parsed
+   */
+  public T_logical parseStringValue(String value) throws MalformedValueException;
 
 }

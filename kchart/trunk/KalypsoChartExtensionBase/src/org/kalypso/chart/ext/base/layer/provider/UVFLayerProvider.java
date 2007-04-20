@@ -17,6 +17,7 @@ import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.util.math.ComparableNumber;
 
 
 /**
@@ -32,23 +33,22 @@ public class UVFLayerProvider extends AbstractLayerProvider
 	 */
 	public IChartLayer getLayer(URL context) throws LayerProviderException
 	{
-		IChartLayer icl = null;
+		IChartLayer<Calendar, ComparableNumber> icl = null;
 
 
 		String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
 		String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
-		IAxis domAxis = m_model.getAxisRegistry().getAxis(domainAxisId);
-		IAxis valAxis = m_model.getAxisRegistry().getAxis(targetAxisId);
+		IAxis<Calendar> domAxis = m_model.getAxisRegistry().getAxis(domainAxisId);
+		IAxis<ComparableNumber> valAxis = m_model.getAxisRegistry().getAxis(targetAxisId);
 
-		AbstractDomainValueData<Calendar, Double> data = new AbstractDomainValueData<Calendar, Double>()
+		AbstractDomainValueData<Calendar, ComparableNumber> data = new AbstractDomainValueData<Calendar, ComparableNumber>()
 		{
 
 			public boolean openData()
 			{
 				try
 				{
-
 					FileReader fr = new FileReader(m_file);
 
 					BufferedReader br = new BufferedReader(fr);
@@ -85,8 +85,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
 								//wichtig, damit die Zeiten richtig sind
 								cal.setTimeZone(TimeZone
 										.getTimeZone("GMT+0000"));
-								m_domainData.add(cal);
-								m_targetData.add(Double.parseDouble(cols[1]));
+								m_domainValues.add(cal);
+								m_targetValues.add(new ComparableNumber(Double.parseDouble(cols[1])));
 							}
 						}
 						count++;
@@ -103,17 +103,17 @@ public class UVFLayerProvider extends AbstractLayerProvider
 			}
 
 			public IDataRange<Calendar> getDomainRange() {
-				return new ComparableDataRange<Calendar>(getDomainData());
+				return new ComparableDataRange<Calendar>(getDomainValues());
 			}
 
-			public IDataRange<Double> getTargetRange() {
-				return new ComparableDataRange<Double>(getTargetData());
+			public IDataRange<ComparableNumber> getTargetRange() {
+				return new ComparableDataRange<ComparableNumber>(getTargetValues());
 			}
 
 		};
 		data.setInputFile(new File(m_pc.getParameterValue("url", m_lt.getId())));
 
-		icl = new DefaultLineLayer(data, domAxis, valAxis);
+		icl = new DefaultLineLayer<Calendar, ComparableNumber>(data, domAxis, valAxis);
 		icl.setTitle(m_lt.getTitle());
 
 		return icl;

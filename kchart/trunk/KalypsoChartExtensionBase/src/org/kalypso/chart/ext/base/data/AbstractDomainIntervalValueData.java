@@ -11,10 +11,10 @@ public abstract class AbstractDomainIntervalValueData<T_domain extends Comparabl
 {
 
 	private boolean m_isOpen=false;
-	protected List<T_domain> m_domainDataIntervalStart=new ArrayList<T_domain>();
-	protected List<T_domain> m_domainDataIntervalEnd=new ArrayList<T_domain>();
-	protected List<T_domain> m_domainData=new ArrayList<T_domain>();
-	protected List<T_target> m_targetData=new ArrayList<T_target>();
+	protected List<T_domain> m_domainIntervalStartValues=new ArrayList<T_domain>();
+	protected List<T_domain> m_domainIntervalEndValues=new ArrayList<T_domain>();
+	protected List<T_domain> m_domainValues=new ArrayList<T_domain>();
+	protected List<T_target> m_targetValues=new ArrayList<T_target>();
 	protected File m_file;
 
 	public boolean isOpen()
@@ -36,22 +36,22 @@ public abstract class AbstractDomainIntervalValueData<T_domain extends Comparabl
 	
 	public List<T_domain> getDomainDataIntervalStart()
 	{
-		return m_domainDataIntervalStart;
+		return m_domainIntervalStartValues;
 	}
 	
 	public List<T_domain> getDomainDataIntervalEnd()
 	{
-		return m_domainDataIntervalEnd;
+		return m_domainIntervalEndValues;
 	}
 
-	public List<T_target> getTargetData()
+	public List<T_domain> getDomainValues()
 	{
-		return m_targetData;
+		return m_domainValues;
 	}
 	
-	public List<T_domain> getDomainData()
+	public List<T_target> getTargetValues()
 	{
-		return m_domainData;
+		return m_targetValues;
 	}
 	
 	public void setInputFile(File f)
@@ -61,9 +61,9 @@ public abstract class AbstractDomainIntervalValueData<T_domain extends Comparabl
 	
 	public void close()
 	{
-		m_domainDataIntervalStart=null;
-		m_domainDataIntervalEnd=null;
-		m_targetData=null;
+		m_domainIntervalStartValues=null;
+		m_domainIntervalEndValues=null;
+		m_targetValues=null;
 		m_isOpen=false;
 	}
 	

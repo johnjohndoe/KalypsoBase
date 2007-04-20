@@ -7,7 +7,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
-import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
@@ -86,7 +85,7 @@ public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> data
 	  if (m_dataContainer != null )
 	  {
 		  m_dataContainer.open();
-		  return new ComparableDataRange<T_target>(m_dataContainer.getTargetData());
+		  return new ComparableDataRange<T_target>(m_dataContainer.getTargetValues());
 	  }
 	  return null;
   }
@@ -103,7 +102,7 @@ public void paint( GCWrapper gc)
 		  m_dataContainer.open();
 		  List<T_domain> m_domainStartComponent = m_dataContainer.getDomainDataIntervalStart();
 		  List<T_domain> m_domainEndComponent = m_dataContainer.getDomainDataIntervalEnd();
-		  List<T_target> m_targetComponent = m_dataContainer.getTargetData();
+		  List<T_target> m_targetComponent = m_dataContainer.getTargetValues();
 		  
 	      ArrayList<Point> path=new ArrayList<Point>();
 	      IStyledElement poly=m_style.getElement( SE_TYPE.POLYGON, 1);

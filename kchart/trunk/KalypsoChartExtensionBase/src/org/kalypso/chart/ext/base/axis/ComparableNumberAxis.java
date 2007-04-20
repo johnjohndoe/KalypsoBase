@@ -4,6 +4,7 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Comparator;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -84,5 +85,15 @@ public class ComparableNumberAxis extends AbstractAxis<ComparableNumber>
   {
 	  return logicalToScreen(new ComparableNumber(0.0));
   }
+
+public ComparableNumber parseStringValue(String value) throws MalformedValueException {
+	try
+	{
+		return new ComparableNumber(Double.parseDouble(value));
+	}
+	catch (NumberFormatException e) {
+		throw new MalformedValueException(e);
+	}
+}
 
 }

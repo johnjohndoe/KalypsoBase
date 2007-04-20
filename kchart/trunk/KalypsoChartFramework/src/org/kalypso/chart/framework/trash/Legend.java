@@ -75,21 +75,12 @@ public class Legend extends Canvas implements PaintListener
   {
     for( IChartLayer l : layers )
     {
-      addLayer( l );
+    	if (l.isVisible())
+    		addLayer( l );
     }
   }
 
-  /**
-   * creates ILegendItems for the given ChartLayers and adds them to the list of ILegendItems 
-   */
-  public void addLayers( List<IChartLayer> layers )
-  {
-    for( IChartLayer l : layers )
-    {
-      if (l.isVisible())
-        addLayer( l );
-    }
-  }
+
 
   /**
    * adds an ILegendItem to the list of ILengendItems
@@ -123,7 +114,6 @@ public class Legend extends Canvas implements PaintListener
     if( bufferImage == null )
     {
       usedBufferImage = new Image( dev, screen.width, screen.height );
-
       drawImage( usedBufferImage, dev );
     }
     else

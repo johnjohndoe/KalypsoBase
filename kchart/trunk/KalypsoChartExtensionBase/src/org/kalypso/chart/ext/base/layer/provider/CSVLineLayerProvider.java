@@ -68,8 +68,8 @@ public class CSVLineLayerProvider<T_domain extends Comparable, T_target extends 
 	                	  targetVal=(T_target) (Object) Double.parseDouble( cols[1].trim());
 	                	  if (domainVal!=null && targetVal!=null)
 		                  {
-		                	  m_domainData.add( domainVal);
-			                  m_targetData.add( targetVal);
+		                	  m_domainValues.add( domainVal);
+			                  m_targetValues.add( targetVal);
 		                  }
 	                  }
 	                  catch(NumberFormatException e)
@@ -94,11 +94,11 @@ public class CSVLineLayerProvider<T_domain extends Comparable, T_target extends 
 		}
 
 		public IDataRange getDomainRange() {
-			return new ComparableDataRange<T_domain>(getDomainData());
+			return new ComparableDataRange<T_domain>(getDomainValues());
 		}
 
 		public IDataRange getTargetRange() {
-			return new ComparableDataRange<T_target>(getTargetData());
+			return new ComparableDataRange<T_target>(getTargetValues());
 		}
 		 
 		 
