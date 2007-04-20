@@ -38,27 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow;
+package de.renew.workflow.connector;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import de.renew.workflow.contexts.ContextType;
 
 /**
- * This command handler does nothing.
- * 
- * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
-public class NullWorkflowCommandHandler extends WorkflowCommandHandler
+public class ContextActivation
 {
-  /**
-   * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
+  private final ContextActivation m_cause;
+
+  private final ContextType m_context;
+
+  private final Object m_result;
+
+  public ContextActivation( final ContextType context, final Object result )
   {
-    // Nothing is what we do here
-    return Status.OK_STATUS;
+    m_context = context;
+    m_result = result;
+    m_cause = null;
   }
 
+  public ContextActivation( final ContextType context, final Object result, final ContextActivation cause )
+  {
+    m_context = context;
+    m_result = result;
+    m_cause = cause;
+  }
+
+  public ContextActivation getCause( )
+  {
+    return m_cause;
+  }
+
+  public ContextType getContext( )
+  {
+    return m_context;
+  }
+
+  public Object getResult( )
+  {
+    return m_result;
+  }
 }
