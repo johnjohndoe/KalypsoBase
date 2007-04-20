@@ -58,13 +58,24 @@ public interface ICaseDataProvider<T extends Object>
   public <D extends T> D getModel( final Class<D> modelClass ) throws CoreException;
 
   /**
+   * Saves all model data
+   */
+  public void saveModel( final IProgressMonitor monitor ) throws CoreException;
+
+  /**
    * Saves the data object corresponding to the given case data key
    */
-  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws Exception;
+  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
    * was retrieved.
    */
   public boolean isDirty( final Class< ? extends T> modelClass );
+
+  /**
+   * Returns the {@link CaseData} object describing the current model state. This method may require information about
+   * the validity of model elements.
+   */
+  public CaseData getCaseData( );
 }
