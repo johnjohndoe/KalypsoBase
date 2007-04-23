@@ -43,7 +43,7 @@ package org.kalypso.kalypsosimulationmodel.core.flowresistance;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**
@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
  * 
  * @author Patrice Congo
  */
-public interface IFlowResistanceModel extends IFeatureWrapper2
+public interface IFlowResistanceModel extends IModel
 {
   
   public IFeatureWrapperCollection<IFlowResistanceConcept> getFlowResistanceConcepts();
