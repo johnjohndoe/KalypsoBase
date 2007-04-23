@@ -4,38 +4,38 @@
 	targetNamespace="http://www.ksp.org/chart/factory"
 	elementFormDefault="qualified">
 
-	<element name="chartConfiguration" type="kcc:ConfigurationType" />
+	<element name="ChartConfiguration" type="kcc:ChartConfigurationType" />
 
-	<complexType name="ConfigurationType">
+	<complexType name="ChartConfigurationType">
 		<choice minOccurs="0" maxOccurs="unbounded">
-			<element ref="kcc:chart" />
-			<element ref="kcc:layer" />
-			<element ref="kcc:axis" />
-			<element ref="kcc:style" />
-			<element ref="kcc:mapper" />
-			<element ref="kcc:axisRenderer" />
+			<element ref="kcc:Chart" />
+			<element ref="kcc:Layer" />
+			<element ref="kcc:Axis" />
+			<element ref="kcc:Style" />
+			<element ref="kcc:Mapper" />
+			<element ref="kcc:AxisRenderer" />
 		</choice>
 	</complexType>
 
 	<complexType name="AbstractConfigurationType" abstract="true">
 		<sequence>
-			<element ref="kcc:provider" minOccurs="0"></element>
+			<element ref="kcc:Provider" minOccurs="0"></element>
 		</sequence>
 		<attribute name="id" type="ID" use="required" />
 	</complexType>
 
-	<element name="chart" type="kcc:chartType" />
+	<element name="Chart" type="kcc:ChartType" />
 
-	<complexType name="chartType">
+	<complexType name="ChartType">
 		<complexContent>
 			<extension base="kcc:AbstractConfigurationType">
 				<sequence>
-					<element name="title" type="string" />
-					<element name="description" type="string" />
-					<element name="layers">
+					<element name="Title" type="string" />
+					<element name="Description" type="string" />
+					<element name="Layers">
 						<complexType>
 							<sequence>
-								<element name="layerRef" maxOccurs="unbounded" type="kcc:RefType">
+								<element name="LayerRef" maxOccurs="unbounded" type="kcc:RefType">
 								</element>
 							</sequence>
 						</complexType>
@@ -46,35 +46,35 @@
 	</complexType>
 
 
-	<element name="layer" type="kcc:LayerType" />
+	<element name="Layer" type="kcc:LayerType" />
 	<complexType name="LayerType">
 		<complexContent>
 			<extension base="kcc:AbstractConfigurationType">
 				<sequence>
-					<element name="title" type="string" />
-					<element name="description" type="string" />
-					<element name="mapper">
+					<element name="Title" type="string" />
+					<element name="Description" type="string" />
+					<element name="Mapper">
 						<complexType>
 							<sequence>
-								<element name="domainAxisRef"
+								<element name="DomainAxisRef"
 									type="kcc:RefType" />
-								<element name="targetAxisRef"
+								<element name="TargetAxisRef"
 									type="kcc:RefType" />
-								<element name="mapperRef"
+								<element name="MapperRef"
 									type="kcc:MapperRefType" minOccurs="0" maxOccurs="unbounded"/>
 							</sequence>
 						</complexType>
 					</element>
-					<element name="style">
+					<element name="Style">
 						<complexType>
 							<sequence>
-								<element name="styleRef"
+								<element name="StyleRef"
 									type="kcc:RefType" maxOccurs="unbounded" />
 							</sequence>
 						</complexType>
 					</element>
 				</sequence>
-				<attribute name="visible" type="boolean" use="optional"
+				<attribute name="visible" type="boolean"
 					default="true">
 					<annotation>
 						<documentation>
@@ -86,10 +86,10 @@
 		</complexContent>
 	</complexType>
 
-	<element name="provider" type="kcc:ProviderType" />
+	<element name="Provider" type="kcc:ProviderType" />
 	<complexType name="ProviderType">
 		<sequence>
-			<element ref="kcc:parameters" minOccurs="0"></element>
+			<element ref="kcc:Parameters" minOccurs="0"></element>
 		</sequence>
 		<attribute name="epid" type="string" use="required">
 			<annotation>
@@ -113,7 +113,7 @@
 		</complexContent>
 	</complexType>
 
-	<element name="mapper" type="kcc:MapperType" />
+	<element name="Mapper" type="kcc:MapperType" />
 		<complexType name="MapperType">
 		<complexContent>
 			<extension base="kcc:AbstractConfigurationType" />
@@ -121,13 +121,13 @@
 	</complexType>
 		
 
-	<element name="axis" type="kcc:AxisType" />
+	<element name="Axis" type="kcc:AxisType" />
 	<complexType name="AxisType">
 		<complexContent>
 			<extension base="kcc:MapperType">
 				<sequence>
-					<element name="label" type="string" />
-					<element name="direction">
+					<element name="Label" type="string" />
+					<element name="Direction">
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="POSITIVE" />
@@ -135,7 +135,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="position">
+					<element name="Position">
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="LEFT" />
@@ -145,15 +145,15 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="minVal" type="string" />
-					<element name="maxVal" type="string" />
-					<element name="rendererRef" type="kcc:RefType" />
+					<element name="MinVal" type="string" />
+					<element name="MaxVal" type="string" />
+					<element name="RendererRef" type="kcc:RefType" />
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 
-	<element name="axisRenderer" type="kcc:AxisRendererType" />
+	<element name="AxisRenderer" type="kcc:AxisRendererType" />
 	<complexType name="AxisRendererType">
 		<complexContent>
 			<extension base="kcc:AbstractConfigurationType">
@@ -162,19 +162,19 @@
 	</complexType>
 
 
-	<element name="style" type="kcc:StyleType" />
+	<element name="Style" type="kcc:StyleType" />
 	<complexType name="StyleType">
 		<complexContent>
 			<extension base="kcc:AbstractConfigurationType">
 				<sequence>
-					<element name="styleID" type="string">
+					<element name="StyleID" type="string">
 						<annotation>
 							<documentation>
 
 							</documentation>
 						</annotation>
 					</element>
-					<element name="type">
+					<element name="Type">
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="POINT" />
@@ -189,16 +189,16 @@
 		</complexContent>
 	</complexType>
 
-	<element name="parameters" type="kcc:ParametersType" />
+	<element name="Parameters" type="kcc:ParametersType" />
 	
 	<complexType name="ParametersType">
 			<sequence>
-				<element ref="kcc:parameter" minOccurs="0"
+				<element ref="kcc:Parameter" minOccurs="0"
 					maxOccurs="unbounded" />
 			</sequence>
 		</complexType>
 
-	<element name="parameter" type="kcc:ParameterType" />
+	<element name="Parameter" type="kcc:ParameterType" />
 	<complexType name="ParameterType">
 		<attribute name="name" type="string" use="required" />
 		<attribute name="value" type="string" use="required" />

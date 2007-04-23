@@ -46,10 +46,10 @@ import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
  * @author alibu
  * Creates a chart object from a configration
  */
-public class ChartLoader
+public class ChartFactory
 {
 
-	public static void configureChartModel( IChartModel model, ConfigLoader cl, String configChartName, URL context ) throws ConfigurationException
+	public static void configureChartModel( IChartModel model, ChartConfigurationLoader cl, String configChartName, URL context ) throws ConfigurationException
 	{
 		  ChartType dt=null;
 		  // ChartConfig auslesen

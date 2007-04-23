@@ -12,6 +12,7 @@ import org.kalypso.chart.framework.logging.Logger;
 import org.ksp.chart.factory.AxisDocument;
 import org.ksp.chart.factory.AxisRendererDocument;
 import org.ksp.chart.factory.ChartConfigurationDocument;
+import org.ksp.chart.factory.ChartConfigurationType;
 import org.ksp.chart.factory.ChartDocument;
 import org.ksp.chart.factory.ChartType;
 import org.ksp.chart.factory.LayerDocument;
@@ -26,7 +27,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author alibu
  */
-public class ConfigLoader implements IReferenceResolver
+public class ChartConfigurationLoader implements IReferenceResolver
 {
   private String m_configPath;
   private ChartConfigurationDocument m_document;
@@ -37,22 +38,23 @@ public class ConfigLoader implements IReferenceResolver
    * @param path
    *          file system path where the configuration file can be found
    */
-  public ConfigLoader( String path ) 
+  public ChartConfigurationLoader( String path ) 
   {
     m_configPath = path;
     loadFile();
   }
 
-  public ConfigLoader(Node node)
+public ChartConfigurationLoader(ChartConfigurationDocument doc)
 {
-	  try
-	{
-		m_document = ChartConfigurationDocument.Factory.parse(node);
-	} catch (XmlException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	m_document = doc;
+}
+
+
+public ChartConfigurationLoader(ChartConfigurationType chartConfiguration)
+{
+	ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
+	document.setChartConfiguration(chartConfiguration);
+	m_document = document;
 }
 
 /**
@@ -170,32 +172,32 @@ public class ConfigLoader implements IReferenceResolver
 	   */
 	  
 	  XmlObject obj=null;
-	  if (node.getNodeName().equals("chart"))
+	  if (node.getNodeName().equals("Chart"))
 	  {
 		   ChartDocument doc = ChartDocument.Factory.parse(node);
 		   obj=doc.getChart();
 	  }
-	  else if (node.getNodeName().equals("layer"))
+	  else if (node.getNodeName().equals("Layer"))
 	  {
 		   LayerDocument doc = LayerDocument.Factory.parse(node);
 		   obj=doc.getLayer();
 	  }
-	  else if (node.getNodeName().equals("axis"))
+	  else if (node.getNodeName().equals("Axis"))
 	  {
 		   AxisDocument doc = AxisDocument.Factory.parse(node);
 		   obj=doc.getAxis();
 	  }
-	  else if (node.getNodeName().equals("mapper"))
+	  else if (node.getNodeName().equals("Mapper"))
 	  {
 		   MapperDocument doc = MapperDocument.Factory.parse(node);
 		   obj=doc.getMapper();
 	  }
-	  else if (node.getNodeName().equals("style"))
+	  else if (node.getNodeName().equals("Style"))
 	  {
 		   StyleDocument doc = StyleDocument.Factory.parse(node);
 		   obj=doc.getStyle();
 	  }
-	  else if (node.getNodeName().equals("axisRenderer"))
+	  else if (node.getNodeName().equals("AxisRenderer"))
 	  {
 		   AxisRendererDocument doc = AxisRendererDocument.Factory.parse(node);
 		   obj=doc.getAxisRenderer();
