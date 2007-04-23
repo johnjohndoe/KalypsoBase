@@ -44,6 +44,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.ogc.gml.map.MapPanel;
+
 
 /**
  * @author kimwerner
@@ -55,10 +60,18 @@ public class MoveUpHandler extends AbstractHandler implements IHandler
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent arg0 ) throws ExecutionException
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
-    throw new ExecutionException("hgsh");
-   // return null;
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( part == null )
+      throw new ExecutionException( "No active part." );
+
+    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+    if( mapPanel == null )
+      throw new ExecutionException( "Active part has no MapPanel." );
+//    TODO: KIM
+    return null;
   }
 
 }
