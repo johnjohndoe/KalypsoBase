@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * A command that changed the discretisation model
@@ -60,7 +59,7 @@ public interface IDiscrModel1d2dChangeCommand extends IFeatureChangeCommand//ICo
    * Get the feature which is being edited od changed
    * @return I
    */
-  public IFeatureWrapper[] getChangedFeature();
+  public IFeatureWrapper2[] getChangedFeature();
   
 //  public List<IFeatureWrapper> getDeletedFeature();
 }
