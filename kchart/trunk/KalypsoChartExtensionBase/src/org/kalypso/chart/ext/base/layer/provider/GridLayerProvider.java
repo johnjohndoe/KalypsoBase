@@ -40,8 +40,8 @@ public class GridLayerProvider extends AbstractLayerProvider
           String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
           String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
-          IAxis domAxis = m_model.getAxisRegistry().getAxis( domainAxisId );
-          IAxis valAxis = m_model.getAxisRegistry().getAxis( targetAxisId );
+          IAxis domAxis = m_model.getMapperRegistry().getAxis( domainAxisId );
+          IAxis valAxis = m_model.getMapperRegistry().getAxis( targetAxisId );
 
           GridOrientation go;
           String orientation=m_pc.getParameterValue( "orientation", "BOTH" );

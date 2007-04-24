@@ -6,7 +6,7 @@ package org.kalypso.chart.framework.model.data;
  * describes min and max valuse of an (ordered) data set
  * 
  */
-public interface IDataRange<T extends Comparable>
+public interface IDataRange<T>
 {
   public T getMin( );
 

@@ -67,7 +67,7 @@ public static ImageData createChartImage( ChartComposite chart, Device dev, int 
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
-    IMapperRegistry ar = chart.getModel().getAxisRegistry();
+    IMapperRegistry ar = chart.getModel().getMapperRegistry();
     Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
     Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
     for( Entry<IAxis, IAxisComponent> ac : acs )

@@ -39,8 +39,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
 		String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
 		String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
-		IAxis<Calendar> domAxis = m_model.getAxisRegistry().getAxis(domainAxisId);
-		IAxis<ComparableNumber> valAxis = m_model.getAxisRegistry().getAxis(targetAxisId);
+		IAxis<Calendar> domAxis = m_model.getMapperRegistry().getAxis(domainAxisId);
+		IAxis<ComparableNumber> valAxis = m_model.getMapperRegistry().getAxis(targetAxisId);
 
 		AbstractDomainValueData<Calendar, ComparableNumber> data = new AbstractDomainValueData<Calendar, ComparableNumber>()
 		{

@@ -6,7 +6,7 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
 
-public class ComparableDataRange<T extends Comparable> implements IDataRange<T>
+public class ComparableDataRange<T> implements IDataRange<T>
 {
 
 	private List<T> m_items;

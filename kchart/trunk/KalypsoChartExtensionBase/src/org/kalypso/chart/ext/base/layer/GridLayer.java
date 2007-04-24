@@ -38,7 +38,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  *
  *
  */
-public class GridLayer<T_domain extends Comparable, T_value extends Comparable> extends AbstractChartLayer
+public class GridLayer<T_domain, T_value> extends AbstractChartLayer
 {
 
   public enum GridOrientation
@@ -92,13 +92,13 @@ public void paint( final GCWrapper gc )
     //von links nach rechts zeichnen
     if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.HORIZONTAL)
     {
-        Comparable[] vTicks = vAxis.getRegistry().getRenderer(vAxis).getGridTicks( vAxis );
+        Object[] vTicks = vAxis.getRegistry().getRenderer(vAxis).getGridTicks( vAxis );
         IDataRange hRange = hAxis.getDataRange();
         int xfrom=hAxis.logicalToScreen(hRange.getMin());
         int xto=hAxis.logicalToScreen(hRange.getMax());
         if (vTicks!=null)
         {
-          for( Comparable vTick : vTicks )
+          for( Object vTick : vTicks )
           {
             path.clear();
             path.add( new Point(xfrom, vAxis.logicalToScreen( vTick )) );
@@ -111,13 +111,13 @@ public void paint( final GCWrapper gc )
     //von unten nach oben zeichnen
     if (m_orientation==GridOrientation.BOTH || m_orientation==GridOrientation.VERTICAL)
     {
-      Comparable[] hTicks = hAxis.getRegistry().getRenderer(hAxis).getGridTicks( hAxis );
+      Object[] hTicks = hAxis.getRegistry().getRenderer(hAxis).getGridTicks( hAxis );
       IDataRange vRange = vAxis.getDataRange();
       int yfrom= vAxis.logicalToScreen(vRange.getMin() ) ;
       int yto=vAxis.logicalToScreen(vRange.getMax() );
       if (hTicks!=null)
       {
-        for( Comparable hTick : hTicks )
+        for( Object hTick : hTicks )
         {
           path.clear();
           path.add( new Point(hAxis.logicalToScreen( hTick ),yfrom) );

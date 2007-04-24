@@ -6,7 +6,7 @@ import org.kalypso.chart.framework.model.data.IDataRange;
 /**
  * @author burtscher
  */
-public interface IAxis<T_logical extends Comparable> extends IMapper<T_logical, Integer>
+public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
 {
   /**
    * @return the axis' unique identifier

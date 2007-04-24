@@ -13,7 +13,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer<T_domain extends Comparable, T_target extends Comparable>
+public interface IChartLayer<T_domain, T_target>
 {
   // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the LayerType)
   

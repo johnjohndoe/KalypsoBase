@@ -6,25 +6,30 @@ import org.kalypso.chart.framework.model.data.IDataRange;
 /**
  * @author alibu
  */
-public class DataRange<T extends Comparable> implements IDataRange<T>
+public class DataRange<T> implements IDataRange<T>
 {
-  private final T m_min;
+  private T m_min;
 
-  private final T m_max;
+  private T m_max;
 
   public DataRange( T min, T max ) throws ZeroSizeDataRangeException
   {
-    if (min.compareTo(max)==0)
-		throw new ZeroSizeDataRangeException();
-	if (min.compareTo(max)>0)
+	if (min instanceof Comparable && max instanceof Comparable)
 	{
-		m_max = min;
-	    m_min = max;
-	}
-	else
-	{
-	    m_min = min;
-	    m_max = max;
+		Comparable minComp=(Comparable) min;
+		Comparable maxComp=(Comparable) max;
+	    if (minComp.compareTo(maxComp)==0)
+			throw new ZeroSizeDataRangeException();
+		if (minComp.compareTo(maxComp)>0)
+		{
+			m_max = min;
+		    m_min = max;
+		}
+		else
+		{
+		    m_min = min;
+		    m_max = max;
+		}
 	}
   }
 

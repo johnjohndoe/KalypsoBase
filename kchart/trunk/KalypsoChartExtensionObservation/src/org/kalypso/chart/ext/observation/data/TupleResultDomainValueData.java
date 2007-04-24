@@ -23,7 +23,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-public class TupleResultDomainValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer<T_domain, T_target>
+public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
 
 	

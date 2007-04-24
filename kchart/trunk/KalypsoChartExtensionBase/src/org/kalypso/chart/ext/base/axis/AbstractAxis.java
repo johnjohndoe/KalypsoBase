@@ -20,7 +20,7 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
  * Abstract implementation of IAxis - implements some
  * methods which are equal for all concrete IAxis-classes
  */
-public abstract class AbstractAxis<T extends Comparable> implements IAxis<T>
+public abstract class AbstractAxis<T> implements IAxis<T>
 {
   protected IMapperRegistry m_registry = null;
 

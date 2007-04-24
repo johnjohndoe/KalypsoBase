@@ -12,7 +12,7 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 public interface IChartModel 
 {
 
-	public IMapperRegistry getAxisRegistry();
+	public IMapperRegistry getMapperRegistry();
 
 	public ILayerManager getLayerManager();
 

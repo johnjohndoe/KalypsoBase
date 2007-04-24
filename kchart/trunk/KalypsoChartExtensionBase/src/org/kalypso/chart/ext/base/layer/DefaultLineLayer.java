@@ -20,7 +20,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author alibu
  *
  */
-public class DefaultLineLayer<T_domain extends Comparable, T_target extends Comparable> extends AbstractChartLayer<T_domain, T_target>
+public class DefaultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
 {
 
   //private AbstractDomainValueData<T_domain, T_target> m_dataContainer;

@@ -2,7 +2,7 @@ package org.kalypso.chart.framework.model.data;
 
 import java.util.List;
 
-public interface IDataContainer<T_domain extends Comparable, T_target extends Comparable>
+public interface IDataContainer<T_domain, T_target>
 {
 
 	public void open();

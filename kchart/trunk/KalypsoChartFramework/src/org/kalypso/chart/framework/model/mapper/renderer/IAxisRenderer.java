@@ -11,7 +11,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * Interface used to render an IAxis object into an IAxisComponent
  *
  */
-public interface IAxisRenderer<T_logical extends Comparable>
+public interface IAxisRenderer<T_logical>
 {
   /**
    * calculates axis values for which label and tick will be shown

@@ -15,7 +15,7 @@ import org.kalypso.chart.framework.model.styles.ILayerStyle;
  * @author alibu
  *
  */
-public abstract class AbstractChartLayer<T_domain extends Comparable, T_target extends Comparable> implements IChartLayer
+public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLayer
 {
 
   protected boolean m_isVisible=true;

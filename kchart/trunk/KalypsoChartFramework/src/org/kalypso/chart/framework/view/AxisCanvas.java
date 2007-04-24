@@ -25,7 +25,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
  *         to calculate screen coordinates for normalized values
  */
-public class AxisCanvas<T extends Comparable> extends Canvas implements PaintListener, IAxisComponent<T>, Listener
+public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisComponent<T>, Listener
 {
   /**
    * the corresponding axis

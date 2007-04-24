@@ -22,7 +22,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author alibu
  *
  */
-public class DefaultBarLayer<T_domain extends Comparable, T_target extends Comparable> extends AbstractChartLayer
+public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer
 {
 
   private AbstractDomainIntervalValueData<T_domain, T_target> m_dataContainer;

@@ -17,7 +17,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author alibu
  *
  */
-public abstract class AbstractAxisRenderer<T_logical extends Comparable> implements IAxisRenderer<T_logical>
+public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T_logical>
 {
 
   protected int m_tickLength=0;

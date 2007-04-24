@@ -6,7 +6,7 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 /**
  * @author burtscher
  */
-public interface IMapper<T_logical extends Comparable, T_visual>
+public interface IMapper<T_logical, T_visual>
 {
   /**
    * @return the axis' unique identifier

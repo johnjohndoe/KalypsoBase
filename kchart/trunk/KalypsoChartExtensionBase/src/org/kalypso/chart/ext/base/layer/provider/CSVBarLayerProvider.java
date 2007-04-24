@@ -24,7 +24,7 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
  * @author alibu
  *
  */
-public class CSVBarLayerProvider<T_domain extends Comparable, T_target extends Comparable> extends AbstractLayerProvider
+public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvider
 {
 
 
@@ -40,8 +40,8 @@ public class CSVBarLayerProvider<T_domain extends Comparable, T_target extends C
     	  String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
     	  String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
 
-          IAxis<T_domain> domainAxis = m_model.getAxisRegistry().getAxis( domainAxisId );
-          IAxis<T_target> targetAxis = m_model.getAxisRegistry().getAxis( targetAxisId);
+          IAxis<T_domain> domainAxis = m_model.getMapperRegistry().getAxis( domainAxisId );
+          IAxis<T_target> targetAxis = m_model.getMapperRegistry().getAxis( targetAxisId);
 
        
         

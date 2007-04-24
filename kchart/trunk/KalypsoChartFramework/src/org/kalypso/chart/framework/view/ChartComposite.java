@@ -63,10 +63,10 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     createControl( this);
 
 
-    m_model.getAxisRegistry().addMapperRegistryEventListener( this );
+    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
     m_model.getLayerManager().addLayerManagerEventListener( this ); 
     
-    IMapperRegistry ar=m_model.getAxisRegistry();
+    IMapperRegistry ar=m_model.getMapperRegistry();
     IAxis[] axes = ar.getAxes();
     
     //Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
@@ -160,7 +160,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
   @Override
   public void dispose( )
   {
-    m_model.getAxisRegistry().removeMapperRegistryEventListener( this );
+    m_model.getMapperRegistry().removeMapperRegistryEventListener( this );
     m_model.getLayerManager().removeLayerManagerEventListener( this );
 
     m_model.clear();
@@ -198,7 +198,7 @@ public void onMapperAdded( final IMapper mapper)
 	    final Composite parent = m_axisPlaces.get( axis.getPosition() );
 	    final AxisCanvas component = new AxisCanvas( axis, parent, SWT.NONE );
 	    component.setBackground(m_bgColor);
-	    m_model.getAxisRegistry().setComponent( axis, component );
+	    m_model.getMapperRegistry().setComponent( axis, component );
 	    layout();
 	}
   }
@@ -223,7 +223,7 @@ public void onMapperAdded( final IMapper mapper)
 private void autoscale( IAxis[] axes )
   {
     if( axes == null )
-      axes = m_model.getAxisRegistry().getAxes();
+      axes = m_model.getMapperRegistry().getAxes();
 
     for( final IAxis axis : axes )
     {
@@ -281,7 +281,7 @@ private void autoscale( IAxis[] axes )
    */
   public void maximize( )
   {
-    final IAxis[] axes = getModel().getAxisRegistry().getAxes();
+    final IAxis[] axes = getModel().getMapperRegistry().getAxes();
     autoscale( axes );
     redraw();
   }
@@ -299,7 +299,7 @@ private void autoscale( IAxis[] axes )
   {
     m_plot.redraw();
 
-    final IMapperRegistry mapperRegistry = m_model.getAxisRegistry();
+    final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
     final IAxis[] axes = mapperRegistry.getAxes();
     for( final IAxis axis : axes )
     {
@@ -373,9 +373,9 @@ public void onLayerRemoved(IChartLayer layer) {
  * maximises the content of the plot to the values inside a dragged rectangle
  */
 @SuppressWarnings("unchecked")
-public <T_logical extends Comparable> void zoomIn( final Point start, final Point end )
+public <T_logical> void zoomIn( final Point start, final Point end )
 {
-  final IMapperRegistry ar = m_model.getAxisRegistry();
+  final IMapperRegistry ar = m_model.getMapperRegistry();
   final IAxis[] axes = ar.getAxes();
   for( IAxis axis : axes )
   {

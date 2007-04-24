@@ -16,7 +16,7 @@ import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.TupleResult;
 
-public class TupleResultLineLayer<T_domain extends Comparable, T_target extends Comparable> extends AbstractChartLayer<T_domain, T_target> {
+public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target> {
 
 	
 	private TupleResultDomainValueData m_data;

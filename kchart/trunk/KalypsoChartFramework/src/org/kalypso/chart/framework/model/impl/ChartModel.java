@@ -116,7 +116,7 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	  /* (non-Javadoc)
 	 * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
 	 */
-	public IMapperRegistry getAxisRegistry( )
+	public IMapperRegistry getMapperRegistry( )
 	  {
 	    return m_mapperRegistry;
 	  }

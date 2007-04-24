@@ -7,7 +7,7 @@ import java.util.List;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 
 
-public abstract class AbstractDomainIntervalValueData<T_domain extends Comparable, T_target extends Comparable> implements IDataContainer
+public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer
 {
 
 	private boolean m_isOpen=false;

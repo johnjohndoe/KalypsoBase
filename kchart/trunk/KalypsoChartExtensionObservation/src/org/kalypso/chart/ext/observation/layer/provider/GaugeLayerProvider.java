@@ -31,8 +31,8 @@ public class GaugeLayerProvider extends AbstractLayerProvider {
 		
 		String domainAxisId=m_lt.getMapper().getDomainAxisRef().getRef();
 		String targetAxisId=m_lt.getMapper().getTargetAxisRef().getRef();
-		IAxis domainAxis=m_model.getAxisRegistry().getAxis(domainAxisId);
-		IAxis targetAxis=m_model.getAxisRegistry().getAxis(targetAxisId);
+		IAxis domainAxis=m_model.getMapperRegistry().getAxis(domainAxisId);
+		IAxis targetAxis=m_model.getMapperRegistry().getAxis(targetAxisId);
 		
 		
 		if (data!=null)
