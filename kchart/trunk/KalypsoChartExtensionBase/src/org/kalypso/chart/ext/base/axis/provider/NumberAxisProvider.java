@@ -1,13 +1,14 @@
 package org.kalypso.chart.ext.base.axis.provider;
 
-import org.apache.commons.collections.comparators.ComparableComparator;
-import org.kalypso.chart.ext.base.axis.ComparableNumberAxis;
+import java.util.Comparator;
+
+import org.kalypso.chart.ext.base.axis.NumberAxis;
 import org.kalypso.chart.factory.configuration.exception.AxisProviderException;
-import org.kalypso.chart.factory.configuration.exception.MalformedValueException;
 import org.kalypso.chart.factory.configuration.parameters.impl.AxisDirectionParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.AxisPositionParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.DoubleParser;
 import org.kalypso.chart.factory.provider.AbstractAxisProvider;
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
@@ -15,30 +16,32 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
-import org.kalypso.chart.framework.util.math.ComparableNumber;
+import org.kalypso.contribs.java.util.DoubleComparator;
 
 
 /**
  * @author alibu
  *
  */
-public class ComparableNumberAxisProvider extends AbstractAxisProvider
+public class NumberAxisProvider extends AbstractAxisProvider
 {
 
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */
-  public IAxis<ComparableNumber> getAxis( ) throws AxisProviderException
+  public IAxis<Number> getAxis( ) throws AxisProviderException
   {
     AxisPositionParser app=new AxisPositionParser();
-    String position = m_at.getPosition().toString();
-    POSITION pos=app.createValueFromString( position  );
+    String position = getAxisType().getPosition().toString();
+    POSITION pos=app.dataFromString( position  );
     AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.createValueFromString( m_at.getDirection().toString() );
+    DIRECTION dir=adp.dataFromString( getAxisType().getDirection().toString() );
+    
+    Comparator<Number> nc=new DoubleComparator(0.0001);
+
     
     
-    
-    IAxis<ComparableNumber> axis = new ComparableNumberAxis( m_at.getId(), m_at.getLabel(), PROPERTY.CONTINUOUS, pos, dir, new ComparableComparator());
+    IAxis<Number> axis = new NumberAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, nc );
     if (axis!=null)
     {
       double min=0;
@@ -46,9 +49,9 @@ public class ComparableNumberAxisProvider extends AbstractAxisProvider
       DoubleParser dp=new DoubleParser();
       try
       {
-        String minValStr=m_at.getMinVal();
+        String minValStr=getAxisType().getMinVal();
         if (!minValStr.equals(""))
-        	min=( dp.createValueFromString(minValStr) );
+        	min=( dp.dataFromString(minValStr) );
       }
       catch( MalformedValueException e )
       {
@@ -56,19 +59,19 @@ public class ComparableNumberAxisProvider extends AbstractAxisProvider
       }
       try
       {
-        String maxValStr=m_at.getMaxVal();
+        String maxValStr=getAxisType().getMaxVal();
         if (!maxValStr.equals(""))
-        	min=( dp.createValueFromString(maxValStr) );
+        	min=( dp.dataFromString(maxValStr) );
       }
       catch( MalformedValueException e )
       {
     	  Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMax; using default (1) ");
       }
       
-      DataRange<ComparableNumber> range= null;
+      DataRange<Number> range= null;
       try
 		{
-			range= new DataRange<ComparableNumber>(new ComparableNumber(min), new ComparableNumber(max));
+		  range= new DataRange<Number>(min, max);
 		} catch (ZeroSizeDataRangeException e)
 		{
 			// TODO Auto-generated catch block
@@ -88,7 +91,7 @@ public class ComparableNumberAxisProvider extends AbstractAxisProvider
    */
   public Class< ? > getDataClass( )
   {
-    return ComparableNumber.class;
+    return Number.class;
   }
 
 

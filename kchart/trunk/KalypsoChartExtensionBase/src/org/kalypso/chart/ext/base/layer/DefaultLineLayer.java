@@ -1,7 +1,6 @@
 package org.kalypso.chart.ext.base.layer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -28,8 +27,7 @@ public class DefaultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_d
 
 public DefaultLineLayer( AbstractDomainValueData<T_domain, T_target> dataContainer, IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis)
   {
-	m_domainAxis=domainAxis;
-    m_targetAxis=targetAxis;
+	super(domainAxis, targetAxis);
     m_dataContainer=dataContainer;
   }
 
@@ -50,7 +48,7 @@ public DefaultLineLayer( AbstractDomainValueData<T_domain, T_target> dataContain
 	  path.add(new Point(width/5*4,height/2));
 	  path.add(new Point(width,height/2));
 	  	
-	  IStyledElement element = m_style.getElement(SE_TYPE.LINE, 1);
+	  IStyledElement element = getStyle().getElement(SE_TYPE.LINE, 1);
 	  
 	  element.setPath(path);
 	  element.paint(gcw);
@@ -72,14 +70,14 @@ public void paint( GCWrapper gc )
 	  if (m_dataContainer != null )
 	  {
 		  m_dataContainer.open();
-		  List<T_domain> m_domainData = m_dataContainer.getDomainValues();
-		  List<T_target> m_targetData = m_dataContainer.getTargetValues();
+		  T_domain[] domainData = m_dataContainer.getDomainValues();
+		  T_target[] targetData = m_dataContainer.getTargetValues();
 	      ArrayList<Point> path=new ArrayList<Point>();
-	      IStyledElement line=m_style.getElement( SE_TYPE.LINE, 1);
-	      for( int i=0; i<m_domainData.size();i++)
+	      IStyledElement line=getStyle().getElement( SE_TYPE.LINE, 1);
+	      for( int i=0; i<domainData.length;i++)
 	      {
-	    	  T_domain domVal=m_domainData.get(i);
-	    	  T_target targetVal=m_targetData.get(i);
+	    	  T_domain domVal=domainData[i];
+	    	  T_target targetVal=targetData[i];
 	    	  int domScreen=getDomainAxis().logicalToScreen(domVal);
 	    	  int valScreen=getTargetAxis().logicalToScreen(targetVal);
 	    	  path.add(new Point(domScreen, valScreen));
@@ -89,7 +87,7 @@ public void paint( GCWrapper gc )
 	  }
 	  else
 	  {
-		  Logger.logWarning(Logger.TOPIC_LOG_GENERAL, "Layer "+m_id+" has not yet been opened");
+		  Logger.logWarning(Logger.TOPIC_LOG_GENERAL, "Layer "+getId()+" has not yet been opened");
 	  }
   }
 

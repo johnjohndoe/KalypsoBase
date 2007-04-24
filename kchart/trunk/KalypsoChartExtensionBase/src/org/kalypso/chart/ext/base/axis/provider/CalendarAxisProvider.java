@@ -4,11 +4,11 @@ import java.util.Calendar;
 
 import org.kalypso.chart.ext.base.axis.CalendarAxis;
 import org.kalypso.chart.factory.configuration.exception.AxisProviderException;
-import org.kalypso.chart.factory.configuration.exception.MalformedValueException;
 import org.kalypso.chart.factory.configuration.parameters.impl.AxisDirectionParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.AxisPositionParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.factory.provider.AbstractAxisProvider;
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
@@ -32,21 +32,21 @@ public class CalendarAxisProvider extends AbstractAxisProvider
   public IAxis getAxis( ) throws AxisProviderException
   {
     AxisPositionParser app=new AxisPositionParser();
-    POSITION pos=app.createValueFromString( m_at.getPosition().toString() );
+    POSITION pos=app.dataFromString( getAxisType().getPosition().toString() );
     AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.createValueFromString( m_at.getDirection().toString() );
-    IAxis<Calendar> axis = new CalendarAxis( m_at.getId(), m_at.getLabel(), PROPERTY.CONTINUOUS, pos, dir );
+    DIRECTION dir=adp.dataFromString( getAxisType().getDirection().toString() );
+    IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir );
     if (axis!=null)
     {
         CalendarParser gcp=new CalendarParser();
-        String minValStr= m_at.getMinVal();
-        String maxValStr= m_at.getMaxVal();
+        String minValStr= getAxisType().getMinVal();
+        String maxValStr= getAxisType().getMaxVal();
         Calendar minVal;
         Calendar maxVal;
         
         try
         {
-	       minVal=gcp.createValueFromString(minValStr);
+	       minVal=gcp.dataFromString(minValStr);
         }
         catch( MalformedValueException e )
         {
@@ -57,7 +57,7 @@ public class CalendarAxisProvider extends AbstractAxisProvider
         }
         try
         {
-        	 maxVal=gcp.createValueFromString(maxValStr);
+        	 maxVal=gcp.dataFromString(maxValStr);
         }
         catch( MalformedValueException e )
         {

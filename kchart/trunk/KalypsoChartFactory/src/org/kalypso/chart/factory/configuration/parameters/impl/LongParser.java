@@ -1,7 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
-import org.kalypso.chart.factory.configuration.exception.MalformedValueException;
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
+import org.kalypso.chart.framework.exception.MalformedValueException;
+import org.kalypso.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu
@@ -11,9 +11,9 @@ public class LongParser implements IStringParser<Long>
 {
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
    */
-  public Long createValueFromString( String value ) throws MalformedValueException
+  public Long dataFromString( String value ) throws MalformedValueException
   {
     Long n=null;
     try
@@ -32,7 +32,7 @@ public class LongParser implements IStringParser<Long>
   }
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#getFormatHint()
+   * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
   public String getFormatHint( )
   {

@@ -20,16 +20,16 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T_logical>
 {
 
-  protected int m_tickLength=0;
-  protected int m_lineWidth=0;
-  protected int m_gap=0;
-  protected Insets m_labelInsets=null;
-  protected Insets m_tickLabelInsets=null;
-  protected FontData m_fontDataLabel=null;
-  protected FontData m_fontDataTick=null;
-  protected HashMap<IAxis<T_logical>, List<T_logical>> m_tickMap=new HashMap<IAxis<T_logical>, List<T_logical>>();
-  protected final RGB m_rgbForeground;
-  protected final RGB m_rgbBackground;
+  private final int m_tickLength;
+  private final int m_lineWidth;
+  private final int m_gap;
+  private final Insets m_labelInsets;
+  private final Insets m_tickLabelInsets;
+  private final FontData m_fontDataLabel;
+  private final FontData m_fontDataTick;
+  private final RGB m_rgbForeground;
+  private final RGB m_rgbBackground;
+  private HashMap<IAxis<T_logical>, List<T_logical>> m_tickMap=new HashMap<IAxis<T_logical>, List<T_logical>>();
 
 
 
@@ -77,7 +77,56 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
     gc.setFont( gc.getDevice().getSystemFont() );
     f.dispose();
   }
-
+  
+  public int getTickLength()
+  {
+  	return m_tickLength;
+  }
+  
+  public int getLineWidth()
+  {
+	  return m_lineWidth;
+  }
+  
+  public int getGap()
+  {
+	  return m_gap;
+  }
+  
+  public Insets getLabelInsets()
+  {
+	  return m_labelInsets;
+  }
+  
+  public Insets getTickLabelInsets()
+  {
+	  return m_tickLabelInsets;
+  }
+  
+  public FontData getFontDataLabel()
+  {
+	  return m_fontDataLabel;
+  }
+  
+  public FontData getFontDataTickLabel()
+  {
+	  return m_fontDataTick;
+  }
+  
+  public RGB getRgbForeground()
+  {
+	  return m_rgbForeground;
+  }
+  
+  public RGB getRgbBackground()
+  {
+	  return m_rgbBackground;
+  }
+  
+  public HashMap<IAxis<T_logical>, List<T_logical>> getTickMap()
+  {
+	  return m_tickMap;
+  }
 
 
 

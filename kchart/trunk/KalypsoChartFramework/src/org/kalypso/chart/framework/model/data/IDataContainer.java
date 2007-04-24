@@ -1,6 +1,5 @@
 package org.kalypso.chart.framework.model.data;
 
-import java.util.List;
 
 public interface IDataContainer<T_domain, T_target>
 {
@@ -15,7 +14,7 @@ public interface IDataContainer<T_domain, T_target>
 	
 	public IDataRange<T_target> getTargetRange();
 	
-	public List<T_domain> getDomainValues();
+	public T_domain[] getDomainValues();
 	
-	public List<T_target> getTargetValues();
+	public T_target[] getTargetValues();
 }

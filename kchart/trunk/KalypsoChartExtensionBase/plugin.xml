@@ -4,17 +4,11 @@
    <extension
          point="org.kalypso.chart.factory.AxisProvider">
       <provider
-            class="org.kalypso.chart.ext.base.axis.provider.DoubleAxisProvider"
-            id="org.kalypso.chart.ext.axis.provider.Double"/>
+            class="org.kalypso.chart.ext.base.axis.provider.NumberAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Number"/>
       <provider
             class="org.kalypso.chart.ext.base.axis.provider.CalendarAxisProvider"
             id="org.kalypso.chart.ext.axis.provider.Calendar"/>
-      <provider
-            class="org.kalypso.chart.ext.base.axis.provider.LongAxisProvider"
-            id="org.kalypso.chart.ext.axis.provider.Long"/>
-      <provider
-            class="org.kalypso.chart.ext.base.axis.provider.ComparableNumberAxisProvider"
-            id="org.kalypso.chart.ext.axis.provider.Number"/>
    </extension>
    <extension
          point="org.kalypso.chart.factory.LayerProvider">
@@ -52,10 +46,7 @@
             class="org.kalypso.chart.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
             id="org.kalypso.chart.ext.axisrenderer.provider.Calendar"/>
       <provider
-            class="org.kalypso.chart.ext.base.axisrenderer.provider.DoubleAxisRendererProvider"
-            id="org.kalypso.chart.ext.axisrenderer.provider.Double"/>
-      <provider
-            class="org.kalypso.chart.ext.base.axisrenderer.provider.ComparableNumberAxisRendererProvider"
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.NumberAxisRendererProvider"
             id="org.kalypso.chart.ext.axisrenderer.provider.Number"/>
    </extension>
 </plugin>

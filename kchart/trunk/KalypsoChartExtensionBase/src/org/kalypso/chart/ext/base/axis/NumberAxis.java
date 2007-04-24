@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.IStringDataConverter;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
@@ -15,16 +16,16 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  * 
  * Concrete IAxis implementation - to be used for numeric data 
  */
-public class DoubleAxis extends AbstractAxis<Double>
+public class NumberAxis extends AbstractAxis<Number> implements IStringDataConverter<Number>
 {
-  public DoubleAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, Comparator<Double> comp )
+  public NumberAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, Comparator<Number> comp )
   {
-    super( id, label, prop, pos, dir, comp, Double.class );
+    super( id, label, prop, pos, dir, comp, Number.class );
   }
 
-  public double logicalToNormalized( final Double value )
+  public double logicalToNormalized( final Number value )
   {
-	IDataRange<Double> dataRange = getDataRange();  
+	IDataRange<Number> dataRange = getDataRange();  
 	
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
@@ -33,10 +34,10 @@ public class DoubleAxis extends AbstractAxis<Double>
     return norm;
   }
 
-  public Double normalizedToLogical( final double value )
+  public Number normalizedToLogical( final double value )
   {
 
-	  IDataRange<Double> dataRange = getDataRange();  
+	  IDataRange<Number> dataRange = getDataRange();  
 		
       final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
@@ -49,12 +50,12 @@ public class DoubleAxis extends AbstractAxis<Double>
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#logicalToScreen(T)
    */
-  public int logicalToScreen( final Double value )
+  public int logicalToScreen( final Number value )
   {
-    if( m_registry == null )
+    if( getRegistry() == null )
       return 0;
 
-    final IAxisComponent comp = m_registry.getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -64,12 +65,12 @@ public class DoubleAxis extends AbstractAxis<Double>
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#screenToLogical(int)
    */
-  public Double screenToLogical( final int value )
+  public Number screenToLogical( final int value )
   {
-    if( m_registry == null )
+    if( getRegistry() == null )
       return Double.NaN;
 
-    final IAxisComponent comp = m_registry.getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return Double.NaN; 
 
@@ -81,7 +82,16 @@ public class DoubleAxis extends AbstractAxis<Double>
 	  return logicalToScreen(0.0);
   }
 
-public Double parseStringValue(String value) throws MalformedValueException {
+
+public IStringDataConverter<Number> getStringDataConverter() {
+	return this;
+}
+
+public String stringFromData(Number value) {
+	return null;
+}
+
+public Number dataFromString(String value) throws MalformedValueException {
 	try {
 		double d = Double.parseDouble(value);
 		return d;
@@ -89,6 +99,11 @@ public Double parseStringValue(String value) throws MalformedValueException {
 	catch (NumberFormatException e) {
 		throw new MalformedValueException(e);
 	}
+}
+
+public String getFormatHint() {
+	return "[1-9]([0-9])*.([0-9])*[1-9]";
+	
 }
 
 }

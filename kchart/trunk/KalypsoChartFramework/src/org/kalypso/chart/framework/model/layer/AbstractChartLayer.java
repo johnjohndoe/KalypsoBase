@@ -15,23 +15,26 @@ import org.kalypso.chart.framework.model.styles.ILayerStyle;
  * @author alibu
  *
  */
-public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLayer
+public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLayer<T_domain, T_target>
 {
 
-  protected boolean m_isVisible=true;
-  protected ILayerStyle m_style=null;
-  protected String m_title="";
-  protected String m_id="";
-  protected String m_description="";
-  protected boolean m_isActive=false;
-  protected IAxis<T_target> m_targetAxis=null;
-  protected IAxis<T_domain> m_domainAxis=null;
+  private boolean m_isVisible=true;
+  private ILayerStyle m_style=null;
+  private String m_title="";
+  private String m_id="";
+  private String m_description="";
+  private boolean m_isActive=false;
+  
+  private final IAxis<T_target> m_targetAxis;
+  private final IAxis<T_domain> m_domainAxis;
+  
   protected IDataContainer<T_domain, T_target> m_dataContainer=null;
 
   
-  public AbstractChartLayer()
+  public AbstractChartLayer( final IAxis<T_domain> domainAxis, final IAxis<T_target> targetAxis )
   {
-	  
+	  m_targetAxis = targetAxis;
+	  m_domainAxis = domainAxis;
   }
   
   

@@ -15,17 +15,17 @@ public class DefaultStyledPointProvider extends AbstractStyledElementProvider{
 			throws StyledElementProviderException {
 
 
-		int pointWidth = m_pc.getParsedParameterValue("pointWidth", "5", 
+		int pointWidth = getParameterContainer().getParsedParameterValue("pointWidth", "5", 
 				new DoubleParser()).intValue();
-		int pointHeight = m_pc.getParsedParameterValue("pointHeight", "5", 
+		int pointHeight = getParameterContainer().getParsedParameterValue("pointHeight", "5", 
 				new DoubleParser()).intValue();
-		int borderWidth = m_pc.getParsedParameterValue("borderWidth", "1", 
+		int borderWidth = getParameterContainer().getParsedParameterValue("borderWidth", "1", 
 				new DoubleParser()).intValue();
-		RGB fillColor = m_pc.getParsedParameterValue("fillColor", "#ffffff", 
+		RGB fillColor = getParameterContainer().getParsedParameterValue("fillColor", "#ffffff", 
 				new RGBParser());
-		RGB borderColor = m_pc.getParsedParameterValue("borderColor", "#000000",
+		RGB borderColor = getParameterContainer().getParsedParameterValue("borderColor", "#000000",
 				new RGBParser());
-		int alpha = m_pc.getParsedParameterValue("alpha", "255", 
+		int alpha = getParameterContainer().getParsedParameterValue("alpha", "255", 
 				new DoubleParser()).intValue();
 		StyledPoint sp = new StyledPoint(pointWidth, pointHeight, fillColor,
 				borderWidth, borderColor, alpha);

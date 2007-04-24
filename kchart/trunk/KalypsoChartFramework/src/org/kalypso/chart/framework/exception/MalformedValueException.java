@@ -13,4 +13,9 @@ public class MalformedValueException extends Exception{
 		super(e.getMessage(), e);
 	}
 
+
+	public MalformedValueException() {
+		
+	}
+
 }

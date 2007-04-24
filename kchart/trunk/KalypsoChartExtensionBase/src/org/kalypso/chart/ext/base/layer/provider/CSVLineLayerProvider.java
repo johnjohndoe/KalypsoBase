@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
@@ -35,11 +37,11 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
     IChartLayer icl = null;
 
 
-	 String domainAxisId=m_lt.getMapper().getDomainAxisRef().getRef();
-     String targetAxisId= m_lt.getMapper().getTargetAxisRef().getRef();
+	 String domainAxisId=getLayerType().getMapper().getDomainAxisRef().getRef();
+     String targetAxisId= getLayerType().getMapper().getTargetAxisRef().getRef();
 
-     IAxis domAxis = m_model.getMapperRegistry().getAxis( domainAxisId );
-     IAxis valAxis = m_model.getMapperRegistry().getAxis( targetAxisId);
+     IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+     IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId);
 	 
 	 AbstractDomainValueData<T_domain, T_target> data=new AbstractDomainValueData<T_domain, T_target>()
 	 {
@@ -50,11 +52,14 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
 			try
 			{
 	          FileReader fr;
-    			fr = new FileReader(m_file);
+    			fr = new FileReader(getInputFile());
 			
 	          BufferedReader br=new BufferedReader(fr);
 	          String s="";
 	          int count=0;
+	          List<T_domain> domainValues=new ArrayList<T_domain>(); 
+        	  List<T_target> targetValues=new ArrayList<T_target>(); 
+        	  
 	          while ((s=br.readLine())!=null )
 	          {
 	                String[] cols=s.split( "  *");
@@ -64,22 +69,25 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
 	                  T_domain domainVal=null;
 	                  T_target targetVal=null;
 	                  try {
-	                	  domainVal=(T_domain) (Object) (Double.parseDouble( cols[0].trim()));
-	                	  targetVal=(T_target) (Object) Double.parseDouble( cols[1].trim());
+	                	  domainVal=(T_domain) new Double( cols[0].trim());
+	                	  targetVal=(T_target) new Double( cols[1].trim());
 	                	  if (domainVal!=null && targetVal!=null)
 		                  {
-		                	  m_domainValues.add( domainVal);
-			                  m_targetValues.add( targetVal);
+		                	  
+							domainValues.add( domainVal);
+			                targetValues.add( targetVal);
 		                  }
 	                  }
 	                  catch(NumberFormatException e)
 	                  {
-	                	  Logger.logWarning(Logger.TOPIC_LOG_DATA, m_file.getName()+": Line "+count+" could not be parsed: \n"+s);
+	                	  Logger.logWarning(Logger.TOPIC_LOG_DATA, getInputFile().getName()+": Line "+count+" could not be parsed: \n"+s);
 	                	  e.printStackTrace();
 	                  }
 	                }
 	                count++;
 	          }
+	          setDomainValues(domainValues);
+	          setTargetValues(targetValues);
 		} catch (FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block
@@ -103,10 +111,10 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
 		 
 		 
 	 };
-	 	  String url=m_pc.getParameterValue( "url", m_lt.getId());
+	 	  String url=getParameterContainer().getParameterValue( "url", getLayerType().getId());
 	 	  data.setInputFile(new File(url));
           icl = new DefaultLineLayer( data, domAxis, valAxis );
-          icl.setTitle( m_lt.getTitle() );
+          icl.setTitle( getLayerType().getTitle() );
 
 
     return icl;

@@ -7,9 +7,9 @@ import org.ksp.chart.factory.LayerType;
 
 public abstract class AbstractLayerProvider implements ILayerProvider {
 
-	protected LayerType m_lt;
-	protected IChartModel m_model;
-	protected IParameterContainer m_pc;
+	private LayerType m_lt;
+	private  IChartModel m_model;
+	private IParameterContainer m_pc;
 
 
 	  /**
@@ -21,6 +21,21 @@ public abstract class AbstractLayerProvider implements ILayerProvider {
 	    m_model = model;
 	    m_pc=ChartFactoryUtilities.createXmlbeansParameterContainer(m_lt.getId(), m_lt.getProvider());
 	    
+	  }
+	  
+	  public LayerType getLayerType()
+	  {
+		  return m_lt;
+	  }
+	  
+	  public IChartModel getChartModel()
+	  {
+		  return m_model;
+	  }
+	  
+	  public IParameterContainer getParameterContainer()
+	  {
+		  return m_pc;
 	  }
 
 }

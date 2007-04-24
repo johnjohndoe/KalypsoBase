@@ -15,16 +15,16 @@ public class DefaultStyledTextProvider extends AbstractStyledElementProvider{
 
 	public IStyledElement getStyledElement() throws StyledElementProviderException {
 		
-		String fontName = m_pc.getParameterValue("fontName", "arial");
-		int fontStyle = m_pc.getParsedParameterValue("fontName", "NORMAL",
+		String fontName = getParameterContainer().getParameterValue("fontName", "arial");
+		int fontStyle = getParameterContainer().getParsedParameterValue("fontName", "NORMAL",
 				new FontStyleParser());
-		int fontSize = m_pc.getParsedParameterValue("fontSize", "10",
+		int fontSize = getParameterContainer().getParsedParameterValue("fontSize", "10",
 				new DoubleParser()).intValue();
-		RGB foregroundColor = m_pc.getParsedParameterValue("textColor",
+		RGB foregroundColor = getParameterContainer().getParsedParameterValue("textColor",
 				"#ffffff",  new RGBParser());
-		RGB backgroundColor = m_pc.getParsedParameterValue("backgroundColor",
+		RGB backgroundColor = getParameterContainer().getParsedParameterValue("backgroundColor",
 				"#000000",  new RGBParser());
-		int alpha = m_pc.getParsedParameterValue("alpha", "255", new DoubleParser()).intValue();
+		int alpha = getParameterContainer().getParsedParameterValue("alpha", "255", new DoubleParser()).intValue();
 		StyledText st = new StyledText(foregroundColor, backgroundColor,
 				fontName, fontStyle, fontSize, alpha);
 		return st;

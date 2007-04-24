@@ -1,5 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters;
 
+import org.kalypso.chart.framework.model.data.IStringParser;
+
 
 /**
  * The interface provides access to a collection of parameters, grouped by namespaces

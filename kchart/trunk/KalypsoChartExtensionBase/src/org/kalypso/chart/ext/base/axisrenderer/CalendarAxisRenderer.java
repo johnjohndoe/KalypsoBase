@@ -72,11 +72,11 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 	IDataRange<Calendar> range=axis.getDataRange();
     final String logicalfrom = m_dateFormat.format( range.getMin().getTimeInMillis() );
     final String logicalto = m_dateFormat.format( range.getMax().getTimeInMillis() );
-    final Point fromTextExtent = getTextExtent( gc, logicalfrom, m_fontDataTick );
-    final Point toTextExtent = getTextExtent( gc, logicalto, m_fontDataTick );
+    final Point fromTextExtent = getTextExtent( gc, logicalfrom, getFontDataTickLabel() );
+    final Point toTextExtent = getTextExtent( gc, logicalto, getFontDataTickLabel() );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
-    final Insets ihelper = getConvertedInsets( axis, m_tickLabelInsets );
+    final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
 
     final int x = tickLabelSize.x + ihelper.left + ihelper.right;
     final int y = tickLabelSize.y + ihelper.top + ihelper.bottom;
@@ -86,7 +86,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
   protected void drawTicks( GCWrapper gc, IAxis<Calendar> axis, int startX, int startY, Collection<Calendar> ticks )
   {
-    gc.setLineWidth( m_lineWidth );
+    gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
 
     int textXDate = 0;
@@ -100,70 +100,70 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     if( axis.getPosition() == POSITION.BOTTOM )
     {
       int y1 = startY;
-      int y2 = y1 + m_tickLength;
+      int y2 = y1 + getTickLength();
 
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
         final String labelDate = m_dateFormat.format( value.getTimeInMillis() );
-        final Point tickExtentDate = getTextExtent( gc, labelDate, m_fontDataTick );
+        final Point tickExtentDate = getTextExtent( gc, labelDate, getFontDataTickLabel() );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textXDate = tickPos - tickExtentDate.x / 2;
-        textYDate = y2 + m_tickLabelInsets.top;
-        drawText( gc, labelDate, textXDate, textYDate, m_fontDataTick );
+        textYDate = y2 + getTickLabelInsets().top;
+        drawText( gc, labelDate, textXDate, textYDate, getFontDataTickLabel() );
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
     {
       int y1 = startY;
-      int y2 = y1 - m_tickLength;
+      int y2 = y1 - getTickLength();
 
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
-        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textXDate = tickPos - tickExtent.x / 2;
-        textYDate = y2 - m_tickLabelInsets.top - tickExtent.y;
-        drawText( gc, label, textXDate, textYDate, m_fontDataTick );
+        textYDate = y2 - getTickLabelInsets().top - tickExtent.y;
+        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
       }
     }
     else if( axis.getPosition() == POSITION.LEFT )
     {
       int x1 = startX;
-      int x2 = x1 - m_tickLength;
+      int x2 = x1 - getTickLength();
 
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
-        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = x1 - tickExtent.x - m_tickLabelInsets.right - m_tickLength;
+        textXDate = x1 - tickExtent.x - getTickLabelInsets().right - getTickLength();
         textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, m_fontDataTick );
+        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
       }
     }
     else if( axis.getPosition() == POSITION.RIGHT )
     {
       int x1 = startX;
-      int x2 = x1 + m_tickLength;
+      int x2 = x1 + getTickLength();
 
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
-        final Point tickExtent = getTextExtent( gc, label, m_fontDataTick );
+        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = tickPos - x2 + m_tickLabelInsets.top;
-        textXDate = x1 + m_tickLabelInsets.left + m_tickLength;
+        textXDate = tickPos - x2 + getTickLabelInsets().top;
+        textXDate = x1 + getTickLabelInsets().left + getTickLength();
         textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, m_fontDataTick );
+        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
       }
     }
 
@@ -295,7 +295,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
           realticks.add(cal);
       }
     }
-    m_tickMap.put( axis, realticks );
+    getTickMap().put( axis, realticks );
 
     return realticks;
   }
@@ -373,16 +373,21 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     int startY;
     int endX;
     int endY;
+    
+    int gap=getGap();
+    
 
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
       startX = screen.x;
       endX = screen.x + screen.width;
 
+      
+      
       if( axis.getPosition() == POSITION.BOTTOM )
-        startY = screen.y + m_gap;
+        startY = screen.y + gap;
       else
-        startY = screen.y + screen.height - 1 - m_gap;
+        startY = screen.y + screen.height - 1 - gap;
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -398,9 +403,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
-        startX = screen.x + m_gap;
+        startX = screen.x + gap;
       else
-        startX = screen.x + screen.width - m_gap -1;
+        startX = screen.x + screen.width - gap -1;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -417,9 +422,10 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   public void paint( GCWrapper gc, final IAxis<Calendar> axis, final Rectangle screen )
   {
 	    Device dev=gc.getDevice();
+	    
 
-	    Color foreground=new Color(dev, m_rgbForeground);
-	    Color background=new Color(dev, m_rgbBackground);
+	    Color foreground=new Color(dev, getRgbForeground());
+	    Color background=new Color(dev, getRgbBackground());
 	    gc.setForeground( foreground );
 	    gc.setBackground( background );
 
@@ -442,12 +448,17 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   {
     if( axis.getLabel() != null )
     {
-      final Point textExtent = getTextExtent( gc, axis.getLabel(), m_fontDataLabel );
+      final Point textExtent = getTextExtent( gc, axis.getLabel(), getFontDataLabel() );
 
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
 
       int x = 0;
       int y = 0;
+      
+      Insets tickLabelInsets=getTickLabelInsets();
+      Insets labelInsets=getLabelInsets();
+      int tickLength =getTickLength();
+      int lineWidth=getLineWidth();
 
       Transform tr = new Transform( gc.getDevice() );
       try
@@ -458,9 +469,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
           y = y1;
 
           if( axis.getPosition() == POSITION.TOP )
-            y -= m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.top;
+            y -= tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;
           else
-            y += m_tickLength + m_lineWidth + m_tickLabelInsets.top + tickLabelExtent.y + m_tickLabelInsets.bottom + m_labelInsets.top;
+            y += tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;
         }
         else
         {
@@ -472,13 +483,13 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
           if( axis.getPosition() == POSITION.LEFT )
           {
             rotation = -90;
-            x -= m_lineWidth + m_tickLength + m_tickLabelInsets.right + tickLabelExtent.x + m_tickLabelInsets.left + m_labelInsets.bottom + textExtent.y;
+            x -= lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
             y += textExtent.x / 2;
           }
           else
           {
             rotation = 90;
-            x += m_lineWidth + m_tickLength + m_tickLabelInsets.right + tickLabelExtent.x + m_tickLabelInsets.left + m_labelInsets.bottom + textExtent.y;
+            x += lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
             y -= textExtent.x / 2;
           }
           tr.translate( x, y );
@@ -490,7 +501,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
         {
           gc.setTransform( tr );
         }
-        drawText( gc, axis.getLabel(), x, y, m_fontDataLabel );
+        drawText( gc, axis.getLabel(), x, y, getFontDataLabel() );
       }
       finally
       {
@@ -502,7 +513,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
   protected void drawAxisLine( GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
   {
-    gc.setLineWidth( m_lineWidth );
+    gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.drawLine( x1, y1, x2, y2 );
   }
@@ -512,13 +523,13 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    */
   public Calendar[] getGridTicks( IAxis<Calendar> axis )
   {
-    Collection<Calendar> ticks= m_tickMap.get( axis );
+    Collection<Calendar> ticks= getTickMap().get( axis );
     if (ticks==null)
     {
         GC gc=new GC(Display.getDefault());
         GCWrapper gcw=new GCWrapper(gc);
         calcTicks( gcw, axis );
-        ticks= m_tickMap.get( axis );
+        ticks= getTickMap().get( axis );
         gcw.dispose();
         gc.dispose();
     }
@@ -532,35 +543,43 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   {
     int width = 0;
     int label = 0;
+    int gap=getGap();
+    int lineWidth=getLineWidth();
+    int tickLength=getTickLength();
 
+    Insets tickLabelInsets=getTickLabelInsets();
+    Insets labelInsets=getLabelInsets();
+
+    
     // Testutensilien erzeugen
     Display dev = Display.getCurrent();
     Image img = new Image( dev, 1, 1 );
     GC gc = new GC( img );
     GCWrapper gcw = new GCWrapper( gc );
+    
 
     Point tls = calcTickLabelSize( gcw, axis );
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      width += m_tickLabelInsets.top + m_tickLabelInsets.bottom;
-      width += m_labelInsets.top + m_labelInsets.bottom;
+      width += tickLabelInsets.top + tickLabelInsets.bottom;
+      width += labelInsets.top + labelInsets.bottom;
       label = tls.y;
     }
     else
     {
-      width += m_tickLabelInsets.left + m_tickLabelInsets.right;
-      width += m_labelInsets.left + m_labelInsets.right;
+      width += tickLabelInsets.left + tickLabelInsets.right;
+      width += labelInsets.left + labelInsets.right;
       label = tls.x;
     }
     width += label;
-    width += m_gap;
-    width += m_lineWidth;
-    width += m_tickLength;
+    width += gap;
+    width += lineWidth;
+    width += tickLength;
 
     // Jetzt noch den Text
-    Point labelExtent = getTextExtent( gcw, axis.getLabel(), m_fontDataLabel );
+    Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
     width += labelExtent.y;
 
     gcw.dispose();

@@ -12,9 +12,7 @@ import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
-import org.kalypso.chart.framework.util.math.ComparableNumber;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -103,8 +101,8 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 		          {
 		          
 			          //Value-Listen aufbauen
-			          m_domainValues=new ArrayList<T_domain>();
-			          m_targetValues=new ArrayList<T_target>();
+			          ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
+			          ArrayList<T_target> targetValues = new ArrayList<T_target>();
 			          for (int i=0; i<m_result.size();i++)
 			          {
 			        	  IRecord record = m_result.get(i);
@@ -112,33 +110,27 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 			        	   * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in 
 			        	   * einen Calendar umwandeln; Problem ist, dass der XMLGregorianCalendar nicht 
 			        	   * Comparable implementiert
-			        	   * 
-			        	   * Außerdem müssen Numbers in ComparableNumbers umgewandelt werden, damit sie mit der 
-			        	   * ComparableNumberAxis verwendet werden können 
 			        	   */
 			        	  T_domain domainValue=null;
 			        	  Object domainValueObj=record.getValue(m_domainComponent);
 			        	  if (domainValueObj instanceof XMLGregorianCalendar)
 			        		  domainValue= (T_domain) ((XMLGregorianCalendar) domainValueObj).toGregorianCalendar();
-			        	  else if (domainValueObj instanceof Number)
-			        		  domainValue= (T_domain) (new ComparableNumber((Number) domainValueObj));
 			        	  else
 			        		  domainValue= (T_domain) domainValueObj;
-			        	  
-			        	  
 			        	  
 			        	  T_target targetValue=null;
 			        	  Object targetValueObj=record.getValue(m_targetComponent);
 			        	  if (targetValueObj instanceof XMLGregorianCalendar)
 			        		  targetValue= (T_target) ((XMLGregorianCalendar) targetValueObj).toGregorianCalendar();
-			        	  else if (targetValueObj instanceof Number)
-			        		  targetValue= (T_target) (new ComparableNumber((Number) targetValueObj));
 			        	  else
 			        		  targetValue= (T_target) targetValueObj;
 			        		  
-			        	  m_domainValues.add(domainValue);
-			        	  m_targetValues.add(targetValue);
+			        	  domainValues.add(domainValue);
+			        	  targetValues.add(targetValue);
 			          }
+			          setDomainValues(domainValues);
+			          setTargetValues(targetValues);
+			          
 		          }
 		      }
 		      catch( MalformedURLException e )
@@ -157,23 +149,35 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
 
 	public IDataRange<T_domain> getDomainRange() {
-		return new ComparableDataRange<T_domain>(m_domainValues);
+		return new ComparableDataRange<T_domain>(( T_domain[] )m_domainValues.toArray());
 	}
 
 
 	public IDataRange<T_target> getTargetRange() {
-		return new ComparableDataRange<T_target>(m_targetValues);
+		return new ComparableDataRange<T_target>((T_target[]) m_targetValues.toArray());
 	}
 
-	public List getDomainValues()
+	public T_domain[] getDomainValues()
 	{
-		return m_domainValues;
+		open();
+		return (T_domain[]) m_domainValues.toArray();
 	}
 	
 	
-	public List getTargetValues()
+	public T_target[] getTargetValues()
 	{
-		return m_targetValues;
+		open();
+		return (T_target[]) m_targetValues.toArray();
+	}
+	
+	public void setDomainValues(List<T_domain> domainValues)
+	{
+		m_domainValues=domainValues;
+	}
+
+	public void setTargetValues(List<T_target> targetValues)
+	{
+		m_targetValues=targetValues;
 	}
 	
 	public TupleResult getTupleResult()

@@ -1,7 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
 
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
+import org.kalypso.chart.framework.model.data.IStringParser;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 
@@ -15,9 +15,9 @@ public class AxisPositionParser implements IStringParser<POSITION>
   private String m_formatHint="one of 'BOTTOM', 'LEFT', 'RIGHT', 'TOP'";
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
    */
-  public POSITION createValueFromString( String value )
+  public POSITION dataFromString( String value )
   {
     POSITION pos = POSITION.BOTTOM;
     if( value.equals( "TOP" )  )
@@ -32,7 +32,7 @@ public class AxisPositionParser implements IStringParser<POSITION>
   }
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#getFormatHint()
+   * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
   public String getFormatHint( )
   {

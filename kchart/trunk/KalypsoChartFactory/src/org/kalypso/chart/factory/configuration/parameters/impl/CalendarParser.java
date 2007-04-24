@@ -5,9 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.kalypso.chart.factory.configuration.exception.MalformedValueException;
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IStringParser;
 
 
 
@@ -32,9 +32,9 @@ public class CalendarParser implements IStringParser<Calendar>
   }
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
    */
-  public Calendar createValueFromString( String value ) throws MalformedValueException
+  public Calendar dataFromString( String value ) throws MalformedValueException
   {
     //erst mal versuchen, ein korrektes Datum zu parsen
     Calendar c=Calendar.getInstance();

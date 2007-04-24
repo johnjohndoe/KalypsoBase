@@ -11,11 +11,11 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 {
 
 	private boolean m_isOpen=false;
-	protected List<T_domain> m_domainIntervalStartValues=new ArrayList<T_domain>();
-	protected List<T_domain> m_domainIntervalEndValues=new ArrayList<T_domain>();
-	protected List<T_domain> m_domainValues=new ArrayList<T_domain>();
-	protected List<T_target> m_targetValues=new ArrayList<T_target>();
-	protected File m_file;
+	private List<T_domain> m_domainIntervalStartValues=new ArrayList<T_domain>();
+	private List<T_domain> m_domainIntervalEndValues=new ArrayList<T_domain>();
+	private List<T_domain> m_domainValues=new ArrayList<T_domain>();
+	private List<T_target> m_targetValues=new ArrayList<T_target>();
+	private File m_file;
 
 	public boolean isOpen()
 	{
@@ -34,29 +34,53 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 	
 	public abstract boolean openData();
 	
-	public List<T_domain> getDomainDataIntervalStart()
+	public T_domain[] getDomainDataIntervalStart()
 	{
-		return m_domainIntervalStartValues;
+		return (T_domain[]) m_domainIntervalStartValues.toArray();
 	}
 	
-	public List<T_domain> getDomainDataIntervalEnd()
+	public T_domain[] getDomainDataIntervalEnd()
 	{
-		return m_domainIntervalEndValues;
+		return (T_domain[]) m_domainIntervalEndValues.toArray();
 	}
 
-	public List<T_domain> getDomainValues()
+	public T_domain[] getDomainValues()
 	{
-		return m_domainValues;
+		return (T_domain[]) m_domainValues.toArray();
 	}
 	
-	public List<T_target> getTargetValues()
+	public T_target[] getTargetValues()
 	{
-		return m_targetValues;
+		return (T_target[]) m_targetValues.toArray();
 	}
 	
 	public void setInputFile(File f)
 	{
 		m_file=f;
+	}
+	
+	public File getInputFile()
+	{
+		return m_file;
+	}
+	
+	
+	protected void setDomainValues(List<T_domain> domainValues)
+	{
+		m_domainValues=domainValues;
+	}
+	
+	protected void setTargetValues(List<T_target> targetValues)
+	{
+		m_targetValues=targetValues;
+	}
+	protected void setDomainIntervalEndValues(List<T_domain> domainIntervalEndValues)
+	{
+		m_domainIntervalStartValues=domainIntervalEndValues;
+	}
+	protected void setDomainIntervalStartValues(List<T_domain> domainIntervalStartValues)
+	{
+		m_domainIntervalEndValues=domainIntervalStartValues;
 	}
 	
 	public void close()

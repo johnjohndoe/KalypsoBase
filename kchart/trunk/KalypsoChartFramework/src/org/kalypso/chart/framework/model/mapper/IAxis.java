@@ -2,6 +2,7 @@ package org.kalypso.chart.framework.model.mapper;
 
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.IStringDataConverter;
 
 /**
  * @author burtscher
@@ -58,9 +59,9 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
   public void setDataRange(IDataRange<T_logical> dataRange);
   
   /**
-   * parses a String and returns a value the axis can understand
-   * @throws MalformedValueException if the String cannot be parsed
+   * returns a data converter which may be used to convert strings to data which can directly 
+   * be used by the axis (and vice versa)
    */
-  public T_logical parseStringValue(String value) throws MalformedValueException;
+  public IStringDataConverter<T_logical> getStringDataConverter();
 
 }

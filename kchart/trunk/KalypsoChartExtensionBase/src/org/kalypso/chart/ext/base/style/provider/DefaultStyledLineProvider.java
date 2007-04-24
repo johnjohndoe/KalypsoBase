@@ -13,10 +13,10 @@ public class DefaultStyledLineProvider extends AbstractStyledElementProvider{
 
 	public IStyledElement getStyledElement()
 	{
-	    int alpha = m_pc.getParsedParameterValue( "alpha", "255", new DoubleParser()).intValue() ;
-	    int lineWidth = m_pc.getParsedParameterValue( "lineWidth", "1", new DoubleParser()).intValue() ;
-	    RGB lineColor = m_pc.getParsedParameterValue( "lineColor", "#000000",  new RGBParser());
-	    int lineStyle = m_pc.getParsedParameterValue( "lineStyle", "SOLID", new LineStyleParser());
+	    int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser()).intValue() ;
+	    int lineWidth = getParameterContainer().getParsedParameterValue( "lineWidth", "1", new DoubleParser()).intValue() ;
+	    RGB lineColor = getParameterContainer().getParsedParameterValue( "lineColor", "#000000",  new RGBParser());
+	    int lineStyle = getParameterContainer().getParsedParameterValue( "lineStyle", "SOLID", new LineStyleParser());
 	    StyledLine sl = new StyledLine( lineWidth, lineColor, lineStyle, alpha );
 	    return sl;
 	}

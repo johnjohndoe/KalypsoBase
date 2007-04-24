@@ -8,12 +8,24 @@ public abstract class AbstractStyledElementProvider implements
 		IStyledElementProvider {
 
 
-	protected StyleType m_st;
-	protected IParameterContainer m_pc;
+	private StyleType m_st;
+	private IParameterContainer m_pc;
 
 	public void init(StyleType st) {
 		m_st=st;
 		m_pc=ChartFactoryUtilities.createXmlbeansParameterContainer(m_st.getId(), m_st.getProvider());
 	}
+	
+	public StyleType getStyleType()
+	{
+		return m_st;
+	}
+	
+	public IParameterContainer getParameterContainer()
+	{
+		return m_pc;
+	}
+	
+	
 
 }

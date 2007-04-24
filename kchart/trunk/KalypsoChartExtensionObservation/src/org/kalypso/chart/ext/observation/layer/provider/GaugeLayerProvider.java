@@ -3,8 +3,6 @@ package org.kalypso.chart.ext.observation.layer.provider;
 import java.net.URL;
 import java.util.Calendar;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
@@ -18,21 +16,21 @@ public class GaugeLayerProvider extends AbstractLayerProvider {
 		
 		IChartLayer icl=null;
 		
-		String href=m_pc.getParameterValue("href", null);
+		String href=getParameterContainer().getParameterValue("href", null);
 
-		String observationId = m_pc.getParameterValue("observationId", null);
-		String domainComponentName=m_pc.getParameterValue("domainComponent", null);
-		String targetComponentName=m_pc.getParameterValue("targetComponent", null);
+		String observationId = getParameterContainer().getParameterValue("observationId", null);
+		String domainComponentName=getParameterContainer().getParameterValue("domainComponent", null);
+		String targetComponentName=getParameterContainer().getParameterValue("targetComponent", null);
 		
 		TupleResultDomainValueData<Calendar, Double> data=null;
 		if (href!=null && observationId!=null && domainComponentName!=null && targetComponentName!=null)
 			data=new TupleResultDomainValueData<Calendar, Double>(context, href, observationId, domainComponentName, targetComponentName);
 		
 		
-		String domainAxisId=m_lt.getMapper().getDomainAxisRef().getRef();
-		String targetAxisId=m_lt.getMapper().getTargetAxisRef().getRef();
-		IAxis domainAxis=m_model.getMapperRegistry().getAxis(domainAxisId);
-		IAxis targetAxis=m_model.getMapperRegistry().getAxis(targetAxisId);
+		String domainAxisId=getLayerType().getMapper().getDomainAxisRef().getRef();
+		String targetAxisId=getLayerType().getMapper().getTargetAxisRef().getRef();
+		IAxis domainAxis=getChartModel().getMapperRegistry().getAxis(domainAxisId);
+		IAxis targetAxis=getChartModel().getMapperRegistry().getAxis(targetAxisId);
 		
 		
 		if (data!=null)

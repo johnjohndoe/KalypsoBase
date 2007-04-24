@@ -21,11 +21,11 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 	
 	private TupleResultDomainValueData m_data;
 
-	public TupleResultLineLayer(TupleResultDomainValueData data, IAxis domainAxis, IAxis targetAxis)
+	public TupleResultLineLayer(TupleResultDomainValueData data, IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis)
 	{
+		super(domainAxis, targetAxis);
 		m_data=data;
-		m_domainAxis=domainAxis;
-		m_targetAxis=targetAxis;
+
 	}
 	
 	
@@ -40,30 +40,29 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 		List<Point> path=new ArrayList<Point>();
 		m_data.open();
 		TupleResult result = m_data.getTupleResult();
-		List xValues=null;
-		List yValues=null;
+		Object[] xValues=null;
+		Object[] yValues=null;
 		IAxis xAxis=null;
 		IAxis yAxis=null;
-		if (m_domainAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+		if (getDomainAxis().getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
 		{
 			xValues= m_data.getDomainValues();
 			yValues= m_data.getTargetValues();
-			xAxis=m_domainAxis;
-			yAxis=m_targetAxis;
+			xAxis=getDomainAxis();
+			yAxis=getTargetAxis();
 		}
 		else
 		{
 			yValues= m_data.getDomainValues();
 			xValues= m_data.getTargetValues();
-			yAxis=m_domainAxis;
-			xAxis=m_targetAxis;
+			yAxis=getDomainAxis();
+			xAxis=getTargetAxis();
 		}
-		if (xValues.size()>0 && yValues.size()>0)
+		if (xValues.length>0 && yValues.length>0)
 		for (int i=0; i<result.size();i++)
 		{
-			int x=xAxis.logicalToScreen((T_domain) xValues.get(i));
-			System.out.println(yValues.get(i).getClass());
-			int y=yAxis.logicalToScreen((T_target) yValues.get(i));
+			int x=xAxis.logicalToScreen((T_domain) xValues[i]);
+			int y=yAxis.logicalToScreen((T_target) yValues[i]);
 			path.add(new Point(x, y));
 		}
 		se.setPath(path);

@@ -6,7 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
@@ -17,7 +21,6 @@ import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.util.math.ComparableNumber;
 
 
 /**
@@ -33,27 +36,34 @@ public class UVFLayerProvider extends AbstractLayerProvider
 	 */
 	public IChartLayer getLayer(URL context) throws LayerProviderException
 	{
-		IChartLayer<Calendar, ComparableNumber> icl = null;
+		IChartLayer<Calendar, Number> icl = null;
 
 
-		String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
-		String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
+		String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
+		String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-		IAxis<Calendar> domAxis = m_model.getMapperRegistry().getAxis(domainAxisId);
-		IAxis<ComparableNumber> valAxis = m_model.getMapperRegistry().getAxis(targetAxisId);
+		IAxis<Calendar> domAxis = getChartModel().getMapperRegistry().getAxis(domainAxisId);
+		IAxis<Number> valAxis = getChartModel().getMapperRegistry().getAxis(targetAxisId);
 
-		AbstractDomainValueData<Calendar, ComparableNumber> data = new AbstractDomainValueData<Calendar, ComparableNumber>()
+		AbstractDomainValueData<Calendar, Number> data = new AbstractDomainValueData<Calendar, Number>()
 		{
+
+			private SimpleDateFormat m_format;
 
 			public boolean openData()
 			{
+				setLoading(true);
 				try
 				{
-					FileReader fr = new FileReader(m_file);
+					FileReader fr = new FileReader(getInputFile());
 
 					BufferedReader br = new BufferedReader(fr);
 					String s = "";
 					int count = 0;
+					List<Calendar> domainValues=new ArrayList<Calendar>();
+					List<Number> targetValues=new ArrayList<Number>();
+					m_format = new SimpleDateFormat("yyMMddHHmm");
+					
 					while ((s = br.readLine()) != null)
 					{
 						if (count > 4)
@@ -63,41 +73,34 @@ public class UVFLayerProvider extends AbstractLayerProvider
 							if (cols.length >= 2)
 							{
 								String ys = cols[0];
-								//Datum zerpflücken (Bsp: 0510190530)
-								//TODO: Auslagern in Toolbox-ähnliche Klasse
-								int year = 2000 + Integer.parseInt(ys
-										.substring(0, 2));
-								int month = Integer
-										.parseInt(ys.substring(2, 4)) - 1;
-								int day = Integer.parseInt(ys.substring(4, 6));
-								int hour = Integer.parseInt(ys.substring(6, 8));
-								int minute = Integer.parseInt(ys.substring(8,
-										10));
-								Calendar cal = Calendar.getInstance();
-
-								cal.set(Calendar.YEAR, year);
-								cal.set(Calendar.MONTH, month);
-								cal.set(Calendar.DAY_OF_MONTH, day);
-								cal.set(Calendar.HOUR_OF_DAY, hour);
-								cal.set(Calendar.MINUTE, minute);
-								cal.set(Calendar.SECOND, 0);
-								cal.set(Calendar.MILLISECOND, 0);
+								
+								Date date = m_format.parse(ys);
+								Calendar cal=Calendar.getInstance();
+								cal.setTime(date);
+								
 								//wichtig, damit die Zeiten richtig sind
-								cal.setTimeZone(TimeZone
-										.getTimeZone("GMT+0000"));
-								m_domainValues.add(cal);
-								m_targetValues.add(new ComparableNumber(Double.parseDouble(cols[1])));
+								cal.setTimeZone(TimeZone.getTimeZone("GMT+0000"));
+								domainValues.add(cal);
+								targetValues.add(Double.parseDouble(cols[1]));
 							}
 						}
 						count++;
 					}
-				} catch (FileNotFoundException e)
+					setDomainValues(domainValues);
+					setTargetValues(targetValues);
+				} 
+				catch (FileNotFoundException e)
 				{
 					e.printStackTrace();
 				} catch (IOException e)
 				{
 					e.printStackTrace();
 				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				setLoading(false);
 				return true;
 
 			}
@@ -106,15 +109,15 @@ public class UVFLayerProvider extends AbstractLayerProvider
 				return new ComparableDataRange<Calendar>(getDomainValues());
 			}
 
-			public IDataRange<ComparableNumber> getTargetRange() {
-				return new ComparableDataRange<ComparableNumber>(getTargetValues());
+			public IDataRange<Number> getTargetRange() {
+				return new ComparableDataRange<Number>(getTargetValues());
 			}
 
 		};
-		data.setInputFile(new File(m_pc.getParameterValue("url", m_lt.getId())));
+		data.setInputFile(new File(getParameterContainer().getParameterValue("url", getLayerType().getId())));
 
-		icl = new DefaultLineLayer<Calendar, ComparableNumber>(data, domAxis, valAxis);
-		icl.setTitle(m_lt.getTitle());
+		icl = new DefaultLineLayer<Calendar, Number>(data, domAxis, valAxis);
+		icl.setTitle(getLayerType().getTitle());
 
 		return icl;
 	}

@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.IStringDataConverter;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
@@ -23,7 +24,7 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  * Concrete IAxis implementation - to be used for calendar data from XML documents
  *
  */
-public class CalendarAxis extends AbstractAxis<Calendar>
+public class CalendarAxis extends AbstractAxis<Calendar> implements IStringDataConverter<Calendar>
 {
   public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
   {
@@ -69,11 +70,11 @@ public class CalendarAxis extends AbstractAxis<Calendar>
    */
   public int logicalToScreen( Calendar value )
   {
-    if( m_registry == null )
+    if( getRegistry() == null )
       return 0;
 
 
-    final IAxisComponent comp = m_registry.getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -87,10 +88,10 @@ public class CalendarAxis extends AbstractAxis<Calendar>
    */
   public Calendar screenToLogical( final int value )
   {
-    if( m_registry == null )
+    if( getRegistry() == null )
       return null;
 
-    final IAxisComponent comp = m_registry.getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
@@ -135,7 +136,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     Calendar endCal = Calendar.getInstance();
     endCal.setTimeInMillis( end );
 
-    final IAxisComponent comp = m_registry.getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
@@ -152,7 +153,13 @@ public int zeroToScreen()
 	return 0;
 }
 
-public Calendar parseStringValue(String value) throws MalformedValueException {
+
+public String stringFromData(Calendar value) {
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	return sdf.format(value.getTime());
+}
+
+public Calendar dataFromString(String value) throws MalformedValueException {
 	SimpleDateFormat sdf;
 	Date date;
 	Calendar cal=Calendar.getInstance();
@@ -182,6 +189,14 @@ public Calendar parseStringValue(String value) throws MalformedValueException {
     cal.set( Calendar.DST_OFFSET, 0);
     cal.set( Calendar.ZONE_OFFSET, 0);
     return cal;
+}
+
+public String getFormatHint() {
+	return "yyyy-MM-dd (HH:mm)";
+}
+
+public IStringDataConverter<Calendar> getStringDataConverter() {
+	return this;
 }
 
 

@@ -3,8 +3,8 @@ package org.kalypso.chart.factory.configuration.parameters.impl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IStringParser;
 
 
 /**
@@ -17,9 +17,9 @@ public class FontDataParser implements IStringParser<FontData>
   String m_defaultFontName="Times New Roman";
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
    */
-  public FontData createValueFromString( String value )
+  public FontData dataFromString( String value )
   {
     FontData fd=null;
     try
@@ -36,7 +36,7 @@ public class FontDataParser implements IStringParser<FontData>
   }
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#getFormatHint()
+   * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
   public String getFormatHint( )
   {

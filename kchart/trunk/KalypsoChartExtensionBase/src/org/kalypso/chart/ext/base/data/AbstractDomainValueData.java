@@ -11,22 +11,40 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 {
 
 	private boolean m_isOpen=false;
-	protected List<T_domain> m_domainValues=new ArrayList<T_domain>();
-	protected List<T_target> m_targetValues=new ArrayList<T_target>();
-	protected File m_file;
+	private boolean m_isLoading=false;
+	private List<T_domain> m_domainValues=new ArrayList<T_domain>();
+	private List<T_target> m_targetValues=new ArrayList<T_target>();
+	private File m_file;
 
 	public boolean isOpen()
 	{
 		return m_isOpen;
 	}
 
-	public void open()
+	public boolean isLoading()
+	{
+		return m_isLoading;
+	}
+	
+	public void setLoading(boolean isLoading)
+	{
+		m_isLoading=isLoading;
+	}
+
+	public synchronized void open()
 	{
 		//nur öffnen, wenn nicht schon offen
-		if (!m_isOpen)
+		if (!m_isOpen )
 		{
-			System.out.println("opening Data: "+m_file.getAbsolutePath());
-			m_isOpen=openData();
+			if (m_isLoading)
+			{
+				//nix machen -> wird gerade geöffnet
+			}
+			else
+			{
+				System.out.println("opening Data: "+m_file.getAbsolutePath());
+				m_isOpen=openData();
+			}
 		}
 	}
 	
@@ -37,6 +55,11 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 	{
 		m_file=f;
 	}
+
+	public File getInputFile()
+	{
+		return m_file;
+	}
 	
 	public void close()
 	{
@@ -45,16 +68,28 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 		m_isOpen=false;
 	}
 	
-	public List<T_domain> getDomainValues()
+	public T_domain[] getDomainValues()
 	{
 		open();
-		return m_domainValues;
+		T_domain[] toArray = (T_domain[]) m_domainValues.toArray();
+		return toArray;
 	}
 	
-	public List<T_target> getTargetValues()
+	protected void setDomainValues(List<T_domain> values)
+	{
+		m_domainValues=values;
+	}
+	
+	protected void setTargetValues(List<T_target> values)
+	{
+		m_targetValues=values;
+	}
+	
+	public T_target[] getTargetValues()
 	{
 		open();
-		return m_targetValues;
+		T_target[] toArray = (T_target[]) m_targetValues.toArray();
+		return toArray;
 	}
 
 }

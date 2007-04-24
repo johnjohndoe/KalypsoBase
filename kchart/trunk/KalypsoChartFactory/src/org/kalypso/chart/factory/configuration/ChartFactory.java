@@ -44,7 +44,7 @@ import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 
 /**
  * @author alibu
- * Creates a chart object from a configration
+ * Creates a chart object from a configuration
  */
 public class ChartFactory
 {
@@ -200,9 +200,8 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  private static void addAxis( final IMapperRegistry ar, final IReferenceResolver rr, final AxisType axisType )
+  public static void addAxis( final IMapperRegistry ar, final IReferenceResolver rr, final AxisType axisType )
   {
-	  
     if( axisType != null )
     {
       final String apId = axisType.getProvider().getEpid();

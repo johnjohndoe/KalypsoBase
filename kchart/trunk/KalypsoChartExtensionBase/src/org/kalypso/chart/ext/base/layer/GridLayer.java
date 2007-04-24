@@ -38,7 +38,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  *
  *
  */
-public class GridLayer<T_domain, T_value> extends AbstractChartLayer
+public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
 {
 
   public enum GridOrientation
@@ -50,10 +50,9 @@ public class GridLayer<T_domain, T_value> extends AbstractChartLayer
   
   private GridOrientation m_orientation;
 
-  public GridLayer( IAxis<T_domain> domAxis, IAxis<T_value> valAxis, GridOrientation orientation )
+  public GridLayer( IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis, GridOrientation orientation )
   {
-	  m_domainAxis=domAxis;
-	  m_targetAxis=valAxis;
+	  super(domainAxis, targetAxis);
 	  m_orientation=orientation;
   }
 
@@ -167,7 +166,7 @@ public void paint( final GCWrapper gc )
     GC gc = new GC( img );
     GCWrapper gcw = new GCWrapper( gc );
 
-    IStyledElement line = m_style.getElement( SE_TYPE.LINE, 0 );
+    IStyledElement line = getStyle().getElement( SE_TYPE.LINE, 0 );
 
     if( line != null )
     {

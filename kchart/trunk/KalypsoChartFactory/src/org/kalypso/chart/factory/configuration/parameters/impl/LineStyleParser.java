@@ -1,7 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
 import org.eclipse.swt.SWT;
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
+import org.kalypso.chart.framework.model.data.IStringParser;
 
 
 /**
@@ -12,9 +12,9 @@ public class LineStyleParser implements IStringParser<Integer>
 {
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#createValueFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
    */
-  public Integer createValueFromString( String value ) 
+  public Integer dataFromString( String value ) 
   {
     if( value.compareTo( "DASH" )==0)
       return SWT.LINE_DASH;
@@ -29,7 +29,7 @@ public class LineStyleParser implements IStringParser<Integer>
   }
 
   /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IStringParser#getFormatHint()
+   * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
    */
   public String getFormatHint( )
   {

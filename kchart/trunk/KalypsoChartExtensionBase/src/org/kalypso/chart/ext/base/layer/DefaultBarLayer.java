@@ -1,7 +1,6 @@
 package org.kalypso.chart.ext.base.layer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -22,7 +21,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author alibu
  *
  */
-public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer
+public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
 {
 
   private AbstractDomainIntervalValueData<T_domain, T_target> m_dataContainer;
@@ -30,8 +29,7 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer
 
 public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> dataContainer, IAxis<T_domain> domAxis, IAxis<T_target> valAxis)
   {
-	m_domainAxis=domAxis;
-    m_targetAxis=valAxis;
+	super(domAxis, valAxis);
     m_dataContainer=dataContainer;
   }
 
@@ -42,7 +40,7 @@ public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> data
   {
 	  GC gc=new GC(img);
 	  GCWrapper gcw=new GCWrapper(gc);
-	  IStyledElement element = m_style.getElement(SE_TYPE.POLYGON, 1);
+	  IStyledElement element = getStyle().getElement(SE_TYPE.POLYGON, 1);
 	  
 	  ArrayList<Point> path=new ArrayList<Point>();
 	  path.add(new Point(0,height));
@@ -100,34 +98,36 @@ public void paint( GCWrapper gc)
 	  if (m_dataContainer!=null)
 	  {
 		  m_dataContainer.open();
-		  List<T_domain> m_domainStartComponent = m_dataContainer.getDomainDataIntervalStart();
-		  List<T_domain> m_domainEndComponent = m_dataContainer.getDomainDataIntervalEnd();
-		  List<T_target> m_targetComponent = m_dataContainer.getTargetValues();
+		  T_domain[] domainStartComponent = m_dataContainer.getDomainDataIntervalStart();
+		  T_domain[] domainEndComponent = m_dataContainer.getDomainDataIntervalEnd();
+		  T_target[] targetComponent = m_dataContainer.getTargetValues();
 		  
 	      ArrayList<Point> path=new ArrayList<Point>();
-	      IStyledElement poly=m_style.getElement( SE_TYPE.POLYGON, 1);
+	      IStyledElement poly=getStyle().getElement( SE_TYPE.POLYGON, 1);
 	      
-	      for(int i=0;i<m_domainStartComponent.size();i++)
+	      for(int i=0;i<domainStartComponent.length;i++)
 	      {
 	        
-	    	T_domain startValue = m_domainStartComponent.get(i);
-	    	T_domain endValue = m_domainEndComponent.get(i);
-	    	T_target targetValue = m_targetComponent.get(i);
+	    	T_domain startValue = domainStartComponent[i];
+	    	T_domain endValue = domainEndComponent[i];
+	    	T_target targetValue = targetComponent[i];
 	    	
-	
-	        if (m_domainAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL )
+	    	IAxis<T_domain> domainAxis = getDomainAxis();
+	    	IAxis<T_target> targetAxis = getTargetAxis();
+	    	
+	        if (domainAxis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL )
 	        {
-	          path.add( new Point( m_domainAxis.logicalToScreen( startValue), m_targetAxis.zeroToScreen() ) );
-	          path.add( new Point( m_domainAxis.logicalToScreen( startValue), m_targetAxis.logicalToScreen(  targetValue ) ) );
-	          path.add( new Point( m_domainAxis.logicalToScreen( endValue), m_targetAxis.logicalToScreen( targetValue ) ) );
-	          path.add( new Point( m_domainAxis.logicalToScreen( endValue), m_targetAxis.zeroToScreen() ) );
+	          path.add( new Point( domainAxis.logicalToScreen( startValue), targetAxis.zeroToScreen() ) );
+	          path.add( new Point( domainAxis.logicalToScreen( startValue), targetAxis.logicalToScreen(  targetValue ) ) );
+	          path.add( new Point( domainAxis.logicalToScreen( endValue), targetAxis.logicalToScreen( targetValue ) ) );
+	          path.add( new Point( domainAxis.logicalToScreen( endValue), targetAxis.zeroToScreen() ) );
 	        }
 	        else
 	        {
-	          path.add( new Point( m_targetAxis.zeroToScreen(  ), m_domainAxis.logicalToScreen( startValue) ) );
-	          path.add( new Point( m_targetAxis.logicalToScreen(targetValue ), m_domainAxis.logicalToScreen( startValue) ) );
-	          path.add( new Point( m_targetAxis.logicalToScreen( targetValue ),  m_domainAxis.logicalToScreen( endValue) ) );
-	          path.add( new Point( m_targetAxis.zeroToScreen( ), m_domainAxis.logicalToScreen( endValue) ) );
+	          path.add( new Point( targetAxis.zeroToScreen(  ), domainAxis.logicalToScreen( startValue) ) );
+	          path.add( new Point( targetAxis.logicalToScreen(targetValue ), domainAxis.logicalToScreen( startValue) ) );
+	          path.add( new Point( targetAxis.logicalToScreen( targetValue ),  domainAxis.logicalToScreen( endValue) ) );
+	          path.add( new Point( targetAxis.zeroToScreen( ), domainAxis.logicalToScreen( endValue) ) );
 	        }
 	        poly.setPath( path );
 	        poly.paint( gc);

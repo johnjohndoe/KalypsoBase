@@ -22,7 +22,7 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public abstract class AbstractAxis<T> implements IAxis<T>
 {
-  protected IMapperRegistry m_registry = null;
+  private IMapperRegistry m_registry = null;
 
   private final String m_id;
 
@@ -36,7 +36,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
   private final Comparator<T> m_dataComparator;
 
-  protected IDataRange<T> m_dataRange;
+  private IDataRange<T> m_dataRange;
 
   private final Class< ? > m_dataClass;
 

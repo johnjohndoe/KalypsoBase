@@ -3,10 +3,10 @@ package org.kalypso.chart.factory.configuration.parameters.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.chart.factory.configuration.exception.MalformedValueException;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.factory.configuration.parameters.IStringParser;
+import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IStringParser;
 import org.ksp.chart.factory.ParameterType;
 import org.ksp.chart.factory.ParametersType;
 
@@ -76,7 +76,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
     {
 	    try
 	    {
-	      value = parser.createValueFromString( strValue );
+	      value = parser.dataFromString( strValue );
 	    }
 	    catch( MalformedValueException e )
 	    {

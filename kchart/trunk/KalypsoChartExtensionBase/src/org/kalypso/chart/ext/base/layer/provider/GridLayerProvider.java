@@ -37,14 +37,14 @@ public class GridLayerProvider extends AbstractLayerProvider
       try
       {
 
-          String domainAxisId = m_lt.getMapper().getDomainAxisRef().getRef();
-          String targetAxisId = m_lt.getMapper().getTargetAxisRef().getRef();
+          String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
+          String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-          IAxis domAxis = m_model.getMapperRegistry().getAxis( domainAxisId );
-          IAxis valAxis = m_model.getMapperRegistry().getAxis( targetAxisId );
+          IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+          IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
           GridOrientation go;
-          String orientation=m_pc.getParameterValue( "orientation", "BOTH" );
+          String orientation=getParameterContainer().getParameterValue( "orientation", "BOTH" );
 
           if (orientation.compareTo( "VERTICAL" )==0)
             go=GridOrientation.VERTICAL;
