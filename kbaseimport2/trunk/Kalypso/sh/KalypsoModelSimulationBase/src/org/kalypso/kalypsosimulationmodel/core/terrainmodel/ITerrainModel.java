@@ -42,15 +42,15 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * This is the root element of the terain-model.
  * 
  * @author Gernot Belger
  */
-public interface ITerrainModel extends IFeatureWrapper2
+public interface ITerrainModel extends IModel
 {
   public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
 
