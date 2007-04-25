@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -93,7 +94,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#getHistogramm()
    */
-  public Map<String, Double> getHistogramm( )
+  public Map<IRoughnessCls, Double> getHistogramm( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -102,7 +103,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#mostSpreadRoughness()
    */
-  public String[] mostSpreadRoughness( )
+  public IRoughnessCls[] mostSpreadRoughness( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -111,7 +112,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#mostSpreadRoughness(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec.ERoughnessSelectionMechanism)
    */
-  public String mostSpreadRoughness( ERoughnessSelectionMechanism rsm )
+  public IRoughnessCls mostSpreadRoughness( ERoughnessSelectionMechanism rsm )
   {
     // TODO Auto-generated method stub
     return null;
@@ -120,7 +121,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#possibleRoughnesses()
    */
-  public String[] possibleRoughnesses( )
+  public IRoughnessCls[] possibleRoughnesses( )
   {
     // TODO Auto-generated method stub
     return null;
