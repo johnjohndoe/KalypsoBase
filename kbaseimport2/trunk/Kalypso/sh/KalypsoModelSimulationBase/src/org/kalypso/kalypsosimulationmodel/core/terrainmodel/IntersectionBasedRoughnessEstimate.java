@@ -50,8 +50,11 @@ import java.util.Map.Entry;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Implementation of roughness estimate based on the
@@ -65,42 +68,55 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    * List of roughness polygones that contributes to this estimate
    */
   final private List<IRoughnessPolygon> contributingRP;
+  
   final private GM_Surface estimateZone; 
+  
   final private Map<IRoughnessCls, Double> histogram = 
                         new HashMap<IRoughnessCls, Double>();
   
   public IntersectionBasedRoughnessEstimate(
                     IRoughnessPolygonCollection roughnessPolygonCollection, 
-                    GM_Surface estimateZone )
+                    GM_Surface estimateZone ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" );
     Assert.throwIAEOnNullParam( estimateZone, "estimateZone" );
     this.estimateZone = estimateZone;
     contributingRP = 
       roughnessPolygonCollection.selectRoughnessPolygons( estimateZone );
-    
+    makeHistrogram();
   }
   
-  private final void makeHistrogram( )
+  private final void makeHistrogram( ) throws GM_Exception
   {
+    Geometry jtsEstimateZone = JTSAdapter.export( estimateZone );
+    final double areaOfEstimateZone = jtsEstimateZone.getArea();
     for( IRoughnessPolygon roughnessPolygon : contributingRP )
     {
-      GM_Object areaGmObject = estimateZone.intersection( roughnessPolygon.getSurface() );
-      if( areaGmObject == null )
+      
+      final Geometry rpolygone = JTSAdapter.export( roughnessPolygon.getSurface() );
+      final Geometry jtsIntersect = jtsEstimateZone.intersection( rpolygone );
+      if(jtsIntersect != null )
       {
-        incrementHistogramValue( 
-            roughnessPolygon.getRoughnessCls() , 
-            areaGmObject);
+        IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
+        Double currentArea = histogram.get(  roughnessCls );
+        double areaToAdd = jtsIntersect.getArea( );
+        if( areaToAdd == 0 )
+        {
+          //skip
+        }
+        else if( currentArea == null )
+        {
+          histogram.put( roughnessCls, areaToAdd/areaOfEstimateZone );
+        }
+        else
+        {
+          histogram.put( roughnessCls, currentArea + areaToAdd/areaOfEstimateZone );
+        }
       }
+
     }
   }
   
-  private final void incrementHistogramValue( 
-                            IRoughnessCls roughnessCls, 
-                            GM_Object areaGmObject )
-  {
-    
-  }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#getAreaRatio()
@@ -139,8 +155,14 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    */
   public IRoughnessCls[] mostSpreadRoughness( )
   {
+    return mostSpreadRoughness( histogram );
+  }
+  
+  public static final IRoughnessCls[] mostSpreadRoughness( 
+                                        Map <IRoughnessCls, Double> histogram)
+  {
     List<IRoughnessCls> mostSpreads =  new ArrayList<IRoughnessCls>();
-    Double max = Double.MAX_VALUE;
+    Double max = Double.MIN_VALUE;
     Set<Entry<IRoughnessCls, Double>> entries = histogram.entrySet();
     for( Entry<IRoughnessCls, Double> entry : entries )
     {
@@ -187,4 +209,21 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
     
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuilder strBuilder = new StringBuilder( 256 );
+    strBuilder.append("IntersectionBasedRoughnessEstimate[\n");
+    strBuilder.append("\tcontributingRP:\n\t\t");
+    strBuilder.append(contributingRP);
+    strBuilder.append("\testimateZone:\n\t\t");
+    strBuilder.append(estimateZone);
+    strBuilder.append("\thistogram:\n\t\t");
+    strBuilder.append(histogram);
+    strBuilder.append("\n]");
+    return strBuilder.toString();
+  }
 }
