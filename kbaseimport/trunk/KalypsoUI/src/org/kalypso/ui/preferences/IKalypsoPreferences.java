@@ -60,8 +60,6 @@ public interface IKalypsoPreferences
 
   public static final String HTTP_PROXY_PASS = "kalypso.http.proxy.pass";
 
-  public static final String GLOBAL_CRS = "kalypso.global.crs";
-
   public static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone";
 
 }
