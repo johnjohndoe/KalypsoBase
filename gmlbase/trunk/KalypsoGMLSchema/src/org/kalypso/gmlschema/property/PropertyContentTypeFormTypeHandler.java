@@ -76,38 +76,40 @@ public class PropertyContentTypeFormTypeHandler implements IPropertyContentType
     {
       m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject, m_gmlVersion );
       m_valueRestriction = new IRestriction[0];
-      m_typeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
+      m_typeHandler = typeHandlerForQName( registry, m_valueQName );
     }
     else if( typeObject instanceof SimpleType )
     {
       final SimpleType simpleType = (SimpleType) typeObject;
       m_valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, simpleType, m_gmlVersion );
-      
-      final IMarshallingTypeHandler baseTypeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
-      
-      if( m_valueQName instanceof ListQName )
-      {
-        m_typeHandler = new ListSimpleTypeHandler( baseTypeHandler );
-      }
-      else if( m_valueQName instanceof MixedQName )
-      {
-        final MixedQName mixedQName = (MixedQName) m_valueQName;
-        final QName[] mixedModel = mixedQName.getMixedModel();
-        // TODO: use MixedSimpleTypeHandler for that
-        m_typeHandler = baseTypeHandler;
-      }
-      else
-        m_typeHandler = registry.getTypeHandlerForTypeName( m_valueQName );
-      
+      m_typeHandler = typeHandlerForQName( registry, m_valueQName );
+
       if( simpleType.isSetRestriction() )
         m_valueRestriction = ContentRestrictionFactory.createRestrictions( simpleType.getRestriction() );
       else
         m_valueRestriction = new IRestriction[0];
-
     }
     else
       throw new UnsupportedOperationException();
 
+  }
+
+  private static IMarshallingTypeHandler typeHandlerForQName( final ITypeRegistry<IMarshallingTypeHandler> registry, final QName qname )
+  {
+    final IMarshallingTypeHandler baseTypeHandler = registry.getTypeHandlerForTypeName( qname );
+
+    if( qname instanceof ListQName )
+      return new ListSimpleTypeHandler( baseTypeHandler );
+
+    if( qname instanceof MixedQName )
+    {
+      final MixedQName mixedQName = (MixedQName) qname;
+      final QName[] mixedModel = mixedQName.getMixedModel();
+      // TODO: use MixedSimpleTypeHandler for that
+      return baseTypeHandler;
+    }
+
+    return registry.getTypeHandlerForTypeName( qname );
   }
 
   /**
