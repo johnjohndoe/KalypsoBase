@@ -66,6 +66,16 @@ public class ProgressUtilitites
    * {@link org.eclipse.ui.progress.IProgressService#busyCursorWhile(org.eclipse.jface.operation.IRunnableWithProgress)}
    * but works with {@link ICoreRunnableWithProgress}.
    */
+  public static IStatus busyCursorWhile( final ICoreRunnableWithProgress operation )
+  {
+    return busyCursorWhile( operation, null );
+  }
+  
+  /**
+   * Same as
+   * {@link org.eclipse.ui.progress.IProgressService#busyCursorWhile(org.eclipse.jface.operation.IRunnableWithProgress)}
+   * but works with {@link ICoreRunnableWithProgress}.
+   */
   public static IStatus busyCursorWhile( final ICoreRunnableWithProgress operation, final String errorMessage )
   {
     final CoreRunnableWrapper runnable = new CoreRunnableWrapper( operation );
