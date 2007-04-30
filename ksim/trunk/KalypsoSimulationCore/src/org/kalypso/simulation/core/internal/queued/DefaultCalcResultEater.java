@@ -130,6 +130,9 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
     ZipOutputStream zos = null;
     try
     {
+      if( m_results.isEmpty() )
+        return new DataHandler( "Keine Ergebnisse vorhanden", "text/plain" );
+      
       final File zipFile = File.createTempFile( "CalcJobResult_", ".zip" );
       zipFile.deleteOnExit();
       addFile( zipFile );
@@ -144,10 +147,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
         final File file = result.getFile();
         final String path = result.getPath();
 
-//        if( file.isFile() )
-//          zipper.setBasePattern( file.getParentFile().getAbsolutePath() );
-//        else
-          zipper.setBasePattern( file.getAbsolutePath() );
+        zipper.setBasePattern( file.getAbsolutePath() );
 
         zipper.setBaseReplace( path );
 
@@ -158,9 +158,9 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
 
       return new DataHandler( new FileDataSource( zipFile ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
-      throw new SimulationException( "Ergebnisse konnten nicht übertragen werden.", e );
+      throw new SimulationException( "Ergebnisse konnten nicht übertragen werden: " + e.getLocalizedMessage(), e );
     }
     finally
     {
