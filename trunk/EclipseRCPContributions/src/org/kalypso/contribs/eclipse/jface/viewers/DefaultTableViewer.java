@@ -93,14 +93,22 @@ public class DefaultTableViewer extends TableViewer
   }
 
   /**
-   * Adds a column to the underlying table control.
+   * Same as {@link #addColumn(String, String, int, boolean, SWT.CENTER)}.
    */
   public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable )
+  {
+    return addColumn( name, title, width, isEditable, SWT.CENTER );
+  }
+
+  /**
+   * Adds a column to the underlying table control.
+   */
+  public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable, int style )
   {
     if( m_disposing )
       throw new IllegalStateException();
 
-    final TableColumn tc = new TableColumn( getTable(), SWT.CENTER );
+    final TableColumn tc = new TableColumn( getTable(), style );
     tc.setData( COLUMN_PROP_NAME, name );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
