@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IEvaluationModel;
