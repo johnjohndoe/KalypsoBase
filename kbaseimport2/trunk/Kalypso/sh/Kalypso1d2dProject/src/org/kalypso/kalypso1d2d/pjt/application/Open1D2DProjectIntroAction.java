@@ -75,13 +75,6 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     introManager.closeIntro( introManager.getIntro() );
 
     Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
-
-    // Make sure that sim-view and workflow-view are visible?
-
-    // Set active project into ActiveWorkContext
-
-    // ...?
-
   }
 
 }
