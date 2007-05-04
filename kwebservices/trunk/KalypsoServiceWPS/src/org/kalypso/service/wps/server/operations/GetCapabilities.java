@@ -19,6 +19,7 @@ import net.opengeospatial.wps.Capabilities;
 import net.opengeospatial.wps.ProcessBriefType;
 import net.opengeospatial.wps.ProcessOfferings;
 
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
@@ -44,15 +45,20 @@ public class GetCapabilities implements IOperation
   /**
    * The Address under which this server is available.
    */
-  private String m_serverURL = "http://informdss.bafg.de/bridge/ogc?";
-
-  // TODO Read this value from somewhere.
+  private String m_serverURL = null;
 
   /**
    * The constructor.
    */
+  @SuppressWarnings("restriction")
   public GetCapabilities( )
   {
+    m_serverURL = FrameworkProperties.getProperty( "org.kalypso.service.wps.service" );
+    if( m_serverURL == null )
+      m_serverURL = "not provided";
+
+    /* Append a questionmark at the URL. */
+    m_serverURL = m_serverURL + "?";
   }
 
   /**

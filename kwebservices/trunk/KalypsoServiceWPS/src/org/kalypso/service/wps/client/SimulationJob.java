@@ -180,9 +180,8 @@ public class SimulationJob
     m_timeout = timeout;
 
     /* Initializing the other variables. */
-    // TODO Remove defaults as soon as possible.
-    m_service = System.getProperty( "org.kalypso.service.wps.service", "http://informdss.bafg.de/bridge/ogc" );
-    m_input = System.getProperty( "org.kalypso.service.wps.input", "webdav://WebDAV:webdav@informdss.bafg.de/webdav/input" );
+    m_service = System.getProperty( "org.kalypso.service.wps.service" );
+    m_input = System.getProperty( "org.kalypso.service.wps.input" );
     m_alreadyWorked = new Integer( 0 );
 
     /* Variables that are initialized during run time. */
