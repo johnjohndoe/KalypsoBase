@@ -103,14 +103,14 @@ public class ModelspecData
    */
   public void checkInput( final ISimulationDataProvider data ) throws SimulationException
   {
-//    for( final Iterator iIt = m_inputHash.values().iterator(); iIt.hasNext(); )
-//    {
-//      final DataType input = (DataType) iIt.next();
-//      final String id = input.getId();
-//      final String description = input.getDescription();
-//      if( !input.isOptional() && !data.hasID( id ) )
-//        throw new SimulationException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.", null );
-//    }
+    for( final Iterator iIt = m_inputHash.values().iterator(); iIt.hasNext(); )
+    {
+      final DataType input = (DataType) iIt.next();
+      final String id = input.getId();
+      final String description = input.getDescription();
+      if( !input.isOptional() && !data.hasID( id ) )
+        throw new SimulationException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.", null );
+    }
   }
 
   public SimulationDescription[] getInput( )
