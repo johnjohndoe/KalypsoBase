@@ -553,7 +553,7 @@ public class OGCUtilities
   }
 
   /**
-   * Note: The documentation is taken from the specific owsCommon.xsd for this type.<br>
+   * Note: The documentation is taken from the specific owsCommon.xsd, xlink.xsd for this type.<br>
    * <br>
    * This element either references or contains more metadata about the element that includes this element. To reference
    * metadata stored remotely, at least the xlinks:href attribute in xlink:simpleLink shall be included. Either at least
@@ -565,13 +565,39 @@ public class OGCUtilities
    *          Abstract element containing more metadata about the element that includes the containing "metadata"
    *          element. A specific server implementation, or an Implementation Specification, can define concrete
    *          elements in the AbstractMetaData substitution group.
-   * @param simpleLink
-   *          TODO
+   * @param href
+   *          [optional]
+   * @param role
+   *          [optional]
+   * @param arcrole
+   *          [optional]
+   * @param title
+   *          [optional]
+   * @param show
+   *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
+   *          traversal from the starting resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
+   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
+   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
+   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
+   * @param actuate
+   *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
+   *          starting resource to the ending resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
+   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose </li>
+   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
    * @param about
    *          [optional] Optional reference to the aspect of the element which includes this "metadata" element that
    *          this metadata provides more information about.
    */
-  public static MetadataType buildMetaDataType( Object abstractMetaData, String about )
+  public static MetadataType buildMetaDataType( Object abstractMetaData, String href, String role, String arcrole, String title, String show, String actuate, String about )
   {
     /* Create the instance via the factory. */
     MetadataType metadata = OWS_OF.createMetadataType();
@@ -579,14 +605,26 @@ public class OGCUtilities
     /* Elements. */
     metadata.setAbstractMetaData( abstractMetaData );
 
-    /* Attributes. TODO This attributes has to be set. */
-    metadata.setActuate( "" );
-    metadata.setArcrole( "" );
-    metadata.setHref( "" );
-    metadata.setRole( "" );
-    metadata.setShow( "" );
-    metadata.setTitle( "" );
-    metadata.setType( "" );
+    /* Attributes. */
+    metadata.setType( "simple" );
+
+    if( href != null )
+      metadata.setHref( href );
+
+    if( role != null )
+      metadata.setRole( role );
+
+    if( arcrole != null )
+      metadata.setArcrole( arcrole );
+
+    if( title != null )
+      metadata.setTitle( title );
+
+    if( show != null )
+      metadata.setShow( show );
+
+    if( actuate != null )
+      metadata.setActuate( actuate );
 
     if( about != null )
       metadata.setAbout( about );
@@ -1634,26 +1672,64 @@ public class OGCUtilities
   }
 
   /**
-   * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
+   * Note: The documentation is taken from the specific ows19115subset.xsd, xlink.xsd for this type.<br>
    * <br>
    * Reference to on-line resource from which data can be obtained.
    * 
-   * @param simpleLink
-   *          TODO
+   * @param href
+   *          [optional]
+   * @param role
+   *          [optional]
+   * @param arcrole
+   *          [optional]
+   * @param title
+   *          [optional]
+   * @param show
+   *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
+   *          traversal from the starting resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
+   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
+   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
+   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
+   * @param actuate
+   *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
+   *          starting resource to the ending resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
+   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose </li>
+   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
    */
-  public static OnlineResourceType buildOnlineResourceType( )
+  public static OnlineResourceType buildOnlineResourceType( String href, String role, String arcrole, String title, String show, String actuate )
   {
     /* Create the instance via the factory. */
     OnlineResourceType onlineResource = OWS_OF.createOnlineResourceType();
 
-    /* Attributes. TODO This attributes has to be set. */
-    onlineResource.setActuate( "" );
-    onlineResource.setArcrole( "" );
-    onlineResource.setHref( "" );
-    onlineResource.setRole( "" );
-    onlineResource.setShow( "" );
-    onlineResource.setTitle( "" );
-    onlineResource.setType( "" );
+    /* Attributes. */
+    onlineResource.setType( "simple" );
+
+    if( href != null )
+      onlineResource.setHref( href );
+
+    if( role != null )
+      onlineResource.setRole( role );
+
+    if( arcrole != null )
+      onlineResource.setArcrole( arcrole );
+
+    if( title != null )
+      onlineResource.setTitle( title );
+
+    if( show != null )
+      onlineResource.setShow( show );
+
+    if( actuate != null )
+      onlineResource.setActuate( actuate );
 
     return onlineResource;
   }
@@ -1769,14 +1845,40 @@ public class OGCUtilities
   }
 
   /**
-   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd for this type.<br>
+   * Note: The documentation is taken from the specific owsOperationsMetadata.xsd, xlink.xsd for this type.<br>
    * <br>
    * Connect point URL and any constraints for this HTTP request method for this operation request. In the
    * OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to contain this
    * URL. The other attributes in the xlink:simpleLink attribute group should not be used.
    * 
-   * @param simpleLink
-   *          TODO
+   * @param href
+   *          [optional]
+   * @param role
+   *          [optional]
+   * @param arcrole
+   *          [optional]
+   * @param title
+   *          [optional]
+   * @param show
+   *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
+   *          traversal from the starting resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
+   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
+   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
+   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
+   * @param actuate
+   *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
+   *          starting resource to the ending resource; it's value should be treated as follows:<br>
+   *          <ol>
+   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
+   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose </li>
+   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
+   *          <li> none - behavior is unconstrained </li>
+   *          </ol>
    * @param constraints
    *          [optional] Optional unordered list of valid domain constraints on non-parameter quantities that each apply
    *          to this request method for this operation. If one of these Constraint elements has the same "name"
@@ -1784,19 +1886,31 @@ public class OGCUtilities
    *          shall override the other one for this operation. The list of required and optional constraints for this
    *          request method for this operation shall be specified in the Implementation Specification for this service.
    */
-  public static RequestMethodType buildRequestMethodType( List<DomainType> constraints )
+  public static RequestMethodType buildRequestMethodType( String href, String role, String arcrole, String title, String show, String actuate, List<DomainType> constraints )
   {
     /* Create the instance via the factory. */
     RequestMethodType requestMethod = OWS_OF.createRequestMethodType();
 
-    /* Attributes. TODO This attributes has to be set. */
-    requestMethod.setActuate( "" );
-    requestMethod.setArcrole( "" );
-    requestMethod.setHref( "" );
-    requestMethod.setRole( "" );
-    requestMethod.setShow( "" );
-    requestMethod.setTitle( "" );
-    requestMethod.setType( "" );
+    /* Attributes. */
+    requestMethod.setType( "simple" );
+
+    if( href != null )
+      requestMethod.setHref( href );
+
+    if( role != null )
+      requestMethod.setRole( role );
+
+    if( arcrole != null )
+      requestMethod.setArcrole( arcrole );
+
+    if( title != null )
+      requestMethod.setTitle( title );
+
+    if( show != null )
+      requestMethod.setShow( show );
+
+    if( actuate != null )
+      requestMethod.setActuate( actuate );
 
     /* Elements. */
     if( constraints != null )

@@ -42,6 +42,13 @@ public class GetCapabilities implements IOperation
   List<Modelspec> m_simModelspecs = null;
 
   /**
+   * The Address under which this server is available.
+   */
+  private String m_serverURL = "http://informdss.bafg.de/bridge/ogc?";
+
+  // TODO Read this value from somewhere.
+
+  /**
    * The constructor.
    */
   public GetCapabilities( )
@@ -194,7 +201,7 @@ public class GetCapabilities implements IOperation
   private Operation buildGetCapabilities( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( null );
+    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     JAXBElement<RequestMethodType> get = OGCUtilities.buildHTTPGet( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
     requestMethods.add( get );
@@ -226,7 +233,7 @@ public class GetCapabilities implements IOperation
   private Operation buildDescribeProcess( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( null );
+    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     JAXBElement<RequestMethodType> get = OGCUtilities.buildHTTPGet( requestMethod );
     JAXBElement<RequestMethodType> post = OGCUtilities.buildHTTPPost( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
@@ -270,7 +277,7 @@ public class GetCapabilities implements IOperation
   private Operation buildExecute( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( null );
+    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     JAXBElement<RequestMethodType> post = OGCUtilities.buildHTTPPost( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
     requestMethods.add( post );
