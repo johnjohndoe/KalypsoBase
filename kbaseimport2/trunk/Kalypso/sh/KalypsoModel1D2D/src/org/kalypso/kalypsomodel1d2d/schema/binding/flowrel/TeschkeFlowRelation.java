@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomialInterpolationInput;
 
 /**
  * @author Gernot Belger
@@ -51,6 +58,27 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   public TeschkeFlowRelation( final Feature featureToBind )
   {
     super( featureToBind, ITeschkeFlowRelation.QNAME );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getStation()
+   */
+  public BigDecimal getStation( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_STATION );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
+   */
+  public IPolynomial1D[] getPolynomials( )
+  {
+    final FeatureList polynomeFeatures = (FeatureList) getFeature().getProperty( QNAME_PROP_POLYNOMES );
+    
+    final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
+    
+    // TODO Auto-generated method stub
+    return (IPolynomial1D[]) resultList.toArray( new IPolynomialInterpolationInput[resultList.size()] );
   }
 
 }
