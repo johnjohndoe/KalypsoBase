@@ -43,7 +43,10 @@ package org.kalypso.ui.wizards.imports.elevationmodel;
 import org.kalypso.commons.command.ICommand;
 
 /**
- * @author congo
+ * Currently just a dummy command use to get the pool
+ * dirty.
+ * TODO Patrice implemts this command 
+ * @author Patrice Congo
  *
  */
 public class AddTerrainelevationModelCmd implements ICommand
@@ -54,8 +57,7 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public String getDescription( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "Terrain Elevation Model hinzufügen ";
   }
 
   /**
@@ -63,7 +65,6 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public boolean isUndoable( )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
