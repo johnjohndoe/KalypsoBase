@@ -67,12 +67,9 @@ public class ContinuityLineInfo extends BoundaryConditionInfo implements ITimeSt
    * @see org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo#setObservation(org.kalypso.observation.IObservation,
    *      org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IComponent)
    */
-  @Override
-  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent )
+  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent, final TYPE type )
   {
     super.setObservation( obs, timeComponent, valueComponent );
-    
-    // a contiline with a timeserie is a CONTI_BC
-    setType( TYPE.CONTI_BC );
+    setType( type );
   }
 }
