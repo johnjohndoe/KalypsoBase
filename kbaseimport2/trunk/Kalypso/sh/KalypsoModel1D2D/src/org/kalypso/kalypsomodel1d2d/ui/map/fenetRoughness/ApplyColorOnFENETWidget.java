@@ -49,16 +49,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor.RoughnessCorrectionDataModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Madanagopal
@@ -70,9 +65,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
-  ColorOnFEDataModel feDataModel = new ColorOnFEDataModel();
+  private RoughnessCorrectionDataModel feDataModel = 
+                          new RoughnessCorrectionDataModel();
 
-  ApplyColorOnFENETWidgetFace widgetFace = new ApplyColorOnFENETWidgetFace( feDataModel );
+  private ApplyColorOnFENETWidgetFace widgetFace = 
+                      new ApplyColorOnFENETWidgetFace( feDataModel );
 
   private String name;
 
@@ -117,30 +114,6 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
     IMapModell mapModell = mapPanel.getMapModell();
     feDataModel.setMapModell( mapModell );
     feDataModel.setMapPanel( mapPanel );
-
-//    IKalypsoFeatureTheme roughnessTheme = UtilMap.findEditableTheme( mapModell, 
-//                                  KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
-//    Feature systemFeature = roughnessTheme.getFeatureList().getParentFeature();// ;
-//    System.out.println( systemFeature.getFeatureType().getQName());
-//    System.out.println( systemFeature.getParent().getFeatureType().getQName() );
-//    ITerrainModel system = (ITerrainModel) systemFeature.getParent().getAdapter( ITerrainModel.class );
-//    feDataModel.setRoughnessPolygonCollection( system.getRoughnessPolygonCollection() );
-//    feDataModel.setRoughnessTheme( roughnessTheme );
-//    feDataModel.setMapPanel( mapPanel );    
-//    IKalypsoFeatureTheme feNodesTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-//    Feature feNodesFeature = feNodesTheme.getFeatureList().getParentFeature();
-    
-    IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme(mapModell );
-    feDataModel.setDiscretisationModel1d2d(model1d2d);
-    
-    // To access the IFE1D2DElements
-//    IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-//    
-//    for (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ink:elements) {
-//      //System.out.println("Poly Elements :"+ink.);  
-//    }
-    //IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> sys =  
-    
   }
 
   /**
@@ -149,7 +122,6 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -158,8 +130,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void clickPopup( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -167,8 +138,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void doubleClickedLeft( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -176,8 +146,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void doubleClickedRight( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -185,8 +154,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void dragged( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -194,8 +162,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void finish( )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -203,7 +170,6 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
     return name;
   }
 
@@ -212,7 +178,6 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public String getToolTip( )
   {
-    // TODO Auto-generated method stub
     return tooltip;
   }
 
@@ -221,8 +186,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyPressed( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -230,8 +194,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyReleased( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -239,8 +202,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyTyped( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -248,8 +210,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftClicked( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -257,8 +218,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftPressed( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -266,8 +226,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftReleased( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -275,8 +234,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middleClicked( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -284,8 +242,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middlePressed( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -293,8 +250,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middleReleased( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -302,8 +258,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void moved( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -311,8 +266,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void paint( Graphics g )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -320,8 +274,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightClicked( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -329,8 +282,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightPressed( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -338,8 +290,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightReleased( Point p )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -347,8 +298,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void setSelection( ISelection selection )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
 }
