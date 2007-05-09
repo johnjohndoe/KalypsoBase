@@ -54,6 +54,7 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.raster.IRasterMetaReader;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.opengis.cs.CS_CoordinateSystem;
