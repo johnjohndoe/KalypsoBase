@@ -206,6 +206,8 @@ public class WPSSimulationThread extends Thread
    */
   public void dispose( )
   {
+    // TODO Add a tracing option for the deletion.
+
     /* Delete the tmp-data. */
     FileUtilities.deleteRecursive( m_tmpDir );
 
