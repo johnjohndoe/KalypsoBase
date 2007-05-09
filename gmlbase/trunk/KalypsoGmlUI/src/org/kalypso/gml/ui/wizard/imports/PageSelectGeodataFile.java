@@ -41,6 +41,7 @@
 package org.kalypso.gml.ui.wizard.imports;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -311,7 +312,9 @@ public class PageSelectGeodataFile extends WizardPage
     setPageComplete( false );
 
     final IPath docLocation = new Path( m_tFile.getText() );
-    if( (docLocation == null) || !docLocation.toFile().exists() )
+
+    final File toFile = docLocation.toFile();
+    if( (docLocation == null) || !toFile.exists() )
     {
       setMessage( null );
       setErrorMessage( "Please select an existing file" );
@@ -320,11 +323,19 @@ public class PageSelectGeodataFile extends WizardPage
     }
 
     verifier = new RasterDataFileVerifier();
-    if( !verifier.verify( docLocation ) )
+    try
     {
-      setMessage( null );
-      setErrorMessage( "Please select a valid geodata file " );
+      if( !verifier.verify( toFile.toURL() ) )
+      {
+        setMessage( null );
+        setErrorMessage( "Please select a valid geodata file " );
 
+        return;
+      }
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
       return;
     }
 
@@ -351,7 +362,14 @@ public class PageSelectGeodataFile extends WizardPage
         final CoordinateSystem cs = (CoordinateSystem) element;
         final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
 
-        m_rasterReader = verifier.getRasterMetaReader( docLocation, adapter.export( cs ) );
+        try
+        {
+          m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), adapter.export( cs ) );
+        }
+        catch( final MalformedURLException e )
+        {
+          e.printStackTrace();
+        }
         updateTextBoxes( m_rasterReader );
 
         m_bBoxesSet = true;
