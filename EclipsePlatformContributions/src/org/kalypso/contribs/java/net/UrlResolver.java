@@ -55,8 +55,10 @@ import java.util.Properties;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -69,7 +71,6 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * <p>
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
- * 
  * TODO: untersuchen warum es auch org.kalypso.contribs.java.net.UrlUtilities gibt??? Marc.
  * 
  * @author belger
@@ -111,14 +112,34 @@ public class UrlResolver implements IUrlResolver
       final String relPath = relativeURL.substring( "project:".length() + 1 );
       return new URL( projectURL + "/" + relPath );
     }
-    
+
+    if( baseURL.toString().startsWith( "platform:" ) )
+    {
+      IPath path = ResourceUtilities.findPathFromURL( baseURL );
+      IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
+      if( !folder.exists() )
+      {
+        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+        if (!file.exists())
+        {
+          throw (new IllegalStateException());
+        }
+        
+        folder = (IFolder)file.getParent();
+      }
+
+      IFile file = folder.getFile( relativeURL );
+
+      return file.getLocationURI().toURL();
+    }
+
     return new URL( baseURL, relativeURL );
   }
 
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
-  public final Iterator getReplaceEntries()
+  public final Iterator getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
   }
@@ -153,7 +174,7 @@ public class UrlResolver implements IUrlResolver
 
         final Runnable runnable = new Runnable()
         {
-          public void run()
+          public void run( )
           {
             try
             {
@@ -183,8 +204,7 @@ public class UrlResolver implements IUrlResolver
           charset = null;
         }
 
-        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os,
-            charset );
+        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os, charset );
         return osw;
       }
 
