@@ -113,26 +113,6 @@ public class UrlResolver implements IUrlResolver
       return new URL( projectURL + "/" + relPath );
     }
 
-    if( baseURL.toString().startsWith( "platform:" ) )
-    {
-      IPath path = ResourceUtilities.findPathFromURL( baseURL );
-      IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
-      if( !folder.exists() )
-      {
-        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
-        if (!file.exists())
-        {
-          throw (new IllegalStateException());
-        }
-        
-        folder = (IFolder)file.getParent();
-      }
-
-      IFile file = folder.getFile( relativeURL );
-
-      return file.getLocationURI().toURL();
-    }
-
     return new URL( baseURL, relativeURL );
   }
 
