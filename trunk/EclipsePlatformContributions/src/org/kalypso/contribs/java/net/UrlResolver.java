@@ -104,7 +104,12 @@ public class UrlResolver implements IUrlResolver
         throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" );
 
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
-        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" );
+      {
+        throw new MalformedURLException( 
+            "Protocol 'project:' need a resource url as context"+
+            "\n\turl="+baseURL+
+            "\n\trelativeURL="+relativeURL);
+      }
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
       final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName();
