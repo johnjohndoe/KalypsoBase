@@ -1,6 +1,7 @@
 package org.kalypso.simulation.ui.navigator;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -22,6 +23,9 @@ public class ModellLabelProvider extends LabelProvider implements ILabelProvider
     if( element instanceof IResource )
       return m_workbenchLabelProvider.getText( element );
 
+    if( element instanceof IStatus )
+      return ((IStatus)element).getMessage();
+    
     return m_gmlLabelProvider.getText( element );
   }
 
@@ -34,6 +38,9 @@ public class ModellLabelProvider extends LabelProvider implements ILabelProvider
     if( element instanceof IResource )
       return m_workbenchLabelProvider.getImage( element );
 
+    if( element instanceof IStatus )
+      return null; //((IStatus)element).getMessage();
+    
     return m_gmlLabelProvider.getImage( element );
   }
 }

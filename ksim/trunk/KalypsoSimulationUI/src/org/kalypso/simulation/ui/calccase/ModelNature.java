@@ -466,7 +466,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final String name = (String) entry.getKey();
       final String value = (String) entry.getValue();
 
-      final IValueVariable valueVariable = new ValueVariable( name, value, null );
+      final IValueVariable valueVariable = new ValueVariable( name, value, true, null );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
 
