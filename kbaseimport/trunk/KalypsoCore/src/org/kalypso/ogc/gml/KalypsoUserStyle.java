@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -50,7 +52,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * 
  * @author bce
  */
-public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
+public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable, IWorkbenchAdapter
 {
   private boolean m_disposed = false;
 
@@ -143,5 +145,49 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     m_disposed = true;
     
     super.dispose();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   */
+  public Object[] getChildren( final Object o )
+  {
+    if( o != this )
+      throw new IllegalStateException();
+
+    return m_userStyle.getFeatureTypeStyles()[0].getRules();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    if( object != this )
+      throw new IllegalStateException();
+
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
+   */
+  public String getLabel( Object o )
+  {
+    if( o != this )
+      throw new IllegalStateException();
+
+    if( getName() != null )
+      return getName();
+
+    return toString();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
+   */
+  public Object getParent( final Object o )
+  {
+    return null;
   }
 }

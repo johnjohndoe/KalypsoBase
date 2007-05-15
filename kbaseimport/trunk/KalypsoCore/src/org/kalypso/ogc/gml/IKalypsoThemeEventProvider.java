@@ -52,6 +52,8 @@ public interface IKalypsoThemeEventProvider
   public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
 
   /**
+   * TODO: should not be public, check this
+   * 
    * notifies all listeners about the change
    * 
    * @param event
