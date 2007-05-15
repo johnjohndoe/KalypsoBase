@@ -46,10 +46,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -103,19 +105,29 @@ public class WPSUtilities
     PostMethod post = new PostMethod( url );
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
 
-    String proxySet = FrameworkProperties.getProperty( "proxySet" );
-    Debug.println( "Should use proxy: " + proxySet );
+    ProxyUtilities proxy = ProxyUtilities.getInstance();
+    Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
-    if( proxySet != null && proxySet.equals( "true" ) )
+    if( proxy.useProxy() )
     {
-      String proxyHost = FrameworkProperties.getProperty( "proxyHost" );
-      String proxyPort = FrameworkProperties.getProperty( "proxyPort" );
+      String proxyHost = proxy.getProxyHost();
+      int proxyPort = proxy.getProxyPort();
       Debug.println( "Proxy host: " + proxyHost );
-      Debug.println( "Proxy port: " + proxyPort );
+      Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
 
-      HostConfiguration config = new HostConfiguration();
-      config.setProxy( proxyHost, Integer.valueOf( proxyPort ) );
-      client.setHostConfiguration( config );
+      /* Set the proxy information. */
+      client.getHostConfiguration().setProxy( proxyHost, proxyPort );
+
+      /* Get the credentials. */
+      String user = proxy.getUser();
+      String password = proxy.getPassword();
+
+      /* Set them, if the credentials are complete. */
+      if( user != null && password != null )
+      {
+        Credentials credentials = new UsernamePasswordCredentials( user, password );
+        client.getState().setProxyCredentials( AuthScope.ANY, credentials );
+      }
     }
 
     /* Execute the method. */

@@ -54,11 +54,12 @@ import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileUtil;
+import org.apache.commons.vfs.UserAuthenticator;
 import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
 /**
  * Helpfull functions when dealing with VFS.
@@ -293,36 +294,53 @@ public class VFSUtilities
   {
     FileSystemManager fsManager = getManager();
 
-    String proxySet = FrameworkProperties.getProperty( "proxySet" );
-    String proxyHost = FrameworkProperties.getProperty( "proxyHost" );
-    String proxyPort = FrameworkProperties.getProperty( "proxyPort" );
+    ProxyUtilities proxy = ProxyUtilities.getInstance();
+    Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
-    Debug.println( "Should use proxy: " + proxySet );
-    Debug.println( "Proxy host: " + proxyHost );
-    Debug.println( "Proxy port: " + proxyPort );
-
-    if( proxySet != null && proxySet.equals( "true" ) )
+    if( proxy.useProxy() )
     {
-      final Pattern p = Pattern.compile( "(.+):/.+" );
-      final Matcher m = p.matcher( absoluteFile );
+      String proxyHost = proxy.getProxyHost();
+      int proxyPort = proxy.getProxyPort();
+      Debug.println( "Proxy host: " + proxyHost );
+      Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
+
+      /* Get the credentials. */
+      String user = proxy.getUser();
+      String password = proxy.getPassword();
+
+      Pattern p = Pattern.compile( "(.+):/.+" );
+      Matcher m = p.matcher( absoluteFile );
       if( m.find() == true )
       {
-
         Debug.println( "File: " + absoluteFile );
         Debug.println( "Protocol: " + m.group( 1 ) );
 
         if( m.group( 1 ).equals( "webdav" ) )
         {
           WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
-          WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, Integer.valueOf( proxyPort ) );
-          // UserAuthenticator authenticator = new StaticUserAuthenticator( "bce01", "albert", "" );
-          // WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
+          WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, proxyPort );
+
+          /* If there are credentials given, set them. */
+          if( user != null && password != null )
+          {
+            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
+          }
+
           return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
         }
         else if( m.group( 1 ).equals( "http" ) )
         {
           HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, proxyHost );
-          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, Integer.valueOf( proxyPort ) );
+          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, proxyPort );
+
+          /* If there are credentials given, set them. */
+          if( user != null && password != null )
+          {
+            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTP_OPTIONS, authenticator );
+          }
+
           return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
         }
       }

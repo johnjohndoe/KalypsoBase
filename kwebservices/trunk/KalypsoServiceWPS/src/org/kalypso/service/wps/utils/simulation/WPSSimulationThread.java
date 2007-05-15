@@ -176,7 +176,7 @@ public class WPSSimulationThread extends Thread
         continue;
       }
 
-      /* Input is here, everything is alright. */
+      /* Input is here, everything is allright. */
     }
   }
 
