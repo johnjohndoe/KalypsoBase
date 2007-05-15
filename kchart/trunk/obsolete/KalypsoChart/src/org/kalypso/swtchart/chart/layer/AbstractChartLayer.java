@@ -62,10 +62,6 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   protected  IAxis m_domainAxis;
 
-  public AbstractChartLayer( )
-  {
-  }
-
   // TODO; add everything to constructor
   public AbstractChartLayer( final String name, final String description, final IAxis domainAxis, final IAxis valueAxis )
   {
