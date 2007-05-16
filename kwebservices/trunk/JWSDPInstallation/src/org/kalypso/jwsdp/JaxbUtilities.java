@@ -66,7 +66,7 @@ public final class JaxbUtilities
     // never instantiate
   }
 
-  public static JAXBContext createQuiet( final Class... objectFactoryClasses )
+  public static JAXBContext createQuiet( final Class<?>... objectFactoryClasses )
   {
     final String classesString = Arrays.toString( objectFactoryClasses );
 

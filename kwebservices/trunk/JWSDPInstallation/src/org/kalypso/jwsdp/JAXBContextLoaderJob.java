@@ -59,11 +59,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class JAXBContextLoaderJob extends Job
 {
-  private final Class[] m_classes;
+  private final Class<?>[] m_classes;
 
   private JAXBContext m_context;
 
-  public JAXBContextLoaderJob( final Class... classes )
+  public JAXBContextLoaderJob( final Class<?>... classes )
   {
     super( "jaxbcontext job" );
     m_classes = classes;
