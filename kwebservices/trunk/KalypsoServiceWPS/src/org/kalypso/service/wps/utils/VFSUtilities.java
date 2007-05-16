@@ -59,6 +59,7 @@ import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
+import org.apache.commons.vfs.provider.webdav.WebDavFileSystem;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 
 /**
