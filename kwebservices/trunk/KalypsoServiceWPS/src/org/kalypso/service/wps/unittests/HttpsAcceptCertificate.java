@@ -77,7 +77,7 @@ public class HttpsAcceptCertificate
     DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
-    Debug.println( "Asking for a process describtion ..." );
+    Debug.println( "Asking for a process description ..." );
     String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), "https://informdss.bafg.de/bridge/ogc" );
 
     /* Handle the response. */
