@@ -127,8 +127,9 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class adapter )
-  {
+  { 
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapter.getName() );
   }

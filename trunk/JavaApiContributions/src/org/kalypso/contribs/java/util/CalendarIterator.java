@@ -43,7 +43,7 @@ package org.kalypso.contribs.java.util;
 import java.util.Calendar;
 import java.util.Iterator;
 
-public class CalendarIterator implements Iterator
+public class CalendarIterator implements Iterator<Calendar>
 {
   private final Calendar m_end;
 
@@ -87,9 +87,9 @@ public class CalendarIterator implements Iterator
   /**
    * @see java.util.Iterator#next()
    */
-  public Object next()
+  public Calendar next()
   {
-    final Object result = m_currentCal.clone();
+    final Calendar result = (Calendar) m_currentCal.clone();
     // iterate the member
     m_currentCal.add( m_calendarField, m_amount );
     // return the clone
@@ -105,12 +105,9 @@ public class CalendarIterator implements Iterator
   public int size()
   {
     int result = 0;
-    final Iterator iterator = new CalendarIterator( m_start, m_end, m_calendarField, m_amount );
-    while( iterator.hasNext() )
-    {
-      iterator.next();
+    for( final Iterator<Calendar> iterator = new CalendarIterator( m_start, m_end, m_calendarField, m_amount ); iterator.hasNext(); iterator.next() )
       result++;
-    }
+
     return result;
   }
 }

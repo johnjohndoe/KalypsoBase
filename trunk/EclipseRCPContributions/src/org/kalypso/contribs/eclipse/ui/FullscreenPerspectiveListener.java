@@ -75,15 +75,17 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 public class FullscreenPerspectiveListener implements IPerspectiveListener
 {
   private final boolean m_hideToolbars;
+
   private final boolean m_hideMenu;
+
   private final IPerspectiveDescriptor m_descriptor;
 
   /** Contribution-Manager -> Items */
   private Map<IContributionManager, IContributionItem[]> m_itemMap = new HashMap<IContributionManager, IContributionItem[]>();
+
   private Collection<Composite> m_hiddenControls = new ArrayList<Composite>( 2 );
 
-  public FullscreenPerspectiveListener( final IPerspectiveDescriptor descriptor, final boolean hideMenu,
-      final boolean hideToolbars )
+  public FullscreenPerspectiveListener( final IPerspectiveDescriptor descriptor, final boolean hideMenu, final boolean hideToolbars )
   {
     m_descriptor = descriptor;
     m_hideMenu = hideMenu;
@@ -102,15 +104,15 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
       showBars();
   }
 
-  private void showBars()
+  private void showBars( )
   {
-    for( final Iterator mapIt = m_itemMap.entrySet().iterator(); mapIt.hasNext(); )
+    for( final Iterator<Entry<IContributionManager, IContributionItem[]>> mapIt = m_itemMap.entrySet().iterator(); mapIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry)mapIt.next();
+      final Entry<IContributionManager, IContributionItem[]> entry = mapIt.next();
       // prepare for exception
       mapIt.remove();
-      final IContributionManager manager = (IContributionManager)entry.getKey();
-      final IContributionItem[] items = (IContributionItem[])entry.getValue();
+      final IContributionManager manager = entry.getKey();
+      final IContributionItem[] items = entry.getValue();
 
       for( int i = 0; i < items.length; i++ )
         manager.add( items[i] );
@@ -122,13 +124,13 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
     m_itemMap.clear();
 
     // show hidden controls
-    for( final Iterator hideIt = m_hiddenControls.iterator(); hideIt.hasNext(); )
-      ( (Composite)hideIt.next() ).setVisible( true );
+    for( final Composite composite : m_hiddenControls )
+      composite.setVisible( true );
   }
 
   private void hideBars( final IWorkbenchPage page )
   {
-    final WorkbenchWindow window = (WorkbenchWindow)page.getWorkbenchWindow();
+    final WorkbenchWindow window = (WorkbenchWindow) page.getWorkbenchWindow();
     if( m_hideMenu )
     {
       final MenuManager menuManager = window.getMenuManager();
@@ -170,7 +172,7 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
    * @see org.eclipse.ui.IPerspectiveListener#perspectiveChanged(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
    */
-  public void perspectiveChanged( final IWorkbenchPage page, final IPerspectiveDescriptor perspective,
-      final String changeId )
-  {}
+  public void perspectiveChanged( final IWorkbenchPage page, final IPerspectiveDescriptor perspective, final String changeId )
+  {
+  }
 }

@@ -78,7 +78,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
   WorkbenchLabelProvider labelProvider = new WorkbenchLabelProvider();
 
-  static class ResourceDescriptor implements Comparable
+  static class ResourceDescriptor implements Comparable<Object>
   {
     String label;
 

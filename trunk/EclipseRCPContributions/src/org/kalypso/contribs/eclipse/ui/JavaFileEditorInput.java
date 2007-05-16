@@ -65,6 +65,7 @@ public class JavaFileEditorInput implements IEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class adapter )
   {
     if( adapter == File.class )

@@ -103,6 +103,7 @@ public class ClassUrlCatalog implements IUrlCatalog
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert. Jede Klasse
    * selbst muss ein IUrlCatalog sein.
    */
+  @SuppressWarnings("unchecked")
   public ClassUrlCatalog( final Properties props )
   {
     try
@@ -111,9 +112,9 @@ public class ClassUrlCatalog implements IUrlCatalog
       final IUrlCatalog[] catalogs = new IUrlCatalog[classNames.length];
       for( int i = 0; i < classNames.length; i++ )
       {
-        final Class clazz = Class.forName( classNames[i] );
-        final Constructor constructor = clazz.getConstructor( new Class[] {} );
-        catalogs[i] = (IUrlCatalog) constructor.newInstance( new Object[] {} );
+        final Class<IUrlCatalog> clazz = (Class<IUrlCatalog>) Class.forName( classNames[i] );
+        final Constructor<IUrlCatalog> constructor = clazz.getConstructor( new Class[] {} );
+        catalogs[i] = constructor.newInstance( new Object[] {} );
       }
 
       m_catalog = new MultiUrlCatalog( catalogs );

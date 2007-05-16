@@ -46,6 +46,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * @author belger
@@ -57,7 +58,7 @@ public interface IUrlResolver
   /**
    * An iterator over entries of a map (Map.Entry) Each entry represant a token , wich can be replaced
    */
-  public Iterator getReplaceEntries();
+  public Iterator<Entry<Object, Object>> getReplaceEntries();
 
   /**
    * add a Replace token to the map, which can be accessed via getReplaceEntries()

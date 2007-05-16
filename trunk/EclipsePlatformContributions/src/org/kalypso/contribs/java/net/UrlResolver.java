@@ -52,13 +52,12 @@ import java.net.URL;
 import java.net.UnknownServiceException;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -124,7 +123,7 @@ public class UrlResolver implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
-  public final Iterator getReplaceEntries( )
+  public final Iterator<Entry<Object, Object>> getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
   }

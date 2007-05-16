@@ -134,7 +134,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void addRenderingHints( Map hints )
+  public void addRenderingHints( Map<?, ?> hints )
   {
     m_graphics.addRenderingHints( hints );
   }
@@ -629,7 +629,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void setRenderingHints( Map hints )
+  public void setRenderingHints( Map<?, ?> hints )
   {
     m_graphics.setRenderingHints( hints );
   }

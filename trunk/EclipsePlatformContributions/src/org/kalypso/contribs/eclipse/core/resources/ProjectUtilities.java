@@ -76,7 +76,7 @@ public class ProjectUtilities
     if( selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
       final IStructuredSelection ssel = (IStructuredSelection)selection;
-      for( final Iterator iter = ssel.iterator(); iter.hasNext(); )
+      for( final Iterator<?> iter = ssel.iterator(); iter.hasNext(); )
       {
         final Object resource = iter.next();
         if( resource instanceof IResource )
