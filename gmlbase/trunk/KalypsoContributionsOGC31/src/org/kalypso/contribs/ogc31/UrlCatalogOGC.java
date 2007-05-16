@@ -54,7 +54,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 public class UrlCatalogOGC extends AbstractUrlCatalog
 {
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // SWE & OM things
     catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) );
