@@ -53,6 +53,7 @@ import java.net.URLConnection;
 import java.net.UnknownServiceException;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 /**
  * @author belger
@@ -82,7 +83,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
-  public final Iterator getReplaceEntries()
+  public final Iterator<Entry<Object, Object>> getReplaceEntries()
   {
     return m_replaceTokenMap.entrySet().iterator();
   }

@@ -42,8 +42,6 @@ package org.kalypso.contribs.eclipse.ui;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
@@ -227,9 +225,8 @@ public class MementoWithUrlResolver implements IMemento
     if( toBeReplaced == null )
       return null;
     // replace absolute file path with the project protocol
-    for( final Iterator iter = m_props.entrySet().iterator(); iter.hasNext(); )
+    for( final Entry<Object, Object> entry : m_props.entrySet() )
     {
-      final Map.Entry entry = (Entry) iter.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 

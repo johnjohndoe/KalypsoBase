@@ -117,6 +117,7 @@ public class StorageEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class adapter )
   {
     final IAdapterManager adapterManager = Platform.getAdapterManager();

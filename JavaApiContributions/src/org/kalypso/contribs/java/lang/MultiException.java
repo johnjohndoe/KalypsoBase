@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.lang;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,8 +90,8 @@ public class MultiException extends Exception
       return "";
 
     final StringBuffer bf = new StringBuffer();
-    for( final Iterator it = m_exceptions.iterator(); it.hasNext(); )
-      bf.append( ((Exception) it.next()).getMessage() ).append( '\n' );
+    for( final Exception exception : m_exceptions )
+      bf.append( exception.getMessage() ).append( '\n' );
 
     return bf.toString();
   }

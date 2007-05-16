@@ -38,7 +38,7 @@ import java.util.Iterator;
  * 
  * @author doemming
  */
-public class ValueIterator implements Iterator
+public class ValueIterator implements Iterator<Object>
 {
 
   private final Object m_start;

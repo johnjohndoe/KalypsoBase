@@ -60,7 +60,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * 
    * @param type
    */
-  public TypeBasedInputValidator( final Class type )
+  public TypeBasedInputValidator( final Class<?> type )
   {
     m_val = createValidator( type );
   }
@@ -69,7 +69,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * @param type
    * @return validator
    */
-  private Validator createValidator( Class type )
+  private Validator createValidator( Class<?> type )
   {
     if( Date.class.isAssignableFrom( type ) )
       return new DateValidator();

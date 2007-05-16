@@ -56,7 +56,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
 
     // hash id -> element
-    final Class[] noclasses = new Class[] {};
+    final Class<?>[] noclasses = new Class[] {};
     final Object[] noobjects = new Object[] {};
     for( int i = 0; i < content.length; i++ )
     {

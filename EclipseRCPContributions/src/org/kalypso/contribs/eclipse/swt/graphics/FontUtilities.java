@@ -41,7 +41,6 @@
 package org.kalypso.contribs.eclipse.swt.graphics;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.eclipse.swt.graphics.Device;
@@ -60,12 +59,12 @@ import org.eclipse.swt.graphics.FontData;
  */
 public class FontUtilities
 {
-  private final Collection m_disposeFonts = new LinkedList();
+  private final Collection<Font> m_disposeFonts = new LinkedList<Font>();
 
   public void dispose()
   {
-    for( final Iterator iter = m_disposeFonts.iterator(); iter.hasNext(); )
-      ( (Font)iter.next() ).dispose();
+    for( final Font font : m_disposeFonts )
+      font.dispose();
   }
 
   public Font createChangedFontData( final FontData[] fontData, final int heightOffset, final int styleOffset,

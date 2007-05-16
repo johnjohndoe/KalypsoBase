@@ -60,7 +60,7 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
     fillCatalog( getClass(), m_catalog, m_prefixes );
   }
 
-  protected abstract void fillCatalog( final Class myClass, final Map<String, URL> catalog, final Map<String, String> prefixes );
+  protected abstract void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, final Map<String, String> prefixes );
 
   /**
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()

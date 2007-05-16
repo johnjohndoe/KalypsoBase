@@ -57,7 +57,7 @@ public class ClassUtilities
    * 
    * @return the classname of the given class without package part.
    */
-  public static String getOnlyClassName( final Class someClass )
+  public static String getOnlyClassName( final Class<?> someClass )
   {
     final String className = someClass.getName().substring( someClass.getName().lastIndexOf( '.' ) + 1 );
 
@@ -67,7 +67,7 @@ public class ClassUtilities
   /**
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class target, final ClassLoader cl )
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl )
       throws ClassUtilityException
   {
     return newInstance( classname, target, cl, null, null );
@@ -81,10 +81,10 @@ public class ClassUtilities
    * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class target, final ClassLoader cl,
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl,
       final Object[] arguments ) throws ClassUtilityException
   {
-    Class[] argClasses = null;
+    Class<?>[] argClasses = null;
     if( arguments != null )
     {
       argClasses = new Class[arguments.length];
@@ -120,8 +120,8 @@ public class ClassUtilities
    * 
    * @see Class#getConstructor(java.lang.Class[])
    */
-  public static Object newInstance( final String classname, final Class target, final ClassLoader cl,
-      final Class[] argClasses, final Object[] arguments ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl,
+      final Class<?>[] argClasses, final Object[] arguments ) throws ClassUtilityException
   {
     try
     {
@@ -134,7 +134,7 @@ public class ClassUtilities
         if( arguments == null )
           return c.newInstance();
 
-        Constructor cons = c.getConstructor( argClasses );
+        Constructor<?> cons = c.getConstructor( argClasses );
 
         return cons.newInstance( arguments );
       }

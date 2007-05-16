@@ -43,7 +43,6 @@ package org.kalypso.contribs.java.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * utility stuff for arrays
@@ -52,18 +51,6 @@ import java.util.List;
  */
 public final class Arrays
 {
-  /**
-   * Return a list containing the elements of the array. Changes to the list do not affect the underlying array, except
-   * for changes to the objects themselves
-   * 
-   * @deprecated This method is obsolete, use <code>java.util.Arrays.asList( array );</code> insted. 
-   */
-  @Deprecated
-  public static List copyAsList( final Object[] array )
-  {
-    return java.util.Arrays.asList( array );
-  }
-
   /**
    * Add all elementsToAdd to the given collection.
    */

@@ -43,7 +43,6 @@ package org.kalypso.contribs.java.net;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -65,10 +64,8 @@ public class PropertyUrlCatalog implements IUrlCatalog
    */
   public PropertyUrlCatalog( final URL context, final Properties catalog )
   {
-    for( final Iterator iter = catalog.entrySet().iterator(); iter.hasNext(); )
+    for( final Entry<Object, Object> entry : catalog.entrySet() )
     {
-      final Map.Entry entry = (Entry)iter.next();
-
       try
       {
         m_catalog.put( (String) entry.getKey(), new URL( context, entry.getValue().toString() ) );

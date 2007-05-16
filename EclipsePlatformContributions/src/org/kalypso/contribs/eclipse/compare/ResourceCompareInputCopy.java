@@ -482,6 +482,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
    * @see IAdaptable.getAdapter
    */
   @Override
+  @SuppressWarnings("unchecked")
   public Object getAdapter( Class adapter )
   {
     if( IFile[].class.equals( adapter ) )

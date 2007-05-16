@@ -68,11 +68,11 @@ public class MultiStatus extends Status
   {
     final IStatus[] stati = new IStatus[m_errorMessages.size()];
     int i = 0;
-    for( final Iterator it = m_errorMessages.entrySet().iterator(); it.hasNext(); )
+    for( final Iterator<Entry<String, Throwable>> it = m_errorMessages.entrySet().iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Entry)it.next();
+      final Entry<String, Throwable> entry = it.next();
 
-      stati[i] = new Status( getSeverity(), getPlugin(), getCode(), (String)entry.getKey(), (Throwable)entry.getValue() );
+      stati[i] = new Status( getSeverity(), getPlugin(), getCode(), entry.getKey(), entry.getValue() );
 
       i++;
     }
