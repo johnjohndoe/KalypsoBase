@@ -78,6 +78,8 @@ public class PropertyUtils
 
     final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
 
+    // TODO: ab hier noch mal ne eigene heper methode machen
+    
     // if we have an enumeration, create a combo
     final IRestriction[] restrictions = vpt.getRestriction();
 
@@ -86,13 +88,13 @@ public class PropertyUtils
     {
       if( restriction instanceof EnumerationRestriction )
       {
-        final String[] values = ((EnumerationRestriction) restriction).getEnumeration();
+        final Object[] keys = ((EnumerationRestriction) restriction).getEnumeration();
         final String[] labels = ((EnumerationRestriction) restriction).getLabels();
 
         for( int i = 0; i < labels.length; i++ )
         {
           final String label = labels[i];
-          final String valueString = values[i];
+          final String valueString = keys[i].toString();
           Object value = null;
           try
           {

@@ -49,7 +49,7 @@ public class RegExpRestriction implements IRestriction
 
   public RegExpRestriction( final String[] patterns )
   {
-    // TODO let the patterns compile here and do the validating stuff also here
+    // FIXME let the patterns compile here and do the validating stuff also here
     m_patterns = patterns;
   }
 

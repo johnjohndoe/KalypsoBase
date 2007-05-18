@@ -89,6 +89,7 @@ public class AnnotationAdapterFactory implements IAdapterFactory
    * <p>
    * All inner elements from the dcoument element are regarded as annotations.
    * </p>
+   * TODO: instead of restricting to one language here, we should parse into an IAnnotationProvider and return it.
    * 
    * @param createDefaultAnnotation
    *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if

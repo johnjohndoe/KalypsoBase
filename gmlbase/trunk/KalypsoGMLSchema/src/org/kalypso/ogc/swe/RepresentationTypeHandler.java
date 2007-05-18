@@ -41,16 +41,30 @@
 package org.kalypso.ogc.swe;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
 import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.sun.org.apache.xerces.internal.dom.AttrNSImpl;
 
 /**
  * @author Marc Schlienger
@@ -69,7 +83,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   @Override
   protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
-    if( node != null && node.hasChildNodes() )
+    if( (node != null) && node.hasChildNodes() )
     {
       final Element typeElt = (Element) node.getChildNodes().item( 0 );
 
@@ -87,56 +101,166 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           // TODO: recurse into simple-type and collect all restrictions
         }
         else
+        {
           // error handling?
           throw new TypeRegistryException( "SimpleType without st:restriction definition." );
+        }
       }
       else if( "Number".equals( localName ) )
+      {
         base = "double";
+      }
       else if( "Word".equals( localName ) )
+      {
         base = "string";
+      }
       else if( "Boolean".equals( localName ) )
+      {
         base = "boolean";
+      }
       else
+      {
         base = "string";
+      }
 
       // read base-attribute of restriction
-//      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" );
-//      Element restrictionElt = null;
-//      if( elementsByTagName.getLength() == 1 )
-//        restrictionElt = (Element) elementsByTagName.item( 0 );
-      
+      // final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" );
+      // Element restrictionElt = null;
+      // if( elementsByTagName.getLength() == 1 )
+      // restrictionElt = (Element) elementsByTagName.item( 0 );
+
       // TODO: read IRestriction - Elements from restrictionElt and append them to the RepresentationType
-      
+
       // parse unitOfMeasure
       final NodeList nlUom = typeElt.getElementsByTagNameNS( NS.GML3, "unitOfMeasure" );
       Element uomElt = null;
       if( nlUom.getLength() == 1 )
+      {
         uomElt = (Element) nlUom.item( 0 );
+      }
 
       String unit = "";
       if( uomElt != null )
+      {
         unit = uomElt.getAttribute( "uom" );
+      }
 
       // parse frame (i.e. timezone information for dates)
       final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.GML3, "frame" );
       Element frameElt = null;
       if( nlFrame.getLength() == 1 )
+      {
         frameElt = (Element) nlFrame.item( 0 );
+      }
 
       String frame = "";
       if( frameElt != null )
+      {
         frame = frameElt.getAttributeNS( NS.XLINK, "href" );
+      }
 
       // TODO: parse classification
-      String classification = "";
+      final String classification = "";
 
-      // TODO: parse restrictions
+      /* parsing of restrictions */
+      final Set<IRestriction> myRestrictions = new HashSet<IRestriction>();
 
+      NodeList restriction = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" );
+      if( restriction.getLength() <= 0 )
+      {
+        restriction = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
+      }
+
+      if( restriction.getLength() > 0 )
+      {
+        final Map<Object, ILanguageAnnontationProvider> hEnumerations = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+        final Set<String> sPatterns = new HashSet<String>(); // *< for pattern regex matching
+
+        for( int i = 0; i < restriction.getLength(); i++ )
+        {
+          final Node rNode = restriction.item( i );
+          final NodeList restrictions = rNode.getChildNodes();
+
+          for( int j = 0; j < restrictions.getLength(); j++ )
+          {
+            final Node myNode = restrictions.item( j );
+
+            // TODO: implement other restrictions (see, who implements IRestriction!)
+            if( "pattern".equals( myNode.getLocalName() ) )
+            {
+              final NamedNodeMap attributes = myNode.getAttributes();
+              for( int a = 0; a < attributes.getLength(); a++ )
+              {
+                final Node n = attributes.item( a );
+                if( n instanceof AttrNSImpl )
+                {
+                  final AttrNSImpl attribute = (AttrNSImpl) n;
+                  final String value = attribute.getValue();
+                  sPatterns.add( value );
+                }
+              }
+            }
+            else if( "enumeration".equals( myNode.getLocalName() ) )
+            {
+
+              // key
+              final NamedNodeMap attributes = myNode.getAttributes();
+              final Node itmKey = attributes.getNamedItem( "value" );
+
+              // values
+              final NodeList childNodes = myNode.getChildNodes();
+              final IAnnotation[] annonatations = ObservationLanguageAnnontationProviderHelper.getAnnontations( itmKey.getTextContent(), childNodes );
+              final IAnnotation defaultAnnontation = ObservationLanguageAnnontationProviderHelper.getDefaultAnnontation( itmKey.getTextContent() );
+
+              final ObservationLanguageAnnontationProvider provider = new ObservationLanguageAnnontationProvider( annonatations, defaultAnnontation );
+
+              hEnumerations.put( itmKey.getTextContent(), provider );
+            }
+            else if( "minInclusive".equals( myNode.getLocalName() ) )
+            {
+              final NamedNodeMap attributes = myNode.getAttributes();
+              for( int a = 0; a < attributes.getLength(); a++ )
+              {
+                final Node n = attributes.item( a );
+                if( n instanceof AttrNSImpl )
+                {
+                  final AttrNSImpl attribute = (AttrNSImpl) n;
+                  final String value = attribute.getValue();
+                  myRestrictions.add( new MinInclusiveRestriction( new Double( value ) ) );
+                }
+              }
+            }
+            else if( "maxInclusive".equals( myNode.getLocalName() ) )
+            {
+              final NamedNodeMap attributes = myNode.getAttributes();
+              for( int a = 0; a < attributes.getLength(); a++ )
+              {
+                final Node n = attributes.item( a );
+                if( n instanceof AttrNSImpl )
+                {
+                  final AttrNSImpl attribute = (AttrNSImpl) n;
+                  final String value = attribute.getValue();
+                  myRestrictions.add( new MaxInclusiveRestriction( new Double( value ) ) );
+                }
+              }
+            }// end if-else-if
+          } // endFor j
+        } // endFor i
+
+        myRestrictions.add( new EnumerationRestriction( hEnumerations ) );
+
+        if( sPatterns.size() > 0 )
+        {
+          myRestrictions.add( new RegExpRestriction( sPatterns.toArray( new String[] {} ) ) );
+        }
+      }
       // from qname we can get the type handler via the registry
-      return new RepresentationType( RepresentationType.KIND.valueOf( localName ), new QName( NS.XSD_SCHEMA, base ), unit, frame, classification );
+      return new RepresentationType( RepresentationType.KIND.valueOf( localName ), new QName( NS.XSD_SCHEMA, base ), unit, frame, myRestrictions.toArray( new IRestriction[] {} ), classification );
     }
     else
+    {
       throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" );
+    }
   }
 
   /**
@@ -144,8 +268,10 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
    *      java.net.URL)
    */
   @Override
-  protected void internalMarshall( Object value, Element element, URL context )
+  protected void internalMarshall( final Object value, final Element element, final URL context )
   {
+    // TODO: write restrictions
+
     final RepresentationType type = (RepresentationType) value;
     final Document doc = element.getOwnerDocument();
 
@@ -177,8 +303,8 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
       {
         final Element eltNumber = doc.createElementNS( NS.SWE, "Number" );
 
-        handleUnit( type, doc, eltNumber );
-        handleFrame( type, doc, eltNumber );
+        RepresentationTypeHandler.handleUnit( type, doc, eltNumber );
+        RepresentationTypeHandler.handleFrame( type, doc, eltNumber );
 
         element.appendChild( eltNumber );
         break;
@@ -192,8 +318,8 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
         eltRestriction.setAttributeNS( NS.XST, "base", type.getValueTypeName().getLocalPart() );
         eltSimpleType.appendChild( eltRestriction );
 
-        handleUnit( type, doc, eltSimpleType );
-        handleFrame( type, doc, eltSimpleType );
+        RepresentationTypeHandler.handleUnit( type, doc, eltSimpleType );
+        RepresentationTypeHandler.handleFrame( type, doc, eltSimpleType );
 
         element.appendChild( eltSimpleType );
         break;
@@ -224,7 +350,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   private static void handleFrame( final RepresentationType type, final Document doc, final Element elt )
   {
     final String frame = type.getFrame();
-    if( frame != null && frame.length() > 0 )
+    if( (frame != null) && (frame.length() > 0) )
     {
       final Element eltFrame = doc.createElementNS( NS.SWE, "frame" );
       eltFrame.setAttributeNS( NS.SWE, "frame", frame );

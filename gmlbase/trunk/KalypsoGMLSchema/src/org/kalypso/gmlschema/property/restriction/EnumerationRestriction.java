@@ -40,35 +40,58 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.restriction;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.kalypso.gmlschema.adapter.AnnotationAdapterFactory;
+import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
+
 /**
- * @author doemming
+ * @author doemming refactored kuch
  */
 public class EnumerationRestriction implements IRestriction
 {
-  private final String[] m_values;
+  private String m_lang;
 
-  private final String[] m_labels;
+  private final Map<Object, ILanguageAnnontationProvider> m_map;
 
   /**
    * @throws IllegalArgumentException
-   *           if 'values' and 'labels' does not have same length
+   *             if 'values' and 'labels' does not have same length
    */
-  public EnumerationRestriction( final String[] values, final String[] labels )
+  public EnumerationRestriction( Map<Object, ILanguageAnnontationProvider> map )
   {
-    if( values.length != labels.length )
-      throw new IllegalArgumentException( "'values' and 'labels' must have same length." );
-
-    m_values = values;
-    m_labels = labels;
+    m_map = map;
+    m_lang = AnnotationAdapterFactory.getPlatformLang();
   }
 
-  public String[] getEnumeration( )
+  public Object[] getEnumeration( )
   {
-    return m_values;
+    return m_map.keySet().toArray();
+  }
+
+  public String[] getLabels( String language )
+  {
+    List<String> list = new LinkedList<String>();
+    for( Entry<Object, ILanguageAnnontationProvider> map : m_map.entrySet() )
+    {
+      list.add( map.getValue().getAnnotation( language ).getLabel() );
+    }
+
+    return list.toArray( new String[] {} );
   }
 
   public String[] getLabels( )
   {
-    return m_labels;
+    return getLabels( m_lang );
   }
+  
+  public Map<Object, ILanguageAnnontationProvider> getMapping()
+  {
+    return m_map;
+  }
+  
+  
 }

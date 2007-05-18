@@ -93,7 +93,7 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     {
       final EnumerationRestriction restriction = (EnumerationRestriction) element;
       result.append( "enumeration:\n" );
-      final String[] enumeration = restriction.getEnumeration();
+      final Object[] enumeration = restriction.getEnumeration();
       for( int i = 0; i < enumeration.length; i++ )
         result.append( "  " + enumeration[i] + "\n" );
       return result.toString();

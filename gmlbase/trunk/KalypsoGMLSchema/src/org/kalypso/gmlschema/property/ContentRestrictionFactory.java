@@ -30,7 +30,9 @@
 package org.kalypso.gmlschema.property;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
@@ -38,8 +40,9 @@ import org.apache.xmlbeans.impl.xb.xsdschema.NoFixedFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
-import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.adapter.AnnotationAdapterFactory;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
@@ -49,9 +52,10 @@ import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
+import org.kalypso.ogc.swe.ObservationLanguageAnnontationProvider;
 
 /**
- * represents restiction on a simple content
+ * represents restriction on a simple content
  * 
  * @author doemming
  */
@@ -65,8 +69,8 @@ public class ContentRestrictionFactory
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
     if( enumerationArray.length > 0 )
     {
-      final String[] values = new String[enumerationArray.length];
-      final String[] labels = new String[enumerationArray.length];
+      Map<Object, ILanguageAnnontationProvider> map = new HashMap<Object, ILanguageAnnontationProvider>();
+
       for( int i = 0; i < enumerationArray.length; i++ )
       {
         final NoFixedFacet facet = enumerationArray[i];
@@ -76,11 +80,10 @@ public class ContentRestrictionFactory
         final String platformLang = AnnotationAdapterFactory.getPlatformLang();
         final IAnnotation annotation = AnnotationAdapterFactory.annotationForElement( platformLang, facet.getAnnotation(), stringValue );
 
-        values[i] = stringValue;
-        labels[i] = annotation.getLabel();
+        map.put( stringValue, new ObservationLanguageAnnontationProvider( new IAnnotation[] { annotation }, annotation ) );
       }
 
-      result.add( new EnumerationRestriction( values, labels ) );
+      result.add( new EnumerationRestriction( map ) );
     }
 
     final Pattern[] patternArray = restriction.getPatternArray();
