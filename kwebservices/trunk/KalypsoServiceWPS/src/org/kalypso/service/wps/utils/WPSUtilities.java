@@ -95,7 +95,7 @@ public class WPSUtilities
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 500 );
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 5000 );
     client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
 
     /* Build the method. */
