@@ -44,19 +44,25 @@ import java.util.Comparator;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+
 /**
- * @author schlienger
+ * Each component is a comparator of its own values. That is, if the tuple-result gets sorted by one columne (i.e.
+ * component), the values of the records are sorted by this comparator.
+ * 
+ * @author Marc Schlienger
  */
 public interface IComponent extends Comparator<Object>
 {
   /**
    * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
+   * should be the urn of the corresponding dictionary entry.
    */
   public String getId( );
 
   /**
-   * User-firednly name of this component.
+   * User-fired name of this component.
    */
   public String getName( );
 
@@ -69,6 +75,10 @@ public interface IComponent extends Comparator<Object>
   public QName getValueTypeName( );
 
   public Object getDefaultValue( );
+
+  public IRestriction[] getRestrictions( );
+
+  public IPhenomenon getPhenomenon( );
 
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
   public boolean equals( final Object object );
