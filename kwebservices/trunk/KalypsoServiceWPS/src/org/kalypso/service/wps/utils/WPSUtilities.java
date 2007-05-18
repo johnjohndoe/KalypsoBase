@@ -46,17 +46,15 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -86,49 +84,26 @@ public class WPSUtilities
    * This function is responsible for sending a request to a server.
    * 
    * @param body
-   *          The XML string to be send.
+   *            The XML string to be send.
    * @param url
-   *          The address of the server.
+   *            The address of the server.
    * @return The response as String.
    */
-  @SuppressWarnings("restriction")
   public static String send( String xml, String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = new HttpClient();
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 500 );
     client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
 
     /* Build the method. */
     PostMethod post = new PostMethod( url );
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
 
-    ProxyUtilities proxy = ProxyUtilities.getInstance();
-    Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
-
-    if( proxy.useProxy() )
-    {
-      String proxyHost = proxy.getProxyHost();
-      int proxyPort = proxy.getProxyPort();
-      Debug.println( "Proxy host: " + proxyHost );
-      Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
-
-      /* Set the proxy information. */
-      client.getHostConfiguration().setProxy( proxyHost, proxyPort );
-
-      /* Get the credentials. */
-      String user = proxy.getUser();
-      String password = proxy.getPassword();
-
-      /* Set them, if the credentials are complete. */
-      if( user != null && password != null )
-      {
-        Credentials credentials = new UsernamePasswordCredentials( user, password );
-        client.getState().setProxyCredentials( AuthScope.ANY, credentials );
-      }
-    }
+    /* Let the method handle the authentication, if any. */
+    post.setDoAuthentication( true );
 
     /* Execute the method. */
     int status = client.executeMethod( post );
@@ -150,7 +125,7 @@ public class WPSUtilities
    * Returns the simulation with the given type id.
    * 
    * @param simulationType
-   *          The simulations type id.
+   *            The simulations type id.
    * @return The simulation.
    */
   public static ISimulation getSimulation( String simulationType ) throws OWSException
@@ -200,14 +175,14 @@ public class WPSUtilities
    * This function converts the URL that, the server has used and converts it to an URL, which the client can use.
    * 
    * @param serverUrl
-   *          The URL, which the server has used internally to copy the results.<br>
-   *          Example:<br>
-   *          Server URL: file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results<br>
-   *          Replacement URL: http://informdss.bafg.de/webdav/results<br>
-   *          ----------------------------------------------------------------------------------<br>
-   *          serverUrl param : file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results/xxx<br>
-   *          ----------------------------------------------------------------------------------<br>
-   *          Result: http://informdss.bafg.de/webdav/results/xxx
+   *            The URL, which the server has used internally to copy the results.<br>
+   *            Example:<br>
+   *            Server URL: file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results<br>
+   *            Replacement URL: http://informdss.bafg.de/webdav/results<br>
+   *            ----------------------------------------------------------------------------------<br>
+   *            serverUrl param : file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results/xxx<br>
+   *            ----------------------------------------------------------------------------------<br>
+   *            Result: http://informdss.bafg.de/webdav/results/xxx
    */
   @SuppressWarnings("restriction")
   public static String convertInternalToClient( String serverUrl )
@@ -229,16 +204,16 @@ public class WPSUtilities
    * the server can use to retrieve them.
    * 
    * @param clientUrl
-   *          The URL, which the client has used internally to copy the input data.<br>
-   *          Example:<br>
-   *          Client URL: webdav://informdss.bafg.de/webdav/input<br>
-   *          Replacement URL: http://informdss.bafg.de/webdav/input<br>
-   *          ----------------------------------------------------------------------------------<br>
-   *          clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
-   *          ----------------------------------------------------------------------------------<br>
-   *          Result: http://informdss.bafg.de/webdav/input/xxx
+   *            The URL, which the client has used internally to copy the input data.<br>
+   *            Example:<br>
+   *            Client URL: webdav://informdss.bafg.de/webdav/input<br>
+   *            Replacement URL: http://informdss.bafg.de/webdav/input<br>
+   *            ----------------------------------------------------------------------------------<br>
+   *            clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
+   *            ----------------------------------------------------------------------------------<br>
+   *            Result: http://informdss.bafg.de/webdav/input/xxx
    * @param clientProperty
-   *          The client URL.
+   *            The client URL.
    */
   @SuppressWarnings("restriction")
   public static String convertInternalToServer( String clientUrl, String clientProperty )
