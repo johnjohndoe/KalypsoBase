@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,8 +42,6 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -201,8 +198,8 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
     TrayDialog.setDialogHelpAvailable( true );
 
     // use this image for the help button in dialogs
-    ImageRegistry reg = JFaceResources.getImageRegistry();
-    reg.put( Dialog.DLG_IMG_HELP, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP ) );
+//    ImageRegistry reg = JFaceResources.getImageRegistry();
+//    reg.put( Dialog.DLG_IMG_HELP, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP ) );
 
     Policy.setComparator( Collator.getInstance() );
   }
@@ -653,7 +650,7 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_LCL_FLAT_LAYOUT, PATH_ELOCALTOOL + "flatLayout.gif", true ); //$NON-NLS-1$
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_LCL_HIERARCHICAL_LAYOUT, PATH_ELOCALTOOL + "hierarchicalLayout.gif", true ); //$NON-NLS-1$
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_ETOOL_PROBLEM_CATEGORY, PATH_ETOOL + "problem_category.gif", true ); //$NON-NLS-1$
-    declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP, PATH_ELOCALTOOL + "linkto_help.gif", false ); //$NON-NLS-1$
+//    declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP, PATH_ELOCALTOOL + "linkto_help.gif", false ); //$NON-NLS-1$
 
     // synchronization indicator objects
     // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_WBET_STAT,
