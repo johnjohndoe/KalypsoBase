@@ -47,7 +47,8 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  * @author Patrice Congo
  *
  */
-public interface ICalculationUnit1D2D<T extends IElement2D>
+@SuppressWarnings("unchecked")
+public interface ICalculationUnit1D2D<T extends IFE1D2DElement>
                                   extends ICalculationUnit<T>
 {
   IFeatureWrapperCollection<ICalculationUnit> getSubUnits();
