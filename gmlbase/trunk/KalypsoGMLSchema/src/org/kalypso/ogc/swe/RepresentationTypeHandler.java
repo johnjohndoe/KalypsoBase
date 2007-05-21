@@ -247,7 +247,10 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           } // endFor j
         } // endFor i
 
-        myRestrictions.add( new EnumerationRestriction( hEnumerations ) );
+        if( hEnumerations.size() > 0 )
+        {
+          myRestrictions.add( new EnumerationRestriction( hEnumerations ) );
+        }
 
         if( sPatterns.size() > 0 )
         {
