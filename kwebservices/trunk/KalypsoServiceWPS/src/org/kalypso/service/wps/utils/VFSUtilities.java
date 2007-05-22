@@ -74,6 +74,8 @@ public class VFSUtilities
 
   private static final FileSystemOptions THE_HTTP_OPTIONS = new FileSystemOptions();
 
+  private static final FileSystemOptions THE_HTTPS_OPTIONS = new FileSystemOptions();
+
   /**
    * The constructor.
    */
@@ -344,6 +346,20 @@ public class VFSUtilities
           }
 
           return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
+        }
+        else if( m.group( 1 ).equals( "https" ) )
+        {
+          HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTPS_OPTIONS, proxyHost );
+          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTPS_OPTIONS, proxyPort );
+
+          /* If there are credentials given, set them. */
+          if( user != null && password != null )
+          {
+            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
+          }
+
+          return fsManager.resolveFile( absoluteFile, THE_HTTPS_OPTIONS );
         }
       }
     }

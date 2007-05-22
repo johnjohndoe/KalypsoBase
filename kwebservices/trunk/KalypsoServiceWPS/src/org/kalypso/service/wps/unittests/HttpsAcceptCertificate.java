@@ -59,7 +59,8 @@ import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 
 /**
- * This unittest should test a http connection, accepting the certificate.
+ * This unittest should test a http connection, accepting every certificate.<br>
+ * This test will use the HttpClient bundled in KalypsoCommons.
  * 
  * @author Holger Albert
  */
@@ -71,6 +72,11 @@ public class HttpsAcceptCertificate
   @Test
   public void testHttpsAcceptCertificate( ) throws HttpException, CoreException, IOException, JAXBException
   {
+    /* Configure proxy for testing. */
+    System.setProperty( "http.proxySet", "true" );
+    System.setProperty( "http.proxyHost", "proxy.bce01.de" );
+    System.setProperty( "http.proxyPort", "8080" );
+
     /* Build the describe process request. */
     List<CodeType> identifier = new LinkedList<CodeType>();
     identifier.add( OGCUtilities.buildCodeType( "", "InformDSSHydraulicV1.0" ) );
@@ -78,7 +84,7 @@ public class HttpsAcceptCertificate
 
     /* Send the request. */
     Debug.println( "Asking for a process description ..." );
-    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), "https://informdss.bafg.de/bridge/ogc" );
+    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), "https://informdss.bafg.de/bridge/ogc?" );
 
     /* Handle the response. */
     Debug.println( "Response:\n" + describeProcessResponse );

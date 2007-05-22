@@ -55,6 +55,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.net.ProxyUtilities;
+import org.kalypso.commons.net.SSLUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -66,6 +67,7 @@ import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
  * 
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 public class WPSUtilities
 {
   /**
@@ -95,8 +97,11 @@ public class WPSUtilities
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 5000 );
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000 );
     client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
+
+    /* All certificates should be accepted! */
+    SSLUtilities.acceptSelfSignedCertificatesSSL();
 
     /* Build the method. */
     PostMethod post = new PostMethod( url );
@@ -184,7 +189,6 @@ public class WPSUtilities
    *            ----------------------------------------------------------------------------------<br>
    *            Result: http://informdss.bafg.de/webdav/results/xxx
    */
-  @SuppressWarnings("restriction")
   public static String convertInternalToClient( String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
@@ -215,7 +219,6 @@ public class WPSUtilities
    * @param clientProperty
    *            The client URL.
    */
-  @SuppressWarnings("restriction")
   public static String convertInternalToServer( String clientUrl, String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */

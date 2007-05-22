@@ -79,6 +79,7 @@ import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
  * 
  * @author Gernot Belger (original), Holger Albert (changes for WPS)
  */
+@SuppressWarnings("restriction")
 public class WPSQueuedSimulationService
 {
   /**
@@ -144,17 +145,16 @@ public class WPSQueuedSimulationService
    * The constructor.
    * 
    * @param factory
-   *          Retrieves the simulation.
+   *            Retrieves the simulation.
    * @param catalog
-   *          The URL catalog.
+   *            The URL catalog.
    * @param maxThreads
-   *          Maximal count of parallel running jobs.
+   *            Maximal count of parallel running jobs.
    * @param schedulingPeriod
-   *          Time (in ms) where the queue is searched for waiting jobs.
+   *            Time (in ms) where the queue is searched for waiting jobs.
    * @param tmpDir
-   *          The temporary directory will be used by the jobs to copy their running data.
+   *            The temporary directory will be used by the jobs to copy their running data.
    */
-  @SuppressWarnings("restriction")
   public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
   {
     m_calcJobFactory = factory;
@@ -183,9 +183,9 @@ public class WPSQueuedSimulationService
       final WPSSimulationInfo[] jobInfos = new WPSSimulationInfo[m_threads.size()];
       int count = 0;
 
-      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); count++ )
+      for( final Iterator<WPSSimulationThread> jIt = m_threads.values().iterator(); jIt.hasNext(); count++ )
       {
-        final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
+        final WPSSimulationThread cjt = jIt.next();
         jobInfos[count] = cjt.getJobInfo();
       }
 
@@ -326,9 +326,9 @@ public class WPSQueuedSimulationService
       // count running thread
       int runningCount = 0;
       int waitingCount = 0;
-      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); )
+      for( final Iterator<WPSSimulationThread> jIt = m_threads.values().iterator(); jIt.hasNext(); )
       {
-        final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
+        final WPSSimulationThread cjt = jIt.next();
         if( cjt.isAlive() )
           runningCount++;
 
@@ -354,9 +354,9 @@ public class WPSQueuedSimulationService
       }
 
       // start one waiting job, if maximum is not reached
-      for( final Iterator jIt = m_threads.values().iterator(); jIt.hasNext(); )
+      for( final Iterator<WPSSimulationThread> jIt = m_threads.values().iterator(); jIt.hasNext(); )
       {
-        final WPSSimulationThread cjt = (WPSSimulationThread) jIt.next();
+        final WPSSimulationThread cjt = jIt.next();
 
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
@@ -380,9 +380,9 @@ public class WPSQueuedSimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator iter = m_threads.values().iterator(); iter.hasNext(); )
+      for( final Iterator<WPSSimulationThread> iter = m_threads.values().iterator(); iter.hasNext(); )
       {
-        final WPSSimulationThread cjt = (WPSSimulationThread) iter.next();
+        final WPSSimulationThread cjt = iter.next();
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         disposeJob( jobInfo.getId() );
       }
@@ -449,11 +449,11 @@ public class WPSQueuedSimulationService
 
   public String[] getSupportedSchemata( )
   {
-    final Map catalog = m_catalog.getCatalog();
+    final Map<String, URL> catalog = m_catalog.getCatalog();
     final String[] namespaces = new String[catalog.size()];
     int count = 0;
-    for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
-      namespaces[count++] = (String) mapIt.next();
+    for( final Iterator<String> mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
+      namespaces[count++] = mapIt.next();
 
     return namespaces;
   }

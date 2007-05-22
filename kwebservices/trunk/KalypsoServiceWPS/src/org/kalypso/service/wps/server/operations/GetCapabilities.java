@@ -35,6 +35,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
  * 
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 public class GetCapabilities implements IOperation
 {
   /**
@@ -50,7 +51,6 @@ public class GetCapabilities implements IOperation
   /**
    * The constructor.
    */
-  @SuppressWarnings("restriction")
   public GetCapabilities( )
   {
     m_serverURL = FrameworkProperties.getProperty( "org.kalypso.service.wps.service" );
@@ -137,7 +137,7 @@ public class GetCapabilities implements IOperation
    * Checks for the parameter AcceptVersions and returns it. No POST/XML allowed!
    * 
    * @param request
-   *          The request.
+   *            The request.
    * @return The AcceptVersions parameter or null if not present.
    */
   private String getAcceptVersions( RequestBean request )
