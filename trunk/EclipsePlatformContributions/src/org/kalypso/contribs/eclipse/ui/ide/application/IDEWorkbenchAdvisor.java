@@ -216,10 +216,10 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
     Platform.getJobManager().suspend();
 
     // Register the build actions
-    IProgressService service = PlatformUI.getWorkbench().getProgressService();
-    ImageDescriptor newImage = IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC );
-    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_MANUAL_BUILD );
-    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_AUTO_BUILD );
+//    IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//    ImageDescriptor newImage = IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC );
+//    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_MANUAL_BUILD );
+//    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_AUTO_BUILD );
   }
 
   /*
