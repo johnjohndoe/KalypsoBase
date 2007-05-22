@@ -1,1 +1,0 @@
-The purpose of this file is to prevent CVS to prune the empty src-folder.
