@@ -76,9 +76,11 @@ public class VFSAcceptCertificate
     /* All certificates should be accepted! */
     SSLUtilities.acceptSelfSignedCertificatesSSL();
 
-    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1179749298830/executeResponse.xml" );
+    // FileObject remoteFile = VFSUtilities.checkProxyFor(
+    // "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1179749298830/executeResponse.xml" );
+    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://informdss.bafg.de/test.txt" );
 
-    Debug.println( "Sending requst ..." );
+    Debug.println( "Sending request ..." );
 
     File file = new File( FileUtilities.TMP_DIR, "vfs_test.tmp" );
     FileObject localFile = VFSUtilities.getManager().toFileObject( file );
