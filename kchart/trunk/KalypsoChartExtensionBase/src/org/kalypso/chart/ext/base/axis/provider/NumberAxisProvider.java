@@ -33,9 +33,9 @@ public class NumberAxisProvider extends AbstractAxisProvider
   {
     AxisPositionParser app=new AxisPositionParser();
     String position = getAxisType().getPosition().toString();
-    POSITION pos=app.dataFromString( position  );
+    POSITION pos=app.stringToLogical( position  );
     AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.dataFromString( getAxisType().getDirection().toString() );
+    DIRECTION dir=adp.stringToLogical( getAxisType().getDirection().toString() );
     
     Comparator<Number> nc=new DoubleComparator(0.0001);
 
@@ -51,7 +51,7 @@ public class NumberAxisProvider extends AbstractAxisProvider
       {
         String minValStr=getAxisType().getMinVal();
         if (!minValStr.equals(""))
-        	min=( dp.dataFromString(minValStr) );
+        	min=( dp.stringToLogical(minValStr) );
       }
       catch( MalformedValueException e )
       {
@@ -61,7 +61,7 @@ public class NumberAxisProvider extends AbstractAxisProvider
       {
         String maxValStr=getAxisType().getMaxVal();
         if (!maxValStr.equals(""))
-        	min=( dp.dataFromString(maxValStr) );
+        	min=( dp.stringToLogical(maxValStr) );
       }
       catch( MalformedValueException e )
       {

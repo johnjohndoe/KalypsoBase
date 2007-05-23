@@ -2,9 +2,10 @@ package org.kalypso.chart.ext.base.axis;
 
 import java.util.Comparator;
 
+import org.kalypso.chart.ext.base.data.NumberDataOperator;
 import org.kalypso.chart.framework.exception.MalformedValueException;
+import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.IStringDataConverter;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
@@ -16,7 +17,7 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  * 
  * Concrete IAxis implementation - to be used for numeric data 
  */
-public class NumberAxis extends AbstractAxis<Number> implements IStringDataConverter<Number>
+public class NumberAxis extends AbstractAxis<Number>
 {
   public NumberAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, Comparator<Number> comp )
   {
@@ -83,27 +84,9 @@ public class NumberAxis extends AbstractAxis<Number> implements IStringDataConve
   }
 
 
-public IStringDataConverter<Number> getStringDataConverter() {
-	return this;
+public IDataOperator<Number> getDataOperator() {
+	return new NumberDataOperator();
 }
 
-public String stringFromData(Number value) {
-	return null;
-}
-
-public Number dataFromString(String value) throws MalformedValueException {
-	try {
-		double d = Double.parseDouble(value);
-		return d;
-	}
-	catch (NumberFormatException e) {
-		throw new MalformedValueException(e);
-	}
-}
-
-public String getFormatHint() {
-	return "[1-9]([0-9])*.([0-9])*[1-9]";
-	
-}
 
 }

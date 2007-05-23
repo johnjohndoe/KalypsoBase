@@ -17,9 +17,9 @@ public class FontDataParser implements IStringParser<FontData>
   String m_defaultFontName="Times New Roman";
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public FontData dataFromString( String value )
+  public FontData stringToLogical( String value )
   {
     FontData fd=null;
     try

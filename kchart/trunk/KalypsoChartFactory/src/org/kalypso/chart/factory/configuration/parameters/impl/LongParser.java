@@ -11,9 +11,9 @@ public class LongParser implements IStringParser<Long>
 {
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Long dataFromString( String value ) throws MalformedValueException
+  public Long stringToLogical( String value ) throws MalformedValueException
   {
     Long n=null;
     try

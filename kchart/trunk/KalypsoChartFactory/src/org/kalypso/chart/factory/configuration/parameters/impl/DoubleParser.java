@@ -11,9 +11,9 @@ public class DoubleParser implements IStringParser<Double>
 {
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Double dataFromString( String value ) throws MalformedValueException
+  public Double stringToLogical( String value ) throws MalformedValueException
   {
     Double n=null;
     try

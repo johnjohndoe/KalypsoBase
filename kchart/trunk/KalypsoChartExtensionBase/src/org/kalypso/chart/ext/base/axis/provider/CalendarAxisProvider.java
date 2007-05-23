@@ -32,9 +32,9 @@ public class CalendarAxisProvider extends AbstractAxisProvider
   public IAxis getAxis( ) throws AxisProviderException
   {
     AxisPositionParser app=new AxisPositionParser();
-    POSITION pos=app.dataFromString( getAxisType().getPosition().toString() );
+    POSITION pos=app.stringToLogical( getAxisType().getPosition().toString() );
     AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.dataFromString( getAxisType().getDirection().toString() );
+    DIRECTION dir=adp.stringToLogical( getAxisType().getDirection().toString() );
     IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir );
     if (axis!=null)
     {
@@ -46,7 +46,7 @@ public class CalendarAxisProvider extends AbstractAxisProvider
         
         try
         {
-	       minVal=gcp.dataFromString(minValStr);
+	       minVal=gcp.stringToLogical(minValStr);
         }
         catch( MalformedValueException e )
         {
@@ -57,7 +57,7 @@ public class CalendarAxisProvider extends AbstractAxisProvider
         }
         try
         {
-        	 maxVal=gcp.dataFromString(maxValStr);
+        	 maxVal=gcp.stringToLogical(maxValStr);
         }
         catch( MalformedValueException e )
         {

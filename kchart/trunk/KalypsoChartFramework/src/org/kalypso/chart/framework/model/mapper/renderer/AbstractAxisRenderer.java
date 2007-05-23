@@ -127,6 +127,11 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
   {
 	  return m_tickMap;
   }
+  
+  public void setTickMapElement(IAxis<T_logical> axis, List<T_logical> ticks)
+  {
+	  m_tickMap.put(axis, ticks);
+  }
 
 
 

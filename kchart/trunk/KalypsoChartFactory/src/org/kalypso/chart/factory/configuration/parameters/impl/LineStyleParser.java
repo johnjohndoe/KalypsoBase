@@ -12,9 +12,9 @@ public class LineStyleParser implements IStringParser<Integer>
 {
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Integer dataFromString( String value ) 
+  public Integer stringToLogical( String value ) 
   {
     if( value.compareTo( "DASH" )==0)
       return SWT.LINE_DASH;

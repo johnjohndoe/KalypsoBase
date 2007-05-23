@@ -14,9 +14,9 @@ public class RGBParser implements IStringParser<RGB>
   final String m_formatHint="'#abcdef' or '255,255,255'"; 
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public RGB dataFromString( String value ) 
+  public RGB stringToLogical( String value ) 
   {
     RGB rgb=null;
     //Hexadezimalwert

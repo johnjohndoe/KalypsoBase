@@ -12,9 +12,9 @@ public class BooleanParser implements IStringParser<Boolean>
   final String m_formatHint="one of 'true' or 'false'";
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Boolean dataFromString( String value ) throws MalformedValueException
+  public Boolean stringToLogical( String value ) throws MalformedValueException
   {
     if (value.compareTo( "true" )==0)
         return Boolean.TRUE;

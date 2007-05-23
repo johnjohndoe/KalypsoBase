@@ -26,9 +26,9 @@ public class GregorianCalendarParser implements IStringParser<GregorianCalendar>
   private String m_formatHint="yyyy-MM-dd HH:mm";
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public GregorianCalendar dataFromString( String value )
+  public GregorianCalendar stringToLogical( String value )
   {
     //erst mal versuchen, ein korrektes Datum zu parsen
     GregorianCalendar gc=new GregorianCalendar();

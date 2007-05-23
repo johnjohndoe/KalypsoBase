@@ -14,9 +14,9 @@ public class FontStyleParser implements IStringParser<Integer>
   final String m_formatHint="one of 'BOLD', 'ITALIC' or 'NORMAL'"; 
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Integer dataFromString( String value )
+  public Integer stringToLogical( String value )
   {
     if (value.compareTo("BOLD")==0)
     {

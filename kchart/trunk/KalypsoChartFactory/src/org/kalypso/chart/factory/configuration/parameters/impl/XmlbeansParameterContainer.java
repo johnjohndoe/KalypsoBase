@@ -76,7 +76,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
     {
 	    try
 	    {
-	      value = parser.dataFromString( strValue );
+	      value = parser.stringToLogical( strValue );
 	    }
 	    catch( MalformedValueException e )
 	    {

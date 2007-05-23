@@ -15,9 +15,9 @@ public class AxisPositionParser implements IStringParser<POSITION>
   private String m_formatHint="one of 'BOTTOM', 'LEFT', 'RIGHT', 'TOP'";
 
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public POSITION dataFromString( String value )
+  public POSITION stringToLogical( String value )
   {
     POSITION pos = POSITION.BOTTOM;
     if( value.equals( "TOP" )  )

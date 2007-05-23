@@ -14,9 +14,9 @@ public class AxisDirectionParser implements IStringParser<DIRECTION>
 
   String m_formatHint="one of 'POSITIVE' or 'NEGATIVE'";
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#dataFromString(java.lang.String)
+   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public DIRECTION dataFromString( String value )
+  public DIRECTION stringToLogical( String value )
   {
     DIRECTION dir = DIRECTION.POSITIVE;
     if( value.compareTo( "NEGATIVE" ) == 0 )

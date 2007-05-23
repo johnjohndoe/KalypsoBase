@@ -8,9 +8,9 @@ import org.kalypso.chart.framework.exception.MalformedValueException;
  * @author alibu
  *
  */
-public interface IStringParser<T>
+public interface IStringParser<T_logical>
 {
-  public T dataFromString(String value) throws MalformedValueException;
+  public T_logical stringToLogical(String value) throws MalformedValueException;
 
   /** Human readable format hint */
   public String getFormatHint( );

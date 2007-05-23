@@ -1,6 +1,7 @@
 package org.kalypso.chart.framework.model.mapper;
 
 import org.kalypso.chart.framework.exception.MalformedValueException;
+import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.IStringDataConverter;
 
@@ -62,6 +63,6 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    * returns a data converter which may be used to convert strings to data which can directly 
    * be used by the axis (and vice versa)
    */
-  public IStringDataConverter<T_logical> getStringDataConverter();
+  public IDataOperator<T_logical> getDataOperator();
 
 }

@@ -1,15 +1,13 @@
 package org.kalypso.chart.ext.base.axis;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.exception.MalformedValueException;
+import org.kalypso.chart.ext.base.data.CalendarDataOperator;
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.IStringDataConverter;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
@@ -24,7 +22,7 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  * Concrete IAxis implementation - to be used for calendar data from XML documents
  *
  */
-public class CalendarAxis extends AbstractAxis<Calendar> implements IStringDataConverter<Calendar>
+public class CalendarAxis extends AbstractAxis<Calendar> 
 {
   public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
   {
@@ -154,49 +152,10 @@ public int zeroToScreen()
 }
 
 
-public String stringFromData(Calendar value) {
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	return sdf.format(value.getTime());
-}
 
-public Calendar dataFromString(String value) throws MalformedValueException {
-	SimpleDateFormat sdf;
-	Date date;
-	Calendar cal=Calendar.getInstance();
-	try
-    {
-      sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      date=sdf.parse( value );
-    }
-    catch( ParseException e )
-    {
-      //Nochmal mit anderem String probieren
-      try
-      {
-        sdf=new SimpleDateFormat("yyyy-MM-dd");
-        date=sdf.parse( value );
-      }
-      catch( ParseException e2 )
-      {
-        //TODO: nichts machen - wir probieren mal, das über die anderer Syntax an das Datum zu kommen
-        Logger.logError(Logger.TOPIC_LOG_GENERAL, "Unable to parse date: "+value);
-        throw new MalformedValueException(e2);
-      }
-    }
 
-    if (date!=null)
-      cal.setTime( date );
-    cal.set( Calendar.DST_OFFSET, 0);
-    cal.set( Calendar.ZONE_OFFSET, 0);
-    return cal;
-}
-
-public String getFormatHint() {
-	return "yyyy-MM-dd (HH:mm)";
-}
-
-public IStringDataConverter<Calendar> getStringDataConverter() {
-	return this;
+public IDataOperator<Calendar> getDataOperator() {
+	return new CalendarDataOperator();
 }
 
 
