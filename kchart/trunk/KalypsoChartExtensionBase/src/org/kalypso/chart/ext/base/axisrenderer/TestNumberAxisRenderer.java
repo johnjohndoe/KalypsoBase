@@ -77,7 +77,7 @@ public class TestNumberAxisRenderer extends AbstractAxisRenderer<Number>
 	if ( tickMap !=null && tickMap.size()>0)
 	{
 		NumberTickCalculator.testNumberFormat(tickMap.toArray(new Double[]{}));
-		tickLabelSize=getTextExtent(gc, m_nf.format(tickMap.get(0)), getFontDataTickLabel());
+		tickLabelSize=getTextExtent(gc, m_nf.format(tickMap.get(tickMap.size()-1)), getFontDataTickLabel());
 		System.out.println("Biggest Tick: "+m_nf.format(tickMap.get(0))+" "+tickMap.get(0));
 	}
 	else
