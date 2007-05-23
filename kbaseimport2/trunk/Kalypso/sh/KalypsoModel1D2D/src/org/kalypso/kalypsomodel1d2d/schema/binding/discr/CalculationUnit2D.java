@@ -62,9 +62,9 @@ public class CalculationUnit2D<ET extends IElement2D>
   {
     this(
         featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
-        (Class<ET>)IElement1D.class );
+        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
+        (Class<ET>)IElement2D.class );
     
   }
   
