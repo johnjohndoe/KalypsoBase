@@ -1,6 +1,6 @@
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IActionDelegate2;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -45,18 +45,15 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * 
  * PluginMapOutlineAction
  * <p>
- * interface to extention point for actions on Mapoutline
- * 
- * created by
+ * interface to extention point for actions on Mapoutline created by
  * 
  * @author doemming (25.05.2005)
  */
-public interface PluginMapOutlineActionDelegate extends IActionDelegate
+public interface PluginMapOutlineActionDelegate extends IActionDelegate2
 {
   public void setView( final IMapModellView mapModellView );
-  
+
   public IMapModellView getView( );
 }
