@@ -61,7 +61,7 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
 
   private final AxisManager m_axisMap = new AxisManager();
 
-  /** Kepps track, which layers are currently visible */
+  /** Keeps track, which layers are currently visible */
   private Map<IChartLayer, Boolean> m_layervisible = new HashMap<IChartLayer, Boolean>();
 
   /** In non null, this Rectangle will be drawn as an focusRect */
