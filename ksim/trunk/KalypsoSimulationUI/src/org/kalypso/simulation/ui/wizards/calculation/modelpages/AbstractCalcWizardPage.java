@@ -90,7 +90,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
@@ -103,6 +102,7 @@ import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -145,7 +145,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -327,7 +326,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private IFolder m_calcFolder = null;
 
-  private Properties m_replaceProperties = new Properties();
+  private final Properties m_replaceProperties = new Properties();
 
   private GisTemplateMapModell m_mapModell = null;
 
@@ -521,13 +520,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       throw new CoreException( StatusUtilities.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName ) );
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
 
     // TODO this might cause problems with active map contexts?
     m_mapModell = new GisTemplateMapModell( context, crs, mapFile.getProject(), m_selectionManager );
     m_mapModell.createFromTemplate( gisview );
-    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     m_mapPanel = new MapPanel( this, crs, m_selectionManager );
 
     m_mapPanel.addSelectionChangedListener( this );
@@ -545,13 +543,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     virtualFrame.add( m_mapPanel );
 
     m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel.repaint();
 
     final String widgetID = getArguments().getProperty( PROP_MAP_WIDGETID, MapPanel.WIDGET_SINGLE_SELECT );
     m_mapPanel.getWidgetManager().setActualWidget( WidgetHelper.createWidget( widgetID ) );
-
-    // only do this, when map has loaded
-    // m_mapPanel.setBoundingBox( m_wishBoundingBox );
 
     return mapComposite;
   }
@@ -768,7 +763,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
-  public TSLinkWithName[] getObservations( boolean onlySelected )
+  public TSLinkWithName[] getObservations( final boolean onlySelected )
   {
     final List selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
 
@@ -778,10 +773,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       final Feature kf = (Feature) it.next();
 
-      for( int i = 0; i < m_tsProps.length; i++ )
+      for( final TimeserieFeatureProps tsprop : m_tsProps )
       {
-        final TimeserieFeatureProps tsprop = m_tsProps[i];
-
         final String nameColumn = tsprop.getNameColumn();
         String name = tsprop.getNameString();
         if( nameColumn != null )
@@ -934,7 +927,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( radioW.getSelection() )
           setObsIgnoreType( ignoreType2 );
@@ -1012,7 +1005,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     runSomething( new ICoreExceptionRunnable()
     {
 
-      public IStatus run( IProgressMonitor monitor ) throws CoreException
+      public IStatus run( final IProgressMonitor monitor ) throws CoreException
       {
         final ModelNature nature = (ModelNature) getCalcFolder().getProject().getNature( ModelNature.ID );
         final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
@@ -1130,8 +1123,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             final Feature feature = workspace.getFeature( panToFid );
             if( feature != null )
             {
-              GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
-              GM_Point centroid = defaultGeometryProperty.getCentroid();
+              final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+              final GM_Point centroid = defaultGeometryProperty.getCentroid();
               m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
             }
           }
@@ -1142,9 +1135,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           if( featureList != null && featureList.size() != 0 )
           {
             final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( fids.length );
-            for( int i = 0; i < fids.length; i++ )
+            for( final String fid : fids )
             {
-              final String fid = fids[i];
               if( fid != null )
               {
                 final Feature feature = workspace.getFeature( fid );
