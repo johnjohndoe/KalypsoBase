@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*****************************************
- * Copy/Paste of the original package org.eclipse.swt.custom.TableCursor in order to make it better. 
- */
-package org.kalypso.contribs.eclipse.swt.custom;
+package org.kalypso.contribs.eclipse.swt.custom.tmp;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
@@ -161,18 +158,18 @@ import org.eclipse.swt.widgets.TypedListener;
  */
 public class TableCursor extends Canvas
 {
+  Table table;
+
+  TableItem row = null;
+
+  TableColumn column = null;
+
+  Listener tableListener, resizeListener, disposeItemListener, disposeColumnListener;
+
   // By default, invert the list selection colors
   static final int BACKGROUND = SWT.COLOR_LIST_SELECTION_TEXT;
 
   static final int FOREGROUND = SWT.COLOR_LIST_SELECTION;
-
-  Table m_table;
-
-  TableItem m_row = null;
-
-  TableColumn m_column = null;
-
-  Listener m_tableListener, m_resizeListener, m_disposeItemListener, m_disposeColumnListener;
 
   /**
    * Constructs a new instance of this class given its parent table and a style value describing its behavior and
@@ -204,7 +201,7 @@ public class TableCursor extends Canvas
   public TableCursor( final Table parent, final int style )
   {
     super( parent, style );
-    m_table = parent;
+    table = parent;
     setBackground( null );
     setForeground( null );
 
@@ -215,7 +212,7 @@ public class TableCursor extends Canvas
         switch( event.type )
         {
           case SWT.Dispose:
-            disposeInternal();
+            dispose( event );
             break;
           case SWT.FocusIn:
           case SWT.FocusOut:
@@ -228,8 +225,18 @@ public class TableCursor extends Canvas
             paint( event );
             break;
           case SWT.Traverse:
-            traverse( event );
+          {
+            event.doit = true;
+            switch( event.detail )
+            {
+              case SWT.TRAVERSE_ARROW_NEXT:
+              case SWT.TRAVERSE_ARROW_PREVIOUS:
+              case SWT.TRAVERSE_RETURN:
+                event.doit = false;
+                break;
+            }
             break;
+          }
         }
       }
     };
@@ -239,7 +246,7 @@ public class TableCursor extends Canvas
       addListener( element, listener );
     }
 
-    m_tableListener = new Listener()
+    tableListener = new Listener()
     {
       public void handleEvent( final Event event )
       {
@@ -249,48 +256,48 @@ public class TableCursor extends Canvas
             tableMouseDown( event );
             break;
           case SWT.FocusIn:
-            tableFocusIn();
+            tableFocusIn( event );
             break;
         }
       }
     };
-    m_table.addListener( SWT.FocusIn, m_tableListener );
-    m_table.addListener( SWT.MouseDown, m_tableListener );
+    table.addListener( SWT.FocusIn, tableListener );
+    table.addListener( SWT.MouseDown, tableListener );
 
-    m_disposeItemListener = new Listener()
+    disposeItemListener = new Listener()
     {
       public void handleEvent( final Event event )
       {
-        m_row = null;
-        m_column = null;
-        resize();
+        row = null;
+        column = null;
+        _resize();
       }
     };
-    m_disposeColumnListener = new Listener()
+    disposeColumnListener = new Listener()
     {
       public void handleEvent( final Event event )
       {
-        m_row = null;
-        m_column = null;
-        resize();
+        row = null;
+        column = null;
+        _resize();
       }
     };
-    m_resizeListener = new Listener()
+    resizeListener = new Listener()
     {
       public void handleEvent( final Event event )
       {
-        resize();
+        _resize();
       }
     };
-    final ScrollBar hBar = m_table.getHorizontalBar();
+    final ScrollBar hBar = table.getHorizontalBar();
     if( hBar != null )
     {
-      hBar.addListener( SWT.Selection, m_resizeListener );
+      hBar.addListener( SWT.Selection, resizeListener );
     }
-    final ScrollBar vBar = m_table.getVerticalBar();
+    final ScrollBar vBar = table.getVerticalBar();
     if( vBar != null )
     {
-      vBar.addListener( SWT.Selection, m_resizeListener );
+      vBar.addListener( SWT.Selection, resizeListener );
     }
   }
 
@@ -298,7 +305,7 @@ public class TableCursor extends Canvas
    * Adds the listener to the collection of listeners who will be notified when the receiver's selection changes, by
    * sending it one of the messages defined in the <code>SelectionListener</code> interface.
    * <p>
-   * When <code>widgetSelected</code> is called, the item field of the event object is valid. If the reciever has
+   * When <code>widgetSelected</code> is called, the item field of the event object is valid. If the receiver has
    * <code>SWT.CHECK</code> style set and the check selection changes, the event object detail field contains the
    * value <code>SWT.CHECK</code>. <code>widgetDefaultSelected</code> is typically called when an item is
    * double-clicked.
@@ -329,37 +336,37 @@ public class TableCursor extends Canvas
     addListener( SWT.DefaultSelection, typedListener );
   }
 
-  void disposeInternal( )
+  void dispose( final Event event )
   {
-    m_table.removeListener( SWT.FocusIn, m_tableListener );
-    m_table.removeListener( SWT.MouseDown, m_tableListener );
-    if( m_column != null )
+    table.removeListener( SWT.FocusIn, tableListener );
+    table.removeListener( SWT.MouseDown, tableListener );
+    if( column != null )
     {
-      m_column.removeListener( SWT.Dispose, m_disposeColumnListener );
-      m_column.removeListener( SWT.Move, m_resizeListener );
-      m_column.removeListener( SWT.Resize, m_resizeListener );
-      m_column = null;
+      column.removeListener( SWT.Dispose, disposeColumnListener );
+      column.removeListener( SWT.Move, resizeListener );
+      column.removeListener( SWT.Resize, resizeListener );
+      column = null;
     }
-    if( m_row != null )
+    if( row != null )
     {
-      m_row.removeListener( SWT.Dispose, m_disposeItemListener );
-      m_row = null;
+      row.removeListener( SWT.Dispose, disposeItemListener );
+      row = null;
     }
-    final ScrollBar hBar = m_table.getHorizontalBar();
+    final ScrollBar hBar = table.getHorizontalBar();
     if( hBar != null )
     {
-      hBar.removeListener( SWT.Selection, m_resizeListener );
+      hBar.removeListener( SWT.Selection, resizeListener );
     }
-    final ScrollBar vBar = m_table.getVerticalBar();
+    final ScrollBar vBar = table.getVerticalBar();
     if( vBar != null )
     {
-      vBar.removeListener( SWT.Selection, m_resizeListener );
+      vBar.removeListener( SWT.Selection, resizeListener );
     }
   }
 
   void keyDown( final Event event )
   {
-    if( m_row == null )
+    if( row == null )
       return;
     switch( event.character )
     {
@@ -367,23 +374,23 @@ public class TableCursor extends Canvas
         notifyListeners( SWT.DefaultSelection, new Event() );
         return;
     }
-    final int rowIndex = m_table.indexOf( m_row );
-    final int columnIndex = m_column == null ? 0 : m_table.indexOf( m_column );
+    final int rowIndex = table.indexOf( row );
+    final int columnIndex = column == null ? 0 : table.indexOf( column );
     switch( event.keyCode )
     {
       case SWT.ARROW_UP:
         setRowColumn( Math.max( 0, rowIndex - 1 ), columnIndex, true );
         break;
       case SWT.ARROW_DOWN:
-        setRowColumn( Math.min( rowIndex + 1, m_table.getItemCount() - 1 ), columnIndex, true );
+        setRowColumn( Math.min( rowIndex + 1, table.getItemCount() - 1 ), columnIndex, true );
         break;
       case SWT.ARROW_LEFT:
       case SWT.ARROW_RIGHT:
       {
-        final int columnCount = m_table.getColumnCount();
+        final int columnCount = table.getColumnCount();
         if( columnCount == 0 )
           break;
-        final int[] order = m_table.getColumnOrder();
+        final int[] order = table.getColumnOrder();
         int index = 0;
         while( index < order.length )
         {
@@ -409,20 +416,20 @@ public class TableCursor extends Canvas
         break;
       case SWT.END:
       {
-        final int i = m_table.getItemCount() - 1;
+        final int i = table.getItemCount() - 1;
         setRowColumn( i, columnIndex, true );
         break;
       }
       case SWT.PAGE_UP:
       {
-        int index = m_table.getTopIndex();
+        int index = table.getTopIndex();
         if( index == rowIndex )
         {
-          final Rectangle rect = m_table.getClientArea();
-          final TableItem item = m_table.getItem( index );
+          final Rectangle rect = table.getClientArea();
+          final TableItem item = table.getItem( index );
           final Rectangle itemRect = item.getBounds( 0 );
           rect.height -= itemRect.y;
-          final int height = m_table.getItemHeight();
+          final int height = table.getItemHeight();
           final int page = Math.max( 1, rect.height / height );
           index = Math.max( 0, index - page + 1 );
         }
@@ -431,14 +438,14 @@ public class TableCursor extends Canvas
       }
       case SWT.PAGE_DOWN:
       {
-        int index = m_table.getTopIndex();
-        final Rectangle rect = m_table.getClientArea();
-        final TableItem item = m_table.getItem( index );
+        int index = table.getTopIndex();
+        final Rectangle rect = table.getClientArea();
+        final TableItem item = table.getItem( index );
         final Rectangle itemRect = item.getBounds( 0 );
         rect.height -= itemRect.y;
-        final int height = m_table.getItemHeight();
+        final int height = table.getItemHeight();
         final int page = Math.max( 1, rect.height / height );
-        final int end = m_table.getItemCount() - 1;
+        final int end = table.getItemCount() - 1;
         index = Math.min( end, index + page - 1 );
         if( index == rowIndex )
         {
@@ -452,9 +459,9 @@ public class TableCursor extends Canvas
 
   void paint( final Event event )
   {
-    if( m_row == null )
+    if( row == null )
       return;
-    final int columnIndex = m_column == null ? 0 : m_table.indexOf( m_column );
+    final int columnIndex = column == null ? 0 : table.indexOf( column );
     final GC gc = event.gc;
     final Display display = getDisplay();
     gc.setBackground( getBackground() );
@@ -462,7 +469,7 @@ public class TableCursor extends Canvas
     gc.fillRectangle( event.x, event.y, event.width, event.height );
     int x = 0;
     final Point size = getSize();
-    final Image image = m_row.getImage( columnIndex );
+    final Image image = row.getImage( columnIndex );
     if( image != null )
     {
       final Rectangle imageSize = image.getBounds();
@@ -470,21 +477,21 @@ public class TableCursor extends Canvas
       gc.drawImage( image, x, imageY );
       x += imageSize.width;
     }
-    final String text = m_row.getText( columnIndex );
+    final String text = row.getText( columnIndex );
     if( text.length() > 0 )
     {
-      final Rectangle bounds = m_row.getBounds( columnIndex );
+      final Rectangle bounds = row.getBounds( columnIndex );
       final Point extent = gc.stringExtent( text );
       // Temporary code - need a better way to determine table trim
       final String platform = SWT.getPlatform();
       if( "win32".equals( platform ) ) { //$NON-NLS-1$
-        if( m_table.getColumnCount() == 0 || columnIndex == 0 )
+        if( table.getColumnCount() == 0 || columnIndex == 0 )
         {
           x += 2;
         }
         else
         {
-          final int alignmnent = m_column.getAlignment();
+          final int alignmnent = column.getAlignment();
           switch( alignmnent )
           {
             case SWT.LEFT:
@@ -501,13 +508,13 @@ public class TableCursor extends Canvas
       }
       else
       {
-        if( m_table.getColumnCount() == 0 )
+        if( table.getColumnCount() == 0 )
         {
           x += 5;
         }
         else
         {
-          final int alignmnent = m_column.getAlignment();
+          final int alignmnent = column.getAlignment();
           switch( alignmnent )
           {
             case SWT.LEFT:
@@ -533,7 +540,7 @@ public class TableCursor extends Canvas
     }
   }
 
-  void tableFocusIn( )
+  void tableFocusIn( final Event event )
   {
     if( isDisposed() )
       return;
@@ -546,21 +553,21 @@ public class TableCursor extends Canvas
     if( isDisposed() || !isVisible() )
       return;
     final Point pt = new Point( event.x, event.y );
-    final int lineWidth = m_table.getLinesVisible() ? m_table.getGridLineWidth() : 0;
-    TableItem item = m_table.getItem( pt );
-    if( (m_table.getStyle() & SWT.FULL_SELECTION) != 0 )
+    final int lineWidth = table.getLinesVisible() ? table.getGridLineWidth() : 0;
+    TableItem item = table.getItem( pt );
+    if( (table.getStyle() & SWT.FULL_SELECTION) != 0 )
     {
       if( item == null )
         return;
     }
     else
     {
-      final int start = item != null ? m_table.indexOf( item ) : m_table.getTopIndex();
-      final int end = m_table.getItemCount();
-      final Rectangle clientRect = m_table.getClientArea();
+      final int start = item != null ? table.indexOf( item ) : table.getTopIndex();
+      final int end = table.getItemCount();
+      final Rectangle clientRect = table.getClientArea();
       for( int i = start; i < end; i++ )
       {
-        final TableItem nextItem = m_table.getItem( i );
+        final TableItem nextItem = table.getItem( i );
         final Rectangle rect = nextItem.getBounds( 0 );
         if( pt.y >= rect.y && pt.y < rect.y + rect.height + lineWidth )
         {
@@ -574,7 +581,7 @@ public class TableCursor extends Canvas
         return;
     }
     TableColumn newColumn = null;
-    final int columnCount = m_table.getColumnCount();
+    final int columnCount = table.getColumnCount();
     if( columnCount > 0 )
     {
       for( int i = 0; i < columnCount; i++ )
@@ -584,13 +591,13 @@ public class TableCursor extends Canvas
         rect.height += lineWidth;
         if( rect.contains( pt ) )
         {
-          newColumn = m_table.getColumn( i );
+          newColumn = table.getColumn( i );
           break;
         }
       }
       if( newColumn == null )
       {
-        newColumn = m_table.getColumn( 0 );
+        newColumn = table.getColumn( 0 );
       }
     }
     setRowColumn( item, newColumn, true );
@@ -598,91 +605,48 @@ public class TableCursor extends Canvas
     return;
   }
 
-// void tableMouseDown( Event event )
-// {
-// if( isDisposed() || !isVisible() )
-// return;
-// Point pt = new Point( event.x, event.y );
-// Rectangle clientRect = m_table.getClientArea();
-// int columnCount = m_table.getColumnCount();
-// int maxColumnIndex = columnCount == 0 ? 0 : columnCount - 1;
-// int start = m_table.getTopIndex();
-// int end = m_table.getItemCount();
-// for( int i = start; i < end; i++ )
-// {
-// TableItem item = m_table.getItem( i );
-// for( int j = 0; j <= maxColumnIndex; j++ )
-// {
-// Rectangle rect = item.getBounds( j );
-// if( rect.y > clientRect.y + clientRect.height )
-// return;
-// if( rect.contains( pt ) )
-// {
-// setRowColumn( i, j, true );
-// setFocus();
-// return;
-// }
-// }
-// }
-// }
-
-  void traverse( final Event event )
-  {
-    switch( event.detail )
-    {
-      case SWT.TRAVERSE_ARROW_NEXT:
-      case SWT.TRAVERSE_ARROW_PREVIOUS:
-      case SWT.TRAVERSE_TAB_NEXT:
-      case SWT.TRAVERSE_TAB_PREVIOUS:
-      case SWT.TRAVERSE_RETURN:
-        event.doit = false;
-        return;
-    }
-    event.doit = true;
-  }
-
   void setRowColumn( final int row, final int column, final boolean notify )
   {
-    final TableItem item = row == -1 ? null : m_table.getItem( row );
-    final TableColumn col = column == -1 || m_table.getColumnCount() == 0 ? null : m_table.getColumn( column );
+    final TableItem item = row == -1 ? null : table.getItem( row );
+    final TableColumn col = column == -1 || table.getColumnCount() == 0 ? null : table.getColumn( column );
     setRowColumn( item, col, notify );
   }
 
   void setRowColumn( final TableItem row, final TableColumn column, final boolean notify )
   {
-    if( this.m_row == row && this.m_column == column )
+    if( this.row == row && this.column == column )
     {
       return;
     }
-    if( this.m_row != null && this.m_row != row )
+    if( this.row != null && this.row != row )
     {
-      this.m_row.removeListener( SWT.Dispose, m_disposeItemListener );
-      this.m_row = null;
+      this.row.removeListener( SWT.Dispose, disposeItemListener );
+      this.row = null;
     }
-    if( this.m_column != null && this.m_column != column )
+    if( this.column != null && this.column != column )
     {
-      this.m_column.removeListener( SWT.Dispose, m_disposeColumnListener );
-      this.m_column.removeListener( SWT.Move, m_resizeListener );
-      this.m_column.removeListener( SWT.Resize, m_resizeListener );
-      this.m_column = null;
+      this.column.removeListener( SWT.Dispose, disposeColumnListener );
+      this.column.removeListener( SWT.Move, resizeListener );
+      this.column.removeListener( SWT.Resize, resizeListener );
+      this.column = null;
     }
     if( row != null )
     {
-      if( this.m_row != row )
+      if( this.row != row )
       {
-        this.m_row = row;
-        row.addListener( SWT.Dispose, m_disposeItemListener );
-        m_table.showItem( row );
+        this.row = row;
+        row.addListener( SWT.Dispose, disposeItemListener );
+        table.showItem( row );
       }
-      if( this.m_column != column && column != null )
+      if( this.column != column && column != null )
       {
-        this.m_column = column;
-        column.addListener( SWT.Dispose, m_disposeColumnListener );
-        column.addListener( SWT.Move, m_resizeListener );
-        column.addListener( SWT.Resize, m_resizeListener );
-        m_table.showColumn( column );
+        this.column = column;
+        column.addListener( SWT.Dispose, disposeColumnListener );
+        column.addListener( SWT.Move, resizeListener );
+        column.addListener( SWT.Resize, resizeListener );
+        table.showColumn( column );
       }
-      final int columnIndex = column == null ? 0 : m_table.indexOf( column );
+      final int columnIndex = column == null ? 0 : table.indexOf( column );
       setBounds( row.getBounds( columnIndex ) );
       redraw();
       if( notify )
@@ -697,7 +661,7 @@ public class TableCursor extends Canvas
   {
     checkWidget();
     if( visible )
-      resize();
+      _resize();
     super.setVisible( visible );
   }
 
@@ -730,16 +694,16 @@ public class TableCursor extends Canvas
     removeListener( SWT.DefaultSelection, listener );
   }
 
-  void resize( )
+  void _resize( )
   {
-    if( m_row == null )
+    if( row == null )
     {
       setBounds( -200, -200, 0, 0 );
     }
     else
     {
-      final int columnIndex = m_column == null ? 0 : m_table.indexOf( m_column );
-      setBounds( m_row.getBounds( columnIndex ) );
+      final int columnIndex = column == null ? 0 : table.indexOf( column );
+      setBounds( row.getBounds( columnIndex ) );
     }
   }
 
@@ -756,7 +720,7 @@ public class TableCursor extends Canvas
   public int getColumn( )
   {
     checkWidget();
-    return m_column == null ? 0 : m_table.indexOf( m_column );
+    return column == null ? 0 : table.indexOf( column );
   }
 
   /**
@@ -772,7 +736,7 @@ public class TableCursor extends Canvas
   public TableItem getRow( )
   {
     checkWidget();
-    return m_row;
+    return row;
   }
 
   @Override
@@ -795,8 +759,6 @@ public class TableCursor extends Canvas
 
   /**
    * Positions the TableCursor over the cell at the given row and column in the parent table.
-   * <p>
-   * Does not notify any listeners.
    * 
    * @param row
    *            the index of the row for the cell to select
@@ -810,32 +772,12 @@ public class TableCursor extends Canvas
    */
   public void setSelection( final int row, final int column )
   {
-    setSelection( row, column, false );
-  }
-
-  /**
-   * Positions the TableCursor over the cell at the given row and column in the parent table.
-   * 
-   * @param row
-   *            the index of the row for the cell to select
-   * @param column
-   *            the index of column for the cell to select
-   * @param notify
-   *            notify the listeners
-   * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
-   */
-  public void setSelection( final int row, final int column, final boolean notify )
-  {
     checkWidget();
-    final int columnCount = m_table.getColumnCount();
+    final int columnCount = table.getColumnCount();
     final int maxColumnIndex = columnCount == 0 ? 0 : columnCount - 1;
-    if( row < 0 || row >= m_table.getItemCount() || column < 0 || column > maxColumnIndex )
+    if( row < 0 || row >= table.getItemCount() || column < 0 || column > maxColumnIndex )
       SWT.error( SWT.ERROR_INVALID_ARGUMENT );
-    setRowColumn( row, column, notify );
+    setRowColumn( row, column, false );
   }
 
   /**
@@ -854,10 +796,10 @@ public class TableCursor extends Canvas
   public void setSelection( final TableItem row, final int column )
   {
     checkWidget();
-    final int columnCount = m_table.getColumnCount();
+    final int columnCount = table.getColumnCount();
     final int maxColumnIndex = columnCount == 0 ? 0 : columnCount - 1;
     if( row == null || row.isDisposed() || column < 0 || column > maxColumnIndex )
       SWT.error( SWT.ERROR_INVALID_ARGUMENT );
-    setRowColumn( m_table.indexOf( row ), column, false );
+    setRowColumn( table.indexOf( row ), column, false );
   }
 }
