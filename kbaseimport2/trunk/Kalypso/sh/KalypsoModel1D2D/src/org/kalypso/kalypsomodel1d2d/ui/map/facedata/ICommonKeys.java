@@ -39,7 +39,6 @@
  *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
-
 /**
  * Hold often used keys
  * 
