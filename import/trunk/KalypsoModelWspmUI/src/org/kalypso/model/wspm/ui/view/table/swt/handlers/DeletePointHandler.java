@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.table.swt.handlers;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -58,7 +57,7 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class DeletePointHandler extends AbstractSWTTableHandler implements IHandler
+public class DeletePointHandler extends AbstractSWTTableHandler
 {
 
   /**
