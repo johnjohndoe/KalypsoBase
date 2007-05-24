@@ -94,7 +94,7 @@ public class GisMapPerfTest extends TestCase
     logger.showElapsedTime( "Map was loaded. Creating map modell on map" );
 
     final FeatureSelectionManager2 featureSelectionManager2 = new FeatureSelectionManager2();
-    GisTemplateMapModell modell0 = loadMapAndWaitForData( gismapview, resource, crs, logger, featureSelectionManager2 );
+    final GisTemplateMapModell modell0 = loadMapAndWaitForData( gismapview, resource, crs, logger, featureSelectionManager2 );
     if( modell0 == null )
       fail( "Map was not loaded" );
 
@@ -114,14 +114,15 @@ public class GisMapPerfTest extends TestCase
       logger.showElapsedTime( "Rendered map #" + i );
     }
 
-//    logger.showElapsedTime( "Render map to file" );
-//    FileOutputStream stream = new FileOutputStream( new File( "C:/tmp/image.png" ) );
-//    new ExportableMap( panel, 1024, 800, "png" ).exportObject( stream, new NullProgressMonitor(), new BaseConfiguration() );
+// logger.showElapsedTime( "Render map to file" );
+// FileOutputStream stream = new FileOutputStream( new File( "C:/tmp/image.png" ) );
+// new ExportableMap( panel, 1024, 800, "png" ).exportObject( stream, new NullProgressMonitor(), new BaseConfiguration()
+// );
 
     logger.showElapsedTime( "Map was rendered" );
   }
 
-  private void paintPanel( final BufferedImage image, final MapPanel panel, GeoTransform transform, GM_Envelope bbox )
+  private void paintPanel( final BufferedImage image, final MapPanel panel, final GeoTransform transform, final GM_Envelope bbox )
   {
     final int width = image.getWidth();
     final int height = image.getHeight();
@@ -141,7 +142,7 @@ public class GisMapPerfTest extends TestCase
   }
 
   /** @return null, iff not all data was loaded in time. */
-  private GisTemplateMapModell loadMapAndWaitForData( final Gismapview gismapview, final URL resource, final CS_CoordinateSystem crs, final TimeLogger logger, IFeatureSelectionManager selectionManager )
+  private GisTemplateMapModell loadMapAndWaitForData( final Gismapview gismapview, final URL resource, final CS_CoordinateSystem crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager )
   {
     logger.showElapsedTime( "Loading map modell..." );
 
@@ -185,11 +186,8 @@ public class GisMapPerfTest extends TestCase
       return false;
 
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
-
-    for( int i = 0; i < themes.length; i++ )
+    for( final IKalypsoTheme theme : themes )
     {
-      final IKalypsoTheme theme = themes[i];
-
       if( theme instanceof IPooledObject )
       {
         if( !((IPooledObject) theme).isLoaded() )
