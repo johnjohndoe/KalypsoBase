@@ -49,10 +49,59 @@ import java.util.Calendar;
  */
 public final class CalendarUtilities
 {
-  /** do not instanciate */
-  private CalendarUtilities()
+  public enum FIELD
   {
-  // no instanciation
+    DATE(Calendar.DATE, "Tag", "Tage"),
+    DAY_OF_MONTH(Calendar.DAY_OF_MONTH, "Tag", "Tage"),
+    DAY_OF_WEEK(Calendar.DAY_OF_WEEK, "Tag", "Tage"),
+    DAY_OF_WEEK_IN_MONTH(Calendar.DAY_OF_WEEK_IN_MONTH, "Tag", "Tage"),
+    DAY_OF_YEAR(Calendar.DAY_OF_YEAR, "Tag", "Tage"),
+    ERA(Calendar.ERA, "Ära", "Äras"),
+    HOUR(Calendar.HOUR, "Std", "Stunden"),
+    HOUR_OF_DAY(Calendar.HOUR_OF_DAY, "Std", "Stunden"),
+    MILLISECOND(Calendar.MILLISECOND, "Millis", "Millisekunden"),
+    MINUTE(Calendar.MINUTE, "Min", "Minuten"),
+    MONTH(Calendar.MONTH, "Mon", "Monate"),
+    SECOND(Calendar.SECOND, "Sek", "Sekunden"),
+    WEEK_OF_MONTH(Calendar.WEEK_OF_MONTH, "W", "Wochen"),
+    WEEK_OF_YEAR(Calendar.WEEK_OF_YEAR, "W", "Wochen"),
+    YEAR(Calendar.YEAR, "J", "Jahre"),
+    ZONE_OFFSET(Calendar.ZONE_OFFSET, "ZONE_OFFSET", "");
+
+    private final int m_field;
+
+    private final String m_abbreviation;
+
+    /* This label may be used for example for combo boxing choosing the add-field. */
+    private final String m_addLabel;
+
+    private FIELD( final int field, final String abbreviation, final String addLabel )
+    {
+      m_field = field;
+      m_abbreviation = abbreviation;
+      m_addLabel = addLabel;
+    }
+
+    public int getField( )
+    {
+      return m_field;
+    }
+
+    public String getAbbreviation( )
+    {
+      return m_abbreviation;
+    }
+
+    public String getAddLabel( )
+    {
+      return m_addLabel;
+    }
+  }
+
+  /** do not instanciate */
+  private CalendarUtilities( )
+  {
+    // no instanciation
   }
 
   /**
@@ -71,40 +120,15 @@ public final class CalendarUtilities
    */
   public static int getCalendarField( final String fieldName )
   {
-    if( "DATE".equalsIgnoreCase( fieldName ) )
-      return Calendar.DATE;
-    else if( "DAY_OF_MONTH".equalsIgnoreCase( fieldName ) )
-      return Calendar.DAY_OF_MONTH;
-    else if( "DAY_OF_WEEK".equalsIgnoreCase( fieldName ) )
-      return Calendar.DAY_OF_WEEK;
-    else if( "DAY_OF_WEEK_IN_MONTH".equalsIgnoreCase( fieldName ) )
-      return Calendar.DAY_OF_WEEK_IN_MONTH;
-    else if( "DAY_OF_YEAR".equalsIgnoreCase( fieldName ) )
-      return Calendar.DAY_OF_YEAR;
-    else if( "ERA".equalsIgnoreCase( fieldName ) )
-      return Calendar.ERA;
-    else if( "HOUR".equalsIgnoreCase( fieldName ) )
-      return Calendar.HOUR;
-    else if( "HOUR_OF_DAY".equalsIgnoreCase( fieldName ) )
-      return Calendar.HOUR_OF_DAY;
-    else if( "MILLISECOND".equalsIgnoreCase( fieldName ) )
-      return Calendar.MILLISECOND;
-    else if( "MINUTE".equalsIgnoreCase( fieldName ) )
-      return Calendar.MINUTE;
-    else if( "MONTH".equalsIgnoreCase( fieldName ) )
-      return Calendar.MONTH;
-    else if( "SECOND".equalsIgnoreCase( fieldName ) )
-      return Calendar.SECOND;
-    else if( "WEEK_OF_MONTH".equalsIgnoreCase( fieldName ) )
-      return Calendar.WEEK_OF_MONTH;
-    else if( "WEEK_OF_YEAR".equalsIgnoreCase( fieldName ) )
-      return Calendar.WEEK_OF_YEAR;
-    else if( "YEAR".equalsIgnoreCase( fieldName ) )
-      return Calendar.YEAR;
-    else if( "ZONE_OFFSET".equalsIgnoreCase( fieldName ) )
-      return Calendar.ZONE_OFFSET;
-    // last we assume that it is allready an integer
-    return Integer.parseInt( fieldName );
+    try
+    {
+      return FIELD.valueOf( fieldName ).getField();
+    }
+    catch( final Throwable t )
+    {
+// last we assume that it is allready an integer
+      return Integer.parseInt( fieldName );
+    }
   }
 
   /**
@@ -113,38 +137,51 @@ public final class CalendarUtilities
    * @return the string abbreviation of the given field. For instance if field is the java internal value HOUR_OF_DAY,
    *         'h' is returned
    */
-  public static String getAbbreviation( final int field )
+  public static String getAbbreviation( final int fieldValue )
   {
-    switch( field )
+    final FIELD field = fieldForField( fieldValue );
+    return field.getAbbreviation();
+  }
+
+  private static FIELD fieldForField( final int fieldValue )
+  {
+    switch( fieldValue )
     {
+// case Calendar.DATE:
+// return FIELDS.DATE;
       case Calendar.DAY_OF_MONTH:
-        return "Tag";
+        return FIELD.DAY_OF_MONTH;
       case Calendar.DAY_OF_WEEK:
-        return "Tag";
+        return FIELD.DAY_OF_WEEK;
       case Calendar.DAY_OF_WEEK_IN_MONTH:
-        return "Tag";
+        return FIELD.DAY_OF_WEEK_IN_MONTH;
       case Calendar.DAY_OF_YEAR:
-        return "Tag";
+        return FIELD.DAY_OF_YEAR;
+      case Calendar.ERA:
+        return FIELD.ERA;
       case Calendar.HOUR:
-        return "Std";
+        return FIELD.HOUR;
       case Calendar.HOUR_OF_DAY:
-        return "Std";
+        return FIELD.HOUR_OF_DAY;
       case Calendar.MILLISECOND:
-        return "Millis";
+        return FIELD.MILLISECOND;
       case Calendar.MINUTE:
-        return "Min";
+        return FIELD.MINUTE;
       case Calendar.MONTH:
-        return "Mon";
+        return FIELD.MONTH;
       case Calendar.SECOND:
-        return "Sek";
+        return FIELD.SECOND;
       case Calendar.WEEK_OF_MONTH:
-        return "W";
+        return FIELD.WEEK_OF_MONTH;
       case Calendar.WEEK_OF_YEAR:
-        return "W";
+        return FIELD.WEEK_OF_YEAR;
       case Calendar.YEAR:
-        return "J";
+        return FIELD.YEAR;
+      case Calendar.ZONE_OFFSET:
+        return FIELD.ZONE_OFFSET;
+
       default:
-        return "" + field;
+        throw new IllegalArgumentException( "Unknown field: " + fieldValue );
     }
   }
 }
