@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.apache.commons.vfs
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Bundle-ClassPath: lib/jakarta-slide/antlr.jar,
- lib/jakarta-slide/commons-httpclient.jar,
  lib/jakarta-slide/commons-transaction-1.0.jar,
  lib/jakarta-slide/jakarta-slide-commandline-2.1.jar,
  lib/jakarta-slide/jakarta-slide-webdavlib-2.1.jar,
@@ -19,6 +18,7 @@ Bundle-ClassPath: lib/jakarta-slide/antlr.jar,
  lib/commons-vfs/commons-logging-api-1.1.jar,
  lib/commons-vfs/commons-net-1.4.1.jar,
  lib/commons-vfs/jakarta-oro-2.0.8.jar,
+ lib/commons-httpclient-2.0.2.jar,
  .
 Export-Package: org.apache.commons.vfs,
  org.apache.commons.vfs.auth,
