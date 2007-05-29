@@ -43,6 +43,8 @@ package org.kalypso.service.wps.utils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -294,14 +296,14 @@ public class VFSUtilities
    * @return The file object.
    */
   @SuppressWarnings("restriction")
-  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException
+  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException, MalformedURLException
   {
     FileSystemManager fsManager = getManager();
 
     Proxy proxy = ProxyUtilities.getProxy();
     Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
-    if( proxy.useProxy() )
+    if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
     {
       String proxyHost = proxy.getProxyHost();
       int proxyPort = proxy.getProxyPort();
@@ -312,7 +314,7 @@ public class VFSUtilities
       String user = proxy.getUser();
       String password = proxy.getPassword();
 
-      Pattern p = Pattern.compile( "(.+):/.+" );
+      Pattern p = Pattern.compile( "(.+)://.+" );
       Matcher m = p.matcher( absoluteFile );
       if( m.find() == true )
       {

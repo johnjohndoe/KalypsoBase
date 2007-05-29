@@ -42,6 +42,7 @@ package org.kalypso.service.wps.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -97,7 +98,7 @@ public class WPSUtilities
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000 );
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ) );
     client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
 
     /* All certificates should be accepted! */

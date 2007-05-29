@@ -163,13 +163,13 @@ public class SimulationJob
    * The constructor.
    * 
    * @param calcCaseFolder
-   *          The folder of the calc case.
+   *            The folder of the calc case.
    * @param data
-   *          The model specification.
+   *            The model specification.
    * @param simulation
-   *          The id identifying the simulation.
+   *            The id identifying the simulation.
    * @param timeout
-   *          After this period of time, the job gives up, waiting for a result of the service.
+   *            After this period of time, the job gives up, waiting for a result of the service.
    */
   public SimulationJob( final IContainer calcCaseFolder, final Modeldata data, final String simulationType, final long timeout )
   {
@@ -193,7 +193,7 @@ public class SimulationJob
    * Starts the simulation.
    * 
    * @param monitor
-   *          The progress monitor.
+   *            The progress monitor.
    */
   @SuppressWarnings("unchecked")
   public IStatus run( IProgressMonitor monitor )
@@ -475,7 +475,7 @@ public class SimulationJob
   /**
    * This function inits the temporary directory of the server, where the client has to put his files.
    */
-  private void initServerTmpDirectory( ) throws FileSystemException
+  private void initServerTmpDirectory( ) throws FileSystemException, MalformedURLException
   {
     /* If the directory is not initialized, it will be generated and created (if necessary). */
     if( m_serverTmpDirectory == null )
@@ -496,7 +496,7 @@ public class SimulationJob
    * This function collects all input files.
    * 
    * @param calcCaseFolder
-   *          The folder of the calc case.
+   *            The folder of the calc case.
    * @return The input files list.
    */
   private IFile[] getInputFiles( final IContainer calcCaseFolder ) throws CoreException
@@ -537,7 +537,7 @@ public class SimulationJob
    * This function copies all input data to a place, where the WPS can read it.
    * 
    * @param files
-   *          The files to copy.
+   *            The files to copy.
    */
   private void copyInputFiles( IFile[] files ) throws Exception
   {
@@ -558,7 +558,7 @@ public class SimulationJob
    * This function creates the data inputs for the wps.
    * 
    * @param calcCaseFolder
-   *          The folder of the calc case.
+   *            The folder of the calc case.
    * @return The data input from the model spec in wps format.
    */
   private DataInputsType getDataInputs( final IContainer calcCaseFolder, ProcessDescriptions processDescriptions ) throws CoreException, FileSystemException
@@ -643,7 +643,7 @@ public class SimulationJob
    * This function searches an input in the model data.
    * 
    * @param ID
-   *          The ID of the input to search for.
+   *            The ID of the input to search for.
    * @return The found input or null, if none is found for that ID.
    */
   private Input findInput( String ID, List<Input> inputList )
@@ -744,7 +744,7 @@ public class SimulationJob
    * This function searches an output out in the model data.
    * 
    * @param ID
-   *          The ID of the output to search for.
+   *            The ID of the output to search for.
    * @return The found output or null, if none is found for that ID.
    */
   private Output findOutput( String ID, List<Output> outputList )
@@ -763,11 +763,11 @@ public class SimulationJob
    * This function refreshs the monitor.
    * 
    * @param percentCompleted
-   *          The amount of work done, reaching from 0 to 100.
+   *            The amount of work done, reaching from 0 to 100.
    * @param description
-   *          The description to set.
+   *            The description to set.
    * @param monitor
-   *          The progressmonitor to be updated.
+   *            The progressmonitor to be updated.
    */
   private void updateMonitor( Integer percentCompleted, String description, IProgressMonitor monitor )
   {
@@ -792,9 +792,9 @@ public class SimulationJob
    * Copys the process outputs to their destination.
    * 
    * @param calcCaseFolder
-   *          The calc case folder.
+   *            The calc case folder.
    * @param processOutputs
-   *          The process outputs contains the info of the files, which are to copy.
+   *            The process outputs contains the info of the files, which are to copy.
    */
   private void copyOutputFiles( final IContainer calcCaseFolder, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs ) throws Exception
   {
@@ -892,7 +892,7 @@ public class SimulationJob
    * This function will create an error string, containing all error messages.
    * 
    * @param exceptionReport
-   *          The exception report.
+   *            The exception report.
    * @return The error messages as one string.
    */
   private String createErrorString( ExceptionReport exceptionReport )

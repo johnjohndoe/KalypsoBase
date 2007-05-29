@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project default="plugin_export" name="build">
-	<target name="plugin_export">
-		<pde.exportPlugins destination="C:\WPSService" exportSource="false" exportType="directory" plugins="org.apache.commons.vfs,org.kalypso.commons,org.kalypso.contribs.eclipseplatform,org.kalypso.contribs.eclipsercp,org.kalypso.contribs.java,org.kalypso.contribs.ogc2x,org.kalypso.contribs.ogc31,org.kalypso.core,org.kalypso.debug.servlet,org.kalypso.deegree,org.kalypso.flys,org.kalypso.gmlschema,org.kalypso.informdss.calcjob,org.kalypso.jwsdp,org.kalypso.model.wspm.core,org.kalypso.model.wspm.schema,org.kalypso.repository,org.kalypso.service.ogc,org.kalypso.service.wps,org.kalypso.simulation.core,org.kalypso.wspwin.core" useJARFormat="false"/>
-	</target>
-</project>

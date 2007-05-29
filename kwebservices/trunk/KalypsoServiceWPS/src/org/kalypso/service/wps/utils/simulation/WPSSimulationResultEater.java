@@ -113,13 +113,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * The constructor.
    * 
    * @param processDescription
-   *          The process description.
+   *            The process description.
    * @param execute
-   *          The execute request.
+   *            The execute request.
    * @param tmpDir
-   *          The temporary directory for that simulation.
+   *            The temporary directory for that simulation.
    * @param resultDir
-   *          The FileObject contains information, where the results should be put, so that the client can read them.
+   *            The FileObject contains information, where the results should be put, so that the client can read them.
    */
   public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, File tmpDir, FileObject resultDir )
   {
@@ -225,7 +225,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * Indexes the output values with their id.
    * 
    * @param processDescription
-   *          The process description, containing the input data.
+   *            The process description, containing the input data.
    * @return The indexed map.
    */
   private Map<String, OutputDescriptionType> index( ProcessDescriptionType processDescription )
@@ -245,7 +245,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * This function indexes the expected output from the client with their id.
    * 
    * @param execute
-   *          The execute request contains the ouput expected from the client.
+   *            The execute request contains the ouput expected from the client.
    * @return The indexed map.
    */
   private Map<String, OutputDefinitionType> indexClient( Execute execute )
@@ -256,9 +256,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     List<OutputDefinitionType> outputs = outputDefinitions.getOutput();
 
     for( OutputDefinitionType output : outputs )
-    {
       outputListClient.put( output.getIdentifier().getValue(), output );
-    }
 
     return outputListClient;
   }
