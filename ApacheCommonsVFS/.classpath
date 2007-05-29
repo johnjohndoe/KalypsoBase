@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-2.0.2.jar" sourcepath="lib/commons-httpclient-2.0.2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta-slide/antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jakarta-slide/commons-httpclient.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta-slide/commons-transaction-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta-slide/jakarta-slide-commandline-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta-slide/jakarta-slide-webdavlib-2.1.jar" sourcepath="lib/jakarta-slide/jakarta-slide-webdavclient-src-2.1.zip"/>
