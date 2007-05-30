@@ -42,6 +42,7 @@ package org.kalypso.contribs.javax.xml.namespace;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 /**
@@ -70,7 +71,7 @@ public class QNameUtilities
    * 
    * @return qname from fragmentedFullQName
    */
-  public static QName createQName( String fragmentedFullQName )
+  public static QName createQName( final String fragmentedFullQName )
   {
     final String[] parts = fragmentedFullQName.split( "#" );
     return new QName( parts[0], parts[1] );
@@ -80,10 +81,42 @@ public class QNameUtilities
   {
     final ArrayList<QName> allQNames = new ArrayList<QName>();
     final String[] qNameStrings = fragmentedFullQNameList.split( separator );
-    for( String s : qNameStrings )
+    for( final String s : qNameStrings )
     {
       allQNames.add( createQName( s ) );
     }
     return allQNames.toArray( new QName[allQNames.size()] );
+  }
+
+  /**
+   * Parses a {@link QName} from a string in xml-syntax using a prefix resolver.
+   * <p>
+   * Syntax of the qname:
+   * 
+   * <pre>
+   *    prefix:localPart
+   * </pre>
+   * 
+   * </p>
+   * If either the prefix is empty or the namespaceContext is null, returns a qname with empty local part (due to
+   * XML-Spec).
+   */
+  public static QName createQName( final String condition, final NamespaceContext namespaceContext )
+  {
+    final String[] split = condition.split( ":" );
+    if( split.length == 0 || split.length > 2 )
+      return null;
+
+    if( split.length == 1 )
+      return new QName( condition );
+
+    final String prefix = split[0];
+    final String localPart = split[1];
+
+    if( prefix == null || prefix.length() == 0 || namespaceContext == null )
+      return new QName( localPart );
+
+    final String namespaceUri = namespaceContext.getNamespaceURI( prefix );
+    return new QName( namespaceUri, localPart );
   }
 }
