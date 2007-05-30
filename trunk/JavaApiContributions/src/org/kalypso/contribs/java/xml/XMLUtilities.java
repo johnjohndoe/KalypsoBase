@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.xml;
 
+import java.util.Iterator;
+
+import javax.xml.namespace.NamespaceContext;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -76,7 +80,7 @@ public final class XMLUtilities
     return CDATA_BEGIN + string + CDATA_END;
   }
 
-  public static String removeXMLHeader( String xmlString )
+  public static String removeXMLHeader( final String xmlString )
   {
     return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
   }
@@ -88,51 +92,80 @@ public final class XMLUtilities
    * 
    * @param xmlString
    */
-  public static String prepareInLine( String xmlString )
+  public static String prepareInLine( final String xmlString )
   {
     String result = xmlString.replaceAll( "\n", "" );
     result = removeXMLHeader( result );
     return "<filter>" + result + "</filter>";
   }
 
-  public static void setTextNode( Document dom, Node node, String value )
+  public static void setTextNode( final Document dom, final Node node, final String value )
   {
-    NodeList cn = node.getChildNodes();
+    final NodeList cn = node.getChildNodes();
     for( int _n = 0; _n < cn.getLength(); _n++ )
     {
-      Node cnode = cn.item( _n );
-      short nodeType = cnode.getNodeType();
+      final Node cnode = cn.item( _n );
+      final short nodeType = cnode.getNodeType();
       if( nodeType == Node.TEXT_NODE )
         cnode.setNodeValue( value );
     }
     if( cn.getLength() == 0 ) // text node does not exist
     {
-      Text text = dom.createTextNode( value );
+      final Text text = dom.createTextNode( value );
       node.appendChild( text );
     }
+  }
 
+  /**
+   * Returns a NamespaceContext based on the given node.
+   * <p>
+   * The returned implementation does not support {@link NamespaceContext#getPrefixes(String)}.
+   */
+  public static NamespaceContext createNamespaceContext( final Node node )
+  {
+    // sure there is no existing implementation?
+    return new NamespaceContext()
+    {
+      public String getNamespaceURI( final String prefix )
+      {
+        return node.lookupNamespaceURI( prefix );
+      }
+
+      public String getPrefix( final String namespaceURI )
+      {
+        return node.lookupPrefix( namespaceURI );
+      }
+
+      public Iterator<String> getPrefixes( final String namespaceURI )
+      {
+        throw new UnsupportedOperationException();
+      }
+    };
   }
 
   public static String getNameSpaceForPrefix( final Element context, final String prefix )
   {
+    // TODO: why not just the next line?
+// return context.lookupNamespaceURI( prefix );
+
     final String prefixDeclarationNamespace = "http://www.w3.org/2000/xmlns/";
     if( prefix.equals( context.getPrefix() ) )
       return context.getNamespaceURI();
     final String namespace = context.getAttributeNS( prefixDeclarationNamespace, prefix );
-    if( namespace != null && namespace.length()>0)
+    if( namespace != null && namespace.length() > 0 )
       return namespace;
     // test
-//    final NamedNodeMap attributes = context.getAttributes();
-//    int length = attributes.getLength();
-//    for( int i = 0; i < length; i++ )
-//    {
-//      final Node node = attributes.item( i );
-//      String prefix2 = node.getPrefix();
-//      String namespaceURI = node.getNamespaceURI();
-//      String nodeName = node.getNodeName();
-//      String nodeValue = node.getNodeValue();
-//      System.out.println( prefix2 + ":" + nodeName + " {" + namespaceURI + "}=" + nodeValue );
-//    }
+// final NamedNodeMap attributes = context.getAttributes();
+// int length = attributes.getLength();
+// for( int i = 0; i < length; i++ )
+// {
+// final Node node = attributes.item( i );
+// String prefix2 = node.getPrefix();
+// String namespaceURI = node.getNamespaceURI();
+// String nodeName = node.getNodeName();
+// String nodeValue = node.getNodeValue();
+// System.out.println( prefix2 + ":" + nodeName + " {" + namespaceURI + "}=" + nodeValue );
+// }
     final Node parentNode = context.getParentNode();
     if( parentNode != null && parentNode instanceof Element )
       return getNameSpaceForPrefix( (Element) parentNode, prefix );
