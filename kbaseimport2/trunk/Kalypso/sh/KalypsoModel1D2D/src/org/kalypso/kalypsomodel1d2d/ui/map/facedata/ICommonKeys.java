@@ -74,5 +74,7 @@ public interface ICommonKeys
    * used to post command
    */
   public static final String KEY_COMMAND_TARGET ="_command target_";
+
+  public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
   
 }
