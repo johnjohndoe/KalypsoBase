@@ -60,6 +60,7 @@ import org.kalypso.gmlschema.xml.ElementReference;
  */
 public class FeatureType extends QualifiedElement implements IDetailedFeatureType
 {
+  // TODO: do we really need this, smells bad!
   private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
   /** virtual properties are also added to this map */
@@ -67,6 +68,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
 
+  // TODO: this is SO very ugly! Put virtual properties into list of all properties and mark them virtual
   private final Map<QName, IVirtualFunctionPropertyType> virtualPropertyTypes = new HashMap<QName, IVirtualFunctionPropertyType>();
 
   // will initilized in init()
@@ -79,6 +81,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private IValuePropertyType[] m_geoPTs = null;
 
+  // TODO: this extra virtual stuff is SO bad! Dont ever again do such a thing!
   private IVirtualFunctionValuePropertyType[] virtualFuncGeoTypes;
 
   public FeatureType( final GMLSchema gmlSchema, final Element element )
@@ -89,7 +92,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -122,10 +125,10 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   private final void initVirtualPropertyTypes( ) throws IllegalArgumentException, GMLSchemaException
   {
-    Collection<IVirtualFunctionPropertyType> vfptList = VirtualFunctionPropertyFactory.createVirtualFunctionPropertyTypes( this );
-    for( IVirtualFunctionPropertyType vfpt : vfptList )
+    final Collection<IVirtualFunctionPropertyType> vfptList = VirtualFunctionPropertyFactory.createVirtualFunctionPropertyTypes( this );
+    for( final IVirtualFunctionPropertyType vfpt : vfptList )
     {
-      QName propertyQName = vfpt.getQName();
+      final QName propertyQName = vfpt.getQName();
       virtualPropertyTypes.put( propertyQName, vfpt );
       // !Changing deprecate store here
       m_localPartMap.put( propertyQName.getLocalPart(), vfpt );
@@ -140,9 +143,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   private void initDeprecated( )
   {
     final IPropertyType[] pts = m_featureContentType.getProperties();
-    for( int i = 0; i < pts.length; i++ )
+    for( final IPropertyType pt : pts )
     {
-      final IPropertyType pt = pts[i];
       m_localPartMap.put( pt.getName(), pt );
       m_qNameMap.put( pt.getQName(), pt );
     }
@@ -180,6 +182,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   private void initGeometry( )
   {
+    // TODO: refaktor this stuff, smells very bad....
     final IPropertyType[] properties = m_featureContentType.getProperties();
     final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
     for( int i = 0; i < properties.length; i++ )
@@ -233,7 +236,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties(int)
    */
-  public IPropertyType getProperties( int position )
+  public IPropertyType getProperties( final int position )
   {
     return getProperties()[position];
   }
@@ -266,7 +269,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
-    IPropertyType propertyType = m_localPartMap.get( propNameLocalPart );
+    final IPropertyType propertyType = m_localPartMap.get( propNameLocalPart );
     return propertyType;
   }
 
@@ -294,7 +297,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final int lengthNonVir = m_geoPTs == null ? 0 : m_geoPTs.length;
     final int lengthVir = virtualFuncGeoTypes == null ? 0 : virtualFuncGeoTypes.length;
 
-    IValuePropertyType[] allGeo = new IValuePropertyType[lengthNonVir + lengthVir];
+    final IValuePropertyType[] allGeo = new IValuePropertyType[lengthNonVir + lengthVir];
     if( lengthNonVir > 0 )
     {
       System.arraycopy( m_geoPTs, 0, allGeo, 0, lengthNonVir );
@@ -334,9 +337,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     if( m_featureContentType != null )
     {
       final IPropertyType[] properties = getProperties();
-      for( int i = 0; i < properties.length; i++ )
+      for( final IPropertyType pt : properties )
       {
-        final IPropertyType pt = properties[i];
         b.append( "\n    - " ).append( pt.getQName() );
       }
     }
@@ -346,7 +348,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getVirtualProperty( QName propQName )
+  public IPropertyType getVirtualProperty( final QName propQName )
   {
     if( propQName == null )
     {
@@ -358,13 +360,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#isVirtualProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean isVirtualProperty( IPropertyType pt )
+  public boolean isVirtualProperty( final IPropertyType pt )
   {
     if( pt == null )
     {
       throw new IllegalArgumentException( "parameter pt must not be null" );
     }
-    QName name = pt.getQName();
+    final QName name = pt.getQName();
     if( name == null )
     {
       throw new IllegalArgumentException( "Qname or parameter qt must not be null" );
@@ -382,8 +384,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private final void initVirtualFuncGeometry( ) throws GMLSchemaException
   {
-    List<IVirtualFunctionValuePropertyType> geoTypes = new ArrayList<IVirtualFunctionValuePropertyType>();
-    for( IVirtualFunctionPropertyType type : virtualPropertyTypes.values() )
+    final List<IVirtualFunctionValuePropertyType> geoTypes = new ArrayList<IVirtualFunctionValuePropertyType>();
+    for( final IVirtualFunctionPropertyType type : virtualPropertyTypes.values() )
     {
       if( type.isGeometry() )
       {
@@ -401,7 +403,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
         System.out.println( "Novirtual geo:" + type.getQName() );
       }
     }
-    IVirtualFunctionValuePropertyType[] geoTypeArray = new IVirtualFunctionValuePropertyType[geoTypes.size()];
+    final IVirtualFunctionValuePropertyType[] geoTypeArray = new IVirtualFunctionValuePropertyType[geoTypes.size()];
     this.virtualFuncGeoTypes = geoTypes.toArray( geoTypeArray );
   }
 }
