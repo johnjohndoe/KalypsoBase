@@ -36,6 +36,8 @@ public final class NoMouseDownTableViewer extends TableViewer
   @Override
   protected void hookControl( final Control control )
   {
+    super.hookControl( control );
+    
     // want we want to to is:
     // StructuredViewer.super.hookControl( control );
     // but this is not allowed
