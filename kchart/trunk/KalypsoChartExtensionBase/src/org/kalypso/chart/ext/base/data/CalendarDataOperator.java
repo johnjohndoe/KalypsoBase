@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
+import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.logging.Logger;
@@ -16,6 +17,13 @@ import org.kalypso.chart.framework.model.data.impl.DataRange;
 public class CalendarDataOperator implements IDataOperator<Calendar>
 {
 
+	private CalendarParser m_stringParser;
+
+	public CalendarDataOperator()
+	{
+		m_stringParser=new CalendarParser();
+	}
+	
 	public DataRange<Calendar> getContainingInterval(Number numVal,
 			Number numIntervalWidth, Number numFixedPoint)
 	{
@@ -69,39 +77,13 @@ public class CalendarDataOperator implements IDataOperator<Calendar>
 
 
 	public String logicalToString(Calendar value) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		System.out.println(sdf.format(value.getTime()));
 		return sdf.format(value.getTime());
 	}
 
 	public Calendar stringToLogical(String value) throws MalformedValueException {
-		SimpleDateFormat sdf;
-		Date date;
-		Calendar cal=Calendar.getInstance();
-		try
-	    {
-	      sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	      date=sdf.parse( value );
-	    }
-	    catch( ParseException e )
-	    {
-	      //Nochmal mit anderem String probieren
-	      try
-	      {
-	        sdf=new SimpleDateFormat("yyyy-MM-dd");
-	        date=sdf.parse( value );
-	      }
-	      catch( ParseException e2 )
-	      {
-	        //TODO: nichts machen - wir probieren mal, das über die anderer Syntax an das Datum zu kommen
-	        Logger.logError(Logger.TOPIC_LOG_GENERAL, "Unable to parse date: "+value);
-	        throw new MalformedValueException(e2);
-	      }
-	    }
-
-	    if (date!=null)
-	      cal.setTime( date );
-	    cal.set( Calendar.DST_OFFSET, 0);
-	    cal.set( Calendar.ZONE_OFFSET, 0);
+		Calendar cal=m_stringParser.stringToLogical(value);;
 	    return cal;
 	}
 

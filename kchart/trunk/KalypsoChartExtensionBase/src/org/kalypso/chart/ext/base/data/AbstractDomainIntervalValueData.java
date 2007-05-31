@@ -15,7 +15,6 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 	private List<T_domain> m_domainIntervalEndValues=new ArrayList<T_domain>();
 	private List<T_domain> m_domainValues=new ArrayList<T_domain>();
 	private List<T_target> m_targetValues=new ArrayList<T_target>();
-	private File m_file;
 
 	public boolean isOpen()
 	{
@@ -27,7 +26,7 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 		//nur öffnen, wenn nicht schon offen
 		if (!m_isOpen)
 		{
-			System.out.println("opening Data: "+m_file.getAbsolutePath());
+			System.out.println("opening Data ");
 			m_isOpen=openData();
 		}
 	}
@@ -53,17 +52,6 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 	{
 		return (T_target[]) m_targetValues.toArray();
 	}
-	
-	public void setInputFile(File f)
-	{
-		m_file=f;
-	}
-	
-	public File getInputFile()
-	{
-		return m_file;
-	}
-	
 	
 	protected void setDomainValues(List<T_domain> domainValues)
 	{

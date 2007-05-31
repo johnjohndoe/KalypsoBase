@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
+import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
@@ -43,7 +44,7 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
      IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
      IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId);
 	 
-	 AbstractDomainValueData<T_domain, T_target> data=new AbstractDomainValueData<T_domain, T_target>()
+	 AbstractDomainValueFileData<T_domain, T_target> data=new AbstractDomainValueFileData<T_domain, T_target>()
 	 {
 
 

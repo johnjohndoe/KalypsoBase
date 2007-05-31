@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
+import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
@@ -45,7 +45,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
 		IAxis<Calendar> domAxis = getChartModel().getMapperRegistry().getAxis(domainAxisId);
 		IAxis<Number> valAxis = getChartModel().getMapperRegistry().getAxis(targetAxisId);
 
-		AbstractDomainValueData<Calendar, Number> data = new AbstractDomainValueData<Calendar, Number>()
+		AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
 		{
 
 			private SimpleDateFormat m_format;

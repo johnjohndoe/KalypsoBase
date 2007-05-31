@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
+import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultBarLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
@@ -41,7 +42,7 @@ public class CSVBarLayerProvider<T_domain, T_target> extends
 		IAxis<T_domain> domainAxis = getChartModel().getMapperRegistry().getAxis(domainAxisId);
 		IAxis<T_target> targetAxis = getChartModel().getMapperRegistry().getAxis(targetAxisId);
 
-		AbstractDomainIntervalValueData<T_domain, T_target> data = new AbstractDomainIntervalValueData<T_domain, T_target>() {
+		AbstractDomainIntervalValueFileData<T_domain, T_target> data = new AbstractDomainIntervalValueFileData<T_domain, T_target>() {
 
 			public boolean openData() {
 				// TODO: umschreiben, damit auch urls verwendet werden können

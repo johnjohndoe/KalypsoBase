@@ -14,7 +14,6 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 	private boolean m_isLoading=false;
 	private List<T_domain> m_domainValues=new ArrayList<T_domain>();
 	private List<T_target> m_targetValues=new ArrayList<T_target>();
-	private File m_file;
 
 	public boolean isOpen()
 	{
@@ -42,7 +41,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 			}
 			else
 			{
-				System.out.println("opening Data: "+m_file.getAbsolutePath());
+				System.out.println("opening Data");
 				m_isOpen=openData();
 			}
 		}
@@ -50,16 +49,6 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements IDa
 	
 	public abstract boolean openData();
 	
-	
-	public void setInputFile(File f)
-	{
-		m_file=f;
-	}
-
-	public File getInputFile()
-	{
-		return m_file;
-	}
 	
 	public void close()
 	{
