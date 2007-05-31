@@ -92,7 +92,9 @@ public class CustomFeatureType implements IFeatureType
         {
           col.add( vpt );
           if( geoPos < 0 )
+          {
             geoPos = i;
+          }
         }
       }
     }
@@ -120,7 +122,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties(int)
    */
-  public IPropertyType getProperties( int position )
+  public IPropertyType getProperties( final int position )
   {
     return m_properties[position];
   }
@@ -136,7 +138,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getProperty( QName qname )
+  public IPropertyType getProperty( final QName qname )
   {
     return m_qNameMap.get( qname );
   }
@@ -168,10 +170,12 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstituts(org.kalypso.gmlschema.GMLSchema, boolean, boolean)
    */
-  public IFeatureType[] getSubstituts( IGMLSchema contextSchema, boolean includeAbstract, boolean inclusiveThis )
+  public IFeatureType[] getSubstituts( final IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
   {
     if( inclusiveThis )
+    {
       return new IFeatureType[] { this };
+    }
     return new IFeatureType[0];
   }
 
@@ -204,7 +208,14 @@ public class CustomFeatureType implements IFeatureType
    */
   public int getPropertyPosition( final IPropertyType pt )
   {
-    return m_positionMap.get( pt );
+    final Integer pos = m_positionMap.get( pt );
+
+    if( pos == null )
+    {
+      return -1;
+    }
+
+    return pos;
   }
 
   /**
@@ -226,7 +237,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun )
   {
     // TODO nothing to init
   }
@@ -234,7 +245,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
@@ -250,24 +261,33 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getVirtualProperty( QName propQName )
+  public IPropertyType getVirtualProperty( final QName propQName )
   {
     return null;
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#isVirtualProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean isVirtualProperty( IPropertyType pt )
+  public boolean isVirtualProperty( final IPropertyType pt )
   {
-    return false;    
+    return false;
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getVirtualGeometryProperties()
    */
   public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( )
   {
-    return new IVirtualFunctionPropertyType[]{};    
+    return new IVirtualFunctionPropertyType[] {};
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_qName.toString();
   }
 }

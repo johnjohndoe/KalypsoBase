@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -138,7 +139,7 @@ public class CustomRelationType implements IRelationType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun )
   {
     // TODO nothing to init
   }
@@ -148,13 +149,13 @@ public class CustomRelationType implements IRelationType
    */
   public boolean isList( )
   {
-    return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
+    return (m_maxOccurs > 1) || (m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY);
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
@@ -172,7 +173,16 @@ public class CustomRelationType implements IRelationType
    */
   public IDocumentReference[] getDocumentReferences( )
   {
-    return DOCUMENT_REFERENCES;
+    return CustomRelationType.DOCUMENT_REFERENCES;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_qName.toString();
   }
 
 }

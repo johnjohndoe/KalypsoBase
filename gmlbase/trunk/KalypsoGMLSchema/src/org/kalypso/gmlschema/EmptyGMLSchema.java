@@ -75,6 +75,7 @@ public class EmptyGMLSchema implements IGMLSchema
    */
   public void accept( final IGMLSchemaVisitor visitor )
   {
+    visitor.visit( this );
   }
 
   /**
@@ -96,7 +97,7 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#collectSchemas(java.util.Collection)
    */
-  public void collectSchemas( Collection<IGMLSchema> allSchemas )
+  public void collectSchemas( final Collection<IGMLSchema> allSchemas )
   {
     // i do know only myself
     allSchemas.add( this );
