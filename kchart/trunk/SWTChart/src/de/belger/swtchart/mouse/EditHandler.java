@@ -66,7 +66,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
     if( editInfo == null )
       return;
     m_clickPoint = new Point( e.x, e.y );
-    final boolean allowEdit = editInfo.layer != null? editInfo.layer.alwaysAllowsEditing() : false;
+    final boolean allowEdit = editInfo.layer != null ? editInfo.layer.alwaysAllowsEditing() : false;
     if( (m_editingAllowed || allowEdit) && e.button == 1 )
     {
       m_chart.setHoverInfo( null );
@@ -85,6 +85,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
     if( e.button == 1 )
     {
       final EditInfo editInfo = m_chart.getEditInfo();
+      final EditInfo hoverInfo = m_chart.getHoverInfo();
       if( editInfo != null )
       {
         try
@@ -104,6 +105,21 @@ public class EditHandler implements MouseListener, MouseMoveListener
           m_chart.setEditInfo( null );
         }
       }
+      else if( hoverInfo != null )
+      {
+        try
+        {
+          if( (Math.abs( e.x - m_clickPoint.x ) < m_trashHold) || (Math.abs( e.y - m_clickPoint.y ) < m_trashHold) )
+          {
+            hoverInfo.layer.setActivePoint( hoverInfo.data );
+          }
+        }
+        finally
+        {
+          m_clickPoint = null;
+        }
+      }
+
     }
   }
 
