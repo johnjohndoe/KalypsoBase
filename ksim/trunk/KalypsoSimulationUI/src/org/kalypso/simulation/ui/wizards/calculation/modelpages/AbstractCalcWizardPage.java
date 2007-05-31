@@ -660,7 +660,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       final IFeatureChangeListener fcl = new IFeatureChangeListener()
       {
-        public void featureChanged( final FeatureChange change )
+        public void featureChanged( final FeatureChange[] changes )
         {
           // do nothing in wizard modus
         }

@@ -44,6 +44,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
@@ -115,9 +116,9 @@ public class SteuerparameterWizardPage extends WizardPage
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
 
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] fcs )
       {
-        changes.add( change );
+        changes.addAll( Arrays.asList( fcs ) );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
