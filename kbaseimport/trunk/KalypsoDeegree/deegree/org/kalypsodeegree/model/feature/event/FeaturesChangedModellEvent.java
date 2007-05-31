@@ -46,7 +46,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
  * @author doemming
  */
 public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
@@ -62,33 +61,33 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
     m_features = features;
   }
 
-  public Feature[] getFeatures()
+  public Feature[] getFeatures( )
   {
     return m_features;
   }
 
-  public GMLWorkspace getGMLWorkspace()
+  public GMLWorkspace getGMLWorkspace( )
   {
     return m_workspace;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEvent#toString()
    */
   @Override
   public String toString( )
   {
-    StringBuffer buf= new StringBuffer(128);
-    buf.append("FeatureChangedModellEvent[");
-    if(m_features!=null)
+    StringBuffer buf = new StringBuffer( 128 );
+    buf.append( "FeatureChangedModellEvent[" );
+    if( m_features != null )
     {
-      buf.append( Arrays.asList( m_features) );
+      buf.append( Arrays.asList( m_features ) );
     }
     else
     {
-     buf.append("null");
+      buf.append( "null" );
     }
-    buf.append(']');
+    buf.append( ']' );
     return buf.toString();
   }
 }
