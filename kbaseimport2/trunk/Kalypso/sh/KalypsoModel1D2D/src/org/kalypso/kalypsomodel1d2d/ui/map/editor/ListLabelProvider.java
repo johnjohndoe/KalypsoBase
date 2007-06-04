@@ -46,8 +46,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 public class ListLabelProvider extends LabelProvider
 {
-
-
   public ListLabelProvider( )
   {
     //i am empty
