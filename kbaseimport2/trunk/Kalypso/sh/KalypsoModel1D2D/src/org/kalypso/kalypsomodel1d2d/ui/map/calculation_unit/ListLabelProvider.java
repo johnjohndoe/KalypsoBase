@@ -46,9 +46,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 class ListLabelProvider extends LabelProvider
 {
-  private final CalculationElementComponent listLabelProvider;
+  private final SelectedCalculationComponent listLabelProvider;
 
-  ListLabelProvider( CalculationElementComponent calculationElementComponent )
+  ListLabelProvider( SelectedCalculationComponent calculationElementComponent )
   {
     listLabelProvider = calculationElementComponent;
   }
