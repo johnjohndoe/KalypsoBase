@@ -115,7 +115,7 @@ public final class StatusUtilities
    * all includes child-stati, separated by line-breaks
    * 
    * @param currentDepth
-   *          Amout of tabs with wich the message will be indentated
+   *            Amout of tabs with wich the message will be indentated
    */
   private static String createStringFromStatus( final IStatus status, final int currentDepth )
   {
@@ -147,9 +147,9 @@ public final class StatusUtilities
     buffer.append( '\n' );
 
     final IStatus[] children = status.getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final IStatus element : children )
     {
-      buffer.append( createStringFromStatus( children[i], currentDepth + 1 ) );
+      buffer.append( createStringFromStatus( element, currentDepth + 1 ) );
       buffer.append( '\n' );
     }
 
@@ -166,7 +166,7 @@ public final class StatusUtilities
    * </p>
    * 
    * @throws NullPointerException
-   *           If <code>t</code> is null.
+   *             If <code>t</code> is null.
    */
   public static IStatus statusFromThrowable( final Throwable t )
   {
@@ -183,9 +183,9 @@ public final class StatusUtilities
    * </p>
    * 
    * @param message
-   *          [optional] used as message for newly created status if specified
+   *            [optional] used as message for newly created status if specified
    * @throws NullPointerException
-   *           If <code>t</code> is null.
+   *             If <code>t</code> is null.
    */
   public static IStatus statusFromThrowable( final Throwable t, final String message )
   {
@@ -215,13 +215,24 @@ public final class StatusUtilities
     return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
   }
 
+  public static String messageFromThrowable( final Throwable t )
+  {
+    final String msg = t.getLocalizedMessage();
+    if( msg != null )
+      return msg;
+
+    // beser t.toString, weil manche Exceptions dann doch noch mehr verraten
+    // z.B. ValidationException
+    return t.toString();// "<Keine weitere Information vorhanden>";
+  }
+
   /**
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>.
    * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
    * is returned.
    * 
    * @param message
-   *          only used when creating the MultiStatus
+   *            only used when creating the MultiStatus
    */
   public static IStatus createStatus( final List<IStatus> stati, final String message )
   {
@@ -240,7 +251,7 @@ public final class StatusUtilities
    * is returned.
    * 
    * @param message
-   *          only used when creating the MultiStatus
+   *            only used when creating the MultiStatus
    */
   public static IStatus createStatus( final IStatus[] stati, final String message )
   {
@@ -292,12 +303,12 @@ public final class StatusUtilities
    * then it is simply returned.
    * 
    * @param status
-   *          the status to wrap
+   *            the status to wrap
    * @param severity
-   *          the desired severity
+   *            the desired severity
    * @param severityMask
-   *          the severity-mask for which the wrapping takes place. If the given status does not match this
-   *          severity-mask, no wrap takes place
+   *            the severity-mask for which the wrapping takes place. If the given status does not match this
+   *            severity-mask, no wrap takes place
    */
   public static IStatus wrapStatus( final IStatus status, final int severity, final int severityMask )
   {
