@@ -40,61 +40,58 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jwsdp;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.performance.TimeLogger;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.xml.NSPrefixProvider;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
+import org.kalypso.contribs.eclipse.core.runtime.DebugPerf;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public final class JaxbUtilities
 {
+  public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out );
+
   private JaxbUtilities( )
   {
     // never instantiate
   }
 
-  public static JAXBContext createQuiet( final Class<?>... objectFactoryClasses )
+  public static JAXBContext createQuiet( final Class< ? >... objectFactoryClasses )
   {
-    final String classesString = Arrays.toString( objectFactoryClasses );
-
-    final TimeLogger logger;
-    if( Boolean.valueOf( Platform.getDebugOption( "org.kalypso.jwsdp/perf/jaxbinitialisation" ) ) )
-      logger = new TimeLogger( "Loading JAXBContext for classes: " + classesString );
-    else
-      logger = null;
+    final DebugPerf stopWatch = DEBUG.createStopWatch( "Initializing JAXContext for classes:%n" );
+    for( final Class< ? > clazz : objectFactoryClasses )
+      DEBUG.printf( "\t%s%n", clazz );
 
     try
     {
       // TODO Performanzproblem hier:
-      // Ursache ist der Konstruktor der JAXBContextImpl der anscheinend rekrusiv per
+      // Ursache ist der Konstruktor der JAXBContextImpl der anscheinend rekursiv per
       // reflektion alle classen sucht, für die er verantworltich ist
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
     {
-      e.printStackTrace();
+      DEBUG.printStackTrace( IStatus.ERROR, e );
       return null;
     }
     finally
     {
-      if( logger != null )
-      {
-        logger.takeInterimTime();
-        logger.printCurrentInterim( "JAXBContext was loaded in " );
-      }
+      stopWatch.stopWatch( "JAXContext created.%n%n" );
     }
   }
 
@@ -103,7 +100,7 @@ public final class JaxbUtilities
     return new NamespacePrefixMapper()
     {
       @Override
-      public String getPreferredPrefix( String namespace, String suggestion, boolean required )
+      public String getPreferredPrefix( final String namespace, final String suggestion, final boolean required )
       {
         // never return null to avoid using of defaultnamespace witch leads to broken xml sometimes. see bug-description
         // at methode createMarshaller()
@@ -154,10 +151,10 @@ public final class JaxbUtilities
    * <code><element xmlns:xlink="blabla" xlink:href="test"/></code>.
    * 
    * @param formaOutput
-   *          if true, output is nicely formatted.
+   *            if true, output is nicely formatted.
    * @param specialPrefixes
-   *          if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
-   *          namespaces are mapped into the same namespace.
+   *            if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
+   *            namespaces are mapped into the same namespace.
    */
   public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final Map<String, String> specialPrefixes ) throws JAXBException
   {
@@ -180,4 +177,11 @@ public final class JaxbUtilities
 
     return schema.newValidator();
   }
+
+  @SuppressWarnings("unchecked")
+  public static JAXBElement<Object> createJaxbElement( final QName qname, final Object value )
+  {
+    return new JAXBElement<Object>( qname, (Class<Object>) value.getClass(), value );
+  }
+
 }
