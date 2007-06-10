@@ -42,58 +42,59 @@ package org.kalypso.gmlschema.property.virtual;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
- * Default implementation of {@link IVirtualFunctionValuePropertyType}
- * bases on the {@link ITypeHandler} associated with the property
- * q-name
+ * Default implementation of {@link IVirtualFunctionValuePropertyType} bases on the {@link ITypeHandler} associated with
+ * the property q-name
  * 
- * @author Congo Patrice 
+ * @author Congo Patrice
  */
-public class VirtualFunctionValuePropertyType 
-                  implements IVirtualFunctionValuePropertyType
+public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePropertyType
 {
+  private final IMarshallingTypeHandler m_handler;
 
-  private final ITypeHandler handler;
-  private final QName typeQName;
-  
-  private IRestriction[] restrictions = {};
-  private int maxOccurs = 1;
-  private int minOccurs = 0;
-  private boolean isList = false;
-  private boolean isNillable = false;
-  private String defaultValue = null;
-  private String fixed = null;
-  private boolean hasDefault = false;
-  private boolean isFixed = false;
-  private boolean isNullable = false;
-  
+  private final QName m_typeQName;
+
+  private final IRestriction[] m_restrictions = {};
+
+  private final int m_maxOccurs = 1;
+
+  private final int m_minOccurs = 0;
+
+  private final boolean m_isList = false;
+
+  private final boolean m_isNillable = false;
+
+  private final String m_defaultValue = null;
+
+  private final String m_fixed = null;
+
+  private final boolean m_hasDefault = false;
+
+  private final boolean m_isFixed = false;
+
+  private final boolean m_isNullable = false;
+
   /**
-   * Creates a new {@link VirtualFunctionPropertyType} 
-   * for the given value handler and the property q-name
-   * @param handler handler for the property value 
-   * @param propertyQName the q-name of the virtual property 
+   * Creates a new {@link VirtualFunctionPropertyType} for the given value handler and the property q-name
+   * 
+   * @param handler
+   *            handler for the property value
+   * @param propertyQName
+   *            the q-name of the virtual property
    */
-  public VirtualFunctionValuePropertyType(
-                            ITypeHandler handler, 
-                            QName propertyQName)
-                            throws IllegalArgumentException
+  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName ) throws IllegalArgumentException
   {
-    if(handler == null || propertyQName == null)
+    if( handler == null || propertyQName == null )
     {
-      String message = 
-        String.format( 
-            "%s %s",
-            handler==null?"null":handler.toString(),
-            propertyQName==null?"null":propertyQName.toString());
-      throw new IllegalArgumentException(message);
+      final String message = String.format( "%s %s", handler == null ? "null" : handler.toString(), propertyQName == null ? "null" : propertyQName.toString() );
+      throw new IllegalArgumentException( message );
     }
-    this.handler = handler;
-    this.typeQName = propertyQName;
+    this.m_handler = handler;
+    this.m_typeQName = propertyQName;
   }
 
   /**
@@ -101,7 +102,7 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean isGeometry( )
   {
-    return handler.isGeometry();
+    return m_handler.isGeometry();
   }
 
   /**
@@ -109,7 +110,7 @@ public class VirtualFunctionValuePropertyType
    */
   public int getMaxOccurs( )
   {
-    return this.maxOccurs;
+    return this.m_maxOccurs;
   }
 
   /**
@@ -117,15 +118,17 @@ public class VirtualFunctionValuePropertyType
    */
   public int getMinOccurs( )
   {
-    return this.minOccurs;
+    return this.m_minOccurs;
   }
 
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public String getName( )
   {
-    return typeQName.getLocalPart();
+    return m_typeQName.getLocalPart();
   }
 
   /**
@@ -133,7 +136,7 @@ public class VirtualFunctionValuePropertyType
    */
   public QName getQName( )
   {
-    return typeQName;
+    return m_typeQName;
   }
 
   /**
@@ -141,7 +144,7 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean isList( )
   {
-    return this.isList;
+    return this.m_isList;
   }
 
   /**
@@ -149,21 +152,22 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean isNillable( )
   {
-    return this.isNillable;
+    return this.m_isNillable;
   }
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun )
   {
-    
+
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }
@@ -173,7 +177,7 @@ public class VirtualFunctionValuePropertyType
    */
   public String getDefault( )
   {
-    return this.defaultValue;
+    return this.m_defaultValue;
   }
 
   /**
@@ -181,7 +185,7 @@ public class VirtualFunctionValuePropertyType
    */
   public String getFixed( )
   {
-    return this.fixed;
+    return this.m_fixed;
   }
 
   /**
@@ -197,23 +201,23 @@ public class VirtualFunctionValuePropertyType
    */
   public IRestriction[] getRestriction( )
   {
-    return this.restrictions;
+    return this.m_restrictions;
   }
 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
-  public ITypeHandler getTypeHandler( )
+  public IMarshallingTypeHandler getTypeHandler( )
   {
-    return this.handler;
+    return m_handler;
   }
 
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getValueClass()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
-    return handler.getValueClass();
+    return m_handler.getValueClass();
   }
 
   /**
@@ -221,7 +225,7 @@ public class VirtualFunctionValuePropertyType
    */
   public QName getValueQName( )
   {
-    return handler.getTypeName();
+    return m_handler.getTypeName();
   }
 
   /**
@@ -229,7 +233,7 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean hasDefault( )
   {
-    return this.hasDefault;
+    return this.m_hasDefault;
   }
 
   /**
@@ -237,13 +241,13 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean hasRestriction( )
   {
-    if(restrictions == null)
+    if( m_restrictions == null )
     {
       return false;
     }
     else
     {
-      return restrictions.length>0;
+      return m_restrictions.length > 0;
     }
   }
 
@@ -252,7 +256,7 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean isFixed( )
   {
-    return this.isFixed;
+    return this.m_isFixed;
   }
 
   /**
@@ -260,7 +264,7 @@ public class VirtualFunctionValuePropertyType
    */
   public boolean isNullable( )
   {
-    return this.isNullable;
+    return this.m_isNullable;
   }
 
 }

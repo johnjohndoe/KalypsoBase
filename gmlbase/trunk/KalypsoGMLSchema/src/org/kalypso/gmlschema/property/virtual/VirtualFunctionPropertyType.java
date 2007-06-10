@@ -42,29 +42,20 @@ package org.kalypso.gmlschema.property.virtual;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchemaException;
-
 /**
- * Default implementation of {@link IVirtualFunctionPropertyType} 
- * based on a Q-Name and for virtual function properties without 
- * kapp:value specified.
- * {@link #isGeometry()} always return false
+ * Default implementation of {@link IVirtualFunctionPropertyType} based on a Q-Name and for virtual function properties
+ * without kapp:value specified. {@link #isGeometry()} always return false
  * 
  * @author Patrice Congo
- *
  */
-public class VirtualFunctionPropertyType 
-                  implements IVirtualFunctionPropertyType
+public class VirtualFunctionPropertyType implements IVirtualFunctionPropertyType
 {
-  
-  private final QName propertyQName;
-  
-//  private final boolean isGeometry=false;
-  
-  public VirtualFunctionPropertyType(
-                      final QName propertyQName)
+
+  private final QName m_propertyQName;
+
+  public VirtualFunctionPropertyType( final QName propertyQName )
   {
-    this.propertyQName = propertyQName;    
+    m_propertyQName = propertyQName;
   }
 
   /**
@@ -94,9 +85,11 @@ public class VirtualFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public String getName( )
   {
-    return propertyQName.getLocalPart();
+    return m_propertyQName.getLocalPart();
   }
 
   /**
@@ -104,7 +97,7 @@ public class VirtualFunctionPropertyType
    */
   public QName getQName( )
   {
-    return propertyQName;
+    return m_propertyQName;
   }
 
   /**
@@ -126,15 +119,16 @@ public class VirtualFunctionPropertyType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun )
   {
-    
+
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }

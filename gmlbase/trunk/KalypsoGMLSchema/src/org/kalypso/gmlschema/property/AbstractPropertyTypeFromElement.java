@@ -31,10 +31,10 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.Occurs;
-import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
+import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * Property feature type that is build from a xml-element

@@ -60,7 +60,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
 
   private final ContentHandler m_unmarshallerHandler;
 
-  private final UnMarshallResultEater m_unmarshalResultEater;
+  private final UnmarshallResultEater m_unmarshalResultEater;
 
   private final UnmarshalResultProvider m_unmarshallResultProvider;
 
@@ -74,7 +74,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @param unmarshalResultEater
    *          will be feeded with the result of unmarshalling
    */
-  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnMarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement, final String gmlVersion )
+  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnmarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement, final String gmlVersion )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
@@ -163,9 +163,9 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         final Object result = m_unmarshallResultProvider.getResult();
         final JAXBElement<Object> jaxBElement = (JAXBElement<Object>) result;
         if( jaxBElement != null )
-          m_unmarshalResultEater.eat( jaxBElement.getValue() );
+          m_unmarshalResultEater.unmarshallSuccesful( jaxBElement.getValue() );
         else
-          m_unmarshalResultEater.eat( null );
+          m_unmarshalResultEater.unmarshallSuccesful( null );
       }
       catch( GMLSchemaException e )
       {

@@ -61,8 +61,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * Provides mechanism to create virtual function properties
- * for a details feature type
+ * Provides mechanism to create virtual function properties for a details feature type
  * 
  * @author Patrice Congo
  */
@@ -75,352 +74,315 @@ public class VirtualFunctionPropertyFactory
   public static final QName QNAME_NAME = new QName( NS.KALYPSO_APPINFO, "name" );
 
   public static final QName QNAME_VALUE = new QName( NS.KALYPSO_APPINFO, "value" );
-  
+
   public static final QName QNAME_IS_VIRTUAL = new QName( NS.KALYPSO_APPINFO, "isVirtual" );
-  
-  public static final QName QNAME_IS_GEOMETRY = 
-                              new QName( NS.KALYPSO_APPINFO, "isGeometry" );
-  //AbstractGeometryType
-  public static final QName QNAME_GML_GEOMETRY = 
-                              new QName( NS.GML3, "_Geometry" );
-  
-  //kapp:valueType
-  public static final QName QNAME_VALUE_TYPE  = 
-                new QName( NS.KALYPSO_APPINFO, "valueType" );
-  
-  private VirtualFunctionPropertyFactory()
+
+  public static final QName QNAME_IS_GEOMETRY = new QName( NS.KALYPSO_APPINFO, "isGeometry" );
+
+  // AbstractGeometryType
+  public static final QName QNAME_GML_GEOMETRY = new QName( NS.GML3, "_Geometry" );
+
+  // kapp:valueType
+  public static final QName QNAME_VALUE_TYPE = new QName( NS.KALYPSO_APPINFO, "valueType" );
+
+  private VirtualFunctionPropertyFactory( )
   {
-    
+
   }
-  
+
   /**
-   * Create the virtual function propety types for the given feature type.
-   * {@link IFeatureType#getProperty(QName)} is used to look up regular feature 
-   * type regular properties. Therefor the feature type must be in a state after
-   * the collection of those regular properties
+   * Create the virtual function propety types for the given feature type. {@link IFeatureType#getProperty(QName)} is
+   * used to look up regular feature type regular properties. Therefor the feature type must be in a state after the
+   * collection of those regular properties
    * 
-   * @param featureType the feature properties for which virtual properties are to be collected
-   * @return a collection of virtual properties for the given feature 
+   * @param featureType
+   *            the feature properties for which virtual properties are to be collected
+   * @return a collection of virtual properties for the given feature
    */
-  public static final Collection<IVirtualFunctionPropertyType> createVirtualFunctionPropertyTypes( 
-                                                      IDetailedFeatureType featureType)
-                                                      throws  IllegalArgumentException,
-                                                              GMLSchemaException
+  public static final Collection<IVirtualFunctionPropertyType> createVirtualFunctionPropertyTypes( final IDetailedFeatureType featureType ) throws IllegalArgumentException, GMLSchemaException
   {
-    if(featureType == null)
+    if( featureType == null )
     {
-      throw new IllegalArgumentException("Parameter featureType must not be null");
+      throw new IllegalArgumentException( "Parameter featureType must not be null" );
     }
-    Map<QName, IVirtualFunctionPropertyType> vftpMap= 
-        new HashMap<QName, IVirtualFunctionPropertyType>();
-    
-//    List<IVirtualFunctionPropertyType> vfptList = 
-//                      new ArrayList<IVirtualFunctionPropertyType>();
-    final IFeatureContentType featureContentType = 
-                                    featureType.getFeatureContentType();
-    //return local before base function properties
+    final Map<QName, IVirtualFunctionPropertyType> vftpMap = new HashMap<QName, IVirtualFunctionPropertyType>();
+
+// List<IVirtualFunctionPropertyType> vfptList =
+// new ArrayList<IVirtualFunctionPropertyType>();
+    final IFeatureContentType featureContentType = featureType.getFeatureContentType();
+    // return local before base function properties
     final XmlObject[] funcProps = featureContentType.collectFunctionProperties();
-    
-      try
+
+    try
+    {
+      for( final XmlObject funcProp : funcProps )
       {
-        for( final XmlObject funcProp : funcProps )
+        final XmlCursor funcCursor = funcProp.newCursor();
+        final IVirtualFunctionPropertyType pt = createFromCursor( featureType, funcCursor );
+        if( pt != null )
         {
-          final XmlCursor funcCursor = funcProp.newCursor();
-          final IVirtualFunctionPropertyType pt = 
-                         createFromCursor( featureType, funcCursor );
-          if(pt!=null)
+          final QName name = pt.getQName();
+          if( !vftpMap.containsKey( name ) )
           {
-            QName name = pt.getQName();
-            if(!vftpMap.containsKey( name))
-            {
-              vftpMap.put( name, pt );
-            }
-//            vfptList.add( pt);
+            vftpMap.put( name, pt );
           }
+// vfptList.add( pt);
         }
       }
-      catch (GMLSchemaException e) 
-      {
-        e.printStackTrace();
-        throw e;
-      }
-      catch( final Throwable th )
-      {
-        th.printStackTrace();
-        String message = 
-          String.format( 
-                  "Exception while computig the virtual properties of %s ", 
-                  getPrefixedName( featureType.getQName() )  ); 
-        throw new GMLSchemaException(message,th);
-      }
-      
-      return vftpMap.values();    
+    }
+    catch( final GMLSchemaException e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+      final String message = String.format( "Exception while computig the virtual properties of %s ", getPrefixedName( featureType.getQName() ) );
+      throw new GMLSchemaException( message, th );
+    }
+
+    return vftpMap.values();
   }
-  
+
   /**
-   * Creates a virtual function property for the specified featureType given a cursor
-   * describing a function property.
-   * This method relies on {@link IFeatureType#getProperty(QName)} to check for existing
-   * regular property with the same q-name as the function property. 
-   * Therefore the feature type instance must be in a state where it regular property are 
-   * already collected.
+   * Creates a virtual function property for the specified featureType given a cursor describing a function property.
+   * This method relies on {@link IFeatureType#getProperty(QName)} to check for existing regular property with the same
+   * q-name as the function property. Therefore the feature type instance must be in a state where it regular property
+   * are already collected.
    * 
-   * @param featureType the feature type to find the function property for
-   * @param funcCursor the cursor containing the function property description
-   * 
-   * @return 
+   * @param featureType
+   *            the feature type to find the function property for
+   * @param funcCursor
+   *            the cursor containing the function property description
+   * @return
    */
-  static public final IVirtualFunctionPropertyType createFromCursor(
-                                                    IFeatureType featureType,
-                                                    XmlCursor funcCursor)
-                                                    throws GMLSchemaException
+  static public final IVirtualFunctionPropertyType createFromCursor( final IFeatureType featureType, final XmlCursor funcCursor ) throws GMLSchemaException
   {
-//    final String property = funcCursor.getAttributeText( QNAME_PROPERTY );
+// final String property = funcCursor.getAttributeText( QNAME_PROPERTY );
     final boolean isVirtual = getBooleanKAppProperty( QNAME_IS_VIRTUAL, funcCursor );
-    if(!isVirtual)
+    if( !isVirtual )
     {
       return null;
     }
-    
+
     final QName propertyQName = getPropertyAsQName( funcCursor, QNAME_PROPERTY );
-    
-    
-    //this supposed that getProperty only returns non virtual property
-    if(featureType.getProperty( propertyQName )!=null)
+
+    // this supposed that getProperty only returns non virtual property
+    if( featureType.getProperty( propertyQName ) != null )
     {
-      String message = 
-        String.format( 
-            "Feature must not have a regular and a virtual property with the same qname:%s",  
-            getPrefixedName( propertyQName ));
-      throw new GMLSchemaException(message);
+      final String message = String.format( "Feature must not have a regular and a virtual property with the same qname:%s", getPrefixedName( propertyQName ) );
+      throw new GMLSchemaException( message );
     }
-    
-    //check value type
+
+    // check value type
     try
     {
-      QName valueTypeQName = getPropertyAsQName( funcCursor, QNAME_VALUE_TYPE );
-      if(valueTypeQName!=null)
+      final QName valueTypeQName = getPropertyAsQName( funcCursor, QNAME_VALUE_TYPE );
+      if( valueTypeQName != null )
       {
-        IMarshallingTypeHandler typeHandler = getTypeHandler( valueTypeQName );
-        if(typeHandler!=null)
+        final IMarshallingTypeHandler typeHandler = getTypeHandler( valueTypeQName );
+        if( typeHandler != null )
         {
-//        System.out.println("isGeometry="+isGeometry( featureType, valueTypeQName ));
-//          System.out.println("FEATURETYPE="+featureType.getQName());
-//          System.out.println("VALUE_CLASS"+typeHandler.getValueClass());
-//          System.out.println("VALUE_QANME="+typeHandler.getTypeName());
-//          System.out.println("VALUE_IS_GEO="+typeHandler.isGeometry());
-//          System.out.println();
-          IVirtualFunctionValuePropertyType valProp=
-            new VirtualFunctionValuePropertyType(typeHandler, propertyQName);
+// System.out.println("isGeometry="+isGeometry( featureType, valueTypeQName ));
+// System.out.println("FEATURETYPE="+featureType.getQName());
+// System.out.println("VALUE_CLASS"+typeHandler.getValueClass());
+// System.out.println("VALUE_QANME="+typeHandler.getTypeName());
+// System.out.println("VALUE_IS_GEO="+typeHandler.isGeometry());
+// System.out.println();
+          final IVirtualFunctionValuePropertyType valProp = new VirtualFunctionValuePropertyType( typeHandler, propertyQName );
           return valProp;
         }
         else
         {
-          throw new GMLSchemaException(
-              "Value-Type not supported:"+valueTypeQName);
+          throw new GMLSchemaException( "Value-Type not supported:" + valueTypeQName );
         }
-          
+
       }
       else
       {
-//        System.out.println("Type handler is null");
-        final IVirtualFunctionPropertyType vfpt = 
-          new VirtualFunctionPropertyType(propertyQName);
+// System.out.println("Type handler is null");
+        final IVirtualFunctionPropertyType vfpt = new VirtualFunctionPropertyType( propertyQName );
         return vfpt;
       }
     }
-    catch (GMLSchemaException e) 
+    catch( final GMLSchemaException e )
     {
       throw e;
     }
-    catch(Throwable th)
+    catch( final Throwable th )
     {
-     th.printStackTrace();
-     throw new GMLSchemaException(
-         "Exception while creating virtual property type for "+featureType.getQName(),th);
+      th.printStackTrace();
+      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th );
     }
-  
-    
+
   }
-  
+
   /**
    * To get the marshalling type handler for the given QName
-   * @param valueQName the q-name to find the marshalling type for
+   * 
+   * @param valueQName
+   *            the q-name to find the marshalling type for
    * @return the mashalling handler for the provided q-name
    */
-  public static final IMarshallingTypeHandler getTypeHandler(QName valueQName)
+  public static final IMarshallingTypeHandler getTypeHandler( final QName valueQName )
   {
-    ITypeRegistry<IMarshallingTypeHandler> typeRegistry = 
-              MarshallingTypeRegistrySingleton.getTypeRegistry();
-    IMarshallingTypeHandler typeHandlerForTypeName = 
-        typeRegistry.getTypeHandlerForTypeName( valueQName );
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandlerForTypeName = typeRegistry.getTypeHandlerForTypeName( valueQName );
     return typeHandlerForTypeName;
-    
+
   }
-  
+
   /**
-   * To get the valueClass associated with the given q-name.
-   * This method uses a the associated marshaling handler to find the value class
-   * @return the class of object representing the element of q-name 
+   * To get the valueClass associated with the given q-name. This method uses a the associated marshaling handler to
+   * find the value class
+   * 
+   * @return the class of object representing the element of q-name
    */
-  public static final Class getValueClass(QName valueQName)
+  public static final Class< ? > getValueClass( final QName valueQName )
   {
-    Class cls = null;
-    ITypeRegistry<IMarshallingTypeHandler> typeRegistry = 
-              MarshallingTypeRegistrySingleton.getTypeRegistry();
-    IMarshallingTypeHandler typeHandlerForTypeName = 
-        typeRegistry.getTypeHandlerForTypeName( valueQName );
-    if(typeHandlerForTypeName !=null)
+    Class< ? > cls = null;
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandlerForTypeName = typeRegistry.getTypeHandlerForTypeName( valueQName );
+    if( typeHandlerForTypeName != null )
     {
       cls = typeHandlerForTypeName.getValueClass();
     }
     return cls;
   }
-  
+
   /**
-   * Answer whether a given q-name is for a geometry element.
-   * A element is a geometry if its in the substitution
-   * group of gml:_Geometry
-   * @param valueTypeQName the q-name to test
-   * @param schema the gml containing the q-name
-   * @return true if the element of given q-name represents a geometry 
+   * Answer whether a given q-name is for a geometry element. A element is a geometry if its in the substitution group
+   * of gml:_Geometry
+   * 
+   * @param valueTypeQName
+   *            the q-name to test
+   * @param schema
+   *            the gml containing the q-name
+   * @return true if the element of given q-name represents a geometry
    */
-  public static final boolean isGeometry(
-                              QName valueTypeQName, 
-                              GMLSchema schema)
+  public static final boolean isGeometry( final QName valueTypeQName, final GMLSchema schema )
   {
     try
     {
-        QName curQName=valueTypeQName;
-        ElementReference elementReference;
-          for(
-              elementReference = schema.resolveElementReference( curQName );
-              elementReference!=null;
-              elementReference = schema.resolveElementReference( curQName ))
+      QName curQName = valueTypeQName;
+      ElementReference elementReference;
+      for( elementReference = schema.resolveElementReference( curQName ); elementReference != null; elementReference = schema.resolveElementReference( curQName ) )
+      {
+
+        if( elementReference != null )
+        {
+
+          final Element element = elementReference.getElement();
+          if( element != null )
           {
-          
-            
-            if(elementReference!=null)
+            final QName substitutionGroup = element.getSubstitutionGroup();
+            System.out.println( "elementReference=" + element.getName() + "\n\tSUBG=" + substitutionGroup );
+            if( substitutionGroup == null )
             {
-              
-              Element element = elementReference.getElement();
-              if(element !=null)
-              {
-                QName substitutionGroup = element.getSubstitutionGroup();
-                System.out.println("elementReference="+element.getName()+
-                              "\n\tSUBG="+substitutionGroup);
-                if(substitutionGroup==null)
-                {
-                  return false;
-                }
-                else if(QNAME_GML_GEOMETRY.equals( substitutionGroup ))
-                {
-                  return true;
-                }
-                else
-                {
-                  //continue looking
-                  curQName=substitutionGroup;
-                }
-              }
+              return false;
             }
+            else if( QNAME_GML_GEOMETRY.equals( substitutionGroup ) )
+            {
+              return true;
+            }
+            else
+            {
+              // continue looking
+              curQName = substitutionGroup;
+            }
+          }
         }
-        return false;
+      }
+      return false;
     }
-    catch(Throwable th)
+    catch( final Throwable th )
     {
-     th.printStackTrace(); 
-     return false;
+      th.printStackTrace();
+      return false;
     }
   }
-  
-  public static final String getPrefixedName(QName qname)
-                                    throws IllegalArgumentException 
+
+  public static final String getPrefixedName( final QName qname ) throws IllegalArgumentException
   {
-    if(qname == null)
+    if( qname == null )
     {
-      throw new IllegalArgumentException("Argument qname must not be null:"+qname);
+      throw new IllegalArgumentException( "Argument qname must not be null:" + qname );
     }
-    return qname.getPrefix()+":"+qname.getLocalPart();
+    return qname.getPrefix() + ":" + qname.getLocalPart();
   }
-  
+
   /**
-   * Get the property, the attribute of an element represented by the
-   * given cursor as QName
-   * @param cursor the cursor representing the element to get the xml element from
-   * @param propertyQName the q-name to get the property, attribute qname to get as q-name
+   * Get the property, the attribute of an element represented by the given cursor as QName
+   * 
+   * @param cursor
+   *            the cursor representing the element to get the xml element from
+   * @param propertyQName
+   *            the q-name to get the property, attribute qname to get as q-name
    * @return the value of the attribute as q-name
-   * @throws GMLSchemaException if the property does not have the 
-   * form &lt;ns&gt;:&lt;localName&gt; 
+   * @throws GMLSchemaException
+   *             if the property does not have the form &lt;ns&gt;:&lt;localName&gt;
    */
-  public static final QName getPropertyAsQName(
-                                  XmlCursor cursor,
-                                  QName propertyQName)
-                                  throws GMLSchemaException
+  public static final QName getPropertyAsQName( final XmlCursor cursor, final QName propertyQName ) throws GMLSchemaException
   {
-    if(cursor == null || propertyQName==null)
+    if( cursor == null || propertyQName == null )
     {
-      String message = 
-        String.format( 
-            "Parameter cursor[%s] and name[%s] must not be null", 
-            cursor==null? "null":cursor.toString(),
-            propertyQName==null?"null":propertyQName.toString());
-      throw new IllegalArgumentException(message);
+      final String message = String.format( "Parameter cursor[%s] and name[%s] must not be null", cursor == null ? "null" : cursor.toString(), propertyQName == null ? "null"
+          : propertyQName.toString() );
+      throw new IllegalArgumentException( message );
     }
-    String strQName = cursor.getAttributeText( propertyQName );
-    if(strQName == null)
+    final String strQName = cursor.getAttributeText( propertyQName );
+    if( strQName == null )
     {
       return null;
     }
-    
-    String[] qnameParts = strQName.split( ":" );
-    if(qnameParts.length!=2)
+
+    final String[] qnameParts = strQName.split( ":" );
+    if( qnameParts.length != 2 )
     {
-      String message = 
-        String.format( 
-            "Property[%s] must have the form \"<prefix>:<local name>\" but is \"%s\"", 
-                getPrefixedName( propertyQName ),qnameParts );
-      throw new GMLSchemaException(message);
+      final String message = String.format( "Property[%s] must have the form \"<prefix>:<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts );
+      throw new GMLSchemaException( message );
     }
-    String propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
-    String propertyLocalPart = qnameParts[1];
-    
-    QName propertyValueQName = new QName( propertyNamespace, propertyLocalPart );
-    
+    final String propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
+    final String propertyLocalPart = qnameParts[1];
+
+    final QName propertyValueQName = new QName( propertyNamespace, propertyLocalPart );
+
     return propertyValueQName;
   }
-  
-//  public static final QName makeQName(
-//                              String strQName, 
-//                              XmlCursor cursor)
-//  {
-//    String[] qnameParts = strQName.split( ":" );
-//    String propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
-//    String propertyLocalPart = qnameParts[1];
-//
-//    QName propertyQName = new QName( propertyNamespace, propertyLocalPart );
-//    return propertyQName;
-//  }
-  
-//  private static final IVirtualFunctionPropertyType getPropertyForVirtualFunc( final QName propertyQName, boolean isGeometry )
-//  {
-//    return new VirtualFunctionPropertyType(propertyQName,isGeometry);
-//  }
 
-  
+// public static final QName makeQName(
+// String strQName,
+// XmlCursor cursor)
+// {
+// String[] qnameParts = strQName.split( ":" );
+// String propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
+// String propertyLocalPart = qnameParts[1];
+//
+// QName propertyQName = new QName( propertyNamespace, propertyLocalPart );
+// return propertyQName;
+// }
+
+// private static final IVirtualFunctionPropertyType getPropertyForVirtualFunc( final QName propertyQName, boolean
+// isGeometry )
+// {
+// return new VirtualFunctionPropertyType(propertyQName,isGeometry);
+// }
+
   /**
-   * @param propQName name of the property to get
-   * @param cursor the xml cursor that provide acces to the element
-   *    to get the property from 
+   * @param propQName
+   *            name of the property to get
+   * @param cursor
+   *            the xml cursor that provide acces to the element to get the property from
    */
-  private static final boolean getBooleanKAppProperty(QName propQName, XmlCursor cursor )
+  private static final boolean getBooleanKAppProperty( final QName propQName, final XmlCursor cursor )
   {
-    String boolText = cursor.getAttributeText( propQName );
+    final String boolText = cursor.getAttributeText( propQName );
     if( boolText == null )
     {
       return false;
     }
-    
+
     return Boolean.parseBoolean( boolText );
   }
 }

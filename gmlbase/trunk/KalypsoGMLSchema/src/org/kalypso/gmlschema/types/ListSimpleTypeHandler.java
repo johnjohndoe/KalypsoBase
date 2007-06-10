@@ -53,7 +53,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * Type handler for
+ * Type handler for list-simple types.
  * 
  * @author Gernot Belger
  */
@@ -61,14 +61,15 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
 {
   private final XsdBaseContentHandler m_contentHandler = new XsdBaseContentHandler( this, null );
 
-  private final ISimpleMarshallingTypeHandler m_baseTypeHandler;
+  private final ISimpleMarshallingTypeHandler<Object> m_baseTypeHandler;
 
+  @SuppressWarnings("unchecked")
   public ListSimpleTypeHandler( final IMarshallingTypeHandler baseTypeHandler )
   {
     if( !(baseTypeHandler instanceof ISimpleMarshallingTypeHandler) )
       throw new IllegalArgumentException( "List may be used only on simple types. Not on complex types: " + baseTypeHandler );
 
-    m_baseTypeHandler = (ISimpleMarshallingTypeHandler) baseTypeHandler;
+    m_baseTypeHandler = (ISimpleMarshallingTypeHandler<Object>) baseTypeHandler;
   }
 
   /**
@@ -135,7 +136,7 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
-  public void unmarshal( XMLReader xmlReader, URL context, UnMarshallResultEater marshalResultEater, String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -184,7 +185,7 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return List.class;
   }

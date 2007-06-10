@@ -33,9 +33,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * TODO: insert type comment here
+ * An {@link IPropertyType} represanting the relation to a Gml-Object.
  * 
- * @author doemming
+ * @author Andreas von Dömming
  */
 public interface IRelationType extends IPropertyType
 {

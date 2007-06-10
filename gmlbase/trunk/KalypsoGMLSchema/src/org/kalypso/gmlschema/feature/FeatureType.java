@@ -43,8 +43,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.basics.IInitialize;
-import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
@@ -52,6 +51,7 @@ import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * representation of a feature definition from xml schema
@@ -266,6 +266,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    * @deprecated use getProperty(IPropertyType)
    */
+  @SuppressWarnings("deprecation")
   @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
@@ -400,7 +401,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       }
       else
       {
-        System.out.println( "Novirtual geo:" + type.getQName() );
+// System.out.println( "Novirtual geo:" + type.getQName() );
       }
     }
     final IVirtualFunctionValuePropertyType[] geoTypeArray = new IVirtualFunctionValuePropertyType[geoTypes.size()];

@@ -35,9 +35,8 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.AttributeGroupRef;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * representation of a feature content definition from a xml schema sequence fragment.
@@ -48,7 +47,7 @@ public class RelationContentTypeFromSequence extends RelationContentType
 {
   private final List<ElementWithOccurs> m_elements;
 
-  public RelationContentTypeFromSequence( GMLSchema gmlSchema, ComplexType complexType, List<ElementWithOccurs> elements )
+  public RelationContentTypeFromSequence( final GMLSchema gmlSchema, final ComplexType complexType, final List<ElementWithOccurs> elements )
   {
     super( gmlSchema, complexType );
     m_elements = elements;

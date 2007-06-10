@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * The content handler for the {@link org.kalypsodeegree.model.XsdBaseTypeHandler}.
@@ -69,7 +69,7 @@ public class XsdBaseContentHandler implements ContentHandler
 {
   private final StringBuffer m_buffer = new StringBuffer();
 
-  private UnMarshallResultEater m_marshalResultEater;
+  private UnmarshallResultEater m_marshalResultEater;
 
   private final IMarshallingTypeHandler m_typeHandler;
 
@@ -81,7 +81,7 @@ public class XsdBaseContentHandler implements ContentHandler
    * @param unmarshallerHandler
    *            contenthandler that will be wrapped for unmarshalling
    */
-  public XsdBaseContentHandler( final IMarshallingTypeHandler typeHandler, final UnMarshallResultEater marshalResultEater )
+  public XsdBaseContentHandler( final IMarshallingTypeHandler typeHandler, final UnmarshallResultEater marshalResultEater )
   {
     m_typeHandler = typeHandler;
     m_marshalResultEater = marshalResultEater;
@@ -91,7 +91,7 @@ public class XsdBaseContentHandler implements ContentHandler
    * @param resetBuffer
    *            Clears the intenal string buffer
    */
-  public void setMarshalResultEater( final UnMarshallResultEater marshalResultEater, final boolean resetBuffer )
+  public void setMarshalResultEater( final UnmarshallResultEater marshalResultEater, final boolean resetBuffer )
   {
     m_marshalResultEater = marshalResultEater;
     if( resetBuffer == true )
@@ -100,29 +100,15 @@ public class XsdBaseContentHandler implements ContentHandler
 
   public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
   {
-    try
-    {
-      end();
-    }
-    catch( final GMLSchemaException e )
-    {
-      throw new SAXException( e );
-    }
+    end();
   }
 
   public void endElement( final String uri, final String local, final String qname ) throws SAXException
   {
-    try
-    {
-      end();
-    }
-    catch( final GMLSchemaException e )
-    {
-      throw new SAXException( e );
-    }
+    end();
   }
 
-  private void end( ) throws GMLSchemaException
+  private void end( ) throws SAXParseException
   {
     Object value = null;
     try
@@ -138,7 +124,7 @@ public class XsdBaseContentHandler implements ContentHandler
     finally
     {
       if( m_marshalResultEater != null )
-        m_marshalResultEater.eat( value );
+        m_marshalResultEater.unmarshallSuccesful( value );
     }
   }
 

@@ -29,32 +29,47 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.property.value.PropertyType;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class PropertyType2SimpleTypeBuilder implements IBuilder
+public class PropertyType2SimpleTypeBuilder extends AbstractBuilder
 {
-  public PropertyType2SimpleTypeBuilder( @SuppressWarnings("unused")
-  String version )
-  {
-  }
-
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final PropertyType propertyType = (PropertyType) typeObject;
     final Element element = propertyType.getElement();
     final SimpleType simpleType = element.getSimpleType();
-    return new Object[] { simpleType };
+    if( simpleType != null )
+      return new Object[] { simpleType };
+
+    final QName type = element.getType();
+    if( type != null )
+    {
+      final ComplexTypeReference complexTypeRef = gmlSchema.resolveComplexTypeReference( type );
+      if( complexTypeRef != null )
+      {
+        final ComplexType complexType = complexTypeRef.getComplexType();
+
+        return new Object[] { complexType };
+      }
+    }
+
+    return new Object[] {};
   }
 
   /**
@@ -69,6 +84,7 @@ public class PropertyType2SimpleTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
+  @Override
   public boolean replaces( final IBuilder other )
   {
     return false;

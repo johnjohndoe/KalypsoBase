@@ -16,10 +16,10 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<H>
 {
   /** typeName -> handler */
-  private Map<QName, H> m_typeMap = new HashMap<QName, H>();
+  private final Map<QName, H> m_typeMap = new HashMap<QName, H>();
 
   /** className -> handler */
-  private Map<Class, H> m_classMap = new HashMap<Class, H>();
+  private final Map<Class< ? >, H> m_classMap = new HashMap<Class< ? >, H>();
 
   /**
    * Falls TypeName oder ClassName bereits belegt sind
@@ -30,9 +30,9 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   public void registerTypeHandler( final H typeHandler )
   {
     final QName typeName = typeHandler.getTypeName();
-    final Class className = typeHandler.getValueClass();
-//    if( m_typeMap.containsKey( typeName ) )
-//      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
+    final Class< ? > className = typeHandler.getValueClass();
+// if( m_typeMap.containsKey( typeName ) )
+// throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
 
     m_typeMap.put( typeName, typeHandler );
 
@@ -55,7 +55,9 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#getTypeHandlerForClassName(java.lang.Class)
    */
-  public H getTypeHandlerForClassName( final Class className )
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public H getTypeHandlerForClassName( final Class< ? > className )
   {
     if( !hasClassName( className ) )
       return null;
@@ -82,7 +84,9 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#hasClassName(java.lang.String)
    */
-  public boolean hasClassName( final Class className )
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public boolean hasClassName( final Class< ? > className )
   {
     return m_classMap.containsKey( className );
   }
@@ -105,11 +109,11 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
     return m_typeMap.values().toArray( a );
   }
 
-  public int getRegisteredTypeHandlerSize()
+  public int getRegisteredTypeHandlerSize( )
   {
     return m_typeMap.values().size();
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.types.ITypeRegistry#clearRegistry()
    */

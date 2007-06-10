@@ -32,7 +32,7 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 
 /**
  * Instances of this interface represent the properties of a {@link org.kalypso.gmlschema.feature.IFeatureType}.

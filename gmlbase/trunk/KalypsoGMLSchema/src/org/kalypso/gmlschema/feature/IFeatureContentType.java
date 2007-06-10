@@ -32,7 +32,7 @@ package org.kalypso.gmlschema.feature;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlObject;
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**

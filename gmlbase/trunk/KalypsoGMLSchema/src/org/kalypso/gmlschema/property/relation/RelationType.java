@@ -30,14 +30,14 @@
 package org.kalypso.gmlschema.property.relation;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * @author doemming

@@ -32,28 +32,28 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.PropertyType;
+import org.kalypso.gmlschema.property.value.PropertyType;
+import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class Element2PropertyTypeBuilder implements IBuilder
+public class Element2PropertyTypeBuilder extends AbstractBuilder
 {
-
   private final String m_version;
 
-  public Element2PropertyTypeBuilder( String version )
+  public Element2PropertyTypeBuilder( final String version )
   {
     m_version = version;
   }
@@ -90,7 +90,7 @@ public class Element2PropertyTypeBuilder implements IBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
-    
+
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
     return typeHandler != null;
@@ -99,7 +99,8 @@ public class Element2PropertyTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

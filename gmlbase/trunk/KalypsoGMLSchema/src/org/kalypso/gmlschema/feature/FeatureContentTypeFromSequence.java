@@ -32,9 +32,9 @@ package org.kalypso.gmlschema.feature;
 import java.util.List;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * representation of a feature content definition from a xml schema sequence fragment.

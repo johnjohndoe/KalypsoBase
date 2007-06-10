@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.adapter.IAnnotationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotationProvider;
 
 /**
  * @author Gernot Belger
@@ -63,6 +63,8 @@ public class KalypsoGmlSchemaExtensions
     if( THE_ANNOTATION_PROVIDERS != null )
       return THE_ANNOTATION_PROVIDERS;
 
+    Debug.ANNOTATION_PROVIDERS.printf( "Reading annotation providers fomr registry .%n" );
+
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.gmlschema.annotationProvider" );
@@ -71,14 +73,17 @@ public class KalypsoGmlSchemaExtensions
 
     final List<IAnnotationProvider> providers = new ArrayList<IAnnotationProvider>( configurationElements.length );
 
-    for( int i = 0; i < configurationElements.length; i++ )
+    for( final IConfigurationElement element : configurationElements )
     {
+      Debug.ANNOTATION_PROVIDERS.printf( "Found provider element: %s", element );
+
       try
       {
-        final IConfigurationElement element = configurationElements[i];
-//        final String name = element.getName();
         final Object createExecutableExtension = element.createExecutableExtension( "class" );
         final IAnnotationProvider provider = (IAnnotationProvider) createExecutableExtension;
+
+        Debug.ANNOTATION_PROVIDERS.printf( "Annotation provider successfully created: %s", provider );
+
         providers.add( provider );
       }
       catch( final Throwable t )
@@ -87,9 +92,12 @@ public class KalypsoGmlSchemaExtensions
         // catch exception here and just log it
         final IStatus status = StatusUtilities.statusFromThrowable( t );
         KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
+
+        Debug.ANNOTATION_PROVIDERS.printf( "Failed to create annotation provider:" );
+        Debug.ANNOTATION_PROVIDERS.printStackTrace( t );
       }
     }
-    
+
     final IAnnotationProvider[] result = providers.toArray( new IAnnotationProvider[providers.size()] );
     THE_ANNOTATION_PROVIDERS = result;
     return result;

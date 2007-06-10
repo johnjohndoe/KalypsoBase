@@ -30,7 +30,6 @@
 package org.kalypso.gmlschema.feature;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -39,13 +38,12 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.KalypsoGmlSchemaTracing;
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * Representation of a feature content definition from xml schema
@@ -62,7 +60,7 @@ public abstract class FeatureContentType implements IFeatureContentType
 
   private final QName m_qName;
 
-  public FeatureContentType( final GMLSchema gmlSchema, ComplexType complexType )
+  public FeatureContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
     m_complexType = complexType;
@@ -89,7 +87,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -98,10 +96,10 @@ public abstract class FeatureContentType implements IFeatureContentType
         final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
 
         final List<ElementWithOccurs> sequence = getSequence();
-        for( Iterator<ElementWithOccurs> iter = sequence.iterator(); iter.hasNext(); )
+        for( final ElementWithOccurs elementWithOccurs : sequence )
         {
           GMLSchema schema = getGMLSchema();
-          final Element elementItem = iter.next().getElement();
+          final Element elementItem = elementWithOccurs.getElement();
           Object buildedObject = schema.getBuildedObjectFor( elementItem );
 
           final Element element;
@@ -126,8 +124,8 @@ public abstract class FeatureContentType implements IFeatureContentType
               }
               else
               {
-                if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
-                  System.out.println( "debug" );
+// if( Debug.traceSchemaParsing() )
+// System.out.println( "debug" );
               }
             }
           }
@@ -150,12 +148,11 @@ public abstract class FeatureContentType implements IFeatureContentType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getProperty( QName qName )
+  public IPropertyType getProperty( final QName qName )
   {
     final IPropertyType[] properties = getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType pt : properties )
     {
-      final IPropertyType pt = properties[i];
       if( pt.getQName().equals( qName ) )
         return pt;
     }
@@ -173,6 +170,15 @@ public abstract class FeatureContentType implements IFeatureContentType
     final String fullXpath = namespaceDecl + xpath;
 
     return getComplexType().selectPath( fullXpath );
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_qName + "\n" + m_complexType;
   }
 
 }

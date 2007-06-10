@@ -64,4 +64,5 @@ public class KalypsoGMLSchemaPlugin extends Plugin
   {
     return INSTANCE;
   }
+
 }

@@ -53,12 +53,12 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -69,13 +69,13 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 {
-  private String m_shortName;
+  private final String m_shortName;
 
-  private QName m_qname;
+  private final QName m_qname;
 
-  private boolean m_isGeometry;
+  private final boolean m_isGeometry;
 
-  public SimpleDOMTypeHandler( String shortName, QName qName, boolean isGeometry )
+  public SimpleDOMTypeHandler( final String shortName, final QName qName, final boolean isGeometry )
   {
     m_shortName = shortName;
     m_qname = qName;
@@ -86,7 +86,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion  ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -133,28 +133,27 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.UnMarshallResultEater)
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
-      final UnMarshallResultEater eater = new UnMarshallResultEater()
+      final UnmarshallResultEater eater = new UnmarshallResultEater()
       {
-        public void eat( Object value ) throws GMLSchemaException
+        public void unmarshallSuccesful( Object value ) throws SAXParseException
         {
           final Node node = (Node) value;
           if( node == null )
-            marshalResultEater.eat( null );
+            marshalResultEater.unmarshallSuccesful( null );
           else
           {
             try
             {
               final Object object = internalUnmarshall( node );
-              marshalResultEater.eat( object );
+              marshalResultEater.unmarshallSuccesful( object );
             }
             catch( TypeRegistryException e )
             {
-              e.printStackTrace();
-              throw new GMLSchemaException( e );
+              throw new SAXParseException( e.getLocalizedMessage(), null, e );
             }
           }
         }
@@ -162,7 +161,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware( true );
-      
+
       final DocumentBuilder builder = factory.newDocumentBuilder();
       final Document document = builder.newDocument();
       final DOMConstructor domBuilderContentHandler = new DOMConstructor( document, eater );
@@ -197,7 +196,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
@@ -206,7 +205,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   @SuppressWarnings("unused")
-  public Object parseType( String text ) throws ParseException
+  public Object parseType( final String text ) throws ParseException
   {
     throw new UnsupportedOperationException();
   }
@@ -214,7 +213,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public abstract Class getValueClass( );
+  public abstract Class< ? > getValueClass( );
 
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()

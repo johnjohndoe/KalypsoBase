@@ -29,31 +29,36 @@
  */
 package org.kalypso.gmlschema.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.PropertyContentTypeFormTypeHandler;
+import org.kalypso.gmlschema.property.PropertyContentTypeFromTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * build all featuretypeproperty for simple XML-Schema types
  * 
  * @author doemming
  */
-public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IBuilder
+public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends AbstractBuilder
 {
 
   private final String m_version;
 
-  public ComplexType2PropertyContentFromTypeHandlerTypeBuilder( String version )
+  public ComplexType2PropertyContentFromTypeHandlerTypeBuilder( final String version )
   {
     m_version = version;
   }
@@ -63,7 +68,15 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
    */
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
-    final IPropertyContentType pct = new PropertyContentTypeFormTypeHandler( gmlSchema, typeObject, m_version );
+    final QName valueQName;
+    if( typeObject instanceof ComplexType )
+      valueQName = findBaseType( gmlSchema, (ComplexType) typeObject );
+    else if( typeObject instanceof SimpleType )
+      valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject, m_version );
+    else
+      throw new GMLSchemaException( "Could not find valueQName for: " + typeObject );
+
+    final IPropertyContentType pct = new PropertyContentTypeFromTypeHandler( gmlSchema, typeObject, valueQName );
     gmlSchema.register( typeObject, pct );
     return new Object[] { pct };
   }
@@ -72,7 +85,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass ) throws GMLSchemaException
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     return getTypeHandler( gmlSchema, object ) != null;
   }
@@ -81,13 +94,15 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   {
     final QName baseType;
     if( typeObject instanceof ComplexType )
-      baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) typeObject, m_version );
+      baseType = findBaseType( gmlSchema, (ComplexType) typeObject );
     else if( typeObject instanceof SimpleType )
       baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject, m_version );
     else
       return null;
+
     if( baseType == null )
       return null;
+
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     return registry.getTypeHandlerForTypeName( baseType );
   }
@@ -95,8 +110,36 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder implements IB
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
+    // TODO: HACK: this overrides the generic geometry type parsing, if a type handler is registered for a specific
+    // geometry property type.
+    if( other instanceof ComplexTypeDirectReference2RelationContentTypeBuilder )
+      return true;
+
     return false;
+  }
+
+  private static QName findBaseType( final GMLSchema gmlSchema, final ComplexType typeObject ) throws GMLSchemaException
+  {
+    final ComplexType complexType = typeObject;
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType, gmlSchema.getGMLVersion() );
+    if( baseType != null )
+      return baseType;
+
+    if( baseType == null )
+    {
+      final List<ElementWithOccurs> collector = new ArrayList<ElementWithOccurs>();
+      GMLSchemaUtilities.collectElements( gmlSchema, complexType, collector, null );
+      if( collector.size() == 1 )
+      {
+        final ElementWithOccurs elementWithOccurs = collector.get( 0 );
+        final Element element = elementWithOccurs.getElement();
+        return element.getRef();
+      }
+    }
+
+    return null;
   }
 }

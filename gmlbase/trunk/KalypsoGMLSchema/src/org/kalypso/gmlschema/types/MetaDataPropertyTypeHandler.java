@@ -121,11 +121,11 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
         // should never happen, because this is not valid according to the kom-Schema
         qnType = MetadataObject.DEFAULT_TYPE;
 
-//      final List<MetadataObject> list = new ArrayList<MetadataObject>();
-//      list.add( new MetadataObject( name, value, qnType ) );
-      return  new MetadataObject( name, value, qnType );
+// final List<MetadataObject> list = new ArrayList<MetadataObject>();
+// list.add( new MetadataObject( name, value, qnType ) );
+      return new MetadataObject( name, value, qnType );
 
-//      return list;
+// return list;
     }
     else
       throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" );
@@ -180,7 +180,7 @@ public class MetaDataPropertyTypeHandler extends SimpleDOMTypeHandler
    * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#getValueClass()
    */
   @Override
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return List.class;
   }

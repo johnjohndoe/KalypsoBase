@@ -106,6 +106,8 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public String getName( )
   {
     return m_qName.getLocalPart();
@@ -146,6 +148,8 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
     return m_locatPartMap.get( propNameLocalPart );
@@ -168,18 +172,6 @@ public class CustomFeatureType implements IFeatureType
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstituts(org.kalypso.gmlschema.GMLSchema, boolean, boolean)
-   */
-  public IFeatureType[] getSubstituts( final IGMLSchema contextSchema, final boolean includeAbstract, final boolean inclusiveThis )
-  {
-    if( inclusiveThis )
-    {
-      return new IFeatureType[] { this };
-    }
-    return new IFeatureType[0];
-  }
-
-  /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getQName()
    */
   public QName getQName( )
@@ -190,6 +182,8 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public String getNamespace( )
   {
     return m_qName.getNamespaceURI();
@@ -245,6 +239,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );

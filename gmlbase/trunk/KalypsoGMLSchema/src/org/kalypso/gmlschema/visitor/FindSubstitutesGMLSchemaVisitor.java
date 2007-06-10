@@ -36,7 +36,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
@@ -56,7 +55,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 
   private final IFeatureType m_substitutionHeadFT;
 
-  public FindSubstitutesGMLSchemaVisitor( final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
+  public FindSubstitutesGMLSchemaVisitor( final IFeatureType substitutionHeadFT, final boolean includeAbstract, final boolean includeThis )
   {
     m_substitutionHeadFT = substitutionHeadFT;
     m_includeAbstract = includeAbstract;
@@ -86,9 +85,8 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     if( !result.contains( m_substitutionHeadFT ) && isRequested( m_substitutionHeadFT ) )
       result.add( m_substitutionHeadFT );
     final IFeatureType[] fT = m_result.toArray( new IFeatureType[m_result.size()] );
-    for( int i = 0; i < fT.length; i++ )
+    for( final IFeatureType ft : fT )
     {
-      final IFeatureType ft = fT[i];
       if( !result.contains( ft ) && isRequested( ft ) )
         result.add( ft );
     }

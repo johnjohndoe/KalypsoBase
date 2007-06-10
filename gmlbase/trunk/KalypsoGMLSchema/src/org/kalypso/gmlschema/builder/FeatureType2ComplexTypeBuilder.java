@@ -38,40 +38,30 @@ import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
- * 
  * another builder
  * 
  * @author doemming
  */
-public class FeatureType2ComplexTypeBuilder implements IBuilder
+public class FeatureType2ComplexTypeBuilder extends AbstractBuilder
 {
-  private final String m_version;
-
-  public FeatureType2ComplexTypeBuilder( final String version )
-  {
-    m_version = version;
-  }
-
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object featureTypeObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object featureTypeObject ) throws GMLSchemaException
   {
-    final FeatureType ft = (FeatureType)featureTypeObject;
+    final FeatureType ft = (FeatureType) featureTypeObject;
     final Element element = ft.getElement();
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities
-        .getComplexTypeReferenceFor( gmlSchema, element );
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( gmlSchema, element );
     final ComplexType complexType = complexTypeReference.getComplexType();
     gmlSchema.register( ft, complexType );
-    return new Object[]
-    { complexType };
+    return new Object[] { complexType };
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof FeatureType;
   }
@@ -79,7 +69,8 @@ public class FeatureType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

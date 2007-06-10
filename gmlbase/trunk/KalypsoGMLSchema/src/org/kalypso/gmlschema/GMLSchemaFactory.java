@@ -56,15 +56,16 @@ import org.kalypso.gmlschema.builder.RelationType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.feature.CustomFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.CustomPropertyContentType;
-import org.kalypso.gmlschema.property.CustomValueProperType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.CustomRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.property.value.CustomValueProperType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
- * TODO: insert type comment here
+ * Factory for various GML-Schema elements.
  * 
  * @author doemming
  */
@@ -72,13 +73,13 @@ public class GMLSchemaFactory
 {
   private static Map<String, GMLSchemaBuilder> m_gmlSchemaBuilderRegister = new HashMap<String, GMLSchemaBuilder>();
 
-  private static GMLSchemaBuilder getBuilderForVersion( String version )
+  private static synchronized GMLSchemaBuilder getBuilderForVersion( final String version )
   {
     if( !m_gmlSchemaBuilderRegister.containsKey( version ) )
     {
       final GMLSchemaBuilder gmlSchemaBuilder = new GMLSchemaBuilder( version );
       // schema
-      gmlSchemaBuilder.registerBuilder( new GMLSchema2SchemaBasicsBuilder( version ) ); // ok
+      gmlSchemaBuilder.registerBuilder( new GMLSchema2SchemaBasicsBuilder() ); // ok
       // properties
       // relations
       // featuretype
@@ -88,15 +89,15 @@ public class GMLSchemaFactory
       // complex type ...
       gmlSchemaBuilder.registerBuilder( new ComplexType2FeatureContentTypeBuilder( version ) );// OK
       // for local elelments
-      gmlSchemaBuilder.registerBuilder( new FeatureContentType2ElementBuilder(  ) ); // OK
+      gmlSchemaBuilder.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
 
       // element ...
       gmlSchemaBuilder.registerBuilder( new Element2FeatureTypeBuilder( version ) ); // ok
-      gmlSchemaBuilder.registerBuilder( new FeatureType2ComplexTypeBuilder( version ) );// ok
+      gmlSchemaBuilder.registerBuilder( new FeatureType2ComplexTypeBuilder() );// ok
 
       // element ...
       gmlSchemaBuilder.registerBuilder( new Element2PropertyTypeBuilder( version ) );// ok
-      gmlSchemaBuilder.registerBuilder( new PropertyType2SimpleTypeBuilder( version ) );// ok
+      gmlSchemaBuilder.registerBuilder( new PropertyType2SimpleTypeBuilder() );// ok
 
       // relations
 
@@ -105,7 +106,7 @@ public class GMLSchemaFactory
 
       gmlSchemaBuilder.registerBuilder( new ComplexTypeDirectReference2RelationContentTypeBuilder( version ) ); // test
 
-      gmlSchemaBuilder.registerBuilder( new RelationType2ComplexTypeBuilder( version ) ); // ok
+      gmlSchemaBuilder.registerBuilder( new RelationType2ComplexTypeBuilder() ); // ok
       gmlSchemaBuilder.registerBuilder( new ComplexType2RelationContentTypeBuilder( version ) ); // ok
       // special
       // builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
@@ -117,18 +118,10 @@ public class GMLSchemaFactory
     return m_gmlSchemaBuilderRegister.get( version );
   }
 
-  /**
-   * @param schemaLocationURL
-   * @throws GMLSchemaException
-   */
-  public static IGMLSchema createGMLSchema( final String urn, final String gmlVersion, final URL schemaLocationURL ) throws GMLSchemaException
-  {
-    final URL urlSchemaLocation = GMLSchemaBuilder.getSchemaLocationForURN( urn, schemaLocationURL );
-    return createGMLSchema( gmlVersion, urlSchemaLocation );
-  }
-
   public static GMLSchema createGMLSchema( final String gmlVersion, final URL schemaLocationURL ) throws GMLSchemaException
   {
+    Debug.LOADING.printf( "Loading schema: %s%n", schemaLocationURL );
+
     InputStream inputStream = null;
     try
     {
@@ -137,10 +130,12 @@ public class GMLSchemaFactory
       inputStream.close();
       return createGMLSchema;
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
-      e.printStackTrace();
-      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+      Debug.LOADING.printf( "Failed to load schema:%n" );
+      Debug.LOADING.printStackTrace( e );
+
+      throw new GMLSchemaException( "Unable to load schema: " + e.getMessage(), e );
     }
     finally
     {
@@ -150,14 +145,19 @@ public class GMLSchemaFactory
 
   public static GMLSchema createGMLSchema( final InputStream inputStream, final String gmlVersion, final URL context ) throws GMLSchemaException
   {
+
     SchemaDocument schemaDocument;
     try
     {
+      Debug.LOADING.printf( "Reading schema with xmlbeans%n" );
       schemaDocument = SchemaDocument.Factory.parse( inputStream );
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
-      throw new GMLSchemaException( "could not parse schema: " + e.getMessage(), e );
+      Debug.LOADING.printf( "Failed to load schema:%n" );
+      Debug.LOADING.printStackTrace( e );
+
+      throw new GMLSchemaException( "Unable to load schema: " + e.getMessage(), e );
     }
 
     final Schema schema = schemaDocument.getSchema();
@@ -170,6 +170,9 @@ public class GMLSchemaFactory
       // TODO use a schema-validator to report
       // REMARK:
       // DID you have a look at XMLOptions#setErrorListener ?
+
+      Debug.LOADING.printf( "Schema binding failed, xmlbeans returned null.%n" );
+
       throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
     }
     // TODO: read schema version from schemadocument
@@ -193,8 +196,7 @@ public class GMLSchemaFactory
     else
       version = gmlVersion;
 
-    if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
-      System.out.println( "USING GML VERSION " + version + " on Schema: " + schemaDocument.getSchema().getTargetNamespace() );
+    Debug.LOADING.printf( "Schema (%s) was read. Building GML-Schema using GML-Version %s.%n", schemaDocument.getSchema().getTargetNamespace(), version );
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );
     return builder.buildGMLSchema( schemaDocument, context );
@@ -205,7 +207,7 @@ public class GMLSchemaFactory
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
 
-  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final ITypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     final IPropertyContentType pct = new CustomPropertyContentType( valueQName, typeHandler );
     return new CustomValueProperType( name, pct, minOccurs, maxOccurs, isNillable );

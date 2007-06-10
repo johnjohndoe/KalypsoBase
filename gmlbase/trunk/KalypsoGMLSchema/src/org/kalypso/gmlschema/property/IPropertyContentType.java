@@ -31,9 +31,9 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * TODO: insert type comment here
@@ -50,8 +50,8 @@ public interface IPropertyContentType extends IInitialize
 
   public boolean isGeometry( );
 
-  public Class getValueClass( );
+  public Class< ? > getValueClass( );
 
-  public ITypeHandler getTypeHandler( );
+  public IMarshallingTypeHandler getTypeHandler( );
 
 }

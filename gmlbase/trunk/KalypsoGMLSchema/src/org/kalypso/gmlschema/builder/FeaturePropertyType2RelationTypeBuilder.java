@@ -33,26 +33,27 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.adv.ADVUtilities;
 import org.kalypso.gmlschema.property.relation.AdvRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * a builder for references based on restrictions of FeaturePropertyType and ADV rules
  * 
  * @author doemming
  */
-public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
+public class FeaturePropertyType2RelationTypeBuilder extends AbstractBuilder
 {
   private final String m_gmlVersion;
 
-  public FeaturePropertyType2RelationTypeBuilder( String gmlVersion )
+  public FeaturePropertyType2RelationTypeBuilder( final String gmlVersion )
   {
     m_gmlVersion = gmlVersion;
   }
@@ -60,7 +61,7 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object elementObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
     final QName ref = element.getElement().getRef();
@@ -108,7 +109,8 @@ public class FeaturePropertyType2RelationTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

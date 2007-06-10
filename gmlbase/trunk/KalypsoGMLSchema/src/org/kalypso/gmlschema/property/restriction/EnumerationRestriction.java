@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.kalypso.gmlschema.adapter.AnnotationAdapterFactory;
-import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 
 /**
  * @author doemming refactored kuch

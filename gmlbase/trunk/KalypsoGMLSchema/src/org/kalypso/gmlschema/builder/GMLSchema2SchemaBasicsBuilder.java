@@ -38,26 +38,19 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class GMLSchema2SchemaBasicsBuilder implements IBuilder
+public class GMLSchema2SchemaBasicsBuilder extends AbstractBuilder
 {
-  private final String m_version;
-
-  public GMLSchema2SchemaBasicsBuilder( String version )
-  {
-    m_version = version;
-  }
-
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( GMLSchema gmlSchema, Object schemaObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object schemaObject )
   {
     // process included schemas
     final List<Object> result = new ArrayList<Object>();
@@ -65,9 +58,9 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
     collectSchemaBasics( schema, result );
     final SchemaDocument[] includedSchemas = gmlSchema.getIncludedSchemas();
 
-    for( int i = 0; i < includedSchemas.length; i++ )
+    for( final SchemaDocument element : includedSchemas )
     {
-      final Schema includedSchema = includedSchemas[i].getSchema();
+      final Schema includedSchema = element.getSchema();
       collectSchemaBasics( includedSchema, result );
     }
     return result.toArray();
@@ -82,23 +75,20 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
       result = list;
     // TopLevelComplexTypes -> FeatureContentTypes
     final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
-    for( int i = 0; i < complexTypeArray.length; i++ )
+    for( final TopLevelComplexType complexType : complexTypeArray )
     {
-      final TopLevelComplexType complexType = complexTypeArray[i];
       result.add( complexType );
     }
     // TopLevel SimpleTypes -> PropertyContentTypes
     final TopLevelSimpleType[] simpleTypeArray = schema.getSimpleTypeArray();
-    for( int i = 0; i < simpleTypeArray.length; i++ )
+    for( final TopLevelSimpleType simpleType : simpleTypeArray )
     {
-      final TopLevelSimpleType simpleType = simpleTypeArray[i];
       result.add( simpleType );
     }
     // TopLevel Elements -> FeatureTypes,PropertyTypes
     final TopLevelElement[] elementArray = schema.getElementArray();
-    for( int i = 0; i < elementArray.length; i++ )
+    for( final TopLevelElement element : elementArray )
     {
-      final TopLevelElement element = elementArray[i];
       result.add( new ElementWithOccurs( element ) );
     }
     return result;
@@ -108,7 +98,7 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
   {
     return object instanceof GMLSchema;
   }
@@ -116,7 +106,8 @@ public class GMLSchema2SchemaBasicsBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

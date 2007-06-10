@@ -38,7 +38,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -46,18 +45,19 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
+import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class ComplexType2RelationContentTypeBuilder implements IBuilder
+public class ComplexType2RelationContentTypeBuilder extends AbstractBuilder
 {
 
   private final String m_version;
 
-  public ComplexType2RelationContentTypeBuilder( String version )
+  public ComplexType2RelationContentTypeBuilder( final String version )
   {
     m_version = version;
   }
@@ -66,7 +66,7 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
    * @param gmlSchema
    * @param complexTypeObject
    */
-  public Object[] build( GMLSchema gmlSchema, Object complexTypeObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
     RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
@@ -95,11 +95,11 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass ) throws GMLSchemaException
+  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )
       return false;
-    QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
+    final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
     if( baseType == null )
       return false;
     final String namespaceURI = baseType.getNamespaceURI();
@@ -114,7 +114,8 @@ public class ComplexType2RelationContentTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( IBuilder other )
+  @Override
+  public boolean replaces( final IBuilder other )
   {
     return false;
   }

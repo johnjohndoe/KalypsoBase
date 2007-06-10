@@ -32,7 +32,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param context
    *          use this context for relative url
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
+  public void unmarshal( final XMLReader xmlReader, final URL context, UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname( );

@@ -43,7 +43,6 @@ package org.kalypso.gmlschema.types;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -68,9 +67,9 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
 
   private Node m_contextNode = null;
 
-  private Stack<Node> m_contextStack;
+  private final Stack<Node> m_contextStack;
 
-  private Document m_factory;
+  private final Document m_factory;
 
   private boolean m_inCdata = false;
 
@@ -80,31 +79,31 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
 
   private int m_level = 0;
 
-  private final UnMarshallResultEater m_resultEater;
+  private final UnmarshallResultEater m_resultEater;
 
   /**
    * Create new DOMConstructor instance.
    * 
    * @param factory
-   *          Factory instance to be used for creating nodes.
+   *            Factory instance to be used for creating nodes.
    * @param resultEater
-   *          will be feeded with the result of unmarshalling process
+   *            will be feeded with the result of unmarshalling process
    */
-  public DOMConstructor( final Document factory, UnMarshallResultEater resultEater )
+  public DOMConstructor( final Document factory, final UnmarshallResultEater resultEater )
   {
     m_factory = factory;
     m_resultEater = resultEater;
     m_contextStack = new Stack<Node>();
   }
 
-  public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
   {
     m_level++;
     if( m_buffer != null )
       m_buffer.setLength( 0 );
     flushText();
 
-    Element elem = m_factory.createElementNS( uri, qname );
+    final Element elem = m_factory.createElementNS( uri, qname );
     if( atts != null )
     {
       for( int i = 0; i < atts.getLength(); i++ )
@@ -123,7 +122,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     {
       for( int i = 0; i < m_prefixes.size(); i++ )
       {
-        Attr attr = m_prefixes.elementAt( i );
+        final Attr attr = m_prefixes.elementAt( i );
         elem.setAttributeNode( attr );
       }
       m_prefixes.removeAllElements();
@@ -131,7 +130,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     pushContext( elem );
   }
 
-  public void endElement( String uri, String local, String qname ) throws SAXException
+  public void endElement( final String uri, final String local, final String qname ) throws SAXException
   {
     m_level--;
     // if( m_level < 0 )
@@ -144,15 +143,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
       if( m_level <= 0 )
       {
         final Node node = getNode();
-        // System.out.println(XMLHelper.toString(node));
-        try
-        {
-          m_resultEater.eat( node );
-        }
-        catch( final GMLSchemaException e )
-        {
-          throw new SAXException( e );
-        }
+        m_resultEater.unmarshallSuccesful( node );
       }
     }
   }
@@ -166,9 +157,9 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     return m_contextNode;
   }
 
-  protected void output( Node node ) throws SAXException
+  protected void output( final Node node ) throws SAXException
   {
-    short nodeType = node.getNodeType();
+    final short nodeType = node.getNodeType();
     if( m_contextNode == null || nodeType == Node.DOCUMENT_NODE )
     {
       m_contextNode = node;
@@ -186,7 +177,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     }
   }
 
-  protected void pushContext( Node newContext )
+  protected void pushContext( final Node newContext )
   {
     m_contextStack.push( m_contextNode );
     m_contextNode = newContext;
@@ -194,7 +185,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
 
   protected Node popContext( )
   {
-    Node ret = m_contextNode;
+    final Node ret = m_contextNode;
     m_contextNode = m_contextStack.pop();
     return ret;
   }
@@ -204,7 +195,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     if( m_buffer == null || m_buffer.length() == 0 )
       return;
 
-    String text = new String( m_buffer );
+    final String text = new String( m_buffer );
 
     try
     {
@@ -234,19 +225,19 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     m_inCdata = false;
   }
 
-  public void characters( char[] ch, int start, int length )
+  public void characters( final char[] ch, final int start, final int length )
   {
     if( m_buffer == null )
       m_buffer = new StringBuffer();
     m_buffer.append( ch, start, length );
   }
 
-  public void ignorableWhitespace( char[] ch, int start, int len )
+  public void ignorableWhitespace( final char[] ch, final int start, final int len )
   {
     characters( ch, start, len );
   }
 
-  public void processingInstruction( String target, String data ) throws SAXException
+  public void processingInstruction( final String target, final String data ) throws SAXException
   {
     flushText();
     ProcessingInstruction pi;
@@ -254,10 +245,10 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     output( pi );
   }
 
-  public void comment( char[] ch, int start, int length ) throws SAXException
+  public void comment( final char[] ch, final int start, final int length ) throws SAXException
   {
     flushText();
-    String data = new String( ch, start, length );
+    final String data = new String( ch, start, length );
     output( m_factory.createComment( data ) );
   }
 
@@ -271,7 +262,7 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     output( popContext() );
   }
 
-  public void startPrefixMapping( String prefix, String uri )
+  public void startPrefixMapping( final String prefix, final String uri )
   {
     if( m_prefixes == null )
       m_prefixes = new Vector<Attr>();
@@ -281,31 +272,31 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     String qname = "xmlns";
     if( prefix.length() > 0 )
       qname = "xmlns:" + prefix;
-    Attr attr = m_factory.createAttributeNS( XMLNS_NSURI, qname );
+    final Attr attr = m_factory.createAttributeNS( XMLNS_NSURI, qname );
     attr.setNodeValue( uri );
     m_prefixes.addElement( attr );
   }
 
-  public void endPrefixMapping( String prefix )
+  public void endPrefixMapping( final String prefix )
   {
   }
 
   // EntityReference
-  public void startEntity( String name ) throws SAXException
+  public void startEntity( final String name ) throws SAXException
   {
     flushText();
-    Node entityref = m_factory.createEntityReference( name );
+    final Node entityref = m_factory.createEntityReference( name );
     pushContext( entityref );
   }
 
-  public void endEntity( String name ) throws SAXException
+  public void endEntity( final String name ) throws SAXException
   {
     flushText();
     output( popContext() );
   }
 
   // DOCTYPE: ignored
-  public void startDTD( String root, String p, String s )
+  public void startDTD( final String root, final String p, final String s )
   {
   }
 
@@ -313,11 +304,11 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
   {
   }
 
-  public void setDocumentLocator( Locator locator )
+  public void setDocumentLocator( final Locator locator )
   {
   }
 
-  public void skippedEntity( String name )
+  public void skippedEntity( final String name )
   {
   }
 }

@@ -57,16 +57,15 @@ public final class KalypsoOGC31JAXBcontext
 
   private static JAXBContext m_context = null;
 
-  private static Class[] m_contextClass = null;
+  private static Class< ? >[] m_contextClass = null;
 
   /**
    * methode is intended to be used by parts that generate JAXB-contexts with many classes and need to collect them
    * 
    * @return classes needed for binding context
    */
-  public static Class[] getContextClasses( )
+  public static Class< ? >[] getContextClasses( )
   {
-
     if( m_contextClass == null )
     {
       m_contextClass = new Class[] {//  
@@ -78,7 +77,7 @@ public final class KalypsoOGC31JAXBcontext
     return m_contextClass;
   }
 
-  public static JAXBContext getContext( )
+  public static synchronized JAXBContext getContext( )
   {
     if( m_context == null )
     {

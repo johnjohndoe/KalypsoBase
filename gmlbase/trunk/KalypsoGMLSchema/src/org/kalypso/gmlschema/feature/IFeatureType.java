@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.basics.IInitialize;
+import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;

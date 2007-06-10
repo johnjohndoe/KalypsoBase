@@ -45,6 +45,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * ContentHandler that wraps another contenthandler. When the simpletype element has been parsed complete <br>
@@ -57,26 +58,26 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
 {
   private final ContentHandler m_unmarshallerHandler;
 
-  private final UnMarshallResultEater m_marshalResultEater;
+  private final UnmarshallResultEater m_marshalResultEater;
 
   private final UnmarshalResultProvider m_result;
 
   /**
    * @param marshalResultEater
-   *          will be feeded with the result of unmarshalling process
+   *            will be feeded with the result of unmarshalling process
    * @param unmarshallResultProvider
-   *          should provide the parsed values
+   *            should provide the parsed values
    * @param unmarshallerHandler
-   *          contenthandler that will be wrapped for unmarshalling
+   *            contenthandler that will be wrapped for unmarshalling
    */
-  public SimpleTypeUnmarshalingContentHandler( ContentHandler unmarshallerHandler, UnmarshalResultProvider unmarshallResultProvider, UnMarshallResultEater marshalResultEater )
+  public SimpleTypeUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnmarshallResultEater marshalResultEater )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_result = unmarshallResultProvider;
     m_marshalResultEater = marshalResultEater;
   }
 
-  public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
   {
     try
     {
@@ -88,7 +89,7 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
     }
   }
 
-  public void endElement( String uri, String local, String qname ) throws SAXException
+  public void endElement( final String uri, final String local, final String qname ) throws SAXException
   {
     try
     {
@@ -100,7 +101,7 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
     }
   }
 
-  private void end( ) throws GMLSchemaException
+  private void end( ) throws SAXParseException, GMLSchemaException
   {
     Object value = null;
     try
@@ -109,21 +110,21 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
     }
     finally
     {
-      m_marshalResultEater.eat( value );
+      m_marshalResultEater.unmarshallSuccesful( value );
     }
   }
 
-  public void characters( char[] ch, int start, int length ) throws SAXException
+  public void characters( final char[] ch, final int start, final int length ) throws SAXException
   {
     m_unmarshallerHandler.characters( ch, start, length );
   }
 
-  public void ignorableWhitespace( char[] ch, int start, int len ) throws SAXException
+  public void ignorableWhitespace( final char[] ch, final int start, final int len ) throws SAXException
   {
     m_unmarshallerHandler.ignorableWhitespace( ch, start, len );
   }
 
-  public void processingInstruction( String target, String data ) throws SAXException
+  public void processingInstruction( final String target, final String data ) throws SAXException
   {
     m_unmarshallerHandler.processingInstruction( target, data );
   }
@@ -138,22 +139,22 @@ public class SimpleTypeUnmarshalingContentHandler implements ContentHandler
     m_unmarshallerHandler.endDocument();
   }
 
-  public void startPrefixMapping( String prefix, String uri ) throws SAXException
+  public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
   {
     m_unmarshallerHandler.startPrefixMapping( prefix, uri );
   }
 
-  public void endPrefixMapping( String prefix ) throws SAXException
+  public void endPrefixMapping( final String prefix ) throws SAXException
   {
     m_unmarshallerHandler.endPrefixMapping( prefix );
   }
 
-  public void setDocumentLocator( Locator locator )
+  public void setDocumentLocator( final Locator locator )
   {
     m_unmarshallerHandler.setDocumentLocator( locator );
   }
 
-  public void skippedEntity( String name ) throws SAXException
+  public void skippedEntity( final String name ) throws SAXException
   {
     m_unmarshallerHandler.skippedEntity( name );
   }

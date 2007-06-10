@@ -32,7 +32,7 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * TODO: insert type comment here
@@ -72,11 +72,11 @@ public interface IValuePropertyType extends IPropertyType
   /**
    * @return java class that instanciates the value
    */
-  public Class getValueClass( );
+  public Class< ? > getValueClass( );
 
   // TODO: which one is it? the gui or marshalling type handler??
   // is this really necessary? we still have ITypeRegistry.getTypeHandlerFor( IPropertyType )
-  public ITypeHandler getTypeHandler( );
+  public IMarshallingTypeHandler getTypeHandler( );
 
   /**
    * @return qname of XML type

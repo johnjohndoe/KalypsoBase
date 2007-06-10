@@ -43,21 +43,20 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
- * @author doemming
+ * @author Andreas von Dömming
  */
 public class CustomPropertyContentType implements IPropertyContentType
 {
-
-  private final ITypeHandler m_typeHandler;
+  private final IMarshallingTypeHandler m_typeHandler;
 
   private final QName m_valueQName;
 
   private final IRestriction[] m_noRestruction = new IRestriction[0];
 
-  public CustomPropertyContentType( final QName valueQName, final ITypeHandler typeHandler )
+  public CustomPropertyContentType( final QName valueQName, final IMarshallingTypeHandler typeHandler )
   {
     m_valueQName = valueQName;
     m_typeHandler = typeHandler;
@@ -98,7 +97,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getValueClass()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return m_typeHandler.getValueClass();
   }
@@ -106,7 +105,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun )
   {
     // nothing to init
   }
@@ -114,7 +113,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getTypeHandler()
    */
-  public ITypeHandler getTypeHandler( )
+  public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_typeHandler;
   }
