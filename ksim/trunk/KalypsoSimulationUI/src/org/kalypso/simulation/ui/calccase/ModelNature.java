@@ -104,7 +104,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.gmlschema.Mapper;
+import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.CalcCaseConfig;
 import org.kalypso.model.xml.TransformationList;
