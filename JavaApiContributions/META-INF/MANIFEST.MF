@@ -22,7 +22,8 @@ Export-Package: org.kalypso.contribs.java,
  org.kalypso.contribs.java.util.regex,
  org.kalypso.contribs.java.util.test,
  org.kalypso.contribs.java.xml,
- org.kalypso.contribs.javax.xml.namespace
+ org.kalypso.contribs.javax.xml.namespace,
+ org.kalypso.contribs.org.xml.sax
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.junit
 Eclipse-LazyStart: true
