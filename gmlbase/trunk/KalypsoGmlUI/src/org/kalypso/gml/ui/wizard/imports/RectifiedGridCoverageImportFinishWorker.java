@@ -46,12 +46,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.FileValueModelType;
-import ogc31.www.opengis.net.gml.RangeSetType;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -69,16 +63,12 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * extracted from RectifiedGridCoverageImportWizard
@@ -132,7 +122,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
       /* Workspace && create workspace */
       monitor.subTask( " - creating GMLWorkspace..." );
-      final GMLWorkspace workspace = createGmlWorkspace( m_domain, importFileResource );
+      final GMLWorkspace workspace = RectifiedGridUtils.createGmlWorkspace( m_domain, importFileResource );
 
       monitor.worked( 1 );
 
@@ -141,16 +131,12 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
       final IStatus importStatus = importExternalFiles( monitor, m_selectedFile );
       if( !importStatus.isOK() )
-      {
         return importStatus;
-      }
 
       /* create gml file */
       monitor.subTask( "- writing " + m_gmlFileName );
       if( !resource.exists() || !(resource instanceof IContainer) )
-      {
         StatusUtilities.createErrorStatus( "Container \"" + m_containerName + "\" does not exist." );
-      }
 
       final SetContentHelper contentHelper = new SetContentHelper()
       {
@@ -185,9 +171,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
       public String queryOverwrite( final String pathString )
       {
         if( MessageDialog.openQuestion( m_shell, "Datei import", "Die Datei " + pathString + " exisitert bereits.\nSoll Sie überschrieben werden?" ) )
-        {
           return IOverwriteQuery.YES;
-        }
         return IOverwriteQuery.NO;
       }
     };
@@ -198,31 +182,6 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     operation.run( new SubProgressMonitor( monitor, 1 ) );
 
     return operation.getStatus();
-  }
-
-  private GMLWorkspace createGmlWorkspace( final RectifiedGridDomain domain, final IFile importFileResource ) throws InvocationTargetException
-  {
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS.GML3, "RectifiedGridCoverage" ), "3.1", null, null );
-
-    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-
-    // file name relative to the gml
-    rangeSetFile.setFileName( importFileResource.getName() );
-    rangeSetFile.setMimeType( "image/" + importFileResource.getFileExtension() );
-    rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
-
-    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-    rangeSet.setFile( rangeSetFile );
-
-    // TODO: use the RectifiedGridCoverage-class instead
-    final Feature rgcFeature = workspace.getRootFeature();
-    // TODO: uncomment, as soon as we are able to serialize GM_Envelopes
-    // rgcFeature.setProperty( new QName( NS.GML3, "boundedBy" ), domain.getGM_Envelope( crs ) );
-    rgcFeature.setProperty( new QName( NS.GML3, "description" ), "Imported via Kalypso from " + m_selectedFile.toString() );
-    rgcFeature.setProperty( new QName( NS.GML3, "rectifiedGridDomain" ), domain );
-    rgcFeature.setProperty( new QName( NS.GML3, "rangeSet" ), rangeSet );
-
-    return workspace;
   }
 
 }
