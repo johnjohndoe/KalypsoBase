@@ -63,13 +63,18 @@ public class RectifiedGridUtils
 {
   static public GMLWorkspace createGmlWorkspace( final RectifiedGridDomain domain, final IFile importFileResource ) throws InvocationTargetException
   {
+    return RectifiedGridUtils.createGmlWorkspace( domain, importFileResource, "image/" + importFileResource.getFileExtension() );
+  }
+
+  static public GMLWorkspace createGmlWorkspace( final RectifiedGridDomain domain, final IFile importFileResource, final String mimeType ) throws InvocationTargetException
+  {
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS.GML3, "RectifiedGridCoverage" ), "3.1", null, null );
 
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
     // file name relative to the gml
     rangeSetFile.setFileName( importFileResource.getName() );
-    rangeSetFile.setMimeType( "image/" + importFileResource.getFileExtension() );
+    rangeSetFile.setMimeType( mimeType );
     rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
     final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
