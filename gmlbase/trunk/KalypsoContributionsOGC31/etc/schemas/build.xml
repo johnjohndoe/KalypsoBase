@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<project name="KalypsoContributionsOGC-binding" default="generate">
+<project name="KalypsoContributionsOGC-binding" default="prepareSchemas">
 
 	<property name="project" value="${workspace}/KalypsoContributionsOGC31" />
 
@@ -33,5 +33,6 @@
 		    <!--include name="xsd/**/*.xsd"/-->
 		</xslt>
 		
+		<antcall target="generate"></antcall>
 	</target>
 </project>
