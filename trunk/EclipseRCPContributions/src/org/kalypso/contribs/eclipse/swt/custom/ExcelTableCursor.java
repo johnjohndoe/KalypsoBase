@@ -2,7 +2,6 @@ package org.kalypso.contribs.eclipse.swt.custom;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -291,7 +290,7 @@ public class ExcelTableCursor extends TableCursor
 
   private final TableViewer m_viewer;
 
-  private Color m_errorColor;
+  private final Color m_errorColor;
 
   public ExcelTableCursor( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
   {
@@ -415,7 +414,7 @@ public class ExcelTableCursor extends TableCursor
     // 
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
-      Button button = (Button) control;
+      final Button button = (Button) control;
       button.setSelection( !button.getSelection() );
     }
     // 
@@ -475,7 +474,7 @@ public class ExcelTableCursor extends TableCursor
    * Advances the cursor position by the given delta.
    * 
    * @param control
-   *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
+   *            If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
   protected void advanceCursor( final Control control, final int dx, final int dy )
   {
