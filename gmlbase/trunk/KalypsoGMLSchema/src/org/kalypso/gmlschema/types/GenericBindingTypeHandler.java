@@ -54,8 +54,8 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -123,11 +123,13 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
     m_forceElementTagOnMarshall = forceElementTagOnMarshall;
   }
 
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
-    // memory to xml
     try
     {
+      // memory to xml
+      final ContentHandler contentHandler = xmlReader.getContentHandler();
+
       // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
       // System.out.println( "debug" );
       final String namespaceURI = propQName.getNamespaceURI();
@@ -147,9 +149,9 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       if( m_forceElementTagOnMarshall )
         contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
-    catch( final Exception e )
+    catch( final JAXBException e )
     {
-      throw new TypeRegistryException( e );
+      throw new SAXException( e );
     }
   }
 

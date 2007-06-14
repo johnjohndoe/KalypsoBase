@@ -56,11 +56,10 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * A simple DOM serializer. May be subclassed.
@@ -86,7 +85,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
     {
@@ -111,12 +110,16 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
-      xmlReader.setContentHandler( contentHandler );
+      xmlReader.setContentHandler( reader.getContentHandler() );
       xmlReader.parse( input );
+    }
+    catch( final SAXException saxe )
+    {
+      throw saxe;
     }
     catch( final Exception e )
     {
-      throw new TypeRegistryException( e );
+      throw new SAXException( e );
     }
   }
 

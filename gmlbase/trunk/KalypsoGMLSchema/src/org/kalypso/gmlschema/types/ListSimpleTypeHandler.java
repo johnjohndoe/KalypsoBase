@@ -49,8 +49,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Type handler for list-simple types.
@@ -99,37 +99,32 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
-   *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL, java.lang.String)
+   *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
     final char[] spaceChar = new char[] { ' ' };
 
-    try
+    final ContentHandler contentHandler = xmlReader.getContentHandler();
+
+    final String namespaceURI = propQName.getNamespaceURI();
+    final String localPart = propQName.getLocalPart();
+    final String qNameString = propQName.getPrefix() + ":" + localPart;
+    contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+
+    final List<Object> list = (List<Object>) value;
+    for( final Iterator<Object> iter = list.iterator(); iter.hasNext(); )
     {
-      final String namespaceURI = propQName.getNamespaceURI();
-      final String localPart = propQName.getLocalPart();
-      final String qNameString = propQName.getPrefix() + ":" + localPart;
-      contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+      final Object element = iter.next();
 
-      final List<Object> list = (List<Object>) value;
-      for( final Iterator<Object> iter = list.iterator(); iter.hasNext(); )
-      {
-        final Object element = iter.next();
+      final String xmlString = m_baseTypeHandler.convertToXMLString( element );
+      contentHandler.characters( xmlString.toCharArray(), 0, xmlString.length() );
 
-        final String xmlString = m_baseTypeHandler.convertToXMLString( element );
-        contentHandler.characters( xmlString.toCharArray(), 0, xmlString.length() );
-
-        if( iter.hasNext() )
-          contentHandler.characters( spaceChar, 0, 1 );
-      }
-
-      contentHandler.endElement( namespaceURI, localPart, qNameString );
+      if( iter.hasNext() )
+        contentHandler.characters( spaceChar, 0, 1 );
     }
-    catch( final Exception e )
-    {
-      throw new TypeRegistryException( e );
-    }
+
+    contentHandler.endElement( namespaceURI, localPart, qNameString );
   }
 
   /**

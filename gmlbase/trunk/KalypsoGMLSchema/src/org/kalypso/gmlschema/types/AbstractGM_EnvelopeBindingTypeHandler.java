@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -117,11 +118,13 @@ public abstract class AbstractGM_EnvelopeBindingTypeHandler implements IMarshall
     m_forceElementTagOnMarshall = forceElementTagOnMarshall;
   }
 
-  public void marshal( final QName xmlTagQName, final QName propQName, final Object value, final ContentHandler contentHandler, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName xmlTagQName, final QName propQName, final Object value, final XMLReader reader, final String gmlVersion ) throws SAXException
   {
-    // memory to xml
     try
     {
+      // memory to xml
+      final ContentHandler contentHandler = reader.getContentHandler();
+
       // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
       // System.out.println( "debug" );
       final String namespaceURI = propQName.getNamespaceURI();
@@ -139,9 +142,9 @@ public abstract class AbstractGM_EnvelopeBindingTypeHandler implements IMarshall
       if( m_forceElementTagOnMarshall )
         contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
-    catch( final Exception e )
+    catch( final JAXBException e )
     {
-      throw new TypeRegistryException( e );
+      throw new SAXException( e );
     }
   }
 

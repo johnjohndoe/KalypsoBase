@@ -57,11 +57,10 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * abstract typehandler to support old deprecated kalypso marshalling methodes, let them extend from this
@@ -74,9 +73,8 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    // memory to xml
     try
     {
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -103,12 +101,16 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
 
-      xmlReader.setContentHandler( contentHandler );
+      xmlReader.setContentHandler( reader.getContentHandler() );
       xmlReader.parse( input );
+    }
+    catch( final SAXException e )
+    {
+      throw e;
     }
     catch( final Exception e )
     {
-      throw new TypeRegistryException( e );
+      throw new SAXException( e );
     }
   }
 

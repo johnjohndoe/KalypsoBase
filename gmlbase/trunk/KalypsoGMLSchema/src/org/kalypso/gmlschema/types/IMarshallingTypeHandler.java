@@ -5,12 +5,11 @@ import java.text.ParseException;
 
 import javax.xml.namespace.QName;
 
-import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IMarshallingTypeHandler extends ITypeHandler
 {
@@ -18,19 +17,21 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * Serialize object to xml inclusive the propertynode
    * 
    * @param context
-   *          use this context for relative url
+   *            use this context for relative url
    * @param object
-   *          object to serialize, it must be instanceof {@link #getClassName()}.
+   *            object to serialize, it must be instanceof {@link #getClassName()}.
    * @param propQName
-   *          name of the propertynode, must be full prefixed !!
+   *            name of the propertynode, must be full prefixed !!
+   * @param xmlReader
+   *            The xmlReader to serialize to. Write into its {@link ContentHandler} to do so.
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException;
+  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException;
 
   /**
    * creates an object of type {@link #getClassName()}from node.
    * 
    * @param context
-   *          use this context for relative url
+   *            use this context for relative url
    */
   public void unmarshal( final XMLReader xmlReader, final URL context, UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
@@ -44,7 +45,9 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * <p>
    * Remark this should not be used for gui purposes. Use IGuiTypeHandler#fromText instead.
    * </p>
-   * <p>TODO: Check if this should be deprecated</p>
+   * <p>
+   * TODO: Check if this should be deprecated
+   * </p>
    */
   public Object parseType( final String text ) throws ParseException;
 
