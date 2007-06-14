@@ -30,6 +30,8 @@ public class HeightFromTriangle
     if( m_triangle.getNumPoints() != 4 )
       throw new IllegalArgumentException( "Only triangles supported" );
 
+    // Check if point is inside Triangle, if not return immediuately
+    // TODO: not always necessary?
     if( !m_pir.isInside( c ) )
       return Double.NaN;
 
@@ -61,6 +63,10 @@ public class HeightFromTriangle
      */
 
     final double k = nx * x1 + ny * y1 + nz * z1;
+
+    // TODO: until now, the concrete coordinate 'c' was not used, move code above into constructor
+    // See also
+    // /KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/core/terrainmodel/TriangleData.java#calculateTrianglePlaneEquation
     return (k - nx * c.x - ny * c.y) / nz;
   }
 

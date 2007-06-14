@@ -252,8 +252,8 @@ public class Raster2Lines implements DoubleRasterWalker
   }
 
   /**
-   * Hat die Verbindung c1 - c2 einen Zwischenwert bei value, interpoliere die Zwischencoordinate Voraussetzung ist, das
-   * keine der Koordinaten exakt den Wert annimmt!
+   * Hat die Verbindung c1 - c2 einen Zwischenwert bei value, interpoliere die Zwischencoordinate Voraussetzung ist,
+   * dass keine der Koordinaten exakt den Wert annimmt!
    */
   private final LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
   {
