@@ -42,7 +42,6 @@ package org.kalypsodeegree.model.typeHandler;
 
 import javax.xml.namespace.QName;
 
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
