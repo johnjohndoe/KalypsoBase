@@ -448,8 +448,8 @@ public class PageSelectGeodataFile extends WizardPage
     tVectorYy.setText( reader.getVectorYy() );
     tVectorXy.setText( reader.getVectorXy() );
     tVectorYx.setText( reader.getVectorYx() );
-    tUlcX.setText( reader.getUpperLeftCornerX() );
-    tUlcY.setText( reader.getUpperLeftCornerY() );
+    tUlcX.setText( reader.getOriginCornerX() );
+    tUlcY.setText( reader.getOriginCornerY() );
   }
 
   protected void browseForFile( )
