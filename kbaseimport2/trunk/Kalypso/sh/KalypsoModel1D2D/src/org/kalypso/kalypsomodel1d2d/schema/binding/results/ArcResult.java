@@ -53,7 +53,29 @@ public class ArcResult
   public int elementLeftID; 
   public int elementRightID; 
   public int middleNodeID;
+  public GMLNodeResult m_nodeUp;
+  public GMLNodeResult m_nodeDown;
   
+  public GMLNodeResult getNodeUp( )
+  {
+    return m_nodeUp;
+  }
+
+  public void setNodeUp( GMLNodeResult nodeUp )
+  {
+    m_nodeUp = nodeUp;
+  }
+
+  public GMLNodeResult getNodeDown( )
+  {
+    return m_nodeDown;
+  }
+
+  public void setNodeDown( GMLNodeResult nodeDown )
+  {
+    m_nodeDown = nodeDown;
+  }
+
   public ArcResult( int id, int node1, int node2, int elementLeft, int elementRight, int middleNode )
   {
     arcID = id;
@@ -62,7 +84,5 @@ public class ArcResult
     elementLeftID = elementLeft; 
     elementRightID = elementRight; 
     middleNodeID = middleNode;
-  }
-  
-  
+  } 
 }
