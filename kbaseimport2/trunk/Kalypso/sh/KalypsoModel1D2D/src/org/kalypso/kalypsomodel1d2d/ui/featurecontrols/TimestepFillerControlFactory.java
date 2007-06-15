@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  */
 public class TimestepFillerControlFactory implements IFeatureviewControlFactory
 {
@@ -58,7 +58,7 @@ public class TimestepFillerControlFactory implements IFeatureviewControlFactory
    */
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    return new TimestepFillerFeatureControl( feature, pt, arguments );
+    return new TimestepFillerFeatureControl( feature, pt );
   }
 
 }
