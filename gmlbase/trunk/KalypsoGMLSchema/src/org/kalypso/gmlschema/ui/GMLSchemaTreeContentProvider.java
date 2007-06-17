@@ -59,9 +59,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
   private IGMLSchema m_context;
 
   // key=schema, value=parent of schown schemas
-  private Hashtable<GMLSchema, GMLSchema> m_importMap = new Hashtable<GMLSchema, GMLSchema>();
+  private final Hashtable<GMLSchema, GMLSchema> m_importMap = new Hashtable<GMLSchema, GMLSchema>();
 
-  public GMLSchemaTreeContentProvider( final IGMLSchema context, boolean detailed )
+  public GMLSchemaTreeContentProvider( final IGMLSchema context, final boolean detailed )
   {
     m_context = context;
     m_detailed = detailed;
@@ -86,21 +86,21 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       return new Object[0];
     if( parent instanceof LabelAndChildsProvider )
       return ((LabelAndChildsProvider) parent).getChilds();
-    if( parent instanceof IGMLSchema )
+    if( parent instanceof GMLSchema )
     {
       final GMLSchema schema = (GMLSchema) parent;
 
       final List<GMLSchema> schemasToShow = new ArrayList<GMLSchema>();
       schemasToShow.addAll( getSchemaChildren( schema, schema.getImports() ) );
       schemasToShow.addAll( getSchemaChildren( schema, schema.getAdditionalSchemas() ) );
-      
+
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
       final Object[] children = new Object[schemasToShow.size() + featureTypes.length];
       System.arraycopy( schemasToShow.toArray(), 0, children, 0, schemasToShow.size() );
       System.arraycopy( featureTypes, 0, children, schemasToShow.size(), featureTypes.length );
       return children;
     }
-    
+
     if( !m_detailed )
     {
       if( parent instanceof IFeatureType )
