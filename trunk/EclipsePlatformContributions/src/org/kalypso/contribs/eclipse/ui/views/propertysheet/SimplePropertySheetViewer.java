@@ -73,8 +73,8 @@ public class SimplePropertySheetViewer extends Viewer
   private final void createControl( final Composite parent )
   {
     m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.addColumn( "property", "Eigenschaft", m_propColSize, false, SWT.CENTER );
-    m_viewer.addColumn( "value", "Wert", m_valueColSize, false, SWT.CENTER );
+    m_viewer.addColumn( "property", "Eigenschaft", null, m_propColSize, false, SWT.CENTER );
+    m_viewer.addColumn( "value", "Wert", null, m_valueColSize, false, SWT.CENTER );
     m_viewer.refreshColumnProperties();
 
     m_viewer.setLabelProvider( new PropertySheetTableLabelProvider( null ) );
@@ -130,7 +130,7 @@ public class SimplePropertySheetViewer extends Viewer
    * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
    */
   @Override
-  public void setSelection( ISelection selection, boolean reveal )
+  public void setSelection( final ISelection selection, final boolean reveal )
   {
     m_viewer.setSelection( selection, reveal );
   }
