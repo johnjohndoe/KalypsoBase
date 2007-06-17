@@ -93,17 +93,17 @@ public class DefaultTableViewer extends TableViewer
   }
 
   /**
-   * Same as {@link #addColumn(String, String, int, boolean, SWT.CENTER)}.
+   * Same as {@link #addColumn(String, String, null, int, boolean, SWT.CENTER)}.
    */
   public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable )
   {
-    return addColumn( name, title, width, isEditable, SWT.CENTER );
+    return addColumn( name, title, null, width, isEditable, SWT.CENTER );
   }
 
   /**
    * Adds a column to the underlying table control.
    */
-  public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable, int style )
+  public TableColumn addColumn( final String name, final String title, final String tooltip, final int width, final boolean isEditable, final int style )
   {
     if( m_disposing )
       throw new IllegalStateException();
@@ -115,6 +115,7 @@ public class DefaultTableViewer extends TableViewer
     tc.setWidth( width );
 
     tc.setText( title );
+    tc.setToolTipText( tooltip );
 
     return tc;
   }
@@ -126,8 +127,8 @@ public class DefaultTableViewer extends TableViewer
       return;
 
     final TableColumn[] columns = table.getColumns();
-    for( int i = 0; i < columns.length; i++ )
-      columns[i].dispose();
+    for( final TableColumn element : columns )
+      element.dispose();
 
     refreshColumnProperties();
   }
