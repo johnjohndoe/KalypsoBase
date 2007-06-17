@@ -39,6 +39,7 @@
    <intro introId="org.kalypso.model.product.introID"/>
 
    <vm>
+      <windows type="ee">J2SE-1.5</windows>
    </vm>
 
    <plugins>
