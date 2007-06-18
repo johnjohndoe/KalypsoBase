@@ -45,9 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -95,17 +92,6 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    
-//    if( !CalUnitOps.isCalculationUnitBoundaryRelationType( relationToCalUnit ) )
-//    {
-//      String message =
-//        String.format( 
-//            "Support only relation of type( %s and %s ) but got %s", 
-//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
-//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
-//            relationToCalUnit );
-//      throw new IllegalArgumentException(message);
-//    }
     this.calculationUnit = calculationUnit;
     this.elementsToAdd = elementsToRemove;
     this.model1d2d = model1d2d;
@@ -161,29 +147,6 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
     {
       if( !done )
       {
-//        replacedBoundaryLine = 
-//          CalUnitOps.getLinkedBoundaryLine( 
-//                        calculationUnit, relationToCalUnit );
-//        if( replacedBoundaryLine != null )
-//        {
-//          LinksOps.delRelationshipElementAndComplexElement( 
-//                          replacedBoundaryLine, calculationUnit  );
-//        }
-//        if( relationToCalUnit.equals( 
-//                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM ))
-//        {
-//          calculationUnit.setDownStreamBoundaryLine( elementsToRemove );
-//        }
-//        else if( relationToCalUnit.equals( 
-//                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM ))
-//        {
-//          calculationUnit.setUpStreamBoundaryLine( elementsToRemove );
-//        }
-//        else 
-//        {
-//         throw new RuntimeException(
-//             "Relation type not supported="+relationToCalUnit);
-//        }
         calculationUnit.addElementAsRef( elementsToAdd );
         elementsToAdd.getContainers().addRef( calculationUnit );
         fireProcessChanges();
