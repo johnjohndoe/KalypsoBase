@@ -45,6 +45,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -60,6 +61,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author madanago
  *
  */
+@SuppressWarnings({"unchecked","hiding"})
 public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
@@ -68,23 +70,25 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
   private final IFEDiscretisationModel1d2d model1d2d;
   
   private boolean done = false;
+  private double grabDistance = 5;
   
-  private final QName relationToCalUnit;
+//  private final QName relationToCalUnit;
   
   public AddBoundaryConditionToCalculationUnitCmd(
                       ICalculationUnit calculationUnit,
                       IBoundaryCondition boundaryConditionToAdd,
                       IFEDiscretisationModel1d2d model1d2d,
-                      QName relationToCalUnit )
+                      double grabDistance )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( boundaryConditionToAdd, "elementsToRemove" );
+    Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     
     this.calculationUnit = calculationUnit;
     this.boundaryConditionToAdd = boundaryConditionToAdd;
     this.model1d2d = model1d2d;
-    this.relationToCalUnit = relationToCalUnit;
+    this.grabDistance = grabDistance;
+//    this.relationToCalUnit = relationToCalUnit;
   }
   
 
@@ -136,10 +140,12 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
     {
       if( !done )
       {
-        calculationUnit.addElementAsRef( (IFE1D2DElement) boundaryConditionToAdd );
-        ((IFE1D2DElement) boundaryConditionToAdd).getContainers().addRef( calculationUnit );
+        CalUnitOps.markAsBoundaryCondition( 
+            calculationUnit, 
+            boundaryConditionToAdd,
+            grabDistance );
         fireProcessChanges();
-        done=true;
+        
       }
     }
     catch( Throwable th )
