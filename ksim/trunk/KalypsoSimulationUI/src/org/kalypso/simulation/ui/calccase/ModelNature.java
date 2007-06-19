@@ -436,7 +436,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       return StatusUtilities.createErrorStatus( "Die Operation hat über " + minutes + " Minuten gedauert und wird deshalb abgebrochen." );
     }
-    catch( final InterruptedException e )
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Throwable e )
     {
       e.printStackTrace();
       // sollte eigentlich nie auftreten
@@ -450,7 +454,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // alle resourcen des CalcCase refreshen
       // intern the parent of folder will used as rule
-      folder.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
+      
+      /* In order to have a good error message we need to check if the monitor is canceled (this is the case if an exception was thrown before).*/
+      final IProgressMonitor subMon = monitor.isCanceled() ? new NullProgressMonitor() : new SubProgressMonitor( monitor, 1000 );  
+      
+      folder.refreshLocal( IResource.DEPTH_INFINITE, subMon );
 
       monitor.done();
     }
@@ -460,13 +468,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IValueVariable[] variables = new IValueVariable[properties.size()];
     int count = 0;
-    for( final Iterator iter = properties.entrySet().iterator(); iter.hasNext(); )
+    for( final Map.Entry<Object, Object> entry : properties.entrySet() )
     {
-      final Map.Entry entry = (Entry) iter.next();
       final String name = (String) entry.getKey();
       final String value = (String) entry.getValue();
 
-      final IValueVariable valueVariable = new ValueVariable( name, value, true, null );
+      final IValueVariable valueVariable = new ValueVariable( name, value, true, value );
       valueVariable.setValue( value );
       variables[count++] = valueVariable;
 
