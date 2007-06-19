@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -51,17 +51,16 @@ import javax.xml.bind.JAXBContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 
 import de.renew.workflow.base.IWorkflowSystem;
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.WorkflowSystem;
+import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -127,7 +126,6 @@ public abstract class AbstractCaseManager<T extends Case>
    */
   private void loadModel( ) throws CoreException
   {
-    m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
     if( !m_metaDataFile.exists() )
     {
       m_cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
@@ -207,48 +205,52 @@ public abstract class AbstractCaseManager<T extends Case>
     {
       monitor = new NullProgressMonitor();
     }
-
-    ByteArrayInputStream bis = null;
-    try
+    Job job = new Job( "" )
     {
-      monitor.beginTask( "Szenarios speichern.", 5000 );
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      JC.createMarshaller().marshal( m_cases, bos );
-      monitor.worked( 2000 );
-      bis = new ByteArrayInputStream( bos.toByteArray() );
-      bos.close();
-      m_metaDataFile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1000 ) );
-      if( m_metaDataFile.exists() )
+      /**
+       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      @Override
+      protected IStatus run( IProgressMonitor monitor )
       {
-        m_metaDataFile.setContents( bis, false, true, new SubProgressMonitor( monitor, 2000 ) );
+        try
+        {
+          monitor.beginTask( "Szenarien speichern.", 5000 );
+          final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+          JC.createMarshaller().marshal( m_cases, bos );
+          monitor.worked( 2000 );
+          final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+          bos.close();
+          if( m_metaDataFile.exists() )
+          {
+            m_metaDataFile.setContents( bis, false, true, null );
+          }
+          else
+          {
+            m_metaDataFile.create( bis, false, null );
+          }
+          bis.close();
+        }
+        catch( final Exception e )
+        {
+          final IStatus status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+          return status;
+        }
+        finally
+        {
+          monitor.done();
+        }
+        return Status.OK_STATUS;
       }
-      else
-      {
-        m_metaDataFile.create( bis, false, new SubProgressMonitor( monitor, 2000 ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
-      throw new CoreException( status );
-    }
-    finally
-    {
-      try
-      {
-        bis.close();
-      }
-      catch( final Throwable e )
-      {
-      }
-      monitor.done();
-    }
+    };
+    job.setRule( m_metaDataFile.getParent() );
+    job.schedule();
   }
 
   /**
    * 
    */
-  public Workflow getCurrentWorkflow( )
+  public Workflow getCurrentWorklist( )
   {
     if( m_currentWorkflow == null )
     {
@@ -306,7 +308,7 @@ public abstract class AbstractCaseManager<T extends Case>
   }
 
   protected void fireCaseRemoved( final T caze )
-  {    
+  {
     for( final ICaseManagerListener<T> l : m_listeners )
     {
       l.caseRemoved( caze );

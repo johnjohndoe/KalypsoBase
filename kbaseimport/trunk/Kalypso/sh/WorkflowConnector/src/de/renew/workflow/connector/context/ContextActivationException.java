@@ -38,55 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.context;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.model.WorkbenchAdapter;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
-import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.TaskExecutionException;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
-public class CaseTreeContentAdapter extends WorkbenchAdapter
+public class ContextActivationException extends TaskExecutionException
 {
-  private final ImageDescriptor m_caseImage;
-
-  public CaseTreeContentAdapter( )
+  public ContextActivationException( final Throwable cause )
   {
-    m_caseImage = AbstractUIPlugin.imageDescriptorFromPlugin( WorkflowConnectorPlugin.PLUGIN_ID, "icons/blue.png" );
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    return NO_CHILDREN;
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
-  @Override
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-    return m_caseImage;
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
-  @Override
-  public String getLabel( final Object o )
-  {
-    if( o instanceof Case )
-    {
-      return ((Case) o).getName();
-    }
-    return null;
+    super( cause );
   }
 }

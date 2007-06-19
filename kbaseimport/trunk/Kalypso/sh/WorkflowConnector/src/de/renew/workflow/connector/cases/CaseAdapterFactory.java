@@ -1,7 +1,8 @@
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+
 
 public class CaseAdapterFactory implements IAdapterFactory
 {

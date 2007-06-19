@@ -38,20 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.worklist;
 
 import de.renew.workflow.base.Task;
-import de.renew.workflow.cases.TaskExecutionException;
 
 /**
  * @author Stefan Kurzbach
  */
-public interface ITaskExecutor
+public class TaskExecutionAuthority implements ITaskExecutionAuthority
 {
 
   /**
-   * Called when a task needs to be executed
+   * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
    */
-  public void execute( final Task task ) throws TaskExecutionException;
-
+  public boolean canStopTask( final Task task )
+  {
+    // always return true
+    return true;
+  }
 }

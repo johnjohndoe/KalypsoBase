@@ -38,22 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.cases;
 
-import de.renew.workflow.base.Task;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.model.WorkbenchAdapter;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+
+import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * @author Stefan Kurzbach
+ * 
  */
-public class TaskExecutionAuthority implements ITaskExecutionAuthority
+public class CaseTreeContentAdapter extends WorkbenchAdapter
 {
+  private final ImageDescriptor m_caseImage;
+
+  public CaseTreeContentAdapter( )
+  {
+    m_caseImage = AbstractUIPlugin.imageDescriptorFromPlugin( WorkflowConnectorPlugin.PLUGIN_ID, "icons/blue.png" );
+  }
 
   /**
-   * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  public boolean canStopTask( final Task task )
+  @Override
+  public Object[] getChildren( final Object o )
   {
-    // always return true
-    return true;
+    return NO_CHILDREN;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  @Override
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    return m_caseImage;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
+   */
+  @Override
+  public String getLabel( final Object o )
+  {
+    if( o instanceof Case )
+    {
+      return ((Case) o).getName();
+    }
+    return null;
   }
 }

@@ -38,55 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-
-import de.renew.workflow.base.WorkflowSystem;
-import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * @author Stefan Kurzbach
+ * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
+ * provide a way to create data providers that return data objects of a type more specific than {@link Object}.
  * 
+ * @author Gernot Belger, Stefan Kurzbach
  */
-public class SimpleCaseHandlingProjectNature extends CaseHandlingProjectNature<Case>
+public interface ICaseDataProvider<T extends Object>
 {
-  public static final String ID = "de.renew.workflow.connector.simpleCaseHandlingProjectNature";
+  /**
+   * Returns the data object corresponding to the given case data key.
+   */
+  public <D extends T> D getModel( final Class<D> modelClass ) throws CoreException;
 
   /**
-   * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
+   * Saves all model data
    */
-  @Override
-  protected ICaseManager<Case> createCaseManager( final IProject project ) throws CoreException
-  {
-    final IFolder folder = project.getFolder( WorkflowSystem.METADATA_FOLDER );
-    if( !folder.exists() )
-    {
-      folder.create( false, true, null );
-    }
-    final IFile file = folder.getFile( WorkflowSystem.WORKFLOW_FILENAME );
-    if( !file.exists() )
-    {
-      InputStream openStream;
-      try
-      {
-        openStream = WorkflowConnectorPlugin.getDefault().getBundle().getEntry( "/sample/workflow.xml" ).openStream();
-        file.create( new BufferedInputStream( openStream ), false, null );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-    return new SimpleCaseManager( project );
-  }
+  public void saveModel( final IProgressMonitor monitor ) throws CoreException;
 
+  /**
+   * Saves the data object corresponding to the given case data key
+   */
+  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
+
+  /** Post a command to the right command manager corresponding to the fiven model. */
+//  public void postCommand( final Class< ? extends T> wrapperClass, final ICommand command ) throws Exception;
+
+  /**
+   * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
+   * was retrieved.
+   */
+  public boolean isDirty( final Class< ? extends T> modelClass );
+  
+  public boolean isDirty( );
+  
+  public void reloadModel( );
+
+  public void setCurrent( final IContainer container );
 }

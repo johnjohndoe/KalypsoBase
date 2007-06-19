@@ -1,6 +1,5 @@
-package de.renew.workflow.connector.context.handlers;
+package de.renew.workflow.connector.context;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -9,9 +8,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
 
-import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.cases.CaseData;
+import de.renew.workflow.connector.worklist.AbstractWorkflowHandler;
 
-public class NewProjectHandler extends AbstractHandler
+public class NewProjectHandler extends AbstractWorkflowHandler
 {
 
   @Override
@@ -25,19 +25,16 @@ public class NewProjectHandler extends AbstractHandler
       final Object firstElement = structuredSelection.getFirstElement();
       if( firstElement instanceof IProject )
       {
-        return ((IProject) firstElement).getName();
+        final String name = ((IProject) firstElement).getName();
+        final Object parameter = getState( "activityParameter" ).getValue();
+        if( parameter instanceof CaseData )
+        {
+          final CaseData caseData = (CaseData) parameter;
+          caseData.setData( "name", name );
+          return name;
+        }
       }
     }
-    throw new ExecutionException( "No valid selected project" );
+    return null;
   }
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-   */
-  @Override
-  public boolean isEnabled( )
-  {
-    return WorkflowConnector.getConnector().isWorkflowMode();
-  }
-
 }

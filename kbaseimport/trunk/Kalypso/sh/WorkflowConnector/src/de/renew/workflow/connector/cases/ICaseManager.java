@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public interface ICaseManager<T extends Case>
   /**
    * Returns the workflow for the current case
    */
-  public Workflow getCurrentWorkflow( );
+  public Workflow getCurrentWorklist( );
 
   /**
    * Sets the current case

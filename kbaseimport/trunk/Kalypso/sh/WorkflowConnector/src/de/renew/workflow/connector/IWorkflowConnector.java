@@ -40,48 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector;
 
-import org.eclipse.core.expressions.EvaluationResult;
-import org.eclipse.core.expressions.Expression;
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.internal.AbstractEvaluationHandler;
+import de.renew.workflow.Activity;
+import de.renew.workflow.WorkItem;
+import de.renew.workflow.cases.Case;
 
 /**
- * @author Stefan Kurzbach
- * 
+ * @author w00t
+ *
  */
-public abstract class AbstractWorkflowHandler extends AbstractEvaluationHandler
+public interface IWorkflowConnector
 {
-  protected final String m_taskUri;
 
-  private Expression enabledWhen;
+  public boolean isConnected( );
 
-  public AbstractWorkflowHandler( final String taskUri )
-  {
-    m_taskUri = taskUri;
-  }
+  public Case getActiveCase( );
+
+  public void setActiveCase( final Case activeCase );
+
+  public void connect( );
+
+  public WorkItem[] getAvailables( );
+
+  public Activity[] getRequesteds( );
+
+  public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener );
+
+  public void removeWorklistChangeListener( final IWorklistChangeListener worklistChangeListener );
 
   /**
-   * @see org.eclipse.ui.internal.AbstractEvaluationHandler#getEnabledWhenExpression()
+   * Returns true if the work item with the id is currently available
    */
-  @Override
-  protected Expression getEnabledWhenExpression( )
-  {
-    if( enabledWhen == null )
-    {
-      enabledWhen = new Expression()
-      {
-        @Override
-        public EvaluationResult evaluate( final IEvaluationContext context )
-        {
-          if( WorkflowConnector.getConnector().canRequest( m_taskUri ) )
-          {
-            return EvaluationResult.TRUE;
+  public boolean canRequest( final String id );
 
-          }
-          return EvaluationResult.FALSE;
-        }
-      };
-    }
-    return enabledWhen;
-  }
+  public boolean isActive( final String id );
+
+  /**
+   * Requests a new WorkItem and confirms the active Activity, if there is one
+   */
+  public Object request( final String id );
+
+  /**
+   * Confirms an activity that was previously requested
+   */
+  public void confirm( final String id, final Object result );
+
+  /**
+   * Cancels an activity that was previously requested
+   */
+  public void cancel( final String id );
+
 }

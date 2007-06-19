@@ -1,4 +1,4 @@
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
 import de.renew.workflow.cases.Case;
 

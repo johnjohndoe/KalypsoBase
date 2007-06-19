@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.worklist;
 
 import java.util.logging.Logger;
 
@@ -47,9 +47,14 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.commands.ICommandService;
+
+import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 
 /**
@@ -93,7 +98,11 @@ public class TaskExecutionListener implements IExecutionListener
    */
   public void preExecute( final String commandId, final ExecutionEvent event )
   {
-    requestWorkitem( commandId );
+    Object parameter = requestWorkitem( commandId );
+    State state = new State();
+    state.setId( "activityParameter" );
+    state.setValue( parameter );
+    event.getCommand().addState( state.getId(), state );
   }
 
   /**
@@ -160,7 +169,7 @@ public class TaskExecutionListener implements IExecutionListener
     }
   }
 
-  private void requestWorkitem( final String commandId )
+  private Object requestWorkitem( final String commandId )
   {
     final Command command = m_commandService.getCommand( commandId );
     String categoryId = null;
@@ -175,7 +184,8 @@ public class TaskExecutionListener implements IExecutionListener
     }
     if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
     {
-      WorkflowConnector.getConnector().request( commandId );
+      return WorkflowConnector.getConnector().request( commandId );
     }
+    return null;
   }
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
 import java.util.List;
 import java.util.regex.Pattern;

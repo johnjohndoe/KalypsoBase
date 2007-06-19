@@ -1,4 +1,4 @@
-package de.renew.workflow.connector.context.handlers;
+package de.renew.workflow.connector.context;
 
 import java.util.ArrayList;
 import java.util.Map;

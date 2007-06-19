@@ -38,47 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
-
-import de.renew.workflow.contexts.ContextType;
+package de.renew.workflow.connector.cases;
 
 /**
  * @author Stefan Kurzbach
  */
-public class ContextActivation
+public class TaskExecutionException extends Exception
 {
-  private final ContextActivation m_cause;
-
-  private final ContextType m_context;
-
-  private final Object m_result;
-
-  public ContextActivation( final ContextType context, final Object result )
+  public TaskExecutionException( final String message, final Throwable cause )
   {
-    m_context = context;
-    m_result = result;
-    m_cause = null;
+    super( message, cause );
   }
 
-  public ContextActivation( final ContextType context, final Object result, final ContextActivation cause )
+  public TaskExecutionException( final Throwable cause )
   {
-    m_context = context;
-    m_result = result;
-    m_cause = cause;
+    super( cause );
   }
 
-  public ContextActivation getCause( )
+  public TaskExecutionException( final String message )
   {
-    return m_cause;
-  }
-
-  public ContextType getContext( )
-  {
-    return m_context;
-  }
-
-  public Object getResult( )
-  {
-    return m_result;
+    super( message );
   }
 }

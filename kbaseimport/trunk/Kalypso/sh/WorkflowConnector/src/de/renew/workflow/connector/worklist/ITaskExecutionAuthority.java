@@ -38,29 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package de.renew.workflow.connector.worklist;
 
-import org.eclipse.core.commands.ExecutionEvent;
+import de.renew.workflow.base.Task;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
-public class DummyWorkflowHandler extends AbstractWorkflowHandler
+public interface ITaskExecutionAuthority
 {
-  public DummyWorkflowHandler( final String taskUri )
-  {
-    super( taskUri );
-  }
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    // does nothing
-    return null;
-  }
-
+  public boolean canStopTask( final Task task );
 }
