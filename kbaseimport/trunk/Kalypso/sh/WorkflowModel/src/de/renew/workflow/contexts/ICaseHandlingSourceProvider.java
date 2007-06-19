@@ -38,25 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.cases;
+package de.renew.workflow.contexts;
+
+import org.eclipse.ui.ISourceProvider;
 
 /**
+ * Interface for case source provider
+ * 
  * @author Stefan Kurzbach
  */
-public class TaskExecutionException extends Exception
+public interface ICaseHandlingSourceProvider extends ISourceProvider
 {
-  public TaskExecutionException( final String message, final Throwable cause )
-  {
-    super( message, cause );
-  }
 
-  public TaskExecutionException( final Throwable cause )
-  {
-    super( cause );
-  }
+  public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
 
-  public TaskExecutionException( final String message )
-  {
-    super( message );
-  }
+  public static final String ACTIVE_CASE_FOLDER_NAME = "activeSimulationModelBaseFolder";
 }
