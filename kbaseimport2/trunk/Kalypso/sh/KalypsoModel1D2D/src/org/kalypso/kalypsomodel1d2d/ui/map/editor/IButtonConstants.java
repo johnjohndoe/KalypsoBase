@@ -51,4 +51,5 @@ public interface IButtonConstants
   public String BTN_CLICK_TO_RUN = "CLICK_TO_RUN";
   public String BTN_REMOVE = "REMOVE";
   public String BTN_ADD = "ADD";
+  public String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
 }
