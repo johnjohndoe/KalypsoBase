@@ -157,6 +157,11 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   {
 	  return m_dataContainer;
   }
+  
+  public void setDataContainer (IDataContainer data)
+  {
+	  m_dataContainer=data;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()

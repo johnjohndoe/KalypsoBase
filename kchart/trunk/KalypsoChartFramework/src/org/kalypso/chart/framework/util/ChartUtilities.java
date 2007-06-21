@@ -47,6 +47,15 @@ public class ChartUtilities
     gc.setAlpha( 255 );
   }
 
+  /**
+   * maximises the chart view - that means all the available data of all layers is shown
+   */
+  public static void maximize( final ChartComposite chart )
+  {
+    final IAxis[] axes = chart.getModel().getMapperRegistry().getAxes();
+    chart.autoscale( axes );
+    chart.redraw();
+  }
 
 
 }

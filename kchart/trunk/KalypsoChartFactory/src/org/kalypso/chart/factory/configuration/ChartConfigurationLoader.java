@@ -1,16 +1,22 @@
 package org.kalypso.chart.factory.configuration;
 
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.chart.factory.util.IReferenceResolver;
 import org.kalypso.chart.framework.logging.Logger;
 import org.ksp.chart.factory.AxisDocument;
 import org.ksp.chart.factory.AxisRendererDocument;
+import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartConfigurationDocument;
 import org.ksp.chart.factory.ChartConfigurationType;
 import org.ksp.chart.factory.ChartDocument;
@@ -29,57 +35,77 @@ import org.w3c.dom.NodeList;
  */
 public class ChartConfigurationLoader implements IReferenceResolver
 {
-  private String m_configPath;
+ // private String m_configPath;
   private ChartConfigurationDocument m_document;
   private HashMap<String, XmlObject> m_idMap=null;
   
 
   /**
-   * @param path
-   *          file system path where the configuration file can be found
+   * @param path file system path where the configuration file can be found
+ * @throws XmlException 
    */
-  public ChartConfigurationLoader( String path ) 
+  public ChartConfigurationLoader( String path ) throws XmlException 
   {
-    m_configPath = path;
-    loadFile();
+	  m_document = ChartConfigurationDocument.Factory.parse(path);
   }
 
-public ChartConfigurationLoader(ChartConfigurationDocument doc)
-{
-	m_document = doc;
-}
-
-
-public ChartConfigurationLoader(ChartConfigurationType chartConfiguration)
-{
-	ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
-	document.setChartConfiguration(chartConfiguration);
-	m_document = document;
-}
-
-/**
-   * reads and loads the configuration file
+  /**
+   * @param path file system path where the configuration file can be found
+   * @throws XmlException 
+ * @throws IOException 
    */
-  private void loadFile( ) 
+  public ChartConfigurationLoader( URL url ) throws XmlException, IOException 
   {
-    File file = new File( m_configPath );
-    if( file.exists() )
-    {
-      try {
-		m_document = ChartConfigurationDocument.Factory.parse(file);
-	} catch (XmlException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	  InputStream openStream =null;
+	  try{
+		  openStream = url.openStream();
+		  m_document = ChartConfigurationDocument.Factory.parse(openStream);
+	  }
+	  finally
+	  {
+		  if (openStream!=null)
+			  openStream.close();
+	  }
+  }
+
+  /**
+   * creates a ConfigurationLoader based on the given ChartConfigurationDocument
+   * @param doc ChartConfigurationDocument
+   */
+	public ChartConfigurationLoader(ChartConfigurationDocument doc)
+	{
+		m_document = doc;
 	}
-    }
-    else
-    {
-      Logger.trace( "ERROR: configuration file could not be resolved. \n" + m_configPath );
-    }
-  }
+
+	/**
+	 * creates a ConfigurationLoader from an InputStream provided by IStorage 
+	 * @param configFile
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws XmlException
+	 */
+	public ChartConfigurationLoader( final IStorage configFile ) throws CoreException, IOException, XmlException
+	{
+	  InputStream is = null;
+	  try
+	  {
+	    is = new BufferedInputStream( configFile.getContents() );
+	    m_document = ChartConfigurationDocument.Factory.parse(is);
+	    is.close();
+	  }
+	  finally
+	  {
+	    IOUtils.closeQuietly( is );
+	  }
+	}
+
+
+	public ChartConfigurationLoader(ChartConfigurationType chartConfiguration)
+	{
+		ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
+		document.setChartConfiguration(chartConfiguration);
+		m_document = document;
+	}
 
   /**
    * @return marshalled configuration
@@ -92,6 +118,11 @@ public ChartConfigurationLoader(ChartConfigurationType chartConfiguration)
   public ChartType[] getCharts( )
   {
 	  return m_document.getChartConfiguration().getChartArray();
+  }
+  
+  public AxisType[] getAxes()
+  {
+	  return m_document.getChartConfiguration().getAxisArray();
   }
 
 

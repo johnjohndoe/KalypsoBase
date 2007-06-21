@@ -53,6 +53,8 @@ public class NumberAxis extends AbstractAxis<Number>
    */
   public int logicalToScreen( final Number value )
   {
+	if (value == null)
+		return 0;
     if( getRegistry() == null )
       return 0;
 

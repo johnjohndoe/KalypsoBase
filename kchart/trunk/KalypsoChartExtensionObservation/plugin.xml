@@ -6,6 +6,9 @@
       <provider
             class="org.kalypso.chart.ext.observation.layer.provider.GaugeLayerProvider"
             id="org.kalypso.chart.ext.layer.provider.observation.Gauge"/>
+      <provider
+            class="org.kalypso.chart.ext.observation.layer.provider.LaengsschnittLayerProvider"
+            id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"/>
    </extension>
 
 </plugin>

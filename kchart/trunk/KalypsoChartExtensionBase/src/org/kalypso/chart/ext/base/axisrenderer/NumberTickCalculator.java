@@ -10,7 +10,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -30,7 +29,7 @@ public class NumberTickCalculator
 	  {
 		  
 		IMapperRegistry registry = axis.getRegistry();
-		TestNumberAxisRenderer renderer = (TestNumberAxisRenderer) registry.getRenderer(axis);
+		NumberAxisRenderer renderer = (NumberAxisRenderer) registry.getRenderer(axis);
 		  
 	    if( gc == null || axis == null || axis.getPosition() == null )
 	      return null;
@@ -111,7 +110,7 @@ public class NumberTickCalculator
 	    double normmin = Math.floor( range.getMin().doubleValue() * Math.pow( 10, rangepow ) );
 	    // Das Minimum wieder zurückrechnen
 	    normmin = normmin * Math.pow( 10, rangepow * (-1) );
-	    System.out.println("normmin: "+normmin);
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "normmin: "+normmin);
 	    Logger.trace( axis.getIdentifier() + " Normmin: " + normmin );
 
 	    // Das Maximum normalisieren und aufrunden
@@ -119,12 +118,12 @@ public class NumberTickCalculator
 	    // Das Maximum wieder zurückrechnen
 	    normmax = normmax * Math.pow( 10, rangepow * (-1) );
 	    Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
-	    System.out.println("normmax: "+normmax);
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "normmax: "+normmax);
 	    
 	    // Das Intervall verwendet zunächst nur 10er Schritte
 	    double interval = Math.pow( 10, rangepow * (-1) );
 	    Logger.trace( axis.getIdentifier() + " Interval (" + axis.getIdentifier() + "): " + interval );
-	    System.out.println("Interval: "+interval);
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Interval: "+interval);
 	    
 	    // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
 	    // 3 würde z.B. schnell krumme werte erzeugen
@@ -148,10 +147,10 @@ public class NumberTickCalculator
 	    
 	    for( double i = normmin; i <= normmaxTolerance; i += interval )
 	    {
-	    	System.out.println("Schleife i: "+i+":"+normmin+":"+normmaxTolerance);
+	    	Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Schleife i: "+i+":"+normmin+":"+normmaxTolerance);
 	      if( count > 0 )
 	      {
-        	System.out.print("Top Level: ");
+	    	  Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Top Level: ");
 	        findBetweens( oldi, i, minLogInterval, goodDivisors, ticks, 1 );
 	      }
 	      ticks.add( (new Double( i )) );
@@ -159,8 +158,8 @@ public class NumberTickCalculator
 	      count++;
 	      oldi = i;
 	    }
-	    System.out.println("Letztes i: "+oldi);
-	    System.out.println("next would be: "+(oldi+interval)+" > "+normmaxTolerance);
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Letztes i: "+oldi);
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "next would be: "+(oldi+interval)+" > "+normmaxTolerance);
 
 	    // in realticks sind jetzt nur die wirklich zu zeichnenden werte drin
 	    // wenn man das nicht über neues objekt, sondern ticks.remove macht, gibts eine concurrentmodificationexception
@@ -216,11 +215,11 @@ public class NumberTickCalculator
 	    renderer.setNumberFormat(nf);
 	    renderer.setTickMapElement(axis, realticks);
 
-	    System.out.println("Anzahl ticks: "+realticks.size());
+	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Anzahl ticks: "+realticks.size());
 	    SortedSet<Number> ss=new TreeSet<Number>(realticks);
 	    for (Number realtick: ss)
 	    {
-	    	System.out.println(realtick.doubleValue());
+	    	Logger.logInfo(Logger.TOPIC_LOG_AXIS, realtick.doubleValue()+"");
 	    }
 	    return realticks;
 	  }
@@ -260,7 +259,7 @@ public class NumberTickCalculator
 	        {
 	          if( count >= 1 )
 	          {
-	        	System.out.println(levelinset+i);
+	        	  Logger.logInfo(Logger.TOPIC_LOG_AXIS, levelinset+i);
 	        	ticks.add( new Double( i ) );
 	            findBetweens( oldi, i, interval, divisors, ticks, level+1 );
 	          }
@@ -303,7 +302,7 @@ public class NumberTickCalculator
 						e.printStackTrace();
 					}
 					double epsilon=Math.abs(dtick-stick);
-					System.out.println("Ticks: (d/s)"+dtick+":"+stick+":"+epsilon);
+					Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Ticks: (d/s)"+dtick+":"+stick+":"+epsilon);
 					
 					if (epsilon < 0.000000001 )
 					{

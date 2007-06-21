@@ -32,23 +32,29 @@ public class ComparableDataRange<T> implements IDataRange<T>
 	
 	private void findMinMax()
 	{
+		boolean hasMinAndMax=false;
 		for (int i=0; i<m_items.length;i++)
 		{
-			if (i==0)
+			T item = m_items[i];
+			if (item != null)
 			{
-				m_min=m_items[0];
-				m_max=m_items[0];
-			}
-			else
-			{
-				T compItem=m_items[i];
-				if (m_comp.compare(compItem, m_min) < 0)
+				//erster von Null verschiedener Wert wird als max und min genutzt
+				if (!hasMinAndMax)
 				{
-					m_min=compItem;
+					m_min=item;
+					m_max=item;
+					hasMinAndMax=true;
 				}
-				if (m_comp.compare(compItem, m_max) > 0)
+				else
 				{
-					m_max=compItem;
+					if (m_comp.compare(item, m_min) < 0)
+					{
+						m_min=item;
+					}
+					if (m_comp.compare(item, m_max) > 0)
+					{
+						m_max=item;
+					}
 				}
 			}
 		}

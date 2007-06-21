@@ -29,6 +29,7 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventLis
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
 
+
 /**
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
@@ -55,28 +56,34 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
 
   public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
   {
-    super( parent, style );
-	m_model = model;
-	
-    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
+	  /** HIER BIN ICH **/
+	    super( parent, style | SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND );
+	    m_model = model;
+		
+	   // m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
+		 m_bgColor = new Color( parent.getDisplay(), new RGB(0,0,255) );
+		
+	    createControl( this);
 
-    createControl( this);
 
-
-    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
-    m_model.getLayerManager().addLayerManagerEventListener( this ); 
-    
-    IMapperRegistry ar=m_model.getMapperRegistry();
-    IAxis[] axes = ar.getAxes();
-    
-    //Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
-    for (IAxis axis : axes) 
-    {
-    	onMapperAdded(axis);	
-	}
-    
+	    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
+	    m_model.getLayerManager().addLayerManagerEventListener( this ); 
+	    
+	    IMapperRegistry ar=m_model.getMapperRegistry();
+	    IAxis[] axes = ar.getAxes();
+	    
+	    //Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
+	    for (IAxis axis : axes) 
+	    {
+	    	onMapperAdded(axis);	
+		}
   }
-
+  
+  public void setMouseHandler(IChartMouseHandler handler)
+  {
+	  m_plot.setMouseHandler(handler);
+  }
+  
   
   public IChartModel getModel()
   {
@@ -220,7 +227,7 @@ public void onMapperAdded( final IMapper mapper)
    * automatically scales all given axes; scaling means here: show all available values
    */
   @SuppressWarnings("unchecked")
-private void autoscale( IAxis[] axes )
+  public void autoscale( IAxis[] axes )
   {
     if( axes == null )
       axes = m_model.getMapperRegistry().getAxes();

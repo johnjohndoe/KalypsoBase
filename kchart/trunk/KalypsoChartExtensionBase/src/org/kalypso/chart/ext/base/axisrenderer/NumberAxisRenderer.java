@@ -2,9 +2,7 @@ package org.kalypso.chart.ext.base.axisrenderer;
 
 import java.awt.Insets;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -34,7 +32,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  */
 public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 {
-  private final NumberFormat m_nf = NumberFormat.getInstance();
+  private NumberFormat m_nf = NumberFormat.getInstance();
 
 
   private List<Number> m_ticks;
@@ -71,43 +69,36 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Number> axis )
   {
-	 IDataRange<Number> range=axis.getDataRange(); 
-	  
-    final double logicalMin = range.getMin().doubleValue();
-    final double logicalMax = range.getMax().doubleValue();
+	Point tickLabelSize=new Point(10,10);  
+	//Vielleicht wurden zuvor schon mal ticks ausgerechnet - dann kann man die verwenden
+	List<Number> tickMap = getTickMap().get( axis );
+	
+	
+	
+	if ( tickMap !=null && tickMap.size()>0)
+	{
+		NumberTickCalculator.testNumberFormat(tickMap.toArray(new Double[]{}));
+		tickLabelSize=getTextExtent(gc, m_nf.format(tickMap.get(tickMap.size()-1)), getFontDataTickLabel());
+		Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Biggest Tick: "+m_nf.format(tickMap.get(0))+" "+tickMap.get(0));
+	}
+	else
+	{
+		IDataRange<Number> range=axis.getDataRange(); 
+		  
+	    final double logicalMin = range.getMin().doubleValue();
+	    final double logicalMax = range.getMax().doubleValue();
 
-    // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
-    int rangepow = 0;
-    // Normalisierte Range
-    double normrange = Math.abs( logicalMin - logicalMax );
-    if( normrange != 0 )
-    {
-      while( normrange >= 10 )
-      {
-        normrange /= 10;
-        rangepow--;
-      }
-      while( normrange < 1 )
-      {
-        normrange *= 10;
-        rangepow++;
-      }
-    }
+	   
 
-    // Für das Double-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
-    /**
-    if( rangepow >= 0 )
-    {
-      m_nf.setMaximumFractionDigits( rangepow + 2 );
-      m_nf.setMinimumFractionDigits( rangepow + 1 );
-    }
-    */
+	    FontData fontDataTick = getFontDataTickLabel();
+	    
+	    
+	    final Point fromTextExtent = getTextExtent( gc, logicalMin, fontDataTick );
+	    final Point toTextExtent = getTextExtent( gc, logicalMax, fontDataTick );
+	    tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
-    FontData fontDataTick = getFontDataTickLabel();
-    
-    final Point fromTextExtent = getTextExtent( gc, logicalMin, fontDataTick );
-    final Point toTextExtent = getTextExtent( gc, logicalMax, fontDataTick );
-    final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
+	}
+	
 
     final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
 
@@ -116,6 +107,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     return new Point( x, y );
   }
 
+  
   /**
    * doubleBuffered painting
    */
@@ -144,7 +136,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
   
 
-  /**
+  private List<Number> calcTicks(GCWrapper gc, IAxis<Number> axis)
+{
+	return NumberTickCalculator.calcTicks(gc, axis, true);
+}
+
+/**
    * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates for the axis
    *         line and endX/Y its end coordinates within the given Rectangle
    */
@@ -209,6 +206,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
+    
 
     int textX = 0;
     int textY = 0;
@@ -306,229 +304,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   }
   
   
-  /**
-   * Calculates the ticks shown for the given Axis
-   */
-  public List<Number> calcTicks( GCWrapper gc, final IAxis<Number> axis)
-  {
-    if( gc == null || axis == null || axis.getPosition() == null )
-    {
-      return null;
-    }
 
-    // größtes Tick<-Label berechnen
-    final Point ticklabelSize = calcTickLabelSize( gc, axis );
-
-    if( ticklabelSize == null )
-    {
-      return null;
-    }
-
-   
-    
-    
-    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
-    final int minScreenInterval;
-    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      minScreenInterval = ticklabelSize.x;
-    else
-      minScreenInterval = ticklabelSize.y;
-
-    // Collection für Ticks
-    final ArrayList<Double> ticks = new ArrayList<Double>();
-
-    // Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
-    int screenMin, screenMax;
-    IDataRange<Number> range=axis.getDataRange(); 
-    
-    
-    //maximale Anzahl an Labels
-    int maxTickLabelCount=0;
-    
-    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-    {
-      if( axis.getDirection() == DIRECTION.POSITIVE )
-      {
-        screenMin = (int) (axis.logicalToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.logicalToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
-      }
-      else
-      {
-
-        screenMin = (int) (axis.logicalToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.logicalToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
-      }
-    }
-    else
-    {
-      if( axis.getDirection() == DIRECTION.POSITIVE )
-      {
-        screenMin = (int) (axis.logicalToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
-        screenMax = (int) (axis.logicalToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
-      }
-      else
-      {
-        screenMin = (int) (axis.logicalToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
-        screenMax = (int) (axis.logicalToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
-      }
-
-    }
-    Logger.trace( axis.getIdentifier() + " ScreenMin: " + screenMin + " ScreenMax:" + screenMax + " ( " + axis.logicalToScreen( range.getMin() ) + " : " + axis.logicalToScreen( range.getMax() ) + ") " );
-    System.out.println("max Count "+maxTickLabelCount);
-    
-    // logischen Mini- und Maximalen wert
-    double logicalMin = axis.screenToLogical( screenMin ).doubleValue();
-    double logicalMax = axis.screenToLogical( screenMax ).doubleValue();
-    
-    
-
-    double logicalRange = Math.abs( logicalMax - logicalMin );
-
-    // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
-    double minLogInterval = Math.abs( axis.screenToLogical( minScreenInterval ).doubleValue() - axis.screenToLogical( 0 ).doubleValue() );
-
-    // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
-    int rangepow = 0;
-    // Normalisierte Range
-    double normrange = logicalRange;
-    if( normrange != 0 )
-    {
-      while( normrange >= 10 )
-      {
-        normrange /= 10;
-        rangepow--;
-      }
-      while( normrange < 1 )
-      {
-        normrange *= 10;
-        rangepow++;
-      }
-    }
-
-    Logger.trace( axis.getIdentifier() + " logicalRange: " + logicalRange );
-
-    Logger.trace( axis.getIdentifier() + " Normrange: " + normrange );
-    Logger.trace( axis.getIdentifier() + " Rangepow: " + rangepow );
-
-    // Das Minimum normalisieren und abrunden
-    double normmin = Math.floor( range.getMin().doubleValue() * Math.pow( 10, rangepow ) );
-    System.out.println("normmin: "+normmin);
-    // Das Minimum wieder zurückrechnen
-    normmin = normmin * Math.pow( 10, rangepow * (-1) );
-    Logger.trace( axis.getIdentifier() + " Normmin: " + normmin );
-
-    // Das Maximum normalisieren und aufrunden
-    double normmax = Math.ceil( range.getMax().doubleValue() * Math.pow( 10, rangepow ) );
-    // Das Maximum wieder zurückrechnen
-    normmax = normmax * Math.pow( 10, rangepow * (-1) );
-    Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
-    System.out.println("normmax: "+normmax);
-    
-    // Das Intervall verwendet zunächst nur 10er Schritte
-    double interval = Math.pow( 10, rangepow * (-1) );
-    Logger.trace( axis.getIdentifier() + " Interval (" + axis.getIdentifier() + "): " + interval );
-    System.out.println("Interval: "+interval);
-    
-    // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
-    // 3 würde z.B. schnell krumme werte erzeugen
-    LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
-
-    goodDivisors.add( 10 );
-    goodDivisors.add( 5 );
-    goodDivisors.add( 4 );
-    goodDivisors.add( 2 );
-    
-    
-    
-
-    int count = 0;
-    double oldi = 0;
-    for( double i = normmin; i <= normmax * 1.1; i += interval )
-    {
-      if( count > 0 )
-      {
-        findBetweens( oldi, i, minLogInterval, goodDivisors, ticks );
-      }
-      ticks.add( (new Double( i )) );
-
-      count++;
-      oldi = i;
-    }
-
-    // in realticks sind jetzt nur die wirklich zu zeichnenden werte drin
-    // wenn man das nicht über neues objekt, sondern ticks.remove macht, gibts eine concurrentmodificationexception
-    LinkedList<Number> realticks = new LinkedList<Number>();
-    for( Double tick : ticks )
-    {
-      // "Unnötige" Zahlen abschneiden - dadurch werden Werte wie -0.0 (von -0.00000000000000001) und unnötige
-      // Nachkommastellen entfernt
-      // unnötig ist alles, was mehr als 2 Stellen länger als Rangepow ist
-      double tickdv = tick.doubleValue();
-      int tickNorm = (int) (tickdv * Math.pow( 10, (rangepow + 2) ));
-      tickdv = tickNorm * Math.pow( 10, -(rangepow + 2) );
-
-      if( (tickdv >= logicalMin) && (tickdv <= logicalMax) )
-      {
-        realticks.add( new Double( tickdv ) );
-      }
-    }
-
-    
-    //Anzahl der Nachkommastellen aus 
-    
-    // Für das Double-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
-    if( rangepow >= 0 )
-    {
-      m_nf.setMaximumFractionDigits( rangepow+2);
-      m_nf.setMinimumFractionDigits( rangepow+2);
-    }
-    else
-    {
-    	m_nf.setMaximumFractionDigits(0);
-    	m_nf.setMinimumFractionDigits(0);
-    }
-
-    getTickMap().put( axis, realticks );
-
-    return realticks;
-  }
-
-  /**
-   * recursive function which divides in interval into a Double of "divisions" and adds the values to a linked list the
-   * divisions have to have a larger range than the param interval
-   */
-  private void findBetweens( double from, double to, double interval, List<Integer> divisors, List<Double> ticks )
-  {
-
-    for( Integer divisor : divisors )
-    {
-      double betweenrange = Math.abs( from - to ) / divisor.intValue();
-
-      // TODO: this prevents an endles loop below, if from == to
-      // @Alex:check if this is ok
-      if( betweenrange < 0.0001 )
-        return;
-
-      if( interval < betweenrange )
-      {
-        // vorher prüfen
-        int count = 0;
-        double oldi = 0;
-        for( double i = from; i <= to; i += betweenrange )
-        {
-          ticks.add( new Double( i ) );
-          if( count >= 1 )
-          {
-            findBetweens( oldi, i, interval, divisors, ticks );
-          }
-          // Tick setzen
-          count++;
-          oldi = i;
-        }
-        break;
-      }
-    }
-  }
 
   /**
    * draws the axis' main line
@@ -708,5 +484,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     return width;
   }
+  
+  public void setNumberFormat(NumberFormat nf)
+  {
+	  m_nf=nf;
+  }
 
+
+  
 }

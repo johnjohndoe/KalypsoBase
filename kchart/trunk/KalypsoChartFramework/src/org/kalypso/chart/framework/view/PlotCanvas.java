@@ -28,6 +28,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 	
   private Image m_bufferImg = null;
   private ILayerManager m_manager;
+private IChartMouseHandler m_mouseHandler;
 
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style)
   {
@@ -36,6 +37,13 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
     addPaintListener( this );
     addListener( SWT.Resize, this );
+  }
+  
+  public void setMouseHandler(IChartMouseHandler handler)
+  {
+	  m_mouseHandler=handler;
+	  addMouseListener(m_mouseHandler);
+	  addMouseMoveListener(m_mouseHandler);
   }
   
 
@@ -64,6 +72,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     GCWrapper gcw = new GCWrapper( e.gc );
     final Rectangle screenArea = getClientArea();
     m_bufferImg = paintBuffered( gcw, screenArea, m_bufferImg );
+    //Der MouseHandler soll jetzt noch ein ZoomRechteck zeichnen
+    if (m_mouseHandler!=null)
+    	m_mouseHandler.paint(gcw);
     gcw.dispose();
   }
 
@@ -124,6 +135,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    // gcw.drawImage( usedBufferImage, screen.x, screen.y, screen.width, screen.height, screen.x, screen.y, screen.width, screen.height );
     gcw.drawImage(usedBufferImage, screen.x, screen.y);
     
+   
+    
     return usedBufferImage;
   }
 
@@ -149,4 +162,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     if( event.type == SWT.Resize )
       redraw();
   }
+  
+  
 }
