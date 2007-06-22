@@ -46,7 +46,7 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
     HORIZONTAL,
     VERTICAL,
     BOTH
-  };
+  }
   
   private GridOrientation m_orientation;
 
@@ -133,6 +133,7 @@ public void paint( final GCWrapper gc )
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
    */
+  @Override
   public ILegendItem getLegendItem()
   {
 	ILegendItem l=null;
@@ -148,7 +149,7 @@ public void paint( final GCWrapper gc )
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
-  public IDataRange getDomainRange( )
+  public IDataRange<?> getDomainRange( )
   {
     return null;
   }
@@ -156,7 +157,7 @@ public void paint( final GCWrapper gc )
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
-  public IDataRange getTargetRange( )
+  public IDataRange<?> getTargetRange( )
   {
    return null;
   }

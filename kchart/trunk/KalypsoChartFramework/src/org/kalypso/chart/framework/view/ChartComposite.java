@@ -254,7 +254,7 @@ public void onMapperAdded( final IMapper mapper)
   }
 
   /**
-   * @return DataRange of all domain or value data available in the given layer
+   * @return DataRange of all domain or target data available in the given layer
    */
   private IDataRange getRangeFor( final IChartLayer layer, final IAxis axis )
   {

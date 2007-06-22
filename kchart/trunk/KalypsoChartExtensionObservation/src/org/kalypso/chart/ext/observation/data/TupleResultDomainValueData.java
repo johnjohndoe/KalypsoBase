@@ -57,6 +57,21 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_targetComponentName = targetComponentName;
   }
 
+  public TupleResultDomainValueData( TupleResult result, String domainComponentName, String targetComponentName )
+  {
+    //Die Observation ist schon vorhanden, also kann das Layer gleich als open ausgegeben werden
+     m_isOpen=true;
+     m_context = null;
+     m_observationId=null;
+     m_href=null;
+     m_domainComponentName = domainComponentName;
+     m_targetComponentName = targetComponentName;
+     m_result=result;
+     
+     resolveComponents();
+     createValueLists();
+  }
+
   /**
    * sets all dynamically created data variables to null and m_isOpen to false;
    */
@@ -92,55 +107,9 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
         m_result = m_observation.getResult();
 
-        // ResultComponent rausfinden
-        final IComponent[] comps = m_result.getComponents();
-        final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
-        for( int i = 0; i < comps.length; i++ )
-        {
-          IComponent comp = comps[i];
-          Logger.trace( "Got component: " + comp.getName() );
-          if( comp.getId().compareTo( m_domainComponentName ) == 0 )
-            m_domainComponent = comp;
-          else if( comp.getId().compareTo( m_targetComponentName ) == 0 )
-            m_targetComponent = comp;
-          if( map.size() == 2 )
-            break;
-        }
+        resolveComponents();
 
-        if( m_domainComponent != null && m_targetComponent != null )
-        {
-
-          // Value-Listen aufbauen
-          ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
-          ArrayList<T_target> targetValues = new ArrayList<T_target>();
-          for( int i = 0; i < m_result.size(); i++ )
-          {
-            IRecord record = m_result.get( i );
-            /**
-             * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in einen Calendar umwandeln;
-             * Problem ist, dass der XMLGregorianCalendar nicht Comparable implementiert
-             */
-            T_domain domainValue = null;
-            Object domainValueObj = record.getValue( m_domainComponent );
-            if( domainValueObj instanceof XMLGregorianCalendar )
-              domainValue = (T_domain) ((XMLGregorianCalendar) domainValueObj).toGregorianCalendar();
-            else
-              domainValue = (T_domain) domainValueObj;
-
-            T_target targetValue = null;
-            Object targetValueObj = record.getValue( m_targetComponent );
-            if( targetValueObj instanceof XMLGregorianCalendar )
-              targetValue = (T_target) ((XMLGregorianCalendar) targetValueObj).toGregorianCalendar();
-            else
-              targetValue = (T_target) targetValueObj;
-
-            domainValues.add( domainValue );
-            targetValues.add( targetValue );
-          }
-          setDomainValues( domainValues );
-          setTargetValues( targetValues );
-
-        }
+        createValueLists();
       }
       catch( MalformedURLException e )
       {
@@ -154,6 +123,62 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       }
     }
     m_isOpen = true;
+  }
+
+  private void createValueLists( )
+  {
+    if( m_domainComponent != null && m_targetComponent != null )
+    {
+      // Value-Listen aufbauen
+      ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
+      ArrayList<T_target> targetValues = new ArrayList<T_target>();
+      for( int i = 0; i < m_result.size(); i++ )
+      {
+        IRecord record = m_result.get( i );
+        /**
+         * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in einen Calendar umwandeln;
+         * Problem ist, dass der XMLGregorianCalendar nicht Comparable implementiert
+         */
+        T_domain domainValue = null;
+        Object domainValueObj = record.getValue( m_domainComponent );
+        if( domainValueObj instanceof XMLGregorianCalendar )
+          domainValue = (T_domain) ((XMLGregorianCalendar) domainValueObj).toGregorianCalendar();
+        else
+          domainValue = (T_domain) domainValueObj;
+
+        T_target targetValue = null;
+        Object targetValueObj = record.getValue( m_targetComponent );
+        if( targetValueObj instanceof XMLGregorianCalendar )
+          targetValue = (T_target) ((XMLGregorianCalendar) targetValueObj).toGregorianCalendar();
+        else
+          targetValue = (T_target) targetValueObj;
+
+        domainValues.add( domainValue );
+        targetValues.add( targetValue );
+      }
+      setDomainValues( domainValues );
+      setTargetValues( targetValues );
+
+    }
+    
+  }
+
+  private void resolveComponents( )
+  {
+    // ResultComponent rausfinden
+    final IComponent[] comps = m_result.getComponents();
+    final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
+    for( int i = 0; i < comps.length; i++ )
+    {
+      IComponent comp = comps[i];
+      Logger.trace( "Got component: " + comp.getName() );
+      if( comp.getId().compareTo( m_domainComponentName ) == 0 )
+        m_domainComponent = comp;
+      else if( comp.getId().compareTo( m_targetComponentName ) == 0 )
+        m_targetComponent = comp;
+      if( map.size() == 2 )
+        break;
+    }
   }
 
   public IDataRange<T_domain> getDomainRange( )

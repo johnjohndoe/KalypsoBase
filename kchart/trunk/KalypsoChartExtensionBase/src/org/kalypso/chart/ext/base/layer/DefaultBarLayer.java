@@ -68,7 +68,7 @@ public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> data
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
-  public IDataRange getDomainRange( )
+  public IDataRange<T_domain> getDomainRange( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -78,7 +78,7 @@ public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> data
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
-  public IDataRange getTargetRange( )
+  public IDataRange<T_target> getTargetRange( )
   {
 	  if (m_dataContainer != null )
 	  {

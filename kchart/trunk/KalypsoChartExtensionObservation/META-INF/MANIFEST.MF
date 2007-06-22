@@ -7,3 +7,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.chart.factory,
  org.kalypso.core,
  ChartBaseExtensions
+Export-Package: org.kalypso.chart.ext.observation.data,
+ org.kalypso.chart.ext.observation.layer,
+ org.kalypso.chart.ext.observation.layer.provider

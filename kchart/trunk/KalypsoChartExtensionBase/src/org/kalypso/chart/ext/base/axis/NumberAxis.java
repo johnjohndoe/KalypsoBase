@@ -3,7 +3,6 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Comparator;
 
 import org.kalypso.chart.ext.base.data.NumberDataOperator;
-import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -58,7 +57,7 @@ public class NumberAxis extends AbstractAxis<Number>
     if( getRegistry() == null )
       return 0;
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
+    final IAxisComponent<?> comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -73,7 +72,7 @@ public class NumberAxis extends AbstractAxis<Number>
     if( getRegistry() == null )
       return Double.NaN;
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
+    final IAxisComponent<?> comp = getRegistry().getComponent( this );
     if( comp == null )
       return Double.NaN; 
 

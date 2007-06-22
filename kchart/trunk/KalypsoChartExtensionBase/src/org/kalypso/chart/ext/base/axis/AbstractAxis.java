@@ -10,10 +10,8 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
-import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
-import org.kalypso.chart.framework.view.AxisCanvas;
 
 
 /**

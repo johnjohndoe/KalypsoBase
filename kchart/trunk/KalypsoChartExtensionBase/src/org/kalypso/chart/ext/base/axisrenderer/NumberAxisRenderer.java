@@ -84,6 +84,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 	else
 	{
 		IDataRange<Number> range=axis.getDataRange(); 
+
 		  
 	    final double logicalMin = range.getMin().doubleValue();
 	    final double logicalMax = range.getMax().doubleValue();

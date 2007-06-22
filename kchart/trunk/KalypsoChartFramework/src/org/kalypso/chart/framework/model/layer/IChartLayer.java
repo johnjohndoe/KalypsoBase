@@ -2,7 +2,6 @@ package org.kalypso.chart.framework.model.layer;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
@@ -107,5 +106,6 @@ public interface IChartLayer<T_domain, T_target>
 
   public boolean isVisible( );
   
-  public IDataContainer getDataContainer();
+  public IDataContainer<T_domain, T_target> getDataContainer();
+
 }

@@ -72,7 +72,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
       return 0;
 
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
+    final IAxisComponent<?> comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -89,7 +89,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( getRegistry() == null )
       return null;
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
+    final IAxisComponent<?> comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
@@ -134,7 +134,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     Calendar endCal = Calendar.getInstance();
     endCal.setTimeInMillis( end );
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
+    final IAxisComponent<?> comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 

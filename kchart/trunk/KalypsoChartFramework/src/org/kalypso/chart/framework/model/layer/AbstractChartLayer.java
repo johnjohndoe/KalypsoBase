@@ -28,7 +28,7 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   private final IAxis<T_target> m_targetAxis;
   private final IAxis<T_domain> m_domainAxis;
   
-  protected IDataContainer<T_domain, T_target> m_dataContainer=null;
+  private IDataContainer<T_domain, T_target> m_dataContainer=null;
 
   
   public AbstractChartLayer( final IAxis<T_domain> domainAxis, final IAxis<T_target> targetAxis )
@@ -153,18 +153,21 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
 
   }
   
-  public IDataContainer getDataContainer()
+  public IDataContainer<T_domain, T_target> getDataContainer()
   {
 	  return m_dataContainer;
   }
   
-  public void setDataContainer (IDataContainer data)
+  
+  protected void setDataContainer (IDataContainer<T_domain, T_target> data)
   {
 	  m_dataContainer=data;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
+   * 
+   * returns an empty Image
    */
   public ILegendItem getLegendItem()
   {

@@ -15,4 +15,4 @@ Export-Package: org.kalypso.chart.ext.base.axis,
  org.kalypso.chart.ext.base.style,
  org.kalypso.chart.ext.base.style.provider
 Require-Bundle: org.kalypso.contribs.java,
- org.kalypso.chart.factory
+ org.kalypso.chart.factory;visibility:=reexport

@@ -10,7 +10,7 @@ import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 
-public class GaugeLayerProvider extends AbstractLayerProvider
+public class LineLayerProvider extends AbstractLayerProvider
 {
 
   public IChartLayer getLayer( URL context ) throws LayerProviderException
