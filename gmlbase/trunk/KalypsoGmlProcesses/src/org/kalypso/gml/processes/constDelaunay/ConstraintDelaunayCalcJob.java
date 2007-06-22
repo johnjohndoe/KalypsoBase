@@ -105,6 +105,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       // get calculation via path
       log.log( true, "Loading geometries: %s", geometryXPath );
 
+      /* Retrieve list of GM_Curves from workspace */
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof List) )
       {
@@ -119,6 +120,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       log.log( true, "Schreibe .poly Datei für triangle.exe..." );
 
+      /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" );
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
       final CS_CoordinateSystem crs = writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
