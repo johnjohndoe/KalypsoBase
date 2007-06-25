@@ -70,6 +70,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
+  @SuppressWarnings("unchecked")
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" );
@@ -123,7 +124,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" );
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final CS_CoordinateSystem crs = writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
+      final CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -170,12 +171,12 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       monitor.setProgress( 60 );
       if( log.checkCanceled() )
         return;
-      
+
       log.log( true, "Netz wird als GML geschrieben..." );
 
       final File nodeFile = new File( tmpdir, "input.1.node" );
       final File eleFile = new File( tmpdir, "input.1.ele" );
-      
+
       if( !nodeFile.exists() || !eleFile.exists() )
       {
         log.log( false, "Fehler beim Ausführen von triangle.exe" );
@@ -183,12 +184,12 @@ public class ConstraintDelaunayCalcJob implements ISimulation
         monitor.setFinishInfo( IStatus.ERROR, "Fehler: triangle.exe konnte nicht ausgeführt werden." );
         return;
       }
-      
+
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
       final GMLWorkspace elementWorkspace = readElements( nodeReader, eleReader, crs );
-      writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
+      ConstraintDelaunayHelper.writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
 
       nodeReader.close();
       eleReader.close();
@@ -211,156 +212,28 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
   }
 
+  @SuppressWarnings("unchecked")
   private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final CS_CoordinateSystem crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
   {
-    // ignore first line, we don't check the file format
-    final String firstLine = nodeReader.readLine();
-    final StringTokenizer firstTokenizer = new StringTokenizer( firstLine );
-    final int pointCount = Integer.parseInt( firstTokenizer.nextToken() );
-
-    final GM_Position[] points = new GM_Position[pointCount + 1];
-
-    while( nodeReader.ready() )
-    {
-      final String string = nodeReader.readLine();
-      if( string == null )
-        break;
-
-      if( string.startsWith( "#" ) )
-        continue;
-
-      final StringTokenizer tokenizer = new StringTokenizer( string );
-      final int id = Integer.parseInt( tokenizer.nextToken() );
-      final double x = Double.parseDouble( tokenizer.nextToken() );
-      final double y = Double.parseDouble( tokenizer.nextToken() );
-      final double z = Double.parseDouble( tokenizer.nextToken() );
-
-      final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
-      points[id] = position;
-    }
+    final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null, null );
     final Feature rootFeature = workspace.getRootFeature();
     final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" );
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );
-
-    eleReader.readLine(); // ignore first line
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
-    while( eleReader.ready() )
+
+    List<GM_Surface> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+
+    for( GM_Surface surface : surfaces )
     {
-      final String string = eleReader.readLine();
-      if( string == null )
-        break;
-
-      if( string.startsWith( "#" ) )
-        continue;
-
-      final StringTokenizer tokenizer = new StringTokenizer( string );
-      tokenizer.nextToken(); // ele id - ignore
-      final int p1 = Integer.parseInt( tokenizer.nextToken() );
-      final int p2 = Integer.parseInt( tokenizer.nextToken() );
-      final int p3 = Integer.parseInt( tokenizer.nextToken() );
-
-      final GM_Position[] triangle = new GM_Position[] { points[p1], points[p2], points[p3], points[p1] };
-
-      final GM_Surface surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
-
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
-
       newFeature.setProperty( geomName, surface );
     }
 
     return workspace;
   }
 
-  /**
-   * @return the first coordinate system it encounters
-   */
-  private CS_CoordinateSystem writePolyFile( final OutputStream polyStream, final List list, final PrintWriter simLog )
-  {
-    final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
-    int totalPointCount = 0;
-    int totalSegmentCount = 0;
 
-    CS_CoordinateSystem crs = null;
-
-    for( final Object geoObject : list )
-    {
-      if( geoObject instanceof GM_Curve )
-      {
-        try
-        {
-          final GM_Curve curve = (GM_Curve) geoObject;
-
-          if( crs == null )
-            crs = curve.getCoordinateSystem();
-
-          final GM_LineString lineString;
-          lineString = curve.getAsLineString();
-          breaklines.add( lineString );
-          totalPointCount += lineString.getNumberOfPoints();
-          totalSegmentCount += lineString.getNumberOfPoints() - 1;
-        }
-        catch( final GM_Exception e )
-        {
-          e.printStackTrace();
-          simLog.println( "Bad geometry object:  " + geoObject + " - " + e.getLocalizedMessage() );
-        }
-      }
-      else
-      {
-        simLog.println( "Geometry object cannot be handled:  " + geoObject );
-      }
-    }
-
-    final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
-    writer.print( totalPointCount );
-    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0
-    int pointIndex = 1;
-    for( final GM_LineString breakline : breaklines )
-    {
-      for( int i = 0; i < breakline.getNumberOfPoints(); i++ )
-      {
-        final GM_Position pos = breakline.getPositionAt( i );
-        writer.print( pointIndex++ );
-        writer.print( ' ' );
-        writer.print( pos.getX() );
-        writer.print( ' ' );
-        writer.print( pos.getY() );
-        writer.print( ' ' );
-        writer.print( pos.getZ() );
-        writer.println();
-      }
-    }
-
-    writer.print( totalSegmentCount );
-    writer.println( " 0" ); // Border Markers 0
-
-    int segmentIndex = 1;
-    // we reuse pointindex and iterate through the segments in the same way as before
-    pointIndex = 1;
-    for( final GM_LineString breakline : breaklines )
-    {
-      for( int i = 0; i < breakline.getNumberOfPoints() - 1; i++ )
-      {
-        writer.print( segmentIndex++ );
-        writer.print( ' ' );
-        writer.print( pointIndex++ );
-        writer.print( ' ' );
-        writer.print( pointIndex );
-        writer.println();
-      }
-
-      // increase pointIndex one more, because we have one segment less than points per line string
-      pointIndex++;
-    }
-
-    writer.println( "0" );
-    writer.println( "" );
-
-    writer.flush();
-
-    return crs;
-  }
 
 }
