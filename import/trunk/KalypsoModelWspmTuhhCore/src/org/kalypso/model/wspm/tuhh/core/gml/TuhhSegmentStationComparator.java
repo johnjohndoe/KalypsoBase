@@ -48,11 +48,11 @@ import java.util.Comparator;
  */
 public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfileSegment>
 {
-  private final boolean m_isDirectionUpstreams;
+  private final TuhhStationComparator m_stationComparator;
 
   public TuhhSegmentStationComparator( final boolean isDirectionUpstreams )
   {
-    m_isDirectionUpstreams = isDirectionUpstreams;
+    m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
   }
 
   /**
@@ -63,13 +63,7 @@ public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfile
     final BigDecimal s1 = o1.getStation();
     final BigDecimal s2 = o2.getStation();
 
-    if( s1 == null || s2 == null )
-      return 0;
-    
-    if( m_isDirectionUpstreams )
-      return s1.compareTo( s2 );
-    else
-      return s2.compareTo( s1 );
+    return m_stationComparator.compare( s1, s2 );
   }
 
 }
