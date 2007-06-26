@@ -63,4 +63,22 @@ public class NullTriangleEater implements ITriangleEater
   {
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   */
+  public void setTime( double time )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTimestep(int)
+   */
+  public void setTimestep( int timestep )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
