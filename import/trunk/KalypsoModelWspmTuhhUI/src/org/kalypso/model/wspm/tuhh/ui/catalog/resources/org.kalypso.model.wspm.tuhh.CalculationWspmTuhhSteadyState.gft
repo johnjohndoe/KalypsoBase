@@ -115,7 +115,6 @@
 		</gft:visibleOperation>
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false">
-
 			<gft:excludeOperation>
 				<ogc:Not>
 					<ogc:PropertyIsEqualTo>
@@ -124,7 +123,6 @@
 					</ogc:PropertyIsEqualTo>
 				</ogc:Not>
 			</gft:excludeOperation>
-
 		</gft:gridData>
 	</gft:label>
 	<gft:composite tooltip="Auswahl des Abflussereignisses" style="SWT.NONE">
