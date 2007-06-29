@@ -56,6 +56,9 @@ public class CustomPropertyContentType implements IPropertyContentType
 
   private final IRestriction[] m_noRestruction = new IRestriction[0];
 
+  /**
+   * TODO: the valueQName is not needed, because we can get it from the typeHandler
+   */
   public CustomPropertyContentType( final QName valueQName, final IMarshallingTypeHandler typeHandler )
   {
     m_valueQName = valueQName;

@@ -207,6 +207,9 @@ public class GMLSchemaFactory
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
 
+  /**
+   * TODO: the valueQName is not needed, because we can get it from the typeHandler
+   */
   public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     final IPropertyContentType pct = new CustomPropertyContentType( valueQName, typeHandler );
