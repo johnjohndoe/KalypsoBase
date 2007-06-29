@@ -27,7 +27,10 @@ public class NumberTickCalculator
 	   */
 	  public static List<Number> calcTicks( GCWrapper gc, final IAxis<Number> axis, final boolean showAll)
 	  {
-		  
+	  
+	    if (axis.getDataRange()== null )
+	      return null;
+	    
 		IMapperRegistry registry = axis.getRegistry();
 		NumberAxisRenderer renderer = (NumberAxisRenderer) registry.getRenderer(axis);
 		  

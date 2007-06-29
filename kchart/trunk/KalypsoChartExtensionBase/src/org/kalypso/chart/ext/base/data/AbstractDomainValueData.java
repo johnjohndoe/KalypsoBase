@@ -1,13 +1,12 @@
 package org.kalypso.chart.ext.base.data;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.ITabularDataContainer;
 
 
-public abstract class AbstractDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
+public abstract class AbstractDomainValueData<T_domain, T_target> implements ITabularDataContainer<T_domain, T_target>
 {
 
 	private boolean m_isOpen=false;

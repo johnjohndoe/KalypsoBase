@@ -32,8 +32,8 @@ public class XmlbeansParameterContainer implements IParameterContainer
 		  ParameterType[] parameterArray = xmlParams.getParameterArray();
 		  for (ParameterType param : parameterArray) 
 		  {
-			  String name=param.getName();
-			  String value=param.getValue();
+			  String name=param.getName().trim();
+			  String value=param.getValue().trim();
 			  m_parameters.put(name, value);
 		  }
 	  }

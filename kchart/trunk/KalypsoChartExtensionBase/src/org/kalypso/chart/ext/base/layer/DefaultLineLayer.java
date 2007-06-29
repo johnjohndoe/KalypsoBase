@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
 import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.ITabularDataContainer;
 import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
@@ -68,7 +68,7 @@ public DefaultLineLayer( AbstractDomainValueData<T_domain, T_target> dataContain
    */
 public void paint( GCWrapper gc )
   {
-      IDataContainer<T_domain, T_target> dataContainer=getDataContainer();
+      ITabularDataContainer<T_domain, T_target> dataContainer=getDataContainer();
 	  if (dataContainer != null )
 	  {
 		  dataContainer.open();
@@ -92,5 +92,12 @@ public void paint( GCWrapper gc )
 		  Logger.logWarning(Logger.TOPIC_LOG_GENERAL, "Layer "+getId()+" has not yet been opened");
 	  }
   }
+
+@Override
+public ITabularDataContainer<T_domain, T_target> getDataContainer()
+{
+  return (ITabularDataContainer<T_domain, T_target>) super.getDataContainer();
+}
+
 
 }

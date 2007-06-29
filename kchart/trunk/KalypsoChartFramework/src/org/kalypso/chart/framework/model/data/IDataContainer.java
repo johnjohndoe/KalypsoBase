@@ -13,8 +13,5 @@ public interface IDataContainer<T_domain, T_target>
 	public IDataRange<T_domain> getDomainRange();
 	
 	public IDataRange<T_target> getTargetRange();
-	
-	public T_domain[] getDomainValues();
-	
-	public T_target[] getTargetValues();
+
 }

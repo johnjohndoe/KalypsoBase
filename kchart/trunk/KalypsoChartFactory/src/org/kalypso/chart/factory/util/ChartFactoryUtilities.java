@@ -83,7 +83,8 @@ public class ChartFactoryUtilities {
 	    {
 	    	parameters = pt.getParameters();
 	    }
-	    return new XmlbeansParameterContainer(ownerId, pt.getEpid(), parameters);
+	    IParameterContainer pc= new XmlbeansParameterContainer(ownerId, pt.getEpid(), parameters);
+	    return pc;
 	}
 
 }

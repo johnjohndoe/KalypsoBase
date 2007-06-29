@@ -56,13 +56,13 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
 
   public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
   {
-	  /** HIER BIN ICH **/
-	    super( parent, style | SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND );
+	    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
 	    m_model = model;
 		
-	   // m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
-		 m_bgColor = new Color( parent.getDisplay(), new RGB(0,0,255) );
+	    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
 		
+	    setBackground( m_bgColor );
+	    
 	    createControl( this);
 
 
@@ -103,18 +103,19 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     super.setLayout( gridLayout );
     setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final int axisContainerStyle = SWT.NONE;
+    final int axisContainerStyle = SWT.DOUBLE_BUFFERED;
 
     // 1.1 - wird ins erste Feld der ersten Zeile gefüllt
-    final Label lbl11 = new Label( parent, SWT.NONE );
+    final Label lbl11 = new Label( parent, SWT.SHADOW_ETCHED_IN );
     lbl11.setSize( 0, 0 );
     lbl11.setVisible( false );
 
     // 1.2
-    final Composite topAxes = new SizedComposite( parent, axisContainerStyle );
+    final Composite topAxes = new SizedComposite( parent, axisContainerStyle);
     topAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
     final GridData tad = new GridData( SWT.FILL, SWT.NONE, true, false );
     topAxes.setLayoutData( tad );
+    topAxes.setBackground( m_bgColor );
     m_axisPlaces.put( POSITION.TOP, topAxes );
 
     // 1.3 - wird ins letzte Feld der ersten Zeile gefüllt
@@ -123,10 +124,11 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     lbl13.setVisible( false );
 
     // 2.1
-    final Composite leftAxes = new SizedComposite( parent, axisContainerStyle );
+    final Composite leftAxes = new SizedComposite( parent, axisContainerStyle);
     leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
     leftAxes.setLayoutData( lad );
+    leftAxes.setBackground( m_bgColor );
     m_axisPlaces.put( POSITION.LEFT, leftAxes );
 
     // 2.2
@@ -141,6 +143,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     rightAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData rad = new GridData( SWT.NONE, SWT.FILL, false, true );
     rightAxes.setLayoutData( rad );
+    rightAxes.setBackground( m_bgColor );
     m_axisPlaces.put( POSITION.RIGHT, rightAxes );
 
     // 3.1 - wird ins erste Feld der letzten Zeile gefüllt
@@ -153,6 +156,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     bottomAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
     final GridData bad = new GridData( SWT.FILL, SWT.NONE, true, false );
     bottomAxes.setLayoutData( bad );
+    leftAxes.setBackground( m_bgColor );
     m_axisPlaces.put( POSITION.BOTTOM, bottomAxes );
 
     // 3.3 - wird ins letzte Feld der lezten Zeile gefüllt

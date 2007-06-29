@@ -73,8 +73,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 	//Vielleicht wurden zuvor schon mal ticks ausgerechnet - dann kann man die verwenden
 	List<Number> tickMap = getTickMap().get( axis );
 	
-	
-	
 	if ( tickMap !=null && tickMap.size()>0)
 	{
 		NumberTickCalculator.testNumberFormat(tickMap.toArray(new Double[]{}));
@@ -84,11 +82,16 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 	else
 	{
 		IDataRange<Number> range=axis.getDataRange(); 
-
-		  
-	    final double logicalMin = range.getMin().doubleValue();
-	    final double logicalMax = range.getMax().doubleValue();
-
+		final double logicalMin, logicalMax;
+		if (range!=null)
+		{
+		  logicalMin = range.getMin().doubleValue();
+		  logicalMax = range.getMax().doubleValue();
+		}
+		else
+		{
+		  return new Point (1,0);
+		}
 	   
 
 	    FontData fontDataTick = getFontDataTickLabel();
@@ -208,7 +211,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
     
-
+    
     int textX = 0;
     int textY = 0;
     
@@ -438,7 +441,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   public int getAxisWidth( IAxis<Number> axis )
   {
     int width = 0;
-    int label = 0;
+    int ticklabel = 0;
 
     // Testutensilien erzeugen
     Display dev = Display.getCurrent();
@@ -461,16 +464,20 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
       width += tickLabelInsets.top + tickLabelInsets.bottom;
-      width += labelInsets.top + labelInsets.bottom;
-      label = tickLabelSize.y;
+      ticklabel = tickLabelSize.y;
+      if (axis.getPosition() == POSITION.BOTTOM)
+        width += labelInsets.top;
+      else
+        width += labelInsets.bottom;
+         
     }
     else
     {
       width += tickLabelInsets.left + tickLabelInsets.right;
-      width += labelInsets.left + labelInsets.right;
-      label = tickLabelSize.x;
+      width += labelInsets.bottom;
+      ticklabel = tickLabelSize.x;
     }
-    width += label;
+    width += ticklabel;
     width += getGap();
     width += getLineWidth();
     width += getTickLength();

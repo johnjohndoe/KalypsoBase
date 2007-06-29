@@ -33,9 +33,9 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
 
 
 
-  public AbstractAxisRenderer( final RGB rgbForegroundRGB, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick)
+  public AbstractAxisRenderer( final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick)
   {
-    m_rgbForeground = rgbForegroundRGB;
+    m_rgbForeground = rgbForeground;
     m_rgbBackground = rgbBackground;
     m_tickLength = tickLength;
     m_lineWidth = lineWidth;

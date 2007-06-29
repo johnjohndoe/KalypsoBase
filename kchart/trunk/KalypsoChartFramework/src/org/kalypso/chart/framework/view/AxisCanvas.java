@@ -3,6 +3,7 @@ package org.kalypso.chart.framework.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -108,6 +109,7 @@ public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
     usedBufferImage = new Image( Display.getDefault(), screen.width, screen.height );
     GC buffGc = new GC( usedBufferImage );
     final GCWrapper buffGcw = new GCWrapper( buffGc );
+
     
     IAxisRenderer renderer=null;
     try

@@ -33,7 +33,8 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
   public void paint( GCWrapper gc )
   {
     Rectangle c = gc.getClipping();
-    IStyledElement se = getStyle().getElement( SE_TYPE.LINE, 0 );
+    IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
+    IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );
     List<Point> path = new ArrayList<Point>();
     TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
     data.open();
@@ -63,8 +64,10 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
         int y = yAxis.logicalToScreen( (T_target) yValues[i] );
         path.add( new Point( x, y ) );
       }
-    se.setPath( path );
-    se.paint( gc );
+    sl.setPath( path );
+    sl.paint( gc );
+    sp.setPath( path );
+    sp.paint( gc );
 
   }
 

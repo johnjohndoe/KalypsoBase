@@ -127,13 +127,13 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
 	              IChartLayer icl = provider.getLayer( context );
 	              if( icl != null )
 	              {
-	                Logger.logInfo(Logger.TOPIC_LOG_CONFIG, "Adding Layer " + icl.getTitle() );
 	                icl.setStyle( ls );
 	                icl.setId( layerType.getId() );
 	                icl.setTitle( layerType.getTitle() );
 	                icl.setDescription( layerType.getDescription() );
 	                icl.setVisible( layerType.getVisible() );
 	                model.getLayerManager().addLayer( icl );
+	                Logger.logInfo(Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
 	              }
 	            }
 	            else
