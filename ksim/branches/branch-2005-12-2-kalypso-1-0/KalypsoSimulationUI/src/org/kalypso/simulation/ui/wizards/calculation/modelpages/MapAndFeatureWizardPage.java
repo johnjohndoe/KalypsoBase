@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -130,7 +131,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     try
     {
       final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
-      
+
       createMapPanel( sashForm );
       createRightPanel( sashForm );
 
@@ -234,9 +235,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       {
         try
         {
-          final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-          if( templateFile != null && templateFile.exists() )
+          if( templateFileName != null && !"".equals( templateFileName ) )
           {
+            final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+            if( templateFile == null )
+              return StatusUtilities.createErrorStatus( "FeatureTemplateFile does not exist: "
+                  + templateFile.getFullPath() );
+
             final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
             m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
             parent.getDisplay().asyncExec( new Runnable()

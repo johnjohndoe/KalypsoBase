@@ -821,7 +821,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     default:
       activeTheme = null;
     }
-    if( activeTheme == null )
+    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return FeatureFactory.createFeatureList( null, null );
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
@@ -957,10 +957,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       if( m_mapModell != null )
       {
         final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-        if( kft instanceof GisTemplateFeatureTheme )
+        if( activeTheme instanceof GisTemplateFeatureTheme )
         {
-          final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)kft;
+          final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)activeTheme;
           m_selectionRestorer = new RestoreSelectionHelper( gtft.getLayerKey(), m_selectionManager );
         }
       }
