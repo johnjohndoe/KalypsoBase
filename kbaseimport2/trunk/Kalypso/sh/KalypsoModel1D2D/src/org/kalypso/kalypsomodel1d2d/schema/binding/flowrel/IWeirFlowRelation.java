@@ -65,11 +65,6 @@ public interface IWeirFlowRelation extends IFlowRelationship
 
   public KIND getKind( );
 
-  /**
-   * Call this method to initalize a newly create weir. TODO: move to getObs??
-   */
-  public void init( );
-
   public IObservation<TupleResult> getWeirObservation( );
 
   public void setWeirObservation( final IObservation<TupleResult> observation );
