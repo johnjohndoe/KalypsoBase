@@ -10,7 +10,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  * On each modification, checks if widget contains a Double-Text, if not, setForeground Color *
  * 
  * @author gernot
- * 
  */
 public class DoubleModifyListener implements ModifyListener
 {
