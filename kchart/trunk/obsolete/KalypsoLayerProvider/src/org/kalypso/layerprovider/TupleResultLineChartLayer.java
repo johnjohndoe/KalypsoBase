@@ -42,6 +42,8 @@ package org.kalypso.layerprovider;
 
 import java.util.ArrayList;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -149,8 +151,8 @@ public class TupleResultLineChartLayer implements IChartLayer
     {
       for( final IRecord r : m_result )
       {
-        final Object xVal = m_result.getValue( r, domainComponent );
-        final Object yVal = m_result.getValue( r, valueComponent );
+        final Object xVal = getValue( r, domainComponent );
+        final Object yVal = getValue( r, valueComponent );
 
         final Integer x = m_domAxis.logicalToScreen( xVal );
         final Integer y = m_valAxis.logicalToScreen( yVal );
@@ -254,10 +256,12 @@ public class TupleResultLineChartLayer implements IChartLayer
     final ComparableComparator cc = new ComparableComparator();
 
     final IComponent domainComponent = TupleResultUtilities.findComponentById( m_result, m_domainComponentId );
+    if( domainComponent == null )
+      return null;
 
     for( final IRecord rec : m_result )
     {
-      final Object val = rec.getValue( domainComponent );
+      final Object val = getValue( rec, domainComponent );
 
       if( val == null )
       {
@@ -286,18 +290,21 @@ public class TupleResultLineChartLayer implements IChartLayer
     Object min = null;
     Object max = null;
     final ComparableComparator cc = new ComparableComparator();
-    
+
     final IComponent valueComponent = TupleResultUtilities.findComponentById( m_result, m_valueComponentId );
+
+    if( valueComponent == null )
+      return null;
 
     for( final IRecord rec : m_result )
     {
-      final Object val = rec.getValue( valueComponent );
-      
-      if (val == null)
+      final Object val = getValue( rec, valueComponent );
+
+      if( val == null )
       {
         continue;
       }
-      
+
       if( (min == null) || (cc.compare( min, val ) > 0) )
       {
         min = val;
@@ -370,5 +377,19 @@ public class TupleResultLineChartLayer implements IChartLayer
     {
       m_chart.repaint();
     }
+  }
+
+  /**
+   * Helper class to avoid handling of XMLGregorianCalendars.
+   * <p>
+   * HACK: This is q quite crued hack, but what else can be done?
+   */
+  private static Object getValue( final IRecord record, final IComponent component )
+  {
+    final Object value = record.getValue( component );
+    if( value instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar) value).toGregorianCalendar();
+
+    return value;
   }
 }

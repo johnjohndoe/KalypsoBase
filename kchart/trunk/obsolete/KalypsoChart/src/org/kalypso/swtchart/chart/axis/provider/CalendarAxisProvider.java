@@ -67,55 +67,53 @@ import org.kalypso.swtchart.exception.AxisProviderException;
 import org.kalypso.swtchart.logging.Logger;
 import org.ksp.chart.configuration.AxisType;
 
-
 /**
  * @author alibu
- *
  */
 public class CalendarAxisProvider implements IAxisProvider
 {
+  private AxisType m_at;
 
-  AxisType m_at;
-  IParameterContainer m_pc;
+  private IParameterContainer m_pc;
 
   /**
    * @see org.kalypso.swtchart.chart.axis.IAxisProvider#getAxis()
    */
-  public IAxis getAxis( ) throws AxisProviderException
+  public IAxis<Calendar> getAxis( ) throws AxisProviderException
   {
-    AxisPositionParser app=new AxisPositionParser();
-    POSITION pos=app.createValueFromString( m_at.getPosition() );
-    AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.createValueFromString( m_at.getDirection() );
-    IAxis<Calendar> axis = new CalendarAxis( m_at.getName(), m_at.getLabel(), PROPERTY.CONTINUOUS, pos, dir );
-    if (axis!=null)
+    final AxisPositionParser app = new AxisPositionParser();
+    final POSITION pos = app.createValueFromString( m_at.getPosition() );
+    final AxisDirectionParser adp = new AxisDirectionParser();
+    final DIRECTION dir = adp.createValueFromString( m_at.getDirection() );
+    final IAxis<Calendar> axis = new CalendarAxis( m_at.getName(), m_at.getLabel(), PROPERTY.CONTINUOUS, pos, dir );
+    if( axis != null )
     {
-        CalendarParser gcp=new CalendarParser();
-        try
-        {
-          axis.setFrom( gcp.createValueFromString( m_at.getMinVal()) );
-        }
-        catch( MalformedValueException e )
-        {
-          //config-date not valid - using Calendar start date
-          Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date ");
-          Calendar c=Calendar.getInstance();
-          c.setTimeInMillis( 0 );
-          axis.setFrom( c );
-        }
-        try
-        {
-          axis.setTo( gcp.createValueFromString( m_at.getMaxVal()));
-        }
-        catch( MalformedValueException e )
-        {
-          //config-date not valid - using "now"
-          Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date ");
-          axis.setTo(  Calendar.getInstance());
-        }
+      final CalendarParser gcp = new CalendarParser();
+      try
+      {
+        axis.setFrom( gcp.createValueFromString( m_at.getMinVal() ) );
+      }
+      catch( final MalformedValueException e )
+      {
+        // config-date not valid - using Calendar start date
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date " );
+        final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis( 0 );
+        axis.setFrom( c );
+      }
+      try
+      {
+        axis.setTo( gcp.createValueFromString( m_at.getMaxVal() ) );
+      }
+      catch( final MalformedValueException e )
+      {
+        // config-date not valid - using "now"
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date " );
+        axis.setTo( Calendar.getInstance() );
+      }
     }
     else
-       throw new AxisProviderException();
+      throw new AxisProviderException();
 
     return axis;
   }
@@ -131,44 +129,42 @@ public class CalendarAxisProvider implements IAxisProvider
   /**
    * @see org.kalypso.swtchart.chart.axis.IAxisProvider#getRenderer()
    */
-  public IAxisRenderer getRenderer( )
+  public IAxisRenderer<Calendar> getRenderer( )
   {
-    RGBParser rgbp=new RGBParser();
-    RGB fgRGB=m_pc.getParsedParameterValue( "color", "#000000", rgbp );
-    RGB bgRGB=m_pc.getParsedParameterValue( "background-color", "#ffffff", rgbp );
+    final RGBParser rgbp = new RGBParser();
+    final RGB fgRGB = m_pc.getParsedParameterValue( "color", "#000000", rgbp );
+    final RGB bgRGB = m_pc.getParsedParameterValue( "background-color", "#ffffff", rgbp );
 
-    FontDataParser fdp=new FontDataParser();
-    FontStyleParser fsp=new FontStyleParser();
-    FontData fdLabel=m_pc.getParsedParameterValue( "font-family_label", "Arial", fdp );
+    final FontDataParser fdp = new FontDataParser();
+    final FontStyleParser fsp = new FontStyleParser();
+    final FontData fdLabel = m_pc.getParsedParameterValue( "font-family_label", "Arial", fdp );
     fdLabel.setHeight( Integer.parseInt( m_pc.getParameterValue( "font-height_label", "10" ) ) );
     fdLabel.setStyle( m_pc.getParsedParameterValue( "font-style_label", "NORMAL", fsp ) );
-    FontData fdTick=m_pc.getParsedParameterValue( "font-family_tick", "Arial", fdp );
+    final FontData fdTick = m_pc.getParsedParameterValue( "font-family_tick", "Arial", fdp );
     fdTick.setHeight( Integer.parseInt( m_pc.getParameterValue( "font-height_tick", "8" ) ) );
     fdTick.setStyle( m_pc.getParsedParameterValue( "font-style_tick", "NORMAL", fsp ) );
 
-    int insetTick=Integer.parseInt( m_pc.getParameterValue( "inset_tick", "1" ));
-    Insets insetsTick = new Insets( insetTick, insetTick, insetTick, insetTick );
-    int insetLabel=Integer.parseInt( m_pc.getParameterValue( "inset_label", "1" ));
-    Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
+    final int insetTick = Integer.parseInt( m_pc.getParameterValue( "inset_tick", "1" ) );
+    final Insets insetsTick = new Insets( insetTick, insetTick, insetTick, insetTick );
+    final int insetLabel = Integer.parseInt( m_pc.getParameterValue( "inset_label", "1" ) );
+    final Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
 
-   // String dateFormatString=m_pc.getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
-     String dateFormatString=m_pc.getParameterValue( "dateFormat", "dd.MM.yy" );
-    //Steuerzeichen aus Config ersetzen
-    dateFormatString=dateFormatString.replace( "\\n", "\n" );
-    IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( dateFormatString ) );
+    // String dateFormatString=m_pc.getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
+    String dateFormatString = m_pc.getParameterValue( "dateFormat", "dd.MM.yy" );
+    // Steuerzeichen aus Config ersetzen
+    dateFormatString = dateFormatString.replace( "\\n", "\n" );
+    final IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( dateFormatString ) );
     return calendarAxisRenderer;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.axis.IAxisProvider#init(org.ksp.chart.configuration.AxisType)
    */
-  public void init( AxisType at )
+  public void init( final AxisType at )
   {
-    m_at=at;
-    m_pc=new ParameterHelper();
+    m_at = at;
+    m_pc = new ParameterHelper();
     m_pc.addParameters( m_at.getParameters(), m_at.getName() );
-
   }
-
 
 }

@@ -68,6 +68,8 @@ import org.ksp.chart.configuration.LayerType;
  * <li>featureKey: String. Key, where to get the feature from the ChartDataProvider.</li>
  * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else
  * the given feature must be an observation itself.</li>
+ * <li>domainComponentId: id of the component to use for the domain</li>
+ * <li>valueComponentId: id of the component to use for the range</li>
  * </ul>
  * 
  * @author Gernot Belger
@@ -114,14 +116,13 @@ public class TupleResultLayerProvider implements ILayerProvider
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
     final TupleResult result = obs.getResult();
 
+    final String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
+    final String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
+
     final String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
     final String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
 
     final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
-
-    final String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
-    final String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
-
     final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
     final TupleResultLineChartLayer icl = new TupleResultLineChartLayer( result, domainComponentId, valueComponentId, domAxis, valAxis );
