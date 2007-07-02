@@ -170,6 +170,10 @@
 						</xs:attribute>
 					</xs:complexType>
 				</xs:element>
+				<xs:element 
+						name="calculationUnitGmlID" 
+						type ="xs:string" 
+						minOccurs="0" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attribute name="typeID" type="xs:string"
 				use="required">
@@ -182,6 +186,8 @@
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
+	
+		
 	<xs:element name="modelspec">
 		<xs:annotation>
 			<xs:documentation>
@@ -214,6 +220,7 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				
 			</xs:sequence>
 			<xs:attribute name="typeID" type="xs:string"
 				use="required">
