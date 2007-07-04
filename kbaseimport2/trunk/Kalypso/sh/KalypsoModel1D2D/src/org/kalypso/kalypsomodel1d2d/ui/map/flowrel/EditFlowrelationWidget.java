@@ -45,8 +45,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -59,20 +60,21 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
 {
   public EditFlowrelationWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.element1d.AbstractSelectFlowrelationWidget#flowRelationGrabbed()
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  protected void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship[] flowRelation )
+  protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
-    final Feature featureToSelect = flowRelation[0].getWrappedFeature();
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+    final Feature featureToSelect = selectedFeatures[0];
+    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
 
     final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
     selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );

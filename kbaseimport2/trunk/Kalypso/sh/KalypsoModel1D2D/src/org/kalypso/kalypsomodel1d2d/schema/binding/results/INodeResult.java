@@ -54,7 +54,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface INodeResult
 {
-
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
 
   public abstract void setCalcId( final int id );
@@ -76,9 +75,9 @@ public interface INodeResult
   public double getWaterlevel( );
 
   public boolean isWet( );
-  
+
   public abstract void setVelocity( List<Double> velocity );
 
   public abstract double getAbsoluteVelocity( );
-  
+
 }
