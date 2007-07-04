@@ -54,4 +54,8 @@ public interface ITaskExecutor
    */
   public void execute( final Task task ) throws TaskExecutionException;
 
+  public Task getActiveTask( );
+
+  public void stopActiveTask( );
+
 }
