@@ -177,11 +177,14 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       m_substituteFT = null;
   }
 
+  private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" );
+
   /**
    * initialize geometryinformation after
    */
   private void initGeometry( )
   {
+
     // TODO: refaktor this stuff, smells very bad....
     final IPropertyType[] properties = m_featureContentType.getProperties();
     final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
@@ -193,13 +196,24 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       {
         final IValuePropertyType vpt = (IValuePropertyType) pt;
         // check for defaultgeometryPosition
+
         if( vpt.isGeometry() )
         {
           list.add( vpt );
-          if( m_defaultGeometryPosition < 0 )
+
+          // HACK: for backwards compability, we search first for non-location properties, if this fails just take it
+          if( !vpt.getQName().equals( QNAME_LOCATION ) && m_defaultGeometryPosition < 0 )
             m_defaultGeometryPosition = i;
         }
       }
+    }
+
+    // HACK: if no other geometry was found, take the location
+    if( m_defaultGeometryPosition < 0 )
+    {
+      final IPropertyType localtionProp = getProperty( QNAME_LOCATION );
+      if( localtionProp != null )
+        m_defaultGeometryPosition = getPropertyPosition( localtionProp );
     }
     m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
   }
