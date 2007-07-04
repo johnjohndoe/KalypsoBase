@@ -40,11 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -237,13 +237,15 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
+        InputStream contents = null;
         try
         {
           final IFile templateFile = (IFile)getProject().findMember( templateFileName );
           if( templateFile != null && templateFile.exists() )
           {
-            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
-            m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
+            contents = new BufferedInputStream( templateFile.getContents() );
+            m_templateviewer.loadInput( contents, getContext(), monitor, featureTemplateProps );
+            contents.close();
             parent.getDisplay().asyncExec( new Runnable()
             {
               public void run()
@@ -255,9 +257,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
           return Status.OK_STATUS;
         }
-        catch( UnsupportedEncodingException e )
+        catch( final Throwable e )
         {
           throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "", e ) );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( contents );
         }
       }
     };
