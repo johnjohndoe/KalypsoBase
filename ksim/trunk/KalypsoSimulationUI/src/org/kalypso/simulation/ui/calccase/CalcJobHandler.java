@@ -333,7 +333,6 @@ public class CalcJobHandler
     try
     {
       final IProject project = calcCaseFolder.getProject();
-
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Input input : inputList )
       {
