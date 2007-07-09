@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
