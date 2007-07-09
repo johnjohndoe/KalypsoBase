@@ -125,13 +125,17 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
+    final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
+    marshal( propQName, jaxElement, xmlReader, context, gmlVersion );
+  }
+
+  public <T> void marshal( final QName propQName, final JAXBElement<T> element, final XMLReader xmlReader, final String gmlVersion ) throws SAXException
+  {
     try
     {
       // memory to xml
       final ContentHandler contentHandler = xmlReader.getContentHandler();
 
-      // if( m_xmlTypeQName.getLocalPart().startsWith( "PolygonProperty" ) )
-      // System.out.println( "debug" );
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
@@ -141,10 +145,8 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
-      // TODO: the tagQName should come from outside!, the handler only should now how to parse the content...
-      final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
 
-      marshaller.marshal( jaxElement, contentHandler );
+      marshaller.marshal( element, contentHandler );
 
       if( m_forceElementTagOnMarshall )
         contentHandler.endElement( namespaceURI, localPart, qNameString );
@@ -238,10 +240,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
       final Unmarshaller unmarshaller = jaxBContext.createUnmarshaller();
       final UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
       final Marshaller marshaller = jaxBContext.createMarshaller();
-
-      final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, objectToClone );
-      marshaller.marshal( jaxElement, unmarshallerHandler );
-
+      marshaller.marshal( objectToClone, unmarshallerHandler );
       return unmarshallerHandler.getResult();
     }
     catch( final JAXBException e )

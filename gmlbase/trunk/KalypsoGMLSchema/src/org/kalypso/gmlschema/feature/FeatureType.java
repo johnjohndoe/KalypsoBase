@@ -184,10 +184,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   private void initGeometry( )
   {
-
     // TODO: refaktor this stuff, smells very bad....
     final IPropertyType[] properties = m_featureContentType.getProperties();
     final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
+    // REMARK: used to get position for gml:location property. We cannot acces the position via getProperty(), because
+    // this stuff
+    // is not yet initialized.
+    int locationPos = -1;
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType pt = properties[i];
@@ -202,19 +205,17 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
           list.add( vpt );
 
           // HACK: for backwards compability, we search first for non-location properties, if this fails just take it
-          if( !vpt.getQName().equals( QNAME_LOCATION ) && m_defaultGeometryPosition < 0 )
+          if( vpt.getQName().equals( QNAME_LOCATION ) )
+            locationPos = i;
+          else if( m_defaultGeometryPosition < 0 )
             m_defaultGeometryPosition = i;
         }
       }
     }
 
-    // HACK: if no other geometry was found, take the location
+    // HACK: if no other geometry was found, take gml:location
     if( m_defaultGeometryPosition < 0 )
-    {
-      final IPropertyType localtionProp = getProperty( QNAME_LOCATION );
-      if( localtionProp != null )
-        m_defaultGeometryPosition = getPropertyPosition( localtionProp );
-    }
+      m_defaultGeometryPosition = locationPos;
     m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
   }
 
