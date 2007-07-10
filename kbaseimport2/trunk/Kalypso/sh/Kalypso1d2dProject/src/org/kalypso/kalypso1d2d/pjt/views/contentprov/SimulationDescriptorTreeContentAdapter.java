@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
@@ -51,6 +48,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * @author Stefan Kurzbach
+ * TODO: rename to SimulationDescriptorWorkbenchAdapter
  * 
  */
 public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
