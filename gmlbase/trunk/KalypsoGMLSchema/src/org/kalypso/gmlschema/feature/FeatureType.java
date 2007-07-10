@@ -212,10 +212,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
         }
       }
     }
-
-    // HACK: if no other geometry was found, take gml:location
-    if( m_defaultGeometryPosition < 0 )
-      m_defaultGeometryPosition = locationPos;
+//TODO Patrice Find another solution this breaks the virtual geometry handling
+// if this is realy needed feature_impl.getDefault geometry is the better 
+// place to hack
+//    // HACK: if no other geometry was found, take gml:location
+//    if( m_defaultGeometryPosition < 0 )
+//      m_defaultGeometryPosition = locationPos;
+    
     m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
   }
 
