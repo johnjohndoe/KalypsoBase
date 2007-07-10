@@ -44,11 +44,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
  */
-public class IHydrograph
+public interface IHydrograph extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
 
