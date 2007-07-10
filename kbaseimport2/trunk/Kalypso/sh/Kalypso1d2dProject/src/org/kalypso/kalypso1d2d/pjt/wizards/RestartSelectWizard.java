@@ -51,19 +51,19 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class RestartSelectWizard extends Wizard implements INewWizard
 {
-
   private RestartSelectWizardPage m_restartSelectWizardPage;
+
   private final Feature m_feature;
 
-  public RestartSelectWizard( Feature feature )
+  public RestartSelectWizard( final Feature feature )
   {
     m_feature = feature;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
@@ -72,30 +72,31 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( "Berechnungszeitschritte definieren" );
     final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-    m_restartSelectWizardPage = new RestartSelectWizardPage(property==null?"":property.toString());
+    m_restartSelectWizardPage = new RestartSelectWizardPage( property == null ? "" : property.toString() );
     addPage( m_restartSelectWizardPage );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
   public boolean performFinish( )
   {
-    String selectedPath = m_restartSelectWizardPage.getSelectedPath();
+    final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
     m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedPath );
     return true;
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  
+
   public File[] getSelectedFiles( )
   {
     // TODO Auto-generated method stub
