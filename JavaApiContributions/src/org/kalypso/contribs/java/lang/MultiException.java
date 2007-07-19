@@ -96,6 +96,23 @@ public class MultiException extends Exception
     return bf.toString();
   }
 
+  
+  /**
+   * @see java.lang.Throwable#getLocalizedMessage()
+   */
+  @Override
+  public String getLocalizedMessage( )
+  {
+    if( isEmpty() )
+      return "";
+    
+    final StringBuffer bf = new StringBuffer();
+    for( final Exception exception : m_exceptions )
+      bf.append( exception.getLocalizedMessage() ).append( '\n' );
+    
+    return bf.toString();
+  }
+  
   /**
    * @return true if this MultiException container does not contain any exceptions
    */
