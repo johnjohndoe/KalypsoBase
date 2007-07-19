@@ -163,6 +163,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     if( substitutionGroup != null )
     {
       final ElementReference substitutesReference = getGMLSchema().resolveElementReference( substitutionGroup );
+      if( substitutesReference == null )
+        throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup );
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
       if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
@@ -212,13 +214,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
         }
       }
     }
-//TODO Patrice Find another solution this breaks the virtual geometry handling
-// if this is realy needed feature_impl.getDefault geometry is the better 
+// TODO Patrice Find another solution this breaks the virtual geometry handling
+// if this is realy needed feature_impl.getDefault geometry is the better
 // place to hack
-//    // HACK: if no other geometry was found, take gml:location
-//    if( m_defaultGeometryPosition < 0 )
-//      m_defaultGeometryPosition = locationPos;
-    
+// // HACK: if no other geometry was found, take gml:location
+// if( m_defaultGeometryPosition < 0 )
+// m_defaultGeometryPosition = locationPos;
+
     m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
   }
 

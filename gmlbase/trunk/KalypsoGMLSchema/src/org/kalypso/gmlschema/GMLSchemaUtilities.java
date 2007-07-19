@@ -331,6 +331,9 @@ public class GMLSchemaUtilities
   private static QName findBaseType( final GMLSchema schema, final Restriction restriction, final String gmlVersion ) throws GMLSchemaException
   {
     final QName base = restriction.getBase();
+
+    if( base == null )
+      throw new GMLSchemaException( "Missing base name for restriction: " + restriction );
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 

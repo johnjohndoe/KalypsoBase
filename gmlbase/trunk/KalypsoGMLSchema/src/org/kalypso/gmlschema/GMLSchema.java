@@ -242,8 +242,12 @@ public class GMLSchema implements IGMLSchema
         }
       }
     }
-    catch( final Exception e )
+    catch( Throwable e )
     {
+      /* unpack exceptionif inside InvocationTargetException */
+      if( e instanceof InvocationTargetException )
+        e = ((InvocationTargetException)e).getTargetException();
+      
       if( e instanceof GMLSchemaException )
         throw (GMLSchemaException) e;
       else
