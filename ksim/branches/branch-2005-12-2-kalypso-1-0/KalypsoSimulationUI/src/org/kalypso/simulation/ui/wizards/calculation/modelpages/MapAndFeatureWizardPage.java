@@ -97,6 +97,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /** Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} */
   private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle";
 
+  /** Argument: Flag (true or false) if featureView shall listen to featureSelection in Map. Default is true */
+  private static final String PROP_FEATURE_VIEW_LISTENS_TO_MAP = "featureViewListensToMap";
+
   /**
    * Argument: falls true, wird der festeingebaute Berechnungsknopf nicht gezeigt. Nur aus Gründen der
    * Rückwärtskompabilität. Eigentlich sollten alle Modell (z.B. WeisseElster) lieber Ant-Knöpfe benutzen.
@@ -357,26 +360,34 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     super.selectionChanged( event );
 
-    // refresh featureview
-    final ISelection selection = event.getSelection();
-    if( selection instanceof IFeatureSelection )
+    // refresh featureview (only if requested)
+    if( featureViewListensToMap() )
     {
-      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
-      final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
-      if( feature != null )
+      final ISelection selection = event.getSelection();
+      if( selection instanceof IFeatureSelection )
       {
-        final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+        final IFeatureSelection featureSelection = (IFeatureSelection)selection;
+        final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+        if( feature != null )
+        {
+          final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
 
-        final Control control = m_templateviewer.getControl();
-        if( control != null && !control.isDisposed() )
-          control.getDisplay().asyncExec( new Runnable()
-          {
-            public void run()
+          final Control control = m_templateviewer.getControl();
+          if( control != null && !control.isDisposed() )
+            control.getDisplay().asyncExec( new Runnable()
             {
-              m_templateviewer.setFeature( workspace, feature );
-            }
-          } );
+              public void run()
+              {
+                m_templateviewer.setFeature( workspace, feature );
+              }
+            } );
+        }
       }
     }
+  }
+
+  protected boolean featureViewListensToMap()
+  {
+    return "true".equals( getArguments().getProperty( PROP_FEATURE_VIEW_LISTENS_TO_MAP, "true" ) );
   }
 }
