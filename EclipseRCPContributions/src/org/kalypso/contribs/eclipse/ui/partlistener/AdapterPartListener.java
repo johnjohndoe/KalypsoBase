@@ -66,21 +66,21 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * 
  * @author Gernot Belger
  */
-public class AdapterPartListener implements IPartListener2
+public class AdapterPartListener<C> implements IPartListener2
 {
-  private final Class< ? > m_adapter;
+  private final Class<C> m_adapter;
 
-  private final IAdapterEater m_adapterEater;
+  private final IAdapterEater<C> m_adapterEater;
 
-  private final IAdapterFinder m_closeFinder;
+  private final IAdapterFinder<C> m_closeFinder;
 
   private IWorkbenchPart m_part = null;
 
-  private final IAdapterFinder m_initFinder;
+  private final IAdapterFinder<C> m_initFinder;
 
   private IWorkbenchPage m_page;
 
-  public AdapterPartListener( final Class< ? > adapter, final IAdapterEater adapterEater, final IAdapterFinder initFinder, final IAdapterFinder closeFinder )
+  public AdapterPartListener( final Class<C> adapter, final IAdapterEater<C> adapterEater, final IAdapterFinder<C> initFinder, final IAdapterFinder<C> closeFinder )
   {
     m_adapter = adapter;
     m_adapterEater = adapterEater;
@@ -183,12 +183,13 @@ public class AdapterPartListener implements IPartListener2
     return adaptPart( partRef.getPart( false ) );
   }
 
+  @SuppressWarnings("unchecked")
   public boolean adaptPart( final IWorkbenchPart part )
   {
     if( part == null )
       return false;
-    
-    final Object adapter = part.getAdapter( m_adapter );
+
+    final C adapter = (C) part.getAdapter( m_adapter );
     if( adapter == null )
       return false;
 
@@ -197,7 +198,7 @@ public class AdapterPartListener implements IPartListener2
     return true;
   }
 
-  public void setAdapter( final IWorkbenchPart part, final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final C adapter )
   {
     m_part = part;
 
