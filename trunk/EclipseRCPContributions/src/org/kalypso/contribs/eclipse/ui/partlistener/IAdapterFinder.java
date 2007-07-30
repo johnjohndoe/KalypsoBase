@@ -48,7 +48,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * 
  * @author Gernot Belger
  */
-public interface IAdapterFinder
+public interface IAdapterFinder<C>
 {
   /**
    * Try to find an adapter among the parts of the given page.
@@ -57,5 +57,5 @@ public interface IAdapterFinder
    * <p>
    * If nothing is found, always call {@link AdapterPartListener#setAdapter(null, null)}.
    */
-  public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener listener );
+  public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener<C> listener );
 }

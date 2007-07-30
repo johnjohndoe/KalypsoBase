@@ -56,7 +56,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * 
  * @author Gernot Belger
  */
-public class EditorFirstAdapterFinder implements IAdapterFinder
+public class EditorFirstAdapterFinder<C> implements IAdapterFinder<C>
 {
   /**
    * The shared instance.
@@ -77,8 +77,11 @@ public class EditorFirstAdapterFinder implements IAdapterFinder
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder#findAdapterPart(org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener)
    */
-  public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener listener )
+  public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener<C> listener )
   {
+    if( page == null )
+      return;
+
     final IWorkbenchPartReference activePart = page.getActivePartReference();
     if( listener.adaptPartReference( activePart ) )
       return;

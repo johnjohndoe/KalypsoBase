@@ -47,11 +47,11 @@ import org.eclipse.ui.IWorkbenchPart;
  * 
  * @author Gernot Belger
  */
-public interface IAdapterEater
+public interface IAdapterEater<C>
 {
   /**
    * @param part
-   *          The part which has provided the adapted object.
+   *            The part which has provided the adapted object.
    */
-  public void setAdapter( final IWorkbenchPart part, final Object adapter );
+  public void setAdapter( final IWorkbenchPart part, final C adapter );
 }
