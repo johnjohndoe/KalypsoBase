@@ -526,7 +526,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // TODO this might cause problems with active map contexts?
     m_mapModell = new GisTemplateMapModell( context, crs, mapFile.getProject(), m_selectionManager );
     m_mapModell.createFromTemplate( gisview );
-    m_mapPanel = new MapPanel( this, crs, m_selectionManager );
+    m_mapPanel = new MapPanel( this, m_selectionManager );
 
     m_mapPanel.addSelectionChangedListener( this );
 
