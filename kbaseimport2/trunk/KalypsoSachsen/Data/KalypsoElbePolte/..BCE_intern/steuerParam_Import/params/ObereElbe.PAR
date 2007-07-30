@@ -1,7 +1,7 @@
-1    1    				/ ID=3		HW-Typ,  SelNFG=1: Nachf�hrung RIDO  
+1    1    				/ ID=3		HW-Typ,  SelNFG=1: Nachf�hrung RIDO   // alle int
 1      0	0    0    0   0  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 BRANDYS+PRAG - LITOMERICE
-1500   2675       72.7     0.1   2.2  /						mittl. Par neu id=3h
+1500	2675       72.7     0.1   2.2  /						mittl. Par neu id=3h
  8      4    -0.63264   0.15388  		0.00000 0.00564 0.23237 0.28322   / 
 26     5   -1.33384    0.48727    	0.00000 0.00018 0.02048 0.08001 0.05275  10  /		neu mit 2006
 34     4   -1.39133   0.45721    	0.00000 0.00603 0.03915 0.02070    4.4   /		
