@@ -2,61 +2,64 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.test;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.ThemePainter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
@@ -76,75 +79,106 @@ import org.xml.sax.InputSource;
  */
 public class GisMapPerfTest extends TestCase
 {
-  public void tostMapLoadingAndVisualization( ) throws JAXBException, IOException
+  public static String[][] RESOURCES = { //
+  { "points.zip", "points.gmt", "Shapes/point" }, //
+      { "tin.zip", "tin.gmt", "tin_DEPTH.gml" }, //
+      { "tin_isolines.zip", "tin.gmt", "tin_DEPTH.gml" }, //
+      { "polyWithHoles.zip", "poly.gmt", "Shapes/polygon" } //
+  };
+
+  public void testZips( ) throws Exception
   {
-    final TimeLogger logger = new TimeLogger( "Starting test" );
+    for( final String[] resource : RESOURCES )
+    {
+      final URL zipResource = getClass().getResource( "resources/" + resource[0] );
+      final URL gmtResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[1] );
+      final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[2] );
+
+      mapLoadingAndVisualization( gmtResource );
+// gmlLoading( gmlResource );
+    }
+  }
+
+  private void mapLoadingAndVisualization( final URL gmtResource ) throws JAXBException, IOException, CoreException
+  {
+    final TimeLogger logger = new TimeLogger( "Starting test: " + gmtResource.getPath() );
 
     final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
 
-    logger.showElapsedTime( "Loading map" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Loading map: " );
 
-    final URL resource = getClass().getResource( "resources/triangles/triangle.gmt" );
-    final InputStream inputStream = resource.openStream();
+    final InputStream inputStream = gmtResource.openStream();
     final InputSource source = new InputSource( inputStream );
     source.setEncoding( "Cp1252" );
     final Gismapview gismapview = GisTemplateHelper.loadGisMapView( source );
     inputStream.close();
 
-    logger.showElapsedTime( "Map was loaded. Creating map modell on map" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Map was loaded. Creating map modell on map: " );
 
     final FeatureSelectionManager2 featureSelectionManager2 = new FeatureSelectionManager2();
-    final GisTemplateMapModell modell0 = loadMapAndWaitForData( gismapview, resource, crs, logger, featureSelectionManager2 );
-    if( modell0 == null )
+    final GisTemplateMapModell modell = loadMapAndWaitForData( gismapview, gmtResource, crs, logger, featureSelectionManager2 );
+    if( modell == null )
       fail( "Map was not loaded" );
 
-    logger.showElapsedTime( "Map data was loaded" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Map data was loaded: " );
 
-    final MapPanel panel = new MapPanel( null, crs, featureSelectionManager2 );
-    panel.setMapModell( modell0 );
-    panel.setBoundingBox( modell0.getFullExtentBoundingBox() );
+    final MapPanel panel = new MapPanel( null, featureSelectionManager2 );
+    panel.setMapModell( modell );
+    panel.setBoundingBox( modell.getFullExtentBoundingBox() );
     final GeoTransform transform = panel.getProjection();
+    transform.setDestRect( 0, 0, 1024, 1024 );
+
     final GM_Envelope bbox = panel.getBoundingBox();
+
+    final double scale = MapModellHelper.calcScale( modell, bbox, 1024, 1024 );
+
+    final ThemePainter themePainter = new ThemePainter( modell, transform, bbox, scale );
+
     final BufferedImage image = new BufferedImage( 1024, 1024, BufferedImage.TYPE_INT_ARGB );
 
     for( int i = 0; i < 5; i++ )
     {
-      logger.showElapsedTime( "Rendering map #" + i );
-      paintPanel( image, panel, transform, bbox );
-      logger.showElapsedTime( "Rendered map #" + i );
+      logger.takeInterimTime();
+
+      paintPanel( image, themePainter );
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Rendered map #" + i + ": " );
+
+      if( i == 0 )
+        ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) );
     }
 
-// logger.showElapsedTime( "Render map to file" );
-// FileOutputStream stream = new FileOutputStream( new File( "C:/tmp/image.png" ) );
-// new ExportableMap( panel, 1024, 800, "png" ).exportObject( stream, new NullProgressMonitor(), new BaseConfiguration()
-// );
+    logger.printCurrentTotal( "Total: " );
 
-    logger.showElapsedTime( "Map was rendered" );
+    modell.dispose();
+    panel.dispose();
   }
 
-  private void paintPanel( final BufferedImage image, final MapPanel panel, final GeoTransform transform, final GM_Envelope bbox )
+  private void paintPanel( final BufferedImage image, final ThemePainter painter ) throws CoreException
   {
-    final int width = image.getWidth();
-    final int height = image.getHeight();
+    Graphics2D gr = null;
+    try
+    {
+      gr = (Graphics2D) image.getGraphics();
 
-    final Graphics gr = image.getGraphics();
-
-    gr.setColor( Color.white );
-    gr.fillRect( 0, 0, width, height );
-    gr.setColor( Color.black );
-    gr.setClip( 0, 0, width, height );
-
-    transform.setDestRect( 0, 0, width, height );
-
-    final IMapModell model = panel.getMapModell();
-    final double scale = MapModellHelper.calcScale( model, bbox, width, height );
-    model.paint( gr, transform, bbox, scale, false );
+      painter.paintThemes( gr, false, null );
+    }
+    finally
+    {
+      if( gr != null )
+        gr.dispose();
+    }
   }
 
   /** @return null, iff not all data was loaded in time. */
   private GisTemplateMapModell loadMapAndWaitForData( final Gismapview gismapview, final URL resource, final CS_CoordinateSystem crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager )
   {
-    logger.showElapsedTime( "Loading map modell..." );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Loading map modell..." );
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
     try
@@ -175,7 +209,8 @@ public class GisMapPerfTest extends TestCase
         return null;
       }
     }
-    logger.showElapsedTime( "Map modell and data loaded." );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Map modell and data loaded." );
 
     return mapModell;
   }
@@ -197,26 +232,31 @@ public class GisMapPerfTest extends TestCase
     return true;
   }
 
-  public void tostGMLLoading( ) throws Exception
+  private void gmlLoading( final URL gmlResource ) throws Exception
   {
     final TimeLogger logger = new TimeLogger( "Starting test" );
 
-    logger.showElapsedTime( "Loading workspace first time" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Loading workspace first time: " );
 
-    final URL resource = getClass().getResource( "resources/triangles/triangle.gml" );
-    GmlSerializer.createGMLWorkspace( resource, null );
+    GmlSerializer.createGMLWorkspace( gmlResource, null );
 
-    logger.showElapsedTime( "Workspace was loaded" );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Workspace was loaded: " );
 
     // now test it several times
     for( int i = 0; i < 10; i++ )
     {
-      logger.showElapsedTime( "Loading Workspace #" + i );
-      GmlSerializer.createGMLWorkspace( resource, null );
-      logger.showElapsedTime( "Workspace #" + i + "loaded" );
+      logger.takeInterimTime();
+
+      GmlSerializer.createGMLWorkspace( gmlResource, null );
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Workspace # " + i + " loaded: " );
     }
 
-    logger.showElapsedTime( "Test finished" );
+    logger.takeInterimTime();
+    logger.printCurrentTotal( "TOTAL: " );
   }
 
 }
