@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -60,7 +60,7 @@ import java.util.Map.Entry;
  */
 public class UrlUtilities implements IUrlResolver
 {
-  private Properties m_replaceTokenMap = new Properties();
+  private final Properties m_replaceTokenMap = new Properties();
 
   /**
    * <p>
@@ -68,9 +68,9 @@ public class UrlUtilities implements IUrlResolver
    * </p>
    * 
    * @param baseURL
-   *          URL, to which the relative url will be resolved
+   *            URL, to which the relative url will be resolved
    * @param relativeURL
-   *          a string designating an absolute or relative URL
+   *            a string designating an absolute or relative URL
    * @return if relativeURL is relative, return new URL( baseURL, relativeURL ), else return new URL( relativeURL )
    * @throws MalformedURLException
    */
@@ -83,7 +83,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
    */
-  public final Iterator<Entry<Object, Object>> getReplaceEntries()
+  public final Iterator<Entry<Object, Object>> getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
   }
@@ -148,7 +148,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * Öffnet die URL-Connection und gibt null zurück bei Fehler
    */
-  public static URLConnection connectQuietly( URL url )
+  public static URLConnection connectQuietly( final URL url )
   {
     URLConnection connection;
 
@@ -157,7 +157,7 @@ public class UrlUtilities implements IUrlResolver
       connection = url.openConnection();
       connection.connect();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       connection = null;
     }

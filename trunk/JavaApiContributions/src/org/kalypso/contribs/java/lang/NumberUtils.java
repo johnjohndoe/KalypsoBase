@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.lang;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
  * Utility class for Number parsing etc.
@@ -106,4 +109,43 @@ public final class NumberUtils
     final Number number = instance.parse( value );
     return number.intValue();
   }
+
+  /**
+   * Tries to parse a {@link BigDecimal} from a part of a string and additionally sets the indicated scale.
+   * 
+   * @param line
+   *            The string from which to parse the decimal.
+   * @param beginIndex
+   *            the beginning index, inclusive.
+   * @param endIndex
+   *            the ending index, exclusive.
+   * @param scale
+   *            The scale to set on the parsed decimal. If rounding is necessary the {@link BigDecimal#ROUND_HALF_UP}
+   *            method is used.
+   * @return A new BigDecimal parsed from the indicated substring scaled to the givern scale. <code>null</code>, if
+   *         the substring is not parseable as BigDecimal or if the given string is too short.
+   * @throws IllegalArgumentException
+   *             If <code>beginIndex</code> is not less than <code>endIndex</code>.
+   * @see BigDecimal
+   * @see BigDecimal#setScale(int, int)
+   * @see String#substring(int, int)
+   */
+  public static BigDecimal parseQuietDecimal( final String line, final int beginIndex, final int endIndex, final int scale )
+  {
+    Assert.isLegal( beginIndex < endIndex );
+
+    if( line.length() - 1 < endIndex )
+      return null;
+
+    final String substring = line.substring( beginIndex, endIndex ).trim();
+    try
+    {
+      return new BigDecimal( substring ).setScale( scale, BigDecimal.ROUND_HALF_UP );
+    }
+    catch( final NumberFormatException e )
+    {
+      return null;
+    }
+  }
+
 }
