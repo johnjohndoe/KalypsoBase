@@ -16,7 +16,7 @@
     <observation linktype="zml" ns5:href="Pegel/Wittenberg.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c15" name="W - Wittenberg [cm]" width="50"/>
     </observation>
-    <observation linktype="zml" ns6:href="Pegel/Schoena.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns6:href="Pegel/Schöna.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c16" name="W - Schöna [cm]" width="50"/>
     </observation>
     <observation linktype="zml" ns7:href="Pegel/Brandys.zml" xmlns:ns7="http://www.w3.org/1999/xlink">

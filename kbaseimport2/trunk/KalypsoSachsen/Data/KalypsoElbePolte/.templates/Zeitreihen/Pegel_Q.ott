@@ -16,7 +16,7 @@
     <observation linktype="zml" ns5:href="Pegel/Wittenberg.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" format="%.3f" id="c5" name="Q - Wittenberg [m³/s]" width="50"/>
     </observation>
-    <observation linktype="zml" ns6:href="Pegel/Schoena.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns6:href="Pegel/Schöna.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" format="%.3f" id="c6" name="Q - Schöna [m³/s]" width="50"/>
     </observation>
     <observation linktype="zml" ns7:href="Pegel/Brandys.zml" xmlns:ns7="http://www.w3.org/1999/xlink">

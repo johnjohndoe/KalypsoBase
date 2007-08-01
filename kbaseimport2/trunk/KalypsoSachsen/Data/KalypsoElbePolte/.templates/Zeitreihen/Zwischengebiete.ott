@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <features>Alarmstufen;Vorhersage</features>
-    <observation linktype="zml" ns1:href="Zwischengebiete/Loeben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns1:href="Zwischengebiete/Löben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" format="%.3f" id="c1" name="Q - Löben [m³/s]" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zwischengebiete/UstiDresden.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
