@@ -132,19 +132,21 @@ public class ExportableTemplateObject implements IExportableObject
           + ". Nur .odt und .ott Vorlagen werden unterstützt." );
   }
 
-public String getPreferredDocumentName()
+  public String getPreferredDocumentName()
   {
     switch( m_exportType )
     {
     case EXPORT_TYPE_DIAGRAM:
       final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-      return FileUtilities.validateName( m_documentName + "." + format,"_");
+      return FileUtilities.validateName( m_documentName + "." + format, "_" );
     case EXPORT_TYPE_TABLE:
       return FileUtilities.validateName( m_documentName + ".csv", "_" );
     default:
       return FileUtilities.validateName( "<default>", "_" );
     }
-  }  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+  }
+
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
       final Configuration metadataExtensions )
   {
     Reader reader = null;

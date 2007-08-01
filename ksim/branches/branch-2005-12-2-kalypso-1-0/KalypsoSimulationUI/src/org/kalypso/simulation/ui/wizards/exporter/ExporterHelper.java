@@ -237,7 +237,7 @@ public final class ExporterHelper
       IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + category
+        return StatusUtilities.createErrorStatus( "Diagramm " + tpl.getTitle() + " (" + category
             + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
@@ -307,7 +307,7 @@ public final class ExporterHelper
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Tabelle (" + category
+        return StatusUtilities.createErrorStatus( "Tabelle (" + category
             + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
