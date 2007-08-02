@@ -29,6 +29,12 @@
 	<gft:combo property="wb1d2d:kind" tooltip="Fließformel"  enabled="false" style="SWT.DROP_DOWN | SWT.READ_ONLY">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
+	<gft:label text="Richtung" visible="true" tooltip="Richtung [°]" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:spinner property="wb1d2d:direction" tooltip="Richtung [°]" style="SWT.BORDER | SWT.HORIZONTAL">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:spinner>
 	<gft:group text="Parameter" tooltip="Parameter" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
