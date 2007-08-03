@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.awt;
 
@@ -57,7 +57,6 @@ public class ColorUtilities
    * component of the new color.
    * 
    * @param org
-   * 
    * @return new Color
    */
   public static Color createComplementary( final Color org )
@@ -72,9 +71,9 @@ public class ColorUtilities
    * 
    * @return a new Color which components have been given by Math.random().
    */
-  public static Color random()
+  public static Color random( )
   {
-    return new Color( (float)Math.random(), (float)Math.random(), (float)Math.random() );
+    return new Color( (float) Math.random(), (float) Math.random(), (float) Math.random() );
   }
 
   /**
@@ -84,42 +83,34 @@ public class ColorUtilities
    */
   public static Color random( final float alpha )
   {
-    return new Color( (float)Math.random(), (float)Math.random(), (float)Math.random(), alpha );
+    return new Color( (float) Math.random(), (float) Math.random(), (float) Math.random(), alpha );
   }
 
   /**
    * Create a color similar to the given one, but distant of the given distance. The color components from the original
    * color are derived as many times as distance. Thus, if distance is 0, the original color is returned. The same alpha
    * value is kept between the original color and the newly created one.
-   * 
    * <p>
    * Note to developer: ameliorate the algorithm for finding derivate color
    */
-  public static Color derivateColor( final Color c, int distance )
+  public static Color derivateColor( final Color c, final int distance )
   {
     if( distance == 0 )
       return c;
 
     // get color components
     final int a = c.getAlpha();
-    final int[] rgb =
-    {
-        c.getRed(),
-        c.getGreen(),
-        c.getBlue() };
+    final int[] rgb = { c.getRed(), c.getGreen(), c.getBlue() };
 
     // test if components are all 0 or all 255
-    final int[] range =
+    final int[] range = { 0, 255 };
+    for( final int element : range )
     {
-        0,
-        255 };
-    for( int i = 0; i < range.length; i++ )
-    {
-      if( rgb[0] == range[i] && rgb[1] == range[i] && rgb[2] == range[i] )
+      if( rgb[0] == element && rgb[1] == element && rgb[2] == element )
       {
-        rgb[0] = (int)( Math.random() * 255 );
-        rgb[1] = (int)( Math.random() * 255 );
-        rgb[2] = (int)( Math.random() * 255 );
+        rgb[0] = (int) (Math.random() * 255);
+        rgb[1] = (int) (Math.random() * 255);
+        rgb[2] = (int) (Math.random() * 255);
       }
     }
 
@@ -138,14 +129,30 @@ public class ColorUtilities
   }
 
   /**
+   * Creates a color from the given color with the indicated alpha value.
    * 
    * @param color
    * @param alpha
-   *          0 - 255
+   *            0 - 255
    * @return transparent color
    */
   public static Color createTransparent( final Color color, final int alpha )
   {
     return new Color( color.getRed(), color.getGreen(), color.getBlue(), alpha );
+  }
+
+  /**
+   * Creates a color from the given color with the indicated opacity.
+   * 
+   * @param opacity
+   *            0.0 - 1.0: Corresponds to alpha value from 0 to 255.
+   */
+  public static Color createTransparent( final Color color, final double opacity )
+  {
+    final int alpha = (int) Math.round( opacity * 255 );
+    final int red = color.getRed();
+    final int green = color.getGreen();
+    final int blue = color.getBlue();
+    return new Color( red, green, blue, alpha );
   }
 }
