@@ -148,4 +148,24 @@ public final class NumberUtils
     }
   }
 
+  /**
+   * Returns the next bigger {@link BigDecimal} with the same scale.
+   * 
+   * @see BigDecimal
+   */
+  public static BigDecimal increment( final BigDecimal decimal )
+  {
+    return decimal.add( decimal.ulp() );
+  }
+
+  /**
+   * Returns the next smaller {@link BigDecimal} with the same scale.
+   * 
+   * @see BigDecimal
+   */
+  public static BigDecimal decrement( final BigDecimal decimal )
+  {
+    return decimal.subtract( decimal.ulp() );
+  }
+
 }
