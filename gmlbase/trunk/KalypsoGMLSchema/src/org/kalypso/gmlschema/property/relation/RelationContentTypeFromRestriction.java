@@ -108,15 +108,15 @@ public class RelationContentTypeFromRestriction extends RelationContentType
   @Override
   public String[] collectReferences( )
   {
-    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
-    final XmlObject[] xmlObjectsFromRestriction = m_restriction.selectPath( DOCREF_XPATH );
+    final XmlObject[] xmlObjects = getComplexType().selectPath( RelationContentType.DOCREF_XPATH );
+    final XmlObject[] xmlObjectsFromRestriction = m_restriction.selectPath( RelationContentType.DOCREF_XPATH );
 
     /* Derived refs overwrite ths from the restriction. */
     final Set<String> refs = new HashSet<String>( xmlObjects.length );
     for( final XmlObject object : xmlObjectsFromRestriction )
-      refs.add( object.newCursor().getTextValue() );
+      refs.add( object.newCursor().getTextValue().trim() );
     for( final XmlObject object : xmlObjects )
-      refs.add( object.newCursor().getTextValue() );
+      refs.add( object.newCursor().getTextValue().trim() );
 
     return refs.toArray( new String[refs.size()] );
   }

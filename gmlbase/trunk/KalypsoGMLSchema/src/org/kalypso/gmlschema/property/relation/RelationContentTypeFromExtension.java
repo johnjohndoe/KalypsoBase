@@ -59,7 +59,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
 
   private AttributeGroupRef[] m_attributeGroupArray;
 
-  public RelationContentTypeFromExtension( GMLSchema schema, ComplexType complexType, ExtensionType extension ) throws GMLSchemaException
+  public RelationContentTypeFromExtension( final GMLSchema schema, final ComplexType complexType, final ExtensionType extension ) throws GMLSchemaException
   {
     super( schema, complexType );
     m_extension = extension;
@@ -79,7 +79,7 @@ public class RelationContentTypeFromExtension extends RelationContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -109,15 +109,15 @@ public class RelationContentTypeFromExtension extends RelationContentType
   @Override
   public String[] collectReferences( )
   {
-    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
-    final XmlObject[] xmlObjectsFromRestriction = m_extension.selectPath( DOCREF_XPATH );
+    final XmlObject[] xmlObjects = getComplexType().selectPath( RelationContentType.DOCREF_XPATH );
+    final XmlObject[] xmlObjectsFromRestriction = m_extension.selectPath( RelationContentType.DOCREF_XPATH );
 
     /* Derived refs overwrite ths from the extension. */
     final Set<String> refs = new HashSet<String>( xmlObjects.length );
     for( final XmlObject object : xmlObjectsFromRestriction )
-      refs.add( object.newCursor().getTextValue() );
+      refs.add( object.newCursor().getTextValue().trim() );
     for( final XmlObject object : xmlObjects )
-      refs.add( object.newCursor().getTextValue() );
+      refs.add( object.newCursor().getTextValue().trim() );
 
     return refs.toArray( new String[refs.size()] );
   }

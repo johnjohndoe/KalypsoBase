@@ -74,11 +74,11 @@ public class RelationContentTypeFromSequence extends RelationContentType
   @Override
   public String[] collectReferences( )
   {
-    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
+    final XmlObject[] xmlObjects = getComplexType().selectPath( RelationContentType.DOCREF_XPATH );
 
     final List<String> refs = new ArrayList<String>( xmlObjects.length );
     for( final XmlObject object : xmlObjects )
-      refs.add( object.newCursor().getTextValue() );
+      refs.add( object.newCursor().getTextValue().trim() );
 
     return refs.toArray( new String[refs.size()] );
   }
