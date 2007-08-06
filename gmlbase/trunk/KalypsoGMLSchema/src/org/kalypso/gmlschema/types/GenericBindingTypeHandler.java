@@ -126,7 +126,7 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
     final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
-    marshal( propQName, jaxElement, xmlReader, context, gmlVersion );
+    marshal( propQName, jaxElement, xmlReader, gmlVersion );
   }
 
   public <T> void marshal( final QName propQName, final JAXBElement<T> element, final XMLReader xmlReader, final String gmlVersion ) throws SAXException
