@@ -11,6 +11,8 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TraverseEvent;
@@ -343,6 +345,18 @@ public class ExcelTableCursor extends TableCursor
     final Table table = viewer.getTable();
     table.addKeyListener( m_tableKeyListener );
 
+    // BUGFIX: always invalidate self if table was redrawn. Fixes: if a row was deleted/added,
+    // the cursor showed still the old value
+    // Is there a better idea than to use PaintListener? Also the cursor should keep its
+    // relative place in the table
+    table.addPaintListener( new PaintListener()
+    {
+      public void paintControl( final PaintEvent e )
+      {
+        ExcelTableCursor.this.redraw();
+      }
+    } );
+
     addMouseListener( m_cellEditorMouseListener );
   }
 
@@ -411,13 +425,13 @@ public class ExcelTableCursor extends TableCursor
     // ??
 
     // do not loose pressed character
-    // 
+    //
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
       final Button button = (Button) control;
       button.setSelection( !button.getSelection() );
     }
-    // 
+    //
     if( control instanceof Text )
     {
       final Text text = (Text) control;
