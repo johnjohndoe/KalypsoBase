@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -59,8 +59,6 @@ import org.xml.sax.XMLReader;
  */
 public class ListSimpleTypeHandler implements IMarshallingTypeHandler
 {
-  private final XsdBaseContentHandler m_contentHandler = new XsdBaseContentHandler( this, null );
-
   private final ISimpleMarshallingTypeHandler<Object> m_baseTypeHandler;
 
   @SuppressWarnings("unchecked")
@@ -135,13 +133,8 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
   {
     try
     {
-      // REMARK: We had a small performance and memory problem here, because each time the method
-      // was called a content handler (and severel other classes) where instantiated.
-      // But this method is called quite often!
-      // We now resuse the same content handler. This is safe, because a simle type never contains any other types.
-      m_contentHandler.setMarshalResultEater( marshalResultEater, true );
-
-      xmlReader.setContentHandler( m_contentHandler );
+      final XsdBaseContentHandler contentHandler = new XsdBaseContentHandler( this, marshalResultEater );
+      xmlReader.setContentHandler( contentHandler );
     }
     catch( final Exception e )
     {
