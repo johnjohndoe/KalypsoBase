@@ -56,18 +56,22 @@ public interface ITerrainModel extends IModel
 
   public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
 
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerPolynomCollection" );
+  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
 
   public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
 
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
 
+  public IRoughnessLayerCollection getRoughnessLayerCollection( );
+  
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
+  
+  public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer );
   
   /**
    * Return the terrain elevation system of this terrain model
    * @return the terrain elevation system of this model
    */
   public ITerrainElevationModelSystem getTerrainElevationModelSystem();
-  
+
 }
