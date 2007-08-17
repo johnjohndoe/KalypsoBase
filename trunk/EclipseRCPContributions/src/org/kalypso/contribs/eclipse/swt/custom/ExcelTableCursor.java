@@ -353,7 +353,8 @@ public class ExcelTableCursor extends TableCursor
     {
       public void paintControl( final PaintEvent e )
       {
-        ExcelTableCursor.this.redraw();
+        if( !ExcelTableCursor.this.isDisposed() )
+          ExcelTableCursor.this.redraw();
       }
     } );
 
