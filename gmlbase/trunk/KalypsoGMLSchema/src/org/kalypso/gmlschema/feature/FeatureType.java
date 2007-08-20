@@ -190,8 +190,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final IPropertyType[] properties = m_featureContentType.getProperties();
     final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
     // REMARK: used to get position for gml:location property. We cannot acces the position via getProperty(), because
-    // this stuff
-    // is not yet initialized.
+    // this stuff is not yet initialized.
     int locationPos = -1;
     for( int i = 0; i < properties.length; i++ )
     {
@@ -218,9 +217,9 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 // if this is realy needed feature_impl.getDefault geometry is the better
 // place to hack
 // // HACK: if no other geometry was found, take gml:location
-// if( m_defaultGeometryPosition < 0 )
-// m_defaultGeometryPosition = locationPos;
-
+//    if( m_defaultGeometryPosition < 0 )
+//      m_defaultGeometryPosition = locationPos;
+    
     m_geoPTs = list.toArray( new IValuePropertyType[list.size()] );
   }
 
