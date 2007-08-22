@@ -46,7 +46,7 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  *
  */
 public interface IRoughnessLayer extends IFeatureWrapper2
