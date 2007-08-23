@@ -54,7 +54,7 @@ import org.eclipse.core.resources.IResourceVisitor;
  */
 public class CollectFilesVisitor implements IResourceVisitor
 {
-  private Set<IFile> m_files = new HashSet<IFile>();
+  private final Set<IFile> m_files = new HashSet<IFile>();
 
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
@@ -62,7 +62,7 @@ public class CollectFilesVisitor implements IResourceVisitor
   public boolean visit( final IResource resource )
   {
     if( resource.getType() == IResource.FILE )
-      m_files.add( (IFile)resource );
+      m_files.add( (IFile) resource );
 
     return true;
   }
@@ -70,12 +70,12 @@ public class CollectFilesVisitor implements IResourceVisitor
   /**
    * Clears collected files, so visitor can be used again.
    */
-  public void reset()
+  public void reset( )
   {
     m_files.clear();
   }
 
-  public IFile[] getFiles()
+  public IFile[] getFiles( )
   {
     return m_files.toArray( new IFile[m_files.size()] );
   }
