@@ -6,16 +6,16 @@ import java.text.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.deegree.model.feature.FeatureCollection;
-import org.deegree_impl.io.shpapi.ShapeFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.gis.doubleraster.DGMDiffer;
 import org.kalypso.gis.doubleraster.DoubleFakeRaster;
 import org.kalypso.gis.doubleraster.DoubleProvider;
 import org.kalypso.gis.doubleraster.DoubleRaster;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
-import com.bce.gis.index.FeatureCollectionIndex;
 import com.bce.gis.io.hmo.HMOReader;
 import com.bce.gis.operation.raster2vector.Raster2Lines;
 import com.bce.gis.operation.raster2vector.SegmentCollector;
@@ -90,8 +90,11 @@ public class Hmo2Fli
     LOG.info( "Total volume of flooded area is: " + numberInstance.format( volumen ) + " [m³]" );
 
     // Shape schreiben
-    final FeatureCollection fc = gc.getFeatures();
-    if( fc.getSize() == 0 )
+     Feature fc = gc.getFeatures();
+     Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+     FeatureList list = (FeatureList) property;
+     
+    if( list.size() == 0 )
       LOG.log( Level.WARNING, "No features created" );
     else
     {
@@ -100,17 +103,18 @@ public class Hmo2Fli
 //        if( pable != null )
 //          pable.setNote( "Volumen wird ermittelt" );
         LOG.info( "Start calculation of shape volumes" );
-        final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
-        final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( featureIndex, PolygonCollector.VOLUME_PROP.getName() );
+        //final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
+        final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
         raster.walk( volumeWalker, pable );
         LOG.info( "Finished calculation of shape volumes" );
       }
 
       LOG.info( "Start writing shape: " + shapeBase );
       // transform geometries to shapes and write it
-      final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
-      sf.writeShape( fc );
-      sf.close();
+      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase);
+//      final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
+//      sf.writeShape( fc );
+//      sf.close();
       LOG.info( "Finished writing shape: " + shapeBase );
     }
 

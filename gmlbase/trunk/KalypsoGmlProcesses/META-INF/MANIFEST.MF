@@ -18,7 +18,6 @@ Eclipse-LazyStart: true
 Export-Package: com.bce.apps.wspfli,
  com.bce.ext.jargs,
  com.bce.ext.jts,
- com.bce.gis.index,
  com.bce.gis.io.hmo,
  com.bce.gis.io.zweidm,
  com.bce.gis.operation.hmo2fli,

@@ -1,14 +1,17 @@
 package com.bce.gis.operation.hmo2fli;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
 import org.kalypso.gis.doubleraster.DoubleRaster;
 import org.kalypso.gis.doubleraster.DoubleRasterWalker;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.bce.gis.index.FeatureCollectionIndex;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -18,22 +21,22 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class FeatureVolumeRasterWalker implements DoubleRasterWalker
 {
-  private final FeatureFactory m_featureFactory = new FeatureFactory();
+  //private final FeatureFactory m_featureFactory = new FeatureFactory();
 
-  private final String m_volumeProperty;
+  private final QName m_volumeProperty;
 
-  private final FeatureCollectionIndex m_featureIndex;
+  private final FeatureList m_featureIndex;
 
   private double m_cellArea = 0.0;
 
   private int m_count = 0;
 
-  private GeometryFactory m_geometryFactory = new GeometryFactory();
+  //private GeometryFactory m_geometryFactory = new GeometryFactory();
 
   /**
    * @param featureIndex
    */
-  public FeatureVolumeRasterWalker( final FeatureCollectionIndex featureIndex, final String volumeProperty )
+  public FeatureVolumeRasterWalker( final FeatureList featureIndex, final QName volumeProperty )
   {
     m_featureIndex = featureIndex;
     m_volumeProperty = volumeProperty;
@@ -58,8 +61,11 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
 
     if( !Double.isNaN( cellVolume ) )
     {
-      final GM_Position position = m_geometryFactory.createGM_Position( c.x, c.y );
-      final Feature[] features = m_featureIndex.query( position );
+      final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
+      
+      final List<?> results = m_featureIndex.query( position, null );
+      final Feature[] features = results.toArray( new Feature[]{} );
+      //final Feature[] features = m_featureIndex.query( position );
 
       for( int i = 0; i < features.length; i++ )
       {
@@ -84,8 +90,8 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
               newVolume = new Double( oldVolume + cellVolume );
             }
 
-            final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
-            f.setProperty( fp );
+            //final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
+            f.setProperty( m_volumeProperty, newVolume );
           }
         }
       }

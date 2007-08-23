@@ -50,8 +50,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.deegree.model.feature.FeatureCollection;
-import org.deegree_impl.io.shpapi.ShapeFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -66,6 +64,7 @@ import org.kalypso.gis.doubleraster.walker.MinMaxRasterWalker;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -75,7 +74,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import com.bce.gis.index.FeatureCollectionIndex;
 import com.bce.gis.operation.hmo2fli.FeatureVolumeRasterWalker;
 import com.bce.gis.operation.hmo2fli.TriangleDoubleProvider;
 import com.bce.gis.operation.raster2vector.Raster2Lines;
@@ -155,7 +153,7 @@ public class FloodDepthCalcJob implements ISimulation
 
   /**
    * @param floodDepthStep
-   *          Schrittweite
+   *            Schrittweite
    */
   public static void doFloodDepthIntersection( final String shapeBase, final IProgressMonitor monitor, final URL triangleGmlURL, final URL dtmGmlURL, final TYPE floodDepthType, final double floodDepthStep ) throws Exception, DoubleRasterException, IOException, SimulationException
   {
@@ -214,9 +212,9 @@ public class FloodDepthCalcJob implements ISimulation
         grenzenSet.add( new Double( i ) );
 
       grenzen = ArrayUtils.toPrimitive( grenzenSet.toArray( new Double[grenzenSet.size()] ) );
-//      System.out.println( "Grenzen: " + ArrayUtils.toString( grenzen ) );
+      // System.out.println( "Grenzen: " + ArrayUtils.toString( grenzen ) );
     }
-    
+
     monitor.subTask( "- ermittle Flieﬂtiefen" );
     final GeometryFactory GF = new GeometryFactory();
 
@@ -237,8 +235,11 @@ public class FloodDepthCalcJob implements ISimulation
 
     // Shape schreiben
     // TODO: we still use deegree api here, switch to kalypso-deegree
-    final FeatureCollection fc = gc.getFeatures();
-    if( fc.getSize() == 0 )
+    final Feature fc = gc.getFeatures();
+    Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    FeatureList list = (FeatureList) property;
+
+    if( list.size() == 0 )
     {
       // LOG.log( Level.WARNING, "No features created" );
       throw new SimulationException( "Intersection is empty", null );
@@ -250,8 +251,8 @@ public class FloodDepthCalcJob implements ISimulation
         // if( pable != null )
         // pable.setNote( "Volumen wird ermittelt" );
         // LOG.info( "Start calculation of shape volumes" );
-        final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
-        final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( featureIndex, PolygonCollector.VOLUME_PROP.getName() );
+        // final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
+        final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
         raster.walk( volumeWalker, new SubProgressMonitor( monitor, 3 ) );
         // LOG.info( "Finished calculation of shape volumes" );
       }
@@ -260,9 +261,10 @@ public class FloodDepthCalcJob implements ISimulation
       // transform geometries to shapes and write it
 
       monitor.subTask( "- schreibe Shape" );
-      final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
-      sf.writeShape( fc );
-      sf.close();
+      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase );
+      // final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
+      // sf.writeShape( fc );
+      // sf.close();
       // LOG.info( "Finished writing shape: " + shapeBase );
     }
     monitor.done();

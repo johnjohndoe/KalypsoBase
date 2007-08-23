@@ -2,12 +2,19 @@ package com.bce.gis.operation.raster2vector.collector;
 
 import java.util.Collection;
 
-import org.deegree.model.feature.FeatureCollection;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree_impl.model.geometry.JTSAdapter;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.operation.raster2vector.LinkedCoordinate;
 import com.bce.gis.operation.raster2vector.LinkedCoordinateException;
@@ -23,9 +30,13 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class LineStringCollector implements SegmentCollector
 {
-  private static final FeatureTypeProperty GRENZEN_PROP = FF.createFeatureTypeProperty( FEATURE_BASE_ID + ".hoehe", Double.class.getName(), false );
+  private static final IValuePropertyType GRENZEN_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "hoehe" ), DOUBLE_HANDLER.getTypeName(), DOUBLE_HANDLER, 0, 1, false );
+  // private static final FeatureTypeProperty GRENZEN_PROP = FF.createFeatureTypeProperty( FEATURE_BASE_ID + ".hoehe",
+  // Double.class.getName(), false );
 
-  private static final FeatureType FT = FF.createFeatureType( null, null, FEATURE_BASE_ID + " - FeatureTypeID", new FeatureTypeProperty[] { SHAPE_PROP, ID_PROP, BEZ_PROP, GRENZEN_PROP } );
+  private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( new QName( FEATURE_BASE_ID, "FeatureTypeID" ), new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, GRENZEN_PROP } );
+  // private static final FeatureType FT = FF.createFeatureType( null, null, FEATURE_BASE_ID + " - FeatureTypeID", new
+  // FeatureTypeProperty[] { SHAPE_PROP, ID_PROP, BEZ_PROP, GRENZEN_PROP } );
 
   private final GeometryFactory m_gf;
 
@@ -33,7 +44,8 @@ public class LineStringCollector implements SegmentCollector
 
   private final boolean m_bSimple;
 
-  private final FeatureCollection m_fc = FF.createFeatureCollection( "ShapeFeatureCollection", 0 );
+  private final Feature m_fc = ShapeSerializer.createShapeRootFeature( FT );
+  // private final FeatureCollection m_fc = FF.createFeatureCollection( "ShapeFeatureCollection", 0 );
 
   public LineStringCollector( final GeometryFactory gf, final double[] grenzen, final boolean bSimple )
   {
@@ -51,14 +63,20 @@ public class LineStringCollector implements SegmentCollector
   {
     try
     {
+      Object property = m_fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+      FeatureList list = (FeatureList) property;
+
       if( m_bSimple )
       {
-        final Double id = new Double( m_fc.getSize() );
+        final Double id = new Double( list.size() );
+        // final Double id = new Double( list.getSize() );
         final Double grenze = new Double( m_grenzen[index] );
         final String name = grenze.toString();
 
         final GM_Object gmGeo = JTSAdapter.wrap( m_gf.createLineString( new Coordinate[] { lc0.crd, lc1.crd } ) );
-        m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
+        Feature feature = FeatureFactory.createFeature( list.getParentFeature(), list.getParentFeatureTypeProperty(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } );
+        // m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
+        list.add( feature );
       }
       else
       {
@@ -73,11 +91,14 @@ public class LineStringCollector implements SegmentCollector
         {
           final GM_Object gmGeo = JTSAdapter.wrap( lineString );
 
-          final Double id = new Double( m_fc.getSize() );
+          final Double id = new Double( list.size() );
+          //final Double id = new Double( m_fc.getSize() );
           final Double grenze = new Double( m_grenzen[index] );
           final String name = "" + m_grenzen[index];
-
-          m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
+          
+          Feature feature = FeatureFactory.createFeature( m_fc, m_fc.getParentRelation(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } );
+          //m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
+          list.add(feature);
         }
       }
     }
@@ -90,7 +111,7 @@ public class LineStringCollector implements SegmentCollector
   /**
    * @see com.bce.gis.operation.raster2vector.SegmentCollector#getFeatures()
    */
-  public FeatureCollection getFeatures( )
+  public Feature getFeatures( )
   {
     return m_fc;
   }
