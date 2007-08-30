@@ -94,11 +94,22 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
 
+  /**
+   * Argument: Boolean, wenn <code>true</code>, wird bei jeder selection die Feature-View für das selektierte Feature
+   * neu aufgebaut. Falls <code>false</code>, zeigt die FeatureView immer das zuerst selektierte Feature an. Default:
+   * <code>true</code>.
+   */
+  private final static String PROP_RESELECT_FEATUREVIEW = "reselectFeatureview";
+
+  /**
+   * Argument: Boolean, wenn <code>true</code>, wird die Selektion von der Featureview bezogen (d.h. das Diagramm
+   * zeigt Observations aus dem Feature,. welches in der FeatureView angezeigt ist). Falls <code>false</code>, wird
+   * diese Selektion von der Karte bezogen. Default: <code>true</code>.
+   */
+  private final static String PROP_SELECTION_FROM_FEATUREVIEW = "selectionFromFeatureview";
+
   /** Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} */
   private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle";
-
-  /** Argument: Flag (true or false) if featureView shall listen to featureSelection in Map. Default is true */
-  private static final String PROP_FEATURE_VIEW_LISTENS_TO_MAP = "featureViewListensToMap";
 
   /**
    * Argument: falls true, wird der festeingebaute Berechnungsknopf nicht gezeigt. Nur aus Gründen der
@@ -291,10 +302,10 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     // if the featureToSelect property is set, we use the map!
     final String[] fid = getFeaturesToSelect();
-    {
-      final boolean forceSelectionInMap = !m_templateviewer.hasAdditionalDataObject();
-      selectFeaturesInMap( fid, true, forceSelectionInMap );
-    }
+    final boolean forceSelectionInMap = !m_templateviewer.hasAdditionalDataObject();
+    final boolean getDefaultSelection = !getSelectionFromFeatureview(); // if we dont get the selection from the
+                                                                        // featureview, we should try to default-select
+    selectFeaturesInMap( fid, !getDefaultSelection, forceSelectionInMap );
 
     // else we show the feature defined in the feature-template
     final Thread waitForFeature = new Thread()
@@ -334,11 +345,30 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    */
   protected FeatureList getSelectedFeatures()
   {
+    final boolean selectionFromFeatureview = getSelectionFromFeatureview();
+
+    if( !selectionFromFeatureview )
+    {
+      setSelectSource( SELECT_FROM_MAPVIEW );
+      return super.getSelectedFeatures();
+    }
+
+    // Wenn 'selectionFromFeatureview' gesetzt ist, als selection das in der Featureview gezeigte Feature anzeigen.
     final FeatureList list = FeatureFactory.createFeatureList( null, null );
     final Feature feature = m_templateviewer.getFeature();
     if( feature != null )
       list.add( feature );
     return list;
+  }
+
+  /**
+   * @return
+   */
+  private boolean getSelectionFromFeatureview()
+  {
+    final String selectionFromFeatureviewString = getArguments().getProperty( PROP_SELECTION_FROM_FEATUREVIEW, "true" );
+    final boolean selectionFromFeatureview = Boolean.valueOf( selectionFromFeatureviewString ).booleanValue();
+    return selectionFromFeatureview;
   }
 
   /**
@@ -360,34 +390,30 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     super.selectionChanged( event );
 
-    // refresh featureview (only if requested)
-    if( featureViewListensToMap() )
-    {
-      final ISelection selection = event.getSelection();
-      if( selection instanceof IFeatureSelection )
-      {
-        final IFeatureSelection featureSelection = (IFeatureSelection)selection;
-        final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
-        if( feature != null )
-        {
-          final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+    final String reselectFeatureview = getArguments().getProperty( PROP_RESELECT_FEATUREVIEW, "true" );
+    final boolean reselect = Boolean.valueOf( reselectFeatureview ).booleanValue();
 
-          final Control control = m_templateviewer.getControl();
-          if( control != null && !control.isDisposed() )
-            control.getDisplay().asyncExec( new Runnable()
+    // refresh featureview
+    final ISelection selection = event.getSelection();
+    if( selection instanceof IFeatureSelection )
+    {
+      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+      if( feature != null )
+      {
+        final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+
+        final Control control = m_templateviewer.getControl();
+        if( control != null && !control.isDisposed() )
+          control.getDisplay().asyncExec( new Runnable()
+          {
+            public void run()
             {
-              public void run()
-              {
+              if( reselect )
                 m_templateviewer.setFeature( workspace, feature );
-              }
-            } );
-        }
+            }
+          } );
       }
     }
-  }
-
-  protected boolean featureViewListensToMap()
-  {
-    return "true".equals( getArguments().getProperty( PROP_FEATURE_VIEW_LISTENS_TO_MAP, "true" ) );
   }
 }

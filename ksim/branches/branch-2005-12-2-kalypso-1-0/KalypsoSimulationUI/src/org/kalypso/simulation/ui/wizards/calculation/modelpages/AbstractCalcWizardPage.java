@@ -360,7 +360,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private String m_showZmlTable = "selected";
 
-  private final int m_selectSource;
+  private int m_selectSource;
 
   private String m_ignoreType;
 
@@ -374,6 +374,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
     super( name );
+    
     m_selectSource = selectSource;
   }
 
@@ -1103,9 +1104,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       public void run()
       {
-        //        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-        //        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-
         boolean refreshDiagramHack = true;
 
         // erstes feature des aktiven themas selektieren
@@ -1361,5 +1359,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private final String[] getIgnoreTypes()
   {
     return m_ignoreType == null ? new String[0] : m_ignoreType.split( ";" );
+  }
+  
+  public void setSelectSource( final int selectSource )
+  {
+    m_selectSource = selectSource;
   }
 }

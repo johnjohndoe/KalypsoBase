@@ -80,16 +80,18 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   private final IProgressMonitor m_monitor;
   private final String m_sourceTS;
   private final String m_targetTS;
+  private final String m_sourceFilter;
   private final URL m_context;
   private final IUrlResolver m_resolver;
   private final IObservationService m_srv;
 
   public CommitPrognoseFeatureVisitor( final IObservationService srv, final IUrlResolver resolver, final URL context,
-      final String sourceTS, final String targetTS, final IProgressMonitor monitor )
+      final String sourceTS, final String targetTS, final String sourceFilter, final IProgressMonitor monitor )
   {
     m_srv = srv;
     m_resolver = resolver;
     m_context = context;
+    m_sourceFilter = sourceFilter;
     m_monitor = monitor;
     m_sourceTS = sourceTS;
     m_targetTS = targetTS;
@@ -152,9 +154,15 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   private IStatus doIt( final String sourceHref, final String targetHref ) throws MalformedURLException,
       SensorException
   {
-    final URL urlRS = m_resolver.resolveURL( m_context, sourceHref );
-    final IObservation source = ZmlFactory.parseXML( urlRS, sourceHref );
-    //    final String destRef = targetHref;
+    final String filteredSourceHref;
+    if( m_sourceFilter != null && m_sourceFilter.length() > 0 && sourceHref.indexOf( '?' ) == -1 )
+      filteredSourceHref = sourceHref + "?" + m_sourceFilter;
+    else
+      filteredSourceHref = sourceHref;
+
+    final URL urlRS = m_resolver.resolveURL( m_context, filteredSourceHref );
+
+    final IObservation source = ZmlFactory.parseXML( urlRS, filteredSourceHref );
 
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
     final URL urlPG = m_resolver.resolveURL( m_context, destRef );
