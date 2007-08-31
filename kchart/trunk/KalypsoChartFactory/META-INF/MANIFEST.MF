@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ChartFactory Plug-in
+Bundle-Name: KalypsoChartFactory Plug-in
 Bundle-SymbolicName: org.kalypso.chart.factory;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .,
