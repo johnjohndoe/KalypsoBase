@@ -3,10 +3,10 @@ package org.kalypso.chart.framework.util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.view.ChartComposite;
 
 
 /**
@@ -50,11 +50,11 @@ public class ChartUtilities
   /**
    * maximises the chart view - that means all the available data of all layers is shown
    */
-  public static void maximize( final ChartComposite chart )
+  public static void maximize( final IChartModel chart )
   {
-    final IAxis[] axes = chart.getModel().getMapperRegistry().getAxes();
+    final IAxis[] axes = chart.getMapperRegistry().getAxes();
     chart.autoscale( axes );
-    chart.redraw();
+    chart.invalidate();
   }
 
 

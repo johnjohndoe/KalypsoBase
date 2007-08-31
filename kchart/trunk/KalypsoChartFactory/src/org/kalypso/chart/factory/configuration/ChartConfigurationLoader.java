@@ -91,8 +91,12 @@ public class ChartConfigurationLoader implements IReferenceResolver
 	  {
 	    is = new BufferedInputStream( configFile.getContents() );
 	    m_document = ChartConfigurationDocument.Factory.parse(is);
-	    is.close();
 	  }
+	  catch (Exception e)
+	  {
+	    e.printStackTrace(); 
+	  }
+	  
 	  finally
 	  {
 	    IOUtils.closeQuietly( is );

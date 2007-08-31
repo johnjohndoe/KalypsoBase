@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
-Bundle-SymbolicName: ChartBaseExtensions;singleton:=true
+Bundle-SymbolicName: KalypsoChartExtensionBase;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Localization: plugin

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.IChartModelEventListener;
+import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.model.layer.ILayerManagerEventListener;
@@ -27,8 +30,14 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	  private final Map<IAxis< ? >, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis< ? >, List<IChartLayer>>();
 	
 
-
+	private final ChartModelEventHandler m_handler=new ChartModelEventHandler();
+	  
 	private final ILayerManager m_manager  = new LayerManager();
+
+	/**
+	 * if set to true, all axes are sized automatically to fit all data into a layer
+	 */
+    private boolean m_autoscale=false;
 	  
 	
 	public ChartModel()
@@ -96,6 +105,11 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	          m_mapperRegistry.getComponent( layer.getTargetAxis() ).setVisible( false );
 	      }
 	    }
+	    
+	    if( m_autoscale )
+          autoscale( new IAxis[] { layer.getDomainAxis(), layer.getTargetAxis() } );
+	     
+	    
 	  }
 
 	/* (non-Javadoc)
@@ -103,7 +117,7 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	 */
 	public void onLayerAdded(IChartLayer layer) {
 		 updateAxisLayerMap( layer, true );
-		
+		 m_handler.fireModelChanged();
 	}
 
 	/* (non-Javadoc)
@@ -111,6 +125,7 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	 */
 	public void onLayerRemoved(IChartLayer layer) {
 		 updateAxisLayerMap( layer, false );
+		 m_handler.fireModelChanged();
 	}
 	
 	  /* (non-Javadoc)
@@ -166,6 +181,112 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
 	      }
 	    }
 	  }
+	  
+	  /**
+	   * automatically scales all given axes; scaling means here: show all available values
+	   */
+	  @SuppressWarnings("unchecked")
+	  public void autoscale( IAxis[] axes )
+	  {
+	    if( axes == null )
+	      axes = getMapperRegistry().getAxes();
+
+	    for( final IAxis axis : axes )
+	    {
+	      final List<IChartLayer> layers = getAxis2Layers().get( axis );
+	      if( layers == null )
+	        continue;
+
+	      final List<IDataRange> ranges = new ArrayList<IDataRange>( layers.size() );
+
+	      for( final IChartLayer layer : layers )
+	      {
+	          if (layer.isVisible())
+	          {
+	            final IDataRange range = getRangeFor( layer, axis );
+	            if( range != null )
+	              ranges.add( range );
+	          }
+	      }
+	      axis.autorange( ranges.toArray( new IDataRange[ranges.size()] ) );
+	    }
+	    m_handler.fireModelChanged();
+	  }
+	  
+	  /**
+	   * @return DataRange of all domain or target data available in the given layer
+	   */
+	  @SuppressWarnings("unchecked")
+    private IDataRange getRangeFor( final IChartLayer layer, final IAxis axis )
+	  {
+	    IDataContainer dc = layer.getDataContainer();
+	    if (dc==null)
+	      return null;
+	    else
+	    {
+	      if( axis == layer.getDomainAxis() )
+	        return dc.getDomainRange();
+	      else if( axis == layer.getTargetAxis() )
+	        return dc.getTargetRange();
+	      //letzer Fall: Achse hat nix mit Layer zu tun
+	      else
+	        return null;
+	    }
+	    
+	  }
+	  
+	  /**
+	   * sets autoscaling
+	   * 
+	   * @param b
+	   *          if true, axes are automatically scaled to show the layers full data range
+	   */
+	  public void setAutoscale( boolean b )
+	  {
+	    m_autoscale = b;
+
+	    if( m_autoscale )
+	      autoscale( null );
+	  }
+
+
+	  /**
+	   * maximises the chart view - that means all the available data of all layers is shown
+	   */
+	  public void maximize( )
+	  {
+	    final IAxis[] axes = getMapperRegistry().getAxes();
+	    autoscale( axes );
+	    //ModelChangedEvent werfen, damit Composite das Model neu zeichnet
+	  }
+
+
+    /**
+     * @see org.kalypso.chart.framework.model.IChartModelEventProvider#addChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+     */
+    public void addChartModelEventListener( IChartModelEventListener l )
+    {
+      m_handler.addChartModelEventListener( l );
+    }
+
+
+    /**
+     * @see org.kalypso.chart.framework.model.IChartModelEventProvider#removeChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+     */
+    public void removeChartModelEventListener( IChartModelEventListener l )
+    {
+      m_handler.removeChartModelEventListener( l );
+    }
+
+
+    /**
+     * @see org.kalypso.chart.framework.model.IChartModel#invalidate()
+     */
+    public void invalidate( )
+    {
+      m_handler.fireModelChanged();
+    }
+	  
 
 
 }

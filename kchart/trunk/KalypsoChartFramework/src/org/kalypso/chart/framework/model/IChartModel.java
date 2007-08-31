@@ -3,13 +3,14 @@ package org.kalypso.chart.framework.model;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.chart.framework.model.impl.ChartModelEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 
 
-public interface IChartModel 
+public interface IChartModel extends IChartModelEventProvider
 {
 
 	public IMapperRegistry getMapperRegistry();
@@ -26,4 +27,19 @@ public interface IChartModel
 	 */
 	public void setHideUnusedAxes(boolean b);
 
+    /**
+     * When called, all given axes set their DataRange so all ther layers data can be shown 
+     */
+	public void autoscale( IAxis[] axes );
+
+	/**
+	 * sets automatical autoscaling of axes
+	 */
+    public void setAutoscale( boolean b );
+
+    /**
+     * tells the ChartModel that one of its child elements (Layers or Axes) has changed
+     */
+    public void invalidate( );
+    
 }

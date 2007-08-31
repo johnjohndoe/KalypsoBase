@@ -8,7 +8,6 @@ Bundle-ClassPath: .,
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
- de.openali.xmlbeans;visibility:=reexport,
  org.kalypso.chart.framework;visibility:=reexport
 Export-Package: org.kalypso.chart.factory,
  org.kalypso.chart.factory.configuration,

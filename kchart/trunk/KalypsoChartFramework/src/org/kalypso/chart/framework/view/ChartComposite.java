@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.IChartModelEventListener;
+import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
@@ -34,7 +36,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
  */
-public class ChartComposite extends Composite implements IMapperRegistryEventListener, ILayerManagerEventListener
+public class ChartComposite extends Composite implements IMapperRegistryEventListener, IChartModelEventListener
 {
   
   /** axis pos --> axis placeholder */
@@ -59,15 +61,15 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
 	    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
 	    m_model = model;
 		
+	    m_model.addChartModelEventListener( this );
+	    
 	    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
 		
 	    setBackground( m_bgColor );
 	    
 	    createControl( this);
 
-
 	    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
-	    m_model.getLayerManager().addLayerManagerEventListener( this ); 
 	    
 	    IMapperRegistry ar=m_model.getMapperRegistry();
 	    IAxis[] axes = ar.getAxes();
@@ -172,7 +174,6 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
   public void dispose( )
   {
     m_model.getMapperRegistry().removeMapperRegistryEventListener( this );
-    m_model.getLayerManager().removeLayerManagerEventListener( this );
 
     m_model.clear();
 
@@ -227,75 +228,10 @@ public void onMapperAdded( final IMapper mapper)
 	}
   }
 
-  /**
-   * automatically scales all given axes; scaling means here: show all available values
-   */
-  @SuppressWarnings("unchecked")
-  public void autoscale( IAxis[] axes )
-  {
-    if( axes == null )
-      axes = m_model.getMapperRegistry().getAxes();
-
-    for( final IAxis axis : axes )
-    {
-      final List<IChartLayer> layers = m_model.getAxis2Layers().get( axis );
-      if( layers == null )
-        continue;
-
-      final List<IDataRange> ranges = new ArrayList<IDataRange>( layers.size() );
-
-      for( final IChartLayer layer : layers )
-      {
-    	  if (layer.isVisible())
-    	  {
-	        final IDataRange range = getRangeFor( layer, axis );
-	        if( range != null )
-	          ranges.add( range );
-    	  }
-      }
-      axis.autorange( ranges.toArray( new IDataRange[ranges.size()] ) );
-    }
-  }
-
-  /**
-   * @return DataRange of all domain or target data available in the given layer
-   */
-  private IDataRange getRangeFor( final IChartLayer layer, final IAxis axis )
-  {
-    if( axis == layer.getDomainAxis() )
-      return layer.getDataContainer().getDomainRange();
-    else if( axis == layer.getTargetAxis() )
-      return layer.getDataContainer().getTargetRange();
-    else
-      return null;
-  }
+  
 
 
 
-  /**
-   * sets autoscaling
-   * 
-   * @param b
-   *          if true, axes are automatically scaled to show the layers full data range
-   */
-  public void setAutoscale( boolean b )
-  {
-    m_autoscale = b;
-
-    if( m_autoscale )
-      autoscale( null );
-  }
-
-
-  /**
-   * maximises the chart view - that means all the available data of all layers is shown
-   */
-  public void maximize( )
-  {
-    final IAxis[] axes = getModel().getMapperRegistry().getAxes();
-    autoscale( axes );
-    redraw();
-  }
 
 
   public PlotCanvas getPlot( )
@@ -359,18 +295,6 @@ public void onMapperAdded( final IMapper mapper)
       setSize( getBounds().width, getBounds().height - 1 );
 
   }
-
-public void onLayerAdded(IChartLayer layer) {
-	 if( m_autoscale )
-	      autoscale( new IAxis[] { layer.getDomainAxis(), layer.getTargetAxis() } );
-	    redraw();
-}
-
-public void onLayerRemoved(IChartLayer layer) {
-	if( m_autoscale )
-	      autoscale( null );
-	redraw();
-}
 
 	public void setHideUnusedAxes(boolean hide)
 	{
@@ -446,6 +370,14 @@ public <T_logical> void zoomIn( final Point start, final Point end )
     }
   }
   redraw();
+}
+
+/**
+ * @see org.kalypso.chart.framework.model.IChartModelEventListener#onModelChanged()
+ */
+public void onModelChanged( )
+{
+    redraw();
 }
 
 
