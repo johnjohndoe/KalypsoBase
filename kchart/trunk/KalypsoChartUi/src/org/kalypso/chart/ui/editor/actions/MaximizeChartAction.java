@@ -42,22 +42,22 @@ package org.kalypso.chart.ui.editor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.chart.framework.util.ChartUtilities;
+import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.ChartUtilities;
 
 /**
  * @author Gernot Belger
  */
 public class MaximizeChartAction extends Action
 {
-  private final Chart m_chart;
+  private final ChartComposite m_chartComposite;
 
-  public MaximizeChartAction( final Chart chart )
+  public MaximizeChartAction( final ChartComposite chart )
   {
     super( "Maximieren", KalypsoChartUiPlugin.getImageDescriptor( "icons/elcl16/chart_maximize.gif" ) );
     
-    m_chart = chart;
+    m_chartComposite = chart;
   }
 
   /**
@@ -66,6 +66,6 @@ public class MaximizeChartAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    ChartUtilities.maximize( m_chart );
+    ChartUtilities.maximize( m_chartComposite.getModel() );
   }
 }

@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.factory.LayerType;
 
 /**
  * @author Gernot Belger
@@ -100,7 +100,7 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
       if( m_images.containsKey( chartLayer ) )
         return m_images.get( chartLayer );
 
-      final Image img = new Image( m_editor.getChart().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
+      final Image img = new Image( m_editor.getChartComposite().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
       // TODO: change this to getName
       m_editor.drawLegendIcon( chartLayer.getTitle(), img );
       m_images.put( chartLayer, img );

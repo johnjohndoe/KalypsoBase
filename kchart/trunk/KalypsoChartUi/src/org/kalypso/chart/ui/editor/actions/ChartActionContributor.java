@@ -41,7 +41,7 @@
 package org.kalypso.chart.ui.editor.actions;
 
 import org.eclipse.jface.action.IContributionManager;
-import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.chart.framework.view.ChartComposite;
 
 /**
  * Helper class which contributes actions for the chart to any contribution manager.
@@ -51,9 +51,9 @@ import org.kalypso.swtchart.chart.Chart;
  */
 public class ChartActionContributor
 {
-  public void contributeActions( final Chart chart, final IContributionManager manager )
+  public void contributeActions( final ChartComposite chartComposite, final IContributionManager manager )
   {
-    manager.add( new MaximizeChartAction( chart ) );
+    manager.add( new MaximizeChartAction( chartComposite ) );
     
     manager.update( true );
   }

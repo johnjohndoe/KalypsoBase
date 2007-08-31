@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -57,9 +55,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.ksp.chart.configuration.LayerType;
-import org.ksp.chart.configuration.ChartType.Layers;
-import org.ksp.chart.configuration.ChartType.Layers.LayerRef;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.ksp.chart.factory.ChartType;
+import org.ksp.chart.factory.LayerType;
+import org.ksp.chart.factory.RefType;
+import org.ksp.chart.factory.ChartType.Layers;
+
 
 /**
  * @author Gernot Belger
@@ -184,17 +185,24 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
   /* default-visible */void updateControl( )
   {
-    final Layers layers = m_editor.getChartType().getLayers();
+    
+    ChartConfigurationLoader ccl = m_editor.getChartConfigurationLoader();
+    ChartType chartType = m_editor.getChartType();
+    final Layers layers = chartType.getLayers();
 
-    final List<LayerRef> layerRefList = layers.getLayerRef();
-    final LayerType[] layerArray = new LayerType[layerRefList.size()];
+    RefType[] layerRefArray = layers.getLayerRefArray();
+    final LayerType[] layerArray = new LayerType[layerRefArray.length];
+    
     for( int i = 0; i < layerArray.length; i++ )
-      layerArray[i] = (LayerType) layerRefList.get( i ).getRef();
-
+    {
+      RefType refType = layerRefArray[i];
+      String idref = refType.getRef();
+      layerArray[i] = (LayerType) ccl.resolveReference( idref );
+    }
     m_viewer.setInput( layerArray );
-
     for( int i = 0; i < layerArray.length; i++ )
-      m_viewer.setChecked( layerArray[i], layerArray[i].isVisible() );
+      m_viewer.setChecked( layerArray[i], layerArray[i].getVisible() );
+    
   }
 
 }

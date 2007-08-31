@@ -1,10 +1,11 @@
 package org.kalypso.chart.ui.editor;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -14,6 +15,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,16 +29,22 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.chart.factory.configuration.ChartFactory;
+import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.impl.ChartModel;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.IChartMouseHandler;
+import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
+import org.kalypso.chart.ui.editor.mouse.DragMouseHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.configuration.ConfigLoader;
-import org.ksp.chart.configuration.ChartType;
-import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.factory.ChartConfigurationDocument;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * @author Gernot Belger
@@ -45,17 +53,21 @@ public class ChartEditor extends EditorPart
 {
   private Composite m_composite = null;
 
-  private ConfigurationType m_configuration = null;
+  private ChartConfigurationDocument m_configuration = null;
 
-  private Chart m_chart = null;
+  private IChartModel m_chartModel = null;
 
   private ChartType m_chartType = null;
+  
+  private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
   private ChartEditorOutlinePage m_outlinePage = null;
 
 //  private boolean m_isSaving;
 
   private boolean m_dirty = false;
+
+  private ChartComposite m_chartComposite = null;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -90,10 +102,10 @@ public class ChartEditor extends EditorPart
       {
         final IStorage storage = ((IStorageEditorInput) input).getStorage();
 
-        final ConfigurationType config = ConfigLoader.loadConfig( storage );
-
-        m_chartType = ChartLoader.findFirstChart( config );
-        m_configuration = config;
+        m_chartConfigurationLoader=new ChartConfigurationLoader(storage);
+        m_configuration = m_chartConfigurationLoader.getChartConfigurationDocument();
+        ChartType[] charts = m_chartConfigurationLoader.getCharts();
+        m_chartType = charts[0];
       }
     }
     catch( final Exception e )
@@ -148,13 +160,13 @@ public class ChartEditor extends EditorPart
     {
 //      m_isSaving = true;
 
-      final ConfigurationType config = m_configuration;
+      final ChartConfigurationDocument config = m_configuration;
       SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
-          ConfigLoader.writeConfig( config, writer );
+          config.save( writer );
         }
       };
 
@@ -239,7 +251,7 @@ public class ChartEditor extends EditorPart
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    m_chart = null;
+    m_chartModel = null;
 
     /* Reset controls */
     final Control[] children = m_composite.getChildren();
@@ -259,12 +271,44 @@ public class ChartEditor extends EditorPart
       try
       {
         final URL context = ResourceUtilities.createURL( file );
-        m_chart = new Chart( m_composite, SWT.BORDER );
-        ChartLoader.configureChart( m_chart, m_chartType, context );
-
-        m_chart.setAutoscale( true );
+        
+        
+       // m_chart = new Chart( m_composite, SWT.BORDER );
+        
+        m_chartModel=new ChartModel();
+        m_chartConfigurationLoader = new ChartConfigurationLoader(file);
+        
+        try
+        {
+          ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
+        }
+        catch( ConfigurationException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        
+        m_chartComposite =new ChartComposite(m_composite, SWT.BORDER, m_chartModel, new RGB(255,255,255));
+        IChartMouseHandler mouseHandler=new DragMouseHandler(m_chartComposite);
+        m_chartComposite.setMouseHandler( mouseHandler );
+        m_chartComposite.getModel().setAutoscale( true );
       }
       catch( final MalformedURLException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( CoreException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( XmlException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -282,14 +326,19 @@ public class ChartEditor extends EditorPart
     firePropertyChange( PROP_DIRTY );
   }
 
-  public Chart getChart( )
+  public ChartComposite getChartComposite( )
   {
-    return m_chart;
+    return m_chartComposite;
   }
 
   public ChartType getChartType( )
   {
     return m_chartType;
+  }
+  
+  public ChartConfigurationLoader getChartConfigurationLoader()
+  {
+    return m_chartConfigurationLoader;
   }
 
   /**
@@ -309,13 +358,13 @@ public class ChartEditor extends EditorPart
     return super.getAdapter( adapter );
   }
 
-  public void drawLegendIcon( final String name, final Image img )
+  public void drawLegendIcon( final String title, final Image img )
   {
-    final List<IChartLayer> layers = m_chart.getLayers();
+    final IChartLayer[] layers = m_chartModel.getLayerManager().getLayers();
     for( final IChartLayer layer : layers )
     {
       // TODO: change this to get id!
-      if( layer.getName().equals( name ) )
+      if( layer.getTitle().equals( title ) )
       {
         final Rectangle bounds = img.getBounds();
         layer.drawIcon( img, bounds.width, bounds.height );

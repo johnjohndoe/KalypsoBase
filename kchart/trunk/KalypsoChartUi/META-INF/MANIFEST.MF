@@ -9,11 +9,13 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide,
- org.kalypso.chart;visibility:=reexport,
  org.eclipse.core.resources,
  org.kalypso.jwsdp,
- org.eclipse.ui.views
+ org.eclipse.ui.views,
+ org.kalypso.chart.framework,
+ org.kalypso.chart.factory
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.chart.ui,
  org.kalypso.chart.ui.editor,
- org.kalypso.chart.ui.editor.actions
+ org.kalypso.chart.ui.editor.actions,
+ org.kalypso.chart.ui.editor.mouse

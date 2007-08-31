@@ -44,9 +44,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.kalypso.chart.framework.util.ChartUtilities;
+import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.editor.ChartEditor;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.ChartUtilities;
+
 
 /**
  * @author Gernot Belger
@@ -73,8 +74,8 @@ public class MaximizeActionDelegate implements IEditorActionDelegate
   {
     final ChartEditor chartEditor = (ChartEditor) m_targetEditor;
 
-    final Chart chart = chartEditor.getChart();
-    ChartUtilities.maximize( chart );
+    final ChartComposite chart = chartEditor.getChartComposite();
+    ChartUtilities.maximize( chart.getModel() );
   }
 
   /**
