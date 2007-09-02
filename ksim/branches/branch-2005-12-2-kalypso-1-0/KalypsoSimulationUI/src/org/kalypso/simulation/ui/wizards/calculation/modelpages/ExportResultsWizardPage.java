@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -52,6 +53,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -505,17 +507,24 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       if( resultLink == null )
         continue;
 
+      InputStream is = null;
       try
       {
         resultURL = resolver.resolveURL( context, ZmlURL.getIdentifierPart( resultLink.getHref() ) );
         // let's see if it throws an exception
-        resultURL.openStream();
-        // no exception means, result is existing
+        is = resultURL.openStream();
+        is.close();
+
+        // no exception means, result exists
         result.add( fe );
       }
       catch( final Exception ignored )
       {
         //   nothing, as exception is expected if result is not there
+      }
+      finally
+      {
+        IOUtils.closeQuietly( is );
       }
     }
     return result;
@@ -559,7 +568,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void startGrafik(  )
+  protected void startGrafik()
   {
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
@@ -608,7 +617,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere Rechenfälle ausführen
    */
-  public void refreshDiagram(  )
+  public void refreshDiagram()
   {
     getDiagView().removeAllItems();
 
