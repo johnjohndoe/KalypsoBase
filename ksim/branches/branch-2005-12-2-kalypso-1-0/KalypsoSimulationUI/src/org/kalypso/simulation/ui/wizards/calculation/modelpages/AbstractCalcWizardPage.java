@@ -59,6 +59,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -122,6 +123,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -136,6 +138,7 @@ import org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage;
 import org.kalypso.simulation.ui.wizards.calculation.TSLinkWithName;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -272,6 +275,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Argument: Flag (true or false) if the legend of the diagram is visible */
   private final static String PROP_DIAG_SHOW_LEGEND = "diagShowLegend";
 
+  /** Argument: Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  private final static String PROP_DIAGTEMPLATE = "diagTemplate";
+
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
@@ -333,7 +339,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private ObservationChart m_obsChart = null;
 
-  protected DiagView m_diagView = null;
+  private DiagView m_diagView = null;
 
   private Frame m_tableFrame = null;
 
@@ -371,10 +377,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private RestoreSelectionHelper m_selectionRestorer = null;
 
+  private ObsdiagviewType m_obsdiagviewType;
+
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
     super( name );
-    
+
     m_selectSource = selectSource;
   }
 
@@ -570,17 +578,38 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected Control initDiagram( final Composite parent )
   {
+    /* Load template if defined */
+    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+    if( diagFileName != null )
+    {
+      final IFile diagFile = (IFile)getProject().findMember( diagFileName );
+      InputStream is = null;
+      try
+      {
+        is = diagFile.getContents();
+        m_obsdiagviewType = DiagViewUtils.loadDiagramTemplateXML( is );
+        is.close();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( is );
+      }
+    }
+
+    final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+    m_ignoreType = ignoreType;
+
     try
     {
       final String showLegendString = getArguments().getProperty( PROP_DIAG_SHOW_LEGEND, "true" );
       final boolean showLegend = Boolean.valueOf( showLegendString ).booleanValue();
 
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
-      m_ignoreType = ignoreType;
-
       // actually creates the template
       m_diagView = new DiagView( true );
-      m_diagView.setShowLegend( showLegend );
 
       m_obsChart = new ObservationChart( m_diagView );
       m_obsChart.setBackgroundPaint( Color.WHITE );
@@ -590,6 +619,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
       m_diagFrame.setVisible( true );
+
+      if( m_obsdiagviewType == null )
+        m_diagView.setShowLegend( showLegend );
+      else
+        DiagViewUtils.applyXMLTemplate( m_diagView, m_obsdiagviewType, getContext(), false, null );
 
       return composite;
     }
@@ -609,7 +643,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_controlAdapter;
   }
 
-  public void refreshDiagram()
+  public void refreshDiagram( )
   {
     final TSLinkWithName[] obs = getObservations( true );
     refreshDiagramForContext( obs, getContext() );
@@ -639,7 +673,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void refreshDiagramForContext( final TSLinkWithName[] links, final URL context )
   {
-    if( m_diagView != null )
+    if( m_diagView != null && m_obsdiagviewType == null )
       CalcWizardHelper.updateZMLView( m_diagView, links, context, true, getIgnoreTypes() );
   }
 
@@ -822,7 +856,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     default:
       activeTheme = null;
     }
-    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
+    if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
       return FeatureFactory.createFeatureList( null, null );
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
@@ -1050,7 +1084,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 
     StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, true );
@@ -1360,9 +1393,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     return m_ignoreType == null ? new String[0] : m_ignoreType.split( ";" );
   }
-  
+
   public void setSelectSource( final int selectSource )
   {
     m_selectSource = selectSource;
+  }
+  
+  public DiagView getDiagView()
+  {
+    return m_diagView;
   }
 }

@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -158,9 +157,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /** Argument: Position des rechten Sash: Integer von 0 bis 100 */
   private final static String PROP_RIGHTSASH = "rightSash";
 
-  /** Argument: Pfad auf die Vorlage für das Diagramm (.odt Datei) */
-  private final static String PROP_DIAGTEMPLATE = "diagTemplate";
-
   /** Argument: */
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
 
@@ -176,8 +172,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   private static final String PROP_VISIBLE_EXPORT_PROGNOSE = "visibleExportPrognose";
 
   protected Object[] m_checkedElements;
-
-  protected ObsdiagviewType m_obsdiagviewType;
 
   public ExportResultsWizardPage()
   {
@@ -233,21 +227,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       setControl( sashForm );
 
       selectFeaturesInMap( getFeaturesToSelect() );
-
-      // Load Template for Grafix.exe
-      final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
-      if( diagFileName != null )
-      {
-        final IFile diagFile = (IFile)getProject().findMember( diagFileName );
-        try
-        {
-          m_obsdiagviewType = DiagViewUtils.loadDiagramTemplateXML( diagFile.getContents() );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
     }
     catch( final Exception e )
     {
@@ -580,7 +559,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void startGrafik()
+  protected void startGrafik(  )
   {
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
@@ -588,7 +567,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     final ObsdiagviewType xml;
     try
     {
-      xml = DiagViewUtils.buildDiagramTemplateXML( m_diagView );
+      xml = DiagViewUtils.buildDiagramTemplateXML( getDiagView() );
     }
     catch( JAXBException e2 )
     {
@@ -629,9 +608,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   /**
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere Rechenfälle ausführen
    */
-  public void refreshDiagram()
+  public void refreshDiagram(  )
   {
-    m_diagView.removeAllItems();
+    getDiagView().removeAllItems();
 
     if( m_checkedElements == null || m_checkedElements.length == 0 )
       return;
