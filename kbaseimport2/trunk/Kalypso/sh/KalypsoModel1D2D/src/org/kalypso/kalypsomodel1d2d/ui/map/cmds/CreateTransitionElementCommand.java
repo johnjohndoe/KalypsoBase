@@ -40,61 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
-import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-/**
- * Add junction context from 1D and 2D edge
- * 
- * 
- * @author Patrice Congo
- */
-@SuppressWarnings({"unchecked", "hiding"})
-public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d2dChangeCommand
+public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeCommand
 {
-  private IFE1D2DEdge edge1D;
-  
-  private IFE1D2DEdge edge2D;
-  
-  private IFEDiscretisationModel1d2d model;
-  
-  
-  private IJunctionContext1DTo2D addedJunction;
-  
-  /**
-   * @param model
-   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
-   *  by this command. the array must contains only {@link AddEdgeCommand} and 
-   *    {@link AddEdgeInvCommand} commands
-   */
-  public AddJunctionContextEle1DToEle2DFromEdgesCmd(
-              IFEDiscretisationModel1d2d model,
-              IFE1D2DEdge edge1D,
-              IFE1D2DEdge edge2D
-              )
+  private ITransitionElement m_transitionElement;
+  private final IFEDiscretisationModel1d2d m_model;
+  private final IContinuityLine1D m_line1D;
+  private final IContinuityLine2D m_line2D;
+
+  public CreateTransitionElementCommand( final IFEDiscretisationModel1d2d model, final IContinuityLine1D line1D, final IContinuityLine2D line2D ) throws IllegalArgumentException
   {
-    
-    Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( edge1D, "edge1D" );
-    Assert.throwIAEOnNullParam( edge2D, "edge2D" );
-    this.model = model;
-    this.edge2D = edge2D;
-    this.edge1D = edge1D;
-    
-  }
-  
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
-  public String getDescription( )
-  {
-    return "Add Junction from Element 1D and Continuity Line Selection";
+    m_model = model;
+    m_line1D = line1D;
+    m_line2D = line2D;
   }
 
   /**
@@ -102,7 +65,6 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
    */
   public boolean isUndoable( )
   {
-    //TODO implement undo using delete command
     return false;
   }
 
@@ -111,13 +73,13 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
    */
   public void process( ) throws Exception
   {
-    if(addedJunction==null)
+    if( m_transitionElement == null )
     {
       try
       {
-        addedJunction = 
-          JunctionContextOps.createEdgeToEdgeJunctionContext( 
-                                                model, edge1D, edge2D );
+        m_transitionElement = m_model.getComplexElements().addNew( ITransitionElement.QNAME, ITransitionElement.class );
+        m_transitionElement.addElementAsRef( m_line1D );
+        m_transitionElement.addElementAsRef( m_line2D );
       }
       catch( Exception e )
       {
@@ -127,15 +89,12 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
     }
   }
 
- 
-
-  
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    if(addedJunction==null)
+    if( m_transitionElement == null )
     {
       process();
     }
@@ -146,9 +105,9 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
    */
   public void undo( ) throws Exception
   {
-    if(addedJunction!=null)
+    if( m_transitionElement != null )
     {
-      //TODO remove element and links to it edges
+      // TODO remove element and links to it edges
     }
   }
 
@@ -157,16 +116,22 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    final ILineElement continuityLine =  
-                            addedJunction.getContinuityLine();    
-    return new IFeatureWrapper2[]{addedJunction, continuityLine};
+    return new IFeatureWrapper2[] { m_transitionElement };
   }
-  
+
   /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model;
+    return m_model;
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
+  public String getDescription( )
+  {
+    return "Creates transition element";
   }
 }

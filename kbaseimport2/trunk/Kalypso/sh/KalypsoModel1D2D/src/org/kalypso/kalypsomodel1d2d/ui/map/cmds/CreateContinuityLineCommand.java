@@ -40,48 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
-/**
- * Undoable route Line element command
- * 
- * @author Patrice Congo
- */
-public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
+public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
 {
-  private ILineElement m_addedElement;
+  private boolean m_processed = false;
+
+  private IFELine m_line;
 
   final private IFEDiscretisationModel1d2d m_model;
 
-  final private GM_Object m_routeGeometry;
-
-  final private Class< ? extends ILineElement> m_adapterTargetClass;
+  final private List<IFE1D2DNode> m_nodeList;
 
   final private QName m_lineElementQName;
 
-  /**
-   * @param model
-   * @param elementEdgeCmds
-   *            an array the command used to create the edges of the element to be created by this command. the array
-   *            must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
-   */
-  public RouteLineElementCommand( final IFEDiscretisationModel1d2d model, final GM_Object routeGeometry, final Class< ? extends ILineElement> adapterTargetClass, final QName lineElementQName )
+  public CreateContinuityLineCommand( final IFEDiscretisationModel1d2d model, final List<IFE1D2DNode> nodeList, final QName lineElementQName )
   {
     m_model = model;
-    m_routeGeometry = routeGeometry;
-    m_adapterTargetClass = adapterTargetClass;
+    m_nodeList = nodeList;
     m_lineElementQName = lineElementQName;
   }
 
@@ -90,7 +79,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Add FE element";
+    return "Create continuity line command";
   }
 
   /**
@@ -106,18 +95,23 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if( m_addedElement == null )
-    {
-      if( m_lineElementQName.equals( IBoundaryLine.QNAME ) )
-        m_addedElement = ContinuityLineOps.lineElementFromCurve( m_lineElementQName, m_adapterTargetClass, (GM_Curve) m_routeGeometry, m_model );
-      else
-        m_addedElement = ContinuityLineOps.boundaryLine1DFromPoint( m_lineElementQName, m_adapterTargetClass, (GM_Point) m_routeGeometry, m_model );
-      m_addedElement.getWrappedFeature().invalidEnvelope();
+    // TODO check if such a line already exists (with same nodes etc...)
+    
+    final Feature parentFeature = m_model.getWrappedFeature();
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    final IFeatureWrapperCollection<IFELine> continuityLines = m_model.getContinuityLines();
 
-      final Feature parentFeature = m_model.getWrappedFeature();
-      GMLWorkspace workspace = parentFeature.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_addedElement.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    }
+    if( m_lineElementQName.equals( IContinuityLine1D.QNAME ) )
+      m_line = continuityLines.addNew( m_lineElementQName, IContinuityLine1D.class );
+    else
+      m_line = continuityLines.addNew( m_lineElementQName, IContinuityLine2D.class );
+    
+    final List<IFE1D2DNode> nodes = m_line.createFullNodesList( m_nodeList );
+    for( int i = 0; i < nodes.size(); i++ )
+      nodes.get( i ).addContainer( m_line.getGmlID() );
+    m_line.getWrappedFeature().invalidEnvelope();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_processed = true;
   }
 
   /**
@@ -125,7 +119,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if( m_addedElement == null )
+    if( !m_processed )
     {
       process();
     }
@@ -136,7 +130,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if( m_addedElement != null )
+    if( m_processed )
     {
       // TODO remove element and links to it edges and delete element
     }
@@ -147,7 +141,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { m_addedElement };
+    return new IFeatureWrapper2[] { m_line };
   }
 
   /**
