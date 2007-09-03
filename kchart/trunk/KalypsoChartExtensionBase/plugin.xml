@@ -48,5 +48,9 @@
       <provider
             class="org.kalypso.chart.ext.base.axisrenderer.provider.NumberAxisRendererProvider"
             id="org.kalypso.chart.ext.axisrenderer.provider.Number"/>
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.FullNumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.FullNumber">
+      </provider>
    </extension>
 </plugin>

@@ -235,6 +235,8 @@ public class NumberTickCalculator
 	   */
 	  private static void findBetweens( double from, double to, double interval, List<Integer> divisors, List<Double> ticks, int level  )
 	  {
+
+	      
 		  String levelinset="";
 	      for (int i =0; i<level; i++)
 	      {
