@@ -74,7 +74,7 @@ public class CalculationUnit1D2DLabelProvider extends LabelProvider
     }
     else
     {
-      throw new RuntimeException( "Only ICalculation1D / ICalculation2D are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+      throw new RuntimeException( "Only ICalculation1D / ICalculation2D are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 }
