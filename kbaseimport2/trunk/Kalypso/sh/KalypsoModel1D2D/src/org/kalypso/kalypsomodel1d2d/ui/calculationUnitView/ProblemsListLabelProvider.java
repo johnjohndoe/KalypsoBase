@@ -72,12 +72,12 @@ public class ProblemsListLabelProvider extends LabelProvider
       }
       else
       {
-        return "";
+        return ""; //$NON-NLS-1$
       }
     }
     else
     {
-      throw new RuntimeException( "Only Valid Messages Supported:" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+      throw new RuntimeException( "Only Valid Messages Supported:" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
