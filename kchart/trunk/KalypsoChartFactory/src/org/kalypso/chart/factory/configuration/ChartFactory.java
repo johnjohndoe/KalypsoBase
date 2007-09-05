@@ -40,127 +40,125 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 
-
-
 /**
- * @author alibu
- * Creates a chart object from a configuration
+ * @author alibu Creates a chart object from a configuration
  */
 public class ChartFactory
 {
 
-	public static void configureChartModel( IChartModel model, ChartConfigurationLoader cl, String configChartName, URL context ) throws ConfigurationException
-	{
-		  ChartType dt=null;
-		  // ChartConfig auslesen
-		  if( cl != null )
-		  {
-			  ChartType[] charts = cl.getCharts();
-			  for (ChartType chart : charts) {
-				if (chart.getId().equals(configChartName))
-				{
-					dt=chart;
-					break;
-				}
-			}
-		  }
-		  if( dt == null )
-		  {
-			  throw new ConfigChartNotFoundException( configChartName );
-		  }
-		  else
-		  {
-			  try
-			  {
-				  doConfiguration( model, cl, dt, context );
-			  }
-			  catch (ConfigurationException e)
-			  {
-				  Logger.logError(Logger.TOPIC_LOG_CONFIG, " ChartModel could not be created");
-			  }
-		  }
-	  }
+  public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final URL context ) throws ConfigurationException
+  {
+    ChartType dt = null;
+    // ChartConfig auslesen
+    if( cl != null )
+    {
+      final ChartType[] charts = cl.getCharts();
+      for( final ChartType chart : charts )
+      {
+        if( chart.getId().equals( configChartName ) )
+        {
+          dt = chart;
+          break;
+        }
+      }
+    }
+    if( dt == null )
+    {
+      throw new ConfigChartNotFoundException( configChartName );
+    }
+    else
+    {
+      try
+      {
+        doConfiguration( model, cl, dt, context );
+      }
+      catch( final ConfigurationException e )
+      {
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, " ChartModel could not be created" );
+      }
+    }
+  }
 
   @SuppressWarnings("unchecked")
-private static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final URL context ) throws ConfigurationException
+  private static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final URL context ) throws ConfigurationException
   {
-	  
-	 Layers layers = chartType.getLayers();
-	 RefType[] layerRefArray = layers.getLayerRefArray();
-	 for (RefType layerRef : layerRefArray) {
-		String ref = layerRef.getRef();
-		LayerType layerType = (LayerType) rr.resolveReference(ref);
-		if (layerType!=null)
-		{
-			  // Achsen hinzufügen
-			Mapper mapper = layerType.getMapper();
-			AxisType domainAxisType = (AxisType) rr.resolveReference(mapper.getDomainAxisRef().getRef());
-			addAxis (model.getMapperRegistry(), rr, domainAxisType);
-			AxisType targetAxisType = (AxisType) rr.resolveReference(mapper.getTargetAxisRef().getRef());
-			addAxis (model.getMapperRegistry(), rr, targetAxisType);
-			
-			//Restliche Mapper hinzufügen
-			MapperRefType[] mapperRefArray = mapper.getMapperRefArray();
-			for (MapperRefType mapperRef : mapperRefArray) 
-			{
-				MapperType mapperType = (MapperType) rr.resolveReference(mapperRef.getRef());
-				if (mapperType != null)
-				{
-        		  addMapper( model.getMapperRegistry(), mapperType );
-				}
-			}
-			
-			 //Styles erzeugen
-	          LayerStyle ls=createStyle(layerType, rr);
-	          
-	         //Layer erzeugen
-        	ProviderType provider2 = layerType.getProvider();
-			final String providerId = provider2.getEpid();
-	          
-	          try
-	          {
-	            final ILayerProvider provider = ChartExtensionLoader.createLayerProvider( providerId );
-	            if( provider != null )
-	            {
-	              Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
-	              provider.init( model, layerType );
-	              IChartLayer icl = provider.getLayer( context );
-	              if( icl != null )
-	              {
-	                icl.setStyle( ls );
-	                icl.setId( layerType.getId() );
-	                icl.setTitle( layerType.getTitle() );
-	                icl.setDescription( layerType.getDescription() );
-	                icl.setVisible( layerType.getVisible() );
-	                model.getLayerManager().addLayer( icl );
-	                Logger.logInfo(Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
-	              }
-	            }
-	            else
-	            {
-	              Logger.logError( Logger.TOPIC_LOG_GENERAL, "No LayerProvider for " + providerId );
-	            }
-	          }
-	          catch( final CoreException e )
-	          {
-	            e.printStackTrace();
-	          }
-	          catch( final LayerProviderException e )
-	          {
-	            e.printStackTrace();
-	          }
-		}
+    final Layers layers = chartType.getLayers();
+    final RefType[] layerRefArray = layers.getLayerRefArray();
+    for( final RefType layerRef : layerRefArray )
+    {
+      final String ref = layerRef.getRef();
+      final LayerType layerType = (LayerType) rr.resolveReference( ref );
+      if( layerType != null )
+      {
+        // Achsen hinzufügen
+        final Mapper mapper = layerType.getMapper();
+        final AxisType domainAxisType = (AxisType) rr.resolveReference( mapper.getDomainAxisRef().getRef() );
+        addAxis( model.getMapperRegistry(), rr, domainAxisType );
+        final AxisType targetAxisType = (AxisType) rr.resolveReference( mapper.getTargetAxisRef().getRef() );
+        addAxis( model.getMapperRegistry(), rr, targetAxisType );
+
+        // Restliche Mapper hinzufügen
+        final MapperRefType[] mapperRefArray = mapper.getMapperRefArray();
+        for( final MapperRefType mapperRef : mapperRefArray )
+        {
+          final MapperType mapperType = (MapperType) rr.resolveReference( mapperRef.getRef() );
+          if( mapperType != null )
+          {
+            addMapper( model.getMapperRegistry(), mapperType );
+          }
+        }
+
+        // Styles erzeugen
+        final LayerStyle ls = createStyle( layerType, rr );
+
+        // Layer erzeugen
+        final ProviderType provider2 = layerType.getProvider();
+        final String providerId = provider2.getEpid();
+
+        try
+        {
+          final ILayerProvider provider = ChartExtensionLoader.createLayerProvider( providerId );
+          if( provider != null )
+          {
+            Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
+            provider.init( model, layerType );
+            final IChartLayer icl = provider.getLayer( context );
+            if( icl != null )
+            {
+              icl.setStyle( ls );
+              icl.setId( layerType.getId() );
+              icl.setTitle( layerType.getTitle() );
+              icl.setDescription( layerType.getDescription() );
+              icl.setVisible( layerType.getVisible() );
+              model.getLayerManager().addLayer( icl );
+              Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
+            }
+          }
+          else
+          {
+            Logger.logError( Logger.TOPIC_LOG_GENERAL, "No LayerProvider for " + providerId );
+          }
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+        catch( final LayerProviderException e )
+        {
+          e.printStackTrace();
+        }
+      }
       else
-    	  Logger.logWarning(Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved: "+layerRef.getRef());
-	 }
-	 
+        Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved: " + layerRef.getRef() );
+    }
+
   }
 
   /**
    */
   private static void addMapper( final IMapperRegistry ar, final MapperType mapperType )
   {
-	  
+
     if( mapperType != null )
     {
       final String mpId = mapperType.getProvider().getEpid();
@@ -170,15 +168,15 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
         {
           final IMapperProvider mp = ChartExtensionLoader.createMapperProvider( mpId );
           mp.init( mapperType );
-          final IMapper mapper = mp.getMapper() ;
+          final IMapper mapper = mp.getMapper();
           ar.addMapper( mapper );
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( MapperProviderException e )
+        catch( final MapperProviderException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -194,8 +192,7 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
     }
   }
-  
-  
+
   /**
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
@@ -210,55 +207,57 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
         try
         {
           final IAxisProvider ap = ChartExtensionLoader.createAxisProvider( apId );
-          if (ap!=null)
+          if( ap != null )
           {
-          ap.init( axisType );
-          final IAxis axis = ap.getAxis() ;
-          axis.setRegistry(ar);
-          ar.addMapper( axis );
+            ap.init( axisType );
+            final IAxis axis = ap.getAxis();
+            axis.setRegistry( ar );
+            ar.addMapper( axis );
 
-          if( ar.getRenderer( axis ) == null )
-          {
-        	RefType rendererRef = axisType.getRendererRef();
-        	AxisRendererType rendererType = (AxisRendererType) rr.resolveReference(rendererRef.getRef()); 
-        	if (rendererType !=null )
-        	{
-	        	String arpId = rendererType.getProvider().getEpid();
-	        	final IAxisRendererProvider arp = ChartExtensionLoader.createAxisRendererProvider( arpId );
-	        	
-	        	//Überprüfen, ob Renderer- und Axis-DataClass zusammenpassen
-	        	if (ChartFactoryUtilities.isSubclassOf(arp.getDataClass(), ap.getDataClass()))
-	        	{
-		        	arp.init(rendererType);
-		            IAxisRenderer axisRenderer = arp.getAxisRenderer();
-		            ar.setRenderer( axis.getIdentifier(), axisRenderer );
-		            Logger.trace("Adding AxisRenderer for: "+arp.getClass());
-	        	}
-	        	else
-	        	{
-	        		Logger.logError(Logger.TOPIC_LOG_CONFIG, "incompatible renderer for axis: "+arp.getDataClass()+ " != "+ap.getDataClass());
-	        	}
-        	}
-          }
+            if( ar.getRenderer( axis ) == null )
+            {
+              final RefType rendererRef = axisType.getRendererRef();
+              final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
+              if( rendererType != null )
+              {
+                final String arpId = rendererType.getProvider().getEpid();
+                final IAxisRendererProvider arp = ChartExtensionLoader.createAxisRendererProvider( arpId );
+
+                // Überprüfen, ob Renderer- und Axis-DataClass zusammenpassen
+                if( ChartFactoryUtilities.isSubclassOf( arp.getDataClass(), ap.getDataClass() ) )
+                {
+                  arp.init( rendererType );
+                  final IAxisRenderer axisRenderer = arp.getAxisRenderer();
+                  ar.setRenderer( axis.getIdentifier(), axisRenderer );
+                  Logger.trace( "Adding AxisRenderer for: " + arp.getClass() );
+                }
+                else
+                {
+                  Logger.logError( Logger.TOPIC_LOG_CONFIG, "incompatible renderer for axis: " + arp.getDataClass() + " != " + ap.getDataClass() );
+                }
+              }
+            }
           }
           else
           {
-        	  Logger.logError(Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: "+apId);
+            Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
           }
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( AxisProviderException e )
+        catch( final AxisProviderException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
-        } catch (AxisRendererProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        }
+        catch( final AxisRendererProviderException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
       else
       {
@@ -270,43 +269,46 @@ private static void doConfiguration( final IChartModel model, final IReferenceRe
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
     }
   }
-  
-  
-  
-  private static LayerStyle createStyle(LayerType l, IReferenceResolver rr)
+
+  private static LayerStyle createStyle( final LayerType l, final IReferenceResolver rr )
   {
-	  LayerStyle ls=new LayerStyle();
-	  Style style = l.getStyle();
-	  if (style!=null)
-	  {
-		  RefType[] styleRefArray = style.getStyleRefArray();
-		  for (RefType styleRef : styleRefArray)
-		  {
-			  StyleType st=(StyleType) rr.resolveReference(styleRef.getRef());
-			  ProviderType provider = st.getProvider();
-			  if (provider !=null)
-			  {
-				  IStyledElementProvider sp=null;
-				  try {
-					sp = ChartExtensionLoader.createStyledElementProvider(provider.getEpid() );
-					if (sp!=null)
-					{
-						sp.init(st);
-						IStyledElement styledElement = sp.getStyledElement();
-						ls.add(styledElement);
-					}
-					
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (StyledElementProviderException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			  }
-			  
-		  }
-	  }
-	  return ls;
+    final LayerStyle ls = new LayerStyle();
+    final Style style = l.getStyle();
+    if( style != null )
+    {
+      final RefType[] styleRefArray = style.getStyleRefArray();
+      for( final RefType styleRef : styleRefArray )
+      {
+        final StyleType st = (StyleType) rr.resolveReference( styleRef.getRef() );
+        final ProviderType provider = st.getProvider();
+        if( provider != null )
+        {
+          IStyledElementProvider sp = null;
+          try
+          {
+            sp = ChartExtensionLoader.createStyledElementProvider( provider.getEpid() );
+            if( sp != null )
+            {
+              sp.init( st );
+              final IStyledElement styledElement = sp.getStyledElement();
+              ls.add( styledElement );
+            }
+
+          }
+          catch( final CoreException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          catch( final StyledElementProviderException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+
+      }
+    }
+    return ls;
   }
 }

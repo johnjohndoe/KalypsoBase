@@ -37,7 +37,6 @@ import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartMouseHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mouse.DragMouseHandler;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -58,12 +57,12 @@ public class ChartEditor extends EditorPart
   private IChartModel m_chartModel = null;
 
   private ChartType m_chartType = null;
-  
+
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
   private ChartEditorOutlinePage m_outlinePage = null;
 
-//  private boolean m_isSaving;
+// private boolean m_isSaving;
 
   private boolean m_dirty = false;
 
@@ -102,9 +101,9 @@ public class ChartEditor extends EditorPart
       {
         final IStorage storage = ((IStorageEditorInput) input).getStorage();
 
-        m_chartConfigurationLoader=new ChartConfigurationLoader(storage);
+        m_chartConfigurationLoader = new ChartConfigurationLoader( storage );
         m_configuration = m_chartConfigurationLoader.getChartConfigurationDocument();
-        ChartType[] charts = m_chartConfigurationLoader.getCharts();
+        final ChartType[] charts = m_chartConfigurationLoader.getCharts();
         m_chartType = charts[0];
       }
     }
@@ -158,10 +157,10 @@ public class ChartEditor extends EditorPart
 
     try
     {
-//      m_isSaving = true;
+// m_isSaving = true;
 
       final ChartConfigurationDocument config = m_configuration;
-      SetContentHelper helper = new SetContentHelper()
+      final SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
@@ -183,7 +182,7 @@ public class ChartEditor extends EditorPart
     }
     finally
     {
-//      m_isSaving = false;
+// m_isSaving = false;
     }
   }
 
@@ -271,44 +270,46 @@ public class ChartEditor extends EditorPart
       try
       {
         final URL context = ResourceUtilities.createURL( file );
-        
-        
-       // m_chart = new Chart( m_composite, SWT.BORDER );
-        
-        m_chartModel=new ChartModel();
-        m_chartConfigurationLoader = new ChartConfigurationLoader(file);
-        
+
+        m_chartModel = new ChartModel();
+
         try
         {
+          m_chartConfigurationLoader = new ChartConfigurationLoader( file );
           ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
         }
-        catch( ConfigurationException e )
+        // TODO: provide message to user instead of eating the exceptions.
+        catch( final ConfigurationException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        
-        m_chartComposite =new ChartComposite(m_composite, SWT.BORDER, m_chartModel, new RGB(255,255,255));
-        IChartMouseHandler mouseHandler=new DragMouseHandler(m_chartComposite);
-        m_chartComposite.setMouseHandler( mouseHandler );
-        m_chartComposite.getModel().setAutoscale( true );
+        catch( final CoreException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( final XmlException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( final IOException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
+        if( m_chartModel != null )
+        {
+          m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+          final IChartMouseHandler mouseHandler = new DragMouseHandler( m_chartComposite );
+          m_chartComposite.setMouseHandler( mouseHandler );
+          m_chartComposite.getModel().setAutoscale( true );
+        }
+        // else: TODO: what?
       }
       catch( final MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( CoreException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( IOException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( XmlException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -335,8 +336,8 @@ public class ChartEditor extends EditorPart
   {
     return m_chartType;
   }
-  
-  public ChartConfigurationLoader getChartConfigurationLoader()
+
+  public ChartConfigurationLoader getChartConfigurationLoader( )
   {
     return m_chartConfigurationLoader;
   }
@@ -344,6 +345,7 @@ public class ChartEditor extends EditorPart
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

@@ -29,87 +29,79 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 /**
  * @author alibu
  */
 public class ChartConfigurationLoader implements IReferenceResolver
 {
- // private String m_configPath;
   private ChartConfigurationDocument m_document;
-  private HashMap<String, XmlObject> m_idMap=null;
-  
 
+  private HashMap<String, XmlObject> m_idMap = null;
+
+  // TODO: @Alex: machen die beiden nächsten Construktoren noch sinn? Da kann man doch gleich die Document selbst
+  // nehmen...
   /**
-   * @param path file system path where the configuration file can be found
- * @throws XmlException 
+   * @param path
+   *            file system path where the configuration file can be found
+   * @throws XmlException
    */
-  public ChartConfigurationLoader( String path ) throws XmlException 
+  public ChartConfigurationLoader( final String path ) throws XmlException
   {
-	  m_document = ChartConfigurationDocument.Factory.parse(path);
+    m_document = ChartConfigurationDocument.Factory.parse( path );
   }
 
   /**
-   * @param path file system path where the configuration file can be found
-   * @throws XmlException 
- * @throws IOException 
+   * @param path
+   *            file system path where the configuration file can be found
+   * @throws XmlException
+   * @throws IOException
    */
-  public ChartConfigurationLoader( URL url ) throws XmlException, IOException 
+  public ChartConfigurationLoader( final URL url ) throws XmlException, IOException
   {
-	  InputStream openStream =null;
-	  try{
-		  openStream = url.openStream();
-		  m_document = ChartConfigurationDocument.Factory.parse(openStream);
-	  }
-	  finally
-	  {
-		  if (openStream!=null)
-			  openStream.close();
-	  }
+    m_document = ChartConfigurationDocument.Factory.parse( url );
   }
 
   /**
    * creates a ConfigurationLoader based on the given ChartConfigurationDocument
-   * @param doc ChartConfigurationDocument
+   * 
+   * @param doc
+   *            ChartConfigurationDocument
    */
-	public ChartConfigurationLoader(ChartConfigurationDocument doc)
-	{
-		m_document = doc;
-	}
+  public ChartConfigurationLoader( final ChartConfigurationDocument doc )
+  {
+    m_document = doc;
+  }
 
-	/**
-	 * creates a ConfigurationLoader from an InputStream provided by IStorage 
-	 * @param configFile
-	 * @throws CoreException
-	 * @throws IOException
-	 * @throws XmlException
-	 */
-	public ChartConfigurationLoader( final IStorage configFile ) throws CoreException, IOException, XmlException
-	{
-	  InputStream is = null;
-	  try
-	  {
-	    is = new BufferedInputStream( configFile.getContents() );
-	    m_document = ChartConfigurationDocument.Factory.parse(is);
-	  }
-	  catch (Exception e)
-	  {
-	    e.printStackTrace(); 
-	  }
-	  
-	  finally
-	  {
-	    IOUtils.closeQuietly( is );
-	  }
-	}
+  /**
+   * creates a ConfigurationLoader from an InputStream provided by IStorage
+   * 
+   * @param configFile
+   * @throws CoreException
+   * @throws IOException
+   * @throws XmlException
+   */
+  public ChartConfigurationLoader( final IStorage configFile ) throws CoreException, XmlException, IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( configFile.getContents() );
+      m_document = ChartConfigurationDocument.Factory.parse( is );
+      is.close();
+    }
+    // TODO: @Alex: do not do such a thing! Throw exceptions, the caller must be able to handle errors!
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
 
-
-	public ChartConfigurationLoader(ChartConfigurationType chartConfiguration)
-	{
-		ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
-		document.setChartConfiguration(chartConfiguration);
-		m_document = document;
-	}
+  public ChartConfigurationLoader( final ChartConfigurationType chartConfiguration )
+  {
+    final ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
+    document.setChartConfiguration( chartConfiguration );
+    m_document = document;
+  }
 
   /**
    * @return marshalled configuration
@@ -121,77 +113,79 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   public ChartType[] getCharts( )
   {
-	  return m_document.getChartConfiguration().getChartArray();
+    return m_document.getChartConfiguration().getChartArray();
   }
-  
-  public AxisType[] getAxes()
+
+  public AxisType[] getAxes( )
   {
-	  return m_document.getChartConfiguration().getAxisArray();
+    return m_document.getChartConfiguration().getAxisArray();
   }
 
-
-  
   /**
-   * as xmlbeans does not support idrefs in xml schema, we have to find them by ourselves;
-   * this function searches the DOM tree an id equals to the given idref and checks if
-   * the found element is of the desired type 
+   * as xmlbeans does not support idrefs in xml schema, we have to find them by ourselves; this function searches the
+   * DOM tree an id equals to the given idref and checks if the found element is of the desired type
    * 
    * @param idref
    * @param myClass
    * @return
    */
-  public XmlObject resolveReference(String idref)
+  public XmlObject resolveReference( final String idref )
   {
-	  Map<String, XmlObject> idMap = getIdMap();
-	  
-	  return  idMap.get(idref);
+    final Map<String, XmlObject> idMap = getIdMap();
+
+    return idMap.get( idref );
   }
-  
-  private synchronized Map<String, XmlObject> getIdMap()
+
+  private synchronized Map<String, XmlObject> getIdMap( )
   {
-	  if (m_idMap != null && false)
-	  {
-		  return m_idMap;
-	  }
-	  else
-	  {
-		  m_idMap=new HashMap<String, XmlObject>();
-		  fillIdMap(m_document.getDomNode());
-		  return m_idMap;
-	  }
+    if( m_idMap != null && false )
+    {
+      return m_idMap;
+    }
+    else
+    {
+      m_idMap = new HashMap<String, XmlObject>();
+      fillIdMap( m_document.getDomNode() );
+      return m_idMap;
+    }
   }
-  
-  private void fillIdMap(Node node)
+
+  private void fillIdMap( final Node node )
   {
-	  NamedNodeMap atts = node.getAttributes();
-	  if (atts!=null)
-	  {
-		  Node idAtt = atts.getNamedItem("id");
-		  if (idAtt !=null)
-		  {
-			  try {
-				m_idMap.put(idAtt.getNodeValue(), createXmlObjectFromNode(node));
-			} catch (DOMException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XmlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		  }
-	  }
-	  if (node.hasChildNodes())
-	  {
-		  NodeList childNodes = node.getChildNodes();
-		  int length=childNodes.getLength();
-		  for (int i=0;i< length ; i++)
-		  {
-			  Node child=childNodes.item(i);
-			  fillIdMap(child);
-		  }
-	  }
+    final NamedNodeMap atts = node.getAttributes();
+    if( atts != null )
+    {
+      final Node idAtt = atts.getNamedItem( "id" );
+      if( idAtt != null )
+      {
+        try
+        {
+          m_idMap.put( idAtt.getNodeValue(), createXmlObjectFromNode( node ) );
+        }
+        catch( final DOMException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( final XmlException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+    if( node.hasChildNodes() )
+    {
+      final NodeList childNodes = node.getChildNodes();
+      final int length = childNodes.getLength();
+      for( int i = 0; i < length; i++ )
+      {
+        final Node child = childNodes.item( i );
+        fillIdMap( child );
+      }
+    }
   }
-  
+
   /**
    * creates an XmlObject from a DOM node
    * 
@@ -199,48 +193,47 @@ public class ChartConfigurationLoader implements IReferenceResolver
    * @return
    * @throws XmlException
    */
-  private XmlObject createXmlObjectFromNode(Node node) throws XmlException
+  private XmlObject createXmlObjectFromNode( final Node node ) throws XmlException
   {
-	  /**
-	   * hier muss man die Document-Factories zum Parsen verwenden ( z.B. ChartDocument.Factory statt ChartType.Factory),
-	   * weil sonst das erzeugt XmlObject nur null-Objekte enthält 
-	   */
-	  
-	  XmlObject obj=null;
-	  if (node.getNodeName().equals("Chart"))
-	  {
-		   ChartDocument doc = ChartDocument.Factory.parse(node);
-		   obj=doc.getChart();
-	  }
-	  else if (node.getNodeName().equals("Layer"))
-	  {
-		   LayerDocument doc = LayerDocument.Factory.parse(node);
-		   obj=doc.getLayer();
-	  }
-	  else if (node.getNodeName().equals("Axis"))
-	  {
-		   AxisDocument doc = AxisDocument.Factory.parse(node);
-		   obj=doc.getAxis();
-	  }
-	  else if (node.getNodeName().equals("Mapper"))
-	  {
-		   MapperDocument doc = MapperDocument.Factory.parse(node);
-		   obj=doc.getMapper();
-	  }
-	  else if (node.getNodeName().equals("Style"))
-	  {
-		   StyleDocument doc = StyleDocument.Factory.parse(node);
-		   obj=doc.getStyle();
-	  }
-	  else if (node.getNodeName().equals("AxisRenderer"))
-	  {
-		   AxisRendererDocument doc = AxisRendererDocument.Factory.parse(node);
-		   obj=doc.getAxisRenderer();
-	  }
-	  else
-		  Logger.logError(Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: "+node.getNodeName());
-	  return obj;
-  }
+    /**
+     * hier muss man die Document-Factories zum Parsen verwenden ( z.B. ChartDocument.Factory statt ChartType.Factory),
+     * weil sonst das erzeugt XmlObject nur null-Objekte enthält
+     */
 
+    XmlObject obj = null;
+    if( node.getNodeName().equals( "Chart" ) )
+    {
+      final ChartDocument doc = ChartDocument.Factory.parse( node );
+      obj = doc.getChart();
+    }
+    else if( node.getNodeName().equals( "Layer" ) )
+    {
+      final LayerDocument doc = LayerDocument.Factory.parse( node );
+      obj = doc.getLayer();
+    }
+    else if( node.getNodeName().equals( "Axis" ) )
+    {
+      final AxisDocument doc = AxisDocument.Factory.parse( node );
+      obj = doc.getAxis();
+    }
+    else if( node.getNodeName().equals( "Mapper" ) )
+    {
+      final MapperDocument doc = MapperDocument.Factory.parse( node );
+      obj = doc.getMapper();
+    }
+    else if( node.getNodeName().equals( "Style" ) )
+    {
+      final StyleDocument doc = StyleDocument.Factory.parse( node );
+      obj = doc.getStyle();
+    }
+    else if( node.getNodeName().equals( "AxisRenderer" ) )
+    {
+      final AxisRendererDocument doc = AxisRendererDocument.Factory.parse( node );
+      obj = doc.getAxisRenderer();
+    }
+    else
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + node.getNodeName() );
+    return obj;
+  }
 
 }
