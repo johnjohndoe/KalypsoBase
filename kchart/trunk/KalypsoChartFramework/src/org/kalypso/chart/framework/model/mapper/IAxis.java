@@ -1,9 +1,7 @@
 package org.kalypso.chart.framework.model.mapper;
 
-import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.IStringDataConverter;
 
 /**
  * @author burtscher
@@ -31,7 +29,7 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
   public IAxisConstants.PROPERTY getProperty( );
 
   /**
-   *  @return axis position - left, right, top, bottom
+   * @return axis position - left, right, top, bottom
    */
   public IAxisConstants.POSITION getPosition( );
 
@@ -43,26 +41,28 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
 
+  // TODO: remove that method from this interface!
   public void autorange( IDataRange<T_logical>[] ranges );
 
   public int logicalToScreen( T_logical value );
 
   public T_logical screenToLogical( int value );
-  
-  public int zeroToScreen();
-  
-  public IDataRange<T_logical> getDataRange();
-  
+
+  public int zeroToScreen( );
+
+  public IDataRange<T_logical> getDataRange( );
+
   /**
    * sets visible range of axis
+   * 
    * @param dataRange
    */
-  public void setDataRange(IDataRange<T_logical> dataRange);
-  
+  public void setDataRange( IDataRange<T_logical> dataRange );
+
   /**
-   * returns a data converter which may be used to convert strings to data which can directly 
-   * be used by the axis (and vice versa)
+   * returns a data converter which may be used to convert strings to data which can directly be used by the axis (and
+   * vice versa)
    */
-  public IDataOperator<T_logical> getDataOperator();
+  public IDataOperator<T_logical> getDataOperator( );
 
 }

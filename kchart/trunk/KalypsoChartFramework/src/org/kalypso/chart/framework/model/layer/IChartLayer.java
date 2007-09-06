@@ -7,30 +7,25 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
 public interface IChartLayer<T_domain, T_target>
 {
-  // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the LayerType)
-  
-  
-	
-	/**
-	   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
-	   */
-	public void setId( final String id );
-	
-	/**
-	   * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
-	   */
-	public String getId( );
-	
-	
-	
-	
+  // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the
+  // LayerType)
+
+  /**
+   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
+   */
+  public void setId( final String id );
+
+  /**
+   * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
+   */
+  public String getId( );
+
   /**
    * sets the layers title (which will be shown in the legend)
    */
@@ -56,13 +51,10 @@ public interface IChartLayer<T_domain, T_target>
    */
   public IAxis<T_domain> getDomainAxis( );
 
-
   /**
    * @return the IAxis object used with value data
    */
   public IAxis<T_target> getTargetAxis( );
-
-
 
   /**
    * TODO: remove this from IChartLayer interface ILegendItem should be constructed upon layers, client should always
@@ -75,8 +67,8 @@ public interface IChartLayer<T_domain, T_target>
   /**
    * draws a picture of a given size into the given Image; the icon will be used for the legend to describe the layers
    * visual representation
-   * TODO: remove widht and height parameters!
-   * Use img.getBounds instead
+   * <p>
+   * TODO: remove widht and height parameters! Use img.getBounds instead
    */
   public void drawIcon( final Image img, final int width, final int height );
 
@@ -84,8 +76,8 @@ public interface IChartLayer<T_domain, T_target>
    * @return true if the layer is set active, false otherwise
    */
   public boolean isActive( );
-  
-  public void setActive(boolean isActive);
+
+  public void setActive( boolean isActive );
 
   /**
    * @return the layer style
@@ -100,12 +92,15 @@ public interface IChartLayer<T_domain, T_target>
   /**
    * draws the layer using the given GCWrapper and Device
    */
-  public void paint( final GCWrapper gc);
+  public void paint( final GCWrapper gc );
 
   public void setVisible( final boolean isVisible );
 
   public boolean isVisible( );
-  
-  public IDataContainer<T_domain, T_target> getDataContainer();
+
+  // TODO: @Alex This does NOT belong into the Layer interface! It is not needed, and will never be needed!
+  // This is absolutely implementation depenmdedn and MUST be hidden inside the implementation and not EXHIBITET to the
+  // interface!
+  public IDataContainer<T_domain, T_target> getDataContainer( );
 
 }

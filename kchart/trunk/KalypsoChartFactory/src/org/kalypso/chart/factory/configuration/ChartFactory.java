@@ -45,11 +45,11 @@ import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
  */
 public class ChartFactory
 {
-
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final URL context ) throws ConfigurationException
   {
-    ChartType dt = null;
     // ChartConfig auslesen
+    // TODO: move the search for the chart into a separate search method
+    ChartType dt = null;
     if( cl != null )
     {
       final ChartType[] charts = cl.getCharts();
@@ -63,24 +63,12 @@ public class ChartFactory
       }
     }
     if( dt == null )
-    {
       throw new ConfigChartNotFoundException( configChartName );
-    }
-    else
-    {
-      try
-      {
-        doConfiguration( model, cl, dt, context );
-      }
-      catch( final ConfigurationException e )
-      {
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, " ChartModel could not be created" );
-      }
-    }
+
+    doConfiguration( model, cl, dt, context );
   }
 
-  @SuppressWarnings("unchecked")
-  private static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final URL context ) throws ConfigurationException
+  public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final URL context )
   {
     final Layers layers = chartType.getLayers();
     final RefType[] layerRefArray = layers.getLayerRefArray();
@@ -139,6 +127,7 @@ public class ChartFactory
             Logger.logError( Logger.TOPIC_LOG_GENERAL, "No LayerProvider for " + providerId );
           }
         }
+        // TODO: NO! Please throw these exceptions, else the code outside is not able to react to error-conditions
         catch( final CoreException e )
         {
           e.printStackTrace();

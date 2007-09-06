@@ -23,7 +23,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
-
   final private String m_observationId;
 
   final private String m_domainComponentName;
@@ -40,6 +39,9 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   private IComponent m_targetComponent;
 
+  // TODO: @Alex This is exactly that, what i never wanted to have in the new Chart Framework! Please do NOT! copy the
+  // values out out of the real data object
+  // That is really something we have to avoid!
   private List<T_domain> m_domainValues;
 
   private List<T_target> m_targetValues;
@@ -48,7 +50,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   private boolean m_isOpen = false;
 
-  public TupleResultDomainValueData( URL context, String href, String observationId, String domainComponentName, String targetComponentName )
+  public TupleResultDomainValueData( final URL context, final String href, final String observationId, final String domainComponentName, final String targetComponentName )
   {
     m_context = context;
     m_href = href;
@@ -57,19 +59,19 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_targetComponentName = targetComponentName;
   }
 
-  public TupleResultDomainValueData( TupleResult result, String domainComponentName, String targetComponentName )
+  public TupleResultDomainValueData( final TupleResult result, final String domainComponentName, final String targetComponentName )
   {
-    //Die Observation ist schon vorhanden, also kann das Layer gleich als open ausgegeben werden
-     m_isOpen=true;
-     m_context = null;
-     m_observationId=null;
-     m_href=null;
-     m_domainComponentName = domainComponentName;
-     m_targetComponentName = targetComponentName;
-     m_result=result;
-     
-     resolveComponents();
-     createValueLists();
+    // Die Observation ist schon vorhanden, also kann das Layer gleich als open ausgegeben werden
+    m_isOpen = true;
+    m_context = null;
+    m_observationId = null;
+    m_href = null;
+    m_domainComponentName = domainComponentName;
+    m_targetComponentName = targetComponentName;
+    m_result = result;
+
+    resolveComponents();
+    createValueLists();
   }
 
   /**
@@ -97,8 +99,8 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     {
       try
       {
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
-        Feature feature = workspace.getFeature( m_observationId );
+        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
+        final Feature feature = workspace.getFeature( m_observationId );
         if( feature != null )
         {
           Logger.trace( "Found feature: " + feature.getId() );
@@ -111,12 +113,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
         createValueLists();
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -130,24 +132,24 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     if( m_domainComponent != null && m_targetComponent != null )
     {
       // Value-Listen aufbauen
-      ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
-      ArrayList<T_target> targetValues = new ArrayList<T_target>();
+      final ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
+      final ArrayList<T_target> targetValues = new ArrayList<T_target>();
       for( int i = 0; i < m_result.size(); i++ )
       {
-        IRecord record = m_result.get( i );
+        final IRecord record = m_result.get( i );
         /**
          * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in einen Calendar umwandeln;
          * Problem ist, dass der XMLGregorianCalendar nicht Comparable implementiert
          */
         T_domain domainValue = null;
-        Object domainValueObj = record.getValue( m_domainComponent );
+        final Object domainValueObj = record.getValue( m_domainComponent );
         if( domainValueObj instanceof XMLGregorianCalendar )
           domainValue = (T_domain) ((XMLGregorianCalendar) domainValueObj).toGregorianCalendar();
         else
           domainValue = (T_domain) domainValueObj;
 
         T_target targetValue = null;
-        Object targetValueObj = record.getValue( m_targetComponent );
+        final Object targetValueObj = record.getValue( m_targetComponent );
         if( targetValueObj instanceof XMLGregorianCalendar )
           targetValue = (T_target) ((XMLGregorianCalendar) targetValueObj).toGregorianCalendar();
         else
@@ -158,9 +160,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       }
       setDomainValues( domainValues );
       setTargetValues( targetValues );
-
     }
-    
   }
 
   private void resolveComponents( )
@@ -168,9 +168,8 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     // ResultComponent rausfinden
     final IComponent[] comps = m_result.getComponents();
     final TreeMap<String, IComponent> map = new TreeMap<String, IComponent>();
-    for( int i = 0; i < comps.length; i++ )
+    for( final IComponent comp : comps )
     {
-      IComponent comp = comps[i];
       Logger.trace( "Got component: " + comp.getName() );
       if( comp.getId().compareTo( m_domainComponentName ) == 0 )
         m_domainComponent = comp;
@@ -203,12 +202,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_target[]) m_targetValues.toArray();
   }
 
-  public void setDomainValues( List<T_domain> domainValues )
+  public void setDomainValues( final List<T_domain> domainValues )
   {
     m_domainValues = domainValues;
   }
 
-  public void setTargetValues( List<T_target> targetValues )
+  public void setTargetValues( final List<T_target> targetValues )
   {
     m_targetValues = targetValues;
   }

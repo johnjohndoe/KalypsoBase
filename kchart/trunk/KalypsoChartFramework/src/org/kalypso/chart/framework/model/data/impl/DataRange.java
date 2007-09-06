@@ -12,60 +12,57 @@ public class DataRange<T> implements IDataRange<T>
 
   private T m_max;
 
-  public DataRange( T min, T max ) throws ZeroSizeDataRangeException
+  public DataRange( final T min, final T max ) throws ZeroSizeDataRangeException
   {
-    if (min instanceof Number && max instanceof Number)
+    if( min instanceof Number && max instanceof Number )
     {
-      Double minNum= ( ( Number ) min).doubleValue();
-      Double maxNum= ( ( Number ) max).doubleValue();
-      
-      if (minNum.compareTo(maxNum)==0)
-          throw new ZeroSizeDataRangeException();
-      if (minNum.compareTo(maxNum)>0)
+      final Double minNum = ((Number) min).doubleValue();
+      final Double maxNum = ((Number) max).doubleValue();
+
+      if( minNum.compareTo( maxNum ) == 0 )
+        // TODO etwas dubios, sollte schon eher von aussen abgefangen werden...
+        throw new ZeroSizeDataRangeException();
+      if( minNum.compareTo( maxNum ) > 0 )
       {
-          m_max = min;
-          m_min = max;
+        m_max = min;
+        m_min = max;
       }
       else
       {
-          m_min = min;
-          m_max = max;
+        m_min = min;
+        m_max = max;
       }
     }
-    else 
-      if (min instanceof Comparable && max instanceof Comparable
-        && ( min.getClass().isInstance( max ) || max.getClass().isInstance( min ))
-    )
-	{
-		Comparable<Comparable> minComp=(Comparable<Comparable>) min;
-		Comparable maxComp=(Comparable) max;
-		System.out.println("comparing: "+minComp.toString()+" : "+maxComp.toString()+ "("+minComp.getClass()+"|"+maxComp.getClass()+")");
-		
-	    if (minComp.compareTo(maxComp)==0)
-			throw new ZeroSizeDataRangeException();
-		if (minComp.compareTo(maxComp)>0)
-		{
-			m_max = min;
-		    m_min = max;
-		}
-		else
-		{
-		    m_min = min;
-		    m_max = max;
-		}
-	}
-    /* 
-     * das wäre dann der ungünstigste Fall: nicht Vergleichbar und nicht numerisch
-     * TODO: überlegen, ob dieser Fall überhaupt zugelassen werden soll; alternativ
-     * sollte eine InvalidRangeIntervalObjectsException
-     */ 
-	else
-	{
-	  if (min == max)
-	    throw new ZeroSizeDataRangeException();
-	  m_min=min;
-	  m_max=max;
-	}
+    else if( min instanceof Comparable && max instanceof Comparable && (min.getClass().isInstance( max ) || max.getClass().isInstance( min )) )
+    {
+      final Comparable<Comparable> minComp = (Comparable<Comparable>) min;
+      final Comparable maxComp = (Comparable) max;
+      System.out.println( "comparing: " + minComp.toString() + " : " + maxComp.toString() + "(" + minComp.getClass() + "|" + maxComp.getClass() + ")" );
+
+      if( minComp.compareTo( maxComp ) == 0 )
+        throw new ZeroSizeDataRangeException();
+      if( minComp.compareTo( maxComp ) > 0 )
+      {
+        m_max = min;
+        m_min = max;
+      }
+      else
+      {
+        m_min = min;
+        m_max = max;
+      }
+    }
+    /*
+     * das wäre dann der ungünstigste Fall: nicht Vergleichbar und nicht numerisch TODO: überlegen, ob dieser Fall
+     * überhaupt zugelassen werden soll; alternativ sollte eine InvalidRangeIntervalObjectsException
+     */
+    else
+    {
+      if( min == max )
+        throw new ZeroSizeDataRangeException();
+      m_min = min;
+      m_max = max;
+    }
   }
 
   /**

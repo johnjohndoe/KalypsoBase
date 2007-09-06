@@ -13,12 +13,9 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 
-
 /**
- * @author burtscher
- *
- * Abstract implementation of IAxis - implements some
- * methods which are equal for all concrete IAxis-classes
+ * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
+ *         IAxis-classes
  */
 public abstract class AbstractAxis<T> implements IAxis<T>
 {
@@ -75,10 +72,8 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   {
     m_registry = mapperRegistry;
   }
-  
 
-
-  public IMapperRegistry  getRegistry( )
+  public IMapperRegistry getRegistry( )
   {
     return m_registry;
   }
@@ -143,7 +138,6 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     return getDirection() == DIRECTION.NEGATIVE;
   }
 
-
   /**
    * @see java.lang.Object#toString()
    */
@@ -161,33 +155,36 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     T min = null;
     T max = null;
 
-    for( int i = 0; i < ranges.length; i++ )
+    for( final IDataRange<T> element : ranges )
     {
-      if( min == null || m_dataComparator.compare( min, ranges[i].getMin() ) > 0 )
-        min = ranges[i].getMin();
-      if( max == null || m_dataComparator.compare( max, ranges[i].getMax() ) < 0 )
-        max = ranges[i].getMax();
+      if( min == null || m_dataComparator.compare( min, element.getMin() ) > 0 )
+        min = element.getMin();
+      if( max == null || m_dataComparator.compare( max, element.getMax() ) < 0 )
+        max = element.getMax();
     }
 
-    DataRange<T> range=null;
     try
-	{
-		range= new DataRange<T>(min, max);
-	} catch (ZeroSizeDataRangeException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-    setDataRange(range);
+    {
+      final DataRange<T> range = new DataRange<T>( min, max );
+      setDataRange( range );
+    }
+    catch( final ZeroSizeDataRangeException e )
+    {
+      e.printStackTrace(); // etwas was ein treffen darf (auch wenns dubios ist) sollte man nicht auf die konsole
+                            // loggen
+
+      // TODO: what to do in that case?
+      setDataRange( null );
+    }
   }
-  
-  public IDataRange<T> getDataRange()
+
+  public IDataRange<T> getDataRange( )
   {
-	  return m_dataRange;
+    return m_dataRange;
   }
-  
-  public void setDataRange(IDataRange<T> dataRange)
+
+  public void setDataRange( final IDataRange<T> dataRange )
   {
-	  m_dataRange=dataRange;
+    m_dataRange = dataRange;
   }
 }

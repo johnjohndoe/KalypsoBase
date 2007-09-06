@@ -9,35 +9,35 @@ import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
 
-
-
 /**
  * @author alibu
- *
  */
 public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLayer<T_domain, T_target>
 {
+  private boolean m_isVisible = true;
 
-  private boolean m_isVisible=true;
-  private ILayerStyle m_style=null;
-  private String m_title="";
-  private String m_id="";
-  private String m_description="";
-  private boolean m_isActive=false;
-  
+  private ILayerStyle m_style = null;
+
+  private String m_title = "";
+
+  private String m_id = "";
+
+  private String m_description = "";
+
+  private boolean m_isActive = false;
+
   private final IAxis<T_target> m_targetAxis;
-  private final IAxis<T_domain> m_domainAxis;
-  
-  private IDataContainer<T_domain, T_target> m_dataContainer=null;
 
-  
+  private final IAxis<T_domain> m_domainAxis;
+
+  private IDataContainer<T_domain, T_target> m_dataContainer = null;
+
   public AbstractChartLayer( final IAxis<T_domain> domainAxis, final IAxis<T_target> targetAxis )
   {
-	  m_targetAxis = targetAxis;
-	  m_domainAxis = domainAxis;
+    m_targetAxis = targetAxis;
+    m_domainAxis = domainAxis;
   }
-  
-  
+
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
    */
@@ -54,7 +54,6 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
     return m_domainAxis;
   }
 
-
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTitle()
    */
@@ -68,7 +67,7 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
    */
   public String getId( )
   {
-	  return m_id;
+    return m_id;
   }
 
   /**
@@ -106,24 +105,23 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
-  public void setActive( boolean isActive)
+  public void setActive( final boolean isActive )
   {
-	  m_isActive=isActive;
+    m_isActive = isActive;
   }
-
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
    */
-  public void setDescription( String description )
+  public void setDescription( final String description )
   {
-    m_description=description;
+    m_description = description;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
     m_title = title;
   }
@@ -131,52 +129,49 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
-  public void setId( String id )
+  public void setId( final String id )
   {
-	  m_id = id;
+    m_id = id;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
-  public void setStyle( ILayerStyle style )
+  public void setStyle( final ILayerStyle style )
   {
-    m_style=style;
+    m_style = style;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
    */
-  public void setVisible( boolean isVisible )
+  public void setVisible( final boolean isVisible )
   {
-    m_isVisible=isVisible;
+    m_isVisible = isVisible;
 
   }
-  
-  public IDataContainer<T_domain, T_target> getDataContainer()
+
+  public IDataContainer<T_domain, T_target> getDataContainer( )
   {
-	  return m_dataContainer;
+    return m_dataContainer;
   }
-  
-  
-  protected void setDataContainer (IDataContainer<T_domain, T_target> data)
+
+  protected void setDataContainer( final IDataContainer<T_domain, T_target> data )
   {
-	  m_dataContainer=data;
+    m_dataContainer = data;
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
-   * 
-   * returns an empty Image
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem() returns an empty Image
    */
-  public ILegendItem getLegendItem()
+  public ILegendItem getLegendItem( )
   {
-	ILegendItem l=null;
-    Image img=new Image(Display.getCurrent(), 20, 20);
-    drawIcon(img, 20, 20);
-    ImageData id=img.getImageData();
+    ILegendItem l = null;
+    final Image img = new Image( Display.getCurrent(), 20, 20 );
+    drawIcon( img, 20, 20 );
+    final ImageData id = img.getImageData();
     img.dispose();
-    l=new LegendItem(null, getTitle(), id);
+    l = new LegendItem( null, getTitle(), id );
     return l;
   }
 

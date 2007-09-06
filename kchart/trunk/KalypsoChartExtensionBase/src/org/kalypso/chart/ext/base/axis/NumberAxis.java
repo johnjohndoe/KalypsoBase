@@ -10,23 +10,20 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 
-
 /**
- * @author burtscher
- * 
- * Concrete IAxis implementation - to be used for numeric data 
+ * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class NumberAxis extends AbstractAxis<Number>
 {
-  public NumberAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, Comparator<Number> comp )
+  public NumberAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<Number> comp )
   {
     super( id, label, prop, pos, dir, comp, Number.class );
   }
 
   public double logicalToNormalized( final Number value )
   {
-	IDataRange<Number> dataRange = getDataRange();  
-	
+    final IDataRange<Number> dataRange = getDataRange();
+
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
     final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
@@ -36,11 +33,9 @@ public class NumberAxis extends AbstractAxis<Number>
 
   public Number normalizedToLogical( final double value )
   {
+    final IDataRange<Number> dataRange = getDataRange();
 
-	  IDataRange<Number> dataRange = getDataRange();  
-		
-      final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
-
+    final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
     final double logical = value * r + dataRange.getMin().doubleValue();
 
@@ -52,12 +47,12 @@ public class NumberAxis extends AbstractAxis<Number>
    */
   public int logicalToScreen( final Number value )
   {
-	if (value == null)
-		return 0;
+    if( value == null )
+      return 0;
     if( getRegistry() == null )
       return 0;
 
-    final IAxisComponent<?> comp = getRegistry().getComponent( this );
+    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -72,22 +67,21 @@ public class NumberAxis extends AbstractAxis<Number>
     if( getRegistry() == null )
       return Double.NaN;
 
-    final IAxisComponent<?> comp = getRegistry().getComponent( this );
+    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
     if( comp == null )
-      return Double.NaN; 
+      return Double.NaN;
 
     return normalizedToLogical( comp.screenToNormalized( value ) );
   }
-  
-  public int zeroToScreen()
+
+  public int zeroToScreen( )
   {
-	  return logicalToScreen(0.0);
+    return logicalToScreen( 0.0 );
   }
 
-
-public IDataOperator<Number> getDataOperator() {
-	return new NumberDataOperator();
-}
-
+  public IDataOperator<Number> getDataOperator( )
+  {
+    return new NumberDataOperator();
+  }
 
 }
