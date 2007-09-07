@@ -5,30 +5,30 @@
      xs:schemaLocation="http://www.ksp.org/ods/capabilities ../capabilities/Capabilities.xsd"
 	>
 	<Service>
-		<Name>ods</Name>
-		<Title>Diagramme zur Visualisierung hydrologischer Messdaten</Title>
-		<Abstract>Web Diagram Servicer - Bjoernsen Beratende Ingenieure </Abstract>
-		<OnlineResource xlink:href="http://ibpm.bjoernsen.de/ods"/>
-		<ContactInformation>
-		<ContactPersonPrimary>
-			<ContactPerson>Alexander Burtscher</ContactPerson>
-			<ContactOrganization>Bjoernsen Beratende Ingenieure</ContactOrganization>
-			</ContactPersonPrimary>
-		<ContactPosition></ContactPosition>
-		<ContactAddress>
-		<AddressType></AddressType>
-		<Address>Maria Trost 3</Address>
-		<City>Koblenz</City>
-		<StateOrProvince>Rheinland-Pfalz</StateOrProvince>
-		<PostCode>56073</PostCode>
-		<Country>Deutschland</Country>
-		</ContactAddress>
-		<ContactVoiceTelephone>+49-(0)261-8851-148</ContactVoiceTelephone>
-		<ContactFacsimileTelephone></ContactFacsimileTelephone>
-		<ContactElectronicMailAddress>a.burtscher@bjoernsen.de</ContactElectronicMailAddress>
-		</ContactInformation>
-		<Fees>none</Fees>
-		<AccessConstraints>none</AccessConstraints>
+	<Name>ODS</Name>
+	<Title>Diagramme zur Visualisierung hydrologischer Messdaten</Title>
+	<Abstract>Web Diagram Servicer - Bjoernsen Beratende Ingenieure </Abstract>
+	<OnlineResource xlink:href="http://ibpm.bjoernsen.de/ods"/>
+	<ContactInformation>
+	<ContactPersonPrimary>
+		<ContactPerson>Alexander Burtscher</ContactPerson>
+		<ContactOrganization>Bjoernsen Beratende Ingenieure</ContactOrganization>
+		</ContactPersonPrimary>
+	<ContactPosition></ContactPosition>
+	<ContactAddress>
+	<AddressType></AddressType>
+	<Address>Maria Trost 3</Address>
+	<City>Koblenz</City>
+	<StateOrProvince>Rheinland-Pfalz</StateOrProvince>
+	<PostCode>56073</PostCode>
+	<Country>Deutschland</Country>
+	</ContactAddress>
+	<ContactVoiceTelephone>+49-(0)261-8851-148</ContactVoiceTelephone>
+	<ContactFacsimileTelephone></ContactFacsimileTelephone>
+	<ContactElectronicMailAddress>a.burtscher@bjoernsen.de</ContactElectronicMailAddress>
+	</ContactInformation>
+	<Fees>none</Fees>
+	<AccessConstraints>none</AccessConstraints>
 	</Service>
 	<Capability>
 	     <Request>

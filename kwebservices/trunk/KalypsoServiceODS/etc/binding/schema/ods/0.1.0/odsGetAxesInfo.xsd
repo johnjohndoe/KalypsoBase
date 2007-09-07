@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema 
+    targetNamespace="http://www.ksp.org/service/ods" 
+    xmlns:ods="http://www.ksp.org/service/ods" 
+    xmlns="http://www.w3.org/2001/XMLSchema"  
+    elementFormDefault="qualified" version="0.1.0" xml:lang="en"
+    >
+    <element name="AxesInfo" type="ods:AxesInfoType"></element>
+    
+    <complexType name="AxesInfoType">
+        <sequence>
+            <element ref="ods:Axis" minOccurs="0" maxOccurs="unbounded"></element>
+    
+        </sequence>
+        
+    </complexType>
+    
+    <element name="Axis" type="ods:AxisType"></element>
+    
+    <complexType name="AxisType">
+        <sequence>
+            <element name="Title" type="string"></element>
+            <element name="Description" type="string"></element>
+            <element name="Position" type="ods:AxisPositionType"></element>
+            <element name="Direction" type="ods:AxisDirectionType"></element>
+            <element name="MinVal" type="string"></element>
+            <element name="MaxVal" type="string"></element>
+            <element name="Type" type="string"></element>
+        </sequence>
+        <attribute name="id" type="ID"></attribute>
+    </complexType>
+    
+<simpleType name="AxisPositionType">
+        <restriction base="string">
+            <enumeration value="LEFT"></enumeration>
+            <enumeration value="RIGHT"></enumeration>
+            <enumeration value="BOTTOM"></enumeration>
+            <enumeration value="TOP"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="AxisDirectionType">
+        <restriction base="string">
+            <enumeration value="POSITIVE"></enumeration>
+            <enumeration value="NEGATIVE"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    </schema>

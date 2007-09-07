@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>KalypsoServiceODS</name>
+	<name>KalypsoServiceODSOperations</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -10,7 +10,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/ODSBinding.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/ODSOperations Builder.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
@@ -33,6 +33,6 @@
 	<natures>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
+		<nature>edu.mit.csail.relo.jdt.builder.ReloJDTBuilderProjectNature</nature>
 	</natures>
 </projectDescription>
