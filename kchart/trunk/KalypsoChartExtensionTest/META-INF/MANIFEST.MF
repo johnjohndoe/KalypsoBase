@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoChartExtensionTest Plug-in
+Bundle-SymbolicName: org.kalypso.chart.ext.test;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: org.kalypso.chart.ext.test/
+Require-Bundle: org.kalypso.chart.ext.base
