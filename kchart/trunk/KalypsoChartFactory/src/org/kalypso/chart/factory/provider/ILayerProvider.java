@@ -3,6 +3,7 @@ package org.kalypso.chart.factory.provider;
 import java.net.URL;
 
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
+import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.ksp.chart.factory.LayerType;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
@@ -29,4 +30,14 @@ public interface ILayerProvider
 
   // TODO: move chart parameter to getLayers
   public void init( final IChartModel model, final LayerType lt);
+  
+  /**
+   * returns XML configuration element
+   */
+  public LayerType getLayerType( );
+
+  /**
+   * returns the IChartModel which the layer belongs to
+   */
+  public IChartModel getChartModel( );
 }

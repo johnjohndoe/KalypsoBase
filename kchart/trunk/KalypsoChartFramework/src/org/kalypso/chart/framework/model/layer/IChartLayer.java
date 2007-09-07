@@ -103,4 +103,16 @@ public interface IChartLayer<T_domain, T_target>
   // interface!
   public IDataContainer<T_domain, T_target> getDataContainer( );
 
+  /**
+   * method to store arbitrary data objects;  
+   */
+  public void setData ( String identifier, Object data);
+ 
+  /**
+   * get stored data objects
+   */
+  public Object getData ( String identifier );
+  
 }
+
+

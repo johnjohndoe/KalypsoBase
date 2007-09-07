@@ -233,19 +233,17 @@ public class FullNumberTickCalculator
 	   * recursive function which divides in interval into a Double of "divisions" and adds the values to a linked list the
 	   * divisions have to have a larger range than the param interval
 	   */
-	  private static void findBetweens( double from, double to, double interval, List<Integer> divisors, List<Double> ticks, int level  )
+	  private static void findBetweens( double from, double to, double interval, List<Integer> divisors, List<Double> ticks, int level)
 	  {
 	    
-        if (interval < 1)
+        if (interval <= 1)
           return;
-	    
 		  String levelinset="";
 	      for (int i =0; i<level; i++)
 	      {
 	    	  levelinset+="\t";
 	      }
-	//	System.out.println(levelinset+"Between: "+from+":"+to+":"+interval+"---------------------------------------");
-	    for( Integer divisor : divisors )
+		for( Integer divisor : divisors )
 	    {
 	      double betweenrange = Math.abs( from - to ) / divisor.intValue();
 

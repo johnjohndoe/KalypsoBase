@@ -23,6 +23,7 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.renderer.AbstractAxisRenderer;
+import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.util.InsetsHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
@@ -123,22 +124,98 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 	    gc.setForeground( fgColor );
 	    gc.setBackground( bgColor );
 
+
+	    //Variable zum Zwischenspeichern der "Breite" des letzten Segments
+	    int removeWidth=getGap();
+	    //Gap rausrechnen
+	    Rectangle newScreen=substractSegment( axis, screen, removeWidth );
+	    
 	    // paint axis line
-	    int[] coords = createAxisSegment( axis, screen );
-	    assert coords != null && coords.length == 4;
-	    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
-
-	    // final Collection<Double> ticks = calcTicks( gc, axis );
+	    removeWidth=drawAxisLine (gc, axis, newScreen);
+	    
+	    newScreen=substractSegment( axis, newScreen, removeWidth );
+	    
 	    m_ticks = calcTicks( gc, axis);
-	    drawTicks( gc, axis, coords[0], coords[1], m_ticks );
+	    removeWidth=drawTicks( gc, axis, newScreen, m_ticks );
 
-	    drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
+	    newScreen=substractSegment( axis, newScreen, removeWidth );
+	    removeWidth=drawAxisLabel( gc, axis, newScreen );
 
+	    //Breite des letzten Stücks sollte nur der Breite des Rest-Rechtecks entsprechen
 	    fgColor.dispose();
 	    bgColor.dispose();
   }
 
-  
+  /**
+   * Substracts a segment by the width (given a vertical axis) of 'width' from a rectangle;
+   */
+  private Rectangle substractSegment(IAxis<?> axis, Rectangle rect, int width)
+  {
+    if (axis.getPosition()==POSITION.LEFT)
+    {
+      return new Rectangle(rect.x, rect.y, rect.width - width, rect.height);
+    }
+    else if (axis.getPosition()==POSITION.RIGHT)
+    {
+      return new Rectangle(rect.x+width, rect.y, rect.width - width, rect.height);
+    }
+    else if (axis.getPosition()==POSITION.BOTTOM)
+    {
+      return new Rectangle(rect.x, rect.y+width, rect.width , rect.height - width);
+    }
+    else if (axis.getPosition()==POSITION.TOP)
+    {
+      return new Rectangle(rect.x, rect.y, rect.width , rect.height - width);
+    }
+    //should never occur
+    return null;
+  }
+
+  /**
+   * draws the axis main line
+   */
+  private int drawAxisLine( GCWrapper gc, IAxis<Number> axis, Rectangle screen )
+  {
+    int lineWidth=getLineWidth();
+    int x=0;
+    int y=0;
+    int width=0;
+    int height=0;
+    if (axis.getPosition()==POSITION.LEFT)
+    {
+      x=screen.x + screen.width - lineWidth;
+      y=screen.y;
+      height=screen.height;
+      width=lineWidth;
+    }
+    else if (axis.getPosition()==POSITION.RIGHT)
+    {
+      x=screen.x;
+      y=screen.y;
+      height=screen.height;
+      width=lineWidth;
+    }
+    else if (axis.getPosition()==POSITION.BOTTOM)
+    {
+      x=screen.x;
+      y=screen.y;
+      height=lineWidth;
+      width=screen.x+screen.width;
+    }
+    else if (axis.getPosition()==POSITION.TOP)
+    {
+      x=screen.x;
+      y=screen.y+screen.height-lineWidth;
+      height=lineWidth;
+      width=screen.x+screen.width;
+    }
+    //temporär Vorder- und Hintergrund austauschen - Rectangle-Hintergrund wird in Vordergrundfarbe gezeichnet
+    Color bgColor=gc.getBackground();
+    gc.setBackground( gc.getForeground() );
+    gc.fillRectangle( x, y, width, height );
+    gc.setBackground( bgColor );
+    return lineWidth;
+  }
 
   private List<Number> calcTicks(GCWrapper gc, IAxis<Number> axis)
 {
@@ -157,6 +234,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     int endY;
 
     int gap=getGap();
+    int halfWidth=(int) Math.round( ( (double) getLineWidth() )/ ( (double) 2 ) );
     
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
@@ -164,9 +242,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
-        startY = screen.y + gap;
+        startY = screen.y + gap+halfWidth;
       else
-        startY = screen.y + screen.height - 1 - gap;
+        startY = screen.y + screen.height - gap - halfWidth;
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -182,9 +260,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
-        startX = screen.x + gap;
+        startX = screen.x + gap + halfWidth;
       else
-        startX = screen.x + screen.width - 1 - gap;
+        startX = screen.x + screen.width - gap - halfWidth;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -201,16 +279,19 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * draws the Axis ticks into the given GCWrapper
    */
-  private void drawTicks( GCWrapper gc, IAxis<Number> axis, int startX, int startY, List<Number> ticks )
+  private int drawTicks( GCWrapper gc, IAxis<Number> axis, Rectangle screen, List<Number> ticks )
   {
     if( gc == null || axis == null || ticks == null )
     {
-      return;
+      return 0;
     }
+    ChartUtilities.resetGC( gc.m_gc );
 
     gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
     
+    //speichert die maximale Labelgröße
+    Point maxExtent=new Point(0,0);
     
     int textX = 0;
     int textY = 0;
@@ -221,7 +302,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
-      int y1 = startY;
+      int y1 = screen.y;
       int y2 = y1 + tickLength;
 
       for( final Number value : ticks )
@@ -229,7 +310,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
         final Point tickExtent = getTextExtent( gc, label, fontDataTick );
-
+        maxExtent=getMaxExtent( maxExtent, tickExtent );
+        
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textX = tickPos - tickExtent.x / 2;
         textY = y2 + tickLabelInsets.top;
@@ -238,7 +320,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.TOP )
     {
-      int y1 = startY;
+      int y1 = screen.y + screen.height;
       int y2 = y1 - tickLength;
 
       for( final Number value : ticks )
@@ -246,7 +328,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
         final Point tickExtent = getTextExtent( gc, label, fontDataTick );
-
+        maxExtent=getMaxExtent( maxExtent, tickExtent );
+        
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textX = tickPos - tickExtent.x / 2;
         textY = y2 - tickLabelInsets.top - tickExtent.y;
@@ -255,7 +338,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.LEFT )
     {
-      int x1 = startX;
+      int x1 = screen.x+screen.width;
       int x2 = x1 - tickLength;
 
       for( final Number value : ticks )
@@ -263,7 +346,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
         final Point tickExtent = getTextExtent( gc, label, fontDataTick );
-
+        maxExtent=getMaxExtent( maxExtent, tickExtent );
+        
         gc.drawLine( x1, tickPos, x2, tickPos );
         textX = x2 - tickExtent.x - tickLabelInsets.top;
         textY = tickPos - tickExtent.y / 2;
@@ -272,7 +356,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else if( axis.getPosition() == POSITION.RIGHT )
     {
-      int x1 = startX;
+      int x1 = screen.x;
       int x2 = x1 + tickLength;
 
       for( final Number value : ticks )
@@ -280,15 +364,35 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
         final int tickPos = axis.logicalToScreen( value );
         final String label = m_nf.format( value );
         final Point tickExtent = getTextExtent( gc, label, fontDataTick );
-
+        maxExtent=getMaxExtent( maxExtent, tickExtent );
+        
         gc.drawLine( x1, tickPos, x2, tickPos );
         textX = x2 + tickLabelInsets.top;
         textY = tickPos - tickExtent.y / 2;
         drawText( gc, label, textX, textY, fontDataTick );
       }
     }
+    
+    
+    //Benötigte Breite berechnen
+    if (axis.getPosition().getOrientation()==ORIENTATION.HORIZONTAL)
+    {
+      return tickLength + tickLabelInsets.top + maxExtent.y + tickLabelInsets.bottom;
+    }
+    else
+    {
+      return tickLength + tickLabelInsets.left + maxExtent.x + tickLabelInsets.right;
+    }
   }
-
+  
+  /**
+   * returns a point containing the max x and max y of both given points
+   */
+  private Point getMaxExtent(Point p1, Point p2)
+  {
+    return new Point(Math.max( p1.x, p2.x ), Math.max( p1.y, p2.y ));
+  }
+  
   /**
    * @return Insets-object, transformed in accordance to axis position
    */
@@ -310,78 +414,63 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   
 
 
-  /**
-   * draws the axis' main line
-   */
-  private void drawAxisLine( GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
-  {
-    gc.setLineWidth( getLineWidth() );
-    gc.setLineStyle( SWT.LINE_SOLID );
-    gc.drawLine( x1, y1, x2, y2 );
-  }
+  
 
   /**
    * draws the axis label - if the axis is oriented vertical, the text is also drawn vertical
    */
-  private void drawAxisLabel( GCWrapper gc, IAxis<Number> axis, int x1, int y1, int x2, int y2 )
+  private int drawAxisLabel( GCWrapper gc, IAxis<Number> axis, Rectangle screen )
   {
-    // ChartUtilities.resetGC( gc.m_gc, dev );
-
+     ChartUtilities.resetGC( gc.m_gc );
+     int partWidth=0;
+     
+     
+     
     if( axis.getLabel() != null )
     {
       final Point textExtent = getTextExtent( gc, axis.getLabel(), getFontDataLabel() );
 
-      final Point tickLabelExtent = calcTickLabelSize( gc, axis );
-
-      if( tickLabelExtent == null )
-      {
-        return;
-      }
-
       int x = 0;
       int y = 0;
       
-      int tickLength=getTickLength();
-      int lineWidth=getLineWidth();
-      
       Insets labelInsets = getLabelInsets();
-      Insets tickLabelInsets=getTickLabelInsets();
 
       Transform tr = new Transform( gc.getDevice() );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
         {
-          x = Math.abs( x2 - x1 ) / 2 - textExtent.x / 2;
-          y = y1;
-
-          if( axis.getPosition() == POSITION.TOP )
-            y -= textExtent.y + labelInsets.bottom + tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.bottom;// +
-          else
-            y += tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;// +
+          x = screen.width / 2 - textExtent.x / 2;
+          y = screen.y;
+          y += labelInsets.top;// 
+          partWidth=labelInsets.top + textExtent.y + labelInsets.bottom;
         }
         else
         {
-          x = x1;
-          y = Math.abs( y2 - y1 ) / 2;
+          
+          y = screen.height / 2;
 
           int rotation = 0;
 
           if( axis.getPosition() == POSITION.LEFT )
           {
+            x = screen.width;
             rotation = -90;
-            x -= lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x -= labelInsets.bottom + textExtent.y;
             y += textExtent.x / 2;
           }
           else
           {
+            x = screen.x;
             rotation = 90;
-            x += lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x += screen.y + labelInsets.bottom + textExtent.y ;
             y -= textExtent.x / 2;
           }
           tr.translate( x, y );
           tr.rotate( rotation );
           tr.translate( -x, -y );
+          
+          partWidth=labelInsets.left + textExtent.x + labelInsets.right;
 
         }
         if( tr != null )
@@ -396,8 +485,11 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
           tr.dispose();
       }
     }
+    
+    return partWidth;
   }
-
+  
+  
   /**
    * calculates the extent of a Double using a certain fontdata
    */

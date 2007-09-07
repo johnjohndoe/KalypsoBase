@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="de.openali.diagram.factory">
+<schema targetNamespace="org.kalypso.chart.factory">
 <annotation>
       <appInfo>
-         <meta.schema plugin="de.openali.diagram.factory" id="LayerProvider" name="LayerProvider"/>
+         <meta.schema plugin="org.kalypso.chart.factory" id="LayerProvider" name="LayerProvider"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
