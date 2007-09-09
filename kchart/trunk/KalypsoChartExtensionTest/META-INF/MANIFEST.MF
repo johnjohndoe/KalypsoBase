@@ -5,3 +5,5 @@ Bundle-SymbolicName: org.kalypso.chart.ext.test;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: org.kalypso.chart.ext.test/
 Require-Bundle: org.kalypso.chart.ext.base
+Export-Package: org.kalypso.chart.ext.test.axisrenderer,
+ org.kalypso.chart.ext.test.axisrenderer.provider

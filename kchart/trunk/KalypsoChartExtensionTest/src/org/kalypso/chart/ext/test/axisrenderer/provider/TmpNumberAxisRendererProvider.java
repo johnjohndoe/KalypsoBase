@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.ext.test.axisrenderer.TmpNumberAxisRenderer;
 import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import org.kalypso.chart.factory.configuration.parameters.impl.BooleanParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontDataParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
@@ -39,7 +40,12 @@ public class TmpNumberAxisRendererProvider extends AbstractAxisRendererProvider 
 	    int insetLabel=Integer.parseInt( pc.getParameterValue( "inset_label", "1" ));
 	    Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
 
-	    IAxisRenderer<Number> tmpNumberAxisRenderer = new TmpNumberAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, 1.0);
+	    int minTickInteval = Integer.parseInt( pc.getParameterValue( "min_tick_inteval", "0" ));
+	    int fixedWidth = Integer.parseInt( pc.getParameterValue( "fixed_width", "0" ));
+	    BooleanParser bp=new BooleanParser( );
+	    boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
+	    
+	    IAxisRenderer<Number> tmpNumberAxisRenderer = new TmpNumberAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut);
 	    return tmpNumberAxisRenderer;
 	}
 
