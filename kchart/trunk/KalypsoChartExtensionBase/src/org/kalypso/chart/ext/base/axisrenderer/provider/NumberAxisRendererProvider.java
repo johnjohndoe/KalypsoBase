@@ -1,5 +1,6 @@
 package org.kalypso.chart.ext.base.axisrenderer.provider;
 
+
 import java.awt.Insets;
 
 import org.eclipse.swt.graphics.FontData;
@@ -7,6 +8,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.ext.base.axisrenderer.NumberAxisRenderer;
 import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import org.kalypso.chart.factory.configuration.parameters.impl.BooleanParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontDataParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
@@ -33,32 +35,35 @@ public class NumberAxisRendererProvider extends AbstractAxisRendererProvider {
 	    fdTick.setHeight( Integer.parseInt( pc.getParameterValue( "font-height_tick", "8" ) ) );
 	    fdTick.setStyle( pc.getParsedParameterValue( "font-style_tick", "NORMAL", fsp ) );
 	    
-	    //Ticks setzen; inset_tick definiert Abstände für alle Seiten; die können dann für jede Seite einzeln überschrieben werden
-	    int insetTick=Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ));
-	    String insetTickString=(new Integer(insetTick)).toString();
-	    int insetTick_left=Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ));
-	    int insetTick_right=Integer.parseInt( pc.getParameterValue( "inset_tick_right", insetTickString ));
-	    int insetTick_bottom=Integer.parseInt( pc.getParameterValue( "inset_tick_bottom", insetTickString ));
-	    int insetTick_top=Integer.parseInt( pc.getParameterValue( "inset_tick_top", insetTickString ));
-	    Insets insetsTick = new Insets( insetTick_top, insetTick_left, insetTick_bottom, insetTick_right );
-
 	    
-	    int insetLabel=Integer.parseInt( pc.getParameterValue( "inset_label", "1" ));
-	    String insetLabelString=(new Integer(insetLabel)).toString();
-	    int insetLabel_left=Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ));
+	  //Ticks setzen; inset_tick definiert Abstände für alle Seiten; die können dann für jede Seite einzeln überschrieben werden
+        int insetTick=Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ));
+        String insetTickString=(new Integer(insetTick)).toString();
+        int insetTick_left=Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ));
+        int insetTick_right=Integer.parseInt( pc.getParameterValue( "inset_tick_right", insetTickString ));
+        int insetTick_bottom=Integer.parseInt( pc.getParameterValue( "inset_tick_bottom", insetTickString ));
+        int insetTick_top=Integer.parseInt( pc.getParameterValue( "inset_tick_top", insetTickString ));
+        Insets insetsTick = new Insets( insetTick_top, insetTick_left, insetTick_bottom, insetTick_right );
+
+        int insetLabel=Integer.parseInt( pc.getParameterValue( "inset_label", "1" ));
+        String insetLabelString=(new Integer(insetLabel)).toString();
+        int insetLabel_left=Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ));
         int insetLabel_right=Integer.parseInt( pc.getParameterValue( "inset_label_right", insetLabelString ));
         int insetLabel_bottom=Integer.parseInt( pc.getParameterValue( "inset_label_bottom", insetLabelString ));
         int insetLabel_top=Integer.parseInt( pc.getParameterValue( "inset_label_top", insetLabelString ));
-	    Insets insetsLabel = new Insets( insetLabel_top, insetLabel_left, insetLabel_bottom, insetLabel_right );
+        Insets insetsLabel = new Insets( insetLabel_top, insetLabel_left, insetLabel_bottom, insetLabel_right );
 
         int lineWidth=Integer.parseInt( pc.getParameterValue( "line_width", "1"));
-        
         int tickLength=Integer.parseInt( pc.getParameterValue( "tick_length", "5"));
-
         int gap=Integer.parseInt( pc.getParameterValue( "gap", "0"));
+        
+	    int minTickInteval = Integer.parseInt( pc.getParameterValue( "min_tick_interval", "0" ));
+	    int fixedWidth = Integer.parseInt( pc.getParameterValue( "fixed_width", "0" ));
+	    BooleanParser bp=new BooleanParser( );
+	    boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
 	    
-	    IAxisRenderer<Number> numberAxisRenderer = new NumberAxisRenderer( fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick );
-	    return numberAxisRenderer;
+	    IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut);
+	    return tmpNumberAxisRenderer;
 	}
 
 	public Class<?> getDataClass() {

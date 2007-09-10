@@ -13,7 +13,7 @@ public class TupleResultBarLayer<T_domain, T_target> extends AbstractChartLayer<
     super( domainAxis, targetAxis );
   }
 
-  public void drawIcon( Image img, int width, int height )
+  public void drawIcon( Image img )
   {
     // TODO Auto-generated method stub
 

@@ -25,7 +25,7 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     setDataContainer( data );
   }
 
-  public void drawIcon( final Image img, final int width, final int height )
+  public void drawIcon( final Image img )
   {
     // TODO Auto-generated method stub
   }

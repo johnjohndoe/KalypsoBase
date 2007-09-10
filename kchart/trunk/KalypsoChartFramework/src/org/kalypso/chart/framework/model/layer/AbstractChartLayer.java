@@ -175,7 +175,7 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   {
     ILegendItem l = null;
     final Image img = new Image( Display.getCurrent(), 20, 20 );
-    drawIcon( img, 20, 20 );
+    drawIcon( img );
     final ImageData id = img.getImageData();
     img.dispose();
     l = new LegendItem( null, getTitle(), id );

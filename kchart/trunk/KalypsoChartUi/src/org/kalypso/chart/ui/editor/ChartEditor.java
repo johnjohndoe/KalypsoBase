@@ -369,7 +369,7 @@ public class ChartEditor extends EditorPart
       if( layer.getTitle().equals( title ) )
       {
         final Rectangle bounds = img.getBounds();
-        layer.drawIcon( img, bounds.width, bounds.height );
+        layer.drawIcon( img );
         break;
       }
     }

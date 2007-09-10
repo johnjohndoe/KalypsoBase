@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.ITabularDataContainer;
@@ -35,8 +36,11 @@ public DefaultLineLayer( AbstractDomainValueData<T_domain, T_target> dataContain
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
-  public void drawIcon( Image img, int width, int height )
+  public void drawIcon( Image img )
   {	
+      Rectangle bounds = img.getBounds();
+      int height=bounds.height;
+      int width=bounds.width;
 	  GC gc=new GC(img);
 	  GCWrapper gcw=new GCWrapper(gc);
 	  

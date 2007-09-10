@@ -76,7 +76,7 @@ public class DefaultLegendItem implements ILegendItem_old
    */
   public void drawIcon( Image img )
   {
-    m_layer.drawIcon( img, m_iconWidth, m_iconHeight );
+    m_layer.drawIcon( img );
   }
 
   /**
@@ -122,7 +122,7 @@ public class DefaultLegendItem implements ILegendItem_old
 
     // Icon holen
     Image iconImage = new Image( Display.getDefault(), m_iconWidth, m_iconHeight );
-    m_layer.drawIcon( iconImage, m_iconWidth, m_iconHeight );
+    m_layer.drawIcon( iconImage );
     // Icon kopieren
     gc.drawImage( iconImage, 0, 0, m_iconWidth, m_iconHeight, p0.x, p0.y, m_iconWidth, m_iconHeight );
     // TestImage zerstören

@@ -68,9 +68,8 @@ public interface IChartLayer<T_domain, T_target>
    * draws a picture of a given size into the given Image; the icon will be used for the legend to describe the layers
    * visual representation
    * <p>
-   * TODO: remove widht and height parameters! Use img.getBounds instead
    */
-  public void drawIcon( final Image img, final int width, final int height );
+  public void drawIcon( final Image img );
 
   /**
    * @return true if the layer is set active, false otherwise

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
@@ -36,8 +37,11 @@ public DefaultBarLayer( AbstractDomainIntervalValueData<T_domain, T_target> data
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
-  public void drawIcon( Image img, int width, int height )
+  public void drawIcon( Image img )
   {
+      Rectangle bounds = img.getBounds();
+      int height=bounds.height;
+      int width=bounds.width;
 	  GC gc=new GC(img);
 	  GCWrapper gcw=new GCWrapper(gc);
 	  IStyledElement element = getStyle().getElement(SE_TYPE.POLYGON, 1);

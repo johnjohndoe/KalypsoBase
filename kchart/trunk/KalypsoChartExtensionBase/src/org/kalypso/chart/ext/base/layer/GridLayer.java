@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ext.base.style.StyledLine;
 import org.kalypso.chart.framework.logging.Logger;
@@ -138,7 +139,7 @@ public void paint( final GCWrapper gc )
   {
 	ILegendItem l=null;
     Image img=new Image(Display.getCurrent(), 20, 20);
-    drawIcon(img, 20, 20);
+    drawIcon(img );
     ImageData id=img.getImageData();
     img.dispose();
     l=new LegendItem(null, getId(), id);
@@ -162,8 +163,11 @@ public void paint( final GCWrapper gc )
    return null;
   }
 
-  public void drawIcon( Image img, int width, int height )
+  public void drawIcon( Image img )
   {
+    Rectangle bounds = img.getBounds();
+    int height=bounds.height;
+    int width=bounds.width;
     GC gc = new GC( img );
     GCWrapper gcw = new GCWrapper( gc );
 
