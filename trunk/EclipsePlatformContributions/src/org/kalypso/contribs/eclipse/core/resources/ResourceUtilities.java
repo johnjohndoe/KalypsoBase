@@ -305,4 +305,30 @@ public class ResourceUtilities
     }
   }
 
+  /**
+   * Returns all children of the given container with a given extension. If extension is null all files will be
+   * returned.
+   * <p>
+   * If any exception is thrown, it is suppressed and an empty array of files is returned.
+   * 
+   * @param depth
+   *            See {@link org.eclipse.core.resources.IResource}
+   * @param extension
+   *            the extension
+   */
+  public static IFile[] getChildrenWithExtensionQuiet( final IContainer container, final int depth, final String extension )
+  {
+    try
+    {
+      final CollectFilesWithExtensionVisitor visitor = new CollectFilesWithExtensionVisitor();
+      visitor.setExtension( extension );
+      container.accept( visitor, depth, IResource.NONE );
+      return visitor.getFiles();
+    }
+    catch( final CoreException e )
+    {
+      return new IFile[0];
+    }
+  }
+
 }
