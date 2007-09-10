@@ -42,8 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -55,19 +53,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexElement<T>
 {
-  /**
-   * Finds the control model for the given calculation unit from the control model group.
-   * 
-   * @param controlModelGroup
-   *            the control model group holding the group of control models to check
-   * @throws IllegalArgumentException
-   *             if controlModelGroup is null
-   * @returns an Instance of {@link IControlModel1D2D} which is linked to this calculation unit
-   */
-  public IControlModel1D2D getControlModel( final IControlModelGroup controlModelGroup );
-  
-  public void deleteControlModel();
-  
   public List<IFELine> getContinuityLines( );
   
   public boolean contains(final IFeatureWrapper2 member);
