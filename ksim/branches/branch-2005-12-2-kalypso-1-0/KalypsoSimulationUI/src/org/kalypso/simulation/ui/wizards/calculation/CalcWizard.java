@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -97,6 +98,18 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
+/**
+ * The calc wiazrd.
+ * <p>
+ * Supported arguments in the CalcWizard xml-definition:
+ * <ul>
+ * <li>askForSaveOnFinish: [Boolean] If <code>true</code>, the user is asked if the wizard shall be saved when the
+ * wizard is finished. Defaults to <code>false</code>.</li>
+ * <li></li>
+ * </ul>
+ * 
+ * @author Gernot Belger
+ */
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 {
   private static final RGB DEFAULT_TITLE_RGB = new RGB( 255, 255, 255 );
@@ -122,6 +135,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /** Scenario of current calcCase */
   protected IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
 
+  private Arguments m_arguments;
+
   /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
   {
@@ -145,6 +160,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       inputSource.setEncoding( wizardConfigFile.getCharset() );
 
       m_calcwizard = (CalcwizardType)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
+
+      m_arguments = buildArguments( m_calcwizard );
     }
     catch( final JAXBException e )
     {
@@ -249,6 +266,32 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean performFinish()
   {
+    final IWizardContainer container = getContainer();
+    final Shell shell = container.getShell();
+
+    final String askForSaveStr = m_arguments.getProperty( "askForSaveOnFinish", "false" );
+    final boolean askForSave = Boolean.valueOf( askForSaveStr ).booleanValue();
+
+    if( askForSave )
+    {
+      final MessageDialog msgDialog = new MessageDialog( shell, "Vorhersageassistent beenden", null,
+          "Vorhersageassistent wird beendet, zuletzt geänderte Daten speichern?", MessageDialog.QUESTION, new String[]
+          {
+              IDialogConstants.YES_LABEL,
+              IDialogConstants.NO_LABEL,
+              IDialogConstants.CANCEL_LABEL }, 0 );
+      switch( msgDialog.open() )
+      {
+      case 0: // YES
+        break; // just continue to save
+      case 1: // NO
+        return true;
+
+      case 2: // Cancel
+        return false;
+      }
+    }
+
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
       protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
@@ -269,8 +312,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
-    ErrorDialog.openError( getContainer().getShell(), "Daten speichern", "Fehler beim Speichern der Daten", status );
+    final IStatus status = RunnableContextHelper.execute( container, false, false, operation );
+    ErrorDialog.openError( shell, "Daten speichern", "Fehler beim Speichern der Daten", status );
     return status.isOK();
   }
 
@@ -416,8 +459,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           title = "Warnung";
         }
 
-        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls",
-            status, true );
+        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, true );
       }
       else
       {
@@ -629,9 +671,21 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   }
 
   /**
-   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#isSaveAvailable()
    */
-  public IStatus saveAllPages( final IProgressMonitor monitor )
+  public boolean isSaveAvailable()
+  {
+    final String showSaveStr = m_arguments.getProperty( "showSaveButton", "false" );
+    final boolean showSave = Boolean.valueOf( showSaveStr ).booleanValue();
+
+    return showSave;
+  }
+  
+  /**
+   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
+   * @throws CoreException
+   */
+  public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException
   {
     final IWizardPage[] pages = getPages();
     final int pageCount = pages.length;
@@ -662,6 +716,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         else
           monitor.worked( 1 );
       }
+      
+      final IWizardPage currentPage = getContainer().getCurrentPage();
+      if( currentPage instanceof IModelWizardPage )
+        ((IModelWizardPage)currentPage).restoreState();
     }
     finally
     {
@@ -735,5 +793,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       return pageHelpId;
 
     return m_calcwizard == null ? null : m_calcwizard.getHelpId();
+  }
+
+  public Arguments getArgument()
+  {
+    return m_arguments;
   }
 }
