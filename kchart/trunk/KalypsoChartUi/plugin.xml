@@ -33,5 +33,15 @@
                tooltip="Maximize Chart"/>
       </editorContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.chart.ui.view.ChartView"
+            id="org.kalypso.chart.ui.view.ChartView"
+            name="Chart View">
+      </view>
+   </extension>
 
 </plugin>
