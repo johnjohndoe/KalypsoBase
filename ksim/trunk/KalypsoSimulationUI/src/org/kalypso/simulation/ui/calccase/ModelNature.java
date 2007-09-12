@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.calccase;
 
@@ -127,11 +127,11 @@ import org.xml.sax.InputSource;
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
-  
+
   // TODO Move this to KalypsoSimulationCore plugin
   public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
   public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
-  
+
 
   private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
 
@@ -179,7 +179,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * This is the id to use in your own launch files.
    * <p>
    * Example of an launch-file:
-   * 
+   *
    * <pre>
    *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
    *    &lt;launchConfiguration type=&quot;org.eclipse.ant.AntLaunchConfigurationType&quot;&gt;
@@ -194,7 +194,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    *    &lt;stringAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_ANT_TARGETS&quot; value=&quot;afterCalc,&quot;/&gt;
    *    &lt;/launchConfiguration&gt;
    *  &lt;pre&gt;
-   * 
+   *
    */
   public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
 
@@ -213,10 +213,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         m_metadata.store( bos, "Modell-Projekt Metadata Information" );
         bos.close();
-  
+
         final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
         file.create( bis, false, new NullProgressMonitor() );
-  
+
         bis.close();
       }
     }
@@ -369,7 +369,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     // TODO: check, if already another ant-task is running in the platform
     // if yes, wait until it has finished
-    
+
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
 
@@ -380,9 +380,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 
       final IFile launchFile = getLaunchFile( launchName );
-      
+
       monitor.subTask( "Starte Launch-Datei '" + launchName + "'" );
-      
+
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
@@ -401,7 +401,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
 
       // TODO: timeout konfigurierbar machen?
-      final int minutes = 30;
+      final int minutes = 720;
       monitor.subTask( "Warte auf Ende der Berechnung..." );
       for( int i = 0; i < 60 * minutes; i++ )
       {
@@ -410,13 +410,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           launch.terminate();
           return Status.CANCEL_STATUS;
         }
-        
+
         if( launch.isTerminated() )
         {
           final String[] arguments = ExternalToolsUtil.getArguments( lc );
           if( arguments == null )
             return Status.OK_STATUS;
-          
+
           for( int j = 0; j < arguments.length; j++ )
           {
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
@@ -454,10 +454,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // alle resourcen des CalcCase refreshen
       // intern the parent of folder will used as rule
-      
+
       /* In order to have a good error message we need to check if the monitor is canceled (this is the case if an exception was thrown before).*/
-      final IProgressMonitor subMon = monitor.isCanceled() ? new NullProgressMonitor() : new SubProgressMonitor( monitor, 1000 );  
-      
+      final IProgressMonitor subMon = monitor.isCanceled() ? new NullProgressMonitor() : new SubProgressMonitor( monitor, 1000 );
+
       folder.refreshLocal( IResource.DEPTH_INFINITE, subMon );
 
       monitor.done();
@@ -574,7 +574,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Führt eine Transformation auf einer Rechenvariante durch
-   * 
+   *
    * @deprecated use ant launch framework instead. Leave here until all models have been ported to the new system.
    */
   @Deprecated
@@ -809,7 +809,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         if( controlFile.exists() )
           gmlPath = controlFile.getFullPath().toString();
       }
-      
+
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
 
       final IUrlResolver urlResolver = configureTokensForcontrol();
@@ -831,13 +831,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       if( folder == null )
         return null;
-      
+
         final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
         if( !controlFile.exists() )
-          return null; 
-          
+          return null;
+
           final String gmlPath = controlFile.getFullPath().toString();
-      
+
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
 
       final IUrlResolver urlResolver = configureTokensForcontrol();
@@ -852,7 +852,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  
+
   public IUrlResolver configureTokensForcontrol( ) throws CoreException
   {
     final IUrlResolver urlResolver = new UrlResolver();
@@ -905,7 +905,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   * 
+   *
    * @param cal
    * @return true when time is valid
    */
@@ -979,7 +979,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   * 
+   *
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for
@@ -991,7 +991,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final GMLWorkspace workspace = loadControl( calcCase );
     if( workspace == null )
       return null;
-    
+
     final Feature rootFeature = workspace.getRootFeature();
 
     final FindPropertyByNameVisitor vis = new FindPropertyByNameVisitor( propertyName );
