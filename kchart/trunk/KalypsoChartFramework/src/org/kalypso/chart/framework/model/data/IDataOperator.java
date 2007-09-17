@@ -9,6 +9,6 @@ public interface IDataOperator<T_logical> extends IStringDataConverter<T_logical
 
 	public T_logical numericalToLogical(Number numVal);
 	
-	public DataRange<T_logical> getContainingInterval(Number numVal, Number numIntervalWidth, Number numFixedPoint);
+	public IDataRange<T_logical> getContainingInterval(Number numVal, Number numIntervalWidth, Number numFixedPoint);
 	
 }

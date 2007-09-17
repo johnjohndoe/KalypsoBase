@@ -131,12 +131,12 @@ public class NumberTickCalculator
 	    normmax = normmax * Math.pow( 10, ( rangepow -1 )* (-1) );
 	    Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
 	    Logger.logInfo(Logger.TOPIC_LOG_AXIS, "normmax: "+normmax);
-	    System.out.println( axis.getIdentifier() + " Normmin: " + normmin );
-	    System.out.println( axis.getIdentifier() + " Normmax: " + normmax );
+	    Logger.logInfo( Logger.TOPIC_LOG_AXIS, axis.getIdentifier() + " Normmin: " + normmin );
+	    Logger.logInfo( Logger.TOPIC_LOG_AXIS,  axis.getIdentifier() + " Normmax: " + normmax );
 	    
 	    //Zum feststellen, über wieviele Grundintervalle iteriert werden soll 
 	    int normmid=(int) ((normmax-normmin)*Math.pow(10, rangepow-1));
-	    System.out.println("Normmax - Normmin: "+normmid);
+	    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Normmax - Normmin: "+normmid);
 	    
 	    // Das Intervall verwendet zun�chst nur 10er Schritte
 	    double interval = Math.pow( 10, rangepow * (-1) -1 );
@@ -171,7 +171,7 @@ public class NumberTickCalculator
 	    else
 	    {
 		    double normmiddle=normmin+(normmax-normmin)/2;
-		    System.out.println(normmiddle);
+		    Logger.logInfo( Logger.TOPIC_LOG_AXIS, (new Double(normmiddle)).toString());
 		    firstticks.add(new Double(normmiddle));
 		    findBetweens( normmin, normmiddle, minLogInterval, goodDivisors, ticks, level+1, minDisplayInterval, axis );
 		    findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, level+1, minDisplayInterval, axis );
@@ -258,16 +258,18 @@ public class NumberTickCalculator
 
 	private static void outputTicks(TreeMap<Integer, SortedSet<Double>> ticks) {
 		Set<Entry<Integer, SortedSet<Double>>> entrySet = ticks.entrySet();
+		String info="";
 		for (Entry<Integer, SortedSet<Double>> entry : entrySet) {
 			Integer key = entry.getKey();
 			SortedSet<Double> valueSet = entry.getValue();
-			System.out.print("Level "+key+": ");
+			info+= "Level "+key+": ";
 			for (Double double1 : valueSet) {
-				System.out.print(double1+" | ");
+				info += double1+" | ";
 			}
-			System.out.println();
+			info+="\n";
 		}
-		System.out.println("\n-----------------");
+		info+="\n-----------------";
+		Logger.logInfo( Logger.TOPIC_LOG_AXIS, info);
 		
 	}
 
@@ -365,7 +367,7 @@ public class NumberTickCalculator
 	        	{
 	        		count++;
 		        	 oldi = i;
-	        		System.out.println("Nicht sichtbar: "+i+" "+ (i+betweenrange) + " "+dataRange.getMin()+ " "+dataRange.getMax());
+		        	 Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Nicht sichtbar: "+i+" "+ (i+betweenrange) + " "+dataRange.getMin()+ " "+dataRange.getMax());
 	        	}
 	        	// Tick setzen
 	        	 

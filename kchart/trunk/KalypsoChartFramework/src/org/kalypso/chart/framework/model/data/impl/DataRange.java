@@ -1,6 +1,7 @@
 package org.kalypso.chart.framework.model.data.impl;
 
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
+import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
 /**
@@ -19,9 +20,24 @@ public class DataRange<T> implements IDataRange<T>
       final Double minNum = ((Number) min).doubleValue();
       final Double maxNum = ((Number) max).doubleValue();
 
+      //Beide gleich => dataRange automatisch so anpassen, dass der Wert in der Intervallmitte liegt
       if( minNum.compareTo( maxNum ) == 0 )
-        // TODO etwas dubios, sollte schon eher von aussen abgefangen werden...
-        throw new ZeroSizeDataRangeException();
+      {
+        double doubleValue = minNum.doubleValue();
+        //falls != 0 werden einfach 10% addiert oder subtrahiert
+        if (doubleValue != 0)
+        {
+          m_min = (T) ( (Number) new Double(doubleValue - doubleValue*0.1) );
+          m_max = (T) ( (Number) new Double(doubleValue + doubleValue*0.1) );
+        }
+        //falls == 0 wird 1 addiert oder subtrahiert
+        else
+        {
+          m_min = (T) ( (Number) new Double(doubleValue - 1) );
+          m_max = (T) ( (Number) new Double(doubleValue + 1) );
+        }
+        
+      }
       if( minNum.compareTo( maxNum ) > 0 )
       {
         m_max = min;
@@ -37,10 +53,12 @@ public class DataRange<T> implements IDataRange<T>
     {
       final Comparable<Comparable> minComp = (Comparable<Comparable>) min;
       final Comparable maxComp = (Comparable) max;
-      System.out.println( "comparing: " + minComp.toString() + " : " + maxComp.toString() + "(" + minComp.getClass() + "|" + maxComp.getClass() + ")" );
-
+      Logger.logInfo( Logger.TOPIC_LOG_DATA, "comparing: " + minComp.toString() + " : " + maxComp.toString() + "(" + minComp.getClass() + "|" + maxComp.getClass() + ")" );
       if( minComp.compareTo( maxComp ) == 0 )
+      {
+        //kann leider nicht automatisch angepasst werden => Exception
         throw new ZeroSizeDataRangeException();
+      }
       if( minComp.compareTo( maxComp ) > 0 )
       {
         m_max = min;
@@ -53,7 +71,7 @@ public class DataRange<T> implements IDataRange<T>
       }
     }
     /*
-     * das wäre dann der ungünstigste Fall: nicht Vergleichbar und nicht numerisch TODO: überlegen, ob dieser Fall
+     * das wäre dann der ungünstigste Fall: nicht vergleichbar und nicht numerisch TODO: überlegen, ob dieser Fall
      * überhaupt zugelassen werden soll; alternativ sollte eine InvalidRangeIntervalObjectsException
      */
     else
