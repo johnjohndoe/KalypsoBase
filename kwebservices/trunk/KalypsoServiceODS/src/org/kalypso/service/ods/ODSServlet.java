@@ -59,8 +59,13 @@ public class ODSServlet implements IOGCService
 		
 	   //Proxy setzen
 		Map<String, String> serviceParams= loader.getServiceParameters();
-		String proxyPort = serviceParams.get("proxyPort");
-		String proxyHost = serviceParams.get("proxyHost");
+	      String proxyPort =null;
+	      String proxyHost =null;
+		if (serviceParams!=null)
+		{
+		  proxyPort = serviceParams.get("proxyPort");
+		  proxyHost = serviceParams.get("proxyHost");
+		}
 		
 		if (proxyPort!=null && proxyHost !=null)
 		{
