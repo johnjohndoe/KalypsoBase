@@ -312,7 +312,9 @@ public class ChartCanvas extends Canvas implements PaintListener, DisposeListene
         final Point toolsize = gc.textExtent( tooltiptext );
         // final int toolx = shape.x + shape.width + 5 + TOOLINSET;
         // final int tooly = shape.y - 5 - TOOLINSET - toolsize.y;
-        final int toolx = mousePos.x + shape.width + 5 + TOOLINSET;
+        int toolx = mousePos.x + shape.width + 5 + TOOLINSET;
+        if( toolx + toolsize.x > screen.width )
+          toolx = toolx - toolsize.x;
         final int tooly = mousePos.y - 5 - TOOLINSET - toolsize.y;
 
         gc.setLineWidth( 1 );
