@@ -63,6 +63,7 @@ public interface IDocumentResultMeta extends IResultMeta
     tinShearStress,
     hydrograph,
     lengthSection,
+    tinDifference,
     log,
     coreDataZip
   }
