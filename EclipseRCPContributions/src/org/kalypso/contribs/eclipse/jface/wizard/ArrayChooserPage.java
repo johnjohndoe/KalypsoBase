@@ -367,7 +367,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page. */
-    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage" );
+    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage"+getName() );
     if( section == null )
       return;
 
@@ -415,7 +415,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page in creating a new emtpy one, so that no old values will remain. */
-    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage" );
+    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage"+getName() );
 
     for( int i = 0; i < m_checked.length; i++ )
     {
