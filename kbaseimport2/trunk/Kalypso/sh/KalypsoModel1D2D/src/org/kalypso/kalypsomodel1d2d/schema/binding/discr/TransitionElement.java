@@ -144,23 +144,21 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   {
     if( calculationUnit instanceof ICalculationUnit1D2D )
     {
-      final List calcUnitContinuityLines = calculationUnit.getContinuityLines();
+      final List<IFELine> calcUnitContinuityLines = calculationUnit.getContinuityLines();
       boolean allLinesFound = true;
       boolean lineFound = false;
-      final List<IFELine> myContinuityLines = getContinuityLines();
-      for( final IFELine myLine : myContinuityLines )
+      for( final IFELine myLine : m_continuityLines )
       {
+        if( !allLinesFound )
+          break;
+        lineFound = false;
         final String myLineGmlID = myLine.getGmlID();
-        for( final Object object : calcUnitContinuityLines )
+        for( final IFELine calcUnitLine : calcUnitContinuityLines )
         {
-          if( object instanceof IFELine )
+          if( calcUnitLine.getGmlID().equals( myLineGmlID ) )
           {
-            final String calcUnitLineGmlID = ((IFELine) object).getGmlID();
-            if( calcUnitLineGmlID.equals( myLineGmlID ) )
-            {
-              lineFound = true;
-              break;
-            }
+            lineFound = true;
+            break;
           }
         }
         allLinesFound &= lineFound;

@@ -150,6 +150,10 @@ public class CreateTransitionElementWidget extends AbstractWidget
         {
           e1.printStackTrace();
         }
+        finally
+        {
+          reinit();
+        }
       }
     }
     super.keyPressed( e );
