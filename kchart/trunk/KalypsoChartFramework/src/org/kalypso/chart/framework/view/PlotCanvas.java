@@ -17,35 +17,33 @@ import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
- * @author burtscher 
- * widget in which the layers' content is paintet
+ * @author burtscher widget in which the layers' content is paintet
  */
 public class PlotCanvas extends Canvas implements PaintListener, Listener
 {
 
-	
   private Image m_bufferImg = null;
-  private ILayerManager m_manager;
-private IChartMouseHandler m_mouseHandler;
 
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style)
+  private final ILayerManager m_manager;
+
+  private IChartMouseHandler m_mouseHandler;
+
+  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
     super( parent, style );
-  	m_manager = manager;
+    m_manager = manager;
 
     addPaintListener( this );
     addListener( SWT.Resize, this );
   }
-  
-  public void setMouseHandler(IChartMouseHandler handler)
+
+  public void setMouseHandler( final IChartMouseHandler handler )
   {
-	  m_mouseHandler=handler;
-	  addMouseListener(m_mouseHandler);
-	  addMouseMoveListener(m_mouseHandler);
+    m_mouseHandler = handler;
+    addMouseListener( m_mouseHandler );
+    addMouseMoveListener( m_mouseHandler );
   }
-  
 
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
@@ -69,52 +67,44 @@ private IChartMouseHandler m_mouseHandler;
    */
   public void paintControl( final PaintEvent e )
   {
-    GCWrapper gcw = new GCWrapper( e.gc );
+    final GCWrapper gcw = new GCWrapper( e.gc );
     final Rectangle screenArea = getClientArea();
     m_bufferImg = paintBuffered( gcw, screenArea, m_bufferImg );
-    //Der MouseHandler soll jetzt noch ein ZoomRechteck zeichnen
-    if (m_mouseHandler!=null)
-    	m_mouseHandler.paint(gcw);
+    // Der MouseHandler soll jetzt noch ein ZoomRechteck zeichnen
+    if( m_mouseHandler != null )
+      m_mouseHandler.paint( gcw );
     gcw.dispose();
   }
 
-  
-  
-  
-  
-  
-  
   /**
    * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
    */
-  public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
+  public Image paintBuffered( final GCWrapper gcw, final Rectangle screen, final Image bufferImage )
   {
     final Image usedBufferImage;
-    if( bufferImage == null)
+    if( bufferImage == null )
     {
       usedBufferImage = new Image( Display.getDefault(), screen.width, screen.height );
 
-      GC buffGc = new GC( usedBufferImage );
+      final GC buffGc = new GC( usedBufferImage );
       final GCWrapper buffGcw = new GCWrapper( buffGc );
-      buffGcw.setAntialias(SWT.ON);
+      buffGcw.setAntialias( SWT.ON );
       try
       {
         final IChartLayer[] layers = m_manager.getLayers();
         for( final IChartLayer layer : layers )
-        {
           if( layer.isVisible() )
           {
-            ChartUtilities.resetGC( buffGcw.m_gc);
+            ChartUtilities.resetGC( buffGcw.m_gc );
             try
             {
-            	layer.paint( buffGcw );
+              layer.paint( buffGcw );
             }
-            catch (SWTException e)
+            catch( final SWTException e )
             {
-            	e.printStackTrace();
+              e.printStackTrace();
             }
           }
-        }
       }
       catch( final Exception e )
       {
@@ -128,15 +118,13 @@ private IChartMouseHandler m_mouseHandler;
     }
     else
       usedBufferImage = bufferImage;
-    
-    
+
     // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
     // selstsamen effekten
-   // gcw.drawImage( usedBufferImage, screen.x, screen.y, screen.width, screen.height, screen.x, screen.y, screen.width, screen.height );
-    gcw.drawImage(usedBufferImage, screen.x, screen.y);
-    
-   
-    
+    // gcw.drawImage( usedBufferImage, screen.x, screen.y, screen.width, screen.height, screen.x, screen.y,
+    // screen.width, screen.height );
+    gcw.drawImage( usedBufferImage, screen.x, screen.y );
+
     return usedBufferImage;
   }
 
@@ -149,10 +137,10 @@ private IChartMouseHandler m_mouseHandler;
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-    super.redraw();
-  }
 
- 
+    if( !isDisposed() )
+      super.redraw();
+  }
 
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
@@ -162,6 +150,5 @@ private IChartMouseHandler m_mouseHandler;
     if( event.type == SWT.Resize )
       redraw();
   }
-  
-  
+
 }
