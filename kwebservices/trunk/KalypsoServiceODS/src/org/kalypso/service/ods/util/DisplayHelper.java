@@ -34,8 +34,6 @@ public class DisplayHelper extends Thread
     {
       m_display = Display.getCurrent();
       Logger.trace( "using current display" );
-
-      // TODO: strange, wurde schon mal aufgerufen? wir sind aber ein singleton
     }
 
     if( m_display == null )
@@ -44,8 +42,7 @@ public class DisplayHelper extends Thread
 
       if( m_display.getThread() != Thread.currentThread() )
       {
-        // TODO: was macher mer denn jetzt?
-        Logger.trace( "another thread has the display, what to do? " + m_display.getThread().getName() );
+        Logger.trace( "Another thread has the display. Maybe you should check that the ods plugin is the first plugin to open the display. " + m_display.getThread().getName() );
       }
     }
     runEventLoop( m_display );
