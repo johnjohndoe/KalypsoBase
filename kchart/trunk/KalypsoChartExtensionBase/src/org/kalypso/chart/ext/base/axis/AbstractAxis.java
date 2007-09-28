@@ -171,7 +171,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     catch( final ZeroSizeDataRangeException e )
     {
       e.printStackTrace(); // etwas was ein treffen darf (auch wenns dubios ist) sollte man nicht auf die konsole
-                            // loggen
+      // loggen
 
       // TODO: what to do in that case?
       setDataRange( null );

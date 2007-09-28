@@ -47,12 +47,11 @@ import org.kalypso.chart.framework.model.IChartModelEventProvider;
 
 /**
  * @author burtscher1
- *
  */
-public class ChartModelEventHandler implements IChartModelEventProvider 
+public class ChartModelEventHandler implements IChartModelEventProvider
 {
 
-  private Vector<IChartModelEventListener> m_listeners=new Vector<IChartModelEventListener>();
+  private final Vector<IChartModelEventListener> m_listeners = new Vector<IChartModelEventListener>();
 
   /**
    * @see org.kalypso.chart.framework.model.IChartModelEventProvider#addChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
@@ -60,7 +59,7 @@ public class ChartModelEventHandler implements IChartModelEventProvider
   public void addChartModelEventListener( IChartModelEventListener l )
   {
     m_listeners.add( l );
-    
+
   }
 
   /**
@@ -70,11 +69,11 @@ public class ChartModelEventHandler implements IChartModelEventProvider
   {
     m_listeners.remove( l );
   }
-  
-  public void fireModelChanged()
+
+  public void fireModelChanged( )
   {
     for( final IChartModelEventListener l : m_listeners )
-      l.onModelChanged( );
+      l.onModelChanged();
   }
 
 }

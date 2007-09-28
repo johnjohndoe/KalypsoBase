@@ -5,9 +5,7 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * @author alibu
- * 
- * switch to return x- or y-coordinates according to the an orientation
+ * @author alibu switch to return x- or y-coordinates according to the an orientation
  */
 public interface ICoordinateSwitcher
 {

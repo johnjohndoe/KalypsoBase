@@ -32,12 +32,12 @@ public class TupleResultPointLayer<T_domain, T_target> extends AbstractChartLaye
 
   public void paint( GCWrapper gc )
   {
-    Rectangle c = gc.getClipping();
-    IStyledElement se = getStyle().getElement( SE_TYPE.POINT, 0 );
-    List<Point> path = new ArrayList<Point>();
-    TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
+    final Rectangle c = gc.getClipping();
+    final IStyledElement se = getStyle().getElement( SE_TYPE.POINT, 0 );
+    final List<Point> path = new ArrayList<Point>();
+    final TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
     data.open();
-    TupleResult result = data.getTupleResult();
+    final TupleResult result = data.getTupleResult();
     Object[] xValues = null;
     Object[] yValues = null;
     IAxis xAxis = null;
@@ -59,8 +59,8 @@ public class TupleResultPointLayer<T_domain, T_target> extends AbstractChartLaye
     if( xValues.length > 0 && yValues.length > 0 )
       for( int i = 0; i < result.size(); i++ )
       {
-        int x = xAxis.logicalToScreen( (T_domain) xValues[i] );
-        int y = yAxis.logicalToScreen( (T_target) yValues[i] );
+        final int x = xAxis.logicalToScreen( (T_domain) xValues[i] );
+        final int y = yAxis.logicalToScreen( (T_target) yValues[i] );
         path.add( new Point( x, y ) );
       }
     se.setPath( path );

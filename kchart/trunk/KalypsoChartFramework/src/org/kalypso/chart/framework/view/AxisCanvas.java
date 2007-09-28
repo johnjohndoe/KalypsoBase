@@ -3,7 +3,6 @@ package org.kalypso.chart.framework.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -20,10 +19,8 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
- * @author burtscher 
- * Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
+ * @author burtscher Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
  *         to calculate screen coordinates for normalized values
  */
 public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisComponent<T>, Listener
@@ -32,15 +29,15 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    * the corresponding axis
    */
   private final IAxis<T> m_axis;
-  private Image m_bufferImage=null;
 
+  private Image m_bufferImage = null;
 
   public AxisCanvas( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
     m_axis = axis;
     addPaintListener( this );
-    addListener(SWT.Resize, this);
+    addListener( SWT.Resize, this );
   }
 
   /**
@@ -64,15 +61,15 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    *         to 0
    */
   @SuppressWarnings("unchecked")
-@Override
+  @Override
   public Point computeSize( int wHint, int hHint, boolean changed )
   {
     if( m_axis != null )
     {
-      IAxisRenderer renderer = m_axis.getRegistry().getRenderer(m_axis);
+      final IAxisRenderer renderer = m_axis.getRegistry().getRenderer( m_axis );
       if( renderer != null )
       {
-        int axisWidth = renderer.getAxisWidth( m_axis );
+        final int axisWidth = renderer.getAxisWidth( m_axis );
         if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
           return new Point( 0, axisWidth );
         else
@@ -93,59 +90,48 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   private void paint( final GCWrapper gc )
   {
     final Rectangle bounds = getClientArea();
-    final Rectangle b = new Rectangle( 0,0, bounds.width , bounds.height );
-    m_bufferImage=paintBuffered(gc, b, m_bufferImage);
+    final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
+    m_bufferImage = paintBuffered( gc, b, m_bufferImage );
   }
 
-
-/**
- * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
- */
-public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
-{
-  final Image usedBufferImage;
-  if( bufferImage == null)
+  /**
+   * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
+   */
+  public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
-    usedBufferImage = new Image( Display.getDefault(), screen.width, screen.height );
-    GC buffGc = new GC( usedBufferImage );
-    final GCWrapper buffGcw = new GCWrapper( buffGc );
-
-    
-    IAxisRenderer renderer=null;
-    try
+    final Image usedBufferImage;
+    if( bufferImage == null )
     {
-        renderer = m_axis.getRegistry().getRenderer(m_axis);
+      usedBufferImage = new Image( Display.getDefault(), screen.width, screen.height );
+      final GC buffGc = new GC( usedBufferImage );
+      final GCWrapper buffGcw = new GCWrapper( buffGc );
+
+      IAxisRenderer renderer = null;
+      try
+      {
+        renderer = m_axis.getRegistry().getRenderer( m_axis );
         if( renderer != null )
-        	renderer.paint( buffGcw, m_axis, screen );
+          renderer.paint( buffGcw, m_axis, screen );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        buffGc.dispose();
+        buffGcw.dispose();
+      }
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      buffGc.dispose();
-      buffGcw.dispose();
-    }
+    else
+      usedBufferImage = bufferImage;
+
+    // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
+    // selstsamen effekten
+    gcw.drawImage( usedBufferImage, screen.x, screen.y );
+
+    return usedBufferImage;
   }
-  else
-    usedBufferImage = bufferImage;
-  
-  
-  // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
-  // selstsamen effekten
-  gcw.drawImage(usedBufferImage, screen.x, screen.y);
-  
-  return usedBufferImage;
-}
-
-
-
-
-
-
-
-
 
   /**
    * Uses the widgets' complete extension to alculates the screen value in correspondance to a normalized value
@@ -191,12 +177,12 @@ public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
       range = bounds.height; // vertical
     return range;
   }
-  
+
   /** Forces a repaint of the axis. The buffered image is disposed. */
   @Override
   public void redraw( )
   {
-	  
+
     if( m_bufferImage != null )
     {
       m_bufferImage.dispose();
@@ -204,7 +190,7 @@ public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
     }
     super.redraw();
   }
-  
+
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
    */
@@ -213,6 +199,5 @@ public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
     if( event.type == SWT.Resize )
       redraw();
   }
-  
 
 }

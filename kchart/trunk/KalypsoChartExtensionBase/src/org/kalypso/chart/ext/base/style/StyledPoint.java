@@ -12,7 +12,6 @@ import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
  * @author burtscher
  */
@@ -22,13 +21,13 @@ public class StyledPoint implements IStyledElement
 
   private int m_height = 7;
 
-  private RGB m_borderColor;
+  private final RGB m_borderColor;
 
-  private RGB m_fillColor;
+  private final RGB m_fillColor;
 
   private List<Point> m_path;
 
-  private int m_borderWidth;
+  private final int m_borderWidth;
 
   private final int m_alpha;
 
@@ -53,9 +52,8 @@ public class StyledPoint implements IStyledElement
   }
 
   /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#setPath(java.util.List)
-   * The path is used draw a styled point at each point of the path; the Point is regarded
-   * as the center position of the element
+   * @see org.kalypso.chart.framework.styles.IStyledElement#setPath(java.util.List) The path is used draw a styled point
+   *      at each point of the path; the Point is regarded as the center position of the element
    */
   public void setPath( List<Point> path )
   {
@@ -66,19 +64,19 @@ public class StyledPoint implements IStyledElement
    * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc)
+  public void paint( GCWrapper gc )
   {
-	 Device dev=gc.getDevice();
-    ChartUtilities.resetGC( gc.m_gc);
+    final Device dev = gc.getDevice();
+    ChartUtilities.resetGC( gc.m_gc );
     gc.setAlpha( m_alpha );
 
-    Color borderColor = new Color( dev, m_borderColor );
-    Color fillColor = new Color( dev, m_fillColor );
+    final Color borderColor = new Color( dev, m_borderColor );
+    final Color fillColor = new Color( dev, m_fillColor );
     if( m_path != null )
     {
       for( int i = 0; i < m_path.size(); i++ )
       {
-        Point p = centerToLeftTop( m_path.get( i ) );
+        final Point p = centerToLeftTop( m_path.get( i ) );
         gc.setForeground( borderColor );
         gc.setBackground( fillColor );
         gc.fillOval( p.x, p.y, m_width, m_height );
@@ -98,9 +96,9 @@ public class StyledPoint implements IStyledElement
     return SE_TYPE.POINT;
   }
 
-  public static StyledPoint getDefault()
+  public static StyledPoint getDefault( )
   {
-    return new StyledPoint( 3, 3, new RGB(230, 230, 230), 1, new RGB(0,0,0), 255 );
+    return new StyledPoint( 3, 3, new RGB( 230, 230, 230 ), 1, new RGB( 0, 0, 0 ), 255 );
   }
 
 }

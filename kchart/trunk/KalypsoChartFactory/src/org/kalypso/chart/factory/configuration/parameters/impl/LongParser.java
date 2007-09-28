@@ -5,7 +5,6 @@ import org.kalypso.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu
- *
  */
 public class LongParser implements IStringParser<Long>
 {
@@ -15,20 +14,20 @@ public class LongParser implements IStringParser<Long>
    */
   public Long stringToLogical( String value ) throws MalformedValueException
   {
-    Long n=null;
+    Long n = null;
     try
     {
-      n=Long.parseLong( value );
+      n = Long.parseLong( value );
     }
     /**
      * TODO: Überprüfen, welche Exceptions noch autreten können
      */
-    catch (Exception e)
+    catch( Exception e )
     {
       throw new MalformedValueException();
     }
     return n;
-    
+
   }
 
   /**

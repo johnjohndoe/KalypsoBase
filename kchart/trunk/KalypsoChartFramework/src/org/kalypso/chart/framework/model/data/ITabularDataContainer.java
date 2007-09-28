@@ -42,13 +42,12 @@ package org.kalypso.chart.framework.model.data;
 
 /**
  * @author burtscher1
- *
  */
 public interface ITabularDataContainer<T_domain, T_target> extends IDataContainer<T_domain, T_target>
 {
-  
-  public T_domain[] getDomainValues();
-  
-  public T_target[] getTargetValues();
-  
+
+  public T_domain[] getDomainValues( );
+
+  public T_target[] getTargetValues( );
+
 }

@@ -6,12 +6,12 @@ package org.kalypso.chart.factory.configuration.exception;
 public class LayerProviderException extends ConfigurationException
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -822031612038055883L;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -822031612038055883L;
 
-public LayerProviderException( String message )
+  public LayerProviderException( String message )
   {
     super( message );
   }

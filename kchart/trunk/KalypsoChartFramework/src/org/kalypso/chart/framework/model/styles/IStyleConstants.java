@@ -7,7 +7,7 @@ public interface IStyleConstants
 {
 
   /**
-   * different types of StyledElements 
+   * different types of StyledElements
    */
   public enum SE_TYPE
   {

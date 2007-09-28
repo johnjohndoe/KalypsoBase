@@ -42,9 +42,8 @@ package org.kalypso.chart.framework.model;
 
 /**
  * @author burtscher1
- *
  */
 public interface IChartModelEventListener
 {
-    public void onModelChanged();
+  public void onModelChanged( );
 }

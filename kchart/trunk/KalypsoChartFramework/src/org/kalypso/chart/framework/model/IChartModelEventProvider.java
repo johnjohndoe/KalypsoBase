@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.framework.model;
 
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener;
 
 /**
  * @author burtscher1
- *
  */
 public interface IChartModelEventProvider
 {

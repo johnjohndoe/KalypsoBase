@@ -5,7 +5,6 @@ import org.kalypso.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu
- *
  */
 public class DoubleParser implements IStringParser<Double>
 {
@@ -15,20 +14,20 @@ public class DoubleParser implements IStringParser<Double>
    */
   public Double stringToLogical( String value ) throws MalformedValueException
   {
-    Double n=null;
+    Double n = null;
     try
     {
-      n=Double.parseDouble( value );
+      n = Double.parseDouble( value );
     }
     /**
      * TODO: Überprüfen, welche Exceptions noch autreten können
      */
-    catch (Exception e)
+    catch( Exception e )
     {
       throw new MalformedValueException();
     }
     return n;
-    
+
   }
 
   /**

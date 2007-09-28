@@ -20,23 +20,23 @@ public class DataRange<T> implements IDataRange<T>
       final Double minNum = ((Number) min).doubleValue();
       final Double maxNum = ((Number) max).doubleValue();
 
-      //Beide gleich => dataRange automatisch so anpassen, dass der Wert in der Intervallmitte liegt
+      // Beide gleich => dataRange automatisch so anpassen, dass der Wert in der Intervallmitte liegt
       if( minNum.compareTo( maxNum ) == 0 )
       {
-        double doubleValue = minNum.doubleValue();
-        //falls != 0 werden einfach 10% addiert oder subtrahiert
-        if (doubleValue != 0)
+        final double doubleValue = minNum.doubleValue();
+        // falls != 0 werden einfach 10% addiert oder subtrahiert
+        if( doubleValue != 0 )
         {
-          m_min = (T) ( (Number) new Double(doubleValue - doubleValue*0.1) );
-          m_max = (T) ( (Number) new Double(doubleValue + doubleValue*0.1) );
+          m_min = (T) ((Number) new Double( doubleValue - doubleValue * 0.1 ));
+          m_max = (T) ((Number) new Double( doubleValue + doubleValue * 0.1 ));
         }
-        //falls == 0 wird 1 addiert oder subtrahiert
+        // falls == 0 wird 1 addiert oder subtrahiert
         else
         {
-          m_min = (T) ( (Number) new Double(doubleValue - 1) );
-          m_max = (T) ( (Number) new Double(doubleValue + 1) );
+          m_min = (T) ((Number) new Double( doubleValue - 1 ));
+          m_max = (T) ((Number) new Double( doubleValue + 1 ));
         }
-        
+
       }
       if( minNum.compareTo( maxNum ) > 0 )
       {
@@ -56,7 +56,7 @@ public class DataRange<T> implements IDataRange<T>
       Logger.logInfo( Logger.TOPIC_LOG_DATA, "comparing: " + minComp.toString() + " : " + maxComp.toString() + "(" + minComp.getClass() + "|" + maxComp.getClass() + ")" );
       if( minComp.compareTo( maxComp ) == 0 )
       {
-        //kann leider nicht automatisch angepasst werden => Exception
+        // kann leider nicht automatisch angepasst werden => Exception
         throw new ZeroSizeDataRangeException();
       }
       if( minComp.compareTo( maxComp ) > 0 )

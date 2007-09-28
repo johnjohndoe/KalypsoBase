@@ -1,6 +1,5 @@
 package org.kalypso.chart.framework.model.mapper.registry;
 
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 
 /**

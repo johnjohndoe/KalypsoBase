@@ -1,18 +1,16 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
-
 import org.kalypso.chart.framework.model.data.IStringParser;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 
-
 /**
  * @author alibu
- *
  */
 public class AxisDirectionParser implements IStringParser<DIRECTION>
 {
 
-  String m_formatHint="one of 'POSITIVE' or 'NEGATIVE'";
+  String m_formatHint = "one of 'POSITIVE' or 'NEGATIVE'";
+
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */

@@ -15,7 +15,6 @@ import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.view.gazetter.GazetterLocationType;
 
 // TODO why do we still have several tuple result layer?
 // @Alex: please combine them to ONE implementation!
@@ -29,29 +28,29 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 
   public void drawIcon( final Image img )
   {
-    Rectangle bounds = img.getBounds();
-    int height=bounds.height;
-    int width=bounds.width;
-    GC gc=new GC(img);
-    GCWrapper gcw=new GCWrapper(gc);
-    
-    ArrayList<Point> path=new ArrayList<Point>();
-    
-    path.add(new Point(0,height/2));
-    path.add(new Point(width/5,height/2));
-    path.add(new Point(width/5*2,height/4));
-    path.add(new Point(width/5*3,height/4*3));
-    path.add(new Point(width/5*4,height/2));
-    path.add(new Point(width,height/2));
-      
-    IStyledElement element = getStyle().getElement(SE_TYPE.LINE, 1);
-    
-    element.setPath(path);
-    element.paint(gcw);
-    
+    final Rectangle bounds = img.getBounds();
+    final int height = bounds.height;
+    final int width = bounds.width;
+    final GC gc = new GC( img );
+    final GCWrapper gcw = new GCWrapper( gc );
+
+    final ArrayList<Point> path = new ArrayList<Point>();
+
+    path.add( new Point( 0, height / 2 ) );
+    path.add( new Point( width / 5, height / 2 ) );
+    path.add( new Point( width / 5 * 2, height / 4 ) );
+    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
+    path.add( new Point( width / 5 * 4, height / 2 ) );
+    path.add( new Point( width, height / 2 ) );
+
+    final IStyledElement element = getStyle().getElement( SE_TYPE.LINE, 1 );
+
+    element.setPath( path );
+    element.paint( gcw );
+
     gcw.dispose();
     gc.dispose();
-    
+
   }
 
   public void paint( final GCWrapper gc )

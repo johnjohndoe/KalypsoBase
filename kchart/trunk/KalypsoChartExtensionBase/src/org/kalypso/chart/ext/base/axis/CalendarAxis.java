@@ -13,16 +13,10 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 
-
-
-
 /**
- * @author burtscher
- *
- * Concrete IAxis implementation - to be used for calendar data from XML documents
- *
+ * @author burtscher Concrete IAxis implementation - to be used for calendar data from XML documents
  */
-public class CalendarAxis extends AbstractAxis<Calendar> 
+public class CalendarAxis extends AbstractAxis<Calendar>
 {
   public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
   {
@@ -31,14 +25,14 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
   public double logicalToNormalized( final Calendar value )
   {
-	IDataRange<Calendar> dataRange = getDataRange();
-    Calendar gcTo = dataRange.getMax();
-    long toMillis = gcTo.getTimeInMillis();
+    final IDataRange<Calendar> dataRange = getDataRange();
+    final Calendar gcTo = dataRange.getMax();
+    final long toMillis = gcTo.getTimeInMillis();
 
-    Calendar gcFrom = dataRange.getMin();
-    long fromMillis = gcFrom.getTimeInMillis();
+    final Calendar gcFrom = dataRange.getMin();
+    final long fromMillis = gcFrom.getTimeInMillis();
 
-    long valueMillis = value.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
 
     // r should not be 0 here (see AbstractAxis)
     final long r = toMillis - fromMillis;
@@ -55,8 +49,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
     final long logical = (long) (value * r + getDataRange().getMin().getTimeInMillis());
 
-    Calendar c = Calendar.getInstance();
-
+    final Calendar c = Calendar.getInstance();
 
     c.setTime( new Date( logical ) );
 
@@ -71,13 +64,12 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( getRegistry() == null )
       return 0;
 
-
-    final IAxisComponent<?> comp = getRegistry().getComponent( this );
+    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
-    double norm = logicalToNormalized( value );
-    int screen = comp.normalizedToScreen( norm );
+    final double norm = logicalToNormalized( value );
+    final int screen = comp.normalizedToScreen( norm );
     return screen;
   }
 
@@ -89,7 +81,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( getRegistry() == null )
       return null;
 
-    final IAxisComponent<?> comp = getRegistry().getComponent( this );
+    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
@@ -102,12 +94,11 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   public Point logicalToScreenInterval( Calendar value, Calendar fixedPoint, double intervalSize )
   {
     // intervalSize wird als Millisecond-Angabe interpretiert
-    long intervalMillis = (long) intervalSize;
-    long fixedMillis = fixedPoint.getTimeInMillis();
-    long valueMillis = value.getTimeInMillis();
+    final long intervalMillis = (long) intervalSize;
+    final long fixedMillis = fixedPoint.getTimeInMillis();
+    final long valueMillis = value.getTimeInMillis();
     /*
-     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint
-     *  gesehen liegt
+     * der Increment-Wert für die Schleife richtet sich nach der Richtung, in der der Wert vom fixedPoint gesehen liegt
      */
     long start = fixedMillis;
     long end = fixedMillis;
@@ -127,37 +118,32 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     Logger.trace( "Axis (" + getIdentifier() + "): IntervalCalculation finished" );
 
     // Start-Zeitpunkt des Wert-Intervalls
-    Calendar startCal = Calendar.getInstance();
+    final Calendar startCal = Calendar.getInstance();
     startCal.setTimeInMillis( start );
 
     // End-Zeitpunkt des Wert-Intervalls
-    Calendar endCal = Calendar.getInstance();
+    final Calendar endCal = Calendar.getInstance();
     endCal.setTimeInMillis( end );
 
-    final IAxisComponent<?> comp = getRegistry().getComponent( this );
+    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
-    int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
-    int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
+    final int startPoint = comp.normalizedToScreen( logicalToNormalized( startCal ) );
+    final int endPoint = comp.normalizedToScreen( logicalToNormalized( endCal ) );
     Logger.trace( "Axis (" + getIdentifier() + "): Using Interval: " + startPoint + ":" + endPoint );
     return new Point( startPoint, endPoint );
   }
 
+  public int zeroToScreen( )
+  {
+    // ist hier nicht anwendbar
+    return 0;
+  }
 
-public int zeroToScreen()
-{
-	//ist hier nicht anwendbar
-	return 0;
-}
-
-
-
-
-public IDataOperator<Calendar> getDataOperator() {
-	return new CalendarDataOperator();
-}
-
-
+  public IDataOperator<Calendar> getDataOperator( )
+  {
+    return new CalendarDataOperator();
+  }
 
 }

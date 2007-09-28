@@ -74,8 +74,8 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( final URL context ) throws LayerProviderException
   {
-    LayerType lt = getLayerType();
-    IChartModel chartModel = getChartModel();
+    final LayerType lt = getLayerType();
+    final IChartModel chartModel = getChartModel();
 
     IChartLayer icl = null;
     final String configLayerId = lt.getTitle();
@@ -119,9 +119,9 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
       final IAxis< ? > domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
       final IAxis< ? > valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
 
-      String observationId = getParameterContainer().getParameterValue( "observationId", null );
-      String domainComponentName = getParameterContainer().getParameterValue( "domainComponentId", null );
-      String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
+      final String observationId = getParameterContainer().getParameterValue( "observationId", null );
+      final String domainComponentName = getParameterContainer().getParameterValue( "domainComponentId", null );
+      final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
 
       TupleResultDomainValueData< ? , ? > data = null;
       if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )

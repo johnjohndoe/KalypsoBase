@@ -45,9 +45,9 @@ import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
  */
 public class ChartFactory
 {
-  
-  public static String LAYER_PROVIDER_KEY="org.kalypso.chart.factory.layerprovider";
-  
+
+  public static String LAYER_PROVIDER_KEY = "org.kalypso.chart.factory.layerprovider";
+
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final URL context ) throws ConfigurationException
   {
     // ChartConfig auslesen
@@ -121,7 +121,7 @@ public class ChartFactory
               icl.setTitle( layerType.getTitle() );
               icl.setDescription( layerType.getDescription() );
               icl.setVisible( layerType.getVisible() );
-              //saving the provider into the layer so it can be reused to save changed charts
+              // saving the provider into the layer so it can be reused to save changed charts
               icl.setData( LAYER_PROVIDER_KEY, provider );
               model.getLayerManager().addLayer( icl );
               Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );

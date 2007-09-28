@@ -18,10 +18,8 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.contribs.java.util.DoubleComparator;
 
-
 /**
  * @author alibu
- *
  */
 public class NumberAxisProvider extends AbstractAxisProvider
 {
@@ -31,57 +29,56 @@ public class NumberAxisProvider extends AbstractAxisProvider
    */
   public IAxis<Number> getAxis( ) throws AxisProviderException
   {
-    AxisPositionParser app=new AxisPositionParser();
-    String position = getAxisType().getPosition().toString();
-    POSITION pos=app.stringToLogical( position  );
-    AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.stringToLogical( getAxisType().getDirection().toString() );
-    
-    Comparator<Number> nc=new DoubleComparator(0.0001);
+    final AxisPositionParser app = new AxisPositionParser();
+    final String position = getAxisType().getPosition().toString();
+    final POSITION pos = app.stringToLogical( position );
+    final AxisDirectionParser adp = new AxisDirectionParser();
+    final DIRECTION dir = adp.stringToLogical( getAxisType().getDirection().toString() );
 
-    
-    
-    IAxis<Number> axis = new NumberAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, nc );
-    if (axis!=null)
+    final Comparator<Number> nc = new DoubleComparator( 0.0001 );
+
+    final IAxis<Number> axis = new NumberAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, nc );
+    if( axis != null )
     {
-      double min=0;
-      double max=1;
-      DoubleParser dp=new DoubleParser();
+      double min = 0;
+      final double max = 1;
+      final DoubleParser dp = new DoubleParser();
       try
       {
-        String minValStr=getAxisType().getMinVal();
-        if (!minValStr.equals(""))
-        	min=( dp.stringToLogical(minValStr) );
+        final String minValStr = getAxisType().getMinVal();
+        if( !minValStr.equals( "" ) )
+          min = (dp.stringToLogical( minValStr ));
       }
-      catch( MalformedValueException e )
+      catch( final MalformedValueException e )
       {
-    	  Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default (0) ");
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default (0) " );
       }
       try
       {
-        String maxValStr=getAxisType().getMaxVal();
-        if (!maxValStr.equals(""))
-        	min=( dp.stringToLogical(maxValStr) );
+        final String maxValStr = getAxisType().getMaxVal();
+        if( !maxValStr.equals( "" ) )
+          min = (dp.stringToLogical( maxValStr ));
       }
-      catch( MalformedValueException e )
+      catch( final MalformedValueException e )
       {
-    	  Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMax; using default (1) ");
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMax; using default (1) " );
       }
-      
-      DataRange<Number> range= null;
+
+      DataRange<Number> range = null;
       try
-		{
-		  range= new DataRange<Number>(min, max);
-		} catch (ZeroSizeDataRangeException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-      
-      axis.setDataRange(range);
+      {
+        range = new DataRange<Number>( min, max );
+      }
+      catch( final ZeroSizeDataRangeException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      axis.setDataRange( range );
     }
     else
-       throw new AxisProviderException();
+      throw new AxisProviderException();
 
     return axis;
   }
@@ -93,8 +90,5 @@ public class NumberAxisProvider extends AbstractAxisProvider
   {
     return Number.class;
   }
-
-
-
 
 }

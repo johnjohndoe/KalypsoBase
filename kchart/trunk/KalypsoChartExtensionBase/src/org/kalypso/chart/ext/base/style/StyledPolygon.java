@@ -12,7 +12,6 @@ import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.util.StyleUtils;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
  * @author burtscher
  */
@@ -20,9 +19,9 @@ public class StyledPolygon implements IStyledElement
 {
   List<Point> m_path;
 
-  private int m_borderWidth;
+  private final int m_borderWidth;
 
-  private RGB m_borderColor;
+  private final RGB m_borderColor;
 
   private RGB m_fillColor;
 
@@ -51,16 +50,16 @@ public class StyledPolygon implements IStyledElement
    */
   public void paint( GCWrapper gc )
   {
-    ChartUtilities.resetGC( gc.m_gc);
+    ChartUtilities.resetGC( gc.m_gc );
     gc.setAlpha( m_alpha );
-    Color fillColor = new Color( gc.getDevice(), m_fillColor );
+    final Color fillColor = new Color( gc.getDevice(), m_fillColor );
     Color borderColor = null;
     if( m_borderColor != null && m_borderWidth > 0 )
     {
       borderColor = new Color( gc.getDevice(), m_borderColor );
     }
 
-    int[] intPath = StyleUtils.pointListToIntArray( m_path );
+    final int[] intPath = StyleUtils.pointListToIntArray( m_path );
 
     // Linienbreite, die verwendet wird, falls alle Punkt auf einer Achsenparallelen oder einem Punkt liegen
     int lineWidth = m_borderWidth;
@@ -83,7 +82,7 @@ public class StyledPolygon implements IStyledElement
     int eqY = 0;
     for( int i = 0; i < m_path.size(); i++ )
     {
-      Point p = m_path.get( i );
+      final Point p = m_path.get( i );
       // erster Punkt: Werte initialisieren
       if( i == 0 )
       {

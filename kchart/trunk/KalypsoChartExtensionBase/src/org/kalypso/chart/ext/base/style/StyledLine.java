@@ -13,7 +13,6 @@ import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.util.StyleUtils;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
  * @author burtscher
  */
@@ -23,11 +22,11 @@ public class StyledLine implements IStyledElement
 
   private int m_width = 0;
 
-  private int m_swtStyle;
+  private final int m_swtStyle;
 
-  private RGB m_lineColor;
+  private final RGB m_lineColor;
 
-  private int m_alpha;
+  private final int m_alpha;
 
   public StyledLine( int width, RGB lineColor, int swtLineStyle, int alpha )
   {
@@ -52,14 +51,13 @@ public class StyledLine implements IStyledElement
    * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gcw)
+  public void paint( GCWrapper gcw )
   {
-    ChartUtilities.resetGC( gcw.m_gc);
+    ChartUtilities.resetGC( gcw.m_gc );
     gcw.setAlpha( m_alpha );
-    Color lineColor = new Color( gcw.getDevice(), m_lineColor );
+    final Color lineColor = new Color( gcw.getDevice(), m_lineColor );
 
-
-    int[] intPath = StyleUtils.pointListToIntArray( m_path );
+    final int[] intPath = StyleUtils.pointListToIntArray( m_path );
     gcw.setForeground( lineColor );
     gcw.setLineWidth( m_width );
     gcw.setLineStyle( m_swtStyle );
@@ -77,9 +75,9 @@ public class StyledLine implements IStyledElement
     return SE_TYPE.LINE;
   }
 
-  public static StyledLine getDefault()
+  public static StyledLine getDefault( )
   {
-    return new StyledLine( 1, new RGB(0,0,0), SWT.LINE_SOLID, 255 );
+    return new StyledLine( 1, new RGB( 0, 0, 0 ), SWT.LINE_SOLID, 255 );
   }
 
 }

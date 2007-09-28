@@ -29,8 +29,6 @@ import org.kalypso.chart.framework.model.mapper.renderer.AbstractAxisRenderer;
 import org.kalypso.chart.framework.util.InsetsHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
-
 /**
  * @author burtscher
  */
@@ -38,38 +36,36 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 {
 
   private Collection<Calendar> m_ticks;
-  private SimpleDateFormat m_dateFormat;
 
-
+  private final SimpleDateFormat m_dateFormat;
 
   /**
    * @param foreground
-   *          Color of axis, ticks and text
+   *            Color of axis, ticks and text
    * @param lineWidth
-   *          Width of ticks and axis line
+   *            Width of ticks and axis line
    * @param tickLength
    * @param tickLabelInsets
-   *          <ul>
-   *          <li>top: distance between ticklabel and axis</li>
-   *          <li>bottom: distance between ticklabel and outside</li>
-   *          <li>left: distance between ticklabel and previous ticklabel</li>
-   *          <li>right: distance between ticklabel and next ticklabel</li>
-   *          </ul>
+   *            <ul>
+   *            <li>top: distance between ticklabel and axis</li>
+   *            <li>bottom: distance between ticklabel and outside</li>
+   *            <li>left: distance between ticklabel and previous ticklabel</li>
+   *            <li>right: distance between ticklabel and next ticklabel</li>
+   *            </ul>
    * @param maxDigits
    * @param labelInsets
    * @param gap
-   *          space between axis and component border
+   *            space between axis and component border
    */
   public CalendarAxisRenderer( final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final SimpleDateFormat df )
   {
-    super(foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick);
+    super( foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
     m_dateFormat = df;
   }
 
-
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Calendar> axis )
   {
-	IDataRange<Calendar> range=axis.getDataRange();
+    final IDataRange<Calendar> range = axis.getDataRange();
     final String logicalfrom = m_dateFormat.format( range.getMin().getTimeInMillis() );
     final String logicalto = m_dateFormat.format( range.getMax().getTimeInMillis() );
     final Point fromTextExtent = getTextExtent( gc, logicalfrom, getFontDataTickLabel() );
@@ -92,15 +88,15 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     int textXDate = 0;
     int textYDate = 0;
 
-    Calendar cal=Calendar.getInstance();
+    final Calendar cal = Calendar.getInstance();
     cal.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
 
     m_dateFormat.setCalendar( cal );
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
-      int y1 = startY;
-      int y2 = y1 + getTickLength();
+      final int y1 = startY;
+      final int y2 = y1 + getTickLength();
 
       for( final Calendar value : ticks )
       {
@@ -116,8 +112,8 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     }
     else if( axis.getPosition() == POSITION.TOP )
     {
-      int y1 = startY;
-      int y2 = y1 - getTickLength();
+      final int y1 = startY;
+      final int y2 = y1 - getTickLength();
 
       for( final Calendar value : ticks )
       {
@@ -133,8 +129,8 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     }
     else if( axis.getPosition() == POSITION.LEFT )
     {
-      int x1 = startX;
-      int x2 = x1 - getTickLength();
+      final int x1 = startX;
+      final int x2 = x1 - getTickLength();
 
       for( final Calendar value : ticks )
       {
@@ -150,8 +146,8 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     }
     else if( axis.getPosition() == POSITION.RIGHT )
     {
-      int x1 = startX;
-      int x2 = x1 + getTickLength();
+      final int x1 = startX;
+      final int x2 = x1 + getTickLength();
 
       for( final Calendar value : ticks )
       {
@@ -166,7 +162,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
         drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
       }
     }
-
 
   }
 
@@ -185,8 +180,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     return ihelper;
   }
 
-
-
   /**
    * Calculates the ticks shown for the given Axis
    */
@@ -203,167 +196,159 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     else
       minScreenInterval = 2 + ticklabelSize.y;
 
-    //Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
+    // Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
     int screenMin, screenMax;
-    IDataRange<Calendar> range=axis.getDataRange();
-    
+    final IDataRange<Calendar> range = axis.getDataRange();
+
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      if (axis.getDirection()==DIRECTION.POSITIVE)
+      if( axis.getDirection() == DIRECTION.POSITIVE )
       {
-        screenMin=(int)(axis.logicalToScreen( range.getMin()) + Math.ceil(0.5*ticklabelSize.x));
-        screenMax=(int)(axis.logicalToScreen(range.getMax())-Math.ceil( 0.5*ticklabelSize.x));
+        screenMin = (int) (axis.logicalToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMax = (int) (axis.logicalToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
       }
       else
       {
 
-        screenMin=(int)(axis.logicalToScreen( range.getMin()) - Math.ceil(0.5*ticklabelSize.x));
-        screenMax=(int)(axis.logicalToScreen(range.getMax()) + Math.ceil( 0.5*ticklabelSize.x));
+        screenMin = (int) (axis.logicalToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMax = (int) (axis.logicalToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
       }
     }
     else
     {
-      if (axis.getDirection()==DIRECTION.POSITIVE)
+      if( axis.getDirection() == DIRECTION.POSITIVE )
       {
-        screenMin=(int)(axis.logicalToScreen( range.getMin()) - Math.ceil(0.5*ticklabelSize.y));
-        screenMax=(int)(axis.logicalToScreen(range.getMax())+ Math.ceil(0.5*ticklabelSize.y));
+        screenMin = (int) (axis.logicalToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
+        screenMax = (int) (axis.logicalToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
       }
       else
       {
-        screenMin=(int)(axis.logicalToScreen( range.getMin()) + Math.ceil(0.5*ticklabelSize.y));
-        screenMax=(int)(axis.logicalToScreen(range.getMax()) - Math.ceil(0.5*ticklabelSize.y));
+        screenMin = (int) (axis.logicalToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
+        screenMax = (int) (axis.logicalToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
       }
 
     }
 
-    //Ab jetzt wird nur noch mit long gerechnet
+    // Ab jetzt wird nur noch mit long gerechnet
 
-    //logischen mini- und maximalen Wert ermitteln
-    long logicalMin=axis.screenToLogical( screenMin ).getTimeInMillis();
-    long logicalMax=axis.screenToLogical( screenMax ).getTimeInMillis();
+    // logischen mini- und maximalen Wert ermitteln
+    final long logicalMin = axis.screenToLogical( screenMin ).getTimeInMillis();
+    final long logicalMax = axis.screenToLogical( screenMax ).getTimeInMillis();
 
+    // der minimale logische Abstand
+    final long minLogInterval = Math.abs( axis.screenToLogical( minScreenInterval ).getTimeInMillis() - axis.screenToLogical( 0 ).getTimeInMillis() );
+    // ein paar Größen
+    final long secondInMillis = 1000;
+    final long minuteInMillis = secondInMillis * 60;
+    final long hourInMillis = minuteInMillis * 60;
+    final long dayInMillis = hourInMillis * 24;
 
-    //der minimale logische Abstand
-    long minLogInterval=Math.abs(axis.screenToLogical( minScreenInterval ).getTimeInMillis() -axis.screenToLogical( 0 ).getTimeInMillis() );
-    //ein paar Größen
-    long secondInMillis=1000;
-    long minuteInMillis=secondInMillis*60;
-    long hourInMillis=minuteInMillis*60;
-    long dayInMillis=hourInMillis*24;
+    // letzten Tagesbeginn VOR dem Startdatum
+    final long normmin = ((logicalMin / dayInMillis) - 1) * dayInMillis;
+    // erster Tagesbeginn NACH dem Startdatum
+    final long normmax = ((logicalMax / dayInMillis) + 1) * dayInMillis;
 
+    // Collection für Ticks
+    final HashSet<Long> ticks = new HashSet<Long>();
 
+    int count = 0;
+    long oldi = 0;
 
-    //letzten Tagesbeginn VOR dem Startdatum
-    long normmin= ( ( logicalMin/dayInMillis) -1) * dayInMillis;
-    //erster Tagesbeginn NACH dem Startdatum
-    long normmax= ( ( logicalMax/dayInMillis) +1) * dayInMillis;
-
-    //Collection für Ticks
-    HashSet<Long> ticks=new HashSet<Long>();
-
-
-    int count=0;
-    long oldi=0;
-
-    long goodInterval=dayInMillis;
-    while(goodInterval < minLogInterval)
+    long goodInterval = dayInMillis;
+    while( goodInterval < minLogInterval )
     {
-      goodInterval+=dayInMillis;
+      goodInterval += dayInMillis;
     }
 
-
-    for (long i=normmin;i<=normmax;i+=goodInterval)
+    for( long i = normmin; i <= normmax; i += goodInterval )
     {
-      if (count>0)
+      if( count > 0 )
       {
-        findBetweens(oldi, i, minLogInterval, ticks);
+        findBetweens( oldi, i, minLogInterval, ticks );
       }
       ticks.add( i );
 
       count++;
-      oldi=i;
+      oldi = i;
     }
 
-    LinkedList<Calendar> realticks=new LinkedList<Calendar>();
-    for (Long tick:ticks)
+    final LinkedList<Calendar> realticks = new LinkedList<Calendar>();
+    for( final Long tick : ticks )
     {
-      long ticklv=tick.longValue();
-      if (ticklv>=logicalMin && ticklv<=logicalMax)
+      final long ticklv = tick.longValue();
+      if( ticklv >= logicalMin && ticklv <= logicalMax )
       {
-          Calendar cal=Calendar.getInstance();
-          cal.setTimeInMillis( ticklv );
-          realticks.add(cal);
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis( ticklv );
+        realticks.add( cal );
       }
     }
-    getTickMap().put( axis, realticks );
+    getTickMap().put( axis, realticks.toArray( new Calendar[] {} ) );
 
     return realticks;
   }
 
-    /**
-     * recursive function which divides an interval into a number of "divisions" and adds the values to a linked list
-     * the divisions have to have a larger range than the param interval
+  /**
+   * recursive function which divides an interval into a number of "divisions" and adds the values to a linked list the
+   * divisions have to have a larger range than the param interval
+   */
+  private void findBetweens( long from, long to, long minInterval, HashSet<Long> ticks )
+  {
+
+    if( from == to || minInterval == 0 )
+      return;
+
+    /*
+     * TODO: hier muss noch irgendwie überprüft werden, in welchem Bereich sich die DateRange befindet - anhand der
+     * DateRange muss dann bestimmt werden, welche divisoren sinnvoll sind; Beispiel: Wenn Stunden geteilt werden, dann
+     * sind die Divisoren 6,4,3,2 gut; bei Tagen eher 120, 90, 60, 30, etc.
      */
-    private void findBetweens(long from, long to, long minInterval, HashSet<Long> ticks)
+    final LinkedList<Integer> divisors = new LinkedList<Integer>();
+
+    divisors.add( 60 );
+    divisors.add( 24 );
+    divisors.add( 18 );
+    divisors.add( 12 );
+    divisors.add( 6 );
+    divisors.add( 2 );
+
+    // Abbruchbedingung: Abstand muss größer 1 sein, sonst kommt immer der 2. Wert raus
+    if( to - from > 1 )
     {
+      final Calendar tmpcal = Calendar.getInstance();
+      m_dateFormat.setCalendar( tmpcal );
 
-    	if (from==to || minInterval==0)
-    		return;
-    	
-      /*
-       * TODO: hier muss noch irgendwie überprüft werden, in welchem Bereich sich die DateRange
-       * befindet - anhand der DateRange muss dann bestimmt werden, welche divisoren sinnvoll sind;
-       * Beispiel: Wenn Stunden geteilt werden, dann sind die Divisoren 6,4,3,2 gut; bei Tagen
-       * eher 120, 90, 60, 30, etc.
-       */
-      LinkedList<Integer> divisors=new LinkedList<Integer>();
-
-      divisors.add( 60 );
-      divisors.add( 24 );
-      divisors.add( 18 );
-      divisors.add( 12 );
-      divisors.add( 6 );
-      divisors.add( 2 );
-
-
-      //Abbruchbedingung: Abstand muss größer 1 sein, sonst kommt immer der 2. Wert raus
-      if (to - from >1 )
+      for( final Integer divisor : divisors )
       {
-        Calendar tmpcal=Calendar.getInstance();
-        m_dateFormat.setCalendar( tmpcal );
-
-        for (Integer divisor:divisors)
+        final long betweenrange = Math.abs( from - to ) / divisor.intValue();
+        if( minInterval < betweenrange )
         {
-          long betweenrange=Math.abs(from-to)/divisor.intValue();
-          if (minInterval < betweenrange )
+          // vorher prüfen
+          int count = 0;
+          long oldi = 0;
+          for( long i = from; i <= to; i += betweenrange )
           {
-              //vorher prüfen
-              int count=0;
-              long oldi=0;
-              for (long i =from;i<=to;i+=betweenrange)
-              {
-                ticks.add( new Long(i) );
-                if (count>=1)
-                {
-                  findBetweens(oldi, i, minInterval, ticks);
-                }
-                //Tick setzen
-                count++;
-                oldi=i;
-              }
-              break;
+            ticks.add( new Long( i ) );
+            if( count >= 1 )
+            {
+              findBetweens( oldi, i, minInterval, ticks );
+            }
+            // Tick setzen
+            count++;
+            oldi = i;
           }
+          break;
         }
       }
-
     }
 
+  }
 
   @Override
   protected Point getTextExtent( GCWrapper gc, final Calendar value, FontData fd )
   {
     final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
-    Point p = getTextExtent( gc, label, fd );
+    final Point p = getTextExtent( gc, label, fd );
     return p;
   }
 
@@ -373,17 +358,14 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     int startY;
     int endX;
     int endY;
-    
-    int gap=getGap();
-    
+
+    final int gap = getGap();
 
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
       startX = screen.x;
       endX = screen.x + screen.width;
 
-      
-      
       if( axis.getPosition() == POSITION.BOTTOM )
         startY = screen.y + gap;
       else
@@ -392,7 +374,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
       {
-        int tmp = startX;
+        final int tmp = startX;
         startX = endX;
         endX = tmp;
       }
@@ -405,12 +387,12 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       if( axis.getPosition() == POSITION.RIGHT )
         startX = screen.x + gap;
       else
-        startX = screen.x + screen.width - gap -1;
+        startX = screen.x + screen.width - gap - 1;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
       {
-        int tmp = startY;
+        final int tmp = startY;
         startY = endY;
         endY = tmp;
       }
@@ -421,28 +403,25 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
   public void paint( GCWrapper gc, final IAxis<Calendar> axis, final Rectangle screen )
   {
-	    Device dev=gc.getDevice();
-	    
+    final Device dev = gc.getDevice();
 
-	    Color foreground=new Color(dev, getRgbForeground());
-	    Color background=new Color(dev, getRgbBackground());
-	    gc.setForeground( foreground );
-	    gc.setBackground( background );
+    final Color foreground = new Color( dev, getRgbForeground() );
+    final Color background = new Color( dev, getRgbBackground() );
+    gc.setForeground( foreground );
+    gc.setBackground( background );
 
-	    // draw axis line
-	    int[] coords = createAxisSegment( axis, screen );
-	    assert coords != null && coords.length == 4;
-	    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
+    // draw axis line
+    final int[] coords = createAxisSegment( axis, screen );
+    assert coords != null && coords.length == 4;
+    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
-	    m_ticks = calcTicks( gc, axis );
-	    drawTicks( gc, axis, coords[0], coords[1], m_ticks );
-	    drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
+    m_ticks = calcTicks( gc, axis );
+    drawTicks( gc, axis, coords[0], coords[1], m_ticks );
+    drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
 
-	    foreground.dispose();
-	    background.dispose();
+    foreground.dispose();
+    background.dispose();
   }
-
-
 
   protected void drawAxisLabel( GCWrapper gc, IAxis<Calendar> axis, int x1, int y1, int x2, int y2 )
   {
@@ -454,13 +433,13 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
       int x = 0;
       int y = 0;
-      
-      Insets tickLabelInsets=getTickLabelInsets();
-      Insets labelInsets=getLabelInsets();
-      int tickLength =getTickLength();
-      int lineWidth=getLineWidth();
 
-      Transform tr = new Transform( gc.getDevice() );
+      final Insets tickLabelInsets = getTickLabelInsets();
+      final Insets labelInsets = getLabelInsets();
+      final int tickLength = getTickLength();
+      final int lineWidth = getLineWidth();
+
+      final Transform tr = new Transform( gc.getDevice() );
       try
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -523,17 +502,17 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    */
   public Calendar[] getGridTicks( IAxis<Calendar> axis )
   {
-    Collection<Calendar> ticks= getTickMap().get( axis );
-    if (ticks==null)
+    Calendar[] ticks = getTickMap().get( axis );
+    if( ticks == null )
     {
-        GC gc=new GC(Display.getDefault());
-        GCWrapper gcw=new GCWrapper(gc);
-        calcTicks( gcw, axis );
-        ticks= getTickMap().get( axis );
-        gcw.dispose();
-        gc.dispose();
+      final GC gc = new GC( Display.getDefault() );
+      final GCWrapper gcw = new GCWrapper( gc );
+      calcTicks( gcw, axis );
+      ticks = getTickMap().get( axis );
+      gcw.dispose();
+      gc.dispose();
     }
-     return (Calendar[]) ticks.toArray(new Calendar[0]);
+    return ticks;
   }
 
   /**
@@ -543,22 +522,20 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   {
     int width = 0;
     int label = 0;
-    int gap=getGap();
-    int lineWidth=getLineWidth();
-    int tickLength=getTickLength();
+    final int gap = getGap();
+    final int lineWidth = getLineWidth();
+    final int tickLength = getTickLength();
 
-    Insets tickLabelInsets=getTickLabelInsets();
-    Insets labelInsets=getLabelInsets();
+    final Insets tickLabelInsets = getTickLabelInsets();
+    final Insets labelInsets = getLabelInsets();
 
-    
     // Testutensilien erzeugen
-    Display dev = Display.getCurrent();
-    Image img = new Image( dev, 1, 1 );
-    GC gc = new GC( img );
-    GCWrapper gcw = new GCWrapper( gc );
-    
+    final Display dev = Display.getCurrent();
+    final Image img = new Image( dev, 1, 1 );
+    final GC gc = new GC( img );
+    final GCWrapper gcw = new GCWrapper( gc );
 
-    Point tls = calcTickLabelSize( gcw, axis );
+    final Point tls = calcTickLabelSize( gcw, axis );
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -579,7 +556,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     width += tickLength;
 
     // Jetzt noch den Text
-    Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
+    final Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
     width += labelExtent.y;
 
     gcw.dispose();

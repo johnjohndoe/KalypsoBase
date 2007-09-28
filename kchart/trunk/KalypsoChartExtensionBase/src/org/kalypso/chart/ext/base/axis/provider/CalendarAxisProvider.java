@@ -17,11 +17,8 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 
-
-
 /**
  * @author alibu
- *
  */
 public class CalendarAxisProvider extends AbstractAxisProvider
 {
@@ -31,56 +28,57 @@ public class CalendarAxisProvider extends AbstractAxisProvider
    */
   public IAxis getAxis( ) throws AxisProviderException
   {
-    AxisPositionParser app=new AxisPositionParser();
-    POSITION pos=app.stringToLogical( getAxisType().getPosition().toString() );
-    AxisDirectionParser adp=new AxisDirectionParser();
-    DIRECTION dir=adp.stringToLogical( getAxisType().getDirection().toString() );
-    IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir );
-    if (axis!=null)
+    final AxisPositionParser app = new AxisPositionParser();
+    final POSITION pos = app.stringToLogical( getAxisType().getPosition().toString() );
+    final AxisDirectionParser adp = new AxisDirectionParser();
+    final DIRECTION dir = adp.stringToLogical( getAxisType().getDirection().toString() );
+    final IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir );
+    if( axis != null )
     {
-        CalendarParser gcp=new CalendarParser();
-        String minValStr= getAxisType().getMinVal();
-        String maxValStr= getAxisType().getMaxVal();
-        Calendar minVal;
-        Calendar maxVal;
-        
-        try
-        {
-	       minVal=gcp.stringToLogical(minValStr);
-        }
-        catch( MalformedValueException e )
-        {
-          //config-date not valid - using Calendar start date
-          Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisRange ("+minValStr+"); using default date ");
-          minVal=Calendar.getInstance();
-          minVal.setTimeInMillis( 0 );
-        }
-        try
-        {
-        	 maxVal=gcp.stringToLogical(maxValStr);
-        }
-        catch( MalformedValueException e )
-        {
-          //config-date not valid - using "now"
-          Logger.logError(Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date ");
-          maxVal=Calendar.getInstance();
-        }
-        
-        DataRange<Calendar> range = null;
-        
-        try
-		{
-			range=new DataRange<Calendar>(minVal, maxVal);
-		} catch (ZeroSizeDataRangeException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        axis.setDataRange(range);
+      final CalendarParser gcp = new CalendarParser();
+      final String minValStr = getAxisType().getMinVal();
+      final String maxValStr = getAxisType().getMaxVal();
+      Calendar minVal;
+      Calendar maxVal;
+
+      try
+      {
+        minVal = gcp.stringToLogical( minValStr );
+      }
+      catch( final MalformedValueException e )
+      {
+        // config-date not valid - using Calendar start date
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisRange (" + minValStr + "); using default date " );
+        minVal = Calendar.getInstance();
+        minVal.setTimeInMillis( 0 );
+      }
+      try
+      {
+        maxVal = gcp.stringToLogical( maxValStr );
+      }
+      catch( final MalformedValueException e )
+      {
+        // config-date not valid - using "now"
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Unparsable value for AxisMin; using default date " );
+        maxVal = Calendar.getInstance();
+      }
+
+      DataRange<Calendar> range = null;
+
+      try
+      {
+        range = new DataRange<Calendar>( minVal, maxVal );
+      }
+      catch( final ZeroSizeDataRangeException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      axis.setDataRange( range );
     }
     else
-       throw new AxisProviderException();
+      throw new AxisProviderException();
 
     return axis;
   }
@@ -92,8 +90,5 @@ public class CalendarAxisProvider extends AbstractAxisProvider
   {
     return Calendar.class;
   }
-
-
-
 
 }

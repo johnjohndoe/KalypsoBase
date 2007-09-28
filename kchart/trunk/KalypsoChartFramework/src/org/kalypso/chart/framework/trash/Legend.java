@@ -1,7 +1,6 @@
 package org.kalypso.chart.framework.trash;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -18,26 +17,22 @@ import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
- * @author burtscher
- * 
- * widget displaying a legend describing a charts contents; also a container for ILegendItems 
- * 
+ * @author burtscher widget displaying a legend describing a charts contents; also a container for ILegendItems
  */
 public class Legend extends Canvas implements PaintListener
 {
-	
+
   @SuppressWarnings("unused")
-  private String m_title="";
+  private String m_title = "";
 
-  private ArrayList<ILegendItem_old> m_items;
+  private final ArrayList<ILegendItem_old> m_items;
 
-  private int m_iconWidth = 20;
+  private final int m_iconWidth = 20;
 
-  private int m_iconHeight = 20;
+  private final int m_iconHeight = 20;
 
-  private int m_inset = 5;
+  private final int m_inset = 5;
 
   private Image m_bufferImg;
 
@@ -50,9 +45,8 @@ public class Legend extends Canvas implements PaintListener
   }
 
   /**
-   * sets the legends title
-   * TODO: the title is not rendered into the legend image 
-   * - this should be done as there's no need for a title otherwise
+   * sets the legends title TODO: the title is not rendered into the legend image - this should be done as there's no
+   * need for a title otherwise
    */
   public void setTitle( final String title )
   {
@@ -60,27 +54,25 @@ public class Legend extends Canvas implements PaintListener
   }
 
   /**
-   * creates an ILegendItem for the given ChartLayer and adds it to the list of ILegendItems 
+   * creates an ILegendItem for the given ChartLayer and adds it to the list of ILegendItems
    */
   public void addLayer( IChartLayer l )
   {
-    DefaultLegendItem li = new DefaultLegendItem( l, m_iconWidth, m_iconHeight, m_inset );
+    final DefaultLegendItem li = new DefaultLegendItem( l, m_iconWidth, m_iconHeight, m_inset );
     addLegendItem( li );
   }
 
   /**
-   * creates ILegendItems for the given ChartLayers and adds them to the list of ILegendItems 
+   * creates ILegendItems for the given ChartLayers and adds them to the list of ILegendItems
    */
   public void addLayers( IChartLayer[] layers )
   {
-    for( IChartLayer l : layers )
+    for( final IChartLayer l : layers )
     {
-    	if (l.isVisible())
-    		addLayer( l );
+      if( l.isVisible() )
+        addLayer( l );
     }
   }
-
-
 
   /**
    * adds an ILegendItem to the list of ILengendItems
@@ -95,7 +87,7 @@ public class Legend extends Canvas implements PaintListener
    */
   public void paintControl( PaintEvent e )
   {
-    GCWrapper gcw = new GCWrapper( e.gc );
+    final GCWrapper gcw = new GCWrapper( e.gc );
     final Rectangle screenArea = getClientArea();
     m_bufferImg = paintLegend( e.display, gcw, screenArea, m_bufferImg );
     gcw.dispose();
@@ -103,10 +95,8 @@ public class Legend extends Canvas implements PaintListener
   }
 
   /**
-   * paints the legend into a buffer image and uses the given Rectangle to define the size; if the given image is null, a new image will be created
-   * and returned
-   * 
-   * TODO: rename to paintBufferedLegend or similar to separate from drawImage
+   * paints the legend into a buffer image and uses the given Rectangle to define the size; if the given image is null,
+   * a new image will be created and returned TODO: rename to paintBufferedLegend or similar to separate from drawImage
    */
   public Image paintLegend( Device dev, GCWrapper gcw, Rectangle screen, Image bufferImage )
   {
@@ -128,7 +118,7 @@ public class Legend extends Canvas implements PaintListener
    */
   public void drawImage( Image img, Device dev )
   {
-    GCWrapper buffGc = new GCWrapper( new GC( img ) );
+    final GCWrapper buffGc = new GCWrapper( new GC( img ) );
     buffGc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     buffGc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
     try
@@ -136,10 +126,10 @@ public class Legend extends Canvas implements PaintListener
       // Abstand zum oberen Rand der Komponente
       int top = 0;
 
-      for( ILegendItem_old li : m_items )
+      for( final ILegendItem_old li : m_items )
       {
-        Point size = li.computeSize( 0, 0 );
-        Image liImg = new Image( dev, size.x, size.y );
+        final Point size = li.computeSize( 0, 0 );
+        final Image liImg = new Image( dev, size.x, size.y );
         li.paintImage( liImg );
         buffGc.drawImage( liImg, 0, top );
         liImg.dispose();
@@ -162,18 +152,18 @@ public class Legend extends Canvas implements PaintListener
   {
     int width = 0;
     int height = 0;
-    for( ILegendItem_old li : m_items )
+    for( final ILegendItem_old li : m_items )
     {
-      Point lisize = li.computeSize( 0, 0 );
-      Logger.trace(li.getTitle()+" hat Größe "+lisize);
+      final Point lisize = li.computeSize( 0, 0 );
+      Logger.trace( li.getTitle() + " hat Größe " + lisize );
       if( lisize.x > width )
         width = lisize.x;
       height += lisize.y;
-      Logger.trace("Current Legend Size width: "+width+ " height: "+height);
+      Logger.trace( "Current Legend Size width: " + width + " height: " + height );
     }
-    int tolerance = 5;
-    Point size=new Point( width, height + tolerance );
-    Logger.trace("Legend Size: "+size);
+    final int tolerance = 5;
+    final Point size = new Point( width, height + tolerance );
+    Logger.trace( "Legend Size: " + size );
     return size;
   }
 

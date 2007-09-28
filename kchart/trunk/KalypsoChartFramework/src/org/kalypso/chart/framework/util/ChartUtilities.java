@@ -8,11 +8,8 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 
-
 /**
- * @author burtscher
- * 
- * some helper methods to ease your everyday life programming chart stuff
+ * @author burtscher some helper methods to ease your everyday life programming chart stuff
  */
 public class ChartUtilities
 {
@@ -32,14 +29,12 @@ public class ChartUtilities
     return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir == DIRECTION.NEGATIVE;
   }
 
-  
   /**
-   * sets the given GC to an initial state - this methosd should be called before any 
-   * chart painting action is processed
+   * sets the given GC to an initial state - this methosd should be called before any chart painting action is processed
    */
-  public static void resetGC( final GC gc)
+  public static void resetGC( final GC gc )
   {
-	Device dev=gc.getDevice();
+    final Device dev = gc.getDevice();
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
     gc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     gc.setLineWidth( 1 );
@@ -56,6 +51,5 @@ public class ChartUtilities
     chart.autoscale( axes );
     chart.invalidate();
   }
-
 
 }

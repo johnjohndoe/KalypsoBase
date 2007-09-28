@@ -3,19 +3,16 @@ package org.kalypso.chart.framework.util;
 import java.awt.Insets;
 
 /**
- * @author burtscher
- * 
- * extends AWT-Insets by some methods to mirror and transform inset-characteristics
- * 
+ * @author burtscher extends AWT-Insets by some methods to mirror and transform inset-characteristics
  */
 public class InsetsHelper extends Insets
 {
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3705594929052083569L;
+   * 
+   */
+  private static final long serialVersionUID = 3705594929052083569L;
 
-public InsetsHelper( final Insets insets )
+  public InsetsHelper( final Insets insets )
   {
     this( insets.top, insets.left, insets.bottom, insets.right );
   }

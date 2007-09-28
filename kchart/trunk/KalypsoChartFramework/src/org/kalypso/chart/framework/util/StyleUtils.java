@@ -5,8 +5,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * @author burtscher
- * static helper methods to ease the handling of Style-concerns
+ * @author burtscher static helper methods to ease the handling of Style-concerns
  */
 public class StyleUtils
 {
@@ -22,7 +21,7 @@ public class StyleUtils
       newpath = new int[path.size() * 2];
       for( int i = 0; i < path.size(); i++ )
       {
-        Point p = path.get( i );
+        final Point p = path.get( i );
         if( p != null )
         {
           newpath[2 * i] = p.x;

@@ -8,21 +8,19 @@ import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
 import org.kalypso.chart.factory.provider.AbstractStyledElementProvider;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 
+public class DefaultStyledPolygonProvider extends AbstractStyledElementProvider
+{
 
-public class DefaultStyledPolygonProvider extends AbstractStyledElementProvider{
+  public IStyledElement getStyledElement( ) throws StyledElementProviderException
+  {
 
+    final int borderWidth = getParameterContainer().getParsedParameterValue( "borderWidth", "0", new DoubleParser() ).intValue();
+    final RGB borderColor = getParameterContainer().getParsedParameterValue( "borderColor", "#000000", new RGBParser() );
+    final RGB fillColor = getParameterContainer().getParsedParameterValue( "fillColor", "#ffffff", new RGBParser() );
+    final int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser() ).intValue();
+    final StyledPolygon sp = new StyledPolygon( fillColor, borderWidth, borderColor, alpha );
 
-	public IStyledElement getStyledElement()
-			throws StyledElementProviderException {
-	    
-	    int borderWidth = getParameterContainer().getParsedParameterValue( "borderWidth", "0", new DoubleParser() ).intValue();
-	    RGB borderColor = getParameterContainer().getParsedParameterValue( "borderColor", "#000000", new RGBParser());
-	    RGB fillColor = getParameterContainer().getParsedParameterValue( "fillColor", "#ffffff", new RGBParser());
-	    int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser() ).intValue();
-	    StyledPolygon sp = new StyledPolygon( fillColor, borderWidth, borderColor, alpha );
-	      
-	    return sp;
-	}
-
+    return sp;
+  }
 
 }

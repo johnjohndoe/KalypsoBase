@@ -8,21 +8,12 @@ import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 
-
-
 /**
- * @author burtscher
- *
- * Layer Provider for gauge data from O&M data;
- * it's looking for a feature named "wasserstandsmessung", then tries to
- * transform it into an IObservation, creates a WasserstandLayer
- *  and uses the result components which go by the name "Datum" (domain data) and
- *  "Wasserstand" (value data) as data input for the layer; the WasserstandLayer draws
- *  its data as line chart
- *
- *  The following configuration parameters are needed for the LayerProvider:
- *  dataSource:     URL or relative path leading to observation data
- *
+ * @author burtscher Layer Provider for gauge data from O&M data; it's looking for a feature named
+ *         "wasserstandsmessung", then tries to transform it into an IObservation, creates a WasserstandLayer and uses
+ *         the result components which go by the name "Datum" (domain data) and "Wasserstand" (value data) as data input
+ *         for the layer; the WasserstandLayer draws its data as line chart The following configuration parameters are
+ *         needed for the LayerProvider: dataSource: URL or relative path leading to observation data
  */
 public class GridLayerProvider extends AbstractLayerProvider
 {
@@ -32,36 +23,36 @@ public class GridLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( URL context )
   {
-      IChartLayer icl = null;
+    IChartLayer icl = null;
 
-      try
-      {
+    try
+    {
 
-          String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
-          String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
+      final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
+      final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-          IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-          IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
+      final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+      final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
-          GridOrientation go;
-          String orientation=getParameterContainer().getParameterValue( "orientation", "BOTH" );
+      GridOrientation go;
+      final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
 
-          if (orientation.compareTo( "VERTICAL" )==0)
-            go=GridOrientation.VERTICAL;
-          else if (orientation.compareTo( "HORIZONTAL" )==0)
-            go=GridOrientation.HORIZONTAL;
-          else
-            go=GridOrientation.BOTH;
+      if( orientation.compareTo( "VERTICAL" ) == 0 )
+        go = GridOrientation.VERTICAL;
+      else if( orientation.compareTo( "HORIZONTAL" ) == 0 )
+        go = GridOrientation.HORIZONTAL;
+      else
+        go = GridOrientation.BOTH;
 
-          icl = new GridLayer(domAxis, valAxis, go );
-      }
+      icl = new GridLayer( domAxis, valAxis, go );
+    }
 
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      return icl;
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return icl;
   }
 
 }

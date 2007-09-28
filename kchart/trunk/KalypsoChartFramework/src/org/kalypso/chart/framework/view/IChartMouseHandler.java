@@ -46,7 +46,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 /**
  * @author Gernot
- *
  */
 public interface IChartMouseHandler extends MouseListener, MouseMoveListener
 {

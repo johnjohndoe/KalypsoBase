@@ -22,105 +22,104 @@ import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 
-
 /**
  * @author alibu
- *
  */
 public class UVFLayerProvider extends AbstractLayerProvider
 {
 
+  /**
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
+   */
+  public IChartLayer getLayer( URL context ) throws LayerProviderException
+  {
+    IChartLayer<Calendar, Number> icl = null;
 
-	/**
-	 * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
-	 */
-	public IChartLayer getLayer(URL context) throws LayerProviderException
-	{
-		IChartLayer<Calendar, Number> icl = null;
+    final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
+    final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
+    final IAxis<Calendar> domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
-		String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
-		String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
+    final AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
+    {
 
-		IAxis<Calendar> domAxis = getChartModel().getMapperRegistry().getAxis(domainAxisId);
-		IAxis<Number> valAxis = getChartModel().getMapperRegistry().getAxis(targetAxisId);
+      private SimpleDateFormat m_format;
 
-		AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
-		{
+      @Override
+      public boolean openData( )
+      {
+        setLoading( true );
+        try
+        {
+          FileReader fr = new FileReader( getInputFile() );
 
-			private SimpleDateFormat m_format;
+          BufferedReader br = new BufferedReader( fr );
+          String s = "";
+          int count = 0;
+          List<Calendar> domainValues = new ArrayList<Calendar>();
+          List<Number> targetValues = new ArrayList<Number>();
+          m_format = new SimpleDateFormat( "yyMMddHHmm" );
 
-			public boolean openData()
-			{
-				setLoading(true);
-				try
-				{
-					FileReader fr = new FileReader(getInputFile());
+          while( (s = br.readLine()) != null )
+          {
+            if( count > 4 )
+            {
+              String[] cols = s.split( "  *" );
+              // YearString
+              if( cols.length >= 2 )
+              {
+                String ys = cols[0];
 
-					BufferedReader br = new BufferedReader(fr);
-					String s = "";
-					int count = 0;
-					List<Calendar> domainValues=new ArrayList<Calendar>();
-					List<Number> targetValues=new ArrayList<Number>();
-					m_format = new SimpleDateFormat("yyMMddHHmm");
-					
-					while ((s = br.readLine()) != null)
-					{
-						if (count > 4)
-						{
-							String[] cols = s.split("  *");
-							//YearString
-							if (cols.length >= 2)
-							{
-								String ys = cols[0];
-								
-								Date date = m_format.parse(ys);
-								Calendar cal=Calendar.getInstance();
-								cal.setTime(date);
-								
-								//wichtig, damit die Zeiten richtig sind
-								cal.setTimeZone(TimeZone.getTimeZone("GMT+0000"));
-								domainValues.add(cal);
-								targetValues.add(Double.parseDouble(cols[1]));
-							}
-						}
-						count++;
-					}
-					setDomainValues(domainValues);
-					setTargetValues(targetValues);
-				} 
-				catch (FileNotFoundException e)
-				{
-					e.printStackTrace();
-				} catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				setLoading(false);
-				return true;
+                Date date = m_format.parse( ys );
+                Calendar cal = Calendar.getInstance();
+                cal.setTime( date );
 
-			}
+                // wichtig, damit die Zeiten richtig sind
+                cal.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+                domainValues.add( cal );
+                targetValues.add( Double.parseDouble( cols[1] ) );
+              }
+            }
+            count++;
+          }
+          setDomainValues( domainValues );
+          setTargetValues( targetValues );
+        }
+        catch( FileNotFoundException e )
+        {
+          e.printStackTrace();
+        }
+        catch( IOException e )
+        {
+          e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+        setLoading( false );
+        return true;
 
-			public IDataRange<Calendar> getDomainRange() {
-				return new ComparableDataRange<Calendar>(getDomainValues());
-			}
+      }
 
-			public IDataRange<Number> getTargetRange() {
-				return new ComparableDataRange<Number>(getTargetValues());
-			}
+      public IDataRange<Calendar> getDomainRange( )
+      {
+        return new ComparableDataRange<Calendar>( getDomainValues() );
+      }
 
-		};
-		data.setInputFile(new File(getParameterContainer().getParameterValue("url", getLayerType().getId())));
+      public IDataRange<Number> getTargetRange( )
+      {
+        return new ComparableDataRange<Number>( getTargetValues() );
+      }
 
-		icl = new DefaultLineLayer<Calendar, Number>(data, domAxis, valAxis);
-		icl.setTitle(getLayerType().getTitle());
+    };
+    data.setInputFile( new File( getParameterContainer().getParameterValue( "url", getLayerType().getId() ) ) );
 
-		return icl;
-	}
+    icl = new DefaultLineLayer<Calendar, Number>( data, domAxis, valAxis );
+    icl.setTitle( getLayerType().getTitle() );
 
+    return icl;
+  }
 
 }

@@ -1,8 +1,6 @@
 package org.kalypso.chart.framework.view;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -18,11 +16,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.IChartModelEventListener;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.layer.ILayerManagerEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -30,66 +24,60 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
-
-
 /**
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
  */
 public class ChartComposite extends Composite implements IMapperRegistryEventListener, IChartModelEventListener
 {
-  
+
   /** axis pos --> axis placeholder */
   private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
   /** drawing space for the plot itself */
   private PlotCanvas m_plot;
 
-  private boolean m_autoscale = false;
-
-
+  private final boolean m_autoscale = false;
 
   private final Color m_bgColor;
 
-  //private final Color m_black;
+  // private final Color m_black;
 
   private final IChartModel m_model;
 
-
   public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
   {
-	    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
-	    m_model = model;
-		
-	    m_model.addChartModelEventListener( this );
-	    
-	    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
-		
-	    setBackground( m_bgColor );
-	    
-	    createControl( this);
+    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
+    m_model = model;
 
-	    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
-	    
-	    IMapperRegistry ar=m_model.getMapperRegistry();
-	    IAxis[] axes = ar.getAxes();
-	    
-	    //Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
-	    for (IAxis axis : axes) 
-	    {
-	    	onMapperAdded(axis);	
-		}
+    m_model.addChartModelEventListener( this );
+
+    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
+
+    setBackground( m_bgColor );
+
+    createControl( this );
+
+    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
+
+    final IMapperRegistry ar = m_model.getMapperRegistry();
+    final IAxis[] axes = ar.getAxes();
+
+    // Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
+    for( final IAxis axis : axes )
+    {
+      onMapperAdded( axis );
+    }
   }
-  
-  public void setMouseHandler(IChartMouseHandler handler)
+
+  public void setMouseHandler( IChartMouseHandler handler )
   {
-	  m_plot.setMouseHandler(handler);
+    m_plot.setMouseHandler( handler );
   }
-  
-  
-  public IChartModel getModel()
+
+  public IChartModel getModel( )
   {
-	  return m_model;
+    return m_model;
   }
 
   /**
@@ -113,7 +101,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     lbl11.setVisible( false );
 
     // 1.2
-    final Composite topAxes = new SizedComposite( parent, axisContainerStyle);
+    final Composite topAxes = new SizedComposite( parent, axisContainerStyle );
     topAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
     final GridData tad = new GridData( SWT.FILL, SWT.NONE, true, false );
     topAxes.setLayoutData( tad );
@@ -126,7 +114,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     lbl13.setVisible( false );
 
     // 2.1
-    final Composite leftAxes = new SizedComposite( parent, axisContainerStyle);
+    final Composite leftAxes = new SizedComposite( parent, axisContainerStyle );
     leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
     leftAxes.setLayoutData( lad );
@@ -195,44 +183,36 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     checkWidget();
   }
 
-
-
   /**
-   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(org.kalypso.chart.framework.axis.IAxis) adds an
-   *      AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
+   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(org.kalypso.chart.framework.axis.IAxis)
+   *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
    */
   @SuppressWarnings("unchecked")
-public void onMapperAdded( final IMapper mapper)
+  public void onMapperAdded( final IMapper mapper )
   {
-	if (mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis)
-	{
-		IAxis axis=(IAxis) mapper; 
-	    final Composite parent = m_axisPlaces.get( axis.getPosition() );
-	    final AxisCanvas component = new AxisCanvas( axis, parent, SWT.NONE );
-	    component.setBackground(m_bgColor);
-	    m_model.getMapperRegistry().setComponent( axis, component );
-	    layout();
-	}
+    if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
+    {
+      final IAxis axis = (IAxis) mapper;
+      final Composite parent = m_axisPlaces.get( axis.getPosition() );
+      final AxisCanvas component = new AxisCanvas( axis, parent, SWT.NONE );
+      component.setBackground( m_bgColor );
+      m_model.getMapperRegistry().setComponent( axis, component );
+      layout();
+    }
   }
 
   /**
-   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(org.kalypso.chart.framework.axis.IAxis) TODO: not
-   *      implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked in the
-   *      future)
+   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(org.kalypso.chart.framework.axis.IAxis)
+   *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked
+   *      in the future)
    */
-  public void onMapperRemoved( final IMapper mapper)
+  public void onMapperRemoved( final IMapper mapper )
   {
-	if (mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis)
-	{
-	  layout();
-	}
+    if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
+    {
+      layout();
+    }
   }
-
-  
-
-
-
-
 
   public PlotCanvas getPlot( )
   {
@@ -242,6 +222,7 @@ public void onMapperAdded( final IMapper mapper)
   /**
    * repaints all paintable elements (which are: Plot and AxisComponents)
    */
+  @Override
   public void redraw( )
   {
     m_plot.redraw();
@@ -264,15 +245,15 @@ public void onMapperAdded( final IMapper mapper)
    */
   public void setPlotSize( int width, int height )
   {
-    Composite l = m_axisPlaces.get( POSITION.LEFT );
-    Composite r = m_axisPlaces.get( POSITION.RIGHT );
-    Composite t = m_axisPlaces.get( POSITION.TOP );
-    Composite b = m_axisPlaces.get( POSITION.BOTTOM );
+    final Composite l = m_axisPlaces.get( POSITION.LEFT );
+    final Composite r = m_axisPlaces.get( POSITION.RIGHT );
+    final Composite t = m_axisPlaces.get( POSITION.TOP );
+    final Composite b = m_axisPlaces.get( POSITION.BOTTOM );
 
     // setSize( width, height );
     // TODO: check if border-width must be included
-    int chartwidth = width + l.getBounds().width + r.getBounds().width + (2 * l.getBorderWidth()) + (2 * r.getBorderWidth());
-    int chartheight = height + b.getBounds().height + t.getBounds().height + (2 * b.getBorderWidth()) + (2 * t.getBorderWidth());
+    final int chartwidth = width + l.getBounds().width + r.getBounds().width + (2 * l.getBorderWidth()) + (2 * r.getBorderWidth());
+    final int chartheight = height + b.getBounds().height + t.getBounds().height + (2 * b.getBorderWidth()) + (2 * t.getBorderWidth());
 
     // getParent().setSize( chartwidth, chartheight );
     setSize( chartwidth, chartheight );
@@ -296,89 +277,87 @@ public void onMapperAdded( final IMapper mapper)
 
   }
 
-	public void setHideUnusedAxes(boolean hide)
-	{
-		m_model.setHideUnusedAxes( hide );
-		redraw();
-	}
-
-
-
-/**
- * maximises the content of the plot to the values inside a dragged rectangle
- */
-@SuppressWarnings("unchecked")
-public <T_logical> void zoomIn( final Point start, final Point end )
-{
-  final IMapperRegistry ar = m_model.getMapperRegistry();
-  final IAxis[] axes = ar.getAxes();
-  for( IAxis axis : axes )
+  public void setHideUnusedAxes( boolean hide )
   {
-  	T_logical from = null;
-  	T_logical to = null;
-
-    switch( axis.getPosition().getOrientation() )
-    {
-      case HORIZONTAL:
-        switch( axis.getDirection() )
-        {
-          case POSITIVE:
-            from = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
-            to = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
-            break;
-
-          case NEGATIVE:
-            from = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
-            to = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
-            break;
-        }
-        break;
-
-      case VERTICAL:
-        switch( axis.getDirection() )
-        {
-          case POSITIVE:
-            from = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
-            to = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
-            break;
-
-          case NEGATIVE:
-            from = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
-            to = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
-            break;
-        }
-        break;
-    }
-
-    if( from != null && to != null )
-    {
-      try
-	{
-		axis.setDataRange( new DataRange(from, to) );
-	} catch (ZeroSizeDataRangeException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-      /*
-       * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisCanvas gecastet werden - sonst gibts
-       * keinen Zugriff auf die Paint-Sachen
-       */
-      AxisCanvas ac = (AxisCanvas) ar.getComponent( axis );
-      ac.redraw();
-    }
-  }
-  redraw();
-}
-
-/**
- * @see org.kalypso.chart.framework.model.IChartModelEventListener#onModelChanged()
- */
-public void onModelChanged( )
-{
+    m_model.setHideUnusedAxes( hide );
     redraw();
-}
+  }
 
+  /**
+   * maximises the content of the plot to the values inside a dragged rectangle
+   */
+  @SuppressWarnings("unchecked")
+  public <T_logical> void zoomIn( final Point start, final Point end )
+  {
+    final IMapperRegistry ar = m_model.getMapperRegistry();
+    final IAxis[] axes = ar.getAxes();
+    for( final IAxis axis : axes )
+    {
+      T_logical from = null;
+      T_logical to = null;
+
+      switch( axis.getPosition().getOrientation() )
+      {
+        case HORIZONTAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
+              to = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
+              break;
+
+            case NEGATIVE:
+              from = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
+              to = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
+              break;
+          }
+          break;
+
+        case VERTICAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
+              to = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
+              break;
+
+            case NEGATIVE:
+              from = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
+              to = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
+              break;
+          }
+          break;
+      }
+
+      if( from != null && to != null )
+      {
+        try
+        {
+          axis.setDataRange( new DataRange( from, to ) );
+        }
+        catch( final ZeroSizeDataRangeException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
+        /*
+         * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisCanvas gecastet werden - sonst gibts keinen
+         * Zugriff auf die Paint-Sachen
+         */
+        final AxisCanvas ac = (AxisCanvas) ar.getComponent( axis );
+        ac.redraw();
+      }
+    }
+    redraw();
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModelEventListener#onModelChanged()
+   */
+  public void onModelChanged( )
+  {
+    redraw();
+  }
 
 }

@@ -22,128 +22,130 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 
 /**
  * @author alibu
- * 
  */
-public class CSVBarLayerProvider<T_domain, T_target> extends
-		AbstractLayerProvider {
+public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvider
+{
 
-	/**
-	 * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
-	 */
-  @SuppressWarnings({ "unused", "unchecked" })
-  public IChartLayer<?, ?> getLayer(URL context) throws LayerProviderException {
-		IChartLayer icl = null;
+  /**
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
+   */
+  @SuppressWarnings( { "unused", "unchecked" })
+  public IChartLayer< ? , ? > getLayer( URL context ) throws LayerProviderException
+  {
+    IChartLayer icl = null;
 
-		String domainAxisId = getLayerType().getMapper().getDomainAxisRef()
-				.getRef();
-		String targetAxisId = getLayerType().getMapper().getTargetAxisRef()
-				.getRef();
+    final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
+    final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-		IAxis<T_domain> domainAxis = getChartModel().getMapperRegistry().getAxis(domainAxisId);
-		IAxis<T_target> targetAxis = getChartModel().getMapperRegistry().getAxis(targetAxisId);
+    final IAxis<T_domain> domainAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<T_target> targetAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
-		AbstractDomainIntervalValueFileData<T_domain, T_target> data = new AbstractDomainIntervalValueFileData<T_domain, T_target>() {
+    final AbstractDomainIntervalValueFileData<T_domain, T_target> data = new AbstractDomainIntervalValueFileData<T_domain, T_target>()
+    {
 
-			@Override
-      public boolean openData() {
-				// TODO: umschreiben, damit auch urls verwendet werden können
-				FileReader fr;
-				try {
-					fr = new FileReader(getInputFile());
-					
-					List<T_domain> domainValues=new ArrayList<T_domain>();
-					List<T_domain> domainIntervalStartValues=new ArrayList<T_domain>();
-					List<T_domain> domainIntervalEndValues=new ArrayList<T_domain>();
-					List<T_target> targetValues=new ArrayList<T_target>();
+      @Override
+      public boolean openData( )
+      {
+        // TODO: umschreiben, damit auch urls verwendet werden können
+        FileReader fr;
+        try
+        {
+          fr = new FileReader( getInputFile() );
 
-					BufferedReader br = new BufferedReader(fr);
-					String s = "";
-					while ((s = br.readLine()) != null) {
-						String[] cols = s.split("  *");
-						// YearString
-						if (cols.length >= 2) {
-							String ys = cols[0];
-							// Datum zerpflücken (Bsp: 0510190530)
-							// TODO: Auslagern in Toolbox-ähnliche Klasse
-							int year = 2000 + Integer.parseInt(ys.substring(0,
-									2));
-							int month = Integer.parseInt(ys.substring(2, 4)) - 1;
-							int day = Integer.parseInt(ys.substring(4, 6));
-							int hour = Integer.parseInt(ys.substring(6, 8));
-							int minute = Integer.parseInt(ys.substring(8, 10));
+          List<T_domain> domainValues = new ArrayList<T_domain>();
+          List<T_domain> domainIntervalStartValues = new ArrayList<T_domain>();
+          List<T_domain> domainIntervalEndValues = new ArrayList<T_domain>();
+          List<T_target> targetValues = new ArrayList<T_target>();
 
-							// echte Daten aus EiongabeDatei
-							Calendar calData = Calendar.getInstance();
-							calData.setTimeZone(TimeZone
-									.getTimeZone("GMT+0000"));
-							calData.set(Calendar.YEAR, year);
-							calData.set(Calendar.MONTH, month);
-							calData.set(Calendar.DAY_OF_MONTH, day);
-							calData.set(Calendar.HOUR_OF_DAY, hour);
-							calData.set(Calendar.MINUTE, minute);
-							calData.set(Calendar.SECOND, 0);
-							calData.set(Calendar.MILLISECOND, 0);
+          BufferedReader br = new BufferedReader( fr );
+          String s = "";
+          while( (s = br.readLine()) != null )
+          {
+            String[] cols = s.split( "  *" );
+            // YearString
+            if( cols.length >= 2 )
+            {
+              String ys = cols[0];
+              // Datum zerpflücken (Bsp: 0510190530)
+              // TODO: Auslagern in Toolbox-ähnliche Klasse
+              int year = 2000 + Integer.parseInt( ys.substring( 0, 2 ) );
+              int month = Integer.parseInt( ys.substring( 2, 4 ) ) - 1;
+              int day = Integer.parseInt( ys.substring( 4, 6 ) );
+              int hour = Integer.parseInt( ys.substring( 6, 8 ) );
+              int minute = Integer.parseInt( ys.substring( 8, 10 ) );
 
-							// Startwert für Interval
-							Calendar calStart = (Calendar) calData.clone();
-							calStart.setTimeZone(TimeZone
-									.getTimeZone("GMT+0000"));
-							calStart.set(Calendar.MINUTE, 0);
-							calStart.set(Calendar.HOUR_OF_DAY, 0);
+              // echte Daten aus EiongabeDatei
+              Calendar calData = Calendar.getInstance();
+              calData.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+              calData.set( Calendar.YEAR, year );
+              calData.set( Calendar.MONTH, month );
+              calData.set( Calendar.DAY_OF_MONTH, day );
+              calData.set( Calendar.HOUR_OF_DAY, hour );
+              calData.set( Calendar.MINUTE, minute );
+              calData.set( Calendar.SECOND, 0 );
+              calData.set( Calendar.MILLISECOND, 0 );
 
-							// Endwert für Interval
-							Calendar calEnd = (Calendar) calStart.clone();
-							calEnd
-									.setTimeZone(TimeZone
-											.getTimeZone("GMT+0000"));
-							// wichtig, damit die Zeiten richtig sind
+              // Startwert für Interval
+              Calendar calStart = (Calendar) calData.clone();
+              calStart.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+              calStart.set( Calendar.MINUTE, 0 );
+              calStart.set( Calendar.HOUR_OF_DAY, 0 );
 
-							calEnd.add(Calendar.DAY_OF_MONTH, +1);
- 
+              // Endwert für Interval
+              Calendar calEnd = (Calendar) calStart.clone();
+              calEnd.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+              // wichtig, damit die Zeiten richtig sind
 
-							domainValues.add((T_domain) calData);
-							domainIntervalStartValues.add(
-									(T_domain) calStart);
-							domainIntervalEndValues.add((T_domain) calEnd);
-							targetValues.add((T_target) (Object) Double.parseDouble(cols[1]));
-						}
-						setDomainIntervalEndValues(domainIntervalEndValues);
-						setDomainIntervalStartValues(domainIntervalStartValues);
-						setDomainValues(domainValues);
-						setTargetValues(targetValues);
-						
-					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+              calEnd.add( Calendar.DAY_OF_MONTH, +1 );
 
-				return true;
+              domainValues.add( (T_domain) calData );
+              domainIntervalStartValues.add( (T_domain) calStart );
+              domainIntervalEndValues.add( (T_domain) calEnd );
+              targetValues.add( (T_target) (Object) Double.parseDouble( cols[1] ) );
+            }
+            setDomainIntervalEndValues( domainIntervalEndValues );
+            setDomainIntervalStartValues( domainIntervalStartValues );
+            setDomainValues( domainValues );
+            setTargetValues( targetValues );
 
-			}
+          }
+        }
+        catch( FileNotFoundException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( NumberFormatException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( IOException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
 
-			public IDataRange<T_domain> getDomainRange() {
-				return new ComparableDataRange<T_domain>(getDomainValues());
-			}
+        return true;
 
-			public IDataRange<T_target> getTargetRange() {
-				return new ComparableDataRange<T_target>(getTargetValues());
-			}
+      }
 
-		};
-		data.setInputFile(new File(getParameterContainer().getParameterValue("url", getLayerType()
-						.getId())));
-		icl = new DefaultBarLayer<T_domain, T_target>(data, domainAxis,
-				targetAxis);
-		icl.setTitle(getLayerType().getTitle());
+      public IDataRange<T_domain> getDomainRange( )
+      {
+        return new ComparableDataRange<T_domain>( getDomainValues() );
+      }
 
-		return icl;
-	}
+      public IDataRange<T_target> getTargetRange( )
+      {
+        return new ComparableDataRange<T_target>( getTargetValues() );
+      }
+
+    };
+    data.setInputFile( new File( getParameterContainer().getParameterValue( "url", getLayerType().getId() ) ) );
+    icl = new DefaultBarLayer<T_domain, T_target>( data, domainAxis, targetAxis );
+    icl.setTitle( getLayerType().getTitle() );
+
+    return icl;
+  }
 
 }

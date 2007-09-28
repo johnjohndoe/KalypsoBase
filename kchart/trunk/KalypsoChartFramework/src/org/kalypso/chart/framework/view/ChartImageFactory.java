@@ -16,69 +16,62 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
-
 /**
- * @author burtscher
- *
- * Creates an Image from a chart widget.
- *
- * The objects has to be disposed when it's no longer needed
+ * @author burtscher Creates an Image from a chart widget. The objects has to be disposed when it's no longer needed
  */
 public class ChartImageFactory
 {
 
-	public enum IMAGE_TYPE{
-		PNG,
-		JPG,
-		GIF
-	};
-	
-	
+  public enum IMAGE_TYPE
+  {
+    PNG,
+    JPG,
+    GIF
+  };
+
   /**
-   *
-   *
-   *  @param transparency RGB to which the transparency-color should be set; transparency will not be used if RGB is null
+   * @param transparency
+   *            RGB to which the transparency-color should be set; transparency will not be used if RGB is null
    */
   @SuppressWarnings("unchecked")
-public static ImageData createChartImage( ChartComposite chart, Device dev, int width, int height )
+  public static ImageData createChartImage( ChartComposite chart, Device dev, int width, int height )
   {
     chart.setSize( new Point( width, height ) );
     chart.layout();
     chart.update();
 
-    Image img = new Image( dev, width, height );
+    final Image img = new Image( dev, width, height );
 
-    GCWrapper gcw = new GCWrapper( new GC( img ) );
+    final GCWrapper gcw = new GCWrapper( new GC( img ) );
     Image tmpImg = new Image( dev, width, height );
     GC tmpGc = new GC( tmpImg );
     GCWrapper tmpGcw = new GCWrapper( tmpGc );
-    
-    
+
     tmpGcw.setBackground( dev.getSystemColor( SWT.COLOR_YELLOW ) );
     tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
     // img mit weiﬂem Hintergrund versehen
-    gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE) );
+    gcw.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     gcw.fillRectangle( 0, 0, width, height );
 
     // Plot zeichnen
-    PlotCanvas plotCanvas = chart.getPlot();
+    final PlotCanvas plotCanvas = chart.getPlot();
     tmpImg = plotCanvas.paintBuffered( tmpGcw, img.getBounds(), null );
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
-    IMapperRegistry ar = chart.getModel().getMapperRegistry();
-    Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
-    Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
-    for( Entry<IAxis, IAxisComponent> ac : acs )
+    final IMapperRegistry ar = chart.getModel().getMapperRegistry();
+    final Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
+    final Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
+    for( final Entry<IAxis, IAxisComponent> ac : acs )
     {
-      IAxis axis = ac.getKey();
+      final IAxis axis = ac.getKey();
       // Casten, damit man auf die Component-Eigenschaften zugreifen kann
-      AxisCanvas comp = (AxisCanvas) ac.getValue();
-      IAxisRenderer rend = ar.getRenderer(axis); //axis.getRgetRenderer();
+      final AxisCanvas comp = (AxisCanvas) ac.getValue();
+      final IAxisRenderer rend = ar.getRenderer( axis ); // axis.getRgetRenderer();
 
       // Wenn man den GC nicht neu erzeugt, werden die AChsen nicht gezeichnet, sondern nochmal das Chart
-      //Zus‰tzlich muss das Image disposed werden, weil sonst noch Teile des Plot in die AxisSpaces gezeichnet werden
+      // Zus‰tzlich muss das Image disposed werden, weil sonst noch Teile des Plot in die AxisSpaces gezeichnet werden
       tmpImg.dispose();
       tmpImg = new Image( dev, width, height );
       tmpGc.dispose();
@@ -98,12 +91,12 @@ public static ImageData createChartImage( ChartComposite chart, Device dev, int 
     tmpGc.dispose();
     tmpGcw.dispose();
     tmpImg.dispose();
-    
-    ImageData id=img.getImageData();
-    
+
+    final ImageData id = img.getImageData();
+
     img.dispose();
-    
+
     return id;
-    
+
   }
 }

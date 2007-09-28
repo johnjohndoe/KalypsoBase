@@ -7,7 +7,6 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManagerEventListener;
 import org.kalypso.chart.framework.model.layer.ILayerManagerEventProvider;
 
-
 /**
  * @author burtscher
  */
@@ -31,9 +30,9 @@ public class LayerManagerEventHandler implements ILayerManagerEventProvider
     m_listeners.remove( l );
   }
 
-  protected void fireLayerAdded( final IChartLayer layer)
+  protected void fireLayerAdded( final IChartLayer layer )
   {
-    for( ILayerManagerEventListener l : m_listeners )
+    for( final ILayerManagerEventListener l : m_listeners )
       l.onLayerAdded( layer );
   }
 

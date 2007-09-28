@@ -33,11 +33,11 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   private final IAxis<T_domain> m_domainAxis;
 
   private IDataContainer<T_domain, T_target> m_dataContainer = null;
-  
+
   /**
    * Hashmap to store arbitrary key value pairs
    */
-  private HashMap<String, Object> m_data = new HashMap<String, Object>();
+  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
   public AbstractChartLayer( final IAxis<T_domain> domainAxis, final IAxis<T_target> targetAxis )
   {
@@ -181,21 +181,21 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
     l = new LegendItem( null, getTitle(), id );
     return l;
   }
-  
-    /**
-     * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData() 
-     */
-    public void setData( String id, Object data)
-    {
-      m_data.put( id, data );
-    }
 
-    /**
-     * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData() 
-     */
-    public Object getData( String id )
-    {
-      return m_data.get( id );
-    }
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
+  public void setData( String id, Object data )
+  {
+    m_data.put( id, data );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
+   */
+  public Object getData( String id )
+  {
+    return m_data.get( id );
+  }
 
 }

@@ -5,9 +5,7 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * @author burtscher
- * 
- * some enumerations that describe axis characteristics
+ * @author burtscher some enumerations that describe axis characteristics
  */
 public interface IAxisConstants
 {
