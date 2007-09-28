@@ -18,9 +18,12 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  */
 public class CalendarAxis extends AbstractAxis<Calendar>
 {
+  private final CalendarDataOperator m_dataOperator;
+
   public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
   {
     super( id, label, prop, pos, dir, Calendar.class );
+    m_dataOperator = new CalendarDataOperator( getComparator() );
   }
 
   public double logicalToNormalized( final Calendar value )
@@ -143,7 +146,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
   public IDataOperator<Calendar> getDataOperator( )
   {
-    return new CalendarDataOperator();
+    return m_dataOperator;
   }
 
 }

@@ -3,9 +3,7 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Comparator;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -147,37 +145,6 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
   }
 
-  /**
-   * @see org.kalypso.swtchart.axis.IAxis#autorange(org.kalypso.swtchart.layer.IDataRange<T>[])
-   */
-  public void autorange( final IDataRange<T>[] ranges )
-  {
-    T min = null;
-    T max = null;
-
-    for( final IDataRange<T> element : ranges )
-    {
-      if( min == null || m_dataComparator.compare( min, element.getMin() ) > 0 )
-        min = element.getMin();
-      if( max == null || m_dataComparator.compare( max, element.getMax() ) < 0 )
-        max = element.getMax();
-    }
-
-    try
-    {
-      final DataRange<T> range = new DataRange<T>( min, max );
-      setDataRange( range );
-    }
-    catch( final ZeroSizeDataRangeException e )
-    {
-      e.printStackTrace(); // etwas was ein treffen darf (auch wenns dubios ist) sollte man nicht auf die konsole
-      // loggen
-
-      // TODO: what to do in that case?
-      setDataRange( null );
-    }
-  }
-
   public IDataRange<T> getDataRange( )
   {
     return m_dataRange;
@@ -186,5 +153,10 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   public void setDataRange( final IDataRange<T> dataRange )
   {
     m_dataRange = dataRange;
+  }
+
+  public Comparator<T> getComparator( )
+  {
+    return m_dataComparator;
   }
 }

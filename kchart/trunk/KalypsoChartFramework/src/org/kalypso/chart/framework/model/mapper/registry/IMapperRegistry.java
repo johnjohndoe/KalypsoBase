@@ -2,6 +2,8 @@ package org.kalypso.chart.framework.model.mapper.registry;
 
 import java.util.Map;
 
+import org.kalypso.chart.framework.model.event.IEventProvider;
+import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants;
 import org.kalypso.chart.framework.model.mapper.IMapper;
@@ -13,7 +15,7 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
  *         each DataType
  */
 
-public interface IMapperRegistry extends IMapperRegistryEventProvider
+public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventListener>
 {
 
   /**

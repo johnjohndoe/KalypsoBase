@@ -15,9 +15,12 @@ import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
  */
 public class NumberAxis extends AbstractAxis<Number>
 {
+  private final NumberDataOperator m_dataOperator;
+
   public NumberAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<Number> comp )
   {
     super( id, label, prop, pos, dir, comp, Number.class );
+    m_dataOperator = new NumberDataOperator( getComparator() );
   }
 
   public double logicalToNormalized( final Number value )
@@ -81,7 +84,6 @@ public class NumberAxis extends AbstractAxis<Number>
 
   public IDataOperator<Number> getDataOperator( )
   {
-    return new NumberDataOperator();
+    return m_dataOperator;
   }
-
 }

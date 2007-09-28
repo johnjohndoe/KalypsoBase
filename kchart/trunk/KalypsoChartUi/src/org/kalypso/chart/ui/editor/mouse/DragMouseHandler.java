@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mouse;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartMouseHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
@@ -56,21 +56,21 @@ public class DragMouseHandler implements IChartMouseHandler
 {
   private Rectangle m_mouseDragRect = null;
 
+  private final ChartComposite m_chartComposite;
 
-  private ChartComposite m_chartComposite;
-
-  public DragMouseHandler( final ChartComposite chartComposite)
+  public DragMouseHandler( final ChartComposite chartComposite )
   {
-    m_chartComposite=chartComposite;
+    m_chartComposite = chartComposite;
   }
 
   public void paint( final GCWrapper gcw )
   {
+
     // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
     if( m_mouseDragRect != null )
     {
       gcw.setLineWidth( 1 );
-
+      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
       final Rectangle r = RectangleUtils.createNormalizedRectangle( m_mouseDragRect );
       gcw.drawFocus( r.x, r.y, r.width, r.height );
     }

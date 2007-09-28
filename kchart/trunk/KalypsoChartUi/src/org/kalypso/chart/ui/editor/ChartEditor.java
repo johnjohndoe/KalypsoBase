@@ -250,73 +250,77 @@ public class ChartEditor extends EditorPart
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    m_chartModel = null;
+    // m_chartModel = null;
 
-    /* Reset controls */
-    final Control[] children = m_composite.getChildren();
-    for( final Control control : children )
-      control.dispose();
+    if( m_chartModel == null )
+    {
 
-    if( m_chartType == null )
-    {
-      final Label label = new Label( m_composite, SWT.NONE );
-      label.setText( "No chart set" );
-    }
-    else
-    {
-      /* Create chart */
-      final IEditorInput editorInput = getEditorInput();
-      final IFile file = (IFile) editorInput.getAdapter( IFile.class );
-      try
+      /* Reset controls */
+      final Control[] children = m_composite.getChildren();
+      for( final Control control : children )
+        control.dispose();
+
+      if( m_chartType == null )
       {
-        final URL context = ResourceUtilities.createURL( file );
-
-        m_chartModel = new ChartModel();
-
+        final Label label = new Label( m_composite, SWT.NONE );
+        label.setText( "No chart set" );
+      }
+      else
+      {
+        /* Create chart */
+        final IEditorInput editorInput = getEditorInput();
+        final IFile file = (IFile) editorInput.getAdapter( IFile.class );
         try
         {
-          m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-          ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
+          final URL context = ResourceUtilities.createURL( file );
+
+          m_chartModel = new ChartModel();
+
+          try
+          {
+            m_chartConfigurationLoader = new ChartConfigurationLoader( file );
+            ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
+          }
+          // TODO: provide message to user instead of eating the exceptions.
+          catch( final ConfigurationException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          catch( final CoreException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          catch( final XmlException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          catch( final IOException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+
+          if( m_chartModel != null )
+          {
+            m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+            final IChartMouseHandler mouseHandler = new DragMouseHandler( m_chartComposite );
+            m_chartComposite.setMouseHandler( mouseHandler );
+            m_chartComposite.getModel().setAutoscale( true );
+          }
+          // else: TODO: what?
         }
-        // TODO: provide message to user instead of eating the exceptions.
-        catch( final ConfigurationException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final CoreException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final XmlException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final IOException e )
+        catch( final MalformedURLException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
 
-        if( m_chartModel != null )
-        {
-          m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-          final IChartMouseHandler mouseHandler = new DragMouseHandler( m_chartComposite );
-          m_chartComposite.setMouseHandler( mouseHandler );
-          m_chartComposite.getModel().setAutoscale( true );
-        }
-        // else: TODO: what?
-      }
-      catch( final MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       }
 
     }
-
     m_composite.layout();
 
     if( m_outlinePage != null )

@@ -1,6 +1,5 @@
 package org.kalypso.chart.framework.model.mapper;
 
-import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
@@ -17,15 +16,6 @@ public interface IMapper<T_logical, T_visual>
    * @return DataClass which is understood by this axis
    */
   public Class< ? > getDataClass( );
-
-  /**
-   * @return minimal displayable value public T_logical getFrom( ); /** sets minimal displayable value public void
-   *         setFrom( T_logical min ); /**
-   * @return maximum displayable value public T_logical getTo( ); /** sets maximum displayable value public void setTo(
-   *         T_logical max );
-   */
-
-  public void autorange( IDataRange<T_logical>[] ranges );
 
   public int logicalToScreen( T_logical value );
 

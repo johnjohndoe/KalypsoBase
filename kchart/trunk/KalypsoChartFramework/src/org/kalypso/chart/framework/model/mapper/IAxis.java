@@ -41,9 +41,6 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
 
-  // TODO: remove that method from this interface!
-  public void autorange( IDataRange<T_logical>[] ranges );
-
   public int logicalToScreen( T_logical value );
 
   public T_logical screenToLogical( int value );

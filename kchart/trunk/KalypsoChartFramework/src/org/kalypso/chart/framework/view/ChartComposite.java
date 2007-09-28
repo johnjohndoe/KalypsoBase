@@ -15,20 +15,20 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.IChartModelEventListener;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
+import org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener;
+import org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
 /**
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
  *         AxisRegistry;
  */
-public class ChartComposite extends Composite implements IMapperRegistryEventListener, IChartModelEventListener
+public class ChartComposite extends Composite
 {
 
   /** axis pos --> axis placeholder */
@@ -45,12 +45,14 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
 
   private final IChartModel m_model;
 
+  private final AbstractMapperRegistryEventListener m_mapperListener;
+
+  private final AbstractChartModelEventListener m_chartModelListener;
+
   public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
     m_model = model;
-
-    m_model.addChartModelEventListener( this );
 
     m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
 
@@ -58,7 +60,66 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
 
     createControl( this );
 
-    m_model.getMapperRegistry().addMapperRegistryEventListener( this );
+    m_mapperListener = new AbstractMapperRegistryEventListener()
+    {
+      /**
+       * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(org.kalypso.chart.framework.axis.IAxis)
+       *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
+       */
+      @Override
+      public void onMapperAdded( final IMapper mapper )
+      {
+        if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
+        {
+          final IAxis< ? > axis = (IAxis< ? >) mapper;
+          final Composite parent = m_axisPlaces.get( axis.getPosition() );
+          final AxisCanvas< ? > component = new AxisCanvas( axis, parent, SWT.NONE );
+          component.setBackground( m_bgColor );
+          m_model.getMapperRegistry().setComponent( axis, component );
+          layout();
+        }
+      }
+
+      /**
+       * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(org.kalypso.chart.framework.axis.IAxis)
+       *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be
+       *      checked in the future)
+       */
+      @Override
+      public void onMapperRemoved( final IMapper mapper )
+      {
+        if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
+        {
+          layout();
+        }
+      }
+
+      /**
+       * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
+       */
+      @Override
+      public void onMapperRangeChanged( IMapper mapper )
+      {
+        layout();
+      }
+
+    };
+
+    m_model.getMapperRegistry().addListener( m_mapperListener );
+
+    m_chartModelListener = new AbstractChartModelEventListener()
+    {
+      /**
+       * @see org.kalypso.chart.framework.model.event.IChartModelEventListener#onAutoscale()
+       */
+      @Override
+      public void onAutoscale( )
+      {
+        redraw();
+      }
+    };
+
+    m_model.addListener( m_chartModelListener );
 
     final IMapperRegistry ar = m_model.getMapperRegistry();
     final IAxis[] axes = ar.getAxes();
@@ -66,7 +127,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
     // Falls das Model schon gefüllt ist, müssen den vorhandenen Achsen noch Components hinzugefügt werden
     for( final IAxis axis : axes )
     {
-      onMapperAdded( axis );
+      m_mapperListener.onMapperAdded( axis );
     }
   }
 
@@ -161,7 +222,7 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
   @Override
   public void dispose( )
   {
-    m_model.getMapperRegistry().removeMapperRegistryEventListener( this );
+    m_model.getMapperRegistry().removeListener( m_mapperListener );
 
     m_model.clear();
 
@@ -181,37 +242,6 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
   public void setLayout( final Layout layout )
   {
     checkWidget();
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(org.kalypso.chart.framework.axis.IAxis)
-   *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
-   */
-  @SuppressWarnings("unchecked")
-  public void onMapperAdded( final IMapper mapper )
-  {
-    if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
-    {
-      final IAxis axis = (IAxis) mapper;
-      final Composite parent = m_axisPlaces.get( axis.getPosition() );
-      final AxisCanvas component = new AxisCanvas( axis, parent, SWT.NONE );
-      component.setBackground( m_bgColor );
-      m_model.getMapperRegistry().setComponent( axis, component );
-      layout();
-    }
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(org.kalypso.chart.framework.axis.IAxis)
-   *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked
-   *      in the future)
-   */
-  public void onMapperRemoved( final IMapper mapper )
-  {
-    if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
-    {
-      layout();
-    }
   }
 
   public PlotCanvas getPlot( )
@@ -349,14 +379,6 @@ public class ChartComposite extends Composite implements IMapperRegistryEventLis
         ac.redraw();
       }
     }
-    redraw();
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModelEventListener#onModelChanged()
-   */
-  public void onModelChanged( )
-  {
     redraw();
   }
 

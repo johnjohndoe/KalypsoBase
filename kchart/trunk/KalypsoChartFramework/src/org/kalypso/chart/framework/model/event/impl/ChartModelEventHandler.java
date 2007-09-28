@@ -38,12 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.framework.model;
+package org.kalypso.chart.framework.model.event.impl;
+
+import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 
 /**
  * @author burtscher1
  */
-public interface IChartModelEventListener
+public class ChartModelEventHandler extends AbstractEventProvider<IChartModelEventListener>
 {
-  public void onModelChanged( );
+  public void fireAutocaled( )
+  {
+    for( final IChartModelEventListener l : getListeners() )
+      l.onAutoscale();
+  }
 }

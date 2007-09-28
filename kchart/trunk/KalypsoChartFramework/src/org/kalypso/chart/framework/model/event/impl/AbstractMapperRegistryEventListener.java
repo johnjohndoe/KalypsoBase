@@ -38,42 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.framework.model.impl;
+package org.kalypso.chart.framework.model.event.impl;
 
-import java.util.Vector;
-
-import org.kalypso.chart.framework.model.IChartModelEventListener;
-import org.kalypso.chart.framework.model.IChartModelEventProvider;
+import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
+import org.kalypso.chart.framework.model.mapper.IMapper;
 
 /**
  * @author burtscher1
  */
-public class ChartModelEventHandler implements IChartModelEventProvider
+public abstract class AbstractMapperRegistryEventListener implements IMapperRegistryEventListener
 {
 
-  private final Vector<IChartModelEventListener> m_listeners = new Vector<IChartModelEventListener>();
-
   /**
-   * @see org.kalypso.chart.framework.model.IChartModelEventProvider#addChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+   * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperAdded(org.kalypso.chart.framework.model.mapper.IMapper)
    */
-  public void addChartModelEventListener( IChartModelEventListener l )
+  public void onMapperAdded( IMapper mapper )
   {
-    m_listeners.add( l );
-
+    // not implemented - override in subclass if needed
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.IChartModelEventProvider#removeChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+   * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperRemoved(org.kalypso.chart.framework.model.mapper.IMapper)
    */
-  public void removeChartModelEventListener( IChartModelEventListener l )
+  public void onMapperRemoved( IMapper mapper )
   {
-    m_listeners.remove( l );
+    // not implemented - override in subclass if needed
   }
 
-  public void fireModelChanged( )
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
+   */
+  public void onMapperRangeChanged( IMapper mapper )
   {
-    for( final IChartModelEventListener l : m_listeners )
-      l.onModelChanged();
+    // not implemented - override in subclass if needed
   }
 
 }

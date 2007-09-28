@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.util.ChartUtilities;
@@ -36,6 +37,37 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
     addPaintListener( this );
     addListener( SWT.Resize, this );
+
+    AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
+    {
+      /**
+       * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerAdded( IChartLayer layer )
+      {
+        redraw();
+      }
+
+      /**
+       * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerRemoved( IChartLayer layer )
+      {
+        redraw();
+      }
+
+      /**
+       * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerVisibilityChanged( IChartLayer layer )
+      {
+        redraw();
+      }
+    };
+    manager.addListener( m_almel );
   }
 
   public void setMouseHandler( final IChartMouseHandler handler )

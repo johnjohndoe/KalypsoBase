@@ -56,11 +56,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.ksp.chart.factory.ChartType;
 import org.ksp.chart.factory.LayerType;
 import org.ksp.chart.factory.RefType;
 import org.ksp.chart.factory.ChartType.Layers;
-
 
 /**
  * @author Gernot Belger
@@ -103,7 +104,7 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     m_viewer = new CheckboxTableViewer( table );
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new ChartLabelProvider(  m_editor ) );
+    m_viewer.setLabelProvider( new ChartLabelProvider( m_editor ) );
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
@@ -116,11 +117,14 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     updateControl();
   }
 
-  protected void handleCheckStateChanged( final LayerType layer, final boolean checked )
+  protected void handleCheckStateChanged( final LayerType layerType, final boolean checked )
   {
-    layer.setVisible( checked );
-
-    m_editor.updateControl();
+    layerType.setVisible( checked );
+    ILayerManager layerManager = m_editor.getChartComposite().getModel().getLayerManager();
+    IChartLayer layer = layerManager.getLayerById( layerType.getId() );
+    m_editor.getChartComposite().getModel().getLayerManager().setLayerVisibility( layer, checked );
+    // m_editor.getChartComposite().getPlot().redraw();
+    // m_editor.updateControl();
   }
 
   public void dispose( )
@@ -185,14 +189,14 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
   /* default-visible */void updateControl( )
   {
-    
+
     ChartConfigurationLoader ccl = m_editor.getChartConfigurationLoader();
     ChartType chartType = m_editor.getChartType();
     final Layers layers = chartType.getLayers();
 
     RefType[] layerRefArray = layers.getLayerRefArray();
     final LayerType[] layerArray = new LayerType[layerRefArray.length];
-    
+
     for( int i = 0; i < layerArray.length; i++ )
     {
       RefType refType = layerRefArray[i];
@@ -202,7 +206,7 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     m_viewer.setInput( layerArray );
     for( int i = 0; i < layerArray.length; i++ )
       m_viewer.setChecked( layerArray[i], layerArray[i].getVisible() );
-    
+
   }
 
 }

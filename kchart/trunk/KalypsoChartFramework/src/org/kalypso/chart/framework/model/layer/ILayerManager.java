@@ -1,10 +1,12 @@
 package org.kalypso.chart.framework.model.layer;
 
+import org.kalypso.chart.framework.model.event.IEventProvider;
+import org.kalypso.chart.framework.model.event.ILayerManagerEventListener;
 
 /**
  * @author burtscher used to manage chart layers - right now this means adding and removing them
  */
-public interface ILayerManager extends ILayerManagerEventProvider
+public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
   public void addLayer( IChartLayer layer );
 
@@ -27,4 +29,14 @@ public interface ILayerManager extends ILayerManagerEventProvider
   public void moveLayerToPosition( IChartLayer layer, int position );
 
   public IChartLayer getLayerById( String id );
+
+  /**
+   * changes the visibility of a layer
+   * 
+   * @param layer
+   *            the layer whose visibility is to change
+   * @param isVisible
+   *            true if layer should be visible, false if layer should be hidden
+   */
+  public void setLayerVisibility( IChartLayer layer, boolean isVisible );
 }

@@ -1,9 +1,14 @@
 package org.kalypso.chart.framework.util;
 
+import java.util.Comparator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -49,7 +54,37 @@ public class ChartUtilities
   {
     final IAxis[] axes = chart.getMapperRegistry().getAxes();
     chart.autoscale( axes );
-    chart.invalidate();
+  }
+
+  /**
+   * finds the smallest and biggest value of all ranges and creates a new DataRange with these values
+   */
+  public static <T> IDataRange<T> mergeDataRanges( IDataRange<T>[] ranges, Comparator<T> comparator )
+  {
+    T min = null;
+    T max = null;
+
+    for( final IDataRange<T> element : ranges )
+    {
+      if( min == null || comparator.compare( min, element.getMin() ) > 0 )
+        min = element.getMin();
+      if( max == null || comparator.compare( max, element.getMax() ) < 0 )
+        max = element.getMax();
+    }
+
+    try
+    {
+      final DataRange<T> range = new DataRange<T>( min, max );
+      return range;
+    }
+    catch( final ZeroSizeDataRangeException e )
+    {
+      e.printStackTrace(); // etwas was ein treffen darf (auch wenns dubios ist) sollte man nicht auf die konsole
+      // loggen
+
+      // TODO: what to do in that case?
+      return null;
+    }
   }
 
 }

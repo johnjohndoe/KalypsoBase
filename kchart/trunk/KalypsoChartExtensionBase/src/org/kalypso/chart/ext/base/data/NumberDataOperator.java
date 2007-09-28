@@ -1,12 +1,19 @@
 package org.kalypso.chart.ext.base.data;
 
+import java.util.Comparator;
+
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.model.data.IDataOperator;
+import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 
-public class NumberDataOperator implements IDataOperator<Number>
+public class NumberDataOperator extends AbstractDataOperator<Number>
 {
+
+  public NumberDataOperator( Comparator<Number> comparator )
+  {
+    super( comparator );
+  }
 
   public DataRange<Number> getContainingInterval( Number numVal, Number numIntervalWidth, Number numFixedPoint )
   {

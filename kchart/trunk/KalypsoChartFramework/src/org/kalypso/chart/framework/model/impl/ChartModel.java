@@ -1,24 +1,28 @@
 package org.kalypso.chart.framework.model.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.IChartModelEventListener;
 import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.event.IChartModelEventListener;
+import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
+import org.kalypso.chart.framework.model.event.impl.ChartModelEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.kalypso.chart.framework.model.layer.ILayerManagerEventListener;
 import org.kalypso.chart.framework.model.layer.impl.LayerManager;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.registry.impl.MapperRegistry;
+import org.kalypso.chart.framework.util.ChartUtilities;
 
-public class ChartModel implements ILayerManagerEventListener, IChartModel
+public class ChartModel implements IChartModel
 {
   private boolean m_hideUnusedAxes = false;
 
@@ -27,8 +31,6 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
   /** axis --> List of layers */
   private final Map<IAxis< ? >, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis< ? >, List<IChartLayer>>();
 
-  private final ChartModelEventHandler m_handler = new ChartModelEventHandler();
-
   private final ILayerManager m_manager = new LayerManager();
 
   /**
@@ -36,9 +38,38 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
    */
   private boolean m_autoscale = false;
 
+  private final ChartModelEventHandler m_eventHandler;
+
   public ChartModel( )
   {
-    m_manager.addLayerManagerEventListener( this );
+    AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
+    {
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerAdded( final IChartLayer layer )
+      {
+        updateAxisLayerMap( layer, true );
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerRemoved( final IChartLayer layer )
+      {
+        updateAxisLayerMap( layer, false );
+      }
+
+    };
+    m_manager.addListener( m_layerMana );
+
+    m_eventHandler = new ChartModelEventHandler();
   }
 
   /**
@@ -104,28 +135,6 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
     if( m_autoscale )
       autoscale( new IAxis[] { layer.getDomainAxis(), layer.getTargetAxis() } );
 
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerAdded( final IChartLayer layer )
-  {
-    updateAxisLayerMap( layer, true );
-    m_handler.fireModelChanged();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerRemoved( final IChartLayer layer )
-  {
-    updateAxisLayerMap( layer, false );
-    m_handler.fireModelChanged();
   }
 
   /*
@@ -217,13 +226,13 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
             ranges.add( range );
         }
       }
-      // TODO: this is a strange method call!
-      // just set the complete range to the axis and merge the dateRanges in an extra helper method!
-      // It is not the job of an axis to know how to merge date ranges
-      axis.autorange( ranges.toArray( new IDataRange[ranges.size()] ) );
+      IDataOperator dataOperator = axis.getDataOperator();
+      Comparator comparator = dataOperator.getComparator();
+      IDataRange mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ), axis.getDataOperator().getComparator() );
+      axis.setDataRange( mergedDataRange );
+      m_eventHandler.fireAutocaled();
     }
 
-    m_handler.fireModelChanged();
   }
 
   /**
@@ -273,27 +282,19 @@ public class ChartModel implements ILayerManagerEventListener, IChartModel
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.IChartModelEventProvider#addChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+   * @see org.kalypso.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
-  public void addChartModelEventListener( final IChartModelEventListener l )
+  public void addListener( IChartModelEventListener listener )
   {
-    m_handler.addChartModelEventListener( l );
+    m_eventHandler.addListener( listener );
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.IChartModelEventProvider#removeChartModelEventListener(org.kalypso.chart.framework.model.IChartModelEventListener)
+   * @see org.kalypso.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
-  public void removeChartModelEventListener( final IChartModelEventListener l )
+  public void removeListener( IChartModelEventListener listener )
   {
-    m_handler.removeChartModelEventListener( l );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModel#invalidate()
-   */
-  public void invalidate( )
-  {
-    m_handler.fireModelChanged();
+    m_eventHandler.removeListener( listener );
   }
 
 }

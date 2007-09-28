@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
+import org.kalypso.chart.framework.model.event.impl.MapperRegistryEventHandler;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
@@ -118,9 +119,9 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#addMapperRegistryEventListener(org.kalypso.chart.framework.model.axis.registry.IMapperRegistryEventListener)
    */
-  public void addMapperRegistryEventListener( IMapperRegistryEventListener l )
+  public void addListener( IMapperRegistryEventListener l )
   {
-    m_handler.addMapperRegistryEventListener( l );
+    m_handler.addListener( l );
   }
 
   /*
@@ -128,9 +129,9 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#removeMapperRegistryEventListener(org.kalypso.chart.framework.model.axis.registry.IMapperRegistryEventListener)
    */
-  public void removeMapperRegistryEventListener( IMapperRegistryEventListener l )
+  public void removeListener( IMapperRegistryEventListener l )
   {
-    m_handler.removeMapperRegistryEventListener( l );
+    m_handler.removeListener( l );
   }
 
   /*
@@ -146,7 +147,7 @@ public class MapperRegistry implements IMapperRegistry
       if( axis.getPosition() == pos )
         axes.add( axis );
     }
-    return (IAxis[]) axes.toArray( new IAxis[0] );
+    return axes.toArray( new IAxis[0] );
   }
 
   /*

@@ -3,9 +3,10 @@ package org.kalypso.chart.framework.model.layer.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.chart.framework.model.event.ILayerManagerEventListener;
+import org.kalypso.chart.framework.model.event.impl.LayerManagerEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.kalypso.chart.framework.model.layer.ILayerManagerEventListener;
 
 public class LayerManager implements ILayerManager
 {
@@ -34,14 +35,14 @@ public class LayerManager implements ILayerManager
     m_handler.fireLayerRemoved( layer );
   }
 
-  public void addLayerManagerEventListener( ILayerManagerEventListener l )
+  public void addListener( ILayerManagerEventListener l )
   {
-    m_handler.addLayerManagerEventListener( l );
+    m_handler.addListener( l );
   }
 
-  public void removeLayerManagerEventListener( ILayerManagerEventListener l )
+  public void removeListener( ILayerManagerEventListener l )
   {
-    m_handler.removeLayerManagerEventListener( l );
+    m_handler.removeListener( l );
   }
 
   public void clear( )
@@ -71,5 +72,15 @@ public class LayerManager implements ILayerManager
         return layer;
     }
     return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManager#setLayerVisibility(org.kalypso.chart.framework.model.layer.IChartLayer,
+   *      boolean)
+   */
+  public void setLayerVisibility( IChartLayer layer, boolean isVisible )
+  {
+    layer.setVisible( isVisible );
+    m_handler.fireLayerVisibilityChanged( layer );
   }
 }

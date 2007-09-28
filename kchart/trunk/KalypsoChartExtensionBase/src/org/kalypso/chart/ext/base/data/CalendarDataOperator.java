@@ -2,20 +2,22 @@ package org.kalypso.chart.ext.base.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.model.data.IDataOperator;
+import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 
-public class CalendarDataOperator implements IDataOperator<Calendar>
+public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 {
 
   private final CalendarParser m_stringParser;
 
-  public CalendarDataOperator( )
+  public CalendarDataOperator( Comparator<Calendar> comparator )
   {
+    super( comparator );
     m_stringParser = new CalendarParser();
   }
 
@@ -77,7 +79,6 @@ public class CalendarDataOperator implements IDataOperator<Calendar>
   public Calendar stringToLogical( String value ) throws MalformedValueException
   {
     final Calendar cal = m_stringParser.stringToLogical( value );
-    ;
     return cal;
   }
 

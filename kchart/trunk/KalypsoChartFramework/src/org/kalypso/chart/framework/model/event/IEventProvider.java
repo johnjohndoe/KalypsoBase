@@ -38,15 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.framework.model;
-
+package org.kalypso.chart.framework.model.event;
 
 /**
  * @author burtscher1
  */
-public interface IChartModelEventProvider
+public interface IEventProvider<T>
 {
-  public void addChartModelEventListener( IChartModelEventListener l );
+  public void addListener( T listener );
 
-  public void removeChartModelEventListener( IChartModelEventListener l );
+  public void removeListener( T listener );
 }
