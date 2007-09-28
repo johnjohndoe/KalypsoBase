@@ -65,7 +65,6 @@ public class DragMouseHandler implements IChartMouseHandler
 
   public void paint( final GCWrapper gcw )
   {
-
     // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
     if( m_mouseDragRect != null )
     {

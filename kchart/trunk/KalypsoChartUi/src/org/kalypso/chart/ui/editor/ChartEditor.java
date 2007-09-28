@@ -33,8 +33,11 @@ import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
+import org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartMouseHandler;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -160,6 +163,7 @@ public class ChartEditor extends EditorPart
 // m_isSaving = true;
 
       final ChartConfigurationDocument config = m_configuration;
+      // System.out.println( m_configuration.toString() );
       final SetContentHelper helper = new SetContentHelper()
       {
         @Override
@@ -276,6 +280,34 @@ public class ChartEditor extends EditorPart
 
           m_chartModel = new ChartModel();
 
+          AbstractMapperRegistryEventListener mapperRegistryListener = new AbstractMapperRegistryEventListener()
+          {
+            /**
+             * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
+             */
+            @Override
+            public void onMapperRangeChanged( IMapper mapper )
+            {
+              m_dirty = true;
+              firePropertyChange( PROP_DIRTY );
+            }
+          };
+          m_chartModel.getMapperRegistry().addListener( mapperRegistryListener );
+
+          AbstractLayerManagerEventListener layerManagerListener = new AbstractLayerManagerEventListener()
+          {
+            /**
+             * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
+             */
+            @Override
+            public void onLayerVisibilityChanged( IChartLayer layer )
+            {
+              m_dirty = true;
+              firePropertyChange( PROP_DIRTY );
+            }
+          };
+          m_chartModel.getLayerManager().addListener( layerManagerListener );
+
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
@@ -327,8 +359,8 @@ public class ChartEditor extends EditorPart
       m_outlinePage.updateControl();
 
     // HACK: at the moment, we always set dirty, when updateControl is called
-    m_dirty = true;
-    firePropertyChange( PROP_DIRTY );
+    // m_dirty = true;
+    // firePropertyChange( PROP_DIRTY );
   }
 
   public ChartComposite getChartComposite( )
@@ -377,5 +409,15 @@ public class ChartEditor extends EditorPart
         break;
       }
     }
+  }
+
+  public ChartConfigurationDocument getConfiguration( )
+  {
+    return m_configuration;
+  }
+
+  public void setConfiguration( ChartConfigurationDocument doc )
+  {
+    m_configuration = doc;
   }
 }

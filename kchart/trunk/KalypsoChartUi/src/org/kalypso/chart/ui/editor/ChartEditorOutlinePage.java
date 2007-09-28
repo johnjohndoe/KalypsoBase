@@ -58,6 +58,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
+import org.ksp.chart.factory.ChartConfigurationDocument;
 import org.ksp.chart.factory.ChartType;
 import org.ksp.chart.factory.LayerType;
 import org.ksp.chart.factory.RefType;
@@ -120,11 +121,26 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
   protected void handleCheckStateChanged( final LayerType layerType, final boolean checked )
   {
     layerType.setVisible( checked );
+
+    // Layer per hand schreiben
+    ChartConfigurationDocument ccd = m_editor.getChartConfigurationLoader().getChartConfigurationDocument();
+
+    LayerType[] layerArray = ccd.getChartConfiguration().getLayerArray();
+    int count = 0;
+    for( LayerType layerType2 : layerArray )
+    {
+      if( layerType2.getId().equals( layerType.getId() ) )
+      {
+        ccd.getChartConfiguration().setLayerArray( count, layerType );
+        break;
+      }
+      count++;
+    }
+    m_editor.setConfiguration( ccd );
+
     ILayerManager layerManager = m_editor.getChartComposite().getModel().getLayerManager();
     IChartLayer layer = layerManager.getLayerById( layerType.getId() );
     m_editor.getChartComposite().getModel().getLayerManager().setLayerVisibility( layer, checked );
-    // m_editor.getChartComposite().getPlot().redraw();
-    // m_editor.updateControl();
   }
 
   public void dispose( )
