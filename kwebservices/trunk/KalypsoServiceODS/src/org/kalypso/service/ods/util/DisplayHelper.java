@@ -1,17 +1,12 @@
 package org.kalypso.service.ods.util;
 
-
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.logging.Logger;
 
 /**
- * @author burtscher
- * 
- * Helper class for accessing a Display from Server-Side Eclipse;
- * at first, a new thread is created which is only running
- * the Display; every object using graphics in server context
- * should use the Display from this class 
- * 
+ * @author burtscher Helper class for accessing a Display from Server-Side Eclipse; at first, a new thread is created
+ *         which is only running the Display; every object using graphics in server context should use the Display from
+ *         this class
  */
 public class DisplayHelper extends Thread
 {
@@ -50,7 +45,7 @@ public class DisplayHelper extends Thread
       if( m_display.getThread() != Thread.currentThread() )
       {
         // TODO: was macher mer denn jetzt?
-        Logger.trace( "another thread has the display, what to do? "+m_display.getThread().getName() );
+        Logger.trace( "another thread has the display, what to do? " + m_display.getThread().getName() );
       }
     }
     runEventLoop( m_display );
@@ -80,7 +75,7 @@ public class DisplayHelper extends Thread
         e.printStackTrace();
       }
     }
-    
+
     return m_display;
   }
 
@@ -107,10 +102,10 @@ public class DisplayHelper extends Thread
       }
       catch( final Throwable t )
       {
-    	  //TODO: das muss raus, um keine Kalypso-Abhängigkeit zu haben
-    	  
-    //    final IStatus status = StatusUtilities.statusFromThrowable( t );
-    //    Activator.getDefault().getLog().log( status );
+        // TODO: das muss raus, um keine Kalypso-Abhängigkeit zu haben
+
+        // final IStatus status = StatusUtilities.statusFromThrowable( t );
+        // Activator.getDefault().getLog().log( status );
 
         // TODO: remove
         t.printStackTrace();

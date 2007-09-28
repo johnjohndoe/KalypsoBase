@@ -14,7 +14,6 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 
-
 /**
  * @author Alex Burtscher
  */
@@ -30,14 +29,13 @@ public class ODSServlet implements IOGCService
    * @TODO: integrate operations extension
    */
 
-
   /**
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean,
    *      javax.servlet.http.HttpServletResponse)
    */
   public synchronized void executeOperation( RequestBean requestBean, ResponseBean responseBean ) throws OWSException
   {
-    String operationName = requestBean.getParameterValue( "REQUEST" );
+    final String operationName = requestBean.getParameterValue( "REQUEST" );
 
     // Load Operatione from ExtensionPoint
     IODSOperation op = null;
@@ -45,36 +43,36 @@ public class ODSServlet implements IOGCService
     {
       op = ODSExtensionLoader.createOWSOperation( operationName );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation " + operationName + " not found", "" );
     }
 
     if( op != null )
     {
-		ODSConfigurationLoader loader = ODSConfigurationLoader.getInstance();
-		String reset = requestBean.getParameterValue("RESET");
-		if ("TRUE".equals(reset))
-			loader.reload();
-		
-	   //Proxy setzen
-		Map<String, String> serviceParams= loader.getServiceParameters();
-	      String proxyPort =null;
-	      String proxyHost =null;
-		if (serviceParams!=null)
-		{
-		  proxyPort = serviceParams.get("proxyPort");
-		  proxyHost = serviceParams.get("proxyHost");
-		}
-		
-		if (proxyPort!=null && proxyHost !=null)
-		{
-			System.setProperty("proxyPort", proxyPort);
-	    	System.setProperty("proxyHost", proxyHost);		
-		}
-		
-	   Logger.logInfo(Logger.TOPIC_LOG_GENERAL,  "Accessing operation: "+operationName);
-       op.operate( requestBean, responseBean );
+      final ODSConfigurationLoader loader = ODSConfigurationLoader.getInstance();
+      final String reset = requestBean.getParameterValue( "RESET" );
+      if( "TRUE".equals( reset ) )
+        loader.reload();
+
+      // Proxy setzen
+      final Map<String, String> serviceParams = loader.getServiceParameters();
+      String proxyPort = null;
+      String proxyHost = null;
+      if( serviceParams != null )
+      {
+        proxyPort = serviceParams.get( "proxyPort" );
+        proxyHost = serviceParams.get( "proxyHost" );
+      }
+
+      if( proxyPort != null && proxyHost != null )
+      {
+        System.setProperty( "proxyPort", proxyPort );
+        System.setProperty( "proxyHost", proxyHost );
+      }
+
+      Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing operation: " + operationName );
+      op.operate( requestBean, responseBean );
     }
     else
       throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation " + operationName + " not found", "" );
@@ -85,7 +83,7 @@ public class ODSServlet implements IOGCService
    */
   public boolean responsibleFor( RequestBean request )
   {
-    String parameterValue = request.getParameterValue( "Service" );
+    final String parameterValue = request.getParameterValue( "Service" );
 
     if( parameterValue != null && parameterValue.equals( "ODS" ) )
       return true;
@@ -93,10 +91,10 @@ public class ODSServlet implements IOGCService
     return false;
   }
 
-public void destroy() {
-	// TODO Auto-generated method stub
-	
-}
-  
-  
+  public void destroy( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

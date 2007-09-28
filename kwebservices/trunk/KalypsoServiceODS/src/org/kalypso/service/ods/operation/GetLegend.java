@@ -23,90 +23,86 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.ksp.chart.factory.ChartConfigurationType;
 
-
-
-
 /**
- * @author burtscher
- *
- * operation creating a legend image from a given name
+ * @author burtscher operation creating a legend image from a given name
  */
 public class GetLegend implements IODSOperation, Runnable
 {
 
   private RequestBean m_requestBean;
+
   private ResponseBean m_responseBean;
 
-
-  public GetLegend()
+  public GetLegend( )
   {
 
   }
 
   /**
-   * @see de.openali.ows.service.IOWSOperation#operate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   * @see de.openali.ows.service.IOWSOperation#operate(javax.servlet.http.HttpServletRequest,
+   *      javax.servlet.http.HttpServletResponse)
    */
- public void operate( RequestBean requestBean, ResponseBean responseBean )
+  public void operate( RequestBean requestBean, ResponseBean responseBean )
   {
-     m_requestBean=requestBean;
-     m_responseBean=responseBean;
-     //Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet: GetLegend", null ) );
-     //TODO: Logger mit Plugin-Namen instanziieren oder so...
-     Logger.logInfo(Logger.TOPIC_LOG_GENERAL,  "Accessing servlet: GetLegend");
-     DisplayHelper.getInstance().getDisplay().syncExec( this );
+    m_requestBean = requestBean;
+    m_responseBean = responseBean;
+    // Activator.getDefault().getLog().log( new Status( IStatus.INFO, Activator.PLUGIN_ID, 0, "Accessing servlet:
+    // GetLegend", null ) );
+    // TODO: Logger mit Plugin-Namen instanziieren oder so...
+    Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetLegend" );
+    DisplayHelper.getInstance().getDisplay().syncExec( this );
   }
-
 
   /**
    * @see java.lang.Runnable#run()
    */
   public void run( )
   {
-    String reqName = m_requestBean.getParameterValue( "NAME" );
-    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
-    if (reqName!=null)
+    final String reqName = m_requestBean.getParameterValue( "NAME" );
+    // der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if( reqName != null )
     {
-      Display display=null;
-      BufferedOutputStream outputStream=null;
-      LegendImageContainer lic=null;
+      Display display = null;
+      BufferedOutputStream outputStream = null;
+      LegendImageContainer lic = null;
       try
       {
-    	  String sceneId=m_requestBean.getParameterValue("SCENE");
-    	  ODSConfigurationLoader ocl=ODSConfigurationLoader.getInstance();
-    	  ODSScene scene = ocl.getSceneById(sceneId);
-    	  ChartConfigurationType chartConfiguration = scene.getChartConfiguration();
-          ChartConfigurationLoader cl=new ChartConfigurationLoader(chartConfiguration);
-          Logger.trace("GetLegend: Creating new chart model");
-          IChartModel model=new ChartModel();
-  		  ChartFactory.configureChartModel(model, cl, reqName, null );
+        final String sceneId = m_requestBean.getParameterValue( "SCENE" );
+        final ODSConfigurationLoader ocl = ODSConfigurationLoader.getInstance();
+        final ODSScene scene = ocl.getSceneById( sceneId );
+        final ChartConfigurationType chartConfiguration = scene.getChartConfiguration();
+        final ChartConfigurationLoader cl = new ChartConfigurationLoader( chartConfiguration );
+        Logger.trace( "GetLegend: Creating new chart model" );
+        final IChartModel model = new ChartModel();
+        ChartFactory.configureChartModel( model, cl, reqName, null );
 
-          ODSChartManipulation.setLayerVisibility( model.getLayerManager(), m_requestBean );
-          display=DisplayHelper.getInstance().getDisplay();
-          lic = new LegendImageContainer(model.getLayerManager(), display);
-          Image legendImg=lic.getImage();
-          m_responseBean.setContentType( "image/png" );
-          ImageLoader il=new ImageLoader();
-          ImageData id=legendImg.getImageData();
-          il.data=new ImageData[]{id};
-          outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
-          il.save( outputStream, SWT.IMAGE_PNG );
-          outputStream.close();
+        ODSChartManipulation.setLayerVisibility( model.getLayerManager(), m_requestBean );
+        display = DisplayHelper.getInstance().getDisplay();
+        lic = new LegendImageContainer( model.getLayerManager(), display );
+        final Image legendImg = lic.getImage();
+        m_responseBean.setContentType( "image/png" );
+        final ImageLoader il = new ImageLoader();
+        final ImageData id = legendImg.getImageData();
+        il.data = new ImageData[] { id };
+        outputStream = new BufferedOutputStream( m_responseBean.getOutputStream() );
+        il.save( outputStream, SWT.IMAGE_PNG );
+        outputStream.close();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
       finally
       {
-        if (lic!=null)
+        if( lic != null )
           lic.dispose();
-        if (outputStream!=null)
+        if( outputStream != null )
         {
           try
           {
             outputStream.close();
           }
-          catch( IOException e )
+          catch( final IOException e )
           {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -117,7 +113,7 @@ public class GetLegend implements IODSOperation, Runnable
     }
     else
     {
-    // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
+      // ODSException.showException( m_request, m_response, ERROR_CODE.NO_NAME_SPECIFIED );
     }
   }
 }

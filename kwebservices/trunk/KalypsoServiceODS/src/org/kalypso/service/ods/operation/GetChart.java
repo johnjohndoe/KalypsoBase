@@ -15,80 +15,77 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 
-
 /**
- * @author burtscher
- * IODS operation to display an image containing a chart
+ * @author burtscher IODS operation to display an image containing a chart
  */
 public class GetChart implements IODSOperation, Runnable
 {
 
+  private RequestBean m_requestBean;
 
-    private RequestBean m_requestBean;
+  private OWSException m_exception = null;
 
-    private OWSException m_exception=null;
-    private ResponseBean m_responseBean;
+  private ResponseBean m_responseBean;
 
-    public GetChart()
+  public GetChart( )
+  {
+
+  }
+
+  public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
+  {
+    m_requestBean = requestBean;
+    m_responseBean = responseBean;
+    final DisplayHelper dh = DisplayHelper.getInstance();
+    final Display d = dh.getDisplay();
+    d.syncExec( this );
+    if( m_exception != null )
     {
-
+      throw m_exception;
     }
-
-
-    public void operate( RequestBean requestBean, final ResponseBean responseBean ) throws OWSException
-	 {
-	    m_requestBean=requestBean;
-	    m_responseBean=responseBean;
-	    DisplayHelper dh=DisplayHelper.getInstance();
-	    Display d=dh.getDisplay();
-	    d.syncExec( this );
-	    if (m_exception!=null)
-	    {
-	      throw m_exception;
-	    }
-	 }
+  }
 
   /**
-   * @throws OWSException 
- * @see java.lang.Runnable#run()
+   * @throws OWSException
+   * @see java.lang.Runnable#run()
    */
   public void run( )
   {
-	Logger.logInfo(Logger.TOPIC_LOG_GENERAL,  "Accessing servlet: GetChart");
-	  
-    int width=500;
-    int height=400;
-    String reqWidth=m_requestBean.getParameterValue( "WIDTH" );
-    String reqHeight=m_requestBean.getParameterValue( "HEIGHT" );
-    String reqName=m_requestBean.getParameterValue( "NAME" );
-   
-    if (reqWidth!=null && !reqWidth.trim().equals(""))
-      width=Integer.parseInt( reqWidth );
-    if (reqHeight!=null && !reqWidth.trim().equals(""))
-      height=Integer.parseInt( reqHeight );
-    //der Name muss da sein, sonst kann kein Chart ausgewählt werden
-    if (reqName!=null)
+    Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetChart" );
+
+    int width = 500;
+    int height = 400;
+    final String reqWidth = m_requestBean.getParameterValue( "WIDTH" );
+    final String reqHeight = m_requestBean.getParameterValue( "HEIGHT" );
+    final String reqName = m_requestBean.getParameterValue( "NAME" );
+
+    if( reqWidth != null && !reqWidth.trim().equals( "" ) )
+      width = Integer.parseInt( reqWidth );
+    if( reqHeight != null && !reqWidth.trim().equals( "" ) )
+      height = Integer.parseInt( reqHeight );
+    // der Name muss da sein, sonst kann kein Chart ausgewählt werden
+    if( reqName != null )
     {
-      Display display=DisplayHelper.getInstance().getDisplay();
-      
-      ChartComposite chart=null;
-	  String sceneId=m_requestBean.getParameterValue( "SCENE" );
+      final Display display = DisplayHelper.getInstance().getDisplay();
 
-      HeadlessChart hc=new HeadlessChart(sceneId, reqName, new RGB(255,255,255));
-      Logger.trace("GetChart: Creating new chart");
-      chart=hc.getChart();
+      ChartComposite chart = null;
+      final String sceneId = m_requestBean.getParameterValue( "SCENE" );
 
-      if (chart!=null )
+      final HeadlessChart hc = new HeadlessChart( sceneId, reqName, new RGB( 255, 255, 255 ) );
+      Logger.trace( "GetChart: Creating new chart" );
+      chart = hc.getChart();
+
+      if( chart != null )
       {
-    	ODSChartManipulation.manipulateChart(chart.getModel(), m_requestBean);
-        ImageData id= ChartImageFactory.createChartImage(chart, display, width, height);
-        if (id!=null )
+        ODSChartManipulation.manipulateChart( chart.getModel(), m_requestBean );
+        final ImageData id = ChartImageFactory.createChartImage( chart, display, width, height );
+        if( id != null )
         {
-           ImageOutput.imageResponse(m_requestBean, m_responseBean, id);
+          ImageOutput.imageResponse( m_requestBean, m_responseBean, id );
         }
         else
         {
-          m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+          m_exception = new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "" );
           return;
         }
       }
@@ -96,12 +93,9 @@ public class GetChart implements IODSOperation, Runnable
     }
     else
     {
-      m_exception=new OWSException(OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "");
+      m_exception = new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "" );
       return;
     }
   }
-
-
-
 
 }

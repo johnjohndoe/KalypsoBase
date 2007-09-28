@@ -11,36 +11,39 @@ import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.ogc.exception.OWSException.ExceptionCode;
 
-public class DoTest implements IODSOperation {
+public class DoTest implements IODSOperation
+{
 
+  public void operate( RequestBean requestBean, ResponseBean responseBean ) throws OWSException
+  {
+    // TODO Auto-generated method stub
 
-	public void operate(RequestBean requestBean, ResponseBean responseBean)
-			throws OWSException {
-		// TODO Auto-generated method stub
-		
-		ODSConfigurationLoader loader = ODSConfigurationLoader.getInstance();
-		String reset = requestBean.getParameterValue("RESET");
-		if ("TRUE".equals(reset))
-			loader.reload();
-		
-		OutputStream outputStream = responseBean.getOutputStream();
-		
-		String sceneId=requestBean.getParameterValue("SCENE");
-		ODSScene sceneById = loader.getSceneById(sceneId);
-		
-		if (sceneById!=null)
-		{
-			try {
-				sceneById.getODSSceneDocument().save(outputStream);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			throw new OWSException(ExceptionCode.INVALID_PARAMETER_VALUE, "Scene '"+sceneId+"' not defined", requestBean.getUrl() );
-		}
-	}
+    final ODSConfigurationLoader loader = ODSConfigurationLoader.getInstance();
+    final String reset = requestBean.getParameterValue( "RESET" );
+    if( "TRUE".equals( reset ) )
+      loader.reload();
+
+    final OutputStream outputStream = responseBean.getOutputStream();
+
+    final String sceneId = requestBean.getParameterValue( "SCENE" );
+    final ODSScene sceneById = loader.getSceneById( sceneId );
+
+    if( sceneById != null )
+    {
+      try
+      {
+        sceneById.getODSSceneDocument().save( outputStream );
+      }
+      catch( final IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      throw new OWSException( ExceptionCode.INVALID_PARAMETER_VALUE, "Scene '" + sceneId + "' not defined", requestBean.getUrl() );
+    }
+  }
 
 }
