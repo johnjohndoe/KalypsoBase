@@ -84,6 +84,10 @@ public class ChartFactory
 
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final URL context )
   {
+    model.setId( chartType.getId() );
+    model.setTitle( chartType.getTitle() );
+    model.setDescription( chartType.getDescription() );
+
     final Layers layers = chartType.getLayers();
     final RefType[] layerRefArray = layers.getLayerRefArray();
     for( final RefType layerRef : layerRefArray )
@@ -303,7 +307,7 @@ public class ChartFactory
               sp.init( st );
               final IStyledElement styledElement = sp.getStyledElement();
               // Provider in Element setzen - fürs speichern benötigt
-              styledElement.setData( ChartFactory.AXIS_PROVIDER_KEY, sp );
+              styledElement.setData( ChartFactory.STYLE_PROVIDER_KEY, sp );
               ls.add( styledElement );
             }
 

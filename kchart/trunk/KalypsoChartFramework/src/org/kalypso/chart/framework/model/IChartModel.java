@@ -38,4 +38,16 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
    */
   public void setAutoscale( boolean b );
 
+  public String getId( );
+
+  public void setId( String id );
+
+  public String getTitle( );
+
+  public void setTitle( String title );
+
+  public String getDescription( );
+
+  public void setDescription( String description );
+
 }

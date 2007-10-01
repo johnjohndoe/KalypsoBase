@@ -32,7 +32,9 @@ public abstract class AbstractLayerProvider implements ILayerProvider
    */
   public LayerType getXMLType( IChartLayer layer )
   {
-    return m_lt;
+    LayerType lt = (LayerType) m_lt.copy();
+    lt.setVisible( layer.isVisible() );
+    return lt;
   }
 
   public IChartModel getChartModel( )

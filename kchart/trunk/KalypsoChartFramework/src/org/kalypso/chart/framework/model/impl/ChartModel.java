@@ -40,6 +40,12 @@ public class ChartModel implements IChartModel
 
   private final ChartModelEventHandler m_eventHandler;
 
+  private String m_id = "";
+
+  private String m_title = "";
+
+  private String m_description = "";
+
   public ChartModel( )
   {
     AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
@@ -308,4 +314,51 @@ public class ChartModel implements IChartModel
     m_eventHandler.removeListener( listener );
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#getId()
+   */
+  public String getId( )
+  {
+    return m_id;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#setId()
+   */
+  public void setId( String id )
+  {
+    m_id = id;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#getTitle()
+   */
+  public String getTitle( )
+  {
+    return m_title;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#setDescription(java.lang.String)
+   */
+  public void setDescription( String description )
+  {
+    m_description = description;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.IChartModel#setTitle(java.lang.String)
+   */
+  public void setTitle( String title )
+  {
+    m_title = title;
+  }
 }

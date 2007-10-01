@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -30,6 +33,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.chart.factory.configuration.ChartConfigurationSaver;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
@@ -163,13 +167,23 @@ public class ChartEditor extends EditorPart
 // m_isSaving = true;
 
       final ChartConfigurationDocument config = m_configuration;
-      // System.out.println( m_configuration.toString() );
+
+      XmlOptions options = new XmlOptions();
+      // Ausgabe menschenlesbar formatieren
+      // Namespace prefixes setzen
+      final Map<String, String> prefixes = (new HashMap<String, String>());
+      prefixes.put( "http://www.ksp.org/chart/factory", "" );
+      options = options.setSaveSuggestedPrefixes( prefixes );
+      options = options.setSavePrettyPrint();
+      final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getModel() );
+      final XmlOptions xmloptions = options;
+
       final SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
-          config.save( writer );
+          savedConfig.save( writer, xmloptions );
         }
       };
 
@@ -188,6 +202,7 @@ public class ChartEditor extends EditorPart
     {
 // m_isSaving = false;
     }
+
   }
 
   /**
