@@ -1,6 +1,7 @@
 package org.kalypso.chart.ext.base.axis;
 
 import java.util.Comparator;
+import java.util.HashMap;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.kalypso.chart.framework.model.data.IDataRange;
@@ -34,6 +35,11 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   private IDataRange<T> m_dataRange;
 
   private final Class< ? > m_dataClass;
+
+  /**
+   * Hashmap to store arbitrary key value pairs
+   */
+  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
   /**
    * Uses a ComparableComparator as dataComparator
@@ -158,5 +164,21 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   public Comparator<T> getComparator( )
   {
     return m_dataComparator;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
+  public void setData( String id, Object data )
+  {
+    m_data.put( id, data );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
+   */
+  public Object getData( String id )
+  {
+    return m_data.get( id );
   }
 }

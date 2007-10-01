@@ -18,7 +18,7 @@ public class DefaultStyledPolygonProvider extends AbstractStyledElementProvider
     final RGB borderColor = getParameterContainer().getParsedParameterValue( "borderColor", "#000000", new RGBParser() );
     final RGB fillColor = getParameterContainer().getParsedParameterValue( "fillColor", "#ffffff", new RGBParser() );
     final int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser() ).intValue();
-    final StyledPolygon sp = new StyledPolygon( fillColor, borderWidth, borderColor, alpha );
+    final StyledPolygon sp = new StyledPolygon( getStyleType().getId(), fillColor, borderWidth, borderColor, alpha );
 
     return sp;
   }

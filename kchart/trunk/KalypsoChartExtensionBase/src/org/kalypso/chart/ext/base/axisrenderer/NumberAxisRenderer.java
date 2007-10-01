@@ -68,9 +68,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    *            minimal interval size between ticks; if set to 0, the minimum interval size is calculated; otherwise, no
    *            interval smaller than the given value is displayed
    */
-  public NumberAxisRenderer( final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final double minDisplayInterval, final int fixedWidth, final boolean hideCut )
+  public NumberAxisRenderer( final String id, final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final double minDisplayInterval, final int fixedWidth, final boolean hideCut )
   {
-    super( rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
+    super( id, rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
     m_nf.setMinimumFractionDigits( 0 );
     m_nf.setMaximumFractionDigits( 20 );
     m_minDisplayInterval = minDisplayInterval;

@@ -247,7 +247,15 @@ public class MapperRegistry implements IMapperRegistry
    */
   public IMapper[] getMappers( )
   {
-    return (IMapper[]) m_mappers.values().toArray();
+    final Collection<IMapper> allMappers = m_mappers.values();
+    final ArrayList<IMapper> mappers = new ArrayList<IMapper>();
+    for( final IMapper mapper : allMappers )
+    {
+      // nur hinzufügen, wenn keine Axis
+      if( !(mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis) )
+        mappers.add( mapper );
+    }
+    return mappers.toArray( new IMapper[mappers.size()] );
   }
 
   /*

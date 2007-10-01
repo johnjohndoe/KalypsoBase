@@ -1,6 +1,5 @@
 package org.kalypso.chart.ext.base.style;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
@@ -15,9 +14,8 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 /**
  * @author burtscher
  */
-public class StyledPolygon implements IStyledElement
+public class StyledPolygon extends AbstractStyledElement implements IStyledElement
 {
-  List<Point> m_path;
 
   private final int m_borderWidth;
 
@@ -27,21 +25,13 @@ public class StyledPolygon implements IStyledElement
 
   private final int m_alpha;
 
-  public StyledPolygon( RGB fillColor, int borderWidth, RGB borderColor, int alpha )
+  public StyledPolygon( String id, RGB fillColor, int borderWidth, RGB borderColor, int alpha )
   {
+    super( id );
     m_alpha = alpha;
-    m_path = new ArrayList<Point>();
     m_borderWidth = borderWidth;
     m_borderColor = borderColor;
     m_fillColor = fillColor;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.styles.IStyledElement#setPath(java.util.ArrayList)
-   */
-  public void setPath( List<Point> path )
-  {
-    m_path = path;
   }
 
   /**
@@ -59,7 +49,8 @@ public class StyledPolygon implements IStyledElement
       borderColor = new Color( gc.getDevice(), m_borderColor );
     }
 
-    final int[] intPath = StyleUtils.pointListToIntArray( m_path );
+    List<Point> path = getPath();
+    final int[] intPath = StyleUtils.pointListToIntArray( path );
 
     // Linienbreite, die verwendet wird, falls alle Punkt auf einer Achsenparallelen oder einem Punkt liegen
     int lineWidth = m_borderWidth;
@@ -80,9 +71,9 @@ public class StyledPolygon implements IStyledElement
     // Hier werden die ersten Werte des Pfads gespeichert
     int eqX = 0;
     int eqY = 0;
-    for( int i = 0; i < m_path.size(); i++ )
+    for( int i = 0; i < path.size(); i++ )
     {
-      final Point p = m_path.get( i );
+      final Point p = path.get( i );
       // erster Punkt: Werte initialisieren
       if( i == 0 )
       {
@@ -142,7 +133,8 @@ public class StyledPolygon implements IStyledElement
 
   public static StyledPolygon getDefault( )
   {
-    return new StyledPolygon( new RGB( 230, 230, 230 ), 1, new RGB( 0, 0, 0 ), 255 );
+    String defaultId = "defaultPolygonStyle_" + System.currentTimeMillis() + Math.random() * 10000;
+    return new StyledPolygon( defaultId, new RGB( 230, 230, 230 ), 1, new RGB( 0, 0, 0 ), 255 );
   }
 
   /* to set alternating colors of an style, for instance needed for a histogram */

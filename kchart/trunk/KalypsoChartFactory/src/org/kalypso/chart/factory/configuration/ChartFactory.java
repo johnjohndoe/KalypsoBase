@@ -46,7 +46,18 @@ import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 public class ChartFactory
 {
 
+  /**
+   * Keys for saving providers in chart elements
+   */
   public static String LAYER_PROVIDER_KEY = "org.kalypso.chart.factory.layerprovider";
+
+  public static String AXIS_PROVIDER_KEY = "org.kalypso.chart.factory.axisprovider";
+
+  public static String AXISRENDERER_PROVIDER_KEY = "org.kalypso.chart.factory.axisrendererprovider";
+
+  public static String MAPPER_PROVIDER_KEY = "org.kalypso.chart.factory.mapperprovider";
+
+  public static String STYLE_PROVIDER_KEY = "org.kalypso.chart.factory.styleprovider";
 
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final URL context ) throws ConfigurationException
   {
@@ -163,6 +174,8 @@ public class ChartFactory
           final IMapperProvider mp = ChartExtensionLoader.createMapperProvider( mpId );
           mp.init( mapperType );
           final IMapper mapper = mp.getMapper();
+          // Provider in Element setzen - fürs speichern benötigt
+          mapper.setData( ChartFactory.AXIS_PROVIDER_KEY, mp );
           ar.addMapper( mapper );
         }
         catch( final CoreException e )
@@ -206,6 +219,8 @@ public class ChartFactory
             ap.init( axisType );
             final IAxis axis = ap.getAxis();
             axis.setRegistry( ar );
+            // Provider in Element setzen - fürs speichern benötigt
+            axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
             ar.addMapper( axis );
 
             if( ar.getRenderer( axis ) == null )
@@ -222,6 +237,8 @@ public class ChartFactory
                 {
                   arp.init( rendererType );
                   final IAxisRenderer axisRenderer = arp.getAxisRenderer();
+                  // Provider in Element setzen - fürs speichern benötigt
+                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                   ar.setRenderer( axis.getIdentifier(), axisRenderer );
                   Logger.trace( "Adding AxisRenderer for: " + arp.getClass() );
                 }
@@ -285,6 +302,8 @@ public class ChartFactory
             {
               sp.init( st );
               final IStyledElement styledElement = sp.getStyledElement();
+              // Provider in Element setzen - fürs speichern benötigt
+              styledElement.setData( ChartFactory.AXIS_PROVIDER_KEY, sp );
               ls.add( styledElement );
             }
 

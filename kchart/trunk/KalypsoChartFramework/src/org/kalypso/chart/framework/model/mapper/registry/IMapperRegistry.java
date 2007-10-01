@@ -28,6 +28,11 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   public IMapper getMapper( String id );
 
   /**
+   * returns Array of all present mappers (excluding axes; if you need axes, try getAxes())
+   */
+  public IMapper[] getMappers( );
+
+  /**
    * @return Array of all axes at the given position
    */
   public IAxis[] getAxesAt( IAxisConstants.POSITION pos );

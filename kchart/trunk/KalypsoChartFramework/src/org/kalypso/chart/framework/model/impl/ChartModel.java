@@ -229,8 +229,19 @@ public class ChartModel implements IChartModel
       IDataOperator dataOperator = axis.getDataOperator();
       Comparator comparator = dataOperator.getComparator();
       IDataRange mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ), axis.getDataOperator().getComparator() );
+
+      if( mergedDataRange == null )
+      {
+        // if mergedDataRange is null, we keep the old range - if there is any
+        if( axis.getDataRange() != null )
+          continue;
+        else
+          // otherwise, we use a default range
+          mergedDataRange = axis.getDataOperator().getDefaultRange();
+      }
+
       axis.setDataRange( mergedDataRange );
-      m_eventHandler.fireAutocaled();
+      m_eventHandler.fireAutoscaled();
     }
 
   }

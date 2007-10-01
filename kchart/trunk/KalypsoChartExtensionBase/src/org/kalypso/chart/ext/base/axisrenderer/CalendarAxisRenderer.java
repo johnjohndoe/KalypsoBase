@@ -57,9 +57,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    * @param gap
    *            space between axis and component border
    */
-  public CalendarAxisRenderer( final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final SimpleDateFormat df )
+  public CalendarAxisRenderer( final String id, final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final SimpleDateFormat df )
   {
-    super( foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
+    super( id, foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
     m_dateFormat = df;
   }
 

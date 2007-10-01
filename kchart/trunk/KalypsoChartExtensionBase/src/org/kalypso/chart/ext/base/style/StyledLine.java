@@ -1,11 +1,7 @@
 package org.kalypso.chart.ext.base.style;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
@@ -16,9 +12,8 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 /**
  * @author burtscher
  */
-public class StyledLine implements IStyledElement
+public class StyledLine extends AbstractStyledElement implements IStyledElement
 {
-  List<Point> m_path;
 
   private int m_width = 0;
 
@@ -28,23 +23,13 @@ public class StyledLine implements IStyledElement
 
   private final int m_alpha;
 
-  public StyledLine( int width, RGB lineColor, int swtLineStyle, int alpha )
+  public StyledLine( String id, int width, RGB lineColor, int swtLineStyle, int alpha )
   {
+    super( id );
     m_width = width;
-    m_path = new ArrayList<Point>();
     m_lineColor = lineColor;
     m_swtStyle = swtLineStyle;
     m_alpha = alpha;
-  }
-
-  /**
-   * todo. why setPath instead of paint( ..., path ) ??
-   * 
-   * @see org.kalypso.chart.framework.model.styles.IStyledElement#setPath(java.util.ArrayList)
-   */
-  public void setPath( List<Point> path )
-  {
-    m_path = path;
   }
 
   /**
@@ -57,7 +42,7 @@ public class StyledLine implements IStyledElement
     gcw.setAlpha( m_alpha );
     final Color lineColor = new Color( gcw.getDevice(), m_lineColor );
 
-    final int[] intPath = StyleUtils.pointListToIntArray( m_path );
+    final int[] intPath = StyleUtils.pointListToIntArray( getPath() );
     gcw.setForeground( lineColor );
     gcw.setLineWidth( m_width );
     gcw.setLineStyle( m_swtStyle );
@@ -77,7 +62,8 @@ public class StyledLine implements IStyledElement
 
   public static StyledLine getDefault( )
   {
-    return new StyledLine( 1, new RGB( 0, 0, 0 ), SWT.LINE_SOLID, 255 );
+    String defaultId = "defaultLineStyle_" + System.currentTimeMillis() + Math.random() * 10000;
+    return new StyledLine( defaultId, 1, new RGB( 0, 0, 0 ), SWT.LINE_SOLID, 255 );
   }
 
 }

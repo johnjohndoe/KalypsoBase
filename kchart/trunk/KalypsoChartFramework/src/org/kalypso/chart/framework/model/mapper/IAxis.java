@@ -62,4 +62,11 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    */
   public IDataOperator<T_logical> getDataOperator( );
 
+  /**
+   * method to store arbitrary data objects;
+   */
+  public void setData( String identifier, Object data );
+
+  public Object getData( String identifier );
+
 }

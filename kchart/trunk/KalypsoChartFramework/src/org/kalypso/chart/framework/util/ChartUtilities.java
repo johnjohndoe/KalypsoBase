@@ -61,6 +61,13 @@ public class ChartUtilities
    */
   public static <T> IDataRange<T> mergeDataRanges( IDataRange<T>[] ranges, Comparator<T> comparator )
   {
+
+    // if there are no input ranges, we return null
+    if( ranges.length == 0 )
+    {
+      return null;
+    }
+
     T min = null;
     T max = null;
 

@@ -17,8 +17,7 @@ public class DefaultStyledLineProvider extends AbstractStyledElementProvider
     final int lineWidth = getParameterContainer().getParsedParameterValue( "lineWidth", "1", new DoubleParser() ).intValue();
     final RGB lineColor = getParameterContainer().getParsedParameterValue( "lineColor", "#000000", new RGBParser() );
     final int lineStyle = getParameterContainer().getParsedParameterValue( "lineStyle", "SOLID", new LineStyleParser() );
-    final StyledLine sl = new StyledLine( lineWidth, lineColor, lineStyle, alpha );
+    final StyledLine sl = new StyledLine( getStyleType().getId(), lineWidth, lineColor, lineStyle, alpha );
     return sl;
   }
-
 }

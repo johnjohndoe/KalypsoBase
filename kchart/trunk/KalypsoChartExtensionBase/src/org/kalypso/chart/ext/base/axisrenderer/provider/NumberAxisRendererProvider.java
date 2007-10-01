@@ -61,7 +61,7 @@ public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
     final BooleanParser bp = new BooleanParser();
     final boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
 
-    final IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut );
+    final IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut );
     return tmpNumberAxisRenderer;
   }
 

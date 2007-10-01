@@ -13,4 +13,9 @@ public interface IDataOperator<T_logical> extends IStringDataConverter<T_logical
 
   public Comparator<T_logical> getComparator( );
 
+  /**
+   * returns a default range - this can be used if the range can be built automatically by an outside operation
+   */
+  public IDataRange<T_logical> getDefaultRange( );
+
 }

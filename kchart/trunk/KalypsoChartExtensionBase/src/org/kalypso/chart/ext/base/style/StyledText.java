@@ -1,6 +1,5 @@
 package org.kalypso.chart.ext.base.style;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -17,10 +16,8 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 /**
  * @author burtscher
  */
-public class StyledText implements IStyledElement
+public class StyledText extends AbstractStyledElement implements IStyledElement
 {
-
-  private List<Point> m_path;
 
   private final int m_alpha;
 
@@ -32,22 +29,13 @@ public class StyledText implements IStyledElement
 
   private String m_text;
 
-  public StyledText( RGB foregroundColor, RGB backgroundColor, String fontName, int fontStyle, int fontSize, int alpha )
+  public StyledText( String id, RGB foregroundColor, RGB backgroundColor, String fontName, int fontStyle, int fontSize, int alpha )
   {
+    super( id );
     m_alpha = alpha;
-    m_path = new ArrayList<Point>();
     m_foregroundColor = foregroundColor;
     m_backgroundColor = backgroundColor;
     m_fontData = new FontData( fontName, fontSize, fontStyle );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#setPath(java.util.List) The path is used draw a styled point
-   *      at each point of the path; the Point is regarded as the center position of the element
-   */
-  public void setPath( List<Point> path )
-  {
-    m_path = path;
   }
 
   /**
@@ -71,13 +59,14 @@ public class StyledText implements IStyledElement
     final Color backgroundColor = new Color( gc.getDevice(), m_backgroundColor );
     gc.setForeground( foregroundColor );
     gc.setBackground( backgroundColor );
-    if( m_path != null )
+    List<Point> path = getPath();
+    if( path != null )
     {
-      for( int i = 0; i < m_path.size(); i++ )
+      for( int i = 0; i < path.size(); i++ )
       {
         if( m_text.trim().compareTo( "" ) == 0 )
         {
-          final Point point = m_path.get( i );
+          final Point point = path.get( i );
           gc.drawText( m_text.trim(), point.x, point.y );
         }
       }
@@ -107,7 +96,8 @@ public class StyledText implements IStyledElement
 
   public static StyledText getDefault( )
   {
-    return new StyledText( new RGB( 0, 0, 0 ), new RGB( 255, 255, 255 ), "Arial", SWT.NORMAL, 10, 255 );
+    String defaultId = "defaultTextElement_" + System.currentTimeMillis() + Math.random() * 10000;
+    return new StyledText( defaultId, new RGB( 0, 0, 0 ), new RGB( 255, 255, 255 ), "Arial", SWT.NORMAL, 10, 255 );
   }
 
 }

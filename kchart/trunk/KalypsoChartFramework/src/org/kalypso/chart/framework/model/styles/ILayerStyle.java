@@ -15,4 +15,10 @@ public interface ILayerStyle
    *         TODO: is position by in really necessary? how is is known which pos'es are valid?
    */
   public IStyledElement getElement( SE_TYPE type, int pos );
+
+  /**
+   * returns all StyledElements the Style contains
+   */
+  public IStyledElement[] getElements( );
+
 }

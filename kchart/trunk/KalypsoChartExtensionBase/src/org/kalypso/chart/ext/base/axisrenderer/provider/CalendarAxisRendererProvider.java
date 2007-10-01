@@ -40,7 +40,7 @@ public class CalendarAxisRendererProvider extends AbstractAxisRendererProvider
     String dateFormatString = getParameterContainer().getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
     // Steuerzeichen aus Config ersetzen
     dateFormatString = dateFormatString.replace( "\\n", "\n" );
-    final IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( dateFormatString ) );
+    final IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick, new SimpleDateFormat( dateFormatString ) );
     return calendarAxisRenderer;
   }
 

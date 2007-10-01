@@ -35,10 +35,18 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
 
   private final RGB m_rgbBackground;
 
+  private final String m_id;
+
+  /**
+   * Hashmap to store arbitrary key value pairs
+   */
+  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
+
   private final HashMap<IAxis<T_logical>, T_logical[]> m_tickMap = new HashMap<IAxis<T_logical>, T_logical[]>();
 
-  public AbstractAxisRenderer( final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
+  public AbstractAxisRenderer( final String id, final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
   {
+    m_id = id;
     m_rgbForeground = rgbForeground;
     m_rgbBackground = rgbBackground;
     m_tickLength = tickLength;
@@ -130,4 +138,24 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
     m_tickMap.put( axis, ticks );
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
+  public void setData( String id, Object data )
+  {
+    m_data.put( id, data );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
+   */
+  public Object getData( String id )
+  {
+    return m_data.get( id );
+  }
+
+  public String getId( )
+  {
+    return m_id;
+  }
 }

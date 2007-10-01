@@ -20,7 +20,7 @@ public class DefaultStyledPointProvider extends AbstractStyledElementProvider
     final RGB fillColor = getParameterContainer().getParsedParameterValue( "fillColor", "#ffffff", new RGBParser() );
     final RGB borderColor = getParameterContainer().getParsedParameterValue( "borderColor", "#000000", new RGBParser() );
     final int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser() ).intValue();
-    final StyledPoint sp = new StyledPoint( pointWidth, pointHeight, fillColor, borderWidth, borderColor, alpha );
+    final StyledPoint sp = new StyledPoint( getStyleType().getId(), pointWidth, pointHeight, fillColor, borderWidth, borderColor, alpha );
     return sp;
   }
 

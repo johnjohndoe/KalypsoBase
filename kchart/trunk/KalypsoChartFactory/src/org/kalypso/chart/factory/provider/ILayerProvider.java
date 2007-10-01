@@ -26,9 +26,9 @@ public interface ILayerProvider
   public void init( final IChartModel model, final LayerType lt );
 
   /**
-   * returns XML configuration element
+   * returns XML configuration element for the given chart element
    */
-  public LayerType getLayerType( );
+  public LayerType getXMLType( IChartLayer layer );
 
   /**
    * returns the IChartModel which the layer belongs to

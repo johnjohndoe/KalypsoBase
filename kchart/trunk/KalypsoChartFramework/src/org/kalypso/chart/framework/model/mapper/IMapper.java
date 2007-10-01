@@ -23,4 +23,11 @@ public interface IMapper<T_logical, T_visual>
 
   public IMapperRegistry getRegistry( );
 
+  /**
+   * method to store arbitrary data objects;
+   */
+  public void setData( String identifier, Object data );
+
+  public Object getData( String identifier );
+
 }

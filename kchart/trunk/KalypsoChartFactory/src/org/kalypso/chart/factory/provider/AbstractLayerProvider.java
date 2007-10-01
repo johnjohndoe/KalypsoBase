@@ -3,6 +3,7 @@ package org.kalypso.chart.factory.provider;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.ksp.chart.factory.LayerType;
 
 public abstract class AbstractLayerProvider implements ILayerProvider
@@ -24,7 +25,12 @@ public abstract class AbstractLayerProvider implements ILayerProvider
     m_pc = ChartFactoryUtilities.createXmlbeansParameterContainer( m_lt.getId(), m_lt.getProvider() );
   }
 
-  public LayerType getLayerType( )
+  /**
+   * default behaviour: return original xml type; implement, if changes shall be saved
+   * 
+   * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayerType()
+   */
+  public LayerType getXMLType( IChartLayer layer )
   {
     return m_lt;
   }
@@ -37,6 +43,11 @@ public abstract class AbstractLayerProvider implements ILayerProvider
   public IParameterContainer getParameterContainer( )
   {
     return m_pc;
+  }
+
+  public LayerType getLayerType( )
+  {
+    return m_lt;
   }
 
 }

@@ -30,4 +30,16 @@ public interface IAxisRenderer<T_logical>
    */
   public int getAxisWidth( IAxis<T_logical> axis );
 
+  /**
+   * method to store arbitrary data objects;
+   */
+  public void setData( String identifier, Object data );
+
+  public Object getData( String identifier );
+
+  /**
+   * returns unique identifier
+   */
+  public String getId( );
+
 }

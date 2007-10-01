@@ -55,4 +55,12 @@ public class LayerStyle implements ILayerStyle
     return new StyleDummy();
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.styles.ILayerStyle#getElements()
+   */
+  public IStyledElement[] getElements( )
+  {
+    return (IStyledElement[]) m_elements.toArray( new IStyledElement[] {} );
+  }
+
 }

@@ -21,7 +21,7 @@ public class DefaultStyledTextProvider extends AbstractStyledElementProvider
     final RGB foregroundColor = getParameterContainer().getParsedParameterValue( "textColor", "#ffffff", new RGBParser() );
     final RGB backgroundColor = getParameterContainer().getParsedParameterValue( "backgroundColor", "#000000", new RGBParser() );
     final int alpha = getParameterContainer().getParsedParameterValue( "alpha", "255", new DoubleParser() ).intValue();
-    final StyledText st = new StyledText( foregroundColor, backgroundColor, fontName, fontStyle, fontSize, alpha );
+    final StyledText st = new StyledText( getStyleType().getId(), foregroundColor, backgroundColor, fontName, fontStyle, fontSize, alpha );
     return st;
   }
 

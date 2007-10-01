@@ -40,4 +40,33 @@ public class StyleDummy implements IStyledElement
 
   }
 
+  /**
+   * method to store arbitrary data objects;
+   */
+  public void setData( String identifier, Object data )
+  {
+    // not implemented: this is a dummy
+    Logger.logWarning( Logger.TOPIC_LOG_STYLE, "setData() not implemented: this is a dummy object" );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.styles.IStyledElement#getData(java.lang.String)
+   */
+  public Object getData( String identifier )
+  {
+    // not implemented: this is a dummy
+    Logger.logWarning( Logger.TOPIC_LOG_STYLE, "getData() not implemented: this is a dummy object" );
+    return null;
+  }
+
+  /**
+   * returns a dynamically generated id which should be unique
+   * 
+   * @see org.kalypso.chart.framework.model.styles.IStyledElement#getId()
+   */
+  public String getId( )
+  {
+    return "dummy_" + System.currentTimeMillis() + Math.random() * 10000;
+  }
+
 }

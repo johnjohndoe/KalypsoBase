@@ -29,4 +29,13 @@ public interface IStyledElement
    */
   public SE_TYPE getType( );
 
+  /**
+   * method to store arbitrary data objects;
+   */
+  public void setData( String identifier, Object data );
+
+  public Object getData( String identifier );
+
+  public String getId( );
+
 }

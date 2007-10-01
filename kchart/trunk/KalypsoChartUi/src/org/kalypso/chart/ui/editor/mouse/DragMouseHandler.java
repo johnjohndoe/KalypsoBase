@@ -71,7 +71,8 @@ public class DragMouseHandler implements IChartMouseHandler
       gcw.setLineWidth( 1 );
       gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
       final Rectangle r = RectangleUtils.createNormalizedRectangle( m_mouseDragRect );
-      gcw.drawFocus( r.x, r.y, r.width, r.height );
+      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet), irgendwann mal wieder überprüfen
+      gcw.drawRectangle( r.x, r.y, r.width, r.height );
     }
   }
 

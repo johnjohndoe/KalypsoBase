@@ -7,6 +7,7 @@ import java.util.Comparator;
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 
@@ -87,4 +88,34 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return "yyyy-MM-dd (HH:mm)";
   }
 
+  /**
+   * generates a DataRange beginning today at 0:00 and ending tomorrow 0:00
+   * 
+   * @see org.kalypso.chart.framework.model.data.IDataOperator#getDefaultRange()
+   */
+  public IDataRange<Calendar> getDefaultRange( )
+  {
+    Calendar today = Calendar.getInstance();
+    today.set( Calendar.HOUR_OF_DAY, 0 );
+    today.set( Calendar.MINUTE, 0 );
+    today.set( Calendar.SECOND, 0 );
+    today.set( Calendar.MILLISECOND, 0 );
+
+    Calendar tomorrow = Calendar.getInstance();
+    tomorrow.set( Calendar.HOUR_OF_DAY, 0 );
+    tomorrow.set( Calendar.MINUTE, 0 );
+    tomorrow.set( Calendar.SECOND, 0 );
+    tomorrow.set( Calendar.MILLISECOND, 0 );
+    tomorrow.add( Calendar.DAY_OF_MONTH, 1 );
+
+    try
+    {
+      return new DataRange<Calendar>( today, tomorrow );
+    }
+    catch( ZeroSizeDataRangeException e )
+    {
+      // should never occur
+    }
+    return null;
+  }
 }

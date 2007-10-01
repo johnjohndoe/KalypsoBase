@@ -1,8 +1,8 @@
 package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
-import org.ksp.chart.factory.AxisRendererType;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
+import org.ksp.chart.factory.AxisRendererType;
 
 /**
  * @author burtscher A LayerProvider is needed to create layers from configuration data. Theres no 1:1 mapping from data
@@ -20,5 +20,10 @@ public interface IAxisRendererProvider
   public void init( final AxisRendererType at );
 
   public Class< ? > getDataClass( );
+
+  /**
+   * returns XML configuration element for the given chart element
+   */
+  public AxisRendererType getXMLType( IAxisRenderer axisRenderer );
 
 }
