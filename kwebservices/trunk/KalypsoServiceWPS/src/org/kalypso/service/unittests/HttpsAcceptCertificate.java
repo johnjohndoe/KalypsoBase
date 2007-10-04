@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.unittests;
+package org.kalypso.service.unittests;
 
 import java.io.IOException;
 import java.util.LinkedList;

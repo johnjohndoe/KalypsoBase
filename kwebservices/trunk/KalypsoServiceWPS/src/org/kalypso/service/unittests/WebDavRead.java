@@ -38,56 +38,70 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.unittests;
+package org.kalypso.service.unittests;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileUtil;
-import org.apache.commons.vfs.cache.DefaultFilesCache;
-import org.apache.commons.vfs.impl.DefaultFileReplicator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs.provider.temp.TemporaryFileProvider;
-import org.apache.commons.vfs.provider.url.UrlFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 
 /**
- * Testcase for writing file to a webdav using vfs.
+ * Testcase for reading a file from a webdav using vfs.
  * 
  * @author Holger Albert
  */
-public class WebDavWrite
+public class WebDavRead
 {
   /**
-   * This function tries to copy a file to a webdav.
+   * This function tries to copy a file from a webdav.
    */
   @Test
-  public void testWebDavWrite( ) throws IOException
+  public void testWebDavRead( ) throws IOException
   {
     DefaultFileSystemManager manager = new DefaultFileSystemManager();
     manager.addProvider( "webdav", new WebdavFileProvider() );
     manager.addProvider( "file", new DefaultLocalFileProvider() );
-    manager.addProvider( "tmp", new TemporaryFileProvider() );
-
-    manager.setDefaultProvider( new UrlFileProvider() );
-    manager.setFilesCache( new DefaultFilesCache() );
-    manager.setTemporaryFileStore( new DefaultFileReplicator() );
     manager.init();
 
-    FileObject testFile = manager.resolveFile( "C:/Albert/Work/runtime-informdss.product/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
-    Assert.assertNotNull( testFile );
-
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/test.txt" );
     Assert.assertNotNull( davFile );
 
-    FileUtil.copyContent( testFile, davFile );
+    File file = new File( FileUtilities.TMP_DIR, "dav.tmp" );
+    FileObject tmpFile = manager.toFileObject( file );
+    Assert.assertNotNull( tmpFile );
 
-    Assert.assertTrue( davFile.exists() );
+    InputStream is = null;
+    OutputStream os = null;
+
+    try
+    {
+      is = davFile.getContent().getInputStream();
+      os = tmpFile.getContent().getOutputStream();
+
+      /* Copying ... */
+      IOUtils.copy( is, os );
+
+      is.close();
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+      IOUtils.closeQuietly( os );
+    }
+
+    Assert.assertTrue( tmpFile.exists() );
   }
 
   /**
@@ -97,6 +111,6 @@ public class WebDavWrite
    */
   public static junit.framework.Test suite( )
   {
-    return new JUnit4TestAdapter( WebDavWrite.class );
+    return new JUnit4TestAdapter( WebDavRead.class );
   }
 }
