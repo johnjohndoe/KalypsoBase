@@ -78,6 +78,7 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  */
 public class SumUpForecastTable
 {
+  private static final String cNoAlarm = "-";
   private final String m_axisType;
   private final double m_delta;
   private final int m_timeUnit;
@@ -145,7 +146,7 @@ public class SumUpForecastTable
         TimeserieConstants.MD_ALARM_2, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double
         .valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
 
-    String strAlarm = "-";
+    String strAlarm = cNoAlarm;
     double alarm = 0;
     for( int i = 1; i <= alarms.length; i++ )
     {
@@ -157,7 +158,8 @@ public class SumUpForecastTable
           // the alarm-level default axis
           final Double alarmValue = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
           
-          if( maxValue.doubleValue() >= alarmValue.doubleValue() )
+          // if a alarmValue is zero (mostly because of unsufficient W/Q) then it won't be considered valid       
+          if( maxValue.doubleValue() >= alarmValue.doubleValue() && alarmValue.doubleValue() > 0.0 )
           {
             strAlarm = "AS " + i;
             alarm = alarmValue.doubleValue();
@@ -291,8 +293,11 @@ public class SumUpForecastTable
       bf.append( nf.format( m_maxValue ) ).append( separator ).append( df.format( m_maxTime ) ).append( separator )
           .append( m_strAlarm ).append( separator );
 
-      if( m_strAlarm.length() > 0 )
+      // if no Alarmstufe has been set (m_strAlarm == cNoAlarm) then cNoAlarm should be set as alarmValue
+      if( m_strAlarm.length() > 0 && !cNoAlarm.equals(m_strAlarm))
         bf.append( nf.format( m_alarm ) );
+      else
+        bf.append (cNoAlarm);
 
       bf.append( separator );
 

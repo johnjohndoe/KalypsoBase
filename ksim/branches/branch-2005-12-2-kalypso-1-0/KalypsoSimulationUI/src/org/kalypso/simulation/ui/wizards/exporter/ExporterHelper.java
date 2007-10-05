@@ -237,7 +237,8 @@ public final class ExporterHelper
       IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createErrorStatus( "Diagramm " + tpl.getTitle() + " (" + category
+        // Status has been changed from ERROR to Warning to avoid error message in ElbePolte (gauge Usti) model
+        return StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + category
             + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
@@ -251,7 +252,7 @@ public final class ExporterHelper
           .exportObject( output, monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export der Diagrammvorlage: " + templateUrl.getFile() );
+      { status, status2 }, "Fehler während des Exports der Diagrammvorlage: " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
@@ -307,7 +308,8 @@ public final class ExporterHelper
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createErrorStatus( "Tabelle (" + category
+        // Status has been changed from ERROR to Warning to avoid error message in ElbePolte (gauge Usti) model
+        return StatusUtilities.createWarningStatus( "Tabelle (" + category
             + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
@@ -317,7 +319,7 @@ public final class ExporterHelper
           monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );
+      { status, status2 }, "Fehler während des Exports der Tabellenvorlage: " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
