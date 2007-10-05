@@ -43,8 +43,8 @@ public class Hmo2Fli
   {
     LOG.entering( Hmo2Fli.class.getName(), "transform" );
 
-//    final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
-    // TODO: show progress dialog 
+// final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
+    // TODO: show progress dialog
     final IProgressMonitor pable = new NullProgressMonitor();
 
     final HMOReader hmoReader = new HMOReader( GF );
@@ -55,12 +55,12 @@ public class Hmo2Fli
     final Geometry gOben = GF.createGeometryCollection( dgmOben ).getEnvelope();
     final Envelope e = gUnten.intersection( gOben ).getEnvelopeInternal();
 
-//    if( pable != null )
-//      pable.setNote( "Index für Geländemodell wird generiert" );
+// if( pable != null )
+// pable.setNote( "Index für Geländemodell wird generiert" );
     final GetRingsOperation groUnten = new GetRingsOperation( dgmUnten, null );
 
-//    if( pable != null )
-//      pable.setNote( "Index für Wasserspiegel wird generiert" );
+// if( pable != null )
+// pable.setNote( "Index für Wasserspiegel wird generiert" );
     final GetRingsOperation groOben = new GetRingsOperation( dgmOben, null );
 
     final int xCount = (int) (e.getWidth() / rasterSize) + 1;
@@ -75,8 +75,8 @@ public class Hmo2Fli
     final boolean bSimple = false;
     final SegmentCollector gc = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
     final Raster2Lines r2l = new Raster2Lines( gc, grenzen );
-//    if( pable != null )
-//      pable.setNote( "Fliesstiefen werden ermittelt" );
+// if( pable != null )
+// pable.setNote( "Fliesstiefen werden ermittelt" );
 
     LOG.info( "Start creating flow depths" );
     raster.walk( r2l, pable );
@@ -90,20 +90,20 @@ public class Hmo2Fli
     LOG.info( "Total volume of flooded area is: " + numberInstance.format( volumen ) + " [m³]" );
 
     // Shape schreiben
-     Feature fc = gc.getFeatures();
-     Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-     FeatureList list = (FeatureList) property;
-     
+    Feature fc = gc.getFeatures();
+    Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    FeatureList list = (FeatureList) property;
+
     if( list.size() == 0 )
       LOG.log( Level.WARNING, "No features created" );
     else
     {
       if( gc instanceof PolygonCollector && calcVolume )
       {
-//        if( pable != null )
-//          pable.setNote( "Volumen wird ermittelt" );
+// if( pable != null )
+// pable.setNote( "Volumen wird ermittelt" );
         LOG.info( "Start calculation of shape volumes" );
-        //final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
+        // final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
         final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
         raster.walk( volumeWalker, pable );
         LOG.info( "Finished calculation of shape volumes" );
@@ -111,15 +111,15 @@ public class Hmo2Fli
 
       LOG.info( "Start writing shape: " + shapeBase );
       // transform geometries to shapes and write it
-      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase);
-//      final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
-//      sf.writeShape( fc );
-//      sf.close();
+      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase );
+// final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
+// sf.writeShape( fc );
+// sf.close();
       LOG.info( "Finished writing shape: " + shapeBase );
     }
 
-//    if( pable != null )
-//      pable.cancel();
+// if( pable != null )
+// pable.cancel();
 
     LOG.exiting( Hmo2Fli.class.getName(), "transform" );
   }
