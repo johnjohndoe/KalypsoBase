@@ -21,6 +21,12 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
       l.onLayerRemoved( layer );
   }
 
+  public void fireLayerMoved( final IChartLayer layer )
+  {
+    for( final ILayerManagerEventListener l : getListeners() )
+      l.onLayerMoved( layer );
+  }
+
   public void fireLayerVisibilityChanged( final IChartLayer layer )
   {
     for( final ILayerManagerEventListener l : getListeners() )

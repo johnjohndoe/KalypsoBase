@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
@@ -117,6 +118,20 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
     updateControl();
 
+    AbstractLayerManagerEventListener cmel = new AbstractLayerManagerEventListener()
+    {
+      /**
+       * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerMoved( IChartLayer layer )
+      {
+        updateControl();
+      }
+    };
+
+    m_editor.getChartComposite().getModel().getLayerManager().addListener( cmel );
+
     // Drag'n drop
     // add drag and drop support
     int ops = DND.DROP_MOVE;
@@ -126,17 +141,6 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
       public void dragFinished( DragSourceEvent event )
       {
-        // TODO Auto-generated method stub
-        if( event.detail == DND.DROP_MOVE )
-        {
-          System.out.println( "moved" );
-        }
-        else
-        {
-          System.out.println( event.detail );
-        }
-
-        System.out.println( "drag finished" );
       }
 
       public void dragSetData( DragSourceEvent event )
@@ -146,12 +150,10 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
         // da sollte jetzt nur eins drin sein
         IChartLayer layer = layers[0];
         event.data = layer.getId();
-
       }
 
       public void dragStart( DragSourceEvent event )
       {
-        System.out.println( "drag started" );
       }
 
     };
@@ -163,16 +165,23 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
       public boolean performDrop( Object data )
       {
         String id = (String) data;
-        // ILayerManager lm = m_editor.getChartComposite().getModel().getLayerManager();
-        System.out.println( "Dropped Layer with id " + id );
+        ILayerManager lm = m_editor.getChartComposite().getModel().getLayerManager();
         IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
+        // entweder es wurde auf einem anderen Layer ge-drop-t, dann wird es vor diesem eingefügt
         if( selectedObject != null )
         {
-
+          IChartLayer draggedLayer = lm.getLayerById( id );
+          lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
           return true;
         }
+        // oder dahinter, dann wird es ans Ende gehängt
         else
-          return false;
+        {
+          IChartLayer draggedLayer = lm.getLayerById( id );
+          lm.moveLayerToPosition( draggedLayer, 0 );
+        }
+
+        return false;
 
       }
 

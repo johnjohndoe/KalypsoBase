@@ -76,4 +76,12 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
 
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+   */
+  public void onLayerMoved( IChartLayer layer )
+  {
+    // not implemented - override in subclass if needed
+  }
+
 }

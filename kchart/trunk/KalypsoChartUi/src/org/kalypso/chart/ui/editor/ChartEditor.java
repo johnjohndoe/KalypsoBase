@@ -325,6 +325,16 @@ public class ChartEditor extends EditorPart
               m_dirty = true;
               firePropertyChange( PROP_DIRTY );
             }
+
+            /**
+             * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+             */
+            @Override
+            public void onLayerMoved( IChartLayer layer )
+            {
+              m_dirty = true;
+              firePropertyChange( PROP_DIRTY );
+            }
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
 

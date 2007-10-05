@@ -59,6 +59,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       }
 
       /**
+       * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerMoved( IChartLayer layer )
+      {
+        redraw();
+      }
+
+      /**
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override

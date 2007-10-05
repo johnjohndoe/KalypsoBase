@@ -11,6 +11,8 @@ public interface ILayerManagerEventListener
 
   public void onLayerRemoved( IChartLayer layer );
 
+  public void onLayerMoved( IChartLayer layer );
+
   public void onLayerVisibilityChanged( IChartLayer layer );
 
 }

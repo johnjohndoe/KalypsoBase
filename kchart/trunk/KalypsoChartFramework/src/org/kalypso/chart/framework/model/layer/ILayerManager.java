@@ -10,6 +10,10 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 {
   public void addLayer( IChartLayer layer );
 
+  public void addLayer( IChartLayer layer, int position );
+
+  public int getLayerPosition( IChartLayer layer );
+
   public void removeLayer( IChartLayer layer );
 
   /**
@@ -29,6 +33,8 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
   public void moveLayerToPosition( IChartLayer layer, int position );
 
   public IChartLayer getLayerById( String id );
+
+  public int getSize( );
 
   /**
    * changes the visibility of a layer

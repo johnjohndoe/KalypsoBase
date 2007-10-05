@@ -62,6 +62,7 @@ public class LayerManager implements ILayerManager
   {
     m_layers.remove( layer );
     m_layers.add( position, layer );
+    m_handler.fireLayerMoved( layer );
   }
 
   public IChartLayer getLayerById( String id )
@@ -82,5 +83,37 @@ public class LayerManager implements ILayerManager
   {
     layer.setVisible( isVisible );
     m_handler.fireLayerVisibilityChanged( layer );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManager#addLayer(org.kalypso.chart.framework.model.layer.IChartLayer,
+   *      int)
+   */
+  public void addLayer( IChartLayer layer, int position )
+  {
+    m_layers.add( position, layer );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManager#getLayerPosition(org.kalypso.chart.framework.model.layer.IChartLayer)
+   */
+  public int getLayerPosition( IChartLayer layer )
+  {
+    int count = 0;
+    for( IChartLayer l : m_layers )
+    {
+      if( layer == l )
+        return count;
+      count++;
+    }
+    return -1;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManager#getSize()
+   */
+  public int getSize( )
+  {
+    return m_layers.size();
   }
 }
