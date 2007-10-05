@@ -5,14 +5,18 @@
 		<property name="interval.amount" value="3"/>
 	
     <!-- define the requests -->
-    <property name="requestQ"
+	<property name="requestQ"
 		value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
+	<property name="requestW"
+		value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W&lt;/axes&gt;&lt;statusAxes&gt;W&lt;/statusAxes&gt;&lt;/request&gt;" />
 	
 	<!-- Vordefinierte Filter -->
     <!-- Q: interpolation-filter -->
-    <property name="filterQ"
+	<property name="filterQ"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-
+	<property name="filterW"
+		value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+	
     <property name="filterQOhneFortsetzung"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
 
@@ -49,7 +53,9 @@
 					<include name="*.ott"/>
 					<include name="*.odt"/>
 					<include name="Zeitreihen/*.ott"/>
+					<include name="Zeitreihen/*.odt"/>
 					<include name="Ergebnisse/Zeitreihen/*.ott"/>
+					<include name="Ergebnisse/Zeitreihen/*.odt"/>
 				</fileset>
 			</copy>
 		</target>
@@ -63,8 +69,8 @@
 
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
-			<!-- startsim = startforecast - 15d (=360h)  -->
-			<property name="startsim" featurepath="" featureProperty="startforecast" dateoffset="-360" dateoffsetfield="${HOURS_OF_DAY}" />
+			<!-- startsim = startforecast - 15d + 1x intervallLänge (=360h)  -->
+			<property name="startsim" featurepath="" featureProperty="startforecast" dateoffset="-357" dateoffsetfield="${HOURS_OF_DAY}" />
 			<!-- stopsim = startforecast + 72h -->
 			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="72" dateoffsetfield="${HOURS_OF_DAY}"/>
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
@@ -77,6 +83,7 @@
     				<property name="pegelMessungLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
     				<property name="pegelCzVorhersageLink" valueThen="in3ObservationLink" valueElse="in2ObservationLink"/>
     				<property name="zwischengebieteLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
+    				<property name="pegelMessungWInfoLink" valueThen="in3ObservationLink" valueElse="in2ObservationLink"/>
     				
     				<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
     				<property name="vorhersageLinkNormal" valueThen="out5ObservationLink" valueElse="out2ObservationLink"/>
@@ -122,6 +129,12 @@
 		<!-- Usti: zusätzlich tschechische Vorhersage (ohne Fortsetzung/Auffüllung der Werte) -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_Vorhersage.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der tschechischen Vorhersage für Usti (zum Vergleich)">
 			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQOhneFortsetzung}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<!-- Usti: zusätzlich Messung W, zur Information -->
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der W-Messwerte für Usti (zur Information)">
+			<source property="${pegelMessungWInfoLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
