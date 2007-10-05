@@ -48,6 +48,7 @@ public class PolynomialUtilities
   public static IPolynomial1D getPoly( final IPolynomial1D[] polyArray, final double pos )
   {
     // TODO: potential performance bug. Use binary search to find poly instead
+    // what if the value is exactly the range border?
     for( final IPolynomial1D poly : polyArray )
     {
       if( poly.getRangeMin() < pos && pos < poly.getRangeMax() )
