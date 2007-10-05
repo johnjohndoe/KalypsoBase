@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -13,9 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -113,7 +110,7 @@ public class ChartComposite extends Composite
        * @see org.kalypso.chart.framework.model.event.IChartModelEventListener#onAutoscale()
        */
       @Override
-      public void onAutoscale( )
+      public void onModelChanged( )
       {
         redraw();
       }
@@ -310,75 +307,6 @@ public class ChartComposite extends Composite
   public void setHideUnusedAxes( boolean hide )
   {
     m_model.setHideUnusedAxes( hide );
-    redraw();
-  }
-
-  /**
-   * maximises the content of the plot to the values inside a dragged rectangle
-   */
-  @SuppressWarnings("unchecked")
-  public <T_logical> void zoomIn( final Point start, final Point end )
-  {
-    final IMapperRegistry ar = m_model.getMapperRegistry();
-    final IAxis[] axes = ar.getAxes();
-    for( final IAxis axis : axes )
-    {
-      T_logical from = null;
-      T_logical to = null;
-
-      switch( axis.getPosition().getOrientation() )
-      {
-        case HORIZONTAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
-              to = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
-              break;
-
-            case NEGATIVE:
-              from = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
-              to = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
-              break;
-          }
-          break;
-
-        case VERTICAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
-              to = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
-              break;
-
-            case NEGATIVE:
-              from = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
-              to = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
-              break;
-          }
-          break;
-      }
-
-      if( from != null && to != null )
-      {
-        try
-        {
-          axis.setDataRange( new DataRange( from, to ) );
-        }
-        catch( final ZeroSizeDataRangeException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-
-        /*
-         * zum Neuzeichnen der Achse muss nach die IAxisComponent nach AxisCanvas gecastet werden - sonst gibts keinen
-         * Zugriff auf die Paint-Sachen
-         */
-        final AxisCanvas ac = (AxisCanvas) ar.getComponent( axis );
-        ac.redraw();
-      }
-    }
     redraw();
   }
 

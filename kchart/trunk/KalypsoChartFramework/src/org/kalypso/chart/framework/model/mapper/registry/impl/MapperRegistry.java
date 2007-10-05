@@ -293,4 +293,16 @@ public class MapperRegistry implements IMapperRegistry
     return null;
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry#getRenderer(java.lang.String)
+   */
+  public IAxisRenderer getRenderer( String id )
+  {
+    for( IAxisRenderer rend : m_id2renderers.values() )
+    {
+      if( rend.getId().equals( id ) )
+        return rend;
+    }
+    return null;
+  }
 }

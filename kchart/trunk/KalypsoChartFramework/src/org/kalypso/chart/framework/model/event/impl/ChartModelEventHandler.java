@@ -47,9 +47,9 @@ import org.kalypso.chart.framework.model.event.IChartModelEventListener;
  */
 public class ChartModelEventHandler extends AbstractEventProvider<IChartModelEventListener>
 {
-  public void fireAutoscaled( )
+  public void fireModelChanged( )
   {
     for( final IChartModelEventListener l : getListeners() )
-      l.onAutoscale();
+      l.onModelChanged();
   }
 }

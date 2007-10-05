@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import org.kalypso.chart.framework.model.event.impl.ChartModelEventHandler;
@@ -247,7 +250,7 @@ public class ChartModel implements IChartModel
       }
 
       axis.setDataRange( mergedDataRange );
-      m_eventHandler.fireAutoscaled();
+      m_eventHandler.fireModelChanged();
     }
 
   }
@@ -361,4 +364,67 @@ public class ChartModel implements IChartModel
   {
     m_title = title;
   }
+
+  /**
+   * maximises the content of the plot to the values inside a dragged rectangle
+   */
+  @SuppressWarnings("unchecked")
+  public <T_logical> void zoomIn( final Point start, final Point end )
+  {
+    final IMapperRegistry ar = getMapperRegistry();
+    final IAxis[] axes = ar.getAxes();
+    for( final IAxis axis : axes )
+    {
+      T_logical from = null;
+      T_logical to = null;
+
+      switch( axis.getPosition().getOrientation() )
+      {
+        case HORIZONTAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
+              to = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
+              break;
+
+            case NEGATIVE:
+              from = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
+              to = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
+              break;
+          }
+          break;
+
+        case VERTICAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
+              to = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
+              break;
+
+            case NEGATIVE:
+              from = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
+              to = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
+              break;
+          }
+          break;
+      }
+
+      if( from != null && to != null )
+      {
+        try
+        {
+          axis.setDataRange( new DataRange( from, to ) );
+        }
+        catch( final ZeroSizeDataRangeException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+    m_eventHandler.fireModelChanged();
+  }
+
 }

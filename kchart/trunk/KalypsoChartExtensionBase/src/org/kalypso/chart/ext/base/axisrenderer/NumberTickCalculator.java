@@ -160,26 +160,6 @@ public class NumberTickCalculator
       NumberTickCalculator.findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, level + 1, minDisplayInterval, axis );
     }
 
-    /*
-     * for( double i = normmin; i <= normmax-0.5*interval; i += interval ) { Logger.logInfo(Logger.TOPIC_LOG_AXIS,
-     * "Schleife i: "+i+":"+normmin+":"+normmax); Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Top Level: "); findBetweens( i,
-     * i+interval, minLogInterval, goodDivisors, ticks, level+1, minDisplayInterval ); firstticks.add( (new Double( i )) );
-     * count++; oldi = i; }
-     */
-    // firstticks.add( new Double( normmin ) );
-    // firstticks.add( new Double( normmax ) );
-    // Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Letztes i: " + oldi );
-    // Logger.logInfo( Logger.TOPIC_LOG_AXIS, "next would be: " + (oldi + interval) + " > " + normmax );
-    // outputTicks( ticks );
-    /*
-     * // in realticks sind jetzt nur die wirklich zu zeichnenden werte drin // wenn man das nicht �ber neues objekt,
-     * sondern ticks.remove macht, gibts eine concurrentmodificationexception LinkedList<Number> realticks = new
-     * LinkedList<Number>(); for( Double tick : ticks ) { double tickdv = tick.doubleValue(); boolean hasequal=false;
-     * double epsilon=Math.pow(10, - (rangepow+4)); for (Number realtick: realticks) { if
-     * (Math.abs(realtick.doubleValue() - tick) < epsilon) { hasequal=true; break; } } if (!hasequal) realticks.add( new
-     * Double( tickdv ) ); }
-     */
-
     // Anzahl der Nachkommastellen ausrechnen
     final NumberFormat nf = new DecimalFormat();
     final NumberFormat oldnf = renderer.getNumberFormat();
@@ -199,13 +179,8 @@ public class NumberTickCalculator
     // Nochmal rechnen mit neuem NumberFormat <- sehr doof
     if( (axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL) && (oldnf.getMinimumFractionDigits() < digits) && (oldnf.getMaximumFractionDigits() < digits) )
       return NumberTickCalculator.calcTicks( gc, axis, minDisplayInterval );
-    /*
-     * renderer.setTickMapElement(axis, realticks); Logger.logInfo(Logger.TOPIC_LOG_AXIS, "Anzahl ticks:
-     * "+realticks.size()); SortedSet<Number> ss=new TreeSet<Number>(realticks); for (Number realtick: ss) {
-     * Logger.logInfo(Logger.TOPIC_LOG_AXIS, realtick.doubleValue()+""); } return realticks;
-     */
+
     final ArrayList<Double> tickMap = new ArrayList<Double>();
-    // tickMap.add
     renderer.setTickMapElement( axis, (NumberTickCalculator.flattenTicks( ticks )) );
 
     return ticks;

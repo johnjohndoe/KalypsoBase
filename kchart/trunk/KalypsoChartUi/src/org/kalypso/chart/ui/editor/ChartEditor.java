@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
@@ -37,11 +39,14 @@ import org.kalypso.chart.factory.configuration.ChartConfigurationSaver;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartMouseHandler;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -49,11 +54,13 @@ import org.kalypso.chart.ui.editor.mouse.DragMouseHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartConfigurationDocument;
 import org.ksp.chart.factory.ChartType;
 
 /**
  * @author Gernot Belger
+ * @author alibu
  */
 public class ChartEditor extends EditorPart
 {
@@ -269,8 +276,6 @@ public class ChartEditor extends EditorPart
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    // m_chartModel = null;
-
     if( m_chartModel == null )
     {
 
@@ -323,6 +328,20 @@ public class ChartEditor extends EditorPart
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
 
+          AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
+          {
+            /**
+             * @see org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener#onModelChanged()
+             */
+            @Override
+            public void onModelChanged( )
+            {
+              m_dirty = true;
+              firePropertyChange( PROP_DIRTY );
+            }
+          };
+          m_chartModel.addListener( chartModelEventListener );
+
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
@@ -341,7 +360,7 @@ public class ChartEditor extends EditorPart
           }
           catch( final XmlException e )
           {
-            // TODO Auto-generated catch block
+            // TODO -generated catch block
             e.printStackTrace();
           }
           catch( final IOException e )
@@ -355,7 +374,21 @@ public class ChartEditor extends EditorPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
             final IChartMouseHandler mouseHandler = new DragMouseHandler( m_chartComposite );
             m_chartComposite.setMouseHandler( mouseHandler );
-            m_chartComposite.getModel().setAutoscale( true );
+
+            // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
+            AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
+            List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
+            IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
+            for( AxisType axisType : axisArray )
+            {
+              String min = axisType.getMinVal();
+              String max = axisType.getMaxVal();
+              if( min.trim().equals( "" ) || max.trim().equals( "" ) )
+                autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
+            }
+            m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
+
+            setPartName( m_chartModel.getTitle() );
           }
           // else: TODO: what?
         }
@@ -373,9 +406,6 @@ public class ChartEditor extends EditorPart
     if( m_outlinePage != null )
       m_outlinePage.updateControl();
 
-    // HACK: at the moment, we always set dirty, when updateControl is called
-    // m_dirty = true;
-    // firePropertyChange( PROP_DIRTY );
   }
 
   public ChartComposite getChartComposite( )

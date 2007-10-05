@@ -107,9 +107,7 @@ public class DragMouseHandler implements IChartMouseHandler
       final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
 
       if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
-      else
-        m_chartComposite.getPlot().redraw();
+        m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
     }
     finally
     {

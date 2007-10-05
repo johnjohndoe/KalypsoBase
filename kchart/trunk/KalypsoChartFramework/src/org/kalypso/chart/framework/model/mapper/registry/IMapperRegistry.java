@@ -45,6 +45,11 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   public IAxisRenderer getRenderer( IAxis< ? > axis );
 
   /**
+   * checks if a renderer with the given id is available in the registry and returns it oder null otherwise
+   */
+  public IAxisRenderer getRenderer( String id );
+
+  /**
    * sets the AxisRenderer for a particular dataClass
    */
   public void setRenderer( Class< ? > dataClass, IAxisRenderer renderer );

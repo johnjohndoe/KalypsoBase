@@ -41,7 +41,7 @@ public class NumberAxisProvider extends AbstractAxisProvider
     if( axis != null )
     {
       double min = 0;
-      final double max = 1;
+      double max = 1;
       final DoubleParser dp = new DoubleParser();
       try
       {
@@ -57,7 +57,7 @@ public class NumberAxisProvider extends AbstractAxisProvider
       {
         final String maxValStr = getAxisType().getMaxVal();
         if( !maxValStr.equals( "" ) )
-          min = (dp.stringToLogical( maxValStr ));
+          max = (dp.stringToLogical( maxValStr ));
       }
       catch( final MalformedValueException e )
       {

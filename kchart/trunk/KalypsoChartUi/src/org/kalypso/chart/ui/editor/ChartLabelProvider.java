@@ -47,14 +47,14 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.ksp.chart.factory.LayerType;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger
  */
 public class ChartLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  private Map<LayerType, Image> m_images = new HashMap<LayerType, Image>();
+  private final Map<IChartLayer, Image> m_images = new HashMap<IChartLayer, Image>();
 
   private final ChartEditor m_editor;
 
@@ -82,8 +82,8 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof LayerType )
-      return ((LayerType) element).getTitle();
+    if( element instanceof IChartLayer )
+      return ((IChartLayer) element).getTitle();
 
     return super.getText( element );
   }
@@ -94,14 +94,13 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof LayerType )
+    if( element instanceof IChartLayer )
     {
-      final LayerType chartLayer = (LayerType) element;
+      final IChartLayer chartLayer = (IChartLayer) element;
       if( m_images.containsKey( chartLayer ) )
         return m_images.get( chartLayer );
 
       final Image img = new Image( m_editor.getChartComposite().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
-      // TODO: change this to getName
       m_editor.drawLegendIcon( chartLayer.getTitle(), img );
       m_images.put( chartLayer, img );
       return img;

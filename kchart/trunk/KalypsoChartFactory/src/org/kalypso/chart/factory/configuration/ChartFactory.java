@@ -110,7 +110,9 @@ public class ChartFactory
           final MapperType mapperType = (MapperType) rr.resolveReference( mapperRef.getRef() );
           if( mapperType != null )
           {
-            addMapper( model.getMapperRegistry(), mapperType );
+            // nur dann hinzufügen, wenn nicht schon vorhanden
+            if( model.getMapperRegistry().getMapper( mapperType.getId() ) == null )
+              addMapper( model.getMapperRegistry(), mapperType );
           }
         }
 
@@ -167,7 +169,6 @@ public class ChartFactory
    */
   private static void addMapper( final IMapperRegistry ar, final MapperType mapperType )
   {
-
     if( mapperType != null )
     {
       final String mpId = mapperType.getProvider().getEpid();
@@ -212,6 +213,10 @@ public class ChartFactory
   {
     if( axisType != null )
     {
+      // wenn die Achse schon da ist, dann muss man sie nicht mehr erzeugen
+      if( ar.getAxis( axisType.getId() ) != null )
+        return;
+
       final String apId = axisType.getProvider().getEpid();
       if( apId != null && apId.length() > 0 )
       {
@@ -227,28 +232,39 @@ public class ChartFactory
             axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
             ar.addMapper( axis );
 
+            // Renderer nur erzeugen, wenn es noch keinen für die Achse gibt
             if( ar.getRenderer( axis ) == null )
             {
-              final RefType rendererRef = axisType.getRendererRef();
-              final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
-              if( rendererType != null )
+              IAxisRenderer axisRenderer = ar.getRenderer( axisType.getRendererRef().getRef() );
+              // schon vorhanden => einfach zuweisen
+              if( axisRenderer != null )
               {
-                final String arpId = rendererType.getProvider().getEpid();
-                final IAxisRendererProvider arp = ChartExtensionLoader.createAxisRendererProvider( arpId );
+                ar.setRenderer( axis.getIdentifier(), axisRenderer );
+              }
+              // erzeugen, wenn noch nicht vorhanden
+              else
+              {
+                final RefType rendererRef = axisType.getRendererRef();
+                final AxisRendererType rendererType = (AxisRendererType) rr.resolveReference( rendererRef.getRef() );
+                if( rendererType != null )
+                {
+                  final String arpId = rendererType.getProvider().getEpid();
+                  final IAxisRendererProvider arp = ChartExtensionLoader.createAxisRendererProvider( arpId );
 
-                // Überprüfen, ob Renderer- und Axis-DataClass zusammenpassen
-                if( ChartFactoryUtilities.isSubclassOf( arp.getDataClass(), ap.getDataClass() ) )
-                {
-                  arp.init( rendererType );
-                  final IAxisRenderer axisRenderer = arp.getAxisRenderer();
-                  // Provider in Element setzen - fürs speichern benötigt
-                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
-                  ar.setRenderer( axis.getIdentifier(), axisRenderer );
-                  Logger.trace( "Adding AxisRenderer for: " + arp.getClass() );
-                }
-                else
-                {
-                  Logger.logError( Logger.TOPIC_LOG_CONFIG, "incompatible renderer for axis: " + arp.getDataClass() + " != " + ap.getDataClass() );
+                  // Überprüfen, ob Renderer- und Axis-DataClass zusammenpassen
+                  if( ChartFactoryUtilities.isSubclassOf( arp.getDataClass(), ap.getDataClass() ) )
+                  {
+                    arp.init( rendererType );
+                    axisRenderer = arp.getAxisRenderer();
+                    // Provider in Element setzen - fürs speichern benötigt
+                    axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
+                    ar.setRenderer( axis.getIdentifier(), axisRenderer );
+                    Logger.trace( "Adding AxisRenderer for: " + arp.getClass() );
+                  }
+                  else
+                  {
+                    Logger.logError( Logger.TOPIC_LOG_CONFIG, "incompatible renderer for axis: " + arp.getDataClass() + " != " + ap.getDataClass() );
+                  }
                 }
               }
             }

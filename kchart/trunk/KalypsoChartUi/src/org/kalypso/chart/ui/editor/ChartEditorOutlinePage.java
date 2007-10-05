@@ -46,7 +46,14 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -55,21 +62,17 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.ksp.chart.factory.ChartConfigurationDocument;
-import org.ksp.chart.factory.ChartType;
-import org.ksp.chart.factory.LayerType;
-import org.ksp.chart.factory.RefType;
-import org.ksp.chart.factory.ChartType.Layers;
+import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
 
 /**
  * @author Gernot Belger
+ * @author alibu
  */
 public class ChartEditorOutlinePage implements IContentOutlinePage
 {
-  private CheckboxTableViewer m_viewer;
+  CheckboxTableViewer m_viewer;
 
   private final ChartEditor m_editor;
 
@@ -83,9 +86,6 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
    */
   public void createControl( final Composite parent )
   {
-    // m_composite = new Composite( parent, SWT.NONE );
-    // m_composite.setLayout( new FillLayout() );
-
     final Table table = new Table( parent, SWT.CHECK );
     final TableColumn column = new TableColumn( table, SWT.NONE );
     column.setWidth( table.getSize().x );
@@ -111,35 +111,86 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        handleCheckStateChanged( (LayerType) event.getElement(), event.getChecked() );
+        handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
       }
     } );
 
     updateControl();
+
+    // Drag'n drop
+    // add drag and drop support
+    int ops = DND.DROP_MOVE;
+
+    DragSourceListener dragSL = new DragSourceListener()
+    {
+
+      public void dragFinished( DragSourceEvent event )
+      {
+        // TODO Auto-generated method stub
+        if( event.detail == DND.DROP_MOVE )
+        {
+          System.out.println( "moved" );
+        }
+        else
+        {
+          System.out.println( event.detail );
+        }
+
+        System.out.println( "drag finished" );
+      }
+
+      public void dragSetData( DragSourceEvent event )
+      {
+        IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+        IChartLayer[] layers = (IChartLayer[]) selection.toList().toArray( new IChartLayer[selection.size()] );
+        // da sollte jetzt nur eins drin sein
+        IChartLayer layer = layers[0];
+        event.data = layer.getId();
+
+      }
+
+      public void dragStart( DragSourceEvent event )
+      {
+        System.out.println( "drag started" );
+      }
+
+    };
+
+    ViewerDropAdapter vda = new ViewerDropAdapter( m_viewer )
+    {
+
+      @Override
+      public boolean performDrop( Object data )
+      {
+        String id = (String) data;
+        // ILayerManager lm = m_editor.getChartComposite().getModel().getLayerManager();
+        System.out.println( "Dropped Layer with id " + id );
+        IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
+        if( selectedObject != null )
+        {
+
+          return true;
+        }
+        else
+          return false;
+
+      }
+
+      @Override
+      public boolean validateDrop( Object target, int operation, TransferData transferType )
+      {
+        return ChartLayerTransfer.getInstance().isSupportedType( transferType );
+      }
+
+    };
+
+    m_viewer.addDragSupport( ops, new Transfer[] { ChartLayerTransfer.getInstance() }, dragSL );
+    m_viewer.addDropSupport( ops, new Transfer[] { ChartLayerTransfer.getInstance() }, vda );
+
   }
 
-  protected void handleCheckStateChanged( final LayerType layerType, final boolean checked )
+  protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
   {
-    layerType.setVisible( checked );
-
-    // Layer per hand schreiben
-    ChartConfigurationDocument ccd = m_editor.getChartConfigurationLoader().getChartConfigurationDocument();
-
-    LayerType[] layerArray = ccd.getChartConfiguration().getLayerArray();
-    int count = 0;
-    for( LayerType layerType2 : layerArray )
-    {
-      if( layerType2.getId().equals( layerType.getId() ) )
-      {
-        ccd.getChartConfiguration().setLayerArray( count, layerType );
-        break;
-      }
-      count++;
-    }
-    m_editor.setConfiguration( ccd );
-
-    ILayerManager layerManager = m_editor.getChartComposite().getModel().getLayerManager();
-    IChartLayer layer = layerManager.getLayerById( layerType.getId() );
     m_editor.getChartComposite().getModel().getLayerManager().setLayerVisibility( layer, checked );
   }
 
@@ -205,24 +256,19 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
   /* default-visible */void updateControl( )
   {
+    ILayerManager layerManager = m_editor.getChartComposite().getModel().getLayerManager();
+    IChartLayer[] layers = layerManager.getLayers();
 
-    ChartConfigurationLoader ccl = m_editor.getChartConfigurationLoader();
-    ChartType chartType = m_editor.getChartType();
-    final Layers layers = chartType.getLayers();
-
-    RefType[] layerRefArray = layers.getLayerRefArray();
-    final LayerType[] layerArray = new LayerType[layerRefArray.length];
-
-    for( int i = 0; i < layerArray.length; i++ )
+    // Reihenfolge umkehren, damit zuerst gezeichnete Layer auch in der Liste weiter unten liegen
+    IChartLayer[] revertedLayers = new IChartLayer[layers.length];
+    for( int i = 0; i < layers.length; i++ )
     {
-      RefType refType = layerRefArray[i];
-      String idref = refType.getRef();
-      layerArray[i] = (LayerType) ccl.resolveReference( idref );
+      revertedLayers[i] = layers[layers.length - 1 - i];
     }
-    m_viewer.setInput( layerArray );
-    for( int i = 0; i < layerArray.length; i++ )
-      m_viewer.setChecked( layerArray[i], layerArray[i].getVisible() );
 
+    m_viewer.setInput( revertedLayers );
+    for( int i = 0; i < layers.length; i++ )
+      m_viewer.setChecked( layers[i], layers[i].isVisible() );
   }
 
 }

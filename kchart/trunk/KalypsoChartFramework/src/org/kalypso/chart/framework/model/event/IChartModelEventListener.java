@@ -45,5 +45,5 @@ package org.kalypso.chart.framework.model.event;
  */
 public interface IChartModelEventListener
 {
-  public void onAutoscale( );
+  public void onModelChanged( );
 }
