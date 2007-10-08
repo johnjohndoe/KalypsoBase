@@ -42,12 +42,16 @@ package org.kalypso.gmlschema.property.value;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * @author doemming
@@ -216,7 +220,7 @@ public class CustomValueProperType implements IValuePropertyType
    */
   public boolean isList( )
   {
-    return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
+    return (m_maxOccurs > 1) || (m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY);
   }
 
   /**
@@ -238,4 +242,36 @@ public class CustomValueProperType implements IValuePropertyType
     return m_isNillable;
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( this == obj )
+      return true;
+    else if( obj instanceof QualifiedElement )
+    {
+      final QualifiedElement rhs = (QualifiedElement) obj;
+      return new EqualsBuilder().append( m_qName, rhs.getQName() ).isEquals();
+    }
+    else if( obj instanceof CustomValueProperType )
+    {
+      final CustomValueProperType cpt = (CustomValueProperType) obj;
+      return new EqualsBuilder().append( m_qName, cpt.m_qName ).isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    // you pick a hard-coded, randomly chosen, non-zero, odd number
+    // ideally different for each class
+    return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
+  }
 }
