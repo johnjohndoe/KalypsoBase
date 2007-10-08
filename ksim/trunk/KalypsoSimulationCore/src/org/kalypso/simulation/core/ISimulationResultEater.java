@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
-import java.io.File;
-
 /**
  * Sammelt die Ergebnisse der {@link org.kalypso.simulation.core.ISimulation}.
  * 
@@ -53,10 +51,18 @@ public interface ISimulationResultEater
    * Für die {@link ISimulation}: wird aufgerufen, um ein Ergebnis an den Client zurückzugeben
    * 
    * @param id
-   *          Eine ID aus der Model-Spec
-   * @param file
-   *          Eine beliebige Datei oder ein Verzeichnis. Wenns ein Verzeichnis ist, wird der gesamte Inhalt (auch
-   *          rekursiv) zum Client zurückgeschrieben
+   *            Eine ID aus der Model-Spec
+   * @param result
+   *            Das Ergebnis, dass gespeichert werden soll. Dies kann eine Datei, ein Literal, usw. sein.
+   *            <ol>
+   *            <li><strong>ComplexValueType:</strong> Zum Beispiel ein Bild. Verwenden Sie hierzu den Typ
+   *            ComplexValueType von OGC.</li>
+   *            <li><strong>LiteralValueType:</strong> Ein Literal (String, Integer, Double, Boolean).</li>
+   *            <li><strong>ComplexValueReference:</strong> Eine beliebige Datei oder ein Verzeichnis. Wenns ein
+   *            Verzeichnis ist, wird der gesamte Inhalt (auch rekursiv) zum Client zurückgeschrieben.</li>
+   *            <li><strong>BoundingBoxType:</strong> Eine Bounding-Box. Verwenden Sie hierzu den Typ BoundingBoxType
+   *            von OGC.</li>
+   *            </ol>
    */
-  public void addResult( final String id, final File file ) throws SimulationException;
+  public void addResult( final String id, final Object result ) throws SimulationException;
 }

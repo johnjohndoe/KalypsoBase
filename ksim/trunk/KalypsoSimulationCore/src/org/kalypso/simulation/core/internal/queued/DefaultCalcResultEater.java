@@ -84,13 +84,13 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
 
   /**
    * @param id
-   *          Die ID für die Bean
-   * @param file
-   *          Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
+   *            Die ID für die Bean
+   * @param result
+   *            Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
    * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
+   * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
-  public void addResult( final String id, final File file ) throws SimulationException
+  public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_modelspec.hasOutput( id ) )
       throw new SimulationException( "Vom Server unerwartete Ausgabe mit ID: " + id, null );
@@ -102,7 +102,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
     final String clientPath = clientBean.getPath();
     // only add results with a valid path, because null path will later lead to a NullPointerException
     if( clientPath != null )
-      m_results.add( new SimulationResult( id, clientPath, file ) );
+      m_results.add( new SimulationResult( id, clientPath, (File) result ) );
   }
 
   /**
@@ -132,7 +132,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
     {
       if( m_results.isEmpty() )
         return new DataHandler( "Keine Ergebnisse vorhanden", "text/plain" );
-      
+
       final File zipFile = File.createTempFile( "CalcJobResult_", ".zip" );
       zipFile.deleteOnExit();
       addFile( zipFile );
