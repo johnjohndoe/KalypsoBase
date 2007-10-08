@@ -133,7 +133,8 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
     m_editor.getChartComposite().getModel().getLayerManager().addListener( cmel );
 
     // Drag'n drop
-    // add drag and drop support
+
+    // add drag and drop support only for move operation
     int ops = DND.DROP_MOVE;
 
     DragSourceListener dragSL = new DragSourceListener()
@@ -141,19 +142,22 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
       public void dragFinished( DragSourceEvent event )
       {
+        // nothing to do
       }
 
       public void dragSetData( DragSourceEvent event )
       {
+        // resolve selected layer
         IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
         IChartLayer[] layers = (IChartLayer[]) selection.toList().toArray( new IChartLayer[selection.size()] );
-        // da sollte jetzt nur eins drin sein
+        // as only on layer can be selected at a time, there's only one layer in the selection array
         IChartLayer layer = layers[0];
         event.data = layer.getId();
       }
 
       public void dragStart( DragSourceEvent event )
       {
+        // nothing to do
       }
 
     };
@@ -167,22 +171,21 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
         String id = (String) data;
         ILayerManager lm = m_editor.getChartComposite().getModel().getLayerManager();
         IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
-        // entweder es wurde auf einem anderen Layer ge-drop-t, dann wird es vor diesem eingefügt
+        // either the dragged layer is dropped on another layer, then it will be
+        // moved to its position
         if( selectedObject != null )
         {
           IChartLayer draggedLayer = lm.getLayerById( id );
           lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
           return true;
         }
-        // oder dahinter, dann wird es ans Ende gehängt
+        // or it was dropped at the end of the list, then it will be moved to the lowest position
         else
         {
           IChartLayer draggedLayer = lm.getLayerById( id );
           lm.moveLayerToPosition( draggedLayer, 0 );
         }
-
         return false;
-
       }
 
       @Override

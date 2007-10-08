@@ -50,7 +50,8 @@ import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 /**
- * @author burtscher1
+ * @author burtscher1 Transfer object for drag-and-drop of chart layers inside the chart editor outline; the only thing
+ *         serialized is the chart id; when the dragged layer gets recreated, the id is resolved by the layer manager
  */
 public class ChartLayerTransfer extends ByteArrayTransfer
 {
