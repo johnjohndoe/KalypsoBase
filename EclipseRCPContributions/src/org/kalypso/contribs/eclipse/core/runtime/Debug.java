@@ -182,4 +182,13 @@ public class Debug
     return new DebugPerf( this, message, args );
   }
 
+  /**
+   * This function will become true, if the tracing option is enabled.
+   * 
+   * @return True, if the tracing option is enabled.
+   */
+  public boolean isEnabled( )
+  {
+    return m_doDebug;
+  }
 }
