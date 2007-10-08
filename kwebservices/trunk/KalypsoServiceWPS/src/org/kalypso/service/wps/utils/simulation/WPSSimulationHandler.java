@@ -89,11 +89,11 @@ public class WPSSimulationHandler extends Thread
    * The constructor.
    * 
    * @param service
-   *          Manages ALL jobs.
+   *            Manages ALL jobs.
    * @param jobID
-   *          The id of the thread, that should be controlled.
+   *            The id of the thread, that should be controlled.
    * @param execute
-   *          The execute request.
+   *            The execute request.
    */
   public WPSSimulationHandler( WPSQueuedSimulationService service, String jobID, Execute execute )
   {
@@ -164,6 +164,7 @@ public class WPSSimulationHandler extends Thread
     }
     catch( Exception e )
     {
+      // TODO ProcessFailed...!!!
       e.printStackTrace();
     }
   }
@@ -172,7 +173,7 @@ public class WPSSimulationHandler extends Thread
    * This function creates the execute response for the case the process has failed.
    * 
    * @param message
-   *          The error message.
+   *            The error message.
    */
   private void createProcessFailedExecuteResponse( String message ) throws Exception
   {
@@ -193,9 +194,9 @@ public class WPSSimulationHandler extends Thread
    * This function creates the execute response in the location for the given thread.
    * 
    * @param status
-   *          The status of the process.
+   *            The status of the process.
    * @param ioValues
-   *          The ioValues for creating the process outputs, if any are here. Otherwise leave it null.
+   *            The ioValues for creating the process outputs, if any are here. Otherwise leave it null.
    */
   private synchronized void createExecuteResponse( StatusType status, List<IOValueType> ioValues ) throws Exception
   {

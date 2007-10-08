@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="SendMailV1.0">
+
+  <!-- Input -->
+  <input id="SENDER" description="The e-mail adress of the sender." />
+  <input id="RECEIVER" description="The e-mail adress of the receiver." />
+  <input id="RELAIS" description="The SMTP server, to which the mails will be send." />
+  <input id="RELAIS_USERNAME" description="The username of the account for the SMTP server." />
+  <input id="RELAIS_PASSWORD" description="The password of the account for the SMTP server." />
+  <input id="TYPE" description="The type of the e-mail." />
+  <input id="TITLE" description="The title of the e-mail." />
+  <input id="TEXT" description="The text body of the e-mail." />
+
+  <!-- Output -->
+  <output id="RESULT_PATH" description="The result out of FLYS." />
+
+  <!-- Output des CalcJobs -->
+  <output id="SimulationLog" description="The log of the simulation." />
+</modelspec>

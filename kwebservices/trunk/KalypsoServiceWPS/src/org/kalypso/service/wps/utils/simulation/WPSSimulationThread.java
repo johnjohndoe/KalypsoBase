@@ -54,6 +54,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -111,21 +112,21 @@ public class WPSSimulationThread extends Thread
    * The constructor.
    * 
    * @param id
-   *          The id of the thread.
+   *            The id of the thread.
    * @param description
-   *          A description.
+   *            A description.
    * @param typeID
-   *          The id of the simulation.
+   *            The id of the simulation.
    * @param job
-   *          The simulation.
+   *            The simulation.
    * @param execute
-   *          The execute request.
+   *            The execute request.
    * @param processDescription
-   *          The process description.
+   *            The process description.
    * @param tmpDir
-   *          The temporary directory.
+   *            The temporary directory.
    * @param resultDir
-   *          The job can put his results here.
+   *            The job can put his results here.
    */
   public WPSSimulationThread( final String id, final String description, final String typeID, final ISimulation job, Execute execute, ProcessDescriptionType processDescription, final File tmpDir, final FileObject resultDir ) throws SimulationException
   {
@@ -144,11 +145,11 @@ public class WPSSimulationThread extends Thread
    * This function checks the input, if every needed input is available.
    * 
    * @param execute
-   *          The execute request containing the input data.<br>
-   *          (Ok, it contains also info about the expected output data, but that is not needed now.)
+   *            The execute request containing the input data.<br>
+   *            (Ok, it contains also info about the expected output data, but that is not needed now.)
    * @param processDescription
-   *          The processDescription containing the output data.<br>
-   *          (Ok, it contains also info about the output data, but that is not needed now.)
+   *            The processDescription containing the output data.<br>
+   *            (Ok, it contains also info about the output data, but that is not needed now.)
    */
   private void checkInput( Execute execute, ProcessDescriptionType processDescription ) throws SimulationException
   {
@@ -184,9 +185,9 @@ public class WPSSimulationThread extends Thread
    * Tries to find a input in this list.
    * 
    * @param inputDescription
-   *          The description of one input.
+   *            The description of one input.
    * @param ioValues
-   *          The input list.
+   *            The input list.
    * @return The input in the input list of the execute request. If it is not available it returns null.
    */
   private IOValueType findInput( InputDescriptionType inputDescription, List<IOValueType> ioValues )
@@ -206,10 +207,19 @@ public class WPSSimulationThread extends Thread
    */
   public void dispose( )
   {
-    // TODO Add a tracing option for the deletion.
+    if( Debug.doNotDeleteTmpFiles() )
+    {
+      /* Debug-Information. */
+      Debug.println( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ..." );
+    }
+    else
+    {
+      /* Debug-Information. */
+      Debug.println( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ..." );
 
-    /* Delete the tmp-data. */
-    FileUtilities.deleteRecursive( m_tmpDir );
+      /* Delete the tmp-data. */
+      FileUtilities.deleteRecursive( m_tmpDir );
+    }
 
     m_inputData.dispose();
     m_resultEater.dispose();

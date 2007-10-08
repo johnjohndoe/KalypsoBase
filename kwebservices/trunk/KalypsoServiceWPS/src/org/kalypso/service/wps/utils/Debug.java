@@ -60,11 +60,24 @@ public class Debug
    * This function will print a given Message on the console, if the tracing option is set to true.
    * 
    * @param message
-   *          The debug message.
+   *            The debug message.
    */
   public static void println( String message )
   {
     if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/debug" ) ) )
       System.out.println( "DEBUG: " + message );
+  }
+
+  /**
+   * This function will return true, if the temp files of the calc jobs should remain untouched.
+   * 
+   * @return True, if the temp files should not be deleted.
+   */
+  public static boolean doNotDeleteTmpFiles( )
+  {
+    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/doNotDeleteTempFiles" ) ) )
+      return true;
+
+    return false;
   }
 }

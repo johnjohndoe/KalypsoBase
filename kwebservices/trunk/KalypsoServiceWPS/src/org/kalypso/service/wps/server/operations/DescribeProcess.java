@@ -146,7 +146,7 @@ public class DescribeProcess implements IOperation
    * Checks for the parameter or attribute Identifier and returns it. Furthermore it sets the member m_xxxRequest.
    * 
    * @param request
-   *          The request.
+   *            The request.
    * @return A list with Identifier parameter or null if not present.
    */
   private List<String> getIdentifier( RequestBean request ) throws OWSException
@@ -203,13 +203,17 @@ public class DescribeProcess implements IOperation
    * This function builds the process description for one simulation.
    * 
    * @param simulation
-   *          The simulation
+   *            The simulation
    * @param identifier
-   *          The identifier of the simulation.
+   *            The identifier of the simulation.
    * @return The process description.
    */
   public static ProcessDescriptionType buildProcessDescriptionType( ISimulation simulation, String identifier ) throws JAXBException
   {
+    // TODO At the moment only literals and references are supported from our model spec.
+    // The spec must be changed, in order to enable bounding boxes and complex values.
+    // If this is done, the two new cases must be covered here as well.
+
     /* Build all content for the process description. */
     CodeType code = OGCUtilities.buildCodeType( "", identifier );
     String title = identifier;
@@ -234,7 +238,7 @@ public class DescribeProcess implements IOperation
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
       {
         /* Literal. */
-        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadataType( "Any", null ), null, OGCUtilities.buildAnyValue(), null );
+        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null, OGCUtilities.buildAnyValue(), null );
         if( data.isOptional() )
           inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
         else
@@ -277,7 +281,7 @@ public class DescribeProcess implements IOperation
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
       {
         /* Literal. */
-        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadataType( "Any", null ), null ) );
+        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, OGCUtilities.buildLiteralOutputType( OGCUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null ) );
       }
       else
       {
@@ -286,7 +290,8 @@ public class DescribeProcess implements IOperation
         List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
         complexDatas.add( complexData );
 
-        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, complexDatas );
+        SupportedComplexDataType outputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
+        outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
       }
 
       /* Füge die neue Beschreibung hinzu. */

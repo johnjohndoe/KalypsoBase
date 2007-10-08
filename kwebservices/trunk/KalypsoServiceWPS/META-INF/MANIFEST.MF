@@ -14,7 +14,18 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.service.wps,
  org.kalypso.service.wps.client,
+ org.kalypso.service.wps.client.exceptions,
+ org.kalypso.service.wps.client.simulation,
  org.kalypso.service.wps.server,
  org.kalypso.service.wps.server.operations,
- org.kalypso.service.wps.utils
-Bundle-ClassPath: .
+ org.kalypso.service.wps.utils,
+ org.kalypso.service.wps.utils.ogc,
+ org.kalypso.service.wps.utils.simulation
+Bundle-ClassPath: .,
+ libs/activation/activation.jar,
+ libs/javamail/mail.jar,
+ libs/javamail/lib/dsn.jar,
+ libs/javamail/lib/imap.jar,
+ libs/javamail/lib/mailapi.jar,
+ libs/javamail/lib/pop3.jar,
+ libs/javamail/lib/smtp.jar

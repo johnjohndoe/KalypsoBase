@@ -79,7 +79,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * The constructor.
    * 
    * @param execute
-   *          The execute request.
+   *            The execute request.
    */
   public WPSSimulationDataProvider( Execute execute ) throws SimulationException
   {
@@ -111,7 +111,6 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     {
       if( input instanceof ComplexValueType )
       {
-        // TODO Return content?
         ComplexValueType complexValue = (ComplexValueType) input;
         return complexValue;
       }
@@ -121,7 +120,8 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         String dataType = literalValue.getDataType();
         String value = literalValue.getValue();
 
-        // TODO Inspect further. Perhaps use QName(XS, "string") and so on.
+        // TODO Inspect further. Perhaps use QName(XS, "string") and so on. Don't forget the WPSSimulationResultEater
+        // and the SimulationJob, if you change this.
         if( "string".equals( dataType ) )
           return DatatypeConverter.parseString( value );
         else if( "int".equals( dataType ) )
@@ -166,7 +166,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * Indexes the input values with their id.
    * 
    * @param execute
-   *          The execute request, containing the input data.
+   *            The execute request, containing the input data.
    * @return The indexed map.
    */
   private Map<String, Object> index( Execute execute ) throws SimulationException

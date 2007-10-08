@@ -1102,7 +1102,7 @@ public class OGCUtilities
 
     if( outputFormChoice instanceof SupportedComplexDataType )
       outputDescription.setComplexOutput( (SupportedComplexDataType) outputFormChoice );
-    else if( outputFormChoice instanceof LiteralInputType )
+    else if( outputFormChoice instanceof LiteralOutputType )
       outputDescription.setLiteralOutput( (LiteralOutputType) outputFormChoice );
     else if( outputFormChoice instanceof SupportedCRSsType )
       outputDescription.setBoundingBoxOutput( (SupportedCRSsType) outputFormChoice );
