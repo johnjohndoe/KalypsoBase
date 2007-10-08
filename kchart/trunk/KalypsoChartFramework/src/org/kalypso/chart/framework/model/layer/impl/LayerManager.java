@@ -6,6 +6,7 @@ import java.util.List;
 import org.kalypso.chart.framework.model.event.ILayerManagerEventListener;
 import org.kalypso.chart.framework.model.event.impl.LayerManagerEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 
 public class LayerManager implements ILayerManager
@@ -115,5 +116,20 @@ public class LayerManager implements ILayerManager
   public int getSize( )
   {
     return m_layers.size();
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManager#getEditableLayers()
+   */
+  @SuppressWarnings("unchecked")
+  public IEditableChartLayer[] getEditableLayers( )
+  {
+    List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();
+    for( IChartLayer layer : getLayers() )
+    {
+      if( layer instanceof IEditableChartLayer )
+        editLayers.add( (IEditableChartLayer) layer );
+    }
+    return (IEditableChartLayer[]) editLayers.toArray( new IEditableChartLayer[] {} );
   }
 }

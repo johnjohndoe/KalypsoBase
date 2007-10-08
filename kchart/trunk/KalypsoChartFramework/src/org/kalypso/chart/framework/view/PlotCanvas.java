@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
+import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.util.ChartUtilities;
@@ -29,6 +30,10 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   private final ILayerManager m_manager;
 
   private IChartMouseHandler m_mouseHandler;
+
+  private EditInfo m_editInfo;
+
+  private EditInfo m_hoverInfo;
 
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
@@ -190,6 +195,44 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   {
     if( event.type == SWT.Resize )
       redraw();
+  }
+
+  /**
+   * Editing stuff
+   */
+
+  public void setEditInfo( EditInfo editInfo )
+  {
+    m_editInfo = editInfo;
+
+  }
+
+  public void setHoverInfo( EditInfo hoverInfo )
+  {
+    m_hoverInfo = hoverInfo;
+
+  }
+
+  public EditInfo getEditInfo( )
+  {
+    return m_editInfo;
+  }
+
+  public EditInfo getHoverInfo( )
+  {
+    return m_hoverInfo;
+  }
+
+  public boolean isEditing( )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  public boolean isDragging( )
+  {
+    // TODO Auto-generated method stub
+    return false;
   }
 
 }

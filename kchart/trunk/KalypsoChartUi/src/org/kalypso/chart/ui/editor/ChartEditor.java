@@ -51,6 +51,7 @@ import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartMouseHandler;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mouse.DragMouseHandler;
+import org.kalypso.chart.ui.editor.mouse.EditHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -384,6 +385,13 @@ public class ChartEditor extends EditorPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
             final IChartMouseHandler mouseHandler = new DragMouseHandler( m_chartComposite );
             m_chartComposite.setMouseHandler( mouseHandler );
+
+            /**
+             * edit stuff
+             */
+            EditHandler eh = new EditHandler( m_chartComposite );
+            m_chartComposite.addMouseListener( eh );
+            m_chartComposite.addMouseMoveListener( eh );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
             AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();

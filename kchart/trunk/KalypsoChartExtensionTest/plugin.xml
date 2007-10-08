@@ -8,5 +8,12 @@
             id="org.kalypso.chart.ext.test.axisrenderer.provider.TmpNumberAxisRendererProvider">
       </provider>
    </extension>
+   <extension
+         point="org.kalypso.chart.factory.LayerProvider">
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider"
+            id="org.kalypso.chart.ext.test.EditableLineLayerProvider">
+      </provider>
+   </extension>
 
 </plugin>

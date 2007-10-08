@@ -45,4 +45,9 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    *            true if layer should be visible, false if layer should be hidden
    */
   public void setLayerVisibility( IChartLayer layer, boolean isVisible );
+
+  /**
+   * returns only layers which are editable (
+   */
+  public IEditableChartLayer[] getEditableLayers( );
 }
