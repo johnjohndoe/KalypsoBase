@@ -25,6 +25,8 @@ public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
     final RGB fgRGB = pc.getParsedParameterValue( "color", "#000000", rgbp );
     final RGB bgRGB = pc.getParsedParameterValue( "background-color", "#ffffff", rgbp );
 
+    final String tick_label_formater = pc.getParameterValue( "tick_label_formater", "%s" );
+
     final FontDataParser fdp = new FontDataParser();
     final FontStyleParser fsp = new FontStyleParser();
     final FontData fdLabel = pc.getParsedParameterValue( "font-family_label", "Arial", fdp );
@@ -61,7 +63,7 @@ public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
     final BooleanParser bp = new BooleanParser();
     final boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
 
-    final IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut );
+    final IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut, tick_label_formater );
     return tmpNumberAxisRenderer;
   }
 

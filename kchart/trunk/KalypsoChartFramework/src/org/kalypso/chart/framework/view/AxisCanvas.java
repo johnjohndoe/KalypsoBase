@@ -62,7 +62,7 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    */
   @SuppressWarnings("unchecked")
   @Override
-  public Point computeSize( int wHint, int hHint, boolean changed )
+  public Point computeSize( final int wHint, final int hHint, final boolean changed )
   {
     if( m_axis != null )
     {
@@ -97,7 +97,7 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   /**
    * double-buffered paint method; set to public in order to be used from ouside, e.g. from ChartImageContainer
    */
-  public Image paintBuffered( GCWrapper gcw, Rectangle screen, Image bufferImage )
+  public Image paintBuffered( final GCWrapper gcw, final Rectangle screen, final Image bufferImage )
   {
     final Image usedBufferImage;
     if( bufferImage == null )
@@ -152,7 +152,7 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    * 
    * @see org.kalypso.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
-  public double screenToNormalized( int screenValue )
+  public double screenToNormalized( final int screenValue )
   {
     final int range = getRange();
     if( range == 0 )
@@ -188,7 +188,8 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
       m_bufferImage.dispose();
       m_bufferImage = null;
     }
-    super.redraw();
+    if( !isDisposed() )
+      super.redraw();
   }
 
   /**
