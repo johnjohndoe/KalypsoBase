@@ -49,8 +49,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
   private final String m_tick_label_formater;
 
-  private boolean m_dynamic_format;
-
   /**
    * @param foreground
    *            Color of axis, ticks and text
@@ -80,17 +78,19 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     super( id, rgbForeground, rgbBackground, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
 
     m_tick_label_formater = tick_label_formater;
-
-    if( m_tick_label_formater.contains( "%s" ) )
-      m_dynamic_format = true;
-    else
-      m_dynamic_format = false;
-
     m_nf.setMinimumFractionDigits( 0 );
     m_nf.setMaximumFractionDigits( 20 );
     m_minDisplayInterval = minDisplayInterval;
     m_hideCut = hideCut;
     m_fixedWidth = fixedWidth;
+  }
+
+  private String getLabel( Number value )
+  {
+    if( m_tick_label_formater.contains( "%s" ) )
+      return m_nf.format( value );
+    else
+      return String.format( m_tick_label_formater, value );
   }
 
   /**
@@ -106,7 +106,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     if( (tickMap != null) && (tickMap.length > 0) )
     {
       NumberTickCalculator.testNumberFormat( tickMap );
-      tickLabelSize = getTextExtent( gc, m_nf.format( tickMap[tickMap.length - 1] ), getFontDataTickLabel() );
+      tickLabelSize = getTextExtent( gc, (tickMap[tickMap.length - 1]), getFontDataTickLabel() );
       Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Biggest Tick: " + m_nf.format( tickMap[0] ) + " " + tickMap[0] );
     }
     else
@@ -250,11 +250,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       String label;
       for( final Number value : level.getValue() )
       {
+        label = getLabel( value );
+
         boolean drawTick = true;
-        if( m_dynamic_format )
-          label = m_nf.format( value );
-        else
-          label = String.format( m_tick_label_formater, value );
 
         tickPos = axis.logicalToScreen( value );
         final Point tickExtent = getTextExtent( gc, label, fontDataTick );
@@ -426,10 +424,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     String label = "";
     try
     {
-      if( m_dynamic_format )
-        label = m_nf.format( value );
-      else
-        label = String.format( m_tick_label_formater, value );
+      label = getLabel( value );
     }
     catch( final java.lang.IllegalArgumentException e )
     {
