@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.calcjobs.mail.utils;
+package org.kalypso.service.calcjobs.sendmail.utils;
 
 /**
  * Helpfull functions for dealing with mails.
@@ -48,9 +48,62 @@ package org.kalypso.service.calcjobs.mail.utils;
 public class MailUtilities
 {
   /**
+   * x-java-content-handler=com.sun.mail.handlers.text_plain
+   */
+  public static final String TEXT_PLAIN = "text/plain";
+
+  /**
+   * x-java-content-handler=com.sun.mail.handlers.text_html
+   */
+  public static final String TEXT_HTML = "text/html";
+
+  /**
+   * x-java-content-handler=com.sun.mail.handlers.text_xml
+   */
+  public static final String TEXT_XML = "text/xml";
+
+  /**
+   * x-java-content-handler=com.sun.mail.handlers.multipart_mixed; x-java-fallback-entry=true
+   */
+  public static final String MULTIPART_ALL = "multipart/*";
+
+  /**
+   * x-java-con tent-handler=com.sun.mail.handlers.message_rfc822
+   */
+  public static final String MESSAGE_RFC822 = "message/rfc822";
+
+  /**
    * The constructor.
    */
   private MailUtilities( )
   {
+  }
+
+  /**
+   * This function checks, if the content type, given by the user is a supported one. If not, this function returns
+   * false.
+   * 
+   * @param type
+   *            The type given by the user.
+   * @return True, if this content type is allowed.
+   */
+  public static boolean checkContentType( String type )
+  {
+    if( TEXT_PLAIN.equals( type ) )
+      return true;
+
+    if( TEXT_HTML.equals( type ) )
+      return true;
+
+    if( TEXT_XML.equals( type ) )
+      return true;
+
+    if( MULTIPART_ALL.equals( type ) )
+      return true;
+
+    if( MESSAGE_RFC822.equals( type ) )
+      return true;
+
+    return false;
   }
 }

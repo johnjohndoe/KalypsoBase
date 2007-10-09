@@ -38,68 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.calcjobs.mail.utils;
+package org.kalypso.service.calcjobs.sendmail.utils;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 
 /**
- * Small interface, providing some functions for important e-mail data.
+ * An implementation of the Authenticator for getting the authentication information for the host to connect.
  * 
  * @author Holger Albert
  */
-public interface IMail
+public class SendMailAuthenticator extends Authenticator
 {
   /**
-   * This function returns the e-mail adress of the sender.
-   * 
-   * @return The e-mail adress of the sender.
+   * The password authentication.
    */
-  public String getSender( );
+  private PasswordAuthentication m_pwa;
 
   /**
-   * This function returns the e-mail adress of the receiver.
-   * 
-   * @return The e-mail adress of the receiver.
+   * The constructor.
    */
-  public String getReceiver( );
+  public SendMailAuthenticator( String username, String password )
+  {
+    m_pwa = new PasswordAuthentication( username, password );
+  }
 
   /**
-   * This function returns the SMTP server, to which the mails will be send.
-   * 
-   * @return The SMTP server, to which the mails will be send.
+   * @see javax.mail.Authenticator#getPasswordAuthentication()
    */
-  public String getRelais( );
-
-  /**
-   * This function returns the username of the account for the SMTP server.
-   * 
-   * @return The username of the account for the SMTP server.
-   */
-  public String getUserName( );
-
-  /**
-   * This function returns the password of the account for the SMTP server.
-   * 
-   * @return The password of the account for the SMTP server.
-   */
-  public String getPassword( );
-
-  /**
-   * This function returns the type of the e-mail.
-   * 
-   * @return The type of the e-mail.
-   */
-  public String getType( );
-
-  /**
-   * This function returns the title of the e-mail.
-   * 
-   * @return The title of the e-mail.
-   */
-  public String getTitle( );
-
-  /**
-   * This function returns the text body of the e-mail.
-   * 
-   * @return The text body of the e-mail.
-   */
-  public String getText( );
+  @Override
+  protected PasswordAuthentication getPasswordAuthentication( )
+  {
+    return m_pwa;
+  }
 }

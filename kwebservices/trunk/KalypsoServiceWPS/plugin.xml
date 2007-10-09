@@ -23,7 +23,7 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulation
-            simulationClass="org.kalypso.service.calcjobs.mail.SendMailJob"
+            simulationClass="org.kalypso.service.calcjobs.sendmail.SendMailJob"
             typeID="SendMailV1.0">
       </simulation>
    </extension>
