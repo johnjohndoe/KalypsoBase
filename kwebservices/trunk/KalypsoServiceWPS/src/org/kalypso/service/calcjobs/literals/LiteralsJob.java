@@ -61,6 +61,10 @@ public class LiteralsJob implements ISimulation
    */
   private static final String SIMULATION_SPEC = "literal_specification.xml";
 
+  private static final String INPUT_LITERAL = "INPUT_LITERAL";
+
+  private static final String OUTPUT_LITERAL = "OUTPUT_LITERAL";
+
   /**
    * The constructor.
    */
@@ -83,9 +87,9 @@ public class LiteralsJob implements ISimulation
   public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     /* Get the literal. */
-    Double doubleLiteral = (Double) inputProvider.getInputForID( "INPUT_LITERAL" );
+    Double doubleLiteral = (Double) inputProvider.getInputForID( INPUT_LITERAL );
 
     /* Multiply it with two, to give the client the chance, to check, if the job has run. */
-    resultEater.addResult( "OUTPUT_LITERAL", doubleLiteral * 2 );
+    resultEater.addResult( OUTPUT_LITERAL, doubleLiteral * 2 );
   }
 }

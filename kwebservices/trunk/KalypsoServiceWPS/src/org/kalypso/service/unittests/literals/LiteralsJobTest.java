@@ -41,6 +41,7 @@
 package org.kalypso.service.unittests.literals;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBException;
@@ -60,6 +61,7 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.wps.client.WPSClient;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
 
 /**
  * Small test case for testing the literals simulation.
@@ -72,6 +74,10 @@ public class LiteralsJobTest
    * The model data.
    */
   private static final String SIMULATION_DATA = "literal_data.xml";
+
+  private static final String INPUT_LITERAL = "INPUT_LITERAL";
+
+  private static final String OUTPUT_LITERAL = "OUTPUT_LITERAL";
 
   /**
    * This function starts the simulation client, which will contact the wps to activate the literals simulation.
@@ -119,6 +125,14 @@ public class LiteralsJobTest
     Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
     Modeldata modelData = (Modeldata) unmarshaller.unmarshal( resource );
 
+    /* Modify the model data to your needs. */
+    List<Input> inputs = modelData.getInput();
+    for( Input input : inputs )
+    {
+      if( input.getId().equals( INPUT_LITERAL ) )
+        input.setPath( "1.0" );
+    }
+
     /* The name of the simulation. */
     String simulationName = "LiteralsV1.0";
 
@@ -139,6 +153,6 @@ public class LiteralsJobTest
     Assert.assertNotNull( literals );
 
     /* The result. */
-    System.out.println( literals.get( "OUTPUT_LITERAL" ) );
+    System.out.println( literals.get( OUTPUT_LITERAL ) );
   }
 }

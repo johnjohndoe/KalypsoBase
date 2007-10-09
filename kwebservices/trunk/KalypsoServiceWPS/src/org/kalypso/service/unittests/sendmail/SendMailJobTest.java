@@ -170,7 +170,7 @@ public class SendMailJobTest
         input.setPath( "Eine Test-JavaMail" );
 
       if( input.getId().equals( INPUT_TEXT ) )
-        input.setPath( "Wenn du diese Mail bekommen hast, hat das senden funktioniert." );
+        input.setPath( "Wenn du diese Mail bekommen hast, hat das Senden funktioniert." );
     }
 
     /* The name of the simulation. */
