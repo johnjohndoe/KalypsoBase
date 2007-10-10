@@ -3,9 +3,6 @@
   <!-- Input -->
   <input id="SENDER" path="" relativeToCalcCase="false" />
   <input id="RECEIVER" path="" relativeToCalcCase="false" />
-  <input id="RELAIS" path="" relativeToCalcCase="false" />
-  <input id="RELAIS_USERNAME" path="" relativeToCalcCase="false" />
-  <input id="RELAIS_PASSWORD" path="" relativeToCalcCase="false" />
   <input id="TYPE" path="" relativeToCalcCase="false" />
   <input id="TITLE" path="" relativeToCalcCase="false" />
   <input id="TEXT" path="" relativeToCalcCase="false" />

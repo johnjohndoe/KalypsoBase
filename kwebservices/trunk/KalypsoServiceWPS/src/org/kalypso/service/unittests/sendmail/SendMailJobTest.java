@@ -80,12 +80,6 @@ public class SendMailJobTest
 
   private static final String INPUT_RECEIVER = "RECEIVER";
 
-  private static final String INPUT_RELAIS = "RELAIS";
-
-  private static final String INPUT_RELAIS_USERNAME = "RELAIS_USERNAME";
-
-  private static final String INPUT_RELAIS_PASSWORD = "RELAIS_PASSWORD";
-
   private static final String INPUT_TYPE = "TYPE";
 
   private static final String INPUT_TITLE = "TITLE";
@@ -149,19 +143,6 @@ public class SendMailJobTest
 
       if( input.getId().equals( INPUT_RECEIVER ) )
         input.setPath( "h.albert@bjoernsen.de" );
-
-      if( input.getId().equals( INPUT_RELAIS ) )
-        input.setPath( "bceexch01.bce01.de" );
-
-      if( input.getId().equals( INPUT_RELAIS_USERNAME ) )
-      {
-        // input.setPath( "" );
-      }
-
-      if( input.getId().equals( INPUT_RELAIS_PASSWORD ) )
-      {
-        // input.setPath( "" );
-      }
 
       if( input.getId().equals( INPUT_TYPE ) )
         input.setPath( MailUtilities.TEXT_PLAIN );

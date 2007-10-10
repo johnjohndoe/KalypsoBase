@@ -4,9 +4,6 @@
   <!-- Input -->
   <input id="SENDER" type="string" description="The e-mail adress of the sender." />
   <input id="RECEIVER" type="string" description="The e-mail adress of the receiver." />
-  <input id="RELAIS" type="string" description="The SMTP server, to which the mails will be send." />
-  <input id="RELAIS_USERNAME" type="string" description="The username of the account for the SMTP server." />
-  <input id="RELAIS_PASSWORD" type="string" description="The password of the account for the SMTP server." />
   <input id="TYPE" type="string" description="The type of the e-mail." />
   <input id="TITLE" type="string" description="The title of the e-mail." />
   <input id="TEXT" type="string" description="The text body of the e-mail." />

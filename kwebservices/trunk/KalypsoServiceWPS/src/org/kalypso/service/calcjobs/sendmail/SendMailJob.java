@@ -57,6 +57,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.service.calcjobs.sendmail.utils.MailUtilities;
 import org.kalypso.service.calcjobs.sendmail.utils.SendMailAuthenticator;
 import org.kalypso.simulation.core.ISimulation;
@@ -70,6 +71,7 @@ import org.kalypso.simulation.core.SimulationException;
  * 
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 public class SendMailJob implements ISimulation
 {
   /**
@@ -81,12 +83,6 @@ public class SendMailJob implements ISimulation
 
   private static final String INPUT_RECEIVER = "RECEIVER";
 
-  private static final String INPUT_RELAIS = "RELAIS";
-
-  private static final String INPUT_RELAIS_USERNAME = "RELAIS_USERNAME";
-
-  private static final String INPUT_RELAIS_PASSWORD = "RELAIS_PASSWORD";
-
   private static final String INPUT_TYPE = "TYPE";
 
   private static final String INPUT_TITLE = "TITLE";
@@ -94,6 +90,12 @@ public class SendMailJob implements ISimulation
   private static final String INPUT_TEXT = "TEXT";
 
   private static final String OUTPUT_RESULT = "RESULT";
+
+  private static final String CFG_RELAIS = "org.kalypso.wps.sendmail.relais";
+
+  private static final String CFG_RELAIS_USERNAME = "org.kalypso.wps.sendmail.relais.username";
+
+  private static final String CFG_RELAIS_PASSWORD = "org.kalypso.wps.sendmail.relais.password";
 
   /**
    * The constructor.
@@ -124,7 +126,6 @@ public class SendMailJob implements ISimulation
       /* Get all neccessary inputs. */
       String sender = (String) inputProvider.getInputForID( INPUT_SENDER );
       String receiver = (String) inputProvider.getInputForID( INPUT_RECEIVER );
-      String relais = (String) inputProvider.getInputForID( INPUT_RELAIS );
       String type = (String) inputProvider.getInputForID( INPUT_TYPE );
       String title = (String) inputProvider.getInputForID( INPUT_TITLE );
       String text = (String) inputProvider.getInputForID( INPUT_TEXT );
@@ -135,9 +136,6 @@ public class SendMailJob implements ISimulation
 
       if( receiver == null || receiver.length() == 0 )
         throw new SimulationException( "The '" + INPUT_RECEIVER + "' property is not correct configured ...", null );
-
-      if( relais == null || relais.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_RELAIS + "' property is not correct configured ...", null );
 
       if( type == null || type.length() == 0 )
         throw new SimulationException( "The '" + INPUT_TYPE + "' property is not correct configured ...", null );
@@ -151,14 +149,14 @@ public class SendMailJob implements ISimulation
       if( !MailUtilities.checkContentType( type ) )
         throw new SimulationException( "The content type '" + type + "' is not supported, try '" + MailUtilities.TEXT_PLAIN + "'  ...", null );
 
-      /* Optional inputs. */
-      String relais_username = null;
-      if( inputProvider.hasID( INPUT_RELAIS_USERNAME ) )
-        relais_username = (String) inputProvider.getInputForID( INPUT_RELAIS_USERNAME );
+      /* Configuration inputs. */
+      String relais = FrameworkProperties.getProperty( CFG_RELAIS );
+      if( relais == null || relais.length() == 0 )
+        throw new SimulationException( "The '" + CFG_RELAIS + "' directive must be set on the server ...", null );
 
-      String relais_password = null;
-      if( inputProvider.hasID( INPUT_RELAIS_PASSWORD ) )
-        relais_password = (String) inputProvider.getInputForID( INPUT_RELAIS_PASSWORD );
+      /* Configuration, which is optional. */
+      String relais_username = FrameworkProperties.getProperty( CFG_RELAIS_USERNAME );
+      String relais_password = FrameworkProperties.getProperty( CFG_RELAIS_PASSWORD );
 
       /* Update monitor. */
       monitor.setProgress( 25 );
@@ -218,7 +216,7 @@ public class SendMailJob implements ISimulation
 
       /* Need an authenticator eventually. */
       Authenticator auth = null;
-      if( relais_username != null && relais_password != null )
+      if( (relais_username != null && relais_username.length() > 0) && (relais_password != null && relais_password.length() > 0) )
         auth = new SendMailAuthenticator( relais_username, relais_password );
 
       /* Create the settings. */
@@ -250,8 +248,7 @@ public class SendMailJob implements ISimulation
       message.setContent( text, type );
 
       /* Sets the header. */
-      //message.setHeader( "X-Mailer", "WPSSendMailV1.0" );
-
+      // message.setHeader( "X-Mailer", "WPSSendMailV1.0" );
       /* Update monitor. */
       monitor.setProgress( 75 );
       monitor.setMessage( "Send the e-mail ..." );
