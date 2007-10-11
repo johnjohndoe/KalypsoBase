@@ -111,7 +111,7 @@ public class Hmo2Fli
 
       LOG.info( "Start writing shape: " + shapeBase );
       // transform geometries to shapes and write it
-      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase );
+      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase, null );
 // final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
 // sf.writeShape( fc );
 // sf.close();
