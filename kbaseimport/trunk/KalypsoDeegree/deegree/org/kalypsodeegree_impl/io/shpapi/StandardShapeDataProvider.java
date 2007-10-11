@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 public class StandardShapeDataProvider implements IShapeDataProvider
 {
 
-  private final Feature[] m_features;
+  private Feature[] m_features;
 
   private byte m_shptype;
 
@@ -110,9 +110,9 @@ public class StandardShapeDataProvider implements IShapeDataProvider
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatures()
    */
-  public Feature[] getFeatures( )
+  public Feature getFeature( final int index )
   {
-    return m_features;
+    return m_features[index];
   }
 
   /**
@@ -134,6 +134,49 @@ public class StandardShapeDataProvider implements IShapeDataProvider
   public IPropertyType getGeometryPropertyType( )
   {
     return m_geometryPropertyType;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeaturesLength()
+   */
+  public int getFeaturesLength( )
+  {
+    return m_features.length;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
+   */
+  public void setFeatures( final Feature[] features )
+  {
+    m_features = features;
+
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
+   */
+  public void setOutputShapeConstant( final byte shapeConstant )
+  {
+    m_shptype = shapeConstant;
+
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
+   */
+  public GM_Object getGeometry( final int index )
+  {
+    return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureProperty(int,
+   *      org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
+  {
+    return m_features[featureIndex].getProperty( propertyType );
   }
 
 }
