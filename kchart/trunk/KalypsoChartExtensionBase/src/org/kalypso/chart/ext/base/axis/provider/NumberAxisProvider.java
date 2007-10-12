@@ -75,7 +75,7 @@ public class NumberAxisProvider extends AbstractAxisProvider
         e.printStackTrace();
       }
 
-      axis.setDataRange( range );
+      axis.setLogicalRange( range );
     }
     else
       throw new AxisProviderException();

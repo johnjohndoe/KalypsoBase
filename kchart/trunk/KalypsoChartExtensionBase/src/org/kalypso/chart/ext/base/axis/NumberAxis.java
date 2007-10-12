@@ -11,6 +11,9 @@ import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
+ * 
+ * logical and numerical range are identical;
+ * 
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class NumberAxis extends AbstractAxis<Number>
@@ -25,7 +28,7 @@ public class NumberAxis extends AbstractAxis<Number>
 
   public double logicalToNormalized( final Number value )
   {
-    final IDataRange<Number> dataRange = getDataRange();
+    final IDataRange<Number> dataRange = getLogicalRange();
 
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
@@ -36,7 +39,7 @@ public class NumberAxis extends AbstractAxis<Number>
 
   public Number normalizedToLogical( final double value )
   {
-    final IDataRange<Number> dataRange = getDataRange();
+    final IDataRange<Number> dataRange = getLogicalRange();
 
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
@@ -85,5 +88,37 @@ public class NumberAxis extends AbstractAxis<Number>
   public IDataOperator<Number> getDataOperator( )
   {
     return m_dataOperator;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
+   */
+  public IDataRange<Number> getNumericRange( )
+  {
+    return getLogicalRange();
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
+   */
+  public int numericToScreen( Number value )
+  {
+    return logicalToScreen( value );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
+   */
+  public Number screenToNumeric( int value )
+  {
+    return screenToLogical( value );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
+   */
+  public void setNumericRange( IDataRange<Number> range )
+  {
+    setLogicalRange( range );
   }
 }

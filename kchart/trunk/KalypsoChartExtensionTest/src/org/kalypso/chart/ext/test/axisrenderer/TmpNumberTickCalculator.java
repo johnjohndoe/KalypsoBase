@@ -34,7 +34,7 @@ public class TmpNumberTickCalculator
   public static TreeMap<Integer, SortedSet<Double>> calcTicks( GCWrapper gc, final IAxis<Number> axis, double minDisplayInterval )
   {
 
-    if( axis.getDataRange() == null )
+    if( axis.getLogicalRange() == null )
       return null;
 
     final IMapperRegistry registry = axis.getRegistry();
@@ -64,7 +64,7 @@ public class TmpNumberTickCalculator
     // Mini- und maximalen Grenz-Wert ermitteln anhand der Gr��e der
     // Labels
     int screenMin, screenMax;
-    final IDataRange<Number> range = axis.getDataRange();
+    final IDataRange<Number> range = axis.getLogicalRange();
 
     final Point screenMinMax = getScreenMinMax( axis, range, ticklabelSize );
     screenMin = screenMinMax.x;
@@ -250,7 +250,7 @@ public class TmpNumberTickCalculator
    */
   private static void findBetweens( double from, double to, double interval, List<Integer> divisors, TreeMap<Integer, SortedSet<Double>> ticks, int level, double minDisplayInterval, IAxis<Number> axis )
   {
-    final IDataRange<Number> dataRange = axis.getDataRange();
+    final IDataRange<Number> dataRange = axis.getLogicalRange();
 
     String levelinset = "";
     for( int i = 0; i < level; i++ )

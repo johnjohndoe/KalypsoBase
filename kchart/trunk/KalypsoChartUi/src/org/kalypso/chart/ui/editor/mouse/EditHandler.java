@@ -149,12 +149,14 @@ public class EditHandler implements MouseListener, MouseMoveListener
           {
             info.pos = point;
             m_chart.getPlot().setHoverInfo( info );
+            m_chart.getPlot().redraw();
             return;
           }
         }
       }
 
       m_chart.getPlot().setHoverInfo( null );
+      m_chart.getPlot().redraw();
     }
   }
 }

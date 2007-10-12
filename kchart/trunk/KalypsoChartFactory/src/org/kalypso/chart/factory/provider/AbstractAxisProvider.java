@@ -39,7 +39,7 @@ public abstract class AbstractAxisProvider implements IAxisProvider
   public AxisType getXMLType( IAxis axis )
   {
     AxisType at = (AxisType) m_at.copy();
-    IDataRange dra = axis.getDataRange();
+    IDataRange dra = axis.getLogicalRange();
     IDataOperator dop = axis.getDataOperator();
     at.setMinVal( dop.logicalToString( dra.getMin() ) );
     at.setMaxVal( dop.logicalToString( dra.getMax() ) );

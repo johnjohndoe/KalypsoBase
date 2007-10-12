@@ -9,6 +9,8 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoChartUiPlugin extends AbstractUIPlugin
 {
+  public static final String ID = "org.kalypso.chart.ui";
+
   // The shared instance.
   private static KalypsoChartUiPlugin plugin;
 
@@ -44,12 +46,11 @@ public class KalypsoChartUiPlugin extends AbstractUIPlugin
     return plugin;
   }
 
-
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path.
    * 
    * @param path
-   *          the path
+   *            the path
    * @return the image descriptor
    */
   public static ImageDescriptor getImageDescriptor( String path )

@@ -9,6 +9,7 @@ import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 
 public class CalendarDataOperator extends AbstractDataOperator<Calendar>
@@ -108,14 +109,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     tomorrow.set( Calendar.MILLISECOND, 0 );
     tomorrow.add( Calendar.DAY_OF_MONTH, 1 );
 
-    try
-    {
-      return new DataRange<Calendar>( today, tomorrow );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // should never occur
-    }
-    return null;
+    return new ComparableDataRange<Calendar>( new Calendar[] { today, tomorrow } );
   }
+
 }

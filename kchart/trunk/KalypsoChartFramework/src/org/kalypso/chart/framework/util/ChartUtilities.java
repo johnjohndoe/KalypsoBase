@@ -5,9 +5,11 @@ import java.util.Comparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -92,6 +94,44 @@ public class ChartUtilities
       // TODO: what to do in that case?
       return null;
     }
+  }
+
+  /**
+   * determines screen values describing the minimal and maximal values concerning a dragged rectangle
+   */
+  public static IDataRange<Integer> rectangleToAxisSection( IAxis< ? > axis, Rectangle rect )
+  {
+    int min;
+    int max;
+
+    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
+      if( axis.getDirection() == DIRECTION.POSITIVE )
+      {
+        min = rect.x;
+        max = min + rect.width;
+      }
+      else
+      {
+        min = rect.x + rect.width;
+        max = rect.x;
+      }
+    }
+    else
+    {
+      // verticale Achse verläuft wenn positiv von unten nach oben
+      if( axis.getDirection() == DIRECTION.POSITIVE )
+      {
+        min = rect.y + rect.height;
+        max = rect.y;
+      }
+      else
+      {
+        min = rect.y;
+        max = rect.y + rect.height;
+      }
+    }
+    return new ComparableDataRange<Integer>( new Integer[] { min, max } );
   }
 
 }

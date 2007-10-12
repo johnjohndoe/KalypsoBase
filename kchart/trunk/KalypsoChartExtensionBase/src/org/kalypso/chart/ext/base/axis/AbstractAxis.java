@@ -151,12 +151,12 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
   }
 
-  public IDataRange<T> getDataRange( )
+  public IDataRange<T> getLogicalRange( )
   {
     return m_dataRange;
   }
 
-  public void setDataRange( final IDataRange<T> dataRange )
+  public void setLogicalRange( final IDataRange<T> dataRange )
   {
     m_dataRange = dataRange;
   }

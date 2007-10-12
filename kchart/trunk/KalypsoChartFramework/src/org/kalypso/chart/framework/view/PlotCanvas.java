@@ -1,11 +1,14 @@
 package org.kalypso.chart.framework.view;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -18,6 +21,7 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 /**
  * @author burtscher widget in which the layers' content is paintet
@@ -34,6 +38,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   private EditInfo m_editInfo;
 
   private EditInfo m_hoverInfo;
+
+  private Rectangle m_dragArea = null;
 
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
@@ -84,13 +90,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     manager.addListener( m_almel );
   }
 
-  public void setMouseHandler( final IChartMouseHandler handler )
-  {
-    m_mouseHandler = handler;
-    addMouseListener( m_mouseHandler );
-    addMouseMoveListener( m_mouseHandler );
-  }
-
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
@@ -119,7 +118,64 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     // Der MouseHandler soll jetzt noch ein ZoomRechteck zeichnen
     if( m_mouseHandler != null )
       m_mouseHandler.paint( gcw );
+
+    paintDragArea( gcw );
+    paintTooltip( gcw );
+
     gcw.dispose();
+  }
+
+  private void paintDragArea( GCWrapper gcw )
+  {
+    // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
+    if( m_dragArea != null )
+    {
+      gcw.setLineWidth( 1 );
+      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
+      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet), irgendwann mal wieder überprüfen
+      gcw.drawRectangle( r.x, r.y, r.width, r.height );
+    }
+  }
+
+  private void paintTooltip( GCWrapper gcw )
+  {
+    // Tooltips zeichnen
+    if( m_hoverInfo != null )
+    {
+      final Rectangle shape = m_hoverInfo.shape;
+      gcw.drawRectangle( shape.x, shape.y, shape.width, shape.height );
+      Rectangle screen = gcw.getClipping();
+
+      final String tooltiptext = m_hoverInfo.text;
+      final Point mousePos = m_hoverInfo.pos;
+      if( tooltiptext != null )
+      {
+        final int TOOLINSET = 3;
+
+        final Font oldFont = gcw.getFont();
+
+        final Font bannerFont = JFaceResources.getTextFont();
+        gcw.setFont( bannerFont );
+
+        gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+        gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+        final Point toolsize = gcw.textExtent( tooltiptext );
+        int toolx = mousePos.x + shape.width + 5 + TOOLINSET;
+        if( toolx + toolsize.x > screen.width )
+          toolx = toolx - toolsize.x;
+        final int tooly = mousePos.y - 5 - TOOLINSET - toolsize.y;
+
+        gcw.setLineWidth( 1 );
+        final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
+        gcw.fillRectangle( toolrect );
+        gcw.drawRectangle( toolrect );
+
+        gcw.drawText( tooltiptext, toolx, tooly, true );
+
+        gcw.setFont( oldFont );
+      }
+    }
   }
 
   /**
@@ -233,6 +289,11 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   {
     // TODO Auto-generated method stub
     return false;
+  }
+
+  public void setDragArea( Rectangle dragArea )
+  {
+    m_dragArea = dragArea;
   }
 
 }

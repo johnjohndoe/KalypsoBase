@@ -40,40 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mouse;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.framework.view.IChartMouseHandler;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+import org.kalypso.chart.framework.view.PlotCanvas;
+import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
  * @author Gernot Belger
+ * @author burtscher1
  */
-public class DragMouseHandler implements IChartMouseHandler
+public class DragHandler implements MouseListener, MouseMoveListener
 {
   private Rectangle m_mouseDragRect = null;
 
   private final ChartComposite m_chartComposite;
 
-  public DragMouseHandler( final ChartComposite chartComposite )
+  private final PlotCanvas m_plot;
+
+  public DragHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-  }
-
-  public void paint( final GCWrapper gcw )
-  {
-    // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
-    if( m_mouseDragRect != null )
-    {
-      gcw.setLineWidth( 1 );
-      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
-      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_mouseDragRect );
-      // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet), irgendwann mal wieder überprüfen
-      gcw.drawRectangle( r.x, r.y, r.width, r.height );
-    }
+    m_plot = m_chartComposite.getPlot();
   }
 
   /**
@@ -112,6 +103,7 @@ public class DragMouseHandler implements IChartMouseHandler
     finally
     {
       m_mouseDragRect = null;
+      m_plot.setDragArea( m_mouseDragRect );
     }
   }
 
@@ -131,8 +123,21 @@ public class DragMouseHandler implements IChartMouseHandler
       m_mouseDragRect.width = newwidth;
       m_mouseDragRect.height = newheight;
 
+      m_plot.setDragArea( m_mouseDragRect );
       m_chartComposite.getPlot().redraw();
     }
+  }
+
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  public void setDragAction( IChartDragAction chartDragAction )
+  {
+    // TODO Auto-generated method stub
+    System.out.println( "!!!!!!!!!!!!!!!!! TODO: DragAction Setzen" );
   }
 
 }

@@ -4,6 +4,13 @@ import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
 /**
+ * 
+ * Axes use a logical and a numerical data range; the numerical range is needed to express values between discrete
+ * logical data values.
+ * 
+ * Keep in mind that logical and numerical data ranges have to be synchronized when one of them is set.
+ * 
+ * 
  * @author burtscher
  */
 public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
@@ -47,20 +54,40 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
 
   public int zeroToScreen( );
 
-  public IDataRange<T_logical> getDataRange( );
+  public IDataRange<T_logical> getLogicalRange( );
 
   /**
    * sets visible range of axis
    * 
    * @param dataRange
    */
-  public void setDataRange( IDataRange<T_logical> dataRange );
+  public void setLogicalRange( IDataRange<T_logical> dataRange );
 
   /**
    * returns a data converter which may be used to convert strings to data which can directly be used by the axis (and
    * vice versa)
    */
   public IDataOperator<T_logical> getDataOperator( );
+
+  /**
+   * returns the internally used number range
+   */
+  public IDataRange<Number> getNumericRange( );
+
+  /**
+   * sets the internally used number range
+   */
+  public void setNumericRange( IDataRange<Number> range );
+
+  /**
+   * transforms a screen position into a numeric value
+   */
+  public Number screenToNumeric( int value );
+
+  /**
+   * transforms a numeric value into a screen position
+   */
+  public int numericToScreen( Number value );
 
   /**
    * method to store arbitrary data objects;

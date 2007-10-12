@@ -242,14 +242,14 @@ public class ChartModel implements IChartModel
       if( mergedDataRange == null )
       {
         // if mergedDataRange is null, we keep the old range - if there is any
-        if( axis.getDataRange() != null )
+        if( axis.getLogicalRange() != null )
           continue;
         else
           // otherwise, we use a default range
           mergedDataRange = axis.getDataOperator().getDefaultRange();
       }
 
-      axis.setDataRange( mergedDataRange );
+      axis.setLogicalRange( mergedDataRange );
       m_eventHandler.fireModelChanged();
     }
 
@@ -415,7 +415,7 @@ public class ChartModel implements IChartModel
       {
         try
         {
-          axis.setDataRange( new DataRange( from, to ) );
+          axis.setLogicalRange( new DataRange( from, to ) );
         }
         catch( final ZeroSizeDataRangeException e )
         {

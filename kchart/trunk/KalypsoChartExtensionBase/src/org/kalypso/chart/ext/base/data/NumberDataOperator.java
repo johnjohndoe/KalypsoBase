@@ -6,6 +6,7 @@ import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
@@ -89,14 +90,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
    */
   public IDataRange<Number> getDefaultRange( )
   {
-    try
-    {
-      return new DataRange<Number>( new Double( 0 ), new Double( 1 ) );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // should never occur (look at constructor values)
-    }
-    return null;
+    return new ComparableDataRange<Number>( new Double[] { 0.0, 1.0 } );
   }
+
 }

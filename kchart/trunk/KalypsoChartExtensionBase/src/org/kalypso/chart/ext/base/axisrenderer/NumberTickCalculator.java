@@ -34,7 +34,7 @@ public class NumberTickCalculator
   public static TreeMap<Integer, SortedSet<Double>> calcTicks( final GCWrapper gc, final IAxis<Number> axis, final double minDisplayInterval )
   {
 
-    if( axis.getDataRange() == null )
+    if( axis.getLogicalRange() == null )
       return null;
 
     final IMapperRegistry registry = axis.getRegistry();
@@ -63,7 +63,7 @@ public class NumberTickCalculator
 
     // Mini- und maximalen Grenz-Wert ermitteln anhand der Gr��e der Labels
     int screenMin, screenMax;
-    final IDataRange<Number> range = axis.getDataRange();
+    final IDataRange<Number> range = axis.getLogicalRange();
 
     final Point screenMinMax = NumberTickCalculator.getScreenMinMax( axis, range, ticklabelSize );
     screenMin = screenMinMax.x;
@@ -215,7 +215,7 @@ public class NumberTickCalculator
    */
   private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final TreeMap<Integer, SortedSet<Double>> ticks, final int level, final double minDisplayInterval, final IAxis<Number> axis )
   {
-    final IDataRange<Number> dataRange = axis.getDataRange();
+    final IDataRange<Number> dataRange = axis.getLogicalRange();
 
     String levelinset = "";
     for( int i = 0; i < level; i++ )

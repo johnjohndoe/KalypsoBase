@@ -128,11 +128,6 @@ public class ChartComposite extends Composite
     }
   }
 
-  public void setMouseHandler( IChartMouseHandler handler )
-  {
-    m_plot.setMouseHandler( handler );
-  }
-
   public IChartModel getModel( )
   {
     return m_model;

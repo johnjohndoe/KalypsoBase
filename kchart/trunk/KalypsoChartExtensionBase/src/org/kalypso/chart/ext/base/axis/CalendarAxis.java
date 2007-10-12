@@ -8,12 +8,15 @@ import org.kalypso.chart.ext.base.data.CalendarDataOperator;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
+ * logical range consist of calendar values, internal range consists of long values (time in millis)
+ * 
  * @author burtscher Concrete IAxis implementation - to be used for calendar data from XML documents
  */
 public class CalendarAxis extends AbstractAxis<Calendar>
@@ -28,7 +31,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
   public double logicalToNormalized( final Calendar value )
   {
-    final IDataRange<Calendar> dataRange = getDataRange();
+    final IDataRange<Calendar> dataRange = getLogicalRange();
     final Calendar gcTo = dataRange.getMax();
     final long toMillis = gcTo.getTimeInMillis();
 
@@ -48,9 +51,9 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 
   public Calendar normalizedToLogical( final double value )
   {
-    final double r = getDataRange().getMax().getTimeInMillis() - getDataRange().getMin().getTimeInMillis();
+    final double r = getLogicalRange().getMax().getTimeInMillis() - getLogicalRange().getMin().getTimeInMillis();
 
-    final long logical = (long) (value * r + getDataRange().getMin().getTimeInMillis());
+    final long logical = (long) (value * r + getLogicalRange().getMin().getTimeInMillis());
 
     final Calendar c = Calendar.getInstance();
 
@@ -149,4 +152,44 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     return m_dataOperator;
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
+   */
+  public IDataRange<Number> getNumericRange( )
+  {
+    IDataRange<Calendar> logicalRange = getLogicalRange();
+    IDataRange<Number> numericRange = new ComparableDataRange<Number>( new Long[] { logicalRange.getMin().getTimeInMillis(), logicalRange.getMax().getTimeInMillis() } );
+    return numericRange;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
+   */
+  public int numericToScreen( Number value )
+  {
+    Calendar cal = Calendar.getInstance();
+    cal.setTimeInMillis( value.longValue() );
+    return logicalToScreen( cal );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
+   */
+  public Number screenToNumeric( int value )
+  {
+    return screenToLogical( value ).getTimeInMillis();
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
+   */
+  public void setNumericRange( IDataRange<Number> range )
+  {
+    Calendar min = Calendar.getInstance();
+    min.setTimeInMillis( range.getMin().longValue() );
+    Calendar max = Calendar.getInstance();
+    max.setTimeInMillis( range.getMin().longValue() );
+
+    setLogicalRange( new ComparableDataRange<Calendar>( new Calendar[] { min, max } ) );
+  }
 }

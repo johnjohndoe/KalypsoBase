@@ -65,7 +65,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Calendar> axis )
   {
-    final IDataRange<Calendar> range = axis.getDataRange();
+    final IDataRange<Calendar> range = axis.getLogicalRange();
     final String logicalfrom = m_dateFormat.format( range.getMin().getTimeInMillis() );
     final String logicalto = m_dateFormat.format( range.getMax().getTimeInMillis() );
     final Point fromTextExtent = getTextExtent( gc, logicalfrom, getFontDataTickLabel() );
@@ -198,7 +198,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
     // Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
     int screenMin, screenMax;
-    final IDataRange<Calendar> range = axis.getDataRange();
+    final IDataRange<Calendar> range = axis.getLogicalRange();
 
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {

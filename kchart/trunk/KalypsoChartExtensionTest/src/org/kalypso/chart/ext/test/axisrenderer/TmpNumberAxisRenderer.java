@@ -97,7 +97,7 @@ public class TmpNumberAxisRenderer extends AbstractAxisRenderer<Number>
     }
     else
     {
-      final IDataRange<Number> range = axis.getDataRange();
+      final IDataRange<Number> range = axis.getLogicalRange();
       final double logicalMin, logicalMax;
       if( range != null )
       {
@@ -228,7 +228,7 @@ public class TmpNumberAxisRenderer extends AbstractAxisRenderer<Number>
     final FontData fontDataTick = getFontDataTickLabel();
     final Insets tickLabelInsets = getTickLabelInsets();
 
-    final IDataRange<Number> dataRange = axis.getDataRange();
+    final IDataRange<Number> dataRange = axis.getLogicalRange();
     final int axisMin = axis.logicalToScreen( dataRange.getMin() );
     final int axisMax = axis.logicalToScreen( dataRange.getMax() );
     final int screenMin = Math.min( axisMin, axisMax );

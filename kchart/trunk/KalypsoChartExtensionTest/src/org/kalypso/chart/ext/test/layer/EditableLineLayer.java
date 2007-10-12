@@ -1,14 +1,14 @@
 package org.kalypso.chart.ext.test.layer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
+import org.kalypso.chart.ext.test.data.EditableTestDataContainer;
 import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.data.ITabularDataContainer;
 import org.kalypso.chart.framework.model.layer.AbstractEditableChartLayer;
 import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -19,25 +19,23 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 /**
  * @author alibu
  */
-public class EditableLineLayer<T_domain, T_target> extends AbstractEditableChartLayer<T_domain, T_target>
+public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number>
 {
 
-  // private AbstractDomainValueData<T_domain, T_target> m_dataContainer;
+  private List<Number> m_domainData;
 
-  private T_target[] m_targetData;
+  private List<Number> m_targetData;
 
-  private T_domain[] m_domainData;
-
-  public EditableLineLayer( AbstractDomainValueData<T_domain, T_target> dataContainer, IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis )
+  public EditableLineLayer( EditableTestDataContainer data, IAxis<Number> domainAxis, IAxis<Number> targetAxis )
   {
     super( domainAxis, targetAxis );
-    setDataContainer( dataContainer );
+    setDataContainer( data );
 
-    if( dataContainer != null )
+    if( data != null )
     {
-      dataContainer.open();
-      m_domainData = dataContainer.getDomainValues();
-      m_targetData = dataContainer.getTargetValues();
+      data.open();
+      m_domainData = data.getDomainValues();
+      m_targetData = data.getTargetValues();
     }
     else
     {
@@ -80,26 +78,24 @@ public class EditableLineLayer<T_domain, T_target> extends AbstractEditableChart
    */
   public void paint( GCWrapper gc )
   {
-    final ITabularDataContainer<T_domain, T_target> dataContainer = getDataContainer();
+    final EditableTestDataContainer dataContainer = getDataContainer();
 
     final ArrayList<Point> path = new ArrayList<Point>();
     final IStyledElement line = getStyle().getElement( SE_TYPE.LINE, 1 );
-    for( int i = 0; i < m_domainData.length; i++ )
+    final IStyledElement point = getStyle().getElement( SE_TYPE.POINT, 1 );
+    for( int i = 0; i < m_domainData.size(); i++ )
     {
-      final T_domain domVal = m_domainData[i];
-      final T_target targetVal = m_targetData[i];
+      final Number domVal = m_domainData.get( i );
+      final Number targetVal = m_targetData.get( i );
       final int domScreen = getDomainAxis().logicalToScreen( domVal );
       final int valScreen = getTargetAxis().logicalToScreen( targetVal );
       path.add( new Point( domScreen, valScreen ) );
     }
     line.setPath( path );
     line.paint( gc );
-  }
 
-  @Override
-  public ITabularDataContainer<T_domain, T_target> getDataContainer( )
-  {
-    return (ITabularDataContainer<T_domain, T_target>) super.getDataContainer();
+    point.setPath( path );
+    point.paint( gc );
   }
 
   /**
@@ -108,9 +104,44 @@ public class EditableLineLayer<T_domain, T_target> extends AbstractEditableChart
   public EditInfo getEditInfo( Point p )
   {
     // Umrechnen von screen nach logisch
+    // TODO: im Moment wird von domain = horizontal und target = vertkal ausgegangen
+    int tolerance = 2;
+    IAxis<Number> domainAxis = getDomainAxis();
+    IAxis<Number> targetAxis = getTargetAxis();
+    Double domainValMin = domainAxis.screenToLogical( p.x - tolerance ).doubleValue();
+    Double domainValMax = domainAxis.screenToLogical( p.x + tolerance ).doubleValue();
+    Double targetValMin = targetAxis.screenToLogical( p.y + tolerance ).doubleValue();
+    Double targetValMax = targetAxis.screenToLogical( p.y - tolerance ).doubleValue();
 
-    // falls der Punkt in den Daten vorhanden ist, dann eine Info zurückgeben
+    // herausfinden, ob der Punkt IN DER NAEHE eines Datenpunktes liegt
+    for( int i = 0; i < m_domainData.size(); i++ )
+    {
+      Double domainVal = m_domainData.get( i ).doubleValue();
+      if( domainVal >= domainValMin && domainVal <= domainValMax )
+      {
+        Double targetVal = m_targetData.get( i ).doubleValue();
+        if( targetVal >= targetValMin && targetVal <= targetValMax )
+        {
+          Object editData = null;
+          /*
+           * Punkt des "Handles" ausrechnen - evtl. kann man hier auch den eingangspunkt verwenden; (wahrscheinlich aber
+           * nicht, weil sich sonst der handle verschiebt)
+           */
+          Point dataPos = new Point( domainAxis.logicalToScreen( domainVal ), targetAxis.logicalToScreen( targetVal ) );
+          int pointWidth = 10;
+          Rectangle editShape = new Rectangle( dataPos.x - pointWidth, dataPos.y - pointWidth, pointWidth * 2 + 1, pointWidth * 2 + 1 );
+          String editText = domainAxis.getLabel() + ":\t" + domainVal + "\n" + targetAxis.getLabel() + ":\t" + targetVal;
+
+          EditInfo info = new EditInfo( this, editShape, editData, editText );
+
+          // falls der Punkt in den Daten vorhanden ist, dann eine Info zurückgeben
+          return info;
+        }
+      }
+    }
+
     return null;
+
   }
 
   /**
@@ -137,8 +168,13 @@ public class EditableLineLayer<T_domain, T_target> extends AbstractEditableChart
    */
   public void setActivePoint( Object data )
   {
-    // TODO Auto-generated method stub
 
+  }
+
+  @Override
+  public EditableTestDataContainer getDataContainer( )
+  {
+    return (EditableTestDataContainer) super.getDataContainer();
   }
 
 }

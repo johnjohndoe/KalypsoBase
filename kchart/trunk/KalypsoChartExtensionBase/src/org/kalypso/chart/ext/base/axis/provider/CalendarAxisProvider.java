@@ -75,7 +75,7 @@ public class CalendarAxisProvider extends AbstractAxisProvider
         e.printStackTrace();
       }
 
-      axis.setDataRange( range );
+      axis.setLogicalRange( range );
     }
     else
       throw new AxisProviderException();
