@@ -123,7 +123,7 @@ public class ODSChartManipulation
   public static <T> void setAxisRange( IAxis<T> axis, String minVal, String maxVal )
   {
     final IStringDataConverter<T> sdc = axis.getDataOperator();
-    final IDataRange<T> dataRange = axis.getDataRange();
+    final IDataRange<T> dataRange = axis.getLogicalRange();
     try
     {
       T min = null;
@@ -139,7 +139,7 @@ public class ODSChartManipulation
         max = sdc.stringToLogical( maxVal );
       else
         max = dataRange.getMax();
-      axis.setDataRange( new DataRange<T>( min, max ) );
+      axis.setLogicalRange( new DataRange<T>( min, max ) );
     }
     catch( final MalformedValueException e )
     {

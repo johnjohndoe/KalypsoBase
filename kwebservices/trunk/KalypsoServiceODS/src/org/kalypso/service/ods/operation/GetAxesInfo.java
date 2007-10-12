@@ -185,7 +185,7 @@ public class GetAxesInfo implements IODSOperation
     if( axis != null )
     {
       final IDataOperator<T> dataOperator = axis.getDataOperator();
-      final IDataRange<T> dataRange = axis.getDataRange();
+      final IDataRange<T> dataRange = axis.getLogicalRange();
       // this has to be done in order to evaluate dynamic values for the axis range
       final T dataMin = dataRange.getMin();
       final T dataMax = dataRange.getMax();
