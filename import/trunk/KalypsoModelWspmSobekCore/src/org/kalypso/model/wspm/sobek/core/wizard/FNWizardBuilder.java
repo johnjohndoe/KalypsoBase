@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.sobek.core.wizard;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.INodeTypes.NODE_TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -57,16 +56,18 @@ public class FNWizardBuilder
     if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( feature.getFeatureType().getQName() ) )
       return new FNWizardEditBranch( feature );
 
-    final NODE_TYPE type = NODE_TYPE.getFeatureType( feature );
-    switch( type )
-    {
-      case eCrossSectionNode:
-        throw (new NotImplementedException());
-// return new FNWizardEditCrossSectionNode( workspace, feature );
+// final TYPE type = TYPE.getFeatureType( feature );
+// switch( type )
+// {
+// case eCrossSectionNode:
+// throw (new NotImplementedException());
+// // return new FNWizardEditCrossSectionNode( workspace, feature );
+//
+// default:
+// throw new IllegalStateException();
+// }
 
-      default:
-        throw new IllegalStateException();
-    }
+    throw (new NotImplementedException());
   }
 
 }
