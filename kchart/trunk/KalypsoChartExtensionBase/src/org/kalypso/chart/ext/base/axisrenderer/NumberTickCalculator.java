@@ -160,26 +160,11 @@ public class NumberTickCalculator
       NumberTickCalculator.findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, level + 1, minDisplayInterval, axis );
     }
 
-    // Anzahl der Nachkommastellen ausrechnen
-    final NumberFormat nf = new DecimalFormat();
-    final NumberFormat oldnf = renderer.getNumberFormat();
-
-    // F�r das Double-Format wird nun noch die Anzahl der Nachkommastellen aus der Potenz ermittelt
-
-    if( rangepow >= 0 )
-    {
-      nf.setMaximumFractionDigits( rangepow + 4 );
-      nf.setMinimumFractionDigits( rangepow + 4 );
-    }
-
-    final int digits = NumberTickCalculator.testNumberFormat( NumberTickCalculator.flattenTicks( ticks ) );
-    nf.setMaximumFractionDigits( digits );
-    nf.setMinimumFractionDigits( digits );
-    renderer.setNumberFormat( nf );
-    // Nochmal rechnen mit neuem NumberFormat <- sehr doof
-    if( (axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL) && (oldnf.getMinimumFractionDigits() < digits) && (oldnf.getMaximumFractionDigits() < digits) )
-      return NumberTickCalculator.calcTicks( gc, axis, minDisplayInterval );
-
+    /*
+     * // Nochmal rechnen mit neuem NumberFormat <- sehr doof if( (axis.getPosition().getOrientation() ==
+     * ORIENTATION.HORIZONTAL) && (oldnf.getMinimumFractionDigits() < digits) && (oldnf.getMaximumFractionDigits() <
+     * digits) ) return NumberTickCalculator.calcTicks( gc, axis, minDisplayInterval );
+     */
     final ArrayList<Double> tickMap = new ArrayList<Double>();
     renderer.setTickMapElement( axis, (NumberTickCalculator.flattenTicks( ticks )) );
 

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.event.impl.MapperRegistryEventHandler;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -304,5 +306,20 @@ public class MapperRegistry implements IMapperRegistry
         return rend;
     }
     return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry#getNumericRangeAxisSnapshot()
+   */
+  public Map<IAxis< ? >, IDataRange<Number>> getNumericRangeAxisSnapshot( )
+  {
+    IAxis< ? >[] axes = getAxes();
+    Map<IAxis< ? >, IDataRange<Number>> axisMap = new HashMap<IAxis< ? >, IDataRange<Number>>();
+    for( IAxis< ? > axis : axes )
+    {
+      IDataRange<Number> nr = axis.getNumericRange();
+      axisMap.put( axis, new ComparableDataRange<Number>( new Number[] { nr.getMin(), nr.getMax() } ) );
+    }
+    return axisMap;
   }
 }

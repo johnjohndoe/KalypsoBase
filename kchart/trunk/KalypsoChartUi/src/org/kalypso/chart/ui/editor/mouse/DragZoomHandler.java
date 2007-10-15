@@ -53,7 +53,7 @@ import org.kalypso.chart.ui.editor.actions.IChartDragAction;
  * @author Gernot Belger
  * @author burtscher1
  */
-public class DragHandler implements MouseListener, MouseMoveListener
+public class DragZoomHandler implements MouseListener, MouseMoveListener
 {
   private Rectangle m_mouseDragRect = null;
 
@@ -61,7 +61,9 @@ public class DragHandler implements MouseListener, MouseMoveListener
 
   private final PlotCanvas m_plot;
 
-  public DragHandler( final ChartComposite chartComposite )
+  int m_pressedKey = -1;
+
+  public DragZoomHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
     m_plot = m_chartComposite.getPlot();
@@ -72,7 +74,7 @@ public class DragHandler implements MouseListener, MouseMoveListener
    */
   public void mouseDoubleClick( MouseEvent e )
   {
-
+    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
   }
 
   /**
@@ -80,7 +82,7 @@ public class DragHandler implements MouseListener, MouseMoveListener
    */
   public void mouseDown( final MouseEvent e )
   {
-    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
+
   }
 
   /**
@@ -99,6 +101,7 @@ public class DragHandler implements MouseListener, MouseMoveListener
 
       if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
         m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
+
     }
     finally
     {
@@ -122,9 +125,9 @@ public class DragHandler implements MouseListener, MouseMoveListener
 
       m_mouseDragRect.width = newwidth;
       m_mouseDragRect.height = newheight;
-
+      // zoom-Rechteck
       m_plot.setDragArea( m_mouseDragRect );
-      m_chartComposite.getPlot().redraw();
+
     }
   }
 

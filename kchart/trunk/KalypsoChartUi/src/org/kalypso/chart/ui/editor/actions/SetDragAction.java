@@ -1,18 +1,18 @@
 package org.kalypso.chart.ui.editor.actions;
 
 import org.eclipse.jface.action.Action;
-import org.kalypso.chart.ui.editor.mouse.DragHandler;
+import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 
 /**
  * @author belger
  */
 public class SetDragAction extends Action
 {
-  private final DragHandler m_dragHandler;
+  private final DragZoomHandler m_dragHandler;
 
   private final IChartDragAction m_action;
 
-  public SetDragAction( final DragHandler dragHandler, final IChartDragAction action, final String name )
+  public SetDragAction( final DragZoomHandler dragHandler, final IChartDragAction action, final String name )
   {
     super( name, AS_RADIO_BUTTON );
 

@@ -1,6 +1,7 @@
 package org.kalypso.chart.ext.test.layer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
@@ -9,6 +10,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.test.data.EditableTestDataContainer;
 import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.layer.AbstractEditableChartLayer;
 import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -85,11 +87,47 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
     final IStyledElement point = getStyle().getElement( SE_TYPE.POINT, 1 );
     for( int i = 0; i < m_domainData.size(); i++ )
     {
+      IDataRange<Number> domRange = getDomainAxis().getLogicalRange();
+      Comparator<Number> comp = getDomainAxis().getDataOperator().getComparator();
+
+      Number min = domRange.getMin();
+      Number max = domRange.getMax();
+
       final Number domVal = m_domainData.get( i );
-      final Number targetVal = m_targetData.get( i );
-      final int domScreen = getDomainAxis().logicalToScreen( domVal );
-      final int valScreen = getTargetAxis().logicalToScreen( targetVal );
-      path.add( new Point( domScreen, valScreen ) );
+      boolean setPoint = false;
+      if( comp.compare( min, domVal ) <= 0 && comp.compare( max, domVal ) >= 0 )
+      {
+        setPoint = true;
+      }
+      else
+      {
+        // kleiner als min: Nachfolger muss >= min sein
+        if( comp.compare( min, domVal ) <= 0 && i < m_domainData.size() - 1 )
+        {
+          Number next = m_domainData.get( i + 1 );
+          if( comp.compare( min, next ) <= 0 )
+          {
+            setPoint = true;
+          }
+        }
+        // größer als max: Vorgänger muss <= max sein
+        else if( comp.compare( min, domVal ) >= 0 && i > 0 )
+        {
+          Number prev = m_domainData.get( i - 1 );
+          if( comp.compare( max, prev ) >= 0 )
+          {
+            setPoint = true;
+          }
+        }
+      }
+
+      if( setPoint )
+      {
+        final Number targetVal = m_targetData.get( i );
+        final int domScreen = getDomainAxis().logicalToScreen( domVal );
+        final int valScreen = getTargetAxis().logicalToScreen( targetVal );
+        path.add( new Point( domScreen, valScreen ) );
+      }
     }
     line.setPath( path );
     line.paint( gc );
@@ -117,7 +155,11 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
     for( int i = 0; i < m_domainData.size(); i++ )
     {
       Double domainVal = m_domainData.get( i ).doubleValue();
-      if( domainVal >= domainValMin && domainVal <= domainValMax )
+      // Abbrechen, wenn wir über die Domain-Range raus sind
+      if( domainVal > domainValMax )
+        break;
+
+      if( domainVal >= domainValMin )
       {
         Double targetVal = m_targetData.get( i ).doubleValue();
         if( targetVal >= targetValMin && targetVal <= targetValMax )
@@ -130,7 +172,10 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
           Point dataPos = new Point( domainAxis.logicalToScreen( domainVal ), targetAxis.logicalToScreen( targetVal ) );
           int pointWidth = 10;
           Rectangle editShape = new Rectangle( dataPos.x - pointWidth, dataPos.y - pointWidth, pointWidth * 2 + 1, pointWidth * 2 + 1 );
-          String editText = domainAxis.getLabel() + ":\t" + domainVal + "\n" + targetAxis.getLabel() + ":\t" + targetVal;
+          String domainValStr = domainAxis.getDataOperator().getFormat( domainAxis.getLogicalRange() ).format( domainVal );
+          String targetValStr = targetAxis.getDataOperator().getFormat( targetAxis.getLogicalRange() ).format( targetVal );
+
+          String editText = domainAxis.getLabel() + ":\t" + domainValStr + "\n" + targetAxis.getLabel() + ":\t" + targetValStr;
 
           EditInfo info = new EditInfo( this, editShape, editData, editText );
 

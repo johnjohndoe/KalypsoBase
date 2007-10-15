@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 import org.kalypso.chart.framework.model.event.IEventProvider;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
@@ -52,5 +53,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
   public void setDescription( String description );
 
   public <T_logical> void zoomIn( Point start, Point end );
+
+  public void panTo( final Map<IAxis< ? >, IDataRange<Number>> axisRangeSnapshotMap, Point start, Point end );
 
 }

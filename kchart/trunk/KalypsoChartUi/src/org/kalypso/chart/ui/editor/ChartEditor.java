@@ -53,7 +53,8 @@ import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.actions.ChartActionsEnum;
 import org.kalypso.chart.ui.editor.actions.ChartStandardActions;
-import org.kalypso.chart.ui.editor.mouse.DragHandler;
+import org.kalypso.chart.ui.editor.mouse.DragPanHandler;
+import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 import org.kalypso.chart.ui.editor.mouse.EditHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -388,9 +389,12 @@ public class ChartEditor extends EditorPart
           if( m_chartModel != null )
           {
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-            DragHandler dragHandler = new DragHandler( m_chartComposite );
+            DragZoomHandler dragHandler = new DragZoomHandler( m_chartComposite );
             m_chartComposite.getPlot().addMouseListener( dragHandler );
             m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
+            DragPanHandler dragHandler2 = new DragPanHandler( m_chartComposite );
+            m_chartComposite.getPlot().addMouseListener( dragHandler2 );
+            m_chartComposite.getPlot().addMouseMoveListener( dragHandler2 );
 
             /**
              * edit stuff

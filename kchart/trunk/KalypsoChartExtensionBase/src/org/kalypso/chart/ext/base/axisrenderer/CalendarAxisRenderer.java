@@ -1,7 +1,7 @@
 package org.kalypso.chart.ext.base.axisrenderer;
 
 import java.awt.Insets;
-import java.text.SimpleDateFormat;
+import java.text.Format;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
 
   private Collection<Calendar> m_ticks;
 
-  private final SimpleDateFormat m_dateFormat;
+  // private final SimpleDateFormat m_dateFormat;
 
   /**
    * @param foreground
@@ -57,17 +57,17 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    * @param gap
    *            space between axis and component border
    */
-  public CalendarAxisRenderer( final String id, final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, final SimpleDateFormat df )
+  public CalendarAxisRenderer( final String id, final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
   {
     super( id, foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
-    m_dateFormat = df;
   }
 
   public Point calcTickLabelSize( GCWrapper gc, final IAxis<Calendar> axis )
   {
     final IDataRange<Calendar> range = axis.getLogicalRange();
-    final String logicalfrom = m_dateFormat.format( range.getMin().getTimeInMillis() );
-    final String logicalto = m_dateFormat.format( range.getMax().getTimeInMillis() );
+    Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
+    final String logicalfrom = format.format( range.getMin().getTimeInMillis() );
+    final String logicalto = format.format( range.getMax().getTimeInMillis() );
     final Point fromTextExtent = getTextExtent( gc, logicalfrom, getFontDataTickLabel() );
     final Point toTextExtent = getTextExtent( gc, logicalto, getFontDataTickLabel() );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
@@ -91,7 +91,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     final Calendar cal = Calendar.getInstance();
     cal.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
 
-    m_dateFormat.setCalendar( cal );
+    Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
 
     if( axis.getPosition() == POSITION.BOTTOM )
     {
@@ -101,7 +101,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
-        final String labelDate = m_dateFormat.format( value.getTimeInMillis() );
+        final String labelDate = format.format( new Date( value.getTimeInMillis() ) );
         final Point tickExtentDate = getTextExtent( gc, labelDate, getFontDataTickLabel() );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
@@ -118,7 +118,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
-        final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
+        final String label = format.format( new Date( value.getTimeInMillis() ) );
         final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
@@ -135,7 +135,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
-        final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
+        final String label = format.format( new Date( value.getTimeInMillis() ) );
         final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
@@ -152,7 +152,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       for( final Calendar value : ticks )
       {
         final int tickPos = axis.logicalToScreen( value );
-        final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
+        final String label = format.format( new Date( value.getTimeInMillis() ) );
         final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
@@ -260,11 +260,13 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       goodInterval += dayInMillis;
     }
 
+    Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
+
     for( long i = normmin; i <= normmax; i += goodInterval )
     {
       if( count > 0 )
       {
-        findBetweens( oldi, i, minLogInterval, ticks );
+        findBetweens( oldi, i, minLogInterval, ticks, format );
       }
       ticks.add( i );
 
@@ -292,7 +294,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    * recursive function which divides an interval into a number of "divisions" and adds the values to a linked list the
    * divisions have to have a larger range than the param interval
    */
-  private void findBetweens( long from, long to, long minInterval, HashSet<Long> ticks )
+  private void findBetweens( long from, long to, long minInterval, HashSet<Long> ticks, Format format )
   {
 
     if( from == to || minInterval == 0 )
@@ -316,7 +318,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     if( to - from > 1 )
     {
       final Calendar tmpcal = Calendar.getInstance();
-      m_dateFormat.setCalendar( tmpcal );
 
       for( final Integer divisor : divisors )
       {
@@ -331,7 +332,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
             ticks.add( new Long( i ) );
             if( count >= 1 )
             {
-              findBetweens( oldi, i, minInterval, ticks );
+              findBetweens( oldi, i, minInterval, ticks, format );
             }
             // Tick setzen
             count++;
@@ -345,9 +346,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   }
 
   @Override
-  protected Point getTextExtent( GCWrapper gc, final Calendar value, FontData fd )
+  protected Point getTextExtent( GCWrapper gc, final Calendar value, FontData fd, Format format )
   {
-    final String label = m_dateFormat.format( new Date( value.getTimeInMillis() ) );
+    final String label = format.format( new Date( value.getTimeInMillis() ) );
     final Point p = getTextExtent( gc, label, fd );
     return p;
   }

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IMemento;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.editor.mouse.DragHandler;
+import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 import org.kalypso.chart.ui.editor.mouse.EditHandler;
 
 /**
@@ -24,14 +24,14 @@ public class ChartStandardActions
 
   private final Map<Action, IAction> m_actionMap = new HashMap<Action, IAction>( 10 );
 
-  private final DragHandler m_dragHandler;
+  private final DragZoomHandler m_dragHandler;
 
   private final EditHandler m_editHandler;
 
   public ChartStandardActions( final ChartComposite chart )
   {
     // create the actions
-    m_dragHandler = new DragHandler( chart );
+    m_dragHandler = new DragZoomHandler( chart );
     m_editHandler = new EditHandler( chart );
 
     final IChartDragAction zoomAction = new ZoomInDragAction( chart, chart.getModel().getMapperRegistry().getAxes() );

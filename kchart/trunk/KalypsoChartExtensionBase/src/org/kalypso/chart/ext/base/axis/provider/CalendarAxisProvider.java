@@ -1,5 +1,6 @@
 package org.kalypso.chart.ext.base.axis.provider;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.kalypso.chart.ext.base.axis.CalendarAxis;
@@ -32,7 +33,11 @@ public class CalendarAxisProvider extends AbstractAxisProvider
     final POSITION pos = app.stringToLogical( getAxisType().getPosition().toString() );
     final AxisDirectionParser adp = new AxisDirectionParser();
     final DIRECTION dir = adp.stringToLogical( getAxisType().getDirection().toString() );
-    final IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir );
+    String dateFormatString = getParameterContainer().getParameterValue( "dateFormat", "yyyy-MM-dd\nhh:mm:ss" );
+    // Steuerzeichen aus Config ersetzen
+    dateFormatString = dateFormatString.replace( "\\n", "\n" );
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat( dateFormatString );
+    final IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, simpleDateFormat );
     if( axis != null )
     {
       final CalendarParser gcp = new CalendarParser();

@@ -12,6 +12,7 @@ import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
@@ -20,6 +21,7 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.model.layer.impl.LayerManager;
 import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.mapper.registry.impl.MapperRegistry;
@@ -423,6 +425,38 @@ public class ChartModel implements IChartModel
           e.printStackTrace();
         }
       }
+    }
+    m_eventHandler.fireModelChanged();
+  }
+
+  public void panTo( final Map<IAxis< ? >, IDataRange<Number>> axisRangeSnapshotMap, final Point start, final Point end )
+
+  {
+    for( IAxis< ? > axis : axisRangeSnapshotMap.keySet() )
+    {
+      IDataRange<Number> oldRange = axis.getNumericRange();
+      double newmin = 0;
+      double newmax = 0;
+
+      Number nowNum, startNum;
+      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      {
+        nowNum = axis.screenToNumeric( end.x );
+        startNum = axis.screenToNumeric( start.x );
+      }
+      else
+      {
+        nowNum = axis.screenToNumeric( end.y );
+        startNum = axis.screenToNumeric( start.y );
+      }
+      double diff = startNum.doubleValue() - nowNum.doubleValue();
+      IDataRange<Number> initRange = axisRangeSnapshotMap.get( axis );
+      newmin = initRange.getMin().doubleValue() + diff;
+      newmax = initRange.getMax().doubleValue() + diff;
+
+      IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
+      axis.setNumericRange( newRange );
+
     }
     m_eventHandler.fireModelChanged();
   }

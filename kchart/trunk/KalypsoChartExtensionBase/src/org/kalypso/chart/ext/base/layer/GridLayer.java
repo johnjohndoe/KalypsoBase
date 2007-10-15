@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ext.base.style.StyledLine;
-import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
@@ -56,7 +55,6 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
 
     gc.setLineWidth( 5 );
     // gc.drawLine(0,0, 200, 200);
-    Logger.trace( "Drawing GridLayer" );
 
     final StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
 

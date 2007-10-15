@@ -1,6 +1,7 @@
 package org.kalypso.chart.ext.base.axisrenderer;
 
 import java.awt.Insets;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -33,7 +34,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  */
 public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 {
-  private NumberFormat m_nf = NumberFormat.getInstance();
+  private final NumberFormat m_nf = NumberFormat.getInstance();
 
   private TreeMap<Integer, SortedSet<Double>> m_ticks;
 
@@ -85,10 +86,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     m_fixedWidth = fixedWidth;
   }
 
-  private String getLabel( Number value )
+  private String getLabel( Number value, Format format )
   {
     if( m_tick_label_formater.contains( "%s" ) )
-      return m_nf.format( value );
+    {
+      return format.format( value );
+    }
     else
       return String.format( m_tick_label_formater, value );
   }
@@ -102,11 +105,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     Point tickLabelSize = new Point( 10, 10 );
     // Vielleicht wurden zuvor schon mal ticks ausgerechnet - dann kann man die verwenden
     final Number[] tickMap = getTickMap().get( axis );
+    Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
 
     if( (tickMap != null) && (tickMap.length > 0) )
     {
-      NumberTickCalculator.testNumberFormat( tickMap );
-      tickLabelSize = getTextExtent( gc, (tickMap[tickMap.length - 1]), getFontDataTickLabel() );
+
+      tickLabelSize = getTextExtent( gc, (tickMap[tickMap.length - 1]), getFontDataTickLabel(), format );
       Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Biggest Tick: " + m_nf.format( tickMap[0] ) + " " + tickMap[0] );
     }
     else
@@ -123,8 +127,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
       final FontData fontDataTick = getFontDataTickLabel();
 
-      final Point fromTextExtent = getTextExtent( gc, logicalMin, fontDataTick );
-      final Point toTextExtent = getTextExtent( gc, logicalMax, fontDataTick );
+      final Point fromTextExtent = getTextExtent( gc, logicalMin, fontDataTick, format );
+      final Point toTextExtent = getTextExtent( gc, logicalMax, fontDataTick, format );
       tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
     }
@@ -250,7 +254,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       String label;
       for( final Number value : level.getValue() )
       {
-        label = getLabel( value );
+        label = getLabel( value, axis.getDataOperator().getFormat( axis.getLogicalRange() ) );
 
         boolean drawTick = true;
 
@@ -419,12 +423,12 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    * calculates the extent of a Double using a certain fontdata
    */
   @Override
-  protected Point getTextExtent( final GCWrapper gc, final Number value, final FontData fd )
+  protected Point getTextExtent( final GCWrapper gc, final Number value, final FontData fd, Format format )
   {
     String label = "";
     try
     {
-      label = getLabel( value );
+      label = getLabel( value, format );
     }
     catch( final java.lang.IllegalArgumentException e )
     {
@@ -508,16 +512,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     img.dispose();
 
     return width;
-  }
-
-  public void setNumberFormat( final NumberFormat nf )
-  {
-    m_nf = nf;
-  }
-
-  public NumberFormat getNumberFormat( )
-  {
-    return m_nf;
   }
 
 }

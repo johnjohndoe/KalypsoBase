@@ -1,5 +1,6 @@
 package org.kalypso.chart.ext.base.data;
 
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -17,9 +18,12 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 
   private final CalendarParser m_stringParser;
 
-  public CalendarDataOperator( Comparator<Calendar> comparator )
+  private final SimpleDateFormat m_dateFormat;
+
+  public CalendarDataOperator( Comparator<Calendar> comparator, SimpleDateFormat sdf )
   {
     super( comparator );
+    m_dateFormat = sdf;
     m_stringParser = new CalendarParser();
   }
 
@@ -110,6 +114,14 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     tomorrow.add( Calendar.DAY_OF_MONTH, 1 );
 
     return new ComparableDataRange<Calendar>( new Calendar[] { today, tomorrow } );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.data.IDataOperator#getFormat(org.kalypso.chart.framework.model.data.IDataRange)
+   */
+  public Format getFormat( IDataRange<Calendar> range )
+  {
+    return m_dateFormat;
   }
 
 }

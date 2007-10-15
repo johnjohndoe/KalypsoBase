@@ -2,6 +2,7 @@ package org.kalypso.chart.framework.model.mapper.registry;
 
 import java.util.Map;
 
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.event.IEventProvider;
 import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -90,5 +91,7 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   public void clear( );
 
   public void addMapper( IMapper mapper );
+
+  public Map<IAxis< ? >, IDataRange<Number>> getNumericRangeAxisSnapshot( );
 
 }

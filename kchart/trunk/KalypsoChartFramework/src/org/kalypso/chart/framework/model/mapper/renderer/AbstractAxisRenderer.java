@@ -1,6 +1,7 @@
 package org.kalypso.chart.framework.model.mapper.renderer;
 
 import java.awt.Insets;
+import java.text.Format;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -58,7 +59,7 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
     m_fontDataTick = fdTick;
   }
 
-  protected abstract Point getTextExtent( GCWrapper gcw, T_logical value, FontData fontData );
+  protected abstract Point getTextExtent( GCWrapper gcw, T_logical value, FontData fontData, Format format );
 
   protected Point getTextExtent( GCWrapper gc, final String value, FontData fd )
   {

@@ -1,5 +1,6 @@
 package org.kalypso.chart.ext.base.axis;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,10 +24,10 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 {
   private final CalendarDataOperator m_dataOperator;
 
-  public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir )
+  public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, SimpleDateFormat sdf )
   {
     super( id, label, prop, pos, dir, Calendar.class );
-    m_dataOperator = new CalendarDataOperator( getComparator() );
+    m_dataOperator = new CalendarDataOperator( getComparator(), sdf );
   }
 
   public double logicalToNormalized( final Calendar value )
@@ -188,7 +189,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     Calendar min = Calendar.getInstance();
     min.setTimeInMillis( range.getMin().longValue() );
     Calendar max = Calendar.getInstance();
-    max.setTimeInMillis( range.getMin().longValue() );
+    max.setTimeInMillis( range.getMax().longValue() );
 
     setLogicalRange( new ComparableDataRange<Calendar>( new Calendar[] { min, max } ) );
   }
