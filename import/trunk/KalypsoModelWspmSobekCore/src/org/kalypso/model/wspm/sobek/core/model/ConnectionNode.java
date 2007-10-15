@@ -41,12 +41,14 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
  */
-public class ConnectionNode extends AbstractNode
+public class ConnectionNode extends AbstractNode implements IConnectionNode
 {
   public ConnectionNode( Feature node )
   {
@@ -59,6 +61,14 @@ public class ConnectionNode extends AbstractNode
   public String getName( )
   {
     throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return INode.TYPE.eConnectionNode;
   }
 
 }

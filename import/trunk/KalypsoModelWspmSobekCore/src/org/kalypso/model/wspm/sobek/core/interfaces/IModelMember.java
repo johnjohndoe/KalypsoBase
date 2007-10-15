@@ -54,4 +54,6 @@ public interface IModelMember
   public ICalculationLink[] getCalculationLinkMembers( );
 
   public ILastfallMember[] getLastfallMembers( );
+
+  public IBranchMaker getBranchMaker( );
 }
