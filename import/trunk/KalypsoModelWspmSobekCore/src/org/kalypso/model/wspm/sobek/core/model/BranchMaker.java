@@ -41,9 +41,10 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
@@ -64,6 +65,24 @@ public class BranchMaker implements IBranchMaker
    */
   public void createBranch( GM_Curve curve ) throws Exception
   {
-    FNGmlUtils.createBranch( m_model, curve, new Feature[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
+    FNGmlUtils.createBranch( m_model, curve, new INode[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createInflowBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
+   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void createInflowBranch( IBranch branch, GM_Curve curve ) throws Exception
+  {
+    FNGmlUtils.createInflowBranch( m_model, branch, curve );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createOutflowBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
+   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void createOutflowBranch( IBranch branch, GM_Curve curve ) throws Exception
+  {
+    FNGmlUtils.createOutflowBranch( m_model, branch, curve );
   }
 }

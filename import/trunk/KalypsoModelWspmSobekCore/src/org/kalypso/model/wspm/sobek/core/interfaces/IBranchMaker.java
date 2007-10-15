@@ -53,4 +53,8 @@ public interface IBranchMaker
    */
   void createBranch( GM_Curve curve ) throws Exception;
 
+  void createOutflowBranch( IBranch branch, GM_Curve curve ) throws Exception;
+
+  void createInflowBranch( IBranch branch, GM_Curve curve ) throws Exception;
+
 }
