@@ -2,6 +2,8 @@ package org.kalypso.chart.framework.model.layer;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.event.IEventProvider;
+import org.kalypso.chart.framework.model.event.ILayerEventListener;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
@@ -11,7 +13,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer<T_domain, T_target>
+public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEventListener>
 {
   // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the
   // LayerType)

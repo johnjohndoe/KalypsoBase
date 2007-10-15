@@ -13,6 +13,7 @@ public class DataRange<T> implements IDataRange<T>
 
   private T m_max;
 
+  @SuppressWarnings( { "cast", "unchecked" })
   public DataRange( final T min, final T max ) throws ZeroSizeDataRangeException
   {
     if( min instanceof Number && max instanceof Number )

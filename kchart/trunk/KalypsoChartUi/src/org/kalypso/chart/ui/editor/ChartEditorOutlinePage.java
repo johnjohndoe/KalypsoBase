@@ -203,7 +203,8 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
   protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
   {
-    m_editor.getChartComposite().getModel().getLayerManager().setLayerVisibility( layer, checked );
+    // m_editor.getChartComposite().getModel().getLayerManager().setLayerVisibility( layer, checked );
+    layer.setVisible( checked );
   }
 
   public void dispose( )

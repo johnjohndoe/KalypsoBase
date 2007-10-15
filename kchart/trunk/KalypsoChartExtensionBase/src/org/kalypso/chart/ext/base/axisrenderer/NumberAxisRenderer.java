@@ -3,10 +3,6 @@ package org.kalypso.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -19,13 +15,11 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.model.mapper.renderer.AbstractAxisRenderer;
 import org.kalypso.chart.framework.util.InsetsHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
@@ -35,8 +29,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 {
   private final NumberFormat m_nf = NumberFormat.getInstance();
-
-  private TreeMap<Integer, SortedSet<Double>> m_ticks;
 
   /**
    * minimal interval size for ticks; if set to 0, the minimum interval size is calculated; otherwise, no interval
@@ -102,41 +94,15 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Point calcTickLabelSize( final GCWrapper gc, final IAxis<Number> axis )
   {
-    Point tickLabelSize = new Point( 10, 10 );
-    // Vielleicht wurden zuvor schon mal ticks ausgerechnet - dann kann man die verwenden
-    final Number[] tickMap = getTickMap().get( axis );
     Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
-
-    if( (tickMap != null) && (tickMap.length > 0) )
-    {
-
-      tickLabelSize = getTextExtent( gc, (tickMap[tickMap.length - 1]), getFontDataTickLabel(), format );
-      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Biggest Tick: " + m_nf.format( tickMap[0] ) + " " + tickMap[0] );
-    }
-    else
-    {
-      final IDataRange<Number> range = axis.getLogicalRange();
-      final double logicalMin, logicalMax;
-      if( range != null )
-      {
-        logicalMin = range.getMin().doubleValue();
-        logicalMax = range.getMax().doubleValue();
-      }
-      else
-        return new Point( 1, 0 );
-
-      final FontData fontDataTick = getFontDataTickLabel();
-
-      final Point fromTextExtent = getTextExtent( gc, logicalMin, fontDataTick, format );
-      final Point toTextExtent = getTextExtent( gc, logicalMax, fontDataTick, format );
-      tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
-
-    }
+    String testStringMax = format.format( axis.getLogicalRange().getMax() );
+    String testStringMin = format.format( axis.getLogicalRange().getMin() );
+    Point tickLabelSizeMax = gc.textExtent( testStringMax );
+    Point tickLabelSizeMin = gc.textExtent( testStringMin );
 
     final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
-
-    final int x = tickLabelSize.x + ihelper.left + ihelper.right;
-    final int y = tickLabelSize.y + ihelper.top + ihelper.bottom;
+    final int x = Math.max( tickLabelSizeMax.x, tickLabelSizeMin.x ) + ihelper.left + ihelper.right;
+    final int y = Math.max( tickLabelSizeMax.y, tickLabelSizeMin.y ) + ihelper.top + ihelper.bottom;
     return new Point( x, y );
   }
 
@@ -157,8 +123,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
     // final Collection<Double> ticks = calcTicks( gc, axis );
-    m_ticks = calcTicks( gc, axis );
-    drawTicks( gc, axis, coords[0], coords[1], m_ticks );
+    drawTicks( gc, axis, coords[0], coords[1] );
 
     drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
 
@@ -166,9 +131,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     bgColor.dispose();
   }
 
-  private TreeMap<Integer, SortedSet<Double>> calcTicks( final GCWrapper gc, final IAxis<Number> axis )
+  private Number[] getTicks( final GCWrapper gc, final IAxis<Number> axis )
   {
-    return NumberTickCalculator.calcTicks( gc, axis, m_minDisplayInterval );
+    Number[] tickMapElement = getTickMapElement( axis );
+    // wenn null, dann muss es neu erzeugt werden
+    if( tickMapElement == null )
+      NumberTickCalculator.calcTicks( gc, axis, m_minDisplayInterval );
+    return getTickMapElement( axis );
   }
 
   /**
@@ -227,9 +196,11 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
   /**
    * draws the Axis ticks into the given GCWrapper
    */
-  private void drawTicks( final GCWrapper gc, final IAxis<Number> axis, final int startX, final int startY, final TreeMap<Integer, SortedSet<Double>> m_ticks2 )
+  private void drawTicks( final GCWrapper gc, final IAxis<Number> axis, final int startX, final int startY )
   {
-    if( (gc == null) || (axis == null) || (m_ticks2 == null) )
+    Number[] ticks = getTicks( gc, axis );
+
+    if( (gc == null) || (axis == null) || (ticks == null) )
       return;
 
     gc.setLineWidth( getLineWidth() );
@@ -248,71 +219,67 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
 
-    for( final Entry<Integer, SortedSet<Double>> level : m_ticks.entrySet() )
+    for( Number value : ticks )
     {
       int y1, y2, x1, x2, tickPos;
       String label;
-      for( final Number value : level.getValue() )
+      label = getLabel( value, axis.getDataOperator().getFormat( axis.getLogicalRange() ) );
+
+      boolean drawTick = true;
+
+      tickPos = axis.logicalToScreen( value );
+      final Point tickExtent = getTextExtent( gc, label, fontDataTick );
+      // HORIZONTAL
+      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        label = getLabel( value, axis.getDataOperator().getFormat( axis.getLogicalRange() ) );
-
-        boolean drawTick = true;
-
-        tickPos = axis.logicalToScreen( value );
-        final Point tickExtent = getTextExtent( gc, label, fontDataTick );
-        // HORIZONTAL
-        if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+        x1 = tickPos;
+        x2 = tickPos;
+        y1 = startY;
+        textX = tickPos - tickExtent.x / 2;
+        // BOTTOM
+        if( axis.getPosition() == POSITION.BOTTOM )
         {
-          x1 = tickPos;
-          x2 = tickPos;
-          y1 = startY;
-          textX = tickPos - tickExtent.x / 2;
-          // BOTTOM
-          if( axis.getPosition() == POSITION.BOTTOM )
-          {
-            y2 = y1 + tickLength;
-            textY = y2 + tickLabelInsets.top;
-          }
-          // TOP
-          else
-          {
-            y2 = y1 - tickLength;
-            textY = y2 - tickLabelInsets.top - tickExtent.y;
-          }
-
-          if( m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax)) )
-            drawTick = false;
+          y2 = y1 + tickLength;
+          textY = y2 + tickLabelInsets.top;
         }
-        // VERTICAL
+        // TOP
         else
         {
-          x1 = startX;
-          textY = tickPos - tickExtent.y / 2;
-          y1 = tickPos;
-          y2 = tickPos;
-          // LEFT
-          if( axis.getPosition() == POSITION.LEFT )
-          {
-            x2 = x1 - tickLength;
-            textX = x2 - tickExtent.x - tickLabelInsets.top;
-          }
-          // RIGHT
-          else
-          {
-            x2 = x1 + tickLength;
-            textX = x2 + tickLabelInsets.top;
-          }
-          if( m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax)) )
-            drawTick = false;
+          y2 = y1 - tickLength;
+          textY = y2 - tickLabelInsets.top - tickExtent.y;
         }
 
-        if( drawTick )
+        if( m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax)) )
+          drawTick = false;
+      }
+      // VERTICAL
+      else
+      {
+        x1 = startX;
+        textY = tickPos - tickExtent.y / 2;
+        y1 = tickPos;
+        y2 = tickPos;
+        // LEFT
+        if( axis.getPosition() == POSITION.LEFT )
         {
-          // final Color oldFforeground = gc.getForeground();
-
-          drawText( gc, label, textX, textY, fontDataTick );
-          gc.drawLine( x1, y1, x2, y2 );
+          x2 = x1 - tickLength;
+          textX = x2 - tickExtent.x - tickLabelInsets.top;
         }
+        // RIGHT
+        else
+        {
+          x2 = x1 + tickLength;
+          textX = x2 + tickLabelInsets.top;
+        }
+        if( m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax)) )
+          drawTick = false;
+      }
+
+      if( drawTick )
+      {
+        gc.fillRectangle( new Rectangle( textX, textY, tickExtent.x, tickExtent.y ) );
+        drawText( gc, label, textX, textY, fontDataTick );
+        gc.drawLine( x1, y1, x2, y2 );
       }
     }
   }
@@ -442,17 +409,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Number[] getGridTicks( final IAxis<Number> axis )
   {
-    final HashMap<IAxis<Number>, Number[]> tickMap = getTickMap();
-    Number[] ticks = tickMap.get( axis );
-    if( ticks == null )
-    {
-      final GC gc = new GC( Display.getDefault() );
-      final GCWrapper gcw = new GCWrapper( gc );
-      calcTicks( gcw, axis );
-      ticks = tickMap.get( axis );
-      gcw.dispose();
-      gc.dispose();
-    }
+    final Number[] ticks = getTickMapElement( axis );
     return ticks;
   }
 

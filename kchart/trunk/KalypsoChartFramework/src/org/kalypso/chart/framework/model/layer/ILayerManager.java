@@ -8,13 +8,13 @@ import org.kalypso.chart.framework.model.event.ILayerManagerEventListener;
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
-  public void addLayer( IChartLayer layer );
+  public void addLayer( IChartLayer< ? , ? > layer );
 
-  public void addLayer( IChartLayer layer, int position );
+  public void addLayer( IChartLayer< ? , ? > layer, int position );
 
-  public int getLayerPosition( IChartLayer layer );
+  public int getLayerPosition( IChartLayer< ? , ? > layer );
 
-  public void removeLayer( IChartLayer layer );
+  public void removeLayer( IChartLayer< ? , ? > layer );
 
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
@@ -28,26 +28,16 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    * 
    * @return
    */
-  public IChartLayer[] getLayers( );
+  public IChartLayer< ? , ? >[] getLayers( );
 
-  public void moveLayerToPosition( IChartLayer layer, int position );
+  public void moveLayerToPosition( IChartLayer< ? , ? > layer, int position );
 
-  public IChartLayer getLayerById( String id );
+  public IChartLayer< ? , ? > getLayerById( String id );
 
   public int getSize( );
 
   /**
-   * changes the visibility of a layer
-   * 
-   * @param layer
-   *            the layer whose visibility is to change
-   * @param isVisible
-   *            true if layer should be visible, false if layer should be hidden
-   */
-  public void setLayerVisibility( IChartLayer layer, boolean isVisible );
-
-  /**
    * returns only layers which are editable (
    */
-  public IEditableChartLayer[] getEditableLayers( );
+  public IEditableChartLayer< ? , ? >[] getEditableLayers( );
 }

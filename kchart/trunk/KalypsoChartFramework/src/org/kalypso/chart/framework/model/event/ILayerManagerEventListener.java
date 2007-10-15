@@ -7,12 +7,29 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
  */
 public interface ILayerManagerEventListener
 {
-  public void onLayerAdded( IChartLayer layer );
+  /**
+   * called when layer was added to layer stack
+   */
+  public void onLayerAdded( IChartLayer< ? , ? > layer );
 
-  public void onLayerRemoved( IChartLayer layer );
+  /**
+   * called when layer was removed from layer stack
+   */
+  public void onLayerRemoved( IChartLayer< ? , ? > layer );
 
-  public void onLayerMoved( IChartLayer layer );
+  /**
+   * called when layer has been moved to another position in the layer stack
+   */
+  public void onLayerMoved( IChartLayer< ? , ? > layer );
 
-  public void onLayerVisibilityChanged( IChartLayer layer );
+  /**
+   * called when layer visibility has changed
+   */
+  public void onLayerVisibilityChanged( IChartLayer< ? , ? > layer );
+
+  /**
+   * called when layer content has changed
+   */
+  public void onLayerContentChanged( IChartLayer< ? , ? > layer );
 
 }

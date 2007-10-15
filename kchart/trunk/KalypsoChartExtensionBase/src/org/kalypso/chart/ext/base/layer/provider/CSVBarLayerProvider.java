@@ -37,12 +37,13 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
     final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
     final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-    final IAxis<T_domain> domainAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<T_target> targetAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
+    final IAxis<T_domain> domainAxis = (IAxis<T_domain>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<T_target> targetAxis = (IAxis<T_target>) getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
     final AbstractDomainIntervalValueFileData<T_domain, T_target> data = new AbstractDomainIntervalValueFileData<T_domain, T_target>()
     {
 
+      @SuppressWarnings("cast")
       @Override
       public boolean openData( )
       {

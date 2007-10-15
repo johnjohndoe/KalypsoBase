@@ -1,11 +1,14 @@
 package org.kalypso.chart.framework.model.mapper;
 
+import org.kalypso.chart.framework.model.data.IDataOperator;
+import org.kalypso.chart.framework.model.event.IEventProvider;
+import org.kalypso.chart.framework.model.event.IMapperEventListener;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
  * @author burtscher
  */
-public interface IMapper<T_logical, T_visual>
+public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEventListener>
 {
   /**
    * @return the axis' unique identifier
@@ -29,5 +32,11 @@ public interface IMapper<T_logical, T_visual>
   public void setData( String identifier, Object data );
 
   public Object getData( String identifier );
+
+  /**
+   * returns a data converter which may be used to convert strings to data which can directly be used by the mapper (and
+   * vice versa)
+   */
+  public IDataOperator<T_logical> getDataOperator( );
 
 }

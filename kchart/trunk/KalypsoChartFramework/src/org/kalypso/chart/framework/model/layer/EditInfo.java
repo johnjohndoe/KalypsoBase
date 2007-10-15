@@ -10,7 +10,7 @@ public class EditInfo
 {
   public final Rectangle shape;
 
-  public final IEditableChartLayer layer;
+  public final IEditableChartLayer< ? , ? > layer;
 
   public final Object data;
 
@@ -18,7 +18,7 @@ public class EditInfo
 
   public String text;
 
-  public EditInfo( final IEditableChartLayer editLayer, final Rectangle editShape, final Object editData, final String editText )
+  public EditInfo( final IEditableChartLayer< ? , ? > editLayer, final Rectangle editShape, final Object editData, final String editText )
   {
     layer = editLayer;
     shape = editShape;

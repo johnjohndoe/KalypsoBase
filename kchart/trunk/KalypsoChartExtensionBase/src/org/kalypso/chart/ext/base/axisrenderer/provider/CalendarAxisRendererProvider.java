@@ -57,7 +57,8 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 public class CalendarAxisRendererProvider extends AbstractAxisRendererProvider
 {
 
-  public IAxisRenderer getAxisRenderer( ) throws AxisRendererProviderException
+  @SuppressWarnings("unused")
+  public IAxisRenderer< ? > getAxisRenderer( ) throws AxisRendererProviderException
   {
     final RGBParser rgbp = new RGBParser();
     final RGB fgRGB = getParameterContainer().getParsedParameterValue( "color", "#000000", rgbp );

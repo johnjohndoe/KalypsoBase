@@ -40,16 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mouse;
 
-import java.util.Map;
-
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
@@ -61,16 +56,9 @@ public class DragPanHandler implements MouseListener, MouseMoveListener
 
   private final ChartComposite m_chartComposite;
 
-  private final PlotCanvas m_plot;
-
-  int m_pressedKey = -1;
-
-  private Map<IAxis< ? >, IDataRange<Number>> m_axisMap;
-
   public DragPanHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-    m_plot = m_chartComposite.getPlot();
   }
 
   /**
@@ -87,7 +75,7 @@ public class DragPanHandler implements MouseListener, MouseMoveListener
   public void mouseDown( final MouseEvent e )
   {
     m_start = new Point( e.x, e.y );
-    m_axisMap = m_chartComposite.getModel().getMapperRegistry().getNumericRangeAxisSnapshot();
+    // m_axisMap = m_chartComposite.getModel().getMapperRegistry().getNumericRangeAxisSnapshot();
   }
 
   /**
@@ -95,8 +83,16 @@ public class DragPanHandler implements MouseListener, MouseMoveListener
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( m_start == null )
-      return;
+    // pan offset zurücksetzen
+    m_chartComposite.getPlot().setPanOffset( new Point( 0, 0 ) );
+
+    // dann pannen
+    if( m_start != null )
+    {
+      m_chartComposite.getModel().panTo( m_start, new Point( e.x, e.y ) );
+    }
+
+    // dann pan resetten
     m_start = null;
   }
 
@@ -107,12 +103,7 @@ public class DragPanHandler implements MouseListener, MouseMoveListener
   {
     if( m_start != null )
     {
-      // aktueller Punkt
-      final int nowX = e.x;
-      final int nowY = e.y;
-
-      m_chartComposite.getModel().panTo( m_axisMap, m_start, new Point( nowX, nowY ) );
-
+      m_chartComposite.getPlot().setPanOffset( new Point( m_start.x - e.x, m_start.y - e.y ) );
     }
   }
 

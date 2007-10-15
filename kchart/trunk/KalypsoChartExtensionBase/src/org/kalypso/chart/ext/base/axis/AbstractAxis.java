@@ -1,7 +1,6 @@
 package org.kalypso.chart.ext.base.axis;
 
 import java.util.Comparator;
-import java.util.HashMap;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.kalypso.chart.framework.model.data.IDataRange;
@@ -16,9 +15,9 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractAxis<T> implements IAxis<T>
+public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> implements IAxis<T>
 {
-  private IMapperRegistry m_registry = null;
+  private final IMapperRegistry m_registry = null;
 
   private final String m_id;
 
@@ -30,16 +29,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
   private final DIRECTION m_dir;
 
-  private final Comparator<T> m_dataComparator;
-
   private IDataRange<T> m_dataRange;
-
-  private final Class< ? > m_dataClass;
-
-  /**
-   * Hashmap to store arbitrary key value pairs
-   */
-  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
   /**
    * Uses a ComparableComparator as dataComparator
@@ -52,34 +42,12 @@ public abstract class AbstractAxis<T> implements IAxis<T>
 
   public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<T> dataComparator, final Class< ? > dataClass )
   {
+    super( id, dataComparator, dataClass );
     m_id = id;
     m_label = label;
     m_prop = prop;
     m_pos = pos;
     m_dir = dir;
-    m_dataComparator = dataComparator;
-    m_dataClass = dataClass;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getDataClass()
-   */
-  public Class< ? > getDataClass( )
-  {
-    return m_dataClass;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#setRegistry(org.kalypso.chart.framework.axis.registry.IMapperRegistry)
-   */
-  public void setRegistry( final IMapperRegistry mapperRegistry )
-  {
-    m_registry = mapperRegistry;
-  }
-
-  public IMapperRegistry getRegistry( )
-  {
-    return m_registry;
   }
 
   /**
@@ -91,15 +59,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     if( m_registry == null )
       throw new IllegalStateException( "Registry is null" );
 
-    return m_registry.getRenderer( this );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getIdentifier()
-   */
-  public String getIdentifier( )
-  {
-    return m_id;
+    return (IAxisRenderer<T>) m_registry.getRenderer( this );
   }
 
   /**
@@ -159,26 +119,6 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   public void setLogicalRange( final IDataRange<T> dataRange )
   {
     m_dataRange = dataRange;
-  }
-
-  public Comparator<T> getComparator( )
-  {
-    return m_dataComparator;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
-  public void setData( String id, Object data )
-  {
-    m_data.put( id, data );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-   */
-  public Object getData( String id )
-  {
-    return m_data.get( id );
+    getEventHandler().fireMapperRangeChanged( this );
   }
 }

@@ -1,7 +1,6 @@
 package org.kalypso.chart.framework.model.impl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
@@ -34,7 +32,7 @@ public class ChartModel implements IChartModel
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
   /** axis --> List of layers */
-  private final Map<IAxis< ? >, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis< ? >, List<IChartLayer>>();
+  private final Map<IAxis< ? >, List<IChartLayer< ? , ? >>> m_axis2Layers = new HashMap<IAxis< ? >, List<IChartLayer< ? , ? >>>();
 
   private final ILayerManager m_manager = new LayerManager();
 
@@ -61,7 +59,7 @@ public class ChartModel implements IChartModel
        * @see org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerAdded( final IChartLayer layer )
+      public void onLayerAdded( final IChartLayer< ? , ? > layer )
       {
         updateAxisLayerMap( layer, true );
       }
@@ -72,7 +70,7 @@ public class ChartModel implements IChartModel
        * @see org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerRemoved( final IChartLayer layer )
+      public void onLayerRemoved( final IChartLayer< ? , ? > layer )
       {
         updateAxisLayerMap( layer, false );
       }
@@ -89,17 +87,17 @@ public class ChartModel implements IChartModel
    * @param bAdding
    *            if true, the layer will be added; if false, the layer will be removed
    */
-  private void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
+  protected void updateAxisLayerMap( final IChartLayer< ? , ? > layer, final boolean bAdding )
   {
-    List<IChartLayer> domList = m_axis2Layers.get( layer.getDomainAxis() );
-    List<IChartLayer> valList = m_axis2Layers.get( layer.getTargetAxis() );
+    List<IChartLayer< ? , ? >> domList = m_axis2Layers.get( layer.getDomainAxis() );
+    List<IChartLayer< ? , ? >> valList = m_axis2Layers.get( layer.getTargetAxis() );
 
     if( bAdding )
     {
       // mapping for domain axis
       if( domList == null )
       {
-        domList = new ArrayList<IChartLayer>();
+        domList = new ArrayList<IChartLayer< ? , ? >>();
         m_axis2Layers.put( layer.getDomainAxis(), domList );
       }
       domList.add( layer );
@@ -107,17 +105,17 @@ public class ChartModel implements IChartModel
       // mapping for value axis
       if( valList == null )
       {
-        valList = new ArrayList<IChartLayer>();
+        valList = new ArrayList<IChartLayer< ? , ? >>();
         m_axis2Layers.put( layer.getTargetAxis(), valList );
       }
       valList.add( layer );
 
       // axis-components must be visible
 
-      final IAxisComponent domainComp = m_mapperRegistry.getComponent( layer.getDomainAxis() );
+      final IAxisComponent< ? > domainComp = m_mapperRegistry.getComponent( layer.getDomainAxis() );
       if( domainComp != null )
         domainComp.setVisible( true );
-      final IAxisComponent valueComp = m_mapperRegistry.getComponent( layer.getTargetAxis() );
+      final IAxisComponent< ? > valueComp = m_mapperRegistry.getComponent( layer.getTargetAxis() );
       if( valueComp != null )
         valueComp.setVisible( true );
       // m_mapperRegistry.getComponent( layer.getValueAxis() ).setVisible( true );
@@ -185,7 +183,7 @@ public class ChartModel implements IChartModel
    * 
    * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
    */
-  public Map<IAxis< ? >, List<IChartLayer>> getAxis2Layers( )
+  public Map<IAxis< ? >, List<IChartLayer< ? , ? >>> getAxis2Layers( )
   {
     return m_axis2Layers;
   }
@@ -199,13 +197,13 @@ public class ChartModel implements IChartModel
   {
     m_hideUnusedAxes = b;
 
-    final IAxis[] axes = m_mapperRegistry.getAxes();
-    for( final IAxis axis : axes )
+    final IAxis< ? >[] axes = m_mapperRegistry.getAxes();
+    for( final IAxis< ? > axis : axes )
     {
-      final List<IChartLayer> list = m_axis2Layers.get( axis );
+      final List<IChartLayer< ? , ? >> list = m_axis2Layers.get( axis );
       if( list == null || list.size() == 0 )
       {
-        final IAxisComponent comp = m_mapperRegistry.getComponent( axis );
+        final IAxisComponent< ? > comp = m_mapperRegistry.getComponent( axis );
         comp.setVisible( !m_hideUnusedAxes );
       }
     }
@@ -222,7 +220,7 @@ public class ChartModel implements IChartModel
 
     for( final IAxis axis : axes )
     {
-      final List<IChartLayer> layers = getAxis2Layers().get( axis );
+      final List<IChartLayer< ? , ? >> layers = getAxis2Layers().get( axis );
       if( layers == null )
         continue;
 
@@ -237,8 +235,6 @@ public class ChartModel implements IChartModel
             ranges.add( range );
         }
       }
-      IDataOperator dataOperator = axis.getDataOperator();
-      Comparator comparator = dataOperator.getComparator();
       IDataRange mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ), axis.getDataOperator().getComparator() );
 
       if( mergedDataRange == null )
@@ -298,7 +294,7 @@ public class ChartModel implements IChartModel
    */
   public void maximize( )
   {
-    final IAxis[] axes = getMapperRegistry().getAxes();
+    final IAxis< ? >[] axes = getMapperRegistry().getAxes();
     autoscale( axes );
     // ModelChangedEvent werfen, damit Composite das Model neu zeichnet
   }
@@ -429,12 +425,12 @@ public class ChartModel implements IChartModel
     m_eventHandler.fireModelChanged();
   }
 
-  public void panTo( final Map<IAxis< ? >, IDataRange<Number>> axisRangeSnapshotMap, final Point start, final Point end )
+  public void panTo( final Point start, final Point end )
 
   {
-    for( IAxis< ? > axis : axisRangeSnapshotMap.keySet() )
+    IAxis< ? >[] axes = getMapperRegistry().getAxes();
+    for( IAxis< ? > axis : axes )
     {
-      IDataRange<Number> oldRange = axis.getNumericRange();
       double newmin = 0;
       double newmax = 0;
 
@@ -450,7 +446,7 @@ public class ChartModel implements IChartModel
         startNum = axis.screenToNumeric( start.y );
       }
       double diff = startNum.doubleValue() - nowNum.doubleValue();
-      IDataRange<Number> initRange = axisRangeSnapshotMap.get( axis );
+      IDataRange<Number> initRange = axis.getNumericRange();
       newmin = initRange.getMin().doubleValue() + diff;
       newmax = initRange.getMax().doubleValue() + diff;
 
@@ -460,5 +456,4 @@ public class ChartModel implements IChartModel
     }
     m_eventHandler.fireModelChanged();
   }
-
 }

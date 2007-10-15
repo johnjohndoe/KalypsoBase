@@ -42,4 +42,6 @@ public interface IAxisRenderer<T_logical>
    */
   public String getId( );
 
+  public void invalidateTicks( IAxis axis );
+
 }

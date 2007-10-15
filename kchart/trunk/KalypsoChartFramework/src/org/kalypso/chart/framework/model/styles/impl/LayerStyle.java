@@ -50,7 +50,8 @@ public class LayerStyle implements ILayerStyle
     return elt;
   }
 
-  private IStyledElement getDefaultElement( SE_TYPE type )
+  private IStyledElement getDefaultElement( @SuppressWarnings("unused")
+  SE_TYPE type )
   {
     return new StyleDummy();
   }
@@ -58,6 +59,7 @@ public class LayerStyle implements ILayerStyle
   /**
    * @see org.kalypso.chart.framework.model.styles.ILayerStyle#getElements()
    */
+  @SuppressWarnings("cast")
   public IStyledElement[] getElements( )
   {
     return (IStyledElement[]) m_elements.toArray( new IStyledElement[] {} );

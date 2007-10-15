@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 import org.kalypso.chart.framework.model.event.IEventProvider;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
@@ -21,7 +20,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public void clear( );
 
-  public Map<IAxis< ? >, List<IChartLayer>> getAxis2Layers( );
+  public Map<IAxis< ? >, List<IChartLayer< ? , ? >>> getAxis2Layers( );
 
   /**
    * @param b
@@ -33,7 +32,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
   /**
    * When called, all given axes set their DataRange so all ther layers data can be shown
    */
-  public void autoscale( IAxis[] axes );
+  public void autoscale( IAxis< ? >[] axes );
 
   /**
    * sets automatical autoscaling of axes
@@ -54,6 +53,6 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public <T_logical> void zoomIn( Point start, Point end );
 
-  public void panTo( final Map<IAxis< ? >, IDataRange<Number>> axisRangeSnapshotMap, Point start, Point end );
+  public void panTo( Point start, Point end );
 
 }

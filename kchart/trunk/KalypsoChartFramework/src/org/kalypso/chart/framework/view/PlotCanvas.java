@@ -41,6 +41,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private Rectangle m_dragArea = null;
 
+  private Point m_panOffset = new Point( 0, 0 );
+
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
     super( parent, style );
@@ -55,7 +57,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerAdded( IChartLayer layer )
+      public void onLayerAdded( IChartLayer< ? , ? > layer )
       {
         redraw();
       }
@@ -64,7 +66,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerRemoved( IChartLayer layer )
+      public void onLayerRemoved( IChartLayer< ? , ? > layer )
       {
         redraw();
       }
@@ -73,7 +75,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerMoved( IChartLayer layer )
+      public void onLayerMoved( IChartLayer< ? , ? > layer )
       {
         redraw();
       }
@@ -82,7 +84,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
+      public void onLayerVisibilityChanged( IChartLayer< ? , ? > layer )
       {
         redraw();
       }
@@ -193,8 +195,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       buffGcw.setAntialias( SWT.ON );
       try
       {
-        final IChartLayer[] layers = m_manager.getLayers();
-        for( final IChartLayer layer : layers )
+        final IChartLayer< ? , ? >[] layers = m_manager.getLayers();
+        for( final IChartLayer< ? , ? > layer : layers )
           if( layer.isVisible() )
           {
             ChartUtilities.resetGC( buffGcw.m_gc );
@@ -223,9 +225,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
     // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
     // selstsamen effekten
-    // gcw.drawImage( usedBufferImage, screen.x, screen.y, screen.width, screen.height, screen.x, screen.y,
-    // screen.width, screen.height );
-    gcw.drawImage( usedBufferImage, screen.x, screen.y );
+    gcw.drawImage( usedBufferImage, screen.x - m_panOffset.x, screen.y - m_panOffset.y );
 
     return usedBufferImage;
   }
@@ -294,6 +294,17 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   public void setDragArea( Rectangle dragArea )
   {
     m_dragArea = dragArea;
+  }
+
+  /**
+   * sets an offset to which the paint buffer is moved in case of a pan action;
+   * 
+   * @param offset
+   *            positiv value moves buffer to right / down, negative value to left / up
+   */
+  public void setPanOffset( final Point offset )
+  {
+    m_panOffset = offset;
   }
 
 }

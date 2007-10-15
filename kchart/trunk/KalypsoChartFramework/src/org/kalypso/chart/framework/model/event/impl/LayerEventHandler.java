@@ -38,18 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.framework.model.layer;
+package org.kalypso.chart.framework.model.event.impl;
 
-import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.event.ILayerEventListener;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher1
  * 
  */
-public abstract class AbstractEditableChartLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target> implements IEditableChartLayer<T_domain, T_target>
+public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener>
 {
-  public AbstractEditableChartLayer( IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis )
+  public void fireLayerContentChanged( final IChartLayer< ? , ? > layer )
   {
-    super( domainAxis, targetAxis );
+    for( final ILayerEventListener l : getListeners() )
+      l.onLayerContentChanged( layer );
+  }
+
+  public void fireLayerVisibilityChanged( final IChartLayer< ? , ? > layer )
+  {
+    for( final ILayerEventListener l : getListeners() )
+      l.onLayerVisibilityChanged( layer );
   }
 }

@@ -17,7 +17,8 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
 {
 
-  public IAxisRenderer getAxisRenderer( ) throws AxisRendererProviderException
+  @SuppressWarnings("unused")
+  public IAxisRenderer< ? > getAxisRenderer( ) throws AxisRendererProviderException
   {
     final RGBParser rgbp = new RGBParser();
     final IParameterContainer pc = getParameterContainer();

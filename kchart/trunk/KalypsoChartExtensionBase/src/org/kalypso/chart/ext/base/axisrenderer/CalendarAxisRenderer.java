@@ -25,7 +25,6 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.model.mapper.renderer.AbstractAxisRenderer;
 import org.kalypso.chart.framework.util.InsetsHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
@@ -285,7 +284,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
         realticks.add( cal );
       }
     }
-    getTickMap().put( axis, realticks.toArray( new Calendar[] {} ) );
+    setTickMapElement( axis, realticks.toArray( new Calendar[] {} ) );
 
     return realticks;
   }
@@ -317,8 +316,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     // Abbruchbedingung: Abstand muss größer 1 sein, sonst kommt immer der 2. Wert raus
     if( to - from > 1 )
     {
-      final Calendar tmpcal = Calendar.getInstance();
-
       for( final Integer divisor : divisors )
       {
         final long betweenrange = Math.abs( from - to ) / divisor.intValue();
@@ -503,16 +500,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    */
   public Calendar[] getGridTicks( IAxis<Calendar> axis )
   {
-    Calendar[] ticks = getTickMap().get( axis );
-    if( ticks == null )
-    {
-      final GC gc = new GC( Display.getDefault() );
-      final GCWrapper gcw = new GCWrapper( gc );
-      calcTicks( gcw, axis );
-      ticks = getTickMap().get( axis );
-      gcw.dispose();
-      gc.dispose();
-    }
+    Calendar[] ticks = getTickMapElement( axis );
     return ticks;
   }
 

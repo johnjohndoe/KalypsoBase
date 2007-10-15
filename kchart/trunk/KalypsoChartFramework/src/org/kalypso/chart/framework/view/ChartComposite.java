@@ -64,7 +64,7 @@ public class ChartComposite extends Composite
        *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
        */
       @Override
-      public void onMapperAdded( final IMapper mapper )
+      public void onMapperAdded( final IMapper< ? , ? > mapper )
       {
         if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
         {
@@ -98,6 +98,7 @@ public class ChartComposite extends Composite
       public void onMapperRangeChanged( IMapper mapper )
       {
         layout();
+        redraw();
       }
 
     };
@@ -112,6 +113,7 @@ public class ChartComposite extends Composite
       @Override
       public void onModelChanged( )
       {
+        layout();
         redraw();
       }
     };
@@ -247,7 +249,7 @@ public class ChartComposite extends Composite
   @Override
   public void redraw( )
   {
-    m_plot.redraw();
+    layout();
 
     final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
     final IAxis[] axes = mapperRegistry.getAxes();
@@ -260,6 +262,7 @@ public class ChartComposite extends Composite
       final AxisCanvas ac = (AxisCanvas) mapperRegistry.getComponent( axis );
       ac.redraw();
     }
+    m_plot.redraw();
   }
 
   /**

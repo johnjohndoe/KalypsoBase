@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ext.base.style.StyledLine;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
 import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;

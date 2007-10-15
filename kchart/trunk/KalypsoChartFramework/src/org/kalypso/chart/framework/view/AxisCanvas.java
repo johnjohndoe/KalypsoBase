@@ -32,6 +32,8 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
 
   private Image m_bufferImage = null;
 
+  private IAxisRenderer< ? > m_renderer;
+
   public AxisCanvas( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
@@ -126,8 +128,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     else
       usedBufferImage = bufferImage;
 
-    // muss so sein, wenn mann den layerClip immer setzt, kommts beim dragRect zeichnen zu
-    // selstsamen effekten
     gcw.drawImage( usedBufferImage, screen.x, screen.y );
 
     return usedBufferImage;
@@ -182,14 +182,22 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   @Override
   public void redraw( )
   {
+    layout();
+    if( !isDisposed() )
+      super.redraw();
+
+  }
+
+  @Override
+  public void layout( )
+  {
 
     if( m_bufferImage != null )
     {
       m_bufferImage.dispose();
       m_bufferImage = null;
     }
-    if( !isDisposed() )
-      super.redraw();
+
   }
 
   /**
@@ -197,8 +205,20 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    */
   public void handleEvent( final Event event )
   {
+
     if( event.type == SWT.Resize )
+    {
+      if( m_bufferImage != null )
+      {
+        m_bufferImage.dispose();
+        m_bufferImage = null;
+
+        m_renderer = m_axis.getRegistry().getRenderer( m_axis );
+        m_renderer.invalidateTicks( m_axis );
+      }
       redraw();
+    }
+
   }
 
 }

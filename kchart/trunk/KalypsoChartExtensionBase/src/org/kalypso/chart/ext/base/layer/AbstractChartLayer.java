@@ -1,4 +1,4 @@
-package org.kalypso.chart.framework.model.layer;
+package org.kalypso.chart.ext.base.layer;
 
 import java.util.HashMap;
 
@@ -6,6 +6,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.event.ILayerEventListener;
+import org.kalypso.chart.framework.model.event.impl.LayerEventHandler;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
 import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -33,6 +36,8 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   private final IAxis<T_domain> m_domainAxis;
 
   private IDataContainer<T_domain, T_target> m_dataContainer = null;
+
+  private final LayerEventHandler m_handler = new LayerEventHandler();
 
   /**
    * Hashmap to store arbitrary key value pairs
@@ -155,7 +160,7 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   public void setVisible( final boolean isVisible )
   {
     m_isVisible = isVisible;
-
+    m_handler.fireLayerVisibilityChanged( this );
   }
 
   public IDataContainer<T_domain, T_target> getDataContainer( )
@@ -198,4 +203,13 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
     return m_data.get( id );
   }
 
+  public void addListener( ILayerEventListener l )
+  {
+    m_handler.addListener( l );
+  }
+
+  public void removeListener( ILayerEventListener l )
+  {
+    m_handler.removeListener( l );
+  }
 }

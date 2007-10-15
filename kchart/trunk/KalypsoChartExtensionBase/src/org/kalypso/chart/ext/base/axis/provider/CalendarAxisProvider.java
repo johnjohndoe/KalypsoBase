@@ -27,7 +27,7 @@ public class CalendarAxisProvider extends AbstractAxisProvider
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */
-  public IAxis getAxis( ) throws AxisProviderException
+  public IAxis< ? > getAxis( ) throws AxisProviderException
   {
     final AxisPositionParser app = new AxisPositionParser();
     final POSITION pos = app.stringToLogical( getAxisType().getPosition().toString() );

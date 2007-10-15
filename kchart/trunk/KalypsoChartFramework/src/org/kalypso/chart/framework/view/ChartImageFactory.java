@@ -27,7 +27,7 @@ public class ChartImageFactory
     PNG,
     JPG,
     GIF
-  };
+  }
 
   /**
    * @param transparency
@@ -61,9 +61,9 @@ public class ChartImageFactory
     tmpGcw.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
     final IMapperRegistry ar = chart.getModel().getMapperRegistry();
-    final Map<IAxis, IAxisComponent> components = ar.getAxesToComponentsMap();
-    final Set<Entry<IAxis, IAxisComponent>> acs = components.entrySet();
-    for( final Entry<IAxis, IAxisComponent> ac : acs )
+    final Map<IAxis< ? >, IAxisComponent< ? >> components = ar.getAxesToComponentsMap();
+    final Set<Entry<IAxis< ? >, IAxisComponent< ? >>> acs = components.entrySet();
+    for( final Entry<IAxis< ? >, IAxisComponent< ? >> ac : acs )
     {
       final IAxis axis = ac.getKey();
       // Casten, damit man auf die Component-Eigenschaften zugreifen kann

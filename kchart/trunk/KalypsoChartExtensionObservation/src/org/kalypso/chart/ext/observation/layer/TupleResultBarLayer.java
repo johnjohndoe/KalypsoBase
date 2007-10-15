@@ -1,7 +1,7 @@
 package org.kalypso.chart.ext.observation.layer;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
+import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 

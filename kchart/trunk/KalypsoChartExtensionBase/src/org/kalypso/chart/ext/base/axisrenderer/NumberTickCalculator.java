@@ -1,20 +1,12 @@
 package org.kalypso.chart.ext.base.axisrenderer;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -31,22 +23,22 @@ public class NumberTickCalculator
    * @param minDisplayInterval
    *            interval division should stop when intervals become smaller than this value
    */
-  public static TreeMap<Integer, SortedSet<Double>> calcTicks( final GCWrapper gc, final IAxis<Number> axis, final double minDisplayInterval )
+  @SuppressWarnings("cast")
+  public static void calcTicks( final GCWrapper gc, final IAxis<Number> axis, final double minDisplayInterval )
   {
-
-    if( axis.getLogicalRange() == null )
-      return null;
-
     final IMapperRegistry registry = axis.getRegistry();
     final NumberAxisRenderer renderer = (NumberAxisRenderer) registry.getRenderer( axis );
 
+    if( axis.getLogicalRange() == null )
+      renderer.setTickMapElement( axis, null );
+
     if( (gc == null) || (axis == null) || (axis.getPosition() == null) )
-      return null;
+      renderer.setTickMapElement( axis, null );
 
     // gr��tes Tick<-Label berechnen
     final Point ticklabelSize = renderer.calcTickLabelSize( gc, axis );
     if( ticklabelSize == null )
-      return null;
+      renderer.setTickMapElement( axis, null );
 
     // TickLabelGr��e + 2 wegen Rundungsfehlern beim positionieren
     /*
@@ -59,7 +51,8 @@ public class NumberTickCalculator
       minScreenInterval = ticklabelSize.y;
 
     // Collection f�r Ticks
-    final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
+    // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
+    final SortedSet<Double> ticks = new TreeSet<Double>();
 
     // Mini- und maximalen Grenz-Wert ermitteln anhand der Gr��e der Labels
     int screenMin, screenMax;
@@ -69,15 +62,9 @@ public class NumberTickCalculator
     screenMin = screenMinMax.x;
     screenMax = screenMinMax.y;
 
-    Logger.trace( axis.getIdentifier() + " ScreenMin: " + screenMin + " ScreenMax:" + screenMax + " ( " + axis.logicalToScreen( range.getMin() ) + " : " + axis.logicalToScreen( range.getMax() )
-        + ") " );
-
     // logischen Mini- und Maximalen wert
     final double logicalMin = axis.screenToLogical( screenMin ).doubleValue();
     final double logicalMax = axis.screenToLogical( screenMax ).doubleValue();
-
-    Logger.trace( axis.getIdentifier() + " ScreenMin: " + screenMin + " ScreenMax:" + screenMax + " ( " + axis.logicalToScreen( range.getMin() ) + " : " + axis.logicalToScreen( range.getMax() )
-        + ") " );
 
     final double logicalRange = Math.abs( logicalMax - logicalMin );
 
@@ -102,37 +89,23 @@ public class NumberTickCalculator
       }
     }
 
-    Logger.trace( axis.getIdentifier() + " logicalRange: " + logicalRange );
-
-    Logger.trace( axis.getIdentifier() + " Normrange: " + normrange );
-    Logger.trace( axis.getIdentifier() + " Rangepow: " + rangepow );
-
     // Das Minimum normalisieren und abrunden
     double normmin = Math.floor( range.getMin().doubleValue() * Math.pow( 10, rangepow - 1 ) );
     // Das Minimum wieder zur�ckrechnen
     normmin = normmin * Math.pow( 10, (rangepow - 1) * (-1) );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "normmin: " + normmin );
-    Logger.trace( axis.getIdentifier() + " Normmin: " + normmin );
 
     // Das Maximum normalisieren und aufrunden
     double normmax = Math.ceil( range.getMax().doubleValue() * Math.pow( 10, rangepow - 1 ) );
     // Das Maximum wieder zur�ckrechnen
     normmax = normmax * Math.pow( 10, (rangepow - 1) * (-1) );
-    Logger.trace( axis.getIdentifier() + " Normmax: " + normmax );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "normmax: " + normmax );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, axis.getIdentifier() + " Normmin: " + normmin );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, axis.getIdentifier() + " Normmax: " + normmax );
 
     // Zum feststellen, über wieviele Grundintervalle iteriert werden soll
     final int normmid = (int) ((normmax - normmin) * Math.pow( 10, rangepow - 1 ));
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Normmax - Normmin: " + normmid );
 
     // Das Intervall verwendet zun�chst nur 10er Schritte
     double interval = Math.pow( 10, rangepow * (-1) - 1 );
     if( interval < minDisplayInterval )
       interval = minDisplayInterval;
-    Logger.trace( axis.getIdentifier() + " Interval (" + axis.getIdentifier() + "): " + interval );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Interval: " + interval );
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 w�rde z.B. schnell krumme werte erzeugen
@@ -141,52 +114,19 @@ public class NumberTickCalculator
     goodDivisors.add( 5 );
     goodDivisors.add( 2 );
 
-    new TreeMap<Integer, SortedSet<Double>>();
-    final int level = 0;
-
-    final SortedSet<Double> firstticks = new TreeSet<Double>();
-    ticks.put( new Integer( level ), firstticks );
-    firstticks.add( new Double( normmin ) );
-    firstticks.add( new Double( normmax ) );
+    ticks.add( new Double( normmin ) );
+    ticks.add( new Double( normmax ) );
 
     if( normmid == 1 )
-      NumberTickCalculator.findBetweens( normmin, normmax, minLogInterval, goodDivisors, ticks, level + 1, minDisplayInterval, axis );
+      NumberTickCalculator.findBetweens( normmin, normmax, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
     else
     {
       final double normmiddle = normmin + (normmax - normmin) / 2;
-      Logger.logInfo( Logger.TOPIC_LOG_AXIS, (new Double( normmiddle )).toString() );
-      firstticks.add( new Double( normmiddle ) );
-      NumberTickCalculator.findBetweens( normmin, normmiddle, minLogInterval, goodDivisors, ticks, level + 1, minDisplayInterval, axis );
-      NumberTickCalculator.findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, level + 1, minDisplayInterval, axis );
+      ticks.add( new Double( normmiddle ) );
+      NumberTickCalculator.findBetweens( normmin, normmiddle, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
+      NumberTickCalculator.findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
     }
-
-    /*
-     * // Nochmal rechnen mit neuem NumberFormat <- sehr doof if( (axis.getPosition().getOrientation() ==
-     * ORIENTATION.HORIZONTAL) && (oldnf.getMinimumFractionDigits() < digits) && (oldnf.getMaximumFractionDigits() <
-     * digits) ) return NumberTickCalculator.calcTicks( gc, axis, minDisplayInterval );
-     */
-    final ArrayList<Double> tickMap = new ArrayList<Double>();
-    renderer.setTickMapElement( axis, (NumberTickCalculator.flattenTicks( ticks )) );
-
-    return ticks;
-  }
-
-  private static void outputTicks( final TreeMap<Integer, SortedSet<Double>> ticks )
-  {
-    final Set<Entry<Integer, SortedSet<Double>>> entrySet = ticks.entrySet();
-    String info = "";
-    for( final Entry<Integer, SortedSet<Double>> entry : entrySet )
-    {
-      final Integer key = entry.getKey();
-      final SortedSet<Double> valueSet = entry.getValue();
-      info += "Level " + key + ": ";
-      for( final Double double1 : valueSet )
-        info += double1 + " | ";
-      info += "\n";
-    }
-    info += "\n-----------------";
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, info );
-
+    renderer.setTickMapElement( axis, (Number[]) ticks.toArray( new Number[] {} ) );
   }
 
   /**
@@ -198,19 +138,15 @@ public class NumberTickCalculator
    *            value
    * @param axis
    */
-  private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final TreeMap<Integer, SortedSet<Double>> ticks, final int level, final double minDisplayInterval, final IAxis<Number> axis )
+  private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final SortedSet<Double> ticks, final double minDisplayInterval, final IAxis<Number> axis )
   {
     final IDataRange<Number> dataRange = axis.getLogicalRange();
 
-    String levelinset = "";
-    for( int i = 0; i < level; i++ )
-      levelinset += "\t";
     for( final Integer divisor : divisors )
     {
       final double betweenrange = Math.abs( from - to ) / divisor.intValue();
 
-      // TODO: this prevents an endles loop below, if from == to
-      // @Alex:check if this is ok
+      // this prevents an endles loop below, if from == to
       if( betweenrange < 0.000000001 )
         return;
 
@@ -218,14 +154,6 @@ public class NumberTickCalculator
       {
         // vorher pr�fen
         int count = 0;
-        double oldi = 0;
-
-        SortedSet<Double> sortedSet = ticks.get( new Integer( level ) );
-        if( sortedSet == null )
-        {
-          sortedSet = new TreeSet<Double>();
-          ticks.put( new Integer( level ), sortedSet );
-        }
 
         // Damit der letzte Wert nicht drin ist, wird sicherheitshalber der halbe Wertabstand abgezogen
         for( double i = from; i <= to - 0.5 * betweenrange; i += betweenrange )
@@ -237,10 +165,9 @@ public class NumberTickCalculator
           )
           {
 
-            Logger.logInfo( Logger.TOPIC_LOG_AXIS, levelinset + i );
             // Der erste Wert ist schon auf höherer Ebene drin -> nicht einfügen
             if( count > 0 )
-              sortedSet.add( new Double( i ) );
+              ticks.add( new Double( i ) );
 
             // Divisoren rotieren, damit in der nächsten Ebene über den nächsten iteriert wird
             final ArrayList<Integer> newDivisors = new ArrayList<Integer>();
@@ -251,69 +178,19 @@ public class NumberTickCalculator
             newDivisors.addAll( head );
 
             // Über Zwischenräume weiter iterieren
-            NumberTickCalculator.findBetweens( i, i + betweenrange, interval, newDivisors, ticks, level + 1, minDisplayInterval, axis );
+            NumberTickCalculator.findBetweens( i, i + betweenrange, interval, newDivisors, ticks, minDisplayInterval, axis );
             count++;
-            oldi = i;
 
           }
           else
           {
             count++;
-            oldi = i;
-            Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Nicht sichtbar: " + i + " " + (i + betweenrange) + " " + dataRange.getMin() + " " + dataRange.getMax() );
           }
         // Tick setzen
         break;
 
       }
     }
-  }
-
-  /**
-   * testet, wieviele Nachkommastellen angezeigt werden m�ssen
-   * 
-   * @param ticks
-   * @return
-   */
-  public static int testNumberFormat( final Number[] ticks )
-  {
-    // Probleme sind zu viele Nullen der Neunen
-    int digits = 0;
-
-    for( final Number tick : ticks )
-    {
-      boolean allgood = false;
-      while( !allgood )
-      {
-        final NumberFormat nf = new DecimalFormat();
-        nf.setMaximumFractionDigits( digits );
-        nf.setMinimumFractionDigits( digits );
-        final Number dtick = tick;
-        Number stick = 0.0;
-        try
-        {
-          stick = (nf.parse( nf.format( tick ) )).doubleValue();
-        }
-        catch( final ParseException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        final double epsilon = Math.abs( dtick.doubleValue() - stick.doubleValue() );
-        Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Ticks: (d/s)" + dtick + ":" + stick + ":" + epsilon );
-
-        if( (epsilon < 0.000000001) || Double.isNaN( epsilon ) )
-        {
-          allgood = true;
-          break;
-        }
-        else
-          digits++;
-
-      }
-    }
-
-    return digits;
   }
 
   private static Point getScreenMinMax( final IAxis<Number> axis, final IDataRange<Number> range, final Point ticklabelSize )
@@ -348,13 +225,10 @@ public class NumberTickCalculator
     return new Point( screenMin, screenMax );
   }
 
-  private static Double[] flattenTicks( final SortedMap<Integer, SortedSet<Double>> tickSets )
-  {
-    final SortedSet<Double> myList = new TreeSet<Double>();
-    final Set<Entry<Integer, SortedSet<Double>>> entrySet = tickSets.entrySet();
-    for( final Entry<Integer, SortedSet<Double>> entry : entrySet )
-      for( final Double tick : entry.getValue() )
-        myList.add( tick );
-    return myList.toArray( new Double[] {} );
-  }
+  /*
+   * private static Double[] flattenTicks( final SortedMap<Integer, SortedSet<Double>> tickSets ) { final SortedSet<Double>
+   * myList = new TreeSet<Double>(); final Set<Entry<Integer, SortedSet<Double>>> entrySet = tickSets.entrySet();
+   * for( final Entry<Integer, SortedSet<Double>> entry : entrySet ) for( final Double tick : entry.getValue() )
+   * myList.add( tick ); return myList.toArray( new Double[] {} ); }
+   */
 }

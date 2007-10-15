@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueData;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.ITabularDataContainer;
-import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;

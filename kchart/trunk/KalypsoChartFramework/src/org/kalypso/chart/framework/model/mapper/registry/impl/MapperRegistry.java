@@ -10,7 +10,9 @@ import java.util.Map.Entry;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
+import org.kalypso.chart.framework.model.event.IMapperEventListener;
 import org.kalypso.chart.framework.model.event.IMapperRegistryEventListener;
+import org.kalypso.chart.framework.model.event.impl.AbstractMapperEventListener;
 import org.kalypso.chart.framework.model.event.impl.MapperRegistryEventHandler;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
@@ -24,18 +26,18 @@ import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class MapperRegistry implements IMapperRegistry
 {
-  private final MapperRegistryEventHandler m_handler = new MapperRegistryEventHandler();
+  protected final MapperRegistryEventHandler m_handler = new MapperRegistryEventHandler();
 
   /** axis-identifier --> axis */
-  private final Map<String, IMapper> m_mappers = new HashMap<String, IMapper>();
+  private final Map<String, IMapper< ? , ? >> m_mappers = new HashMap<String, IMapper< ? , ? >>();
 
   /** axis-identifier --> renderer */
-  private final Map<String, IAxisRenderer> m_id2renderers = new HashMap<String, IAxisRenderer>();
+  private final Map<String, IAxisRenderer< ? >> m_id2renderers = new HashMap<String, IAxisRenderer< ? >>();
 
-  private final Map<Class< ? >, IAxisRenderer> m_class2renderers = new HashMap<Class< ? >, IAxisRenderer>();
+  private final Map<Class< ? >, IAxisRenderer< ? >> m_class2renderers = new HashMap<Class< ? >, IAxisRenderer< ? >>();
 
   /** axis --> component */
-  private final Map<IAxis, IAxisComponent> m_components = new HashMap<IAxis, IAxisComponent>();
+  private final Map<IAxis< ? >, IAxisComponent< ? >> m_components = new HashMap<IAxis< ? >, IAxisComponent< ? >>();
 
   /*
    * (non-Javadoc)
@@ -52,7 +54,7 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getMapper(java.lang.String)
    */
-  public IMapper getMapper( String identifier )
+  public IMapper< ? , ? > getMapper( String identifier )
   {
     return m_mappers.get( identifier );
   }
@@ -62,7 +64,7 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#addMapper(org.kalypso.chart.framework.model.axis.IMapper)
    */
-  public void addMapper( IMapper mapper )
+  public void addMapper( IMapper< ? , ? > mapper )
   {
     if( m_mappers.containsKey( mapper.getIdentifier() ) )
       Logger.trace( "Mapper already present in registry: " + mapper.getIdentifier() + " - " );
@@ -70,6 +72,25 @@ public class MapperRegistry implements IMapperRegistry
     {
       mapper.setRegistry( this );
       m_mappers.put( mapper.getIdentifier(), mapper );
+
+      IMapperEventListener mel = new AbstractMapperEventListener()
+      {
+        /**
+         * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
+         */
+        @Override
+        public void onMapperRangeChanged( IMapper< ? , ? > eventMapper )
+        {
+          m_handler.fireMapperRangeChanged( eventMapper );
+          if( eventMapper instanceof IAxis< ? > )
+          {
+            IAxis axis = (IAxis) eventMapper;
+            IAxisRenderer< ? > renderer = getRenderer( axis );
+            renderer.invalidateTicks( axis );
+          }
+        }
+      };
+      mapper.addListener( mel );
 
       m_handler.fireMapperAdded( mapper );
     }
@@ -80,14 +101,14 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#removeMapper(org.kalypso.chart.framework.model.axis.IMapper)
    */
-  public void removeMapper( IMapper mapper )
+  public void removeMapper( IMapper< ? , ? > mapper )
   {
     m_mappers.remove( mapper.getIdentifier() );
 
     if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
     {
-      final IAxis axis = (IAxis) mapper;
-      final IAxisComponent component = m_components.get( axis );
+      final IAxis< ? > axis = (IAxis< ? >) mapper;
+      final IAxisComponent< ? > component = m_components.get( axis );
       if( component != null )
       {
         component.dispose();
@@ -104,11 +125,11 @@ public class MapperRegistry implements IMapperRegistry
    */
   public void clear( )
   {
-    for( final IAxisComponent comp : m_components.values() )
+    for( final IAxisComponent< ? > comp : m_components.values() )
       comp.dispose();
     m_components.clear();
 
-    for( final IMapper mapper : m_mappers.values() )
+    for( final IMapper< ? , ? > mapper : m_mappers.values() )
       m_handler.fireMapperRemoved( mapper );
     m_mappers.clear();
 
@@ -141,10 +162,10 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getAxesAt(org.kalypso.chart.framework.model.axis.IAxisConstants.POSITION)
    */
-  public IAxis[] getAxesAt( POSITION pos )
+  public IAxis< ? >[] getAxesAt( POSITION pos )
   {
-    final List<IAxis> axes = new ArrayList<IAxis>();
-    for( final IAxis axis : getAxes() )
+    final List<IAxis< ? >> axes = new ArrayList<IAxis< ? >>();
+    for( final IAxis< ? > axis : getAxes() )
     {
       if( axis.getPosition() == pos )
         axes.add( axis );
@@ -167,7 +188,7 @@ public class MapperRegistry implements IMapperRegistry
     if( renderer != null )
       return renderer;
 
-    for( final Entry<Class< ? >, IAxisRenderer> entry : m_class2renderers.entrySet() )
+    for( final Entry<Class< ? >, IAxisRenderer< ? >> entry : m_class2renderers.entrySet() )
     {
       final Class< ? > dataClass = entry.getKey();
       renderer = entry.getValue();
@@ -184,7 +205,7 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponent(org.kalypso.chart.framework.model.axis.IAxis)
    */
-  public IAxisComponent getComponent( final IAxis axis )
+  public IAxisComponent< ? > getComponent( final IAxis< ? > axis )
   {
     return m_components.get( axis );
   }
@@ -195,7 +216,7 @@ public class MapperRegistry implements IMapperRegistry
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#setRenderer(java.lang.String,
    *      org.kalypso.chart.framework.model.axis.renderer.IAxisRenderer)
    */
-  public void setRenderer( String identifier, IAxisRenderer renderer )
+  public void setRenderer( String identifier, IAxisRenderer< ? > renderer )
   {
     m_id2renderers.put( identifier, renderer );
   }
@@ -216,7 +237,7 @@ public class MapperRegistry implements IMapperRegistry
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#setComponent(org.kalypso.chart.framework.model.axis.IAxis,
    *      org.kalypso.chart.framework.model.axis.component.IAxisComponent)
    */
-  public void setComponent( final IAxis axis, final IAxisComponent comp )
+  public void setComponent( final IAxis< ? > axis, final IAxisComponent< ? > comp )
   {
     m_components.put( axis, comp );
   }
@@ -227,7 +248,7 @@ public class MapperRegistry implements IMapperRegistry
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#setRenderer(java.lang.Class,
    *      org.kalypso.chart.framework.model.axis.renderer.IAxisRenderer)
    */
-  public void setRenderer( final Class< ? > dataClass, final IAxisRenderer renderer )
+  public void setRenderer( final Class< ? > dataClass, final IAxisRenderer< ? > renderer )
   {
     m_class2renderers.put( dataClass, renderer );
   }
@@ -247,11 +268,11 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getMappers()
    */
-  public IMapper[] getMappers( )
+  public IMapper< ? , ? >[] getMappers( )
   {
-    final Collection<IMapper> allMappers = m_mappers.values();
-    final ArrayList<IMapper> mappers = new ArrayList<IMapper>();
-    for( final IMapper mapper : allMappers )
+    final Collection<IMapper< ? , ? >> allMappers = m_mappers.values();
+    final ArrayList<IMapper< ? , ? >> mappers = new ArrayList<IMapper< ? , ? >>();
+    for( final IMapper< ? , ? > mapper : allMappers )
     {
       // nur hinzufügen, wenn keine Axis
       if( !(mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis) )
@@ -265,14 +286,14 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getAxes()
    */
-  public IAxis[] getAxes( )
+  public IAxis< ? >[] getAxes( )
   {
-    final Collection<IMapper> mappers = m_mappers.values();
-    final ArrayList<IAxis> axes = new ArrayList<IAxis>();
-    for( final IMapper mapper : mappers )
+    final Collection<IMapper< ? , ? >> mappers = m_mappers.values();
+    final ArrayList<IAxis< ? >> axes = new ArrayList<IAxis< ? >>();
+    for( final IMapper< ? , ? > mapper : mappers )
     {
       if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
-        axes.add( (IAxis) mapper );
+        axes.add( (IAxis< ? >) mapper );
     }
     return axes.toArray( new IAxis[axes.size()] );
   }
@@ -282,25 +303,25 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponents()
    */
-  public Map<IAxis, IAxisComponent> getAxesToComponentsMap( )
+  public Map<IAxis< ? >, IAxisComponent< ? >> getAxesToComponentsMap( )
   {
     return m_components;
   }
 
-  public IAxis getAxis( String id )
+  public IAxis< ? > getAxis( String id )
   {
-    final IMapper mapper = m_mappers.get( id );
+    final IMapper< ? , ? > mapper = m_mappers.get( id );
     if( mapper instanceof IAxis )
-      return (IAxis) mapper;
+      return (IAxis< ? >) mapper;
     return null;
   }
 
   /**
    * @see org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry#getRenderer(java.lang.String)
    */
-  public IAxisRenderer getRenderer( String id )
+  public IAxisRenderer< ? > getRenderer( String id )
   {
-    for( IAxisRenderer rend : m_id2renderers.values() )
+    for( IAxisRenderer< ? > rend : m_id2renderers.values() )
     {
       if( rend.getId().equals( id ) )
         return rend;

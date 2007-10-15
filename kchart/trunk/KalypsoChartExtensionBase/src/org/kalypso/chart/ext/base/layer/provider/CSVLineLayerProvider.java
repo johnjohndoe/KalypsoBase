@@ -41,6 +41,7 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
     final AbstractDomainValueFileData<T_domain, T_target> data = new AbstractDomainValueFileData<T_domain, T_target>()
     {
 
+      @SuppressWarnings("unchecked")
       @Override
       public boolean openData( )
       {

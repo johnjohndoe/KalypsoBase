@@ -54,7 +54,7 @@ public class ChartUtilities
    */
   public static void maximize( final IChartModel chart )
   {
-    final IAxis[] axes = chart.getMapperRegistry().getAxes();
+    final IAxis< ? >[] axes = chart.getMapperRegistry().getAxes();
     chart.autoscale( axes );
   }
 

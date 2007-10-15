@@ -31,6 +31,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
+  @SuppressWarnings( { "unchecked", "unused" })
   public IChartLayer getLayer( URL context ) throws LayerProviderException
   {
     IChartLayer<Calendar, Number> icl = null;
@@ -38,8 +39,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
     final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
     final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-    final IAxis<Calendar> domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<Number> valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
+    final IAxis<Calendar> domAxis = (IAxis<Calendar>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> valAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
     final AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
     {

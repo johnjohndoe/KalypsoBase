@@ -19,15 +19,16 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws LayerProviderException
+  @SuppressWarnings( { "unused", "unchecked" })
+  public IChartLayer< ? , ? > getLayer( URL context ) throws LayerProviderException
   {
-    IChartLayer icl = null;
+    IChartLayer< ? , ? > icl = null;
 
     final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
     final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
 
-    final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-    final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
+    final IAxis<Number> domAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> valAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
     final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "20", new IntegerParser() );
     final Integer maxVal = getParameterContainer().getParsedParameterValue( "max_val", "1", new IntegerParser() );

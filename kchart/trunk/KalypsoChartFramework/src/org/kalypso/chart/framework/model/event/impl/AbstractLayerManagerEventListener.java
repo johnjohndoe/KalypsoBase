@@ -52,7 +52,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
    */
-  public void onLayerAdded( IChartLayer layer )
+  public void onLayerAdded( IChartLayer< ? , ? > layer )
   {
     // not implemented - override in subclass if needed
 
@@ -61,7 +61,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
    */
-  public void onLayerRemoved( IChartLayer layer )
+  public void onLayerRemoved( IChartLayer< ? , ? > layer )
   {
     // not implemented - override in subclass if needed
 
@@ -70,7 +70,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
    */
-  public void onLayerVisibilityChanged( IChartLayer layer )
+  public void onLayerVisibilityChanged( IChartLayer< ? , ? > layer )
   {
     // not implemented - override in subclass if needed
 
@@ -79,7 +79,15 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
   /**
    * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
    */
-  public void onLayerMoved( IChartLayer layer )
+  public void onLayerMoved( IChartLayer< ? , ? > layer )
+  {
+    // not implemented - override in subclass if needed
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.ILayerManagerEventListener#onLayerContentChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
+   */
+  public void onLayerContentChanged( IChartLayer< ? , ? > layer )
   {
     // not implemented - override in subclass if needed
   }

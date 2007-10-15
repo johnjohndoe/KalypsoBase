@@ -1,6 +1,5 @@
 package org.kalypso.chart.framework.model.mapper;
 
-import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 
 /**
@@ -62,12 +61,6 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    * @param dataRange
    */
   public void setLogicalRange( IDataRange<T_logical> dataRange );
-
-  /**
-   * returns a data converter which may be used to convert strings to data which can directly be used by the axis (and
-   * vice versa)
-   */
-  public IDataOperator<T_logical> getDataOperator( );
 
   /**
    * returns the internally used number range

@@ -8,10 +8,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.chart.ext.base.layer.AbstractEditableChartLayer;
 import org.kalypso.chart.ext.test.data.EditableTestDataContainer;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.layer.AbstractEditableChartLayer;
 import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
@@ -80,8 +80,6 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
    */
   public void paint( GCWrapper gc )
   {
-    final EditableTestDataContainer dataContainer = getDataContainer();
-
     final ArrayList<Point> path = new ArrayList<Point>();
     final IStyledElement line = getStyle().getElement( SE_TYPE.LINE, 1 );
     final IStyledElement point = getStyle().getElement( SE_TYPE.POINT, 1 );

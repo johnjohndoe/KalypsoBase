@@ -1,4 +1,4 @@
-package org.kalypso.chart.framework.model.mapper.renderer;
+package org.kalypso.chart.ext.base.axisrenderer;
 
 import java.awt.Insets;
 import java.text.Format;
@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 /**
@@ -129,14 +130,14 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
     return m_rgbBackground;
   }
 
-  public HashMap<IAxis<T_logical>, T_logical[]> getTickMap( )
-  {
-    return m_tickMap;
-  }
-
-  public void setTickMapElement( IAxis<T_logical> axis, T_logical[] ticks )
+  protected void setTickMapElement( IAxis<T_logical> axis, T_logical[] ticks )
   {
     m_tickMap.put( axis, ticks );
+  }
+
+  protected T_logical[] getTickMapElement( IAxis<T_logical> axis )
+  {
+    return m_tickMap.get( axis );
   }
 
   /**
@@ -158,5 +159,11 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
   public String getId( )
   {
     return m_id;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void invalidateTicks( IAxis axis )
+  {
+    m_tickMap.put( axis, null );
   }
 }

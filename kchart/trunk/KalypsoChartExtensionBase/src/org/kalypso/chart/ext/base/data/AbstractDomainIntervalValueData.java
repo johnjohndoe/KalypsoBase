@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.kalypso.chart.framework.model.data.IDataContainer;
 
-public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer
+public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
 
   private boolean m_isOpen = false;
@@ -35,21 +35,25 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 
   public abstract boolean openData( );
 
+  @SuppressWarnings("unchecked")
   public T_domain[] getDomainDataIntervalStart( )
   {
     return (T_domain[]) m_domainIntervalStartValues.toArray();
   }
 
+  @SuppressWarnings("unchecked")
   public T_domain[] getDomainDataIntervalEnd( )
   {
     return (T_domain[]) m_domainIntervalEndValues.toArray();
   }
 
+  @SuppressWarnings("unchecked")
   public T_domain[] getDomainValues( )
   {
     return (T_domain[]) m_domainValues.toArray();
   }
 
+  @SuppressWarnings("unchecked")
   public T_target[] getTargetValues( )
   {
     return (T_target[]) m_targetValues.toArray();

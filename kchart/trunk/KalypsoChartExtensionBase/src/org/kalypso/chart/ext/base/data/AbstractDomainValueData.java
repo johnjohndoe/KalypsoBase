@@ -57,6 +57,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     m_isOpen = false;
   }
 
+  @SuppressWarnings("unchecked")
   public T_domain[] getDomainValues( )
   {
     open();
@@ -74,6 +75,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     m_targetValues = values;
   }
 
+  @SuppressWarnings("unchecked")
   public T_target[] getTargetValues( )
   {
     open();
