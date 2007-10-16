@@ -338,14 +338,24 @@ public class VirtualFunctionPropertyFactory
     }
 
     final String[] qnameParts = strQName.split( ":" );
-    if( qnameParts.length != 2 )
+    final String propertyNamespace;
+    final String propertyLocalPart;
+    if( qnameParts.length == 2 )
     {
-      final String message = String.format( "Property[%s] must have the form \"<prefix>:<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts );
+      propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
+      propertyLocalPart = qnameParts[1];
+    }
+    else if( qnameParts.length == 1 )
+    {
+      propertyNamespace = cursor.namespaceForPrefix( "" );
+      propertyLocalPart = qnameParts[0];
+    }
+    else
+    {
+      final String message = String.format( "Property[%s] must have the form \"[<prefix>:]<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts );
       throw new GMLSchemaException( message );
     }
-    final String propertyNamespace = cursor.namespaceForPrefix( qnameParts[0] );
-    final String propertyLocalPart = qnameParts[1];
-
+    
     final QName propertyValueQName = new QName( propertyNamespace, propertyLocalPart );
 
     return propertyValueQName;
