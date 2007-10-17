@@ -49,7 +49,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 /**
  * Catalog which provides the url to the flood model schema
  * 
- * @author Patrice Congo
+ * @author Thomas Jung
  */
 public class UrlCatalogModelFlood extends AbstractUrlCatalog
 {
@@ -63,7 +63,7 @@ public class UrlCatalogModelFlood extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodExtrapolation.xsd" ) );
+    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModelPolygon.xsd" ) );
     prefixes.put( NS_MODEL_FLOOD, PREFIX_MODEL_FLOOD );
   }
 }
