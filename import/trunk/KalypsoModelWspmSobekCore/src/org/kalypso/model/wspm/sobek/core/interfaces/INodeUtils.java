@@ -51,6 +51,6 @@ public interface INodeUtils
    * toggle / switch between boundary node and connection node only connection nodes can be "promoted" to a boundary
    * node
    */
-  void switchBoundaryConnectionNode( Feature node );
+  void switchBoundaryConnectionNode( Feature node ) throws Exception;
 
 }
