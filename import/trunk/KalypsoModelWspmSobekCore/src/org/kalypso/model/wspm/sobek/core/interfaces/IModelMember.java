@@ -68,7 +68,7 @@ public interface IModelMember
   /**
    * get all lastfall members
    */
-  public ILastfallMember[] getLastfallMembers( );
+  public ILastfall[] getLastfallMembers( );
 
   /**
    * facade for creating, editing branches
