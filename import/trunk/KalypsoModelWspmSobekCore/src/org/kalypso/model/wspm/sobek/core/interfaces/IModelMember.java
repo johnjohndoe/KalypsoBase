@@ -84,4 +84,6 @@ public interface IModelMember
    * generic interface for deleting a model member (branch, node, ...)
    */
   public void deleteFoo( Feature feature ) throws Exception;
+
+  public INodeUtils getNodeUtils( );
 }
