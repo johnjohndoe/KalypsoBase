@@ -100,6 +100,8 @@ public class PageCreateLastfall extends WizardPage
 
     m_description = new Text( container, SWT.BORDER | SWT.WRAP | SWT.MULTI );
     m_description.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    checkPageCompleted();
   }
 
   protected void checkPageCompleted( )
