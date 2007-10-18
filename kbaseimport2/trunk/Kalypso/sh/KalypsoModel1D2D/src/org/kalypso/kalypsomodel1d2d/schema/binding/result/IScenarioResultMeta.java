@@ -52,10 +52,10 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface IScenarioResultMeta extends IResultMeta
 {
+  // TODO: Document interface methods!
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
 
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
