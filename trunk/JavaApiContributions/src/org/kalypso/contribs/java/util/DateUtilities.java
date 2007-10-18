@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
@@ -56,6 +56,19 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 public final class DateUtilities
 {
+  private static DatatypeFactory DATATYPE_FACTORY;
+  static
+  {
+    try
+    {
+      DATATYPE_FACTORY = DatatypeFactory.newInstance();
+    }
+    catch( final DatatypeConfigurationException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   private static Calendar calSrc = Calendar.getInstance();
 
   private static Calendar calDest = Calendar.getInstance();
@@ -105,16 +118,18 @@ public final class DateUtilities
   {
     if( xmlGregorianCalendar == null )
       return null;
-    
+
     final GregorianCalendar greg = xmlGregorianCalendar.toGregorianCalendar();
     return greg.getTime();
   }
 
-  public static XMLGregorianCalendar toXMLGregorianCalendar( final Date date ) throws DatatypeConfigurationException
+  public static XMLGregorianCalendar toXMLGregorianCalendar( final Date date )
   {
-    final DatatypeFactory factory = DatatypeFactory.newInstance();
+    if( date == null )
+      return null;
+
     final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
     calendar.setTime( date );
-    return factory.newXMLGregorianCalendar( calendar );
+    return DATATYPE_FACTORY.newXMLGregorianCalendar( calendar );
   }
 }

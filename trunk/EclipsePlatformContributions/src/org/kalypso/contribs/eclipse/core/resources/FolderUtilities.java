@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.resources;
 
@@ -54,23 +54,26 @@ import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 public class FolderUtilities
 {
   /** Do not instantiate */
-  private FolderUtilities()
+  private FolderUtilities( )
   {
-  // 
+    //
   }
 
+  /**
+   * Creates this folder and its parent folder if not yet existant.
+   */
   public static void mkdirs( final IContainer folder ) throws CoreException
   {
     if( folder == null || folder.exists() )
       return;
 
-    if( !( folder instanceof IFolder ) )
+    if( !(folder instanceof IFolder) )
       throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "Cannot mkdirs project or workspace", null ) );
 
     // create parents
     mkdirs( folder.getParent() );
 
-    ( (IFolder)folder ).create( false, true, new NullProgressMonitor() );
+    ((IFolder) folder).create( false, true, new NullProgressMonitor() );
   }
 
   public static IFolder createUnusedFolder( final IFolder parentFolder, final String prefix )
