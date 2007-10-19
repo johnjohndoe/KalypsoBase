@@ -56,9 +56,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author thuel2
  */
-public class MonisSpielwiese  extends TestCase
+public class MonisSpielwiese extends TestCase
 {
-  public void testMain(  )
+  public void testMain( )
   {
     final File fleTarget = new File( "C:\\temp\\Spielwiese\\PI" );
 
@@ -71,13 +71,13 @@ public class MonisSpielwiese  extends TestCase
       final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL_MEMBER );
       final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
 
-      final ISobekModelMember sobekModel =  SobekModelMember.getModel( sobekModelFeat[0] );
-      
+      final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );
+
       final URL targetDir = fleTarget.toURL();
       sobekModel.writePi( targetDir, TARGET.eLocations );
     }
 
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import java.io.IOException;
 import java.net.URL;
 
+import org.kalypso.repository.container.IRepositoryContainer;
+
 /**
  * @author kuch
  */
@@ -63,4 +65,6 @@ public interface ISobekModelMember extends IModelMember
    */
 
   public void writePi( final URL targetDir, final TARGET target ) throws IOException;
+
+  public IRepositoryContainer getRepositoryContainer( );
 }
