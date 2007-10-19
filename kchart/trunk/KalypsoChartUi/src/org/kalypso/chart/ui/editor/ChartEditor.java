@@ -187,16 +187,16 @@ public class ChartEditor extends EditorPart
       // Namespace prefixes setzen
       final Map<String, String> prefixes = (new HashMap<String, String>());
       prefixes.put( "http://www.ksp.org/chart/factory", "" );
-      options = options.setSaveSuggestedPrefixes( prefixes );
-      options = options.setSavePrettyPrint();
+      options.setSaveSuggestedPrefixes( prefixes );
+      options.setSavePrettyPrint();
       final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getModel() );
       final XmlOptions xmloptions = options;
-
       final SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
+          xmloptions.setCharacterEncoding( writer.getEncoding() );
           savedConfig.save( writer, xmloptions );
         }
       };

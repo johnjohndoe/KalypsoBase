@@ -131,13 +131,24 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     bgColor.dispose();
   }
 
-  private Number[] getTicks( final GCWrapper gc, final IAxis<Number> axis )
+  public Number[] getTicks( final IAxis<Number> axis )
   {
     Number[] tickMapElement = getTickMapElement( axis );
     // wenn null, dann muss es neu erzeugt werden
     if( tickMapElement == null )
-      NumberTickCalculator.calcTicks( gc, axis, m_minDisplayInterval );
-    return getTickMapElement( axis );
+    {
+      Image img = new Image( Display.getDefault(), 1, 1 );
+      GC gc = new GC( img );
+      GCWrapper gcw = new GCWrapper( gc );
+
+      NumberTickCalculator.calcTicks( gcw, axis, m_minDisplayInterval );
+      tickMapElement = getTickMapElement( axis );
+
+      gcw.dispose();
+      gc.dispose();
+      img.dispose();
+    }
+    return tickMapElement;
   }
 
   /**
@@ -159,7 +170,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
-        startY = screen.y + gap;
+        startY = screen.y + gap + 1;
       else
         startY = screen.y + screen.height - 1 - gap;
       endY = startY;
@@ -177,7 +188,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
-        startX = screen.x + gap;
+        startX = screen.x + gap + 1;
       else
         startX = screen.x + screen.width - 1 - gap;
       endX = startX;
@@ -198,7 +209,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   private void drawTicks( final GCWrapper gc, final IAxis<Number> axis, final int startX, final int startY )
   {
-    Number[] ticks = getTicks( gc, axis );
+    Number[] ticks = getTicks( axis );
 
     if( (gc == null) || (axis == null) || (ticks == null) )
       return;
@@ -277,7 +288,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
 
       if( drawTick )
       {
-        gc.fillRectangle( new Rectangle( textX, textY, tickExtent.x, tickExtent.y ) );
         drawText( gc, label, textX, textY, fontDataTick );
         gc.drawLine( x1, y1, x2, y2 );
       }
@@ -335,7 +345,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       final int lineWidth = getLineWidth();
 
       final Insets labelInsets = getLabelInsets();
-      final Insets tickLabelInsets = getTickLabelInsets();
 
       final Transform tr = new Transform( gc.getDevice() );
       try
@@ -346,9 +355,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
           y = y1;
 
           if( axis.getPosition() == POSITION.TOP )
-            y -= textExtent.y + labelInsets.bottom + tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.bottom;// +
+            y -= textExtent.y + labelInsets.bottom + tickLength + lineWidth + tickLabelExtent.y - 2;// +
           else
-            y += tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;// +
+            y += tickLength + lineWidth + tickLabelExtent.y + labelInsets.top - 2;// +
         }
         else
         {
@@ -360,13 +369,13 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
           if( axis.getPosition() == POSITION.LEFT )
           {
             rotation = -90;
-            x -= lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x -= lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y - 2;
             y += textExtent.x / 2;
           }
           else
           {
             rotation = 90;
-            x += lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x += lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y - 2;
             y -= textExtent.x / 2;
           }
           tr.translate( x, y );
@@ -409,7 +418,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Number[] getGridTicks( final IAxis<Number> axis )
   {
-    final Number[] ticks = getTickMapElement( axis );
+    final Number[] ticks = getTicks( axis );
     return ticks;
   }
 
@@ -422,7 +431,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
       return m_fixedWidth;
 
     int width = 0;
-    int ticklabel = 0;
+    int ticklabelWidth = 0;
 
     // Testutensilien erzeugen
     final Display dev = Display.getCurrent();
@@ -435,27 +444,22 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     if( tickLabelSize == null )
       return 0;
 
-    final Insets tickLabelInsets = getTickLabelInsets();
     final Insets labelInsets = getLabelInsets();
 
     // TickLabels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      width += tickLabelInsets.top + tickLabelInsets.bottom;
-      ticklabel = tickLabelSize.y;
-      if( axis.getPosition() == POSITION.BOTTOM )
-        width += labelInsets.top;
-      else
-        width += labelInsets.bottom;
-
+      ticklabelWidth = tickLabelSize.y;
+      width += labelInsets.top;
+      width += labelInsets.bottom;
     }
     else
     {
-      width += tickLabelInsets.left + tickLabelInsets.right;
       width += labelInsets.bottom;
-      ticklabel = tickLabelSize.x;
+      width += labelInsets.top;
+      ticklabelWidth = tickLabelSize.x;
     }
-    width += ticklabel;
+    width += ticklabelWidth;
     width += getGap();
     width += getLineWidth();
     width += getTickLength();
@@ -463,6 +467,8 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     // Jetzt noch den Label-Text
     final Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
     width += labelExtent.y;
+
+    width -= 2;
 
     gcw.dispose();
     gc.dispose();

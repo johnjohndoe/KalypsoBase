@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.kalypso.chart.framework.model.event.IMapperEventListener;
+import org.kalypso.chart.framework.model.event.impl.AbstractMapperEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
@@ -40,6 +42,11 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     m_axis = axis;
     addPaintListener( this );
     addListener( SWT.Resize, this );
+  }
+
+  protected void recalcTicks( )
+  {
+
   }
 
   /**
@@ -115,10 +122,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
         if( renderer != null )
           renderer.paint( buffGcw, m_axis, screen );
       }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
       finally
       {
         buffGc.dispose();
@@ -138,12 +141,15 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    * 
    * @see org.kalypso.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
-  public int normalizedToScreen( double normValue )
+  public int normalizedToScreen( final double normValue )
   {
+    double myNormValue = normValue;
     final int range = getRange();
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
-      normValue = 1 - normValue;
-    final int screenValue = (int) (range * normValue);
+    {
+      myNormValue = 1 - myNormValue;
+    }
+    final int screenValue = (int) (range * myNormValue);
     return screenValue;
   }
 
@@ -156,10 +162,14 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   {
     final int range = getRange();
     if( range == 0 )
+    {
       return 0;
+    }
     final double normValue = (double) screenValue / range;
     if( ChartUtilities.isInverseScreenCoords( m_axis ) )
+    {
       return 1 - normValue;
+    }
 
     return normValue;
   }
@@ -171,10 +181,14 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   {
     final Rectangle bounds = getBounds();
     final int range;
-    if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    if( m_axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+    {
       range = bounds.width;// horizontal
+    }
     else
+    {
       range = bounds.height; // vertical
+    }
     return range;
   }
 
@@ -197,7 +211,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
       m_bufferImage.dispose();
       m_bufferImage = null;
     }
-
   }
 
   /**

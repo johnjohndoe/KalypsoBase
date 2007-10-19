@@ -53,7 +53,7 @@ public class ChartComposite extends Composite
 
     m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
 
-    setBackground( m_bgColor );
+    super.setBackground( m_bgColor );
 
     createControl( this );
 

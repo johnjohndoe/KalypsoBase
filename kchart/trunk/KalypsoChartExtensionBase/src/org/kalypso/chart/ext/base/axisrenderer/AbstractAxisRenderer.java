@@ -78,7 +78,7 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
   protected void drawText( GCWrapper gc, String text, int x, int y, FontData fd )
   {
     final Font f = new Font( gc.getDevice(), fd );
-    gc.m_gc.setTextAntialias( SWT.ON );
+    gc.setTextAntialias( SWT.ON );
     gc.setFont( f );
     gc.drawText( text, x, y );
     gc.setFont( gc.getDevice().getSystemFont() );

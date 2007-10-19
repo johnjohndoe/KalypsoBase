@@ -365,9 +365,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
-        startY = screen.y + gap;
+        startY = screen.y + gap + 1;
       else
-        startY = screen.y + screen.height - 1 - gap;
+        startY = screen.y + screen.height - gap - 1;
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -385,7 +385,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       if( axis.getPosition() == POSITION.RIGHT )
         startX = screen.x + gap;
       else
-        startX = screen.x + screen.width - gap - 1;
+        startX = screen.x + screen.width - gap;
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -421,7 +421,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     background.dispose();
   }
 
-  protected void drawAxisLabel( GCWrapper gc, IAxis<Calendar> axis, int x1, int y1, int x2, int y2 )
+  protected void drawAxisLabel( GCWrapper gc, IAxis<Calendar> axis, int startX, int startY, int endX, int endY )
   {
     if( axis.getLabel() != null )
     {
@@ -432,7 +432,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       int x = 0;
       int y = 0;
 
-      final Insets tickLabelInsets = getTickLabelInsets();
       final Insets labelInsets = getLabelInsets();
       final int tickLength = getTickLength();
       final int lineWidth = getLineWidth();
@@ -442,31 +441,31 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
         {
-          x = Math.abs( x2 - x1 ) / 2 - textExtent.x / 2;
-          y = y1;
+          x = Math.abs( endX - startX ) / 2 - textExtent.x / 2;
+          y = startY;
 
           if( axis.getPosition() == POSITION.TOP )
-            y -= tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;
+            y -= tickLength + lineWidth + tickLabelExtent.y + labelInsets.top;
           else
-            y += tickLength + lineWidth + tickLabelInsets.top + tickLabelExtent.y + tickLabelInsets.bottom + labelInsets.top;
+            y += tickLength + lineWidth + tickLabelExtent.y + labelInsets.top;
         }
         else
         {
-          x = x1;
-          y = Math.abs( y2 - y1 ) / 2;
+          x = startX;
+          y = Math.abs( endY - startY ) / 2;
 
           int rotation = 0;
 
           if( axis.getPosition() == POSITION.LEFT )
           {
             rotation = -90;
-            x -= lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x -= lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y;
             y += textExtent.x / 2;
           }
           else
           {
             rotation = 90;
-            x += lineWidth + tickLength + tickLabelInsets.right + tickLabelExtent.x + tickLabelInsets.left + labelInsets.bottom + textExtent.y;
+            x += lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y;
             y -= textExtent.x / 2;
           }
           tr.translate( x, y );
@@ -498,7 +497,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   /**
    * @see org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer#getTicks(org.kalypso.chart.framework.model.mapper.IAxis)
    */
-  public Calendar[] getGridTicks( IAxis<Calendar> axis )
+  public Calendar[] getTicks( IAxis<Calendar> axis )
   {
     Calendar[] ticks = getTickMapElement( axis );
     return ticks;
@@ -515,7 +514,6 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     final int lineWidth = getLineWidth();
     final int tickLength = getTickLength();
 
-    final Insets tickLabelInsets = getTickLabelInsets();
     final Insets labelInsets = getLabelInsets();
 
     // Testutensilien erzeugen
@@ -529,13 +527,11 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      width += tickLabelInsets.top + tickLabelInsets.bottom;
       width += labelInsets.top + labelInsets.bottom;
       label = tls.y;
     }
     else
     {
-      width += tickLabelInsets.left + tickLabelInsets.right;
       width += labelInsets.left + labelInsets.right;
       label = tls.x;
     }

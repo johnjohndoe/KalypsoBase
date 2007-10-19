@@ -14,7 +14,7 @@ public interface IAxisRenderer<T_logical>
    * 
    * @return Collection of tick-values
    */
-  public T_logical[] getGridTicks( IAxis<T_logical> axis );
+  public T_logical[] getTicks( IAxis<T_logical> axis );
 
   /**
    * draws the IAxis-Representation into the given GCWrapper;
