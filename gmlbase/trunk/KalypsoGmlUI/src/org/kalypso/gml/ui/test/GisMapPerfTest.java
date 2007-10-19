@@ -61,13 +61,11 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.ThemePainter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
@@ -131,11 +129,7 @@ public class GisMapPerfTest extends TestCase
     final GeoTransform transform = panel.getProjection();
     transform.setDestRect( 0, 0, 1024, 1024 );
 
-    final GM_Envelope bbox = panel.getBoundingBox();
-
-    final double scale = MapModellHelper.calcScale( modell, bbox, 1024, 1024 );
-
-    final ThemePainter themePainter = new ThemePainter( modell, transform, bbox, scale );
+    final ThemePainter themePainter = new ThemePainter( panel );
 
     final BufferedImage image = new BufferedImage( 1024, 1024, BufferedImage.TYPE_INT_ARGB );
 
@@ -148,7 +142,7 @@ public class GisMapPerfTest extends TestCase
       logger.takeInterimTime();
       logger.printCurrentInterim( "Rendered map #" + i + ": " );
 
-      if( i == 0 )
+if( i == 0 )
         ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) );
     }
 
