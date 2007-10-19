@@ -90,4 +90,6 @@ public interface IBoundaryNode extends IAbstractConnectionNode
   }
 
   public BOUNDARY_TYPE getBoundaryType( );
+
+  public IBoundaryNodeLastfallCondition getLastfallCondition( ILastfall lastfall ) throws Exception;
 }
