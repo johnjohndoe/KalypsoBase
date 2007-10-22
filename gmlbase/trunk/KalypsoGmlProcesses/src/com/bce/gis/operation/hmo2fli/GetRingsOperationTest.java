@@ -69,11 +69,11 @@ public class GetRingsOperationTest extends TestCase
     final GetRingsOperation op = new GetRingsOperation( TestData.triangles, null );
     final LinearRing[] rings1 = op.getAllContaining( TestData.cin1 );
     final double value1 = rings1.length == 0 ? Double.NaN : new HeightFromTriangle( rings1[0] ).getHeight( TestData.cin1 );
-    assertEquals( value1, op.getDouble( TestData.cin1 ), 0.0 );
+    assertEquals( value1, op.getValue( TestData.cin1 ), 0.0 );
 
     final LinearRing[] rings2 = op.getAllContaining( TestData.cin2 );
     final double value2 = rings2.length == 0 ? Double.NaN : new HeightFromTriangle( rings2[0] ).getHeight( TestData.cin2 );
-    assertEquals( value2, op.getDouble( TestData.cin2 ), 0.0 );
+    assertEquals( value2, op.getValue( TestData.cin2 ), 0.0 );
   }
 
 }

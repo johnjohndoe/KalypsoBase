@@ -5,8 +5,8 @@ import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gis.doubleraster.DoubleProvider;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
+import org.kalypso.grid.IGeoValueProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -36,7 +36,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  * @author belger
  */
-public class TriangleDoubleProvider implements DoubleProvider
+public class TriangleDoubleProvider implements IGeoValueProvider
 {
   private FeatureList m_triangleList;
 
@@ -87,7 +87,7 @@ public class TriangleDoubleProvider implements DoubleProvider
     return results.toArray( new LinearRing[results.size()] );
   }
 
-  public final double getDouble( final Coordinate c )
+  public final double getValue( final Coordinate c )
   {
     try
     {

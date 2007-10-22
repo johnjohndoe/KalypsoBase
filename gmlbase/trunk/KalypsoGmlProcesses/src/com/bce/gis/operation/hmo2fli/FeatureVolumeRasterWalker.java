@@ -1,12 +1,12 @@
 package com.bce.gis.operation.hmo2fli;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gis.doubleraster.DoubleRaster;
-import org.kalypso.gis.doubleraster.DoubleRasterWalker;
+import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoGridWalker;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -19,10 +19,8 @@ import com.vividsolutions.jts.geom.Coordinate;
  * 
  * @author belger
  */
-public class FeatureVolumeRasterWalker implements DoubleRasterWalker
+public class FeatureVolumeRasterWalker implements IGeoGridWalker
 {
-  //private final FeatureFactory m_featureFactory = new FeatureFactory();
-
   private final QName m_volumeProperty;
 
   private final FeatureList m_featureIndex;
@@ -30,8 +28,6 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
   private double m_cellArea = 0.0;
 
   private int m_count = 0;
-
-  //private GeometryFactory m_geometryFactory = new GeometryFactory();
 
   /**
    * @param featureIndex
@@ -45,7 +41,7 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
-  public void start( final DoubleRaster r )
+  public void start( final IGeoGrid r ) throws GeoGridException
   {
     final Coordinate offsetX = r.getOffsetX();
     final Coordinate offsetY = r.getOffsetY();
@@ -62,14 +58,13 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
     if( !Double.isNaN( cellVolume ) )
     {
       final GM_Position position = GeometryFactory.createGM_Position( c.x, c.y );
-      
-      final List<?> results = m_featureIndex.query( position, null );
-      final Feature[] features = results.toArray( new Feature[]{} );
-      //final Feature[] features = m_featureIndex.query( position );
 
-      for( int i = 0; i < features.length; i++ )
+      final List< ? > results = m_featureIndex.query( position, null );
+      final Feature[] features = results.toArray( new Feature[] {} );
+      // final Feature[] features = m_featureIndex.query( position );
+
+      for( final Feature f : features )
       {
-        final Feature f = features[i];
         if( f.getDefaultGeometryProperty().contains( position ) )
         {
           final Object oldVolumeObj = f.getProperty( m_volumeProperty );
@@ -90,7 +85,7 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
               newVolume = new Double( oldVolume + cellVolume );
             }
 
-            //final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
+            // final FeatureProperty fp = m_featureFactory.createFeatureProperty( m_volumeProperty, newVolume );
             f.setProperty( m_volumeProperty, newVolume );
           }
         }
@@ -99,17 +94,9 @@ public class FeatureVolumeRasterWalker implements DoubleRasterWalker
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#afterLine(int)
-   */
-  public void afterLine( final int y )
-  {
-    // nichts zu tun
-  }
-
-  /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
-  public Object getResult( )
+  public Object finish( )
   {
     return null;
   }

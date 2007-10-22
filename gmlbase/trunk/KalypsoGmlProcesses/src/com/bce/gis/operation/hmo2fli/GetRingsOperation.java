@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.kalypso.gis.doubleraster.DoubleProvider;
+import org.kalypso.grid.IGeoValueProvider;
 
 import com.bce.util.progressbar.Progressable;
 import com.vividsolutions.jts.algorithm.PointInRing;
@@ -29,7 +29,7 @@ import com.vividsolutions.jts.index.strtree.STRtree;
  * 
  * @author belger
  */
-public class GetRingsOperation implements DoubleProvider
+public class GetRingsOperation implements IGeoValueProvider
 {
   private final SpatialIndex m_index;
 
@@ -73,7 +73,7 @@ public class GetRingsOperation implements DoubleProvider
     return results.toArray( new LinearRing[results.size()] );
   }
 
-  public final double getDouble( final Coordinate c )
+  public final double getValue( final Coordinate c )
   {
     final LinearRing[] rings = getAllContaining( c );
     return rings.length == 0 ? Double.NaN : new HeightFromTriangle( rings[0] ).getHeight( c );

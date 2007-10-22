@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.gis.doubleraster.DGMDiffer;
-import org.kalypso.gis.doubleraster.DoubleFakeRaster;
-import org.kalypso.gis.doubleraster.DoubleProvider;
-import org.kalypso.gis.doubleraster.DoubleRaster;
+import org.kalypso.grid.DiffGeoValueProvider;
+import org.kalypso.grid.DoubleFakeRaster;
+import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoValueProvider;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -67,10 +67,10 @@ public class Hmo2Fli
     final int yCount = (int) (e.getHeight() / rasterSize) + 1;
     final Coordinate origin = new Coordinate( e.getMinX(), e.getMinY() );
 
-    final DoubleProvider dgmDiffer = new DGMDiffer( groUnten, groOben );
+    final IGeoValueProvider dgmDiffer = new DiffGeoValueProvider( groUnten, groOben );
     final Coordinate offsetX = new Coordinate( rasterSize, 0 );
     final Coordinate offsetY = new Coordinate( 0, rasterSize );
-    final DoubleRaster raster = new DoubleFakeRaster( xCount, yCount, origin, offsetX, offsetY, dgmDiffer );
+    final IGeoGrid raster = new DoubleFakeRaster( xCount, yCount, origin, offsetX, offsetY, dgmDiffer );
 
     final boolean bSimple = false;
     final SegmentCollector gc = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
@@ -90,9 +90,9 @@ public class Hmo2Fli
     LOG.info( "Total volume of flooded area is: " + numberInstance.format( volumen ) + " [m³]" );
 
     // Shape schreiben
-    Feature fc = gc.getFeatures();
-    Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    FeatureList list = (FeatureList) property;
+    final Feature fc = gc.getFeatures();
+    final Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final FeatureList list = (FeatureList) property;
 
     if( list.size() == 0 )
       LOG.log( Level.WARNING, "No features created" );

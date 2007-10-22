@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.processes,
- org.kalypso.ui.addlayer
-Export-Package: org.kalypso.gml.ui.wizard.imports
+ org.kalypso.ui.addlayer,
+ org.eclipse.core.expressions
+Export-Package: org.kalypso.gml.ui.wizard.grid
 Eclipse-LazyStart: true

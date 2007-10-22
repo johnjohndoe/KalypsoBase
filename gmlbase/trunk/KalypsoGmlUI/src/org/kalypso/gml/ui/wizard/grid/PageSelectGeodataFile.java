@@ -2,51 +2,54 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.wizard.imports;
+package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -70,12 +73,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.kalypso.raster.IRasterMetaReader;
-import org.kalypso.raster.RasterDataFileVerifier;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.grid.IGridMetaReader;
+import org.kalypso.grid.GridFileVerifier;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -83,20 +87,24 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class PageSelectGeodataFile extends WizardPage
 {
+  private static final String SETTINGS_FILE_PATH = "fullFilePath";
+
+  private static final String SETTINGS_SRS_NAME = "srsName";
+
   protected Button m_buttonFile;
 
   protected Text m_tFile;
 
   protected String m_sFile;
 
-  protected RasterDataFileVerifier verifier;
+  protected GridFileVerifier verifier;
 
   protected ComboViewer m_cViewer;
 
   protected StructuredSelection m_comboSel;
 
   /* details */
-  private IRasterMetaReader m_rasterReader = null;
+  private IGridMetaReader m_rasterReader = null;
 
   boolean m_bBoxesSet = false;
 
@@ -305,6 +313,26 @@ public class PageSelectGeodataFile extends WizardPage
     } );
 
     updatePageComplete();
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    final String fullPath = dialogSettings.get( SETTINGS_FILE_PATH );
+    final String srsName = dialogSettings.get( SETTINGS_SRS_NAME );
+    String srsDefaultName = null;
+    try
+    {
+      srsDefaultName = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
+    }
+    catch( final RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
+    final String srsToShow = srsName == null ? srsDefaultName : srsName;
+
+    if( fullPath != null )
+      m_tFile.setText( fullPath );
+    final CoordinateSystem srs = csFac.getCSByName( srsToShow );
+    if( srs != null )
+      m_cViewer.setSelection( new StructuredSelection( srs ), true );
   }
 
   protected void updatePageComplete( )
@@ -322,7 +350,7 @@ public class PageSelectGeodataFile extends WizardPage
       return;
     }
 
-    verifier = new RasterDataFileVerifier();
+    verifier = new GridFileVerifier();
     try
     {
       if( !verifier.verify( toFile.toURL() ) )
@@ -354,34 +382,34 @@ public class PageSelectGeodataFile extends WizardPage
       }
     }
 
-    if( !m_bBoxesSet )
+    final Object element = m_comboSel.getFirstElement();
+    if( element instanceof CoordinateSystem )
     {
-      final Object element = m_comboSel.getFirstElement();
-      if( element instanceof CoordinateSystem )
+      final CoordinateSystem cs = (CoordinateSystem) element;
+      final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
+
+      try
       {
-        final CoordinateSystem cs = (CoordinateSystem) element;
-        final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
-        try
-        {
-          m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), adapter.export( cs ) );
-        }
-        catch( final MalformedURLException e )
-        {
-          e.printStackTrace();
-        }
-        updateTextBoxes( m_rasterReader );
-
-        m_bBoxesSet = true;
+        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), adapter.export( cs ) );
       }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+      updateTextBoxes( m_rasterReader );
     }
 
     setPageComplete( true );
     setMessage( null );
     setErrorMessage( null );
 
-    m_tFile.setEnabled( false );
-    m_buttonFile.setEnabled( false );
+    /* If page is complete, we may save the settings */
+    getDialogSettings().put( SETTINGS_FILE_PATH, m_sFile );
+    getDialogSettings().put( SETTINGS_SRS_NAME, ((CoordinateSystem) m_comboSel.getFirstElement()).getName( Locale.ENGLISH ) );
+
+    // TODO: why disable these controls here?
+// m_tFile.setEnabled( false );
+// m_buttonFile.setEnabled( false );
   }
 
   protected void checkBoxes( )
@@ -437,7 +465,7 @@ public class PageSelectGeodataFile extends WizardPage
     return !m.matches();
   }
 
-  protected void updateTextBoxes( final IRasterMetaReader reader )
+  protected void updateTextBoxes( final IGridMetaReader reader )
   {
     if( reader == null )
     {
@@ -514,7 +542,7 @@ public class PageSelectGeodataFile extends WizardPage
     return new Double[] { new Double( tUlcX.getText() ), new Double( tUlcY.getText() ) };
   }
 
-  public IRasterMetaReader getReader( )
+  public IGridMetaReader getReader( )
   {
     return m_rasterReader;
   }

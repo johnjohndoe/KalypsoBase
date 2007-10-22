@@ -55,14 +55,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gis.doubleraster.DoubleDiffDoubleRaster;
-import org.kalypso.gis.doubleraster.DoubleProvider;
-import org.kalypso.gis.doubleraster.DoubleRaster;
-import org.kalypso.gis.doubleraster.DoubleRasterException;
-import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
-import org.kalypso.gis.doubleraster.walker.MinMaxRasterWalker;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.grid.DoubleDiffDoubleRaster;
+import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoValueProvider;
+import org.kalypso.grid.MinMaxRasterWalker;
+import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.simulation.core.ISimulation;
@@ -155,7 +155,7 @@ public class FloodDepthCalcJob implements ISimulation
    * @param floodDepthStep
    *            Schrittweite
    */
-  public static void doFloodDepthIntersection( final String shapeBase, final IProgressMonitor monitor, final URL triangleGmlURL, final URL dtmGmlURL, final TYPE floodDepthType, final double floodDepthStep ) throws Exception, DoubleRasterException, IOException, SimulationException
+  public static void doFloodDepthIntersection( final String shapeBase, final IProgressMonitor monitor, final URL triangleGmlURL, final URL dtmGmlURL, final TYPE floodDepthType, final double floodDepthStep ) throws Exception, GeoGridException, IOException, SimulationException
   {
     monitor.beginTask( "Fliesstiefen werden ermittelt - ", 12 );
 
@@ -167,7 +167,7 @@ public class FloodDepthCalcJob implements ISimulation
     // TODO: retrieve xpath to feature list from user
     final FeatureList triangleList = (FeatureList) rootFeature.getProperty( new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" ) );
 
-    final DoubleProvider triangleProvider = new TriangleDoubleProvider( triangleList );
+    final IGeoValueProvider triangleProvider = new TriangleDoubleProvider( triangleList );
 
     monitor.subTask( "- lese Raster" );
     // - raster lesen und als DoubleRaster wrappen
@@ -177,9 +177,9 @@ public class FloodDepthCalcJob implements ISimulation
     if( !GMLSchemaUtilities.substitutes( rgcFeature.getFeatureType(), new QName( NS.GML3, "RectifiedGridCoverage" ) ) )
       throw new IllegalArgumentException( "Root-Feature of dtm gml is no rectified grid coverage: " + rgcFeature );
 
-    final DoubleRaster raster = new RectifiedGridCoverageDoubleRaster( rgcFeature );
+    final IGeoGrid raster = new RectifiedGridCoverageGeoGrid( rgcFeature );
 
-    final DoubleRaster diffRaster = new DoubleDiffDoubleRaster( raster, triangleProvider );
+    final IGeoGrid diffRaster = new DoubleDiffDoubleRaster( raster, triangleProvider );
 
     monitor.worked( 1 );
 
@@ -236,8 +236,8 @@ public class FloodDepthCalcJob implements ISimulation
     // Shape schreiben
     // TODO: we still use deegree api here, switch to kalypso-deegree
     final Feature fc = gc.getFeatures();
-    Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    FeatureList list = (FeatureList) property;
+    final Object property = fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final FeatureList list = (FeatureList) property;
 
     if( list.size() == 0 )
     {

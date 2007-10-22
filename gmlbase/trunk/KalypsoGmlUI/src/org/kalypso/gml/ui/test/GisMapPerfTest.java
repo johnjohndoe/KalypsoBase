@@ -54,6 +54,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
+import org.kalypso.grid.GeoGridCache;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -78,7 +79,8 @@ import org.xml.sax.InputSource;
 public class GisMapPerfTest extends TestCase
 {
   public static String[][] RESOURCES = { //
-  { "points.zip", "points.gmt", "Shapes/point" }, //
+  { "dgm2m.zip", "dgm2m.gmt", "dgm2m.gml" }, //
+      { "points.zip", "points.gmt", "Shapes/point" }, //
       { "tin.zip", "tin.gmt", "tin_DEPTH.gml" }, //
       { "tin_isolines.zip", "tin.gmt", "tin_DEPTH.gml" }, //
       { "polyWithHoles.zip", "poly.gmt", "Shapes/polygon" } //
@@ -90,10 +92,12 @@ public class GisMapPerfTest extends TestCase
     {
       final URL zipResource = getClass().getResource( "resources/" + resource[0] );
       final URL gmtResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[1] );
-      final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[2] );
 
       mapLoadingAndVisualization( gmtResource );
-// gmlLoading( gmlResource );
+
+      // final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[2] );
+      // gmlLoading( gmlResource );
+      GeoGridCache.dump();
     }
   }
 

@@ -1,12 +1,12 @@
 package com.bce.gis.operation.raster2vector;
 
-import org.kalypso.gis.doubleraster.DoubleRaster;
-import org.kalypso.gis.doubleraster.DoubleRasterException;
-import org.kalypso.gis.doubleraster.DoubleRasterWalker;
+import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoGridWalker;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class Raster2Lines implements DoubleRasterWalker
+public class Raster2Lines implements IGeoGridWalker
 {
   private double m_volume;
 
@@ -32,6 +32,8 @@ public class Raster2Lines implements DoubleRasterWalker
 
   private Coordinate m_offsetY;
 
+  private int m_sizeY;
+
   public Raster2Lines( final SegmentCollector strategy, final double[] isolines )
   {
     m_strategy = strategy;
@@ -41,7 +43,7 @@ public class Raster2Lines implements DoubleRasterWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
-  public final void start( final DoubleRaster r )
+  public final void start( final IGeoGrid r ) throws GeoGridException
   {
     m_lastRowCoord = new Coordinate[r.getSizeX() + 1];
     m_lastSE = null;
@@ -54,12 +56,14 @@ public class Raster2Lines implements DoubleRasterWalker
 
     // reset volume
     m_volume = 0.0;
+
+    m_sizeY = r.getSizeY();
   }
 
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#operate(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
-  public final void operate( final int x, final int y, final Coordinate crd ) throws DoubleRasterException
+  public final void operate( final int x, final int y, final Coordinate crd ) throws GeoGridException
   {
     // Volumen aufaddieren
     final double cellVolume = m_cellArea * crd.z;
@@ -94,12 +98,16 @@ public class Raster2Lines implements DoubleRasterWalker
     m_lastRowCoord[x] = cSE;
 
     addSegment( x, y, cNW, cNE, cSW, cSE );
+
+    // TODO: this implementation makes assumptions about the order of visited cells... dangerous!
+    if( y == m_sizeY - 1 )
+      afterLine( y );
   }
 
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#afterLine(int)
    */
-  public final void afterLine( final int y ) throws DoubleRasterException
+  private final void afterLine( final int y ) throws GeoGridException
   {
     // die Zellecken ausrechnen
     final int x = m_lastRowCoord.length - 1;
@@ -128,12 +136,12 @@ public class Raster2Lines implements DoubleRasterWalker
    * 
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
-  public Object getResult( )
+  public Object finish( )
   {
     return m_strategy;
   }
 
-  private final void addSegment( final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws DoubleRasterException
+  private final void addSegment( final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws GeoGridException
   {
     for( int i = 0; i < m_grenzen.length; i++ )
     {
@@ -143,12 +151,12 @@ public class Raster2Lines implements DoubleRasterWalker
       }
       catch( final LinkedCoordinateException lce )
       {
-        throw new DoubleRasterException( "Fehler beim linken der Segmente", lce );
+        throw new GeoGridException( "Fehler beim linken der Segmente", lce );
       }
     }
   }
 
-  private final void addAtIndex( final int index, final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws LinkedCoordinateException, DoubleRasterException
+  private final void addAtIndex( final int index, final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws LinkedCoordinateException, GeoGridException
   {
     // check, ob die Koordinaten den Wert genau Treffen
     final double value = m_grenzen[index];
@@ -248,7 +256,7 @@ public class Raster2Lines implements DoubleRasterWalker
       }
     }
     else
-      throw new DoubleRasterException( "Unmöglicher Fall bei x=" + x + ", y=" + y, null );
+      throw new GeoGridException( "Unmöglicher Fall bei x=" + x + ", y=" + y, null );
   }
 
   /**
