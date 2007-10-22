@@ -49,14 +49,13 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -101,7 +100,6 @@ import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.xml.Mapper;
@@ -422,7 +420,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
             {
               final String logfile = arguments[j + 1];
-              return new LogStatusWrapper( new File( logfile ), CharsetUtilities.getDefaultCharset() ).toStatus();
+              return new LogStatusWrapper( new File( logfile ), Charset.defaultCharset().name() ).toStatus();
             }
           }
           return Status.OK_STATUS;
