@@ -44,8 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,17 +169,16 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
   }
 
-  private void createGmlWorkspace( final IContainer container, final List<File> file2import, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
+  private void createGmlWorkspace( final IContainer container, final List<File> file2import, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, file2import.size() + 10 );
 
     for( final File file : file2import )
     {
       final IFile importFileResource = container.getFile( new Path( file.getName() ) );
-      final URL fileUrl = ResourceUtilities.createURL( importFileResource );
       final String mimeType = "image/" + importFileResource.getFileExtension();
 
-      CoverageCollection.addCoverage( coverages, m_domain, fileUrl, mimeType );
+      CoverageCollection.addCoverage( coverages, m_domain, importFileResource.getName(), mimeType );
 
       ProgressUtilities.worked( progress, 1 );
     }
