@@ -70,7 +70,7 @@ public class ChartComposite extends Composite
         {
           final IAxis< ? > axis = (IAxis< ? >) mapper;
           final Composite parent = m_axisPlaces.get( axis.getPosition() );
-          final AxisCanvas< ? > component = new AxisCanvas( axis, parent, SWT.NONE );
+          final AxisCanvas component = new AxisCanvas( axis, parent, SWT.NONE );
           component.setBackground( m_bgColor );
           m_model.getMapperRegistry().setComponent( axis, component );
           layout();
@@ -249,7 +249,7 @@ public class ChartComposite extends Composite
   @Override
   public void redraw( )
   {
-    layout();
+    // layout();
 
     final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
     final IAxis[] axes = mapperRegistry.getAxes();

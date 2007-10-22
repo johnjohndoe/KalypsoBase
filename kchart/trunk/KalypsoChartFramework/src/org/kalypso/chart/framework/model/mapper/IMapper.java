@@ -1,6 +1,7 @@
 package org.kalypso.chart.framework.model.mapper;
 
 import org.kalypso.chart.framework.model.data.IDataOperator;
+import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.event.IEventProvider;
 import org.kalypso.chart.framework.model.event.IMapperEventListener;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
@@ -39,4 +40,12 @@ public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEven
    */
   public IDataOperator<T_logical> getDataOperator( );
 
+  public IDataRange<T_logical> getLogicalRange( );
+
+  /**
+   * sets visible range of mapped data
+   * 
+   * @param dataRange
+   */
+  public void setLogicalRange( IDataRange<T_logical> dataRange );
 }

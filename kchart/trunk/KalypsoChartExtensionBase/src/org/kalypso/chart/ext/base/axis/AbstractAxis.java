@@ -57,7 +57,9 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
   public IAxisRenderer<T> getRenderer( )
   {
     if( m_registry == null )
+    {
       throw new IllegalStateException( "Registry is null" );
+    }
 
     return (IAxisRenderer<T>) m_registry.getRenderer( this );
   }

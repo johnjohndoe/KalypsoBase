@@ -15,8 +15,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  */
 public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEventListener>
 {
-  // TODO: add get/set ID: this is needed to get the back-reference where this laer came from (for examlpe from the
-  // LayerType)
 
   /**
    * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren

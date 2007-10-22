@@ -53,15 +53,6 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
 
   public int zeroToScreen( );
 
-  public IDataRange<T_logical> getLogicalRange( );
-
-  /**
-   * sets visible range of axis
-   * 
-   * @param dataRange
-   */
-  public void setLogicalRange( IDataRange<T_logical> dataRange );
-
   /**
    * returns the internally used number range
    */
@@ -81,12 +72,5 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    * transforms a numeric value into a screen position
    */
   public int numericToScreen( Number value );
-
-  /**
-   * method to store arbitrary data objects;
-   */
-  public void setData( String identifier, Object data );
-
-  public Object getData( String identifier );
 
 }

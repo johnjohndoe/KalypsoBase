@@ -37,7 +37,7 @@ public class MapperRegistry implements IMapperRegistry
   private final Map<Class< ? >, IAxisRenderer< ? >> m_class2renderers = new HashMap<Class< ? >, IAxisRenderer< ? >>();
 
   /** axis --> component */
-  private final Map<IAxis< ? >, IAxisComponent< ? >> m_components = new HashMap<IAxis< ? >, IAxisComponent< ? >>();
+  private final Map<IAxis< ? >, IAxisComponent> m_components = new HashMap<IAxis< ? >, IAxisComponent>();
 
   /*
    * (non-Javadoc)
@@ -108,7 +108,7 @@ public class MapperRegistry implements IMapperRegistry
     if( mapper instanceof org.kalypso.chart.framework.model.mapper.IAxis )
     {
       final IAxis< ? > axis = (IAxis< ? >) mapper;
-      final IAxisComponent< ? > component = m_components.get( axis );
+      final IAxisComponent component = m_components.get( axis );
       if( component != null )
       {
         component.dispose();
@@ -125,7 +125,7 @@ public class MapperRegistry implements IMapperRegistry
    */
   public void clear( )
   {
-    for( final IAxisComponent< ? > comp : m_components.values() )
+    for( final IAxisComponent comp : m_components.values() )
       comp.dispose();
     m_components.clear();
 
@@ -205,7 +205,7 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponent(org.kalypso.chart.framework.model.axis.IAxis)
    */
-  public IAxisComponent< ? > getComponent( final IAxis< ? > axis )
+  public IAxisComponent getComponent( final IAxis< ? > axis )
   {
     return m_components.get( axis );
   }
@@ -237,7 +237,7 @@ public class MapperRegistry implements IMapperRegistry
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#setComponent(org.kalypso.chart.framework.model.axis.IAxis,
    *      org.kalypso.chart.framework.model.axis.component.IAxisComponent)
    */
-  public void setComponent( final IAxis< ? > axis, final IAxisComponent< ? > comp )
+  public void setComponent( final IAxis< ? > axis, final IAxisComponent comp )
   {
     m_components.put( axis, comp );
   }
@@ -303,7 +303,7 @@ public class MapperRegistry implements IMapperRegistry
    * 
    * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getComponents()
    */
-  public Map<IAxis< ? >, IAxisComponent< ? >> getAxesToComponentsMap( )
+  public Map<IAxis< ? >, IAxisComponent> getAxesToComponentsMap( )
   {
     return m_components;
   }

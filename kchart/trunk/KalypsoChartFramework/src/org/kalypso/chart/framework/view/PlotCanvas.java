@@ -24,7 +24,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 /**
- * @author burtscher widget in which the layers' content is paintet
+ * @author burtscher widget in which the layers' content is painted
  */
 public class PlotCanvas extends Canvas implements PaintListener, Listener
 {

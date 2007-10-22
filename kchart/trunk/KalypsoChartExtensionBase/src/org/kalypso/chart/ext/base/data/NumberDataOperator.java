@@ -35,7 +35,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     {
       dirFactor = -1;
     }
-    for( double d = doubleFixedPoint; d > doubleVal; d += dirFactor * doubleIntervalWidth )
+    for( double d = doubleFixedPoint; d < doubleVal; d += dirFactor * doubleIntervalWidth )
     {
       min = doubleFixedPoint + d;
     }
@@ -56,6 +56,8 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
   public Double logicalToNumerical( Number logVal )
   {
+    if( logVal == null )
+      return null;
     return logVal.doubleValue();
   }
 
@@ -71,14 +73,21 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
   public Number stringToLogical( String value ) throws MalformedValueException
   {
-    try
+    if( value == null )
+      return null;
+    else if( "".equals( value.trim() ) )
+      return null;
+    else
     {
-      final double d = Double.parseDouble( value );
-      return d;
-    }
-    catch( final NumberFormatException e )
-    {
-      throw new MalformedValueException( e );
+      try
+      {
+        final double d = Double.parseDouble( value );
+        return d;
+      }
+      catch( final NumberFormatException e )
+      {
+        throw new MalformedValueException( e );
+      }
     }
   }
 

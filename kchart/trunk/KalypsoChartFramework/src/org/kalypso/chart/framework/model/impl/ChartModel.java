@@ -112,10 +112,10 @@ public class ChartModel implements IChartModel
 
       // axis-components must be visible
 
-      final IAxisComponent< ? > domainComp = m_mapperRegistry.getComponent( layer.getDomainAxis() );
+      final IAxisComponent domainComp = m_mapperRegistry.getComponent( layer.getDomainAxis() );
       if( domainComp != null )
         domainComp.setVisible( true );
-      final IAxisComponent< ? > valueComp = m_mapperRegistry.getComponent( layer.getTargetAxis() );
+      final IAxisComponent valueComp = m_mapperRegistry.getComponent( layer.getTargetAxis() );
       if( valueComp != null )
         valueComp.setVisible( true );
       // m_mapperRegistry.getComponent( layer.getValueAxis() ).setVisible( true );
@@ -203,7 +203,7 @@ public class ChartModel implements IChartModel
       final List<IChartLayer< ? , ? >> list = m_axis2Layers.get( axis );
       if( list == null || list.size() == 0 )
       {
-        final IAxisComponent< ? > comp = m_mapperRegistry.getComponent( axis );
+        final IAxisComponent comp = m_mapperRegistry.getComponent( axis );
         comp.setVisible( !m_hideUnusedAxes );
       }
     }
@@ -434,7 +434,8 @@ public class ChartModel implements IChartModel
       double newmin = 0;
       double newmax = 0;
 
-      Number nowNum, startNum;
+      Number nowNum;
+      Number startNum;
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
         nowNum = axis.screenToNumeric( end.x );

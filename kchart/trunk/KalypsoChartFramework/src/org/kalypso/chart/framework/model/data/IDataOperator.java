@@ -10,7 +10,7 @@ public interface IDataOperator<T_logical> extends IStringDataConverter<T_logical
 
   public T_logical numericalToLogical( Number numVal );
 
-  public IDataRange<T_logical> getContainingInterval( Number numVal, Number numIntervalWidth, Number numFixedPoint );
+  public IDataRange<T_logical> getContainingInterval( T_logical logVal, Number numIntervalWidth, T_logical logFixedPoint );
 
   public Comparator<T_logical> getComparator( );
 

@@ -12,8 +12,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.kalypso.chart.framework.model.event.IMapperEventListener;
-import org.kalypso.chart.framework.model.event.impl.AbstractMapperEventListener;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
@@ -25,7 +23,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
  * @author burtscher Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
  *         to calculate screen coordinates for normalized values
  */
-public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisComponent<T>, Listener
+public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisComponent, Listener
 {
   /**
    * the corresponding axis

@@ -1,6 +1,5 @@
 package org.kalypso.chart.ext.base.axis;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,10 +23,10 @@ public class CalendarAxis extends AbstractAxis<Calendar>
 {
   private final CalendarDataOperator m_dataOperator;
 
-  public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, SimpleDateFormat sdf )
+  public CalendarAxis( String id, String label, PROPERTY prop, POSITION pos, DIRECTION dir, String formatString )
   {
     super( id, label, prop, pos, dir, Calendar.class );
-    m_dataOperator = new CalendarDataOperator( getComparator(), sdf );
+    m_dataOperator = new CalendarDataOperator( getComparator(), formatString );
   }
 
   public double logicalToNormalized( final Calendar value )
@@ -71,7 +70,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( getRegistry() == null )
       return 0;
 
-    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return 0;
 
@@ -88,7 +87,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     if( getRegistry() == null )
       return null;
 
-    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 
@@ -132,7 +131,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
     final Calendar endCal = Calendar.getInstance();
     endCal.setTimeInMillis( end );
 
-    final IAxisComponent< ? > comp = getRegistry().getComponent( this );
+    final IAxisComponent comp = getRegistry().getComponent( this );
     if( comp == null )
       return null;
 

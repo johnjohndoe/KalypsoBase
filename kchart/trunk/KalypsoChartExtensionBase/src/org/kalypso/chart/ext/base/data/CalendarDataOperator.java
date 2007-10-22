@@ -7,35 +7,33 @@ import java.util.Comparator;
 
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 
 public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 {
 
   private final CalendarParser m_stringParser;
 
-  private final SimpleDateFormat m_dateFormat;
+  private final CalendarFormat m_dateFormat;
 
-  public CalendarDataOperator( Comparator<Calendar> comparator, SimpleDateFormat sdf )
+  public CalendarDataOperator( Comparator<Calendar> comparator, String formatString )
   {
     super( comparator );
-    m_dateFormat = sdf;
+    m_dateFormat = new CalendarFormat( formatString );
     m_stringParser = new CalendarParser();
   }
 
-  public DataRange<Calendar> getContainingInterval( Number numVal, Number numIntervalWidth, Number numFixedPoint )
+  public IDataRange<Calendar> getContainingInterval( Calendar logVal, Number numIntervalWidth, Calendar logFixedPoint )
   {
-    Long min = numFixedPoint.longValue();
-    Long max = numVal.longValue();
+    Long min = logFixedPoint.getTimeInMillis();
+    Long max = logVal.getTimeInMillis();
 
     int dirFactor = 1;
 
-    final Long longFixedPoint = numFixedPoint.longValue();
-    final Long longVal = numVal.longValue();
+    final Long longFixedPoint = logFixedPoint.getTimeInMillis();
+    final Long longVal = logVal.getTimeInMillis();
     final Long longIntervalWidth = numIntervalWidth.longValue();
 
     if( longFixedPoint.compareTo( longVal ) > 0 )
@@ -47,27 +45,22 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
       min = longFixedPoint + d;
     }
     max = min + dirFactor * longIntervalWidth;
-
-    DataRange<Calendar> dataRange = null;
-    try
-    {
-      dataRange = new DataRange<Calendar>( numericalToLogical( Math.min( min, max ) ), numericalToLogical( Math.max( min, max ) ) );
-    }
-    catch( final ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return dataRange;
+    return new ComparableDataRange<Calendar>( new Calendar[] { numericalToLogical( Math.min( min, max ) ), numericalToLogical( Math.max( min, max ) ) } );
   }
 
   public Long logicalToNumerical( Calendar logVal )
   {
-    return logVal.getTimeInMillis();
+    if( logVal != null )
+      return logVal.getTimeInMillis();
+    return null;
   }
 
   public Calendar numericalToLogical( Number numVal )
   {
+    if( numVal == null )
+      return null;
+    else if( numVal.longValue() < 0 )
+      return null;
     final Calendar cal = Calendar.getInstance();
     cal.set( Calendar.DST_OFFSET, 0 );
     cal.set( Calendar.ZONE_OFFSET, 0 );
@@ -84,6 +77,10 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 
   public Calendar stringToLogical( String value ) throws MalformedValueException
   {
+    if( value == null )
+      return null;
+    if( value.trim().equals( "" ) )
+      return null;
     final Calendar cal = m_stringParser.stringToLogical( value );
     return cal;
   }
@@ -121,7 +118,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
    */
   public Format getFormat( IDataRange<Calendar> range )
   {
-    return m_dateFormat;
+    return (Format) m_dateFormat;
   }
 
 }

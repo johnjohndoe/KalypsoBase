@@ -39,13 +39,7 @@ public class ComparableDataRange<T> implements IDataRange<T>
       if( item != null )
       {
         // erster von Null verschiedener Wert wird als max und min genutzt
-        if( !hasMinAndMax )
-        {
-          m_min = item;
-          m_max = item;
-          hasMinAndMax = true;
-        }
-        else
+        if( hasMinAndMax )
         {
           if( m_comp.compare( item, m_min ) < 0 )
           {
@@ -55,6 +49,12 @@ public class ComparableDataRange<T> implements IDataRange<T>
           {
             m_max = item;
           }
+        }
+        else
+        {
+          m_min = item;
+          m_max = item;
+          hasMinAndMax = true;
         }
       }
     }
