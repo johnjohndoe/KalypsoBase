@@ -133,6 +133,12 @@ public class MapperRegistry implements IMapperRegistry
       m_handler.fireMapperRemoved( mapper );
     m_mappers.clear();
 
+    Collection<IAxisComponent> values = getAxesToComponentsMap().values();
+    for( IAxisComponent comp : values )
+    {
+      comp.dispose();
+    }
+
     m_id2renderers.clear();
     m_class2renderers.clear();
   }
@@ -343,4 +349,5 @@ public class MapperRegistry implements IMapperRegistry
     }
     return axisMap;
   }
+
 }

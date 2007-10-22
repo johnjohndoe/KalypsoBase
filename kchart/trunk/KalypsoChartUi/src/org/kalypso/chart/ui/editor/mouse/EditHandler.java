@@ -19,7 +19,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
 
   private boolean m_editingAllowed = false;
 
-  private final int m_trashHold = 3;
+  private final int m_treshold = 3;
 
   private Point m_clickPoint;
 
@@ -89,7 +89,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
       {
         try
         {
-          if( (Math.abs( e.x - m_clickPoint.x ) > m_trashHold) || (Math.abs( e.y - m_clickPoint.y ) > m_trashHold) )
+          if( (Math.abs( e.x - m_clickPoint.x ) > m_treshold) || (Math.abs( e.y - m_clickPoint.y ) > m_treshold) )
           {
             editInfo.layer.edit( new Point( e.x, e.y ), editInfo.data );
           }
@@ -108,7 +108,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
       {
         try
         {
-          if( (Math.abs( e.x - m_clickPoint.x ) < m_trashHold) || (Math.abs( e.y - m_clickPoint.y ) < m_trashHold) )
+          if( m_clickPoint != null && ((Math.abs( e.x - m_clickPoint.x ) < m_treshold) || (Math.abs( e.y - m_clickPoint.y ) < m_treshold)) )
           {
             hoverInfo.layer.setActivePoint( hoverInfo.data );
           }

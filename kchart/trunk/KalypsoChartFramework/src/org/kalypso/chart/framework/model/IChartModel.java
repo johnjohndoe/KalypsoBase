@@ -53,6 +53,8 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public <T_logical> void zoomIn( Point start, Point end );
 
+  public <T_logical> void zoomOut( Point start, Point end );
+
   public void panTo( Point start, Point end );
 
 }

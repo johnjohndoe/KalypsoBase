@@ -7,6 +7,7 @@ import java.text.NumberFormat;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -97,8 +98,14 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
     String testStringMax = format.format( axis.getLogicalRange().getMax() );
     String testStringMin = format.format( axis.getLogicalRange().getMin() );
+
+    Font oldfont = gc.getFont();
+    gc.setFont( getFont( getFontDataTickLabel(), gc.getDevice() ) );
+
     Point tickLabelSizeMax = gc.textExtent( testStringMax );
     Point tickLabelSizeMin = gc.textExtent( testStringMin );
+
+    gc.setFont( oldfont );
 
     final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
     final int x = Math.max( tickLabelSizeMax.x, tickLabelSizeMin.x ) + ihelper.left + ihelper.right;
@@ -229,7 +236,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     final int axisMax = axis.logicalToScreen( dataRange.getMax() );
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
-
     for( Number value : ticks )
     {
       int y1, y2, x1, x2, tickPos;

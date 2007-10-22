@@ -40,19 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.actions;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.chart.framework.view.ChartComposite;
+import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.chart.ui.editor.ChartEditor;
-
 
 /**
  * @author Gernot Belger
+ * @author burtscher1
  */
-public class MaximizeActionDelegate implements IEditorActionDelegate
+public class MaximizeActionDelegate extends ActionDelegate implements IEditorActionDelegate
 {
   private IEditorPart m_targetEditor;
 
@@ -63,27 +67,41 @@ public class MaximizeActionDelegate implements IEditorActionDelegate
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;
-
     action.setEnabled( m_targetEditor instanceof ChartEditor );
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
-  public void run( final IAction action )
+  @Override
+  public void runWithEvent( IAction action, Event event )
   {
-    final ChartEditor chartEditor = (ChartEditor) m_targetEditor;
+    try
+    {
+      final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.maximize", event );
+    }
+    catch( ExecutionException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( NotDefinedException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( NotEnabledException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( NotHandledException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-    final ChartComposite chart = chartEditor.getChartComposite();
-    ChartUtilities.maximize( chart.getModel() );
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
   }
 
 }

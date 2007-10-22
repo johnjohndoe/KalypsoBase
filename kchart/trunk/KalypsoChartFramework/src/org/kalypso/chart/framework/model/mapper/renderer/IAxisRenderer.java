@@ -44,4 +44,6 @@ public interface IAxisRenderer<T_logical>
 
   public void invalidateTicks( IAxis axis );
 
+  public void dispose( );
+
 }

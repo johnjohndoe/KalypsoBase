@@ -38,23 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.actions;
+package org.kalypso.chart.framework.view;
 
-import org.eclipse.jface.action.IContributionManager;
-import org.kalypso.chart.framework.view.ChartComposite;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Cursor;
 
 /**
- * Helper class which contributes actions for the chart to any contribution manager.
- * 
- * @author Gernot Belger
- *
+ * @author alibu
  */
-public class ChartActionContributor
+public interface IChartDragHandler extends MouseListener, MouseMoveListener
 {
-  public void contributeActions( final ChartComposite chartComposite, final IContributionManager manager )
-  {
-    manager.add( new MaximizeChartAction( chartComposite ) );
-    
-    manager.update( true );
-  }
+
+  public Cursor getCursor( );
+
 }

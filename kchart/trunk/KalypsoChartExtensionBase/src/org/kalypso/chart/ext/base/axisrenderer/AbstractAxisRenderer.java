@@ -3,8 +3,10 @@ package org.kalypso.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
@@ -39,6 +41,8 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
 
   private final String m_id;
 
+  private final Map<FontData, Font> m_fontMap = new HashMap<FontData, Font>();
+
   /**
    * Hashmap to store arbitrary key value pairs
    */
@@ -64,11 +68,11 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
 
   protected Point getTextExtent( GCWrapper gc, final String value, FontData fd )
   {
-    final Font f = new Font( gc.getDevice(), fd );
+    Font oldFont = gc.getFont();
+    final Font f = getFont( fd, gc.getDevice() );
     gc.setFont( f );
     final Point point = gc.textExtent( value );
-    gc.setFont( gc.getDevice().getSystemFont() );
-    f.dispose();
+    gc.setFont( oldFont );
     return point;
   }
 
@@ -77,12 +81,11 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
    */
   protected void drawText( GCWrapper gc, String text, int x, int y, FontData fd )
   {
-    final Font f = new Font( gc.getDevice(), fd );
     gc.setTextAntialias( SWT.ON );
-    gc.setFont( f );
+    Font oldfont = gc.getFont();
+    gc.setFont( getFont( fd, gc.getDevice() ) );
     gc.drawText( text, x, y );
-    gc.setFont( gc.getDevice().getSystemFont() );
-    f.dispose();
+    gc.setFont( oldfont );
   }
 
   public int getTickLength( )
@@ -165,5 +168,26 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
   public void invalidateTicks( IAxis axis )
   {
     m_tickMap.put( axis, null );
+  }
+
+  public void dispose( )
+  {
+    for( Font f : m_fontMap.values() )
+    {
+      if( !f.isDisposed() )
+        f.dispose();
+    }
+  }
+
+  public synchronized Font getFont( FontData fd, Device dev )
+  {
+    Font font = m_fontMap.get( fd );
+    if( font == null )
+    {
+      font = new Font( dev, fd );
+      m_fontMap.put( fd, font );
+    }
+    return font;
+
   }
 }

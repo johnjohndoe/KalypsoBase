@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -48,13 +47,8 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.actions.ChartActionsEnum;
-import org.kalypso.chart.ui.editor.actions.ChartStandardActions;
-import org.kalypso.chart.ui.editor.mouse.DragPanHandler;
-import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 import org.kalypso.chart.ui.editor.mouse.EditHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -86,8 +80,6 @@ public class ChartEditor extends EditorPart
   private boolean m_dirty = false;
 
   private ChartComposite m_chartComposite = null;
-
-  private final ChartStandardActions m_actions = null;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -389,12 +381,12 @@ public class ChartEditor extends EditorPart
           if( m_chartModel != null )
           {
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-            DragZoomHandler dragHandler = new DragZoomHandler( m_chartComposite );
-            m_chartComposite.getPlot().addMouseListener( dragHandler );
-            m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
-            DragPanHandler dragHandler2 = new DragPanHandler( m_chartComposite );
-            m_chartComposite.getPlot().addMouseListener( dragHandler2 );
-            m_chartComposite.getPlot().addMouseMoveListener( dragHandler2 );
+            // DragZoomHandler dragHandler = new DragZoomHandler( m_chartComposite );
+            // m_chartComposite.getPlot().addMouseListener( dragHandler );
+            // m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
+            // DragPanHandler dragHandler2 = new DragPanHandler( m_chartComposite );
+            // m_chartComposite.getPlot().addMouseListener( dragHandler2 );
+            // m_chartComposite.getPlot().addMouseMoveListener( dragHandler2 );
 
             /**
              * edit stuff
@@ -466,6 +458,9 @@ public class ChartEditor extends EditorPart
       return m_outlinePage;
     }
 
+    if( ChartComposite.class.equals( adapter ) )
+      return m_chartComposite;
+
     return super.getAdapter( adapter );
   }
 
@@ -494,43 +489,4 @@ public class ChartEditor extends EditorPart
     m_configuration = doc;
   }
 
-  public void runChartAction( final ChartActionsEnum chartAction )
-  {
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-    {
-      switch( chartAction )
-      {
-        case MAXIMIZE:
-          ChartUtilities.maximize( m_chartComposite.getModel() );
-          break;
-        case ZOOM_IN:
-          m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
-          break;
-        case ZOOM_OUT:
-          m_actions.getAction( ChartStandardActions.Action.ZOOM_OUT ).setChecked( true );
-          break;
-        case PAN:
-          m_actions.getAction( ChartStandardActions.Action.PAN ).setChecked( true );
-          break;
-
-        case EDIT:
-        {
-          final IAction editAction = m_actions.getAction( ChartStandardActions.Action.EDIT );
-          editAction.setChecked( !editAction.isChecked() );
-        }
-          break;
-
-        case EXPORT_IMAGE:
-          saveChartAsImage( m_chartComposite );
-          break;
-
-      }
-    }
-  }
-
-  private static void saveChartAsImage( ChartComposite chart )
-  {
-    // TODO Auto-generated method stub
-
-  }
 }

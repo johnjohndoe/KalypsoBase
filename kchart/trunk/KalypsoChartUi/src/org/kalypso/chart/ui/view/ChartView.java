@@ -64,7 +64,7 @@ import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorOutlinePage;
-import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
+import org.kalypso.chart.ui.editor.mouse.DragZoomInHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.ChartConfigurationDocument;
@@ -190,7 +190,7 @@ public class ChartView extends ViewPart
         if( m_chartModel != null )
         {
           m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-          final DragZoomHandler dragHandler = new DragZoomHandler( m_chartComposite );
+          final DragZoomInHandler dragHandler = new DragZoomInHandler( m_chartComposite );
           m_chartComposite.getPlot().addMouseListener( dragHandler );
           m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
           m_chartComposite.getModel().setAutoscale( true );

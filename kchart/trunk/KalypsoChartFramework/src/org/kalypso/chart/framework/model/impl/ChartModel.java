@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.event.IChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import org.kalypso.chart.framework.model.event.impl.ChartModelEventHandler;
@@ -373,8 +371,8 @@ public class ChartModel implements IChartModel
     final IAxis[] axes = ar.getAxes();
     for( final IAxis axis : axes )
     {
-      T_logical from = null;
-      T_logical to = null;
+      Number from = null;
+      Number to = null;
 
       switch( axis.getPosition().getOrientation() )
       {
@@ -382,13 +380,13 @@ public class ChartModel implements IChartModel
           switch( axis.getDirection() )
           {
             case POSITIVE:
-              from = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
-              to = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
+              from = axis.screenToNumeric( Math.min( start.x, end.x ) );
+              to = axis.screenToNumeric( Math.max( start.x, end.x ) );
               break;
 
             case NEGATIVE:
-              from = (T_logical) axis.screenToLogical( Math.max( start.x, end.x ) );
-              to = (T_logical) axis.screenToLogical( Math.min( start.x, end.x ) );
+              from = axis.screenToNumeric( Math.max( start.x, end.x ) );
+              to = axis.screenToNumeric( Math.min( start.x, end.x ) );
               break;
           }
           break;
@@ -397,13 +395,13 @@ public class ChartModel implements IChartModel
           switch( axis.getDirection() )
           {
             case POSITIVE:
-              from = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
-              to = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
+              from = axis.screenToNumeric( Math.max( start.y, end.y ) );
+              to = axis.screenToNumeric( Math.min( start.y, end.y ) );
               break;
 
             case NEGATIVE:
-              from = (T_logical) axis.screenToLogical( Math.min( start.y, end.y ) );
-              to = (T_logical) axis.screenToLogical( Math.max( start.y, end.y ) );
+              from = axis.screenToNumeric( Math.min( start.y, end.y ) );
+              to = axis.screenToNumeric( Math.max( start.y, end.y ) );
               break;
           }
           break;
@@ -411,15 +409,72 @@ public class ChartModel implements IChartModel
 
       if( from != null && to != null )
       {
-        try
-        {
-          axis.setLogicalRange( new DataRange( from, to ) );
-        }
-        catch( final ZeroSizeDataRangeException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        axis.setNumericRange( new ComparableDataRange( new Number[] { from, to } ) );
+      }
+    }
+    m_eventHandler.fireModelChanged();
+  }
+
+  /**
+   * minimizes the content of the plot to the values inside a dragged rectangle
+   */
+  @SuppressWarnings("unchecked")
+  public <T_logical> void zoomOut( final Point start, final Point end )
+  {
+    final IMapperRegistry ar = getMapperRegistry();
+    final IAxis[] axes = ar.getAxes();
+    for( final IAxis axis : axes )
+    {
+      double from = Double.NaN;
+      double to = Double.NaN;
+
+      switch( axis.getPosition().getOrientation() )
+      {
+        case HORIZONTAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToNumeric( Math.min( start.x, end.x ) ).doubleValue();
+              to = axis.screenToNumeric( Math.max( start.x, end.x ) ).doubleValue();
+              break;
+
+            case NEGATIVE:
+              from = axis.screenToNumeric( Math.max( start.x, end.x ) ).doubleValue();
+              to = axis.screenToNumeric( Math.min( start.x, end.x ) ).doubleValue();
+              break;
+          }
+          break;
+
+        case VERTICAL:
+          switch( axis.getDirection() )
+          {
+            case POSITIVE:
+              from = axis.screenToNumeric( Math.max( start.y, end.y ) ).doubleValue();
+              to = axis.screenToNumeric( Math.min( start.y, end.y ) ).doubleValue();
+              break;
+
+            case NEGATIVE:
+              from = axis.screenToNumeric( Math.min( start.y, end.y ) ).doubleValue();
+              to = axis.screenToNumeric( Math.max( start.y, end.y ) ).doubleValue();
+              break;
+          }
+          break;
+      }
+
+      if( from != Double.NaN && to != Double.NaN )
+      {
+        IDataRange<Number> numericRange = axis.getNumericRange();
+
+        double oldmin = numericRange.getMin().doubleValue();
+        double oldmax = numericRange.getMax().doubleValue();
+        double oldrange = Math.abs( oldmin - oldmax );
+        double mouserange = Math.abs( from - to );
+        double newrange = (oldrange / mouserange) * oldrange;
+
+        double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+        double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+
+        axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }
     }
     m_eventHandler.fireModelChanged();
@@ -457,4 +512,5 @@ public class ChartModel implements IChartModel
     }
     m_eventHandler.fireModelChanged();
   }
+
 }

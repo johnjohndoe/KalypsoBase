@@ -40,17 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mouse;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
  * @author burtscher1
  */
-public class DragPanHandler implements MouseListener, MouseMoveListener
+public class DragPanHandler implements IChartDragHandler
 {
   private Point m_start = null;
 
@@ -117,6 +119,14 @@ public class DragPanHandler implements MouseListener, MouseMoveListener
   {
     // TODO Auto-generated method stub
     System.out.println( "!!!!!!!!!!!!!!!!! TODO: DragAction Setzen" );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
+   */
+  public Cursor getCursor( )
+  {
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
 }
