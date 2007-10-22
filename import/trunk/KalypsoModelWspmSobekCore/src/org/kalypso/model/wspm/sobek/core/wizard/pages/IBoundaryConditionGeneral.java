@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
+import java.util.GregorianCalendar;
+
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 
 /**
@@ -49,5 +51,9 @@ public interface IBoundaryConditionGeneral
 {
 
   IBoundaryNode.BOUNDARY_TYPE getBoundaryNodeType( );
+
+  GregorianCalendar getStartDate( );
+
+  GregorianCalendar getEndDate( );
 
 }
