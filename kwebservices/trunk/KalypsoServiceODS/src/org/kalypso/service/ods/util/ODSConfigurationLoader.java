@@ -20,7 +20,7 @@ import org.ksp.service.odsimpl.ScenesType;
 import org.ksp.service.odsimpl.ServiceParametersType;
 
 /**
- * singleton class which handlse the configurations for the service and teh indivudual scenes; if a scene does not
+ * singleton class which handles the configurations for the service and the individual scenes; if a scene does not
  * define its own ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration
  * 
  * @author burtscher1
