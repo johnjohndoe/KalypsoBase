@@ -73,10 +73,19 @@ public class ResourceUtilities
     return findFileFromPath( path );
   }
 
+  public static File findJavaFileFromURL( final URL url )
+  {
+    final IPath path = findPathFromURL( url );
+    if( path == null )
+      return null;
+
+    return makeFileFromPath( path );
+  }
+
   /**
    * Only works with absolute paths. (?)
    */
-  public static IFile findFileFromPath( IPath path )
+  public static IFile findFileFromPath( final IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFile( path );
@@ -90,7 +99,7 @@ public class ResourceUtilities
     return findFolderFromPath( path );
   }
 
-  public static IFolder findFolderFromPath( IPath path )
+  public static IFolder findFolderFromPath( final IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFolder( path );
@@ -125,7 +134,7 @@ public class ResourceUtilities
   {
     final String utostring = u.toString();
     final String urlpath;
-    int ix = utostring.indexOf( '?' );
+    final int ix = utostring.indexOf( '?' );
     if( ix != -1 )
       urlpath = utostring.substring( 0, ix );
     else
@@ -143,13 +152,13 @@ public class ResourceUtilities
     // especially, if we are working with pathes into the .metadata section we get bugs
     else if( urlpath != null && urlpath.startsWith( "http:/" ) || urlpath.startsWith( "file:/" ) )
     {
-      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       URL url = null;
       try
       {
         url = root.getLocation().toFile().toURL();
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         // just return null
         e.printStackTrace();
@@ -213,20 +222,13 @@ public class ResourceUtilities
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
   }
 
-  public static File findFileFromURL2( URL url )
-  {
-    final IPath path = findPathFromURL( url );
-    final File file = makeFileFromPath( path );
-    return file;
-  }
-
   /**
    * Tries to get the parent project of this container.
    * 
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
-  public static IProject findParentProject( IContainer start ) throws CoreException
+  public static IProject findParentProject( final IContainer start ) throws CoreException
   {
     if( start instanceof IWorkspaceRoot )
       return null;
@@ -246,12 +248,12 @@ public class ResourceUtilities
    *            The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
    */
-  public static IFile getFileFromPath( IPath path )
+  public static IFile getFileFromPath( final IPath path )
   {
     /* Need all segments of this path. */
-    String[] segments = path.segments();
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IProject project = root.getProject( segments[0] );
+    final String[] segments = path.segments();
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IProject project = root.getProject( segments[0] );
 
     if( project == null )
       return null;
@@ -265,7 +267,7 @@ public class ResourceUtilities
         tmpFolder = tmpFolder.getFolder( segments[i] );
 
     /* At least, get the IFile. */
-    IFile file = tmpFolder.getFile( segments[segments.length - 1] );
+    final IFile file = tmpFolder.getFile( segments[segments.length - 1] );
 
     return file;
   }
