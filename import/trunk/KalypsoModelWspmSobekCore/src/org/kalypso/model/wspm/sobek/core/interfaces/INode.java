@@ -68,6 +68,8 @@ public interface INode
 
   public String getName( );
 
+  public String getStationName( );
+
   public String getDescription( );
 
   public String getId( );
