@@ -79,7 +79,7 @@ public class Hmo2Fli
 // pable.setNote( "Fliesstiefen werden ermittelt" );
 
     LOG.info( "Start creating flow depths" );
-    raster.walk( r2l, pable );
+    raster.getWalkingStrategy().walk( raster, r2l, pable );
     LOG.info( "Finished creating flow depths" );
 
     final NumberFormat numberInstance = NumberFormat.getNumberInstance();
@@ -105,7 +105,7 @@ public class Hmo2Fli
         LOG.info( "Start calculation of shape volumes" );
         // final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
         final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
-        raster.walk( volumeWalker, pable );
+        raster.getWalkingStrategy().walk( raster, volumeWalker, pable );
         LOG.info( "Finished calculation of shape volumes" );
       }
 

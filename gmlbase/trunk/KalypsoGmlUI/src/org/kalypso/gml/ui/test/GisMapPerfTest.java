@@ -54,7 +54,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
-import org.kalypso.grid.GeoGridCache;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -97,7 +96,6 @@ public class GisMapPerfTest extends TestCase
 
       // final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[2] );
       // gmlLoading( gmlResource );
-      GeoGridCache.dump();
     }
   }
 
@@ -146,7 +144,7 @@ public class GisMapPerfTest extends TestCase
       logger.takeInterimTime();
       logger.printCurrentInterim( "Rendered map #" + i + ": " );
 
-if( i == 0 )
+      if( i == 0 )
         ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) );
     }
 

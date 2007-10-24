@@ -199,7 +199,7 @@ public class FloodDepthCalcJob implements ISimulation
     {
       monitor.subTask( "- ermittle Maximalwerte" );
       final MinMaxRasterWalker minMaxWalker = new MinMaxRasterWalker();
-      diffRaster.walk( minMaxWalker, new SubProgressMonitor( monitor, 2 ) );
+      diffRaster.getWalkingStrategy().walk( diffRaster, minMaxWalker, new SubProgressMonitor( monitor, 2 ) );
 
       final double min = minMaxWalker.getMin();
       final double max = minMaxWalker.getMax();
@@ -222,7 +222,7 @@ public class FloodDepthCalcJob implements ISimulation
     final Raster2Lines r2l = new Raster2Lines( gc, grenzen );
 
     // LOG.info( "Start creating flow depths" );
-    diffRaster.walk( r2l, new SubProgressMonitor( monitor, 5 ) );
+    diffRaster.getWalkingStrategy().walk( diffRaster, r2l, new SubProgressMonitor( monitor, 5 ) );
     // LOG.info( "Finished creating flow depths" );
 
     monitor.subTask( "- generalisiere Raster" );
@@ -253,7 +253,7 @@ public class FloodDepthCalcJob implements ISimulation
         // LOG.info( "Start calculation of shape volumes" );
         // final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
         final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
-        raster.walk( volumeWalker, new SubProgressMonitor( monitor, 3 ) );
+        raster.getWalkingStrategy().walk( raster, volumeWalker, new SubProgressMonitor( monitor, 3 ) );
         // LOG.info( "Finished calculation of shape volumes" );
       }
 
