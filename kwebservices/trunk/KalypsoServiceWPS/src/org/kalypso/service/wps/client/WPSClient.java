@@ -483,7 +483,7 @@ public class WPSClient
       ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
       if( complexValueReference != null )
       {
-        if( m_references != null )
+        if( m_references == null )
           m_references = new LinkedHashMap<String, ComplexValueReference>();
 
         m_references.put( ioValue.getIdentifier().getValue(), complexValueReference );
