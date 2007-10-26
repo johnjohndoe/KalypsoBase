@@ -74,8 +74,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.grid.GridFileVerifier;
+import org.kalypso.grid.IGridMetaReader;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -163,7 +163,7 @@ public class PageSelectGeodataFile extends WizardPage
 
         /* set proposed file name */
         final String[] parts = new Path( m_tFile.getText() ).toFile().getName().split( "\\." );
-        if( parts.length == 2 )
+        if( parts.length == 2 && m_creationPage != null )
         {
           m_creationPage.setFileName( parts[0] + ".gml" );
         }

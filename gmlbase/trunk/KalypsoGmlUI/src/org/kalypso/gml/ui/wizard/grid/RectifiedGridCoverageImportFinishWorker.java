@@ -44,16 +44,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -74,6 +72,7 @@ import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -86,24 +85,24 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 {
   private final Shell m_shell;
 
-  private final File m_selectedFile;
+  private final File m_inputGridFile;
 
   private final RectifiedGridDomain m_domain;
 
-  private final IPath m_containerName;
-
-  private final String m_gmlFileName;
-
   private final ICoverageCollection m_coverages;
 
-  public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IPath containerName, final String gmlFileName )
+  private final IFile m_gmlFile;
+
+  private final IContainer m_outputGridFolder;
+
+  public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder )
   {
     m_shell = shell;
-    m_selectedFile = selectedFile;
+    m_inputGridFile = selectedFile;
     m_coverages = coverages;
     m_domain = domain;
-    m_containerName = containerName;
-    m_gmlFileName = gmlFileName;
+    m_gmlFile = gmlFile;
+    m_outputGridFolder = gridFolder;
   }
 
   /**
@@ -113,18 +112,15 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Rasterdaten Import", 100 );
 
-    final List<File> files2delete = new ArrayList<File>();
+    File convertedGridFile = null;
     try
     {
       monitor.subTask( "- importiere Daten in den Arbeitsbereich" );
 
-      /* Convert .asc files to .bin files if necessairy */
-      final List<File> fileList = new ArrayList<File>();
-      fileList.add( m_selectedFile );
-
       try
       {
-        convertToBinary( fileList, files2delete, progress.newChild( 70 ) );
+        /* Convert .asc files to .bin files if necessary */
+        convertedGridFile = convertToBinary( m_inputGridFile, progress.newChild( 70 ) );
       }
       catch( final IOException e )
       {
@@ -132,20 +128,17 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
         return StatusUtilities.statusFromThrowable( e, "Fehler beim ASC-BIN Konvertieren: " + e.getLocalizedMessage() );
       }
 
-      final IStatus importStatus = importExternalFiles( progress.newChild( 10 ), fileList );
+      final IStatus importStatus = importExternalFiles( progress.newChild( 10 ), convertedGridFile );
       if( !importStatus.isOK() )
         return importStatus;
 
       /* Fill workspace */
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IResource resource = root.findMember( m_containerName );
-      if( !resource.exists() || !(resource instanceof IContainer) )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Container \"" + m_containerName + "\" does not exist." ) );
-      final IContainer container = (IContainer) resource;
+      final IContainer container = m_gmlFile == null ? null : m_gmlFile.getParent();
 
       final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
 
-      createGmlWorkspace( container, fileList, coverages, progress.newChild( 20 ) );
+      final IFile outputGridFile = m_outputGridFolder.getFile( new Path( convertedGridFile.getName() ) );
+      createGmlWorkspace( outputGridFile, coverages, progress.newChild( 20 ) );
 
       return Status.OK_STATUS;
     }
@@ -161,32 +154,31 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
     finally
     {
-      /* Delete temporary .bin file */
-      for( final File file : files2delete )
-        file.delete();
+      // HACK: if it was converted (now .bin) delete the temporara file
+      if( convertedGridFile != null && convertedGridFile.getName().toLowerCase().endsWith( ".bin" ) )
+        convertedGridFile.delete();
 
       monitor.done();
     }
   }
 
-  private void createGmlWorkspace( final IContainer container, final List<File> file2import, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
+  private void createGmlWorkspace( final IFile outputGridFile, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, file2import.size() + 10 );
+    final SubMonitor progress = SubMonitor.convert( monitor, 1 + 10 );
 
-    for( final File file : file2import )
-    {
-      final IFile importFileResource = container.getFile( new Path( file.getName() ) );
-      final String mimeType = "image/" + importFileResource.getFileExtension();
+    final String mimeType = "image/" + outputGridFile.getFileExtension();
 
-      CoverageCollection.addCoverage( coverages, m_domain, importFileResource.getName(), mimeType );
+    // TODO: make file path relative to gml path
+    final URL outputGridUrl = ResourceUtilities.createURL( outputGridFile );
+    final String fileName = outputGridUrl.toExternalForm();
+    ICoverage newCoverage = CoverageCollection.addCoverage( coverages, m_domain, fileName, mimeType );
+    newCoverage.setName( m_inputGridFile.getName() );
 
-      ProgressUtilities.worked( progress, 1 );
-    }
+    ProgressUtilities.worked( progress, 1 );
 
     if( m_coverages != null ) // do not save if coverages already exists
       return;
 
-    final IFile gmlFileResource = container.getFile( new Path( m_gmlFileName ) );
     final SetContentHelper contentHelper = new SetContentHelper()
     {
       @Override
@@ -195,11 +187,11 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
         GmlSerializer.serializeWorkspace( writer, coverages.getWrappedFeature().getWorkspace() );
       }
     };
-    contentHelper.setFileContents( gmlFileResource, false, true, new SubProgressMonitor( monitor, 1 ) );
+    contentHelper.setFileContents( m_gmlFile, false, true, new SubProgressMonitor( monitor, 1 ) );
     ProgressUtilities.worked( progress, 10 );
   }
 
-  private IStatus importExternalFiles( final IProgressMonitor monitor, final List<File> fileList ) throws InvocationTargetException, InterruptedException
+  private IStatus importExternalFiles( final IProgressMonitor monitor, final File gridFile ) throws InvocationTargetException, InterruptedException
   {
     final Shell shell = m_shell;
     final IOverwriteQuery overwriteQuery = new IOverwriteQuery()
@@ -211,7 +203,10 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
         return IOverwriteQuery.NO;
       }
     };
-    final ImportOperation operation = new ImportOperation( m_containerName, FileSystemStructureProvider.INSTANCE, overwriteQuery, fileList );
+
+    final List<File> fileList = new ArrayList<File>( 1 );
+    fileList.add( gridFile );
+    final ImportOperation operation = new ImportOperation( m_outputGridFolder.getFullPath(), FileSystemStructureProvider.INSTANCE, overwriteQuery, fileList );
     operation.setOverwriteResources( false );
     operation.setCreateContainerStructure( false );
     operation.setContext( m_shell );
@@ -226,25 +221,22 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
    * @param files2delete
    *            This list get filled with the newly generated temp files.
    */
-  private void convertToBinary( final List<File> fileList, final List<File> files2delete, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
+  private File convertToBinary( final File gridFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, fileList.size() );
+    final SubMonitor progress = SubMonitor.convert( monitor, 1 );
 
-    for( int i = 0; i < fileList.size(); i++ )
+    if( gridFile.getName().toLowerCase().endsWith( ".asc" ) )
     {
-      final File file = fileList.get( i );
-      if( file.getName().toLowerCase().endsWith( ".asc" ) )
-      {
-        final File binFile = File.createTempFile( file.getName(), ".bin" );
-        binFile.deleteOnExit();
+      final File binFile = File.createTempFile( gridFile.getName(), ".bin" );
+      binFile.deleteOnExit();
 
-        final ConvertAscii2Binary converter = new ConvertAscii2Binary( file.toURL(), binFile, 2 );
-        converter.doConvert( progress.newChild( 1 ) );
+      final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURL(), binFile, 2 );
+      converter.doConvert( progress.newChild( 1 ) );
 
-        fileList.set( i, binFile ); // just replace it
-        files2delete.add( binFile );
-      }
+      return binFile;
     }
+
+    return gridFile;
   }
 
 }

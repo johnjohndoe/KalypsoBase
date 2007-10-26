@@ -19,6 +19,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.gml.processes,
  org.kalypso.ui.addlayer,
  org.eclipse.core.expressions,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.kalypso.afgui
 Export-Package: org.kalypso.gml.ui.wizard.grid
 Eclipse-LazyStart: true

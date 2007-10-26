@@ -40,13 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import ogc31.www.opengis.net.gml.RangeSetType;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -54,6 +61,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -73,14 +81,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -97,13 +106,11 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * A widget with option pane, which allows the user to edit a coverage collection.
@@ -126,6 +133,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     public void themeActivated( IMapModell source, IKalypsoTheme previouslyActive, IKalypsoTheme nowActive )
     {
       handleThemeActivated( nowActive );
+    }
+  };
+
+  private final Runnable m_refreshCoverageViewerRunnable = new Runnable()
+  {
+    @SuppressWarnings("synthetic-access")
+    public void run( )
+    {
+      ViewerUtilities.refresh( m_coverageViewer, true );
     }
   };
 
@@ -172,8 +188,23 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void setCoverages( final ICoverageCollection coverages )
   {
     m_coverages = coverages;
-    if( m_coverageViewer != null && !m_coverageViewer.getControl().isDisposed() )
-      m_coverageViewer.setInput( m_coverages );
+    final ListViewer coverageViewer = m_coverageViewer;
+    if( coverageViewer != null && !coverageViewer.getControl().isDisposed() )
+    {
+      coverageViewer.getControl().getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !coverageViewer.getControl().isDisposed() )
+          {
+            coverageViewer.setInput( coverages );
+            if( coverages != null && coverages.size() > 0 )
+              coverageViewer.setSelection( new StructuredSelection( coverages.get( 0 ) ), true );
+
+          }
+        }
+      } );
+    }
   }
 
   /**
@@ -199,17 +230,17 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     coveragePanelLayout.leftMargin = 0;
     coveragePanel.setLayout( coveragePanelLayout );
 
-    final ScrolledCompositeCreator s = new ScrolledCompositeCreator( null )
-    {
-      @Override
-      protected Control createContents( Composite parent, int style )
-      {
-        m_coverageViewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
-        m_coverageViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
-// toolkit.adapt( m_coverageViewer.getControl(), true, true );
-        return m_coverageViewer.getControl();
-      }
-    };
+// final ScrolledCompositeCreator s = new ScrolledCompositeCreator( null )
+// {
+// @Override
+// protected Control createContents( Composite parent, int style )
+// {
+    m_coverageViewer = new ListViewer( coveragePanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_coverageViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
+    toolkit.adapt( m_coverageViewer.getControl(), true, true );
+// return m_coverageViewer.getControl();
+// }
+// };
 
     final Composite coverageButtonPanel = toolkit.createComposite( coveragePanel );
     final FillLayout coverageButtonPanelLayout = new FillLayout( SWT.VERTICAL );
@@ -259,8 +290,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void initalizeCoverageActions( FormToolkit toolkit, Composite parent )
   {
     final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
-    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
+    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
     final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
 
@@ -338,7 +369,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        action.run();
+        final Event event = new Event();
+        event.display = e.display;
+        // ...
+
+        action.runWithEvent( event );
       }
     } );
 
@@ -353,19 +388,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   protected void handleCoverageJumpTo( )
   {
-    try
-    {
-      final IGeoGrid grid = getGrid();
-      final Envelope boundingBox = grid.getBoundingBox();
-      final GM_Envelope bbox = JTSAdapter.wrap( boundingBox );
-      final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( bbox, 1.05 );
-      getMapPanel().setBoundingBox( scaledBox );
-    }
-    catch( GeoGridException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    if( m_selectedCoverage == null )
+      return;
+
+    final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.05 );
+    getMapPanel().setBoundingBox( scaledBox );
 
   }
 
@@ -388,30 +416,47 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   protected void handleCoverageMove( final int step )
   {
+    if( m_selectedCoverage == null )
+      return;
+
     final Feature parentFeature = m_coverages.getWrappedFeature();
     final IPropertyType pt = parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
-    MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, coverageFeature, step );
+
+    final List featureList = (List) parentFeature.getProperty( pt );
+    final int newIndex = featureList.indexOf( coverageFeature ) + step;
+    if( newIndex < 0 || newIndex >= featureList.size() )
+      return;
+
+    final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, coverageFeature, step );
 
     final IKalypsoTheme activeTheme = getMapPanel().getMapModell().getActiveTheme();
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-    theme.postCommand( command, null );
-
-    m_coverageViewer.refresh();
+    theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
   protected void handleCoverageAdded( Event event )
   {
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
+
     final RectifiedGridCoverageImportWizard wizard = new RectifiedGridCoverageImportWizard();
     wizard.setCoverageCollection( m_coverages );
     wizard.init( PlatformUI.getWorkbench(), null );
+    wizard.setGridFolder( gridFolder );
 
     final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
     wizardDialog.open();
+
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
+    theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
   }
 
   protected void handleCoverageRemoved( Event event )
   {
+    if( m_selectedCoverage == null )
+      return;
+
     try
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
@@ -425,14 +470,19 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       // TODO : make file from url (see binaryGeoGrid)
       // TODO: delete file
       // TODO: but into helper class
+      IStatus status = CoverageManagmentHelper.deleteGridFile( url );
+      ErrorDialog.openError( event.display.getActiveShell(), "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + m_selectedCoverage.getName() + ") konnte nicht gelöscht werden.", status );
 
-      /* Delete coverage from collection */
-      final Feature parentFeature = m_coverages.getWrappedFeature();
-      final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-      final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
+      if( status == Status.OK_STATUS )
+      {
+        /* Delete coverage from collection */
+        final Feature parentFeature = m_coverages.getWrappedFeature();
+        final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+        final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
 
-      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
-      theme.postCommand( command, null );
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
+        theme.postCommand( command, m_refreshCoverageViewerRunnable );
+      }
     }
     catch( MalformedURLException e )
     {
@@ -446,6 +496,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_selectedCoverage = (ICoverage) selection.getFirstElement();
 
     updateInfoBox();
+
+    getMapPanel().repaint();
   }
 
   private void updateInfoBox( )
@@ -476,6 +528,34 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public void disposeControl( )
   {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( Graphics g )
+  {
+    super.paint( g );
+
+    if( m_selectedCoverage != null )
+    {
+      /* Paint bbox of selected coverage */
+      final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+
+      final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( envelope.getMin() );
+      final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( envelope.getMax() );
+
+      final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
+      final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
+
+      final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
+      final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
+
+      g.setColor( Color.RED );
+      g.drawRect( x, y, width, height );
+    }
+
   }
 
 }

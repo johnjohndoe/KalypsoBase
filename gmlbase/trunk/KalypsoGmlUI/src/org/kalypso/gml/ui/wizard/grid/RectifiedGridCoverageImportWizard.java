@@ -42,6 +42,10 @@ package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -72,6 +76,8 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   private PageSelectGeodataFile m_pageSelect;
 
   private ICoverageCollection m_coverages;
+
+  private IFolder m_gridFolder;
 
   public RectifiedGridCoverageImportWizard( )
   {
@@ -121,16 +127,23 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   @Override
   public void addPages( )
   {
-    /* Only ask user for gml-file if no coverage collection is set */
-    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
+    if( m_gridFolder == null )
+    {
+      /* Only ask user for gml-file if no coverage collection is set */
+      m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
+
+    }
 
     m_pageSelect = new PageSelectGeodataFile( m_fileCreationPage );
     addPage( m_pageSelect );
 
-    m_fileCreationPage.setTitle( "Auswahl der Datei" );
-    m_fileCreationPage.setDescription( "Wählen Sie Speichertort und Name der neuen Datei aus." );
+    if( m_fileCreationPage != null )
+    {
+      m_fileCreationPage.setTitle( "Auswahl der Datei" );
+      m_fileCreationPage.setDescription( "Wählen Sie Speichertort und Name der neuen Datei aus." );
 
-    addPage( m_fileCreationPage );
+      addPage( m_fileCreationPage );
+    }
 
     super.addPages();
   }
@@ -155,7 +168,14 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
       final IGridMetaReader reader = m_pageSelect.getReader();
       final RectifiedGridDomain coverage = reader.getCoverage( offsetX, offsetY, ulc, crs );
 
-      final ICoreRunnableWithProgress op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, containerName, gmlFileName );
+      final IFile gmlFile;
+      if( containerName != null && gmlFileName != null )
+        gmlFile = ResourcesPlugin.getWorkspace().getRoot().getFolder( containerName ).getFile( gmlFileName );
+      else
+        gmlFile = null;
+      final IContainer gridFolder = m_gridFolder == null ? gmlFile.getParent() : m_gridFolder;
+
+      final ICoreRunnableWithProgress op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder );
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
       ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Import einer Datei", status );
@@ -167,5 +187,18 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     }
 
     return false;
+  }
+
+  /**
+   * Sets the target forlder for the imported grid file.
+   * <p>
+   * If no set, the user will be asked for the folder.
+   * </p>
+   * <p>
+   * Must be called before {@link #createPageControls(org.eclipse.swt.widgets.Composite)}.
+   */
+  public void setGridFolder( IFolder gridFolder )
+  {
+    m_gridFolder = gridFolder;
   }
 }
