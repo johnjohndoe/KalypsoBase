@@ -30,7 +30,7 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
     final IAxis<Number> domAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
     final IAxis<Number> valAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
-    final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "20", new IntegerParser() );
+    final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "2000", new IntegerParser() );
     final Integer maxVal = getParameterContainer().getParsedParameterValue( "max_val", "1", new IntegerParser() );
 
     EditableTestDataContainer data = new EditableTestDataContainer( dataSize, maxVal );

@@ -499,8 +499,22 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
    */
   public Calendar[] getTicks( IAxis<Calendar> axis )
   {
-    Calendar[] ticks = getTickMapElement( axis );
-    return ticks;
+    Calendar[] tickMapElement = getTickMapElement( axis );
+    // wenn null, dann muss es neu erzeugt werden
+    if( tickMapElement == null )
+    {
+      Image img = new Image( Display.getDefault(), 1, 1 );
+      GC gc = new GC( img );
+      GCWrapper gcw = new GCWrapper( gc );
+
+      calcTicks( gcw, axis );
+      tickMapElement = getTickMapElement( axis );
+
+      gcw.dispose();
+      gc.dispose();
+      img.dispose();
+    }
+    return tickMapElement;
   }
 
   /**

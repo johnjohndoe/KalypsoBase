@@ -140,7 +140,8 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
 
   protected T_logical[] getTickMapElement( IAxis<T_logical> axis )
   {
-    return m_tickMap.get( axis );
+    T_logical[] tickMap = m_tickMap.get( axis );
+    return tickMap;
   }
 
   /**

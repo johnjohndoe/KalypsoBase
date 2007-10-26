@@ -82,5 +82,4 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     final T_target[] toArray = (T_target[]) m_targetValues.toArray();
     return toArray;
   }
-
 }

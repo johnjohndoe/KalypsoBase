@@ -474,8 +474,6 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     final Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
     width += labelExtent.y;
 
-    width -= 2;
-
     gcw.dispose();
     gc.dispose();
     img.dispose();

@@ -21,14 +21,14 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 /**
  * @author alibu
  */
-public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number>
+public class EditableLineLayer<T_domain, T_target> extends AbstractEditableChartLayer<T_domain, T_target>
 {
 
-  private List<Number> m_domainData;
+  private List<T_domain> m_domainData;
 
-  private List<Number> m_targetData;
+  private List<T_target> m_targetData;
 
-  public EditableLineLayer( EditableTestDataContainer data, IAxis<Number> domainAxis, IAxis<Number> targetAxis )
+  public EditableLineLayer( EditableTestDataContainer data, IAxis domainAxis, IAxis targetAxis )
   {
     super( domainAxis, targetAxis );
     setDataContainer( data );
@@ -36,8 +36,8 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
     if( data != null )
     {
       data.open();
-      m_domainData = data.getDomainValues();
-      m_targetData = data.getTargetValues();
+      m_domainData = (List<T_domain>) data.getDomainValues();
+      m_targetData = (List<T_target>) data.getTargetValues();
     }
     else
     {
@@ -85,43 +85,49 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
     final IStyledElement point = getStyle().getElement( SE_TYPE.POINT, 1 );
     for( int i = 0; i < m_domainData.size(); i++ )
     {
-      IDataRange<Number> domRange = getDomainAxis().getLogicalRange();
-      Comparator<Number> comp = getDomainAxis().getDataOperator().getComparator();
+      IDataRange<T_domain> domRange = getDomainAxis().getLogicalRange();
 
-      Number min = domRange.getMin();
-      Number max = domRange.getMax();
+      T_domain min = domRange.getMin();
+      T_domain max = domRange.getMax();
 
-      final Number domVal = m_domainData.get( i );
+      Comparator comp = getDomainAxis().getDataOperator().getComparator();
+
+      final T_domain domVal = m_domainData.get( i );
       boolean setPoint = false;
-      if( comp.compare( min, domVal ) <= 0 && comp.compare( max, domVal ) >= 0 )
+      if( comp.compare( domVal, min ) >= 0 && comp.compare( domVal, max ) <= 0 )
       {
         setPoint = true;
       }
       else
       {
         // kleiner als min: Nachfolger muss >= min sein
-        if( comp.compare( min, domVal ) <= 0 && i < m_domainData.size() - 1 )
+        if( comp.compare( domVal, min ) <= 0 && i < m_domainData.size() - 1 )
         {
-          Number next = m_domainData.get( i + 1 );
-          if( comp.compare( min, next ) <= 0 )
+          T_domain next = m_domainData.get( i + 1 );
+          if( comp.compare( next, min ) >= 0 )
           {
             setPoint = true;
           }
         }
         // größer als max: Vorgänger muss <= max sein
-        else if( comp.compare( min, domVal ) >= 0 && i > 0 )
+        else if( comp.compare( max, domVal ) >= 0 && i > 0 )
         {
-          Number prev = m_domainData.get( i - 1 );
-          if( comp.compare( max, prev ) >= 0 )
+          T_domain prev = m_domainData.get( i - 1 );
+          if( comp.compare( prev, max ) <= 0 )
           {
             setPoint = true;
+          }
+          else
+          {
+            // jetzt kann man aufhören
+            break;
           }
         }
       }
 
       if( setPoint )
       {
-        final Number targetVal = m_targetData.get( i );
+        final T_target targetVal = m_targetData.get( i );
         final int domScreen = getDomainAxis().logicalToScreen( domVal );
         final int valScreen = getTargetAxis().logicalToScreen( targetVal );
         path.add( new Point( domScreen, valScreen ) );
@@ -142,25 +148,28 @@ public class EditableLineLayer extends AbstractEditableChartLayer<Number, Number
     // Umrechnen von screen nach logisch
     // TODO: im Moment wird von domain = horizontal und target = vertkal ausgegangen
     int tolerance = 2;
-    IAxis<Number> domainAxis = getDomainAxis();
-    IAxis<Number> targetAxis = getTargetAxis();
-    Double domainValMin = domainAxis.screenToLogical( p.x - tolerance ).doubleValue();
-    Double domainValMax = domainAxis.screenToLogical( p.x + tolerance ).doubleValue();
-    Double targetValMin = targetAxis.screenToLogical( p.y + tolerance ).doubleValue();
-    Double targetValMax = targetAxis.screenToLogical( p.y - tolerance ).doubleValue();
+    IAxis<T_domain> domainAxis = getDomainAxis();
+    IAxis<T_target> targetAxis = getTargetAxis();
+    T_domain domainValMin = domainAxis.screenToLogical( p.x - tolerance );
+    T_domain domainValMax = domainAxis.screenToLogical( p.x + tolerance );
+    T_target targetValMin = targetAxis.screenToLogical( p.y + tolerance );
+    T_target targetValMax = targetAxis.screenToLogical( p.y - tolerance );
+
+    Comparator<T_target> ct = getTargetAxis().getDataOperator().getComparator();
+    Comparator<T_domain> cd = getDomainAxis().getDataOperator().getComparator();
 
     // herausfinden, ob der Punkt IN DER NAEHE eines Datenpunktes liegt
     for( int i = 0; i < m_domainData.size(); i++ )
     {
-      Double domainVal = m_domainData.get( i ).doubleValue();
+      T_domain domainVal = m_domainData.get( i );
       // Abbrechen, wenn wir über die Domain-Range raus sind
-      if( domainVal > domainValMax )
+      if( cd.compare( domainVal, domainValMax ) > 0 )
         break;
 
-      if( domainVal >= domainValMin )
+      if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
-        Double targetVal = m_targetData.get( i ).doubleValue();
-        if( targetVal >= targetValMin && targetVal <= targetValMax )
+        T_target targetVal = m_targetData.get( i );
+        if( ct.compare( targetVal, targetValMin ) >= 0 && ct.compare( targetVal, targetValMax ) <= 0 )
         {
           Object editData = null;
           /*

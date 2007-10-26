@@ -62,6 +62,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       @Override
       public void onLayerAdded( IChartLayer< ? , ? > layer )
       {
+        invalidate();
         redraw();
       }
 
@@ -71,6 +72,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       @Override
       public void onLayerRemoved( IChartLayer< ? , ? > layer )
       {
+        invalidate();
         redraw();
       }
 
@@ -80,6 +82,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       @Override
       public void onLayerMoved( IChartLayer< ? , ? > layer )
       {
+        invalidate();
         redraw();
       }
 
@@ -89,10 +92,20 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       @Override
       public void onLayerVisibilityChanged( IChartLayer< ? , ? > layer )
       {
+        invalidate();
         redraw();
       }
     };
     manager.addListener( m_almel );
+  }
+
+  protected void invalidate( )
+  {
+    if( m_bufferImg != null )
+    {
+      m_bufferImg.dispose();
+      m_bufferImg = null;
+    }
   }
 
   /**
@@ -133,8 +146,14 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     {
       gcw.setLineWidth( 1 );
       gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+
+      gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
       final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
       // TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet), irgendwann mal wieder überprüfen
+      gcw.setAlpha( 50 );
+      gcw.fillRectangle( r.x, r.y, r.width, r.height );
+      gcw.setAlpha( 255 );
+      gcw.setLineStyle( SWT.LINE_DASH );
       gcw.drawRectangle( r.x, r.y, r.width, r.height );
     }
   }
@@ -233,11 +252,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   @Override
   public void redraw( )
   {
-    if( m_bufferImg != null )
-    {
-      m_bufferImg.dispose();
-      m_bufferImg = null;
-    }
 
     if( !isDisposed() )
       super.redraw();
@@ -249,7 +263,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   public void handleEvent( final Event event )
   {
     if( event.type == SWT.Resize )
-      redraw();
+      invalidate();
   }
 
   /**

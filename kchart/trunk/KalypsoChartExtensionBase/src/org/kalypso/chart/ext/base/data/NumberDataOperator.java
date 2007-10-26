@@ -125,7 +125,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
       id++;
 
     // Vorkommastellen ausrechnen
-    double tmpmax = Math.abs( max.doubleValue() );
+    double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
     {
       while( tmpmax >= 1 )
@@ -168,6 +168,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     nf.setMinimumIntegerDigits( 1 );
     nf.setMaximumFractionDigits( fd );
     nf.setMinimumFractionDigits( fd );
+    nf.setGroupingUsed( false );
 
     return nf;
   }

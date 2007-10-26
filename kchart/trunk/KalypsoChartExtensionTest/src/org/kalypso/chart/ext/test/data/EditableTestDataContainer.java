@@ -51,7 +51,7 @@ import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
  * @author burtscher1
  * 
  */
-public class EditableTestDataContainer implements IDataContainer<Number, Number>
+public class EditableTestDataContainer implements IDataContainer
 {
 
   private final List<Number> m_targetData;

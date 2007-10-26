@@ -98,6 +98,7 @@ public class ChartComposite extends Composite
       public void onMapperRangeChanged( IMapper mapper )
       {
         layout();
+        m_plot.invalidate();
         redraw();
       }
 
