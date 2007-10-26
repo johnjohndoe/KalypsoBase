@@ -72,7 +72,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
       final Point pos = new Point( e.x, e.y );
       editInfo.pos = pos;
       m_chart.getPlot().setEditInfo( editInfo );
-      m_chart.setCapture( true );
+      // m_chart.setCapture( true );
     }
   }
 
