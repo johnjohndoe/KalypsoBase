@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -44,7 +43,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private Point m_panOffset = new Point( 0, 0 );
 
-  private IChartDragHandler m_dragListener = null;
+  private final IChartDragHandler m_dragListener = null;
 
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
@@ -97,6 +96,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       }
     };
     manager.addListener( m_almel );
+
   }
 
   protected void invalidate( )
@@ -307,6 +307,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   public void setDragArea( Rectangle dragArea )
   {
     m_dragArea = dragArea;
+    redraw();
   }
 
   /**
@@ -318,33 +319,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   public void setPanOffset( final Point offset )
   {
     m_panOffset = offset;
-  }
-
-  public void setActiveDragHandler( IChartDragHandler listener )
-  {
-    if( m_dragListener != null )
-    {
-      removeMouseListener( m_dragListener );
-      removeMouseMoveListener( m_dragListener );
-    }
-    m_dragListener = listener;
-    Cursor cursor;
-    if( listener != null )
-    {
-      addMouseListener( m_dragListener );
-      addMouseMoveListener( m_dragListener );
-      setCursor( m_dragListener.getCursor() );
-    }
-    else
-    {
-      cursor = getDisplay().getSystemCursor( SWT.CURSOR_ARROW );
-    }
-
-  }
-
-  public IChartDragHandler getActiveDragHandler( )
-  {
-    return m_dragListener;
   }
 
 }

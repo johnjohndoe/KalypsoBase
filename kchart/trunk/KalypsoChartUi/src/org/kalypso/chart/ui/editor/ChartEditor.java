@@ -47,9 +47,13 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+import org.kalypso.chart.framework.view.AxisCanvas;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mouse.EditHandler;
+import org.kalypso.chart.ui.editor.mouse.AxisDragZoomInHandler;
+import org.kalypso.chart.ui.editor.mouse.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mouse.TooltipHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -61,7 +65,7 @@ import org.ksp.chart.factory.ChartType;
  * @author Gernot Belger
  * @author alibu
  */
-public class ChartEditor extends EditorPart
+public class ChartEditor extends EditorPart implements IChartPart
 {
   private Composite m_composite = null;
 
@@ -75,11 +79,13 @@ public class ChartEditor extends EditorPart
 
   private ChartEditorOutlinePage m_outlinePage = null;
 
-// private boolean m_isSaving;
+  // private boolean m_isSaving;
 
   private boolean m_dirty = false;
 
   private ChartComposite m_chartComposite = null;
+
+  private ChartDragHandlerDelegate m_chartDragHandler;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -170,7 +176,7 @@ public class ChartEditor extends EditorPart
 
     try
     {
-// m_isSaving = true;
+      // m_isSaving = true;
 
       final ChartConfigurationDocument config = m_configuration;
 
@@ -206,7 +212,7 @@ public class ChartEditor extends EditorPart
     }
     finally
     {
-// m_isSaving = false;
+      // m_isSaving = false;
     }
 
   }
@@ -265,6 +271,9 @@ public class ChartEditor extends EditorPart
   public void setFocus( )
   {
     m_composite.setFocus();
+    ChartDragHandlerDelegate cdh = getChartDragHandler();
+    cdh.activateHandler();
+
   }
 
   /**
@@ -381,17 +390,11 @@ public class ChartEditor extends EditorPart
           if( m_chartModel != null )
           {
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-            // DragZoomHandler dragHandler = new DragZoomHandler( m_chartComposite );
-            // m_chartComposite.getPlot().addMouseListener( dragHandler );
-            // m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
-            // DragPanHandler dragHandler2 = new DragPanHandler( m_chartComposite );
-            // m_chartComposite.getPlot().addMouseListener( dragHandler2 );
-            // m_chartComposite.getPlot().addMouseMoveListener( dragHandler2 );
 
             /**
              * edit stuff
              */
-            EditHandler eh = new EditHandler( m_chartComposite );
+            TooltipHandler eh = new TooltipHandler( m_chartComposite );
             m_chartComposite.getPlot().addMouseListener( eh );
             m_chartComposite.getPlot().addMouseMoveListener( eh );
 
@@ -408,7 +411,22 @@ public class ChartEditor extends EditorPart
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
+            // AxisZoom-Handler setzen
+            IAxis< ? >[] axes = mapperRegistry.getAxes();
+            for( IAxis< ? > axis : axes )
+            {
+              AxisCanvas ac = (AxisCanvas) mapperRegistry.getComponent( axis );
+              AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite, ac );
+              ac.addMouseListener( adzh );
+              ac.addMouseMoveListener( adzh );
+            }
+
+            // Name des Parts
             setPartName( m_chartModel.getTitle() );
+
+            // ChartDragDelegate
+            m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite, this );
+
           }
           // else: TODO: what?
         }
@@ -487,6 +505,11 @@ public class ChartEditor extends EditorPart
   public void setConfiguration( ChartConfigurationDocument doc )
   {
     m_configuration = doc;
+  }
+
+  public ChartDragHandlerDelegate getChartDragHandler( )
+  {
+    return m_chartDragHandler;
   }
 
 }

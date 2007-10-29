@@ -13,7 +13,7 @@ import org.kalypso.chart.framework.view.ChartComposite;
  * 
  * @author gernot
  */
-public class EditHandler implements MouseListener, MouseMoveListener
+public class TooltipHandler implements MouseListener, MouseMoveListener
 {
   private final ChartComposite m_chart;
 
@@ -23,7 +23,7 @@ public class EditHandler implements MouseListener, MouseMoveListener
 
   private Point m_clickPoint;
 
-  public EditHandler( final ChartComposite chart )
+  public TooltipHandler( final ChartComposite chart )
   {
     m_chart = chart;
 

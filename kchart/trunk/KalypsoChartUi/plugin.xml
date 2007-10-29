@@ -67,6 +67,7 @@
       <image
             commandId="org.kalypso.chart.ui.commands.zoomIn"
             disabledIcon="icons/elcl16/chart_zoom_out.gif"
+            hoverIcon="icons/elcl16/chart_pan.gif"
             icon="icons/elcl16/chart_zoom_in.gif">
       </image>
       <image
@@ -120,42 +121,75 @@
          
          <toolbar
                id="org.kalypso.chart.ui.editor.toolbar">
-         <visibleWhen
+         
+               <command
+                     commandId="org.kalypso.chart.ui.commands.pan"
+                     id="panId"
+                     label="Pan"
+                     style="radio">
+                     <visibleWhen
                checkEnabled="true">
             <reference
                   definitionId="org.kalypso.chart.ui.chartEditorActive">
             </reference>
          </visibleWhen>
-               <command
-                     commandId="org.kalypso.chart.ui.commands.pan"
-                     label="Pan"
-                     style="radio">
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomIn"
+               id="zoomId"
                label="Zoom In"
                style="radio">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomOut"
                label="Zoom out"
                style="radio">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.maximize"
                label="Maximize chart"
                style="push">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.edit"
                label="Edit "
                style="radio"
                tooltip="Edit ">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.export"
                label="Export"
                style="push">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </command>
          </toolbar>
       </menuContribution>
@@ -170,11 +204,43 @@
                      definitionId="org.kalypso.chart.ui.chartEditorActive">
                </reference>
             </visibleWhen>
-            <command
-                  commandId="org.kalypso.chart.ui.commands.zoomIn"
-                  label="zoomIn"
-                  style="radio">
-            </command>
+                           <command
+                     commandId="org.kalypso.chart.ui.commands.pan"
+                     label="Pan"
+                     style="radio">
+    
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomIn"
+               label="Zoom In"
+               style="radio">
+      
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomOut"
+               label="Zoom out"
+               style="radio">
+
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="Maximize chart"
+               style="push">
+
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.edit"
+               label="Edit "
+               style="radio"
+               tooltip="Edit ">
+       
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.export"
+               label="Export"
+               style="push">
+
+         </command>
          </menu>
       </menuContribution>
    </extension>

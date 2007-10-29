@@ -97,8 +97,14 @@ public class ChartComposite extends Composite
       @Override
       public void onMapperRangeChanged( IMapper mapper )
       {
-        layout();
         m_plot.invalidate();
+        layout();
+        if( mapper instanceof IAxis )
+        {
+          IAxis axis = (IAxis) mapper;
+          AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
+          ac.layout();
+        }
         redraw();
       }
 

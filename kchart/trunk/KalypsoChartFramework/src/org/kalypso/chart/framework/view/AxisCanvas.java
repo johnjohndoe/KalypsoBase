@@ -3,6 +3,7 @@ package org.kalypso.chart.framework.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -33,6 +34,8 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   private Image m_bufferImage = null;
 
   private IAxisRenderer< ? > m_renderer;
+
+  private Point m_dragInterval;
 
   public AxisCanvas( final IAxis<T> axis, final Composite parent, final int style )
   {
@@ -99,6 +102,30 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
     m_bufferImage = paintBuffered( gc, b, m_bufferImage );
+
+    paintDrag( gc );
+
+  }
+
+  private void paintDrag( GCWrapper gc )
+  {
+    if( m_dragInterval != null )
+    {
+      Rectangle rect = null;
+      Rectangle bounds2 = getBounds();
+      Color bg = gc.getBackground();
+      gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+      if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+        rect = new Rectangle( Math.min( m_dragInterval.x, m_dragInterval.y ), bounds2.y, Math.abs( m_dragInterval.x - m_dragInterval.y ), bounds2.height );
+      else
+        rect = new Rectangle( bounds2.x, Math.min( m_dragInterval.x, m_dragInterval.y ), bounds2.width, Math.abs( m_dragInterval.x - m_dragInterval.y ) );
+      gc.setAlpha( 100 );
+      gc.fillRectangle( rect );
+      gc.setAlpha( 255 );
+
+      gc.setBackground( bg );
+    }
+
   }
 
   /**
@@ -194,16 +221,13 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   @Override
   public void redraw( )
   {
-    layout();
     if( !isDisposed() )
       super.redraw();
-
   }
 
   @Override
   public void layout( )
   {
-
     if( m_bufferImage != null )
     {
       m_bufferImage.dispose();
@@ -232,4 +256,11 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
 
   }
 
+  public void setDragInterval( int y1, int y2 )
+  {
+    if( y1 == -1 && y2 == -1 )
+      m_dragInterval = null;
+    m_dragInterval = new Point( y1, y2 );
+    redraw();
+  }
 }
