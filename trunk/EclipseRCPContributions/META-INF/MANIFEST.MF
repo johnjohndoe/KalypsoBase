@@ -33,5 +33,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
  org.kalypso.contribs.java;visibility:=reexport,
- org.eclipse.core.net;visibility:=reexport
+ org.eclipse.core.net;visibility:=reexport,
+ org.eclipse.core.expressions
 Eclipse-LazyStart: true
