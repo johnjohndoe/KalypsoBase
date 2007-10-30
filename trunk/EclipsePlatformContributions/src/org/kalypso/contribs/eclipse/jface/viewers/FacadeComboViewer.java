@@ -119,6 +119,8 @@ public class FacadeComboViewer
       m_selection = selection;
       m_comboViewer.getCombo().setEnabled( false );
     }
+    else if( inputData.length == 0 )
+      m_comboViewer.getCombo().setEnabled( false );
     else
     {
       m_comboViewer.setSelection( m_delegate.getDefaultKey() );
