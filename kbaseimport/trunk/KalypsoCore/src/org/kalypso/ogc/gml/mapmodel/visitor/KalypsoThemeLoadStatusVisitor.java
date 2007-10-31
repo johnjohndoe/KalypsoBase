@@ -50,9 +50,9 @@ public class KalypsoThemeLoadStatusVisitor implements IKalypsoThemeVisitor
 {
   boolean m_isLoaded = true;
 
-  private final LoadStatusPredicater m_predicate;
+  private final LoadStatusPredicate m_predicate;
 
-  public KalypsoThemeLoadStatusVisitor( LoadStatusPredicater predicate )
+  public KalypsoThemeLoadStatusVisitor( LoadStatusPredicate predicate )
   {
     m_predicate = predicate;
   }
