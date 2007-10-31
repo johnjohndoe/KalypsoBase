@@ -15,12 +15,12 @@ import org.kalypso.chart.framework.model.data.impl.DataRange;
 public class NumberDataOperator extends AbstractDataOperator<Number>
 {
 
-  public NumberDataOperator( Comparator<Number> comparator )
+  public NumberDataOperator( final Comparator<Number> comparator )
   {
     super( comparator );
   }
 
-  public DataRange<Number> getContainingInterval( Number numVal, Number numIntervalWidth, Number numFixedPoint )
+  public DataRange<Number> getContainingInterval( final Number numVal, final Number numIntervalWidth, final Number numFixedPoint )
   {
     double min = numFixedPoint.doubleValue();
     double max = numVal.doubleValue();
@@ -32,13 +32,9 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     final Double doubleIntervalWidth = numIntervalWidth.doubleValue();
 
     if( doubleFixedPoint.compareTo( doubleVal ) > 0 )
-    {
       dirFactor = -1;
-    }
     for( double d = doubleFixedPoint; d < doubleVal; d += dirFactor * doubleIntervalWidth )
-    {
       min = doubleFixedPoint + d;
-    }
     max = min + dirFactor * doubleIntervalWidth;
 
     DataRange<Number> dataRange = null;
@@ -54,31 +50,30 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     return dataRange;
   }
 
-  public Double logicalToNumerical( Number logVal )
+  public Double logicalToNumerical( final Number logVal )
   {
     if( logVal == null )
       return null;
     return logVal.doubleValue();
   }
 
-  public Number numericalToLogical( Number numVal )
+  public Number numericalToLogical( final Number numVal )
   {
     return new Double( numVal.doubleValue() );
   }
 
-  public String logicalToString( Number value )
+  public String logicalToString( final Number value )
   {
     return "" + value.toString();
   }
 
-  public Number stringToLogical( String value ) throws MalformedValueException
+  public Number stringToLogical( final String value ) throws MalformedValueException
   {
     if( value == null )
       return null;
     else if( "".equals( value.trim() ) )
       return null;
     else
-    {
       try
       {
         final double d = Double.parseDouble( value );
@@ -88,7 +83,6 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
       {
         throw new MalformedValueException( e );
       }
-    }
   }
 
   public String getFormatHint( )
@@ -105,16 +99,24 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     return new ComparableDataRange<Number>( new Double[] { 0.0, 1.0 } );
   }
 
-  public Format getFormat( IDataRange<Number> range )
+  public Format getFormat( final IDataRange<Number> range )
   {
     Number min = range.getMin();
-    Number max = range.getMax();
+    // FIXME while runs into endlos loop
+    if( Double.valueOf( min.doubleValue() ).isInfinite() )
+      min = 0.0;
+
+    final Number max = range.getMax();
+    // FIXME while runs into endlos loop
+    if( Double.valueOf( min.doubleValue() ).isInfinite() )
+      min = 0.0;
+
     // Differenz bilden und sicherstellen, dass sie positiv ist
     Double diff = Math.abs( max.doubleValue() - min.doubleValue() );
 
-    NumberFormat nf = new DecimalFormat();
+    final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
-    int validDigits = 3;
+    final int validDigits = 3;
     // Fraction digits
     int fd = 0;
     // Integer digits
@@ -127,42 +129,31 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     // Vorkommastellen ausrechnen
     double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
-    {
       while( tmpmax >= 1 )
       {
         tmpmax /= 10;
         id++;
       }
 
-    }
-
     // Bereichs-10er-potenz ausmachen
     int pow = 0;
     if( diff >= 1 )
-    {
       while( diff >= 1 )
       {
         diff /= 10;
         pow++;
       }
-    }
     else if( diff != 0 )
-    {
       while( diff <= 0.1 )
       {
         diff *= 10;
         pow--;
       }
-    }
     //
     if( pow >= 0 )
-    {
       fd = pow > validDigits ? 0 : Math.abs( validDigits - pow );
-    }
     else
-    {
       fd = Math.abs( pow ) + validDigits;
-    }
 
     nf.setMaximumIntegerDigits( id );
     nf.setMinimumIntegerDigits( 1 );
