@@ -75,4 +75,5 @@ public interface ISobekModelMember extends IModelMember
    *            directory into which result is written
    */
   public void writePi( URL targetDir ) throws IOException, GM_Exception;
+
 }
