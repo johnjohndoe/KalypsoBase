@@ -94,7 +94,9 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
    */
   public void paintControl( final PaintEvent e )
   {
-    paint( new GCWrapper( e.gc ) );
+    GCWrapper gcw = new GCWrapper( e.gc );
+    paint( gcw );
+    gcw.dispose();
   }
 
   private void paint( final GCWrapper gc )
@@ -102,27 +104,41 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     final Rectangle bounds = getClientArea();
     final Rectangle b = new Rectangle( 0, 0, bounds.width, bounds.height );
     m_bufferImage = paintBuffered( gc, b, m_bufferImage );
-
-    paintDrag( gc );
-
+    paintDrag( gc, b );
   }
 
-  private void paintDrag( GCWrapper gc )
+  private void paintDrag( GCWrapper gc, Rectangle bounds2 )
   {
     if( m_dragInterval != null )
     {
-      Rectangle rect = null;
-      Rectangle bounds2 = getBounds();
+
       Color bg = gc.getBackground();
       gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+
+      int x;
+      int y;
+      int width;
+      int height;
+
       if( m_axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-        rect = new Rectangle( Math.min( m_dragInterval.x, m_dragInterval.y ), bounds2.y, Math.abs( m_dragInterval.x - m_dragInterval.y ), bounds2.height );
+      {
+        x = Math.min( m_dragInterval.x, m_dragInterval.y );
+        y = bounds2.y;
+        width = Math.abs( m_dragInterval.x - m_dragInterval.y );
+        height = bounds2.height;
+      }
       else
-        rect = new Rectangle( bounds2.x, Math.min( m_dragInterval.x, m_dragInterval.y ), bounds2.width, Math.abs( m_dragInterval.x - m_dragInterval.y ) );
+      {
+        x = bounds2.x;
+        y = Math.min( m_dragInterval.x, m_dragInterval.y );
+        width = bounds2.width;
+        height = Math.abs( m_dragInterval.x - m_dragInterval.y );
+      }
+
+      Rectangle rect = new Rectangle( x, y, width, height );
       gc.setAlpha( 100 );
       gc.fillRectangle( rect );
       gc.setAlpha( 255 );
-
       gc.setBackground( bg );
     }
 
@@ -152,6 +168,7 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
         buffGc.dispose();
         buffGcw.dispose();
       }
+
     }
     else
       usedBufferImage = bufferImage;
@@ -217,14 +234,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     return range;
   }
 
-  /** Forces a repaint of the axis. The buffered image is disposed. */
-  @Override
-  public void redraw( )
-  {
-    if( !isDisposed() )
-      super.redraw();
-  }
-
   @Override
   public void layout( )
   {
@@ -256,11 +265,22 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
 
   }
 
+  /**
+   * does nothing right now as theres an error displaying the drag intervall
+   */
   public void setDragInterval( int y1, int y2 )
   {
-    if( y1 == -1 && y2 == -1 )
+    if( true )
+      return;
+
+    if( y1 == -1 || y2 == -1 )
+    {
       m_dragInterval = null;
-    m_dragInterval = new Point( y1, y2 );
+    }
+    else
+    {
+      m_dragInterval = new Point( y1, y2 );
+    }
     redraw();
   }
 }

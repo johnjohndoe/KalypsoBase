@@ -38,23 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.actions.old;
-
-import org.eclipse.jface.action.IContributionManager;
-import org.kalypso.chart.framework.view.ChartComposite;
+package org.kalypso.chart.ui;
 
 /**
- * Helper class which contributes actions for the chart to any contribution manager.
+ * @author burtscher1
  * 
- * @author Gernot Belger
- *
  */
-public class ChartActionContributor
+public interface IChartCommand
 {
-  public void contributeActions( final ChartComposite chartComposite, final IContributionManager manager )
-  {
-    manager.add( new MaximizeChartAction( chartComposite ) );
-    
-    manager.update( true );
-  }
+  public static final String CATEGORY = "org.kalypso.chart.ui.commands.category";
+
+  public static final String COMMAND_PAN = "org.kalypso.chart.ui.commands.pan";
+
+  public static final String COMMAND_ZOOM_IN = "org.kalypso.chart.ui.commands.zoomIn";
+
+  public static final String COMMAND_ZOOM_OUT = "org.kalypso.chart.ui.commands.zoomOut";
+
+  public static final String COMMAND_EDIT = "org.kalypso.chart.ui.commands.edit";
+
+  public static final String COMMAND_EXPORT = "org.kalypso.chart.ui.commands.export";
+
+  public static final String COMMAND_MAXIMIZE = "org.kalypso.chart.ui.commands.maximize";
 }

@@ -47,7 +47,16 @@ public class ChartConfigurationLoader implements IReferenceResolver
    */
   public ChartConfigurationLoader( final String path ) throws XmlException
   {
-    m_document = ChartConfigurationDocument.Factory.parse( path );
+    System.out.println( path );
+    try
+    {
+      m_document = ChartConfigurationDocument.Factory.parse( path );
+    }
+    catch( XmlException e )
+    {
+      System.out.println( e.getMessage() );
+    }
+
   }
 
   /**

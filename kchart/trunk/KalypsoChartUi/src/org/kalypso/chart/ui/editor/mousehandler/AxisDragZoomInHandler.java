@@ -38,60 +38,66 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mouse;
+package org.kalypso.chart.ui.editor.mousehandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.view.AxisCanvas;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
- * @author Gernot Belger
+ * handler to manage zooming all axes of the same orientation
+ * 
  * @author burtscher1
+ * 
+ * 
  */
 public class AxisDragZoomInHandler implements IChartDragHandler
 {
+  /**
+   * drag start in screen koordinates
+   */
   private int m_mouseDragStart = -1;
 
+  /**
+   * drag end in screen koordinates
+   */
   private int m_mouseDragEnd = -1;
 
   private final ChartComposite m_chartComposite;
 
-  int m_pressedKey = -1;
+  private final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
 
-  private final AxisCanvas m_axisCanvas;
-
-  private IAxis< ? > m_axis;
-
-  private final ORIENTATION m_orientation;
-
-  public AxisDragZoomInHandler( final ChartComposite chartComposite, final AxisCanvas axisCanvas )
+  public AxisDragZoomInHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-    m_axisCanvas = axisCanvas;
 
-    // Achse rausfinden
+    // zugehörige Achse rausfinden
     IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
     IAxis< ? >[] axes = reg.getAxes();
     for( IAxis< ? > axis : axes )
     {
-      if( reg.getComponent( axis ) == m_axisCanvas )
+      IAxisComponent component = reg.getComponent( axis );
+      if( component != null )
       {
-        m_axis = axis;
-        break;
+        AxisCanvas ac = (AxisCanvas) component;
+        ac.addMouseMoveListener( this );
+        ac.addMouseListener( this );
+        m_axes.put( ac, axis );
       }
     }
-
-    m_orientation = m_axis.getPosition().getOrientation();
   }
 
   /**
@@ -119,18 +125,29 @@ public class AxisDragZoomInHandler implements IChartDragHandler
       return;
     m_mouseDragEnd = getPos( e );
 
+    AxisCanvas curAc = (AxisCanvas) e.getSource();
+    IAxis curAxis = m_axes.get( curAc );
+    ORIENTATION ori = curAxis.getPosition().getOrientation();
+
     if( Math.abs( m_mouseDragStart - m_mouseDragEnd ) > 5 )
     {
-      // Achsenwerte setzen
-      IDataRange<Number> numericRange = m_axis.getNumericRange();
-      Number num1 = m_axis.screenToNumeric( m_mouseDragStart );
-      Number num2 = m_axis.screenToNumeric( m_mouseDragEnd );
-      m_axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { num1, num2 } ) );
+      for( AxisCanvas ac : m_axes.keySet() )
+      {
+        IAxis axis = m_axes.get( ac );
+        // achsen mit gleicher orientierung behandeln
+        if( axis.getPosition().getOrientation().equals( ori ) )
+        {
+          Number num1 = axis.screenToNumeric( m_mouseDragStart );
+          Number num2 = axis.screenToNumeric( m_mouseDragEnd );
+          axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { num1, num2 } ) );
+          ac.setDragInterval( -1, -1 );
+        }
+      }
+
     }
     // zurücksetzen
     m_mouseDragStart = -1;
     m_mouseDragEnd = -1;
-    m_axisCanvas.setDragInterval( -1, -1 );
     m_chartComposite.getPlot().setDragArea( null );
 
   }
@@ -143,11 +160,23 @@ public class AxisDragZoomInHandler implements IChartDragHandler
     if( m_mouseDragStart != -1 )
     {
       m_mouseDragEnd = getPos( e );
-      // zoom-Rechteck
-      // m_axisCanvas.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
+      // Zoom-Anzeige in AxisCanvas
+      AxisCanvas curAc = (AxisCanvas) e.getSource();
+      IAxis curAxis = m_axes.get( curAc );
+      ORIENTATION ori = curAxis.getPosition().getOrientation();
+
+      for( AxisCanvas ac : m_axes.keySet() )
+      {
+        IAxis axis = m_axes.get( ac );
+        if( axis.getPosition().getOrientation().equals( ori ) )
+        {
+          ac.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
+        }
+      }
+      // zoom-Rechteck im Plot
       Rectangle dragArea;
       Rectangle plotBounds = m_chartComposite.getPlot().getBounds();
-      if( m_orientation == ORIENTATION.HORIZONTAL )
+      if( ori == ORIENTATION.HORIZONTAL )
         dragArea = new Rectangle( Math.min( m_mouseDragStart, m_mouseDragEnd ), 0, Math.abs( m_mouseDragStart - m_mouseDragEnd ), plotBounds.height );
       else
         dragArea = new Rectangle( 0, Math.min( m_mouseDragStart, m_mouseDragEnd ), plotBounds.width, Math.abs( m_mouseDragStart - m_mouseDragEnd ) );
@@ -157,7 +186,9 @@ public class AxisDragZoomInHandler implements IChartDragHandler
 
   private int getPos( MouseEvent e )
   {
-    if( m_orientation == ORIENTATION.HORIZONTAL )
+    AxisCanvas ac = getEventSource( e );
+    IAxis axis = m_axes.get( ac );
+    if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
       return e.x;
     else
       return e.y;
@@ -165,8 +196,15 @@ public class AxisDragZoomInHandler implements IChartDragHandler
 
   public void dispose( )
   {
-    // TODO Auto-generated method stub
 
+    for( AxisCanvas ac : m_axes.keySet() )
+    {
+      if( !ac.isDisposed() )
+      {
+        ac.removeMouseListener( this );
+        ac.removeMouseMoveListener( this );
+      }
+    }
   }
 
   /**
@@ -175,6 +213,11 @@ public class AxisDragZoomInHandler implements IChartDragHandler
   public Cursor getCursor( )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
+  }
+
+  private AxisCanvas getEventSource( MouseEvent e )
+  {
+    return (AxisCanvas) e.getSource();
   }
 
 }

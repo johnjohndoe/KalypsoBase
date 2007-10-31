@@ -38,14 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mouse.old;
+package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
@@ -53,7 +55,7 @@ import org.kalypso.chart.ui.editor.actions.IChartDragAction;
  * @author Gernot Belger
  * @author burtscher1
  */
-public class DragZoomHandler implements MouseListener, MouseMoveListener
+public class DragZoomOutHandler implements IChartDragHandler
 {
   private Rectangle m_mouseDragRect = null;
 
@@ -63,7 +65,7 @@ public class DragZoomHandler implements MouseListener, MouseMoveListener
 
   int m_pressedKey = -1;
 
-  public DragZoomHandler( final ChartComposite chartComposite )
+  public DragZoomOutHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
     m_plot = m_chartComposite.getPlot();
@@ -74,7 +76,7 @@ public class DragZoomHandler implements MouseListener, MouseMoveListener
    */
   public void mouseDoubleClick( MouseEvent e )
   {
-    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
+
   }
 
   /**
@@ -82,7 +84,7 @@ public class DragZoomHandler implements MouseListener, MouseMoveListener
    */
   public void mouseDown( final MouseEvent e )
   {
-
+    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
   }
 
   /**
@@ -100,7 +102,7 @@ public class DragZoomHandler implements MouseListener, MouseMoveListener
       final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
 
       if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
+        m_chartComposite.getModel().zoomOut( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
 
     }
     finally
@@ -141,6 +143,14 @@ public class DragZoomHandler implements MouseListener, MouseMoveListener
   {
     // TODO Auto-generated method stub
     System.out.println( "!!!!!!!!!!!!!!!!! TODO: DragAction Setzen" );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
+   */
+  public Cursor getCursor( )
+  {
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
   }
 
 }

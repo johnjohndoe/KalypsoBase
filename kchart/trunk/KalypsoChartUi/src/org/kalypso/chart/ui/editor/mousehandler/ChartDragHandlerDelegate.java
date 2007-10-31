@@ -38,17 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mouse;
+package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.part.EditorPart;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.framework.view.PlotCanvas;
 
 /**
+ * 
+ * delegate to manage handlers for mouse dragging; only one handler is active at a time
+ * 
  * @author burtscher1
  * 
  */
@@ -63,20 +64,16 @@ public class ChartDragHandlerDelegate
 
   private Command m_command;
 
-  private final EditorPart m_part;
-
-  public ChartDragHandlerDelegate( ChartComposite chartComposite, EditorPart part )
+  public ChartDragHandlerDelegate( ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
 
     m_plot = chartComposite.getPlot();
 
-    m_part = part;
   }
 
-  public void setActiveHandler( IChartDragHandler handler, Command command )
+  public void setActiveHandler( IChartDragHandler handler )
   {
-    m_command = command;
 
     if( m_handler != null )
     {
@@ -96,13 +93,9 @@ public class ChartDragHandlerDelegate
     }
   }
 
-  public void activateHandler( )
+  public IChartDragHandler getActiveHandler( )
   {
-
-    if( m_command != null )
-    {
-      ICommandService cs = (ICommandService) m_part.getSite().getService( ICommandService.class );
-    }
-
+    return m_handler;
   }
+
 }

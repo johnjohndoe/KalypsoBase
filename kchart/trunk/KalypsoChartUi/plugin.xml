@@ -90,27 +90,27 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.kalypso.chart.ui.editor.handler.ZoomOutHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomOutHandler"
             commandId="org.kalypso.chart.ui.commands.zoomOut">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.handler.PanHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.PanHandler"
             commandId="org.kalypso.chart.ui.commands.pan">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.handler.ZoomInHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomInHandler"
             commandId="org.kalypso.chart.ui.commands.zoomIn">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.handler.EditHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
             commandId="org.kalypso.chart.ui.commands.edit">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.handler.MaximizeHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler"
             commandId="org.kalypso.chart.ui.commands.maximize">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.handler.ExportHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
             commandId="org.kalypso.chart.ui.commands.export">
       </handler>
    </extension>
@@ -158,9 +158,10 @@
          </visibleWhen>
          </command>
          <command
-               commandId="org.kalypso.chart.ui.commands.maximize"
-               label="Maximize chart"
-               style="push">
+               commandId="org.kalypso.chart.ui.commands.edit"
+               label="Edit "
+               style="radio"
+               tooltip="Edit ">
                <visibleWhen
                checkEnabled="true">
             <reference
@@ -169,10 +170,9 @@
          </visibleWhen>
          </command>
          <command
-               commandId="org.kalypso.chart.ui.commands.edit"
-               label="Edit "
-               style="radio"
-               tooltip="Edit ">
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="Maximize chart"
+               style="push">
                <visibleWhen
                checkEnabled="true">
             <reference
@@ -192,6 +192,40 @@
          </visibleWhen>
          </command>
          </toolbar>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.kalypso.chart.ui.view.ChartView">
+         
+       
+         
+               <command
+                     commandId="org.kalypso.chart.ui.commands.pan"
+                     id="panId"
+                     label="Pan"
+                     style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomIn"
+               id="zoomId"
+               label="Zoom In"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomOut"
+               label="Zoom out"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="Maximize chart"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.export"
+               label="Export"
+               style="push">
+         </command>
+      
       </menuContribution>
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
@@ -223,17 +257,17 @@
 
          </command>
          <command
-               commandId="org.kalypso.chart.ui.commands.maximize"
-               label="Maximize chart"
-               style="push">
-
-         </command>
-         <command
                commandId="org.kalypso.chart.ui.commands.edit"
                label="Edit "
                style="radio"
                tooltip="Edit ">
        
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="Maximize chart"
+               style="push">
+
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.export"
@@ -243,6 +277,7 @@
          </command>
          </menu>
       </menuContribution>
+      
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">

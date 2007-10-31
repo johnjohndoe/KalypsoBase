@@ -1,9 +1,8 @@
-package org.kalypso.chart.ui.editor.handler;
+package org.kalypso.chart.ui.editor.commandhandler;
 
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -11,12 +10,15 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mouse.DragPanHandler;
+import org.kalypso.chart.ui.editor.ChartPartListener;
+import org.kalypso.chart.ui.editor.ElementUpdateHelper;
+import org.kalypso.chart.ui.editor.mousehandler.DragZoomOutHandler;
 
-public class PanHandler extends AbstractHandler implements IElementUpdater
+public class ZoomOutHandler extends AbstractHandler implements IElementUpdater
 {
+
+  private final Class m_handlerClass = DragZoomOutHandler.class;
 
   @Override
   public Object execute( ExecutionEvent event ) throws ExecutionException
@@ -24,14 +26,14 @@ public class PanHandler extends AbstractHandler implements IElementUpdater
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
 
-    final ChartComposite chart = (ChartComposite) part.getAdapter( ChartComposite.class );
-    if( chart == null && part instanceof IChartPart )
+    final IChartPart chartPart = (IChartPart) part.getAdapter( IChartPart.class );
+    if( chartPart == null )
       return null;
     else
     {
-      DragPanHandler dph = new DragPanHandler( chart );
-      Command command = event.getCommand();
-      ((IChartPart) part).getChartDragHandler().setActiveHandler( dph, command );
+      DragZoomOutHandler dragZoomOutHandler = new DragZoomOutHandler( chartPart.getChartComposite() );
+      chartPart.getChartDragHandler().setActiveHandler( dragZoomOutHandler );
+      ChartPartListener.updateElements( part );
     }
     return null;
   }
@@ -41,9 +43,7 @@ public class PanHandler extends AbstractHandler implements IElementUpdater
    */
   public void updateElement( UIElement element, Map parameters )
   {
-    // chart suchen, rausfinden, welches tool aktiv
-
-    element.setChecked( true );
+    ElementUpdateHelper.updateElement( element, parameters, m_handlerClass );
   }
 
 }

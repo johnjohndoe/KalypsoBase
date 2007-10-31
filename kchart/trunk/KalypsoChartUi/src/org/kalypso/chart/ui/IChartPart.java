@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui;
 
-import org.kalypso.chart.ui.editor.mouse.ChartDragHandlerDelegate;
+import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 
 /**
  * @author burtscher1
@@ -49,4 +50,6 @@ import org.kalypso.chart.ui.editor.mouse.ChartDragHandlerDelegate;
 public interface IChartPart
 {
   public ChartDragHandlerDelegate getChartDragHandler( );
+
+  public ChartComposite getChartComposite( );
 }

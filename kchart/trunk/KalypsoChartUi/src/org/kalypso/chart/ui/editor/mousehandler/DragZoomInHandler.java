@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mouse;
+package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,7 +55,7 @@ import org.kalypso.chart.ui.editor.actions.IChartDragAction;
  * @author Gernot Belger
  * @author burtscher1
  */
-public class DragZoomOutHandler implements IChartDragHandler
+public class DragZoomInHandler implements IChartDragHandler
 {
   private Rectangle m_mouseDragRect = null;
 
@@ -65,7 +65,7 @@ public class DragZoomOutHandler implements IChartDragHandler
 
   int m_pressedKey = -1;
 
-  public DragZoomOutHandler( final ChartComposite chartComposite )
+  public DragZoomInHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
     m_plot = m_chartComposite.getPlot();
@@ -102,7 +102,7 @@ public class DragZoomOutHandler implements IChartDragHandler
       final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
 
       if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.getModel().zoomOut( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
+        m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
 
     }
     finally

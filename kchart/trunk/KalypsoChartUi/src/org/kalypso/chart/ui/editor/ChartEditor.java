@@ -47,13 +47,12 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.view.AxisCanvas;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mouse.AxisDragZoomInHandler;
-import org.kalypso.chart.ui.editor.mouse.ChartDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mouse.TooltipHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -78,8 +77,6 @@ public class ChartEditor extends EditorPart implements IChartPart
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
   private ChartEditorOutlinePage m_outlinePage = null;
-
-  // private boolean m_isSaving;
 
   private boolean m_dirty = false;
 
@@ -271,9 +268,6 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void setFocus( )
   {
     m_composite.setFocus();
-    ChartDragHandlerDelegate cdh = getChartDragHandler();
-    cdh.activateHandler();
-
   }
 
   /**
@@ -391,13 +385,6 @@ public class ChartEditor extends EditorPart implements IChartPart
           {
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
-            /**
-             * edit stuff
-             */
-            TooltipHandler eh = new TooltipHandler( m_chartComposite );
-            m_chartComposite.getPlot().addMouseListener( eh );
-            m_chartComposite.getPlot().addMouseMoveListener( eh );
-
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
             AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
             List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
@@ -411,21 +398,21 @@ public class ChartEditor extends EditorPart implements IChartPart
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
-            // AxisZoom-Handler setzen
-            IAxis< ? >[] axes = mapperRegistry.getAxes();
-            for( IAxis< ? > axis : axes )
-            {
-              AxisCanvas ac = (AxisCanvas) mapperRegistry.getComponent( axis );
-              AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite, ac );
-              ac.addMouseListener( adzh );
-              ac.addMouseMoveListener( adzh );
-            }
+            // TooltipHandler - meldet sich selbst an
+            TooltipHandler eh = new TooltipHandler( m_chartComposite );
+
+            // AxisZoom-Handler setzen - meldet sich selbst and
+            AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
 
             // ChartDragDelegate
-            m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite, this );
+            m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite );
+
+            // PartListener
+            ChartPartListener chartPartListener = new ChartPartListener( this );
+            getSite().getPage().addPartListener( chartPartListener );
 
           }
           // else: TODO: what?
@@ -478,6 +465,9 @@ public class ChartEditor extends EditorPart implements IChartPart
 
     if( ChartComposite.class.equals( adapter ) )
       return m_chartComposite;
+
+    if( IChartPart.class.equals( adapter ) )
+      return this;
 
     return super.getAdapter( adapter );
   }

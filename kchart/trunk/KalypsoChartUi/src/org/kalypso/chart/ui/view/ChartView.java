@@ -62,9 +62,11 @@ import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.ChartEditorOutlinePage;
-import org.kalypso.chart.ui.editor.mouse.DragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.ChartConfigurationDocument;
@@ -73,7 +75,7 @@ import org.ksp.chart.factory.ChartType;
 /**
  * @author Thomas Jung
  */
-public class ChartView extends ViewPart
+public class ChartView extends ViewPart implements IChartPart
 {
   public static final String ID = "org.kalypso.chart.ui.view.ChartView";
 
@@ -87,11 +89,15 @@ public class ChartView extends ViewPart
 
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
-  private final ChartEditorOutlinePage m_outlinePage = null;
-
   private ChartComposite m_chartComposite = null;
 
   private IFile m_input;
+
+  private ChartDragHandlerDelegate m_chartDragHandler;
+
+  private AxisDragZoomInHandler m_axisDragZoomInHandler;
+
+  private TooltipHandler m_tooltipHandler;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -190,10 +196,19 @@ public class ChartView extends ViewPart
         if( m_chartModel != null )
         {
           m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-          final DragZoomInHandler dragHandler = new DragZoomInHandler( m_chartComposite );
-          m_chartComposite.getPlot().addMouseListener( dragHandler );
-          m_chartComposite.getPlot().addMouseMoveListener( dragHandler );
+
           m_chartComposite.getModel().setAutoscale( true );
+
+          // DragHandler erzeugen
+          m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite );
+          // TooltipHandler setzen - meldet sich selbst an
+          m_tooltipHandler = new TooltipHandler( m_chartComposite );
+          // AxisZoomHandler setzen - meldet sich selbst an
+          m_axisDragZoomInHandler = new AxisDragZoomInHandler( m_chartComposite );
+
+          // Titel der View setzen
+          setPartName( m_chartModel.getTitle() );
+
         }
         // else: TODO: what?
       }
@@ -217,4 +232,39 @@ public class ChartView extends ViewPart
 
   }
 
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  public ChartComposite getChartComposite( )
+  {
+    return m_chartComposite;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
+   */
+  public ChartDragHandlerDelegate getChartDragHandler( )
+  {
+    return m_chartDragHandler;
+  }
+
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+    m_axisDragZoomInHandler.dispose();
+    m_tooltipHandler.dispose();
+  }
+
+  @Override
+  public Object getAdapter( Class adapter )
+  {
+    if( ChartComposite.class.equals( adapter ) )
+      return m_chartComposite;
+
+    if( IChartPart.class.equals( adapter ) )
+      return this;
+
+    return super.getAdapter( adapter );
+  }
 }

@@ -1,4 +1,4 @@
-package org.kalypso.chart.ui.editor.handler;
+package org.kalypso.chart.ui.editor.commandhandler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
@@ -33,8 +32,6 @@ public class ExportHandler extends AbstractHandler
     else
     {
       final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-
-      FileDialog dia2;
 
       SafeSaveDialog dia = new SafeSaveDialog( shell );
 

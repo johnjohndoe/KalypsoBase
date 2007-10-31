@@ -17,10 +17,8 @@ Eclipse-LazyStart: true
 Export-Package: org.kalypso.chart.ui,
  org.kalypso.chart.ui.editor,
  org.kalypso.chart.ui.editor.actions,
- org.kalypso.chart.ui.editor.actions.old,
+ org.kalypso.chart.ui.editor.commandhandler,
  org.kalypso.chart.ui.editor.dnd,
- org.kalypso.chart.ui.editor.handler,
- org.kalypso.chart.ui.editor.mouse,
- org.kalypso.chart.ui.editor.mouse.old,
+ org.kalypso.chart.ui.editor.mousehandler,
  org.kalypso.chart.ui.editor.ui,
  org.kalypso.chart.ui.view

@@ -1,4 +1,4 @@
-package org.kalypso.chart.ui.editor.handler;
+package org.kalypso.chart.ui.editor.commandhandler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

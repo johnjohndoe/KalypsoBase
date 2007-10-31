@@ -38,34 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.actions.old;
+package org.kalypso.chart.ui.editor;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.KalypsoChartUiPlugin;
+import java.util.Map;
+
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.menus.UIElement;
+import org.kalypso.chart.framework.view.IChartDragHandler;
+import org.kalypso.chart.ui.IChartPart;
 
 /**
- * @author Gernot Belger
+ * @author burtscher1
+ * 
  */
-public class MaximizeChartAction extends Action
+public class ElementUpdateHelper
 {
-  private final ChartComposite m_chartComposite;
-
-  public MaximizeChartAction( final ChartComposite chart )
-  {
-    super( "Maximieren", KalypsoChartUiPlugin.getImageDescriptor( "icons/elcl16/chart_maximize.gif" ) );
-    
-    m_chartComposite = chart;
-  }
 
   /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   * function is called by all radio commands from updateElement (IElementUpdater) in order to synchronize toggle state
+   * with chart handler state
    */
-  @Override
-  public void runWithEvent( final Event event )
+  @SuppressWarnings("unused")
+  public static void updateElement( UIElement element, Map< ? , ? > parameters, Class< ? > handlerClass )
   {
-    ChartUtilities.maximize( m_chartComposite.getModel() );
+    // chart finden,
+    IWorkbenchPart activePart = Workbench.getInstance().getActiveWorkbenchWindow().getPartService().getActivePart();
+    final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
+    if( chartPart != null )
+    {
+      IChartDragHandler activeHandler = chartPart.getChartDragHandler().getActiveHandler();
+      if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
+      {
+        element.setChecked( true );
+      }
+      else
+      {
+        element.setChecked( false );
+      }
+    }
+
   }
+
 }

@@ -1,4 +1,4 @@
-package org.kalypso.chart.ui.editor.mouse;
+package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -9,9 +9,9 @@ import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
 import org.kalypso.chart.framework.view.ChartComposite;
 
 /**
- * Registers itself upon creation and deregisters at disposal.
+ * handler to manage tooltips; registers on creation, deregisters on disposation
  * 
- * @author gernot
+ * @author alibu
  */
 public class TooltipHandler implements MouseListener, MouseMoveListener
 {

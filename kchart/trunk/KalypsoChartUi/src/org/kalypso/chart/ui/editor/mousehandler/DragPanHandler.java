@@ -38,37 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.mouse;
+package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
- * @author Gernot Belger
  * @author burtscher1
  */
-public class DragZoomInHandler implements IChartDragHandler
+public class DragPanHandler implements IChartDragHandler
 {
-  private Rectangle m_mouseDragRect = null;
+  private Point m_start = null;
 
   private final ChartComposite m_chartComposite;
 
-  private final PlotCanvas m_plot;
-
-  int m_pressedKey = -1;
-
-  public DragZoomInHandler( final ChartComposite chartComposite )
+  public DragPanHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-    m_plot = m_chartComposite.getPlot();
   }
 
   /**
@@ -76,7 +68,7 @@ public class DragZoomInHandler implements IChartDragHandler
    */
   public void mouseDoubleClick( MouseEvent e )
   {
-
+    m_start = null;
   }
 
   /**
@@ -84,7 +76,8 @@ public class DragZoomInHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
-    m_mouseDragRect = new Rectangle( e.x, e.y, 0, 0 );
+    m_start = new Point( e.x, e.y );
+    // m_axisMap = m_chartComposite.getModel().getMapperRegistry().getNumericRangeAxisSnapshot();
   }
 
   /**
@@ -92,24 +85,17 @@ public class DragZoomInHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( m_mouseDragRect == null )
-      return;
+    // pan offset zurücksetzen
+    m_chartComposite.getPlot().setPanOffset( new Point( 0, 0 ) );
 
-    try
+    // dann pannen
+    if( m_start != null )
     {
-      // Wenn nach rechts unten gezogen wurde, wird reingezoomt
-      final int endX = m_mouseDragRect.x + m_mouseDragRect.width;
-      final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
-
-      if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
-
+      m_chartComposite.getModel().panTo( m_start, new Point( e.x, e.y ) );
     }
-    finally
-    {
-      m_mouseDragRect = null;
-      m_plot.setDragArea( m_mouseDragRect );
-    }
+
+    // dann pan resetten
+    m_start = null;
   }
 
   /**
@@ -117,19 +103,9 @@ public class DragZoomInHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-    if( m_mouseDragRect != null )
+    if( m_start != null )
     {
-      final int newwidth = e.x - m_mouseDragRect.x;
-      final int newheight = e.y - m_mouseDragRect.y;
-
-      if( newwidth == m_mouseDragRect.width && newheight == m_mouseDragRect.height )
-        return;
-
-      m_mouseDragRect.width = newwidth;
-      m_mouseDragRect.height = newheight;
-      // zoom-Rechteck
-      m_plot.setDragArea( m_mouseDragRect );
-
+      m_chartComposite.getPlot().setPanOffset( new Point( m_start.x - e.x, m_start.y - e.y ) );
     }
   }
 
@@ -150,7 +126,7 @@ public class DragZoomInHandler implements IChartDragHandler
    */
   public Cursor getCursor( )
   {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
 }
