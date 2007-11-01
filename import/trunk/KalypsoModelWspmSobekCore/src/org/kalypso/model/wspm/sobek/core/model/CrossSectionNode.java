@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.eclipse.osgi.internal.profile.Profile;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -101,4 +104,22 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
     return result;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getCrossSectionData()
+   */
+  public IProfil getProfile( )
+  {
+    Feature f = null;
+    final Feature feature = getFeature();
+    final Object objCsData = feature.getProperty( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
+
+    if( objCsData instanceof Feature )
+      // this branch should never be reached according to the schema file
+      f = (Feature) objCsData;
+    else
+      f = feature.getWorkspace().getFeature( (String) objCsData );
+    final WspmProfile wspmProfile = new WspmProfile( f );
+    final IProfil profil = wspmProfile.getProfil();
+    return profil;
+  }
 }
