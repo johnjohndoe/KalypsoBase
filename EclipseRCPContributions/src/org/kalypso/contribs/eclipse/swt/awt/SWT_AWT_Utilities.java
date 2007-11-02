@@ -41,6 +41,8 @@
 package org.kalypso.contribs.eclipse.swt.awt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
@@ -76,4 +78,8 @@ public class SWT_AWT_Utilities
     return result[0];
   }
 
+  public static Color getSWTFromAWT( final java.awt.Color awtColor, final Display display )
+  {
+    return new Color( display, awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+  }
 }
