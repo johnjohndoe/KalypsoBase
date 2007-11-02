@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.createCalcCase;
 
@@ -44,7 +44,6 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
@@ -64,12 +63,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -93,7 +92,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
 
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
 
   private boolean m_update;
 
@@ -112,13 +111,12 @@ public class SteuerparameterWizardPage extends WizardPage
     super( "EditCalcCaseControlPage", "Steuerparameter", image );
     m_canGoBack = canGoBack;
 
-    final Collection<FeatureChange> changes = m_changes;
+    final Collection<ICommand> changes = m_changes;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
-
-      public void featureChanged( final FeatureChange[] fcs )
+      public void featureChanged( final ICommand changeCommand )
       {
-        changes.addAll( Arrays.asList( fcs ) );
+        changes.add( changeCommand );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
@@ -149,8 +147,8 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.beginTask( "Steuerparameter speichern", 2000 );
 
     // COMMITTEN
-    final Collection<FeatureChange> changes = m_changes;
-    final FeatureChange[] featureChanges = changes.toArray( new FeatureChange[changes.size()] );
+    final Collection<ICommand> changes = m_changes;
+    final ICommand[] commands = changes.toArray( new ICommand[changes.size()] );
     changes.clear();
 
     getControl().getDisplay().syncExec( new CatchRunnable()
@@ -160,7 +158,9 @@ public class SteuerparameterWizardPage extends WizardPage
       {
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( m_workspace, featureChanges ).process();
+        final CompositeCommand compositeCommand = new CompositeCommand( "" );
+        compositeCommand.addCommands( commands );
+        compositeCommand.process();
       }
     } );
 

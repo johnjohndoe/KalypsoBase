@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
@@ -111,7 +111,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.RestoreSelectionHelper;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
@@ -660,7 +659,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       final IFeatureChangeListener fcl = new IFeatureChangeListener()
       {
-        public void featureChanged( final FeatureChange[] changes )
+        public void featureChanged( final ICommand changeCommand )
         {
           // do nothing in wizard modus
         }
@@ -1068,7 +1067,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // final IStatus result = calcWizard.refreshAllPages( monitor );
     // if( !result.isOK() )
     // throw new CoreException( result );
-    //        
+    //
     // }};
     // final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, true, op2 );
     // if( !status2.isOK() )

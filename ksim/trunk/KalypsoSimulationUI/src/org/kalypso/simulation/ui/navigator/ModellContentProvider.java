@@ -57,7 +57,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -103,7 +103,7 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
 
   private final Map<IFile, KeyWrapper> m_workspaces = new HashMap<IFile, KeyWrapper>();
 
-  private final Map<GMLWorkspace, GMLEditorContentProvider2> m_contentProviderMap = new HashMap<GMLWorkspace, GMLEditorContentProvider2>();
+  private final Map<GMLWorkspace, GMLContentProvider> m_contentProviderMap = new HashMap<GMLWorkspace, GMLContentProvider>();
 
   private Viewer m_viewer;
 
@@ -131,7 +131,7 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
     if( workspace == null )
       return new Object[] {};
 
-    final GMLEditorContentProvider2 cp = getContentProviderForWorkspace( workspace );
+    final GMLContentProvider cp = getContentProviderForWorkspace( workspace );
     if( cp == null )
       return new Object[] {};
 
@@ -142,12 +142,12 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
 
   }
 
-  private GMLEditorContentProvider2 getContentProviderForWorkspace( final GMLWorkspace workspace )
+  private GMLContentProvider getContentProviderForWorkspace( final GMLWorkspace workspace )
   {
     if( m_contentProviderMap.containsKey( workspace ) )
       return m_contentProviderMap.get( workspace );
 
-    final GMLEditorContentProvider2 cp = new GMLEditorContentProvider2();
+    final GMLContentProvider cp = new GMLContentProvider();
     cp.inputChanged( null, null, workspace );
 
     m_contentProviderMap.put( workspace, cp );
