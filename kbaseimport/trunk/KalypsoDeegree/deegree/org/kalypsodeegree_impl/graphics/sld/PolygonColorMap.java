@@ -51,7 +51,6 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public interface PolygonColorMap extends Marshallable
 {
-
   final String SLDNS_EXT = "http://www.opengis.net/sldExt";
 
   public PolygonColorMapEntry[] getColorMap( );
