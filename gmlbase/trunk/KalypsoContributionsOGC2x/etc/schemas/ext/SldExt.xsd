@@ -95,6 +95,7 @@
 				<xsd:element name="label" type="sld:ParameterValueType"/>
 				<xsd:element name="from" type="sld:ParameterValueType"/>
 				<xsd:element name="to" type="sld:ParameterValueType"/>
+				<xsd:element ref="sld:Stroke" minOccurs="0"/>
 				<xsd:element ref="sld:Fill" minOccurs="0"/>
 			</xsd:sequence>
 		</xsd:complexType>
