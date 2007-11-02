@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map;
 
@@ -66,12 +66,14 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -83,18 +85,22 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeControlListener;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -147,6 +153,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private ListViewer m_coverageViewer;
 
+  private IKalypsoFeatureTheme m_theme;
+
   public CoverageManagementWidget( )
   {
     super( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
@@ -157,7 +165,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -169,9 +177,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     handleThemeActivated( activeTheme );
   }
 
-  protected void handleThemeActivated( IKalypsoTheme activeTheme )
+  protected void handleThemeActivated( final IKalypsoTheme activeTheme )
   {
-    setCoverages( null );
+    setCoverages( null, null );
 
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
@@ -180,14 +188,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
       if( coveragesFeature != null )
       {
-        setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ) );
+        setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
       }
     }
   }
 
-  private void setCoverages( final ICoverageCollection coverages )
+  private void setCoverages( final ICoverageCollection coverages, final IKalypsoFeatureTheme theme )
   {
     m_coverages = coverages;
+    m_theme = theme;
+
     final ListViewer coverageViewer = m_coverageViewer;
     if( coverageViewer != null && !coverageViewer.getControl().isDisposed() )
     {
@@ -200,7 +210,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
             coverageViewer.setInput( coverages );
             if( coverages != null && coverages.size() > 0 )
               coverageViewer.setSelection( new StructuredSelection( coverages.get( 0 ) ), true );
-
           }
         }
       } );
@@ -213,9 +222,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite panel = toolkit.createComposite( parent );
-
+    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+    sc.setExpandHorizontal( true );
+    sc.setExpandVertical( true );
+    final Composite panel = toolkit.createComposite( sc );
     panel.setLayout( new TableWrapLayout() );
+    sc.setContent( panel );
+    parent.addControlListener( new ScrolledCompositeControlListener( sc ) );
 
     // Basic Layout
 
@@ -230,29 +243,38 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     coveragePanelLayout.leftMargin = 0;
     coveragePanel.setLayout( coveragePanelLayout );
 
-// final ScrolledCompositeCreator s = new ScrolledCompositeCreator( null )
-// {
-// @Override
-// protected Control createContents( Composite parent, int style )
-// {
-    m_coverageViewer = new ListViewer( coveragePanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_coverageViewer = new ListViewer( coveragePanel, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL );
     m_coverageViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
     toolkit.adapt( m_coverageViewer.getControl(), true, true );
-// return m_coverageViewer.getControl();
-// }
-// };
 
     final Composite coverageButtonPanel = toolkit.createComposite( coveragePanel );
     final FillLayout coverageButtonPanelLayout = new FillLayout( SWT.VERTICAL );
     coverageButtonPanelLayout.spacing = 4;
     coverageButtonPanel.setLayout( coverageButtonPanelLayout );
-// coverageButtonPanel.setLayout( new ColumnLayout() );
     coverageButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB ) );
 
+    /* Info view */
     final Group coverageInfoGroup = new Group( panel, SWT.NONE );
+    coverageInfoGroup.setLayout( new GridLayout() );
     coverageInfoGroup.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
     toolkit.adapt( coverageInfoGroup );
     coverageInfoGroup.setText( "Info" );
+
+    final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+    featureviewFactory.addView( getClass().getResource( "resources/coverage.gft" ) );
+    final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
+    featureComposite.setFormToolkit( toolkit );
+    featureComposite.addChangeListener( new IFeatureChangeListener()
+    {
+      public void featureChanged( final ICommand changeCommand )
+      {
+        m_theme.postCommand( changeCommand, null );
+      }
+
+      public void openFeatureRequested( final Feature feature, final IPropertyType pt )
+      {
+      }
+    } );
 
     /* Color Map table */
     final Composite createColorMapPanel = toolkit.createComposite( panel, SWT.BORDER );
@@ -278,16 +300,35 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleCoverageSelected( (IStructuredSelection) event.getSelection() );
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        m_selectedCoverage = (ICoverage) selection.getFirstElement();
+
+        featureComposite.disposeControl();
+
+        if( m_selectedCoverage != null )
+        {
+          featureComposite.setFeature( m_selectedCoverage.getWrappedFeature() );
+          featureComposite.createControl( coverageInfoGroup, SWT.NONE );
+          parent.layout( true, true );
+        }
+
+        sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+
+        getMapPanel().repaint();
       }
     } );
+
+    if( m_coverages != null && m_coverages.size() > 0 )
+      m_coverageViewer.setSelection( new StructuredSelection( m_coverages.get( 0 ) ) );
+
+    sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 
     return panel;
   }
 
-  private void initalizeCoverageActions( FormToolkit toolkit, Composite parent )
+  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent )
   {
     final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
@@ -301,7 +342,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleCoverageAdded( event );
       }
@@ -313,7 +354,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleCoverageRemoved( event );
       }
@@ -397,23 +438,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
-  private IGeoGrid getGrid( )
-  {
-    try
-    {
-      if( m_selectedCoverage == null )
-        return null;
-
-      return GeoGridUtilities.toGrid( m_selectedCoverage );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
-  }
-
   protected void handleCoverageMove( final int step )
   {
     if( m_selectedCoverage == null )
@@ -435,7 +459,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
-  protected void handleCoverageAdded( Event event )
+  protected void handleCoverageAdded( final Event event )
   {
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
@@ -452,7 +476,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
   }
 
-  protected void handleCoverageRemoved( Event event )
+  protected void handleCoverageRemoved( final Event event )
   {
     if( m_selectedCoverage == null )
       return;
@@ -470,7 +494,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       // TODO : make file from url (see binaryGeoGrid)
       // TODO: delete file
       // TODO: but into helper class
-      IStatus status = CoverageManagmentHelper.deleteGridFile( url );
+      final IStatus status = CoverageManagmentHelper.deleteGridFile( url );
       ErrorDialog.openError( event.display.getActiveShell(), "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + m_selectedCoverage.getName() + ") konnte nicht gelöscht werden.", status );
 
       if( status == Status.OK_STATUS )
@@ -484,28 +508,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         theme.postCommand( command, m_refreshCoverageViewerRunnable );
       }
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  protected void handleCoverageSelected( IStructuredSelection selection )
-  {
-    m_selectedCoverage = (ICoverage) selection.getFirstElement();
-
-    updateInfoBox();
-
-    getMapPanel().repaint();
-  }
-
-  private void updateInfoBox( )
-  {
-    // TODO Auto-generated method stub
-  }
-
-  private void initalizeCoverageViewer( StructuredViewer viewer )
+  private void initalizeCoverageViewer( final StructuredViewer viewer )
   {
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
@@ -514,9 +524,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-        RectifiedGridCoverage coverage = (RectifiedGridCoverage) element;
+        final RectifiedGridCoverage coverage = (RectifiedGridCoverage) element;
         return coverage.getName();
       }
     } );
@@ -534,7 +544,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     super.paint( g );
 
