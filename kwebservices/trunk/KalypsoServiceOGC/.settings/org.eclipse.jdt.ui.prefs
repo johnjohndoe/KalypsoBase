@@ -1,7 +1,7 @@
-#Wed May 16 10:29:38 CEST 2007
+#Sat Nov 03 13:12:35 CET 2007
 eclipse.preferences.version=1
 formatter_settings_version=11
-internal.default.compliance=default
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.ignorelowercasenames=true
