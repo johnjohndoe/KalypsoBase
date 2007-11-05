@@ -332,5 +332,4 @@ public class ResourceUtilities
       return new IFile[0];
     }
   }
-
 }
