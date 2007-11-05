@@ -45,8 +45,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IPageLayout;
@@ -54,13 +57,15 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author belger
+ * Helper methods for {@link IProject}.
+ * 
+ * @author Gernot Belger
  */
 public class ProjectUtilities
 {
-  private ProjectUtilities()
+  private ProjectUtilities( )
   {
-  // do not instantiate
+    // do not instantiate
   }
 
   /**
@@ -75,15 +80,15 @@ public class ProjectUtilities
     final Collection<IResource> projects = new HashSet<IResource>();
     if( selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection ssel = (IStructuredSelection)selection;
-      for( final Iterator<?> iter = ssel.iterator(); iter.hasNext(); )
+      final IStructuredSelection ssel = (IStructuredSelection) selection;
+      for( final Iterator< ? > iter = ssel.iterator(); iter.hasNext(); )
       {
         final Object resource = iter.next();
         if( resource instanceof IResource )
-          projects.add( ( (IResource)resource ).getProject() );
+          projects.add( ((IResource) resource).getProject() );
         else if( resource instanceof IAdaptable )
         {
-          final IResource res = (IResource)( (IAdaptable)resource ).getAdapter( IResource.class );
+          final IResource res = (IResource) ((IAdaptable) resource).getAdapter( IResource.class );
           if( res != null )
             projects.add( res.getProject() );
         }
@@ -95,12 +100,11 @@ public class ProjectUtilities
 
   /**
    * TODO does this work? seems not... Note from Marc: this only works when the navigator has an active selection
-   * 
    * Returns the currently selected project from the navigator.
    * 
    * @return list of selected projects
    */
-  public static IProject[] getSelectedProjects()
+  public static IProject[] getSelectedProjects( )
   {
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
@@ -109,4 +113,23 @@ public class ProjectUtilities
 
     return projects;
   }
+
+  /**
+   * Adds a nature to a project.<br>
+   * Does nothing if the project is already of the requested nature.
+   */
+  public static final void addNature( final IProject project, final String natureId, final IProgressMonitor monitor ) throws CoreException
+  {
+    if( project.hasNature( natureId ) )
+      return;
+
+    final IProjectDescription description = project.getDescription();
+    final String[] natures = description.getNatureIds();
+    final String[] newNatures = new String[natures.length + 1];
+    System.arraycopy( natures, 0, newNatures, 0, natures.length );
+    newNatures[natures.length] = natureId;
+    description.setNatureIds( newNatures );
+    project.setDescription( description, monitor );
+  }
+
 }
