@@ -6,11 +6,11 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 
 public class ModellLabelProvider extends LabelProvider implements ILabelProvider
 {
-  private final GMLEditorLabelProvider2 m_gmlLabelProvider = new GMLEditorLabelProvider2();
+  private final GMLLabelProvider m_gmlLabelProvider = new GMLLabelProvider();
 
   private final WorkbenchLabelProvider m_workbenchLabelProvider = new WorkbenchLabelProvider();
 
