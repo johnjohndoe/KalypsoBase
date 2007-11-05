@@ -129,8 +129,8 @@ public class PageSelectGeodataFile extends WizardPage
     super( "importGeoData" );
     m_creationPage = creationPage;
 
-    setTitle( "Import rasterdata" );
-    setDescription( "Select an rasterdata file for import, please." );
+    setTitle( "Rasterdaten-Import" );
+    setDescription( "Wählen Sie aus, welche Rasterdatei imporitert werden soll." );
   }
 
   /**

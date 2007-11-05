@@ -20,7 +20,7 @@
    <extension
          point="org.kalypso.core.catalogContribution">
       <catalogContribution
-            class="org.kalypso.gml.ui.sld.GmlFeatureTypeStyleCatalogContribution"
+            class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution"
             name="GML Style Catalog"/>
    </extension>
    <extension
@@ -102,6 +102,13 @@
             </with>
          </enabledWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.kalypso.core.themeInfo">
+      <themeInfo
+            class="org.kalypso.gml.ui.map.CoverageThemeInfo"
+            id="org.kalypso.gml.ui.map.CoverageThemeInfo">
+      </themeInfo>
    </extension>
 
 </plugin>

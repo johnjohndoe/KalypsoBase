@@ -131,7 +131,6 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     {
       /* Only ask user for gml-file if no coverage collection is set */
       m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
-
     }
 
     m_pageSelect = new PageSelectGeodataFile( m_fileCreationPage );
@@ -140,7 +139,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     if( m_fileCreationPage != null )
     {
       m_fileCreationPage.setTitle( "Auswahl der Datei" );
-      m_fileCreationPage.setDescription( "Wählen Sie Speichertort und Name der neuen Datei aus." );
+      m_fileCreationPage.setDescription( "Wählen Sie Speicherort und Name der neuen Datei aus." );
 
       addPage( m_fileCreationPage );
     }
@@ -197,7 +196,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
    * <p>
    * Must be called before {@link #createPageControls(org.eclipse.swt.widgets.Composite)}.
    */
-  public void setGridFolder( IFolder gridFolder )
+  public void setGridFolder( final IFolder gridFolder )
   {
     m_gridFolder = gridFolder;
   }
