@@ -163,4 +163,5 @@ public class UrlUtilities implements IUrlResolver
     }
     return connection;
   }
+
 }
