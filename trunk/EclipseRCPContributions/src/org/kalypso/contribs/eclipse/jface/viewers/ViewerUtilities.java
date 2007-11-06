@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -60,20 +61,19 @@ public final class ViewerUtilities
   {
     // never instantiate it
   }
-  
+
   /**
    * Sets the selection of this viewer to its first input-element.
    * <p>
    * The content provider must be a {@link IStructuredContentProvider}.
    * </p>
-   *  
    */
   public final static void selectFirstElement( final ContentViewer viewer )
   {
     final IContentProvider contentProvider = viewer.getContentProvider();
     if( contentProvider instanceof IStructuredContentProvider )
     {
-      final IStructuredContentProvider provider = (IStructuredContentProvider)contentProvider;
+      final IStructuredContentProvider provider = (IStructuredContentProvider) contentProvider;
       final Object[] elements = provider.getElements( viewer.getInput() );
       if( elements != null && elements.length > 0 )
         viewer.setSelection( new StructuredSelection( elements[0] ), true );
@@ -81,16 +81,11 @@ public final class ViewerUtilities
   }
 
   /**
-   * Refresh a {@link Viewer}in the display thread of its underlying control.
-   * 
-   * Does nothing if the viewer is null, or its control is disposed.
+   * Refresh a {@link Viewer}in the display thread of its underlying control. Does nothing if the viewer is null, or
+   * its control is disposed.
    * 
    * @param async
-   *          if true, refresh is done asynchron, else refresh is
-   *          done synchronisely.
-   * 
-   *
-   * TODO: 3.0 Code was always async
+   *            if true, refresh is done asynchron, else refresh is done synchronisely. TODO: 3.0 Code was always async
    * @see Viewer#refresh()
    * @see Display#asyncExec(java.lang.Runnable)
    * @see Display#syncExec(java.lang.Runnable)
@@ -110,6 +105,32 @@ public final class ViewerUtilities
               viewer.refresh();
           }
         };
+        final Display display = control.getDisplay();
+
+        if( async )
+          display.asyncExec( runner );
+        else
+          display.syncExec( runner );
+      }
+    }
+  }
+
+  public static void refresh( final StructuredViewer viewer, final Object element, final boolean async )
+  {
+    if( viewer != null )
+    {
+      final Control control = viewer.getControl();
+      if( control != null && !control.isDisposed() )
+      {
+        final Runnable runner = new Runnable()
+        {
+          public void run( )
+          {
+            if( !viewer.getControl().isDisposed() )
+              viewer.refresh( element );
+          }
+        };
+
         final Display display = control.getDisplay();
 
         if( async )
