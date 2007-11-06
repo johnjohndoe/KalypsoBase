@@ -474,6 +474,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
     theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
+
+    // TODO: save the modell: we cannot allow the model not to be saved, as the underlying files will then not be
+    // deleted
+    // TODO: same applies to removal of coverages
   }
 
   protected void handleCoverageRemoved( final Event event )
@@ -491,9 +495,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final RangeSetType rangeSet = coverage.getRangeSet();
       final String fileName = rangeSet.getFile().getFileName();
       final URL url = new URL( workspace.getContext(), fileName );
-      // TODO : make file from url (see binaryGeoGrid)
-      // TODO: delete file
-      // TODO: but into helper class
       final IStatus status = CoverageManagmentHelper.deleteGridFile( url );
       ErrorDialog.openError( event.display.getActiveShell(), "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + m_selectedCoverage.getName() + ") konnte nicht gelöscht werden.", status );
 
