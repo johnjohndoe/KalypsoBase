@@ -199,29 +199,33 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure( ) throws CoreException
+  public void configure( ) 
   {
-    // create the .metadata file
-    try
-    {
-      final IFile file = getMetadataFile();
-
-      if( !file.exists() )
-      {
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        m_metadata.store( bos, "Modell-Projekt Metadata Information" );
-        bos.close();
-
-        final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-        file.create( bis, false, new NullProgressMonitor() );
-
-        bis.close();
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
+    // REMARK: creating this file is now work for the configure method!
+    // Normally, this file already should exist in any empty project template
+    // If removal of this cde causes problems, move it into the create project wizard of the corresponding project
+    // If not, remove this dead code
+//    // create the .metadata file
+//    try
+//    {
+//      final IFile file = getMetadataFile();
+//
+//      if( !file.exists() )
+//      {
+//        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        m_metadata.store( bos, "Modell-Projekt Metadata Information" );
+//        bos.close();
+//
+//        final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+//        file.create( bis, false, new NullProgressMonitor() );
+//
+//        bis.close();
+//      }
+//    }
+//    catch( final IOException e )
+//    {
+//      e.printStackTrace();
+//    }
   }
 
   public final IFolder getPrognoseFolder( )
