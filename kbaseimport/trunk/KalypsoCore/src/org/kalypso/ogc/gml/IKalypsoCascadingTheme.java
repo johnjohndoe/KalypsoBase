@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-
 /**
  * @author kuch
  */
 public interface IKalypsoCascadingTheme
 {
-
   IKalypsoTheme[] getChildThemes( );
-
 }
