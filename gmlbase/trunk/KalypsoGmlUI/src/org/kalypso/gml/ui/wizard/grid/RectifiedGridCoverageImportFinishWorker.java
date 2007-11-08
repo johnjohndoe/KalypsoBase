@@ -154,7 +154,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
     finally
     {
-      // HACK: if it was converted (now .bin) delete the temporara file
+      // HACK: if it was converted (now .bin) delete the temporary file
       if( convertedGridFile != null && convertedGridFile.getName().toLowerCase().endsWith( ".bin" ) )
         convertedGridFile.delete();
 

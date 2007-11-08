@@ -430,8 +430,29 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       }
       final ColorMapEntry[] entries = entryList.toArray( new ColorMapEntry[entryList.size()] );
 
+      // get min / max
+// BigDecimal min = new BigDecimal( Double.MAX_VALUE );
+// BigDecimal max = new BigDecimal( Double.MIN_VALUE );
+//
+// for( ICoverage coverage : m_coverages )
+// {
+// try
+// {
+// final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+// min = min.min( geoGrid.getMin() );
+// max = max.max( geoGrid.getMax() );
+//
+// // dispose it
+// geoGrid.dispose();
+// }
+// catch( Exception e )
+// {
+// e.printStackTrace();
+// }
+// }
+
       // open dialog
-      final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries );
+      final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, null, null );
       if( dialog.open() == Window.OK )
       {
         // save sld-file

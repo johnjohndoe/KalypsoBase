@@ -60,10 +60,17 @@ public class GridStyleDialog extends TitleAreaDialog
 
   private RasterColorMapEditorComposite m_rasterComponent;
 
-  public GridStyleDialog( final Shell shell, final ColorMapEntry[] colorMap )
+  private final BigDecimal m_globalMin;
+
+  private final BigDecimal m_globalMax;
+
+  public GridStyleDialog( final Shell shell, final ColorMapEntry[] colorMap, final BigDecimal min, final BigDecimal max )
   {
     super( shell );
     m_colorMap = colorMap;
+
+    m_globalMin = min;
+    m_globalMax = max;
 
     setTitle( "Farbverlauf erzeugen" );
   }
@@ -80,25 +87,7 @@ public class GridStyleDialog extends TitleAreaDialog
 
     final Composite panel = (Composite) super.createDialogArea( parent );
 
-    ColorMapEntry fromEntry;
-    ColorMapEntry toEntry;
-
-    final ColorMapEntry[] colorMapList = m_colorMap;
-    if( colorMapList.length > 0 )
-    {
-      fromEntry = colorMapList[0];
-      toEntry = colorMapList[colorMapList.length - 1];
-    }
-    else
-    {
-      // TODO: create some default values
-      // SLDFactory.createXXXXX
-      // new PolygonColorMapEntry_Impl();
-      fromEntry = null;
-      toEntry = null;
-    }
-
-    m_rasterComponent = new RasterColorMapEditorComposite( panel, SWT.NONE, m_colorMap, new BigDecimal( "0" ), new BigDecimal( "9000" ) )
+    m_rasterComponent = new RasterColorMapEditorComposite( panel, SWT.NONE, m_colorMap, m_globalMin, m_globalMax )
     {
       @Override
       protected void colorMapChanged( )
