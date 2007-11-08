@@ -79,4 +79,21 @@ public class GeoGridCell
     return String.format( "%d / %d", x, y );
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof GeoGridCell) )
+      return false;
+
+    if( obj == this )
+      return true;
+
+    final GeoGridCell other = (GeoGridCell) obj;
+
+    return other.x == x && other.y == y;
+  }
+
 }
