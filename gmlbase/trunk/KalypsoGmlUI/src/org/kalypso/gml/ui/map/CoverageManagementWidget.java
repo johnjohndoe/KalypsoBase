@@ -42,6 +42,7 @@ package org.kalypso.gml.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -104,6 +105,8 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -431,28 +434,28 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final ColorMapEntry[] entries = entryList.toArray( new ColorMapEntry[entryList.size()] );
 
       // get min / max
-// BigDecimal min = new BigDecimal( Double.MAX_VALUE );
-// BigDecimal max = new BigDecimal( Double.MIN_VALUE );
-//
-// for( ICoverage coverage : m_coverages )
-// {
-// try
-// {
-// final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
-// min = min.min( geoGrid.getMin() );
-// max = max.max( geoGrid.getMax() );
-//
-// // dispose it
-// geoGrid.dispose();
-// }
-// catch( Exception e )
-// {
-// e.printStackTrace();
-// }
-// }
+      BigDecimal min = new BigDecimal( Double.MAX_VALUE );
+      BigDecimal max = new BigDecimal( Double.MIN_VALUE );
+
+      for( ICoverage coverage : m_coverages )
+      {
+        try
+        {
+          final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+          min = min.min( geoGrid.getMin() );
+          max = max.max( geoGrid.getMax() );
+
+          // dispose it
+          geoGrid.dispose();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
 
       // open dialog
-      final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, null, null );
+      final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
       if( dialog.open() == Window.OK )
       {
         // save sld-file
