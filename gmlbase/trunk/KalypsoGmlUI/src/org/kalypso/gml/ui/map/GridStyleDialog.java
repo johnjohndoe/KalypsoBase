@@ -52,6 +52,11 @@ import org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
+ * Dialog for creating a RasterColorMap (defined by a {@link ColorMapEntry} array) via the definition of a start
+ * {@link ColorMapEntry} and an end {@link ColorMapEntry}. This could be done via a
+ * {@link RasterColorMapEditorComposite}. In this composite the user can specify the colors, values and opacities for
+ * each of these two ColorMapEntries. The classes inbetween get interpolated.
+ * 
  * @author Thomas jung
  */
 public class GridStyleDialog extends TitleAreaDialog

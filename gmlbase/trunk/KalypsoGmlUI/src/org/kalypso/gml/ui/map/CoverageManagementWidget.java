@@ -107,6 +107,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -120,10 +121,12 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapLabelProvider;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
@@ -142,7 +145,9 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * A widget with option pane, which allows the user to edit a coverage collection.
+ * A widget with option pane, which allows the user to edit a coverage collection.<BR>
+ * The user can add / remove raster data to / from the collection and change the order of the elements of the
+ * collection. In addition he can jump to the extend of an collection element in the map.
  * 
  * @author Thomas Jung
  */
@@ -295,6 +300,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     featureComposite.setFormToolkit( toolkit );
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
@@ -306,8 +312,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     } );
 
     /* Color Map table */
-// final Composite createColorMapPanel = toolkit.createComposite( panel, SWT.BORDER );
-// createColorMapPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
     final Composite colormapPanel = toolkit.createComposite( panel, SWT.BORDER );
     final TableWrapLayout colormapPanelLayout = new TableWrapLayout();
     colormapPanelLayout.numColumns = 2;
@@ -323,7 +327,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final GridLayout colormapButtonPanelLayout = new GridLayout();
     colormapButtonPanelLayout.marginHeight = 0;
     colormapButtonPanelLayout.marginWidth = 0;
-    // colormapButtonPanelLayout.spacing = 4;
     colormapPanelButtonPanel.setLayout( colormapButtonPanelLayout );
     colormapPanelButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL ) );
 
@@ -335,17 +338,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     initalizeColorMapActions( toolkit, colormapPanelButtonPanel );
 
     // Hook Events
-
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         m_selectedCoverage = (ICoverage) selection.getFirstElement();
 
         featureComposite.disposeControl();
-
-// updateStylePanel( m_colorMapTableViewer );
 
         if( m_selectedCoverage != null )
         {
@@ -368,6 +369,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return panel;
   }
 
+  /**
+   * sets the input of the style panel by reading the raster sld.
+   */
   protected void updateStylePanel( final TableViewer viewer )
   {
     /* get sld from maps folder */
@@ -378,6 +382,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     viewer.setInput( m_symb );
   }
 
+  /**
+   * returns the {@link RasterSymbolizer} from a given sld file.
+   * 
+   * @param styleFile
+   *            the style file in which the raster symbolizer is
+   * @return a {@link RasterSymbolizer}
+   */
   private RasterSymbolizer findRasterSymbolizer( IFile styleFile )
   {
     try
@@ -385,9 +396,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
       final NamedLayer gridLayer = m_sld.getNamedLayer( "dtmGrid" );
       final UserStyle style = (UserStyle) gridLayer.getStyle( "dtmGridUserStyle" );
-      final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "dtmGridFeatureTypeStyle" );
-      final Rule wspRule = wspFts.getRule( "dtmGridRule" );
-      return (RasterSymbolizer) wspRule.getSymbolizers()[0];
+      final FeatureTypeStyle dtmFts = style.getFeatureTypeStyle( "dtmGridFeatureTypeStyle" );
+      final Rule dtmRule = dtmFts.getRule( "dtmGridRule" );
+      return (RasterSymbolizer) dtmRule.getSymbolizers()[0];
     }
     catch( final Exception e )
     {
@@ -398,6 +409,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   }
 
+  /**
+   * initializes the button action for the style panel.
+   */
   private void initalizeColorMapActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
@@ -417,6 +431,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
+  /**
+   * handles the creation of a RasterColorMap via a {@link GridStyleDialog}
+   */
   protected void handleGenerateColorMap( final Event event )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
@@ -467,10 +484,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           {
             final String sldXML = m_sld.exportAsXML();
             final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+
             /* get sld from maps folder */
             final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
             final IFolder mapFolder = scenarioFolder.getFolder( "maps" );
             final IFile styleFile = mapFolder.getFile( "grids.sld" );
+
+            /* set new content */
             styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
           }
           catch( CoreException e )
@@ -487,7 +507,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   }
 
   /**
-   * update the colorMap of the rasterSymbolizer
+   * update the colorMap of the {@link RasterSymbolizer}
    */
   private void updateRasterSymbolizer( ColorMapEntry[] entries )
   {
@@ -636,6 +656,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
+  @SuppressWarnings("unchecked")
   protected void handleCoverageMove( final int step )
   {
     if( m_selectedCoverage == null )
@@ -673,9 +694,22 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
     theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
 
-    // TODO: save the modell: we cannot allow the model not to be saved, as the underlying files will then not be
-    // deleted
-    // TODO: same applies to removal of coverages
+    try
+    {
+      /* save the model */
+      // we cannot allow the model not to be saved, as the underlying files will then not be
+      // deleted
+      // TODO: use a flag if the model should be getting saved
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final CommandableWorkspace workspace = theme.getWorkspace();
+      pool.saveObject( workspace, new NullProgressMonitor() );
+    }
+    catch( LoaderException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 
   protected void handleCoverageRemoved( final Event event )
@@ -705,9 +739,21 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
         final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
         theme.postCommand( command, m_refreshCoverageViewerRunnable );
+
+        /* save the model */
+        // we cannot allow the model not to be saved, as the underlying files will then not be
+        // deleted
+        // TODO: use a flag if the model should be getting save
+        final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+        pool.saveObject( workspace, new NullProgressMonitor() );
       }
     }
     catch( final MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( LoaderException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
