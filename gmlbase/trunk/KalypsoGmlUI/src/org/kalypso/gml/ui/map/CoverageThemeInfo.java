@@ -135,11 +135,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
         final Coordinate crd = JTSAdapter.export( pos );
 
-        System.out.println( crd );
-
         final double value = grid.getValue( crd );
-
-        System.out.println( value );
 
         if( !Double.isNaN( value ) )
         {
