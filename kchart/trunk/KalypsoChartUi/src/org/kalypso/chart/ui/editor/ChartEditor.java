@@ -472,13 +472,12 @@ public class ChartEditor extends EditorPart implements IChartPart
     return super.getAdapter( adapter );
   }
 
-  public void drawLegendIcon( final String title, final Image img )
+  public void drawLegendIcon( final String id, final Image img )
   {
     final IChartLayer[] layers = m_chartModel.getLayerManager().getLayers();
     for( final IChartLayer layer : layers )
     {
-      // TODO: change this to get id!
-      if( layer.getTitle().equals( title ) )
+      if( layer.getId().equals( id ) )
       {
         final Rectangle bounds = img.getBounds();
         layer.drawIcon( img );

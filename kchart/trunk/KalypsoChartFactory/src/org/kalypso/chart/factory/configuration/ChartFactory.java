@@ -11,6 +11,23 @@ import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.configuration.exception.MapperProviderException;
 import org.kalypso.chart.factory.configuration.exception.StyledElementProviderException;
+import org.kalypso.chart.factory.provider.IAxisProvider;
+import org.kalypso.chart.factory.provider.IAxisRendererProvider;
+import org.kalypso.chart.factory.provider.ILayerProvider;
+import org.kalypso.chart.factory.provider.IMapperProvider;
+import org.kalypso.chart.factory.provider.IStyledElementProvider;
+import org.kalypso.chart.factory.util.ChartFactoryUtilities;
+import org.kalypso.chart.factory.util.DummyLayerProvider;
+import org.kalypso.chart.factory.util.IReferenceResolver;
+import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IMapper;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
+import org.kalypso.chart.framework.model.styles.IStyledElement;
+import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 import org.ksp.chart.factory.AxisRendererType;
 import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartType;
@@ -23,22 +40,6 @@ import org.ksp.chart.factory.StyleType;
 import org.ksp.chart.factory.ChartType.Layers;
 import org.ksp.chart.factory.LayerType.Mapper;
 import org.ksp.chart.factory.LayerType.Style;
-import org.kalypso.chart.factory.provider.IAxisProvider;
-import org.kalypso.chart.factory.provider.IAxisRendererProvider;
-import org.kalypso.chart.factory.provider.ILayerProvider;
-import org.kalypso.chart.factory.provider.IMapperProvider;
-import org.kalypso.chart.factory.provider.IStyledElementProvider;
-import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.factory.util.IReferenceResolver;
-import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IMapper;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 
 /**
  * @author alibu Creates a chart object from a configuration
@@ -125,28 +126,30 @@ public class ChartFactory
 
         try
         {
-          final ILayerProvider provider = ChartExtensionLoader.createLayerProvider( providerId );
+          ILayerProvider provider = ChartExtensionLoader.createLayerProvider( providerId );
           if( provider != null )
           {
             Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
-            provider.init( model, layerType );
-            final IChartLayer icl = provider.getLayer( context );
-            if( icl != null )
-            {
-              icl.setStyle( ls );
-              icl.setId( layerType.getId() );
-              icl.setTitle( layerType.getTitle() );
-              icl.setDescription( layerType.getDescription() );
-              icl.setVisible( layerType.getVisible() );
-              // saving the provider into the layer so it can be reused to save changed charts
-              icl.setData( LAYER_PROVIDER_KEY, provider );
-              model.getLayerManager().addLayer( icl );
-              Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
-            }
           }
           else
           {
+            provider = new DummyLayerProvider();
             Logger.logError( Logger.TOPIC_LOG_GENERAL, "No LayerProvider for " + providerId );
+          }
+
+          provider.init( model, layerType );
+          final IChartLayer icl = provider.getLayer( context );
+          if( icl != null )
+          {
+            icl.setStyle( ls );
+            icl.setId( layerType.getId() );
+            icl.setTitle( layerType.getTitle() );
+            icl.setDescription( layerType.getDescription() );
+            icl.setVisible( layerType.getVisible() );
+            // saving the provider into the layer so it can be reused to save changed charts
+            icl.setData( LAYER_PROVIDER_KEY, provider );
+            model.getLayerManager().addLayer( icl );
+            Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
           }
         }
         // TODO: NO! Please throw these exceptions, else the code outside is not able to react to error-conditions

@@ -12,7 +12,7 @@ import org.kalypso.chart.framework.view.PlotCanvas;
 /**
  * Registers itself upon creation and deregisters at disposal.
  * 
- * @author gernot
+ * @author alibu
  */
 public class DragEditHandler implements IChartDragHandler
 {
@@ -66,6 +66,7 @@ public class DragEditHandler implements IChartDragHandler
   {
     if( m_isEditing )
     {
+      System.out.println();
       m_editInfo = null;
       m_isEditing = false;
       PlotCanvas plot = m_chart.getPlot();
