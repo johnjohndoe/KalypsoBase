@@ -46,6 +46,7 @@ public class ChartUtilities
     gc.setBackground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     gc.setLineWidth( 1 );
     gc.setLineStyle( SWT.LINE_SOLID );
+    gc.setLineJoin( SWT.JOIN_ROUND );
     gc.setAlpha( 255 );
   }
 

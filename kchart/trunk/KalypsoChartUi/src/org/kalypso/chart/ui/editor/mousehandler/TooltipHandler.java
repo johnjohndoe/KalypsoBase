@@ -61,19 +61,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
    */
   public void mouseDown( final MouseEvent e )
   {
-    final EditInfo editInfo = m_chart.getPlot().getHoverInfo();
-    if( editInfo == null )
-      return;
-    m_clickPoint = new Point( e.x, e.y );
-    final boolean allowEdit = editInfo.layer != null ? editInfo.layer.alwaysAllowsEditing() : false;
-    if( (m_editingAllowed || allowEdit) && e.button == 1 )
-    {
-      m_chart.getPlot().setHoverInfo( null );
-      final Point pos = new Point( e.x, e.y );
-      editInfo.pos = pos;
-      m_chart.getPlot().setEditInfo( editInfo );
-      // m_chart.setCapture( true );
-    }
+    // nothing to do
   }
 
   /**
@@ -81,45 +69,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( e.button == 1 )
-    {
-      final EditInfo editInfo = m_chart.getPlot().getEditInfo();
-      final EditInfo hoverInfo = m_chart.getPlot().getHoverInfo();
-      if( editInfo != null )
-      {
-        try
-        {
-          if( (Math.abs( e.x - m_clickPoint.x ) > m_treshold) || (Math.abs( e.y - m_clickPoint.y ) > m_treshold) )
-          {
-            editInfo.layer.edit( new Point( e.x, e.y ), editInfo.data );
-          }
-          else
-          {
-            editInfo.layer.setActivePoint( editInfo.data );
-          }
-        }
-        finally
-        {
-          m_clickPoint = null;
-          m_chart.getPlot().setEditInfo( null );
-        }
-      }
-      else if( hoverInfo != null )
-      {
-        try
-        {
-          if( m_clickPoint != null && ((Math.abs( e.x - m_clickPoint.x ) < m_treshold) || (Math.abs( e.y - m_clickPoint.y ) < m_treshold)) )
-          {
-            hoverInfo.layer.setActivePoint( hoverInfo.data );
-          }
-        }
-        finally
-        {
-          m_clickPoint = null;
-        }
-      }
-
-    }
+    // nothing to do
   }
 
   /**
@@ -130,14 +80,11 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
 
     if( m_chart.getPlot().isEditing() )
     {
-      m_chart.getPlot().getEditInfo().pos = new Point( e.x, e.y );
-      m_chart.redraw();
+      m_chart.getPlot().getTooltipInfo().pos = new Point( e.x, e.y );
+      m_chart.getPlot().redraw();
     }
     else if( !m_chart.getPlot().isDragging() )
     {
-      // to prevent holding the capture
-      m_chart.setCapture( false );
-
       final Point point = new Point( e.x, e.y );
 
       for( final IEditableChartLayer layer : m_chart.getModel().getLayerManager().getEditableLayers() )
@@ -148,14 +95,14 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
           if( info != null )
           {
             info.pos = point;
-            m_chart.getPlot().setHoverInfo( info );
+            m_chart.getPlot().setTooltipInfo( info );
             m_chart.getPlot().redraw();
             return;
           }
         }
       }
 
-      m_chart.getPlot().setHoverInfo( null );
+      m_chart.getPlot().setTooltipInfo( null );
       m_chart.getPlot().redraw();
     }
   }

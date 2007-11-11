@@ -35,8 +35,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private IChartDragHandler m_mouseHandler;
 
-  private EditInfo m_editInfo;
-
   private EditInfo m_hoverInfo;
 
   private Rectangle m_dragArea = null;
@@ -44,6 +42,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   private Point m_panOffset = new Point( 0, 0 );
 
   private final IChartDragHandler m_dragListener = null;
+
+  private boolean m_isEditing = false;
 
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
@@ -90,6 +90,16 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
        */
       @Override
       public void onLayerVisibilityChanged( IChartLayer< ? , ? > layer )
+      {
+        invalidate();
+        redraw();
+      }
+
+      /**
+       * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerContentChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerContentChanged( IChartLayer< ? , ? > layer )
       {
         invalidate();
         redraw();
@@ -169,7 +179,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
       final String tooltiptext = m_hoverInfo.text;
       final Point mousePos = m_hoverInfo.pos;
-      if( tooltiptext != null )
+      if( tooltiptext != null && mousePos != null )
       {
         final int TOOLINSET = 3;
 
@@ -266,36 +276,25 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       invalidate();
   }
 
-  /**
-   * Editing stuff
-   */
-
-  public void setEditInfo( EditInfo editInfo )
-  {
-    m_editInfo = editInfo;
-
-  }
-
-  public void setHoverInfo( EditInfo hoverInfo )
+  public void setTooltipInfo( EditInfo hoverInfo )
   {
     m_hoverInfo = hoverInfo;
 
   }
 
-  public EditInfo getEditInfo( )
-  {
-    return m_editInfo;
-  }
-
-  public EditInfo getHoverInfo( )
+  public EditInfo getTooltipInfo( )
   {
     return m_hoverInfo;
   }
 
   public boolean isEditing( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_isEditing;
+  }
+
+  public void setIsEditing( boolean isEditing )
+  {
+    m_isEditing = isEditing;
   }
 
   public boolean isDragging( )

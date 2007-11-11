@@ -2,8 +2,12 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.model.layer.EditInfo;
+import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
+import org.kalypso.chart.framework.view.PlotCanvas;
 
 /**
  * Registers itself upon creation and deregisters at disposal.
@@ -14,10 +18,15 @@ public class DragEditHandler implements IChartDragHandler
 {
   private final ChartComposite m_chart;
 
+  private IEditableChartLayer< ? , ? > m_layer;
+
+  private EditInfo m_editInfo = null;
+
+  private boolean m_isEditing = false;
+
   public DragEditHandler( final ChartComposite chart )
   {
     m_chart = chart;
-    // TODO: implement me!
   }
 
   /**
@@ -39,7 +48,15 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
-
+    PlotCanvas plot = m_chart.getPlot();
+    m_editInfo = m_chart.getPlot().getTooltipInfo();
+    if( m_editInfo == null )
+      return;
+    if( m_editInfo != null )
+    {
+      m_isEditing = true;
+      plot.setIsEditing( true );
+    }
   }
 
   /**
@@ -47,7 +64,14 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-
+    if( m_isEditing )
+    {
+      m_editInfo = null;
+      m_isEditing = false;
+      PlotCanvas plot = m_chart.getPlot();
+      plot.setIsEditing( false );
+      plot.setTooltipInfo( null );
+    }
   }
 
   /**
@@ -55,7 +79,13 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-
+    if( m_isEditing )
+    {
+      IEditableChartLayer layer = m_editInfo.layer;
+      Point editPoint = new Point( e.x, e.y );
+      EditInfo editMoveInfo = layer.edit( editPoint, m_editInfo );
+      m_chart.getPlot().setTooltipInfo( editMoveInfo );
+    }
   }
 
   /**

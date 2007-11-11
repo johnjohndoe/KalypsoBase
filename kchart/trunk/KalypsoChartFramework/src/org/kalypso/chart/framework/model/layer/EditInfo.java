@@ -18,11 +18,12 @@ public class EditInfo
 
   public String text;
 
-  public EditInfo( final IEditableChartLayer< ? , ? > editLayer, final Rectangle editShape, final Object editData, final String editText )
+  public EditInfo( final IEditableChartLayer< ? , ? > editLayer, final Rectangle editShape, final Object editData, final String editText, final Point mousePos )
   {
     layer = editLayer;
     shape = editShape;
     data = editData;
     text = editText;
+    pos = mousePos;
   }
 }

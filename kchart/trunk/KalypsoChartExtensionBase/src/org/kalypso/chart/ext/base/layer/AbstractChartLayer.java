@@ -212,4 +212,9 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   {
     m_handler.removeListener( l );
   }
+
+  public LayerEventHandler getEventHandler( )
+  {
+    return m_handler;
+  }
 }

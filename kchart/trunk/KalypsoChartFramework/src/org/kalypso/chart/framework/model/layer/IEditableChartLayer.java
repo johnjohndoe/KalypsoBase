@@ -52,7 +52,7 @@ public interface IEditableChartLayer<T_domain, T_target> extends IChartLayer<T_d
 
   public void setActivePoint( Object data );
 
-  public void edit( Point point, Object data );
+  public EditInfo edit( Point point, EditInfo data );
 
   public boolean alwaysAllowsEditing( );
 }
