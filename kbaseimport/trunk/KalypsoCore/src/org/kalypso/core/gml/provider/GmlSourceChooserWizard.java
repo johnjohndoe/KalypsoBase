@@ -69,6 +69,8 @@ public class GmlSourceChooserWizard extends Wizard
     setForcePreviousAndNextButtons( false );
     setNeedsProgressMonitor( true );
 
+    setDialogSettings( getDialogSettings() );
+
     m_page = new GmlSourceChooserPage( "sourceProviderPage", "Auswahl", null, m_provider );
   }
 
