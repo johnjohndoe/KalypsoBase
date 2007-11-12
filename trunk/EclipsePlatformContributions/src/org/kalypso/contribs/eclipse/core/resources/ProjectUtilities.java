@@ -40,13 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.resources;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -130,6 +134,47 @@ public class ProjectUtilities
     newNatures[natures.length] = natureId;
     description.setNatureIds( newNatures );
     project.setDescription( description, monitor );
+  }
+
+  /**
+   * Finds all current open workspace projects of a given nature.
+   */
+  public static IProject[] allOfNature( final String natureId )
+  {
+
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IProject[] projects = root.getProjects();
+
+    final List<IProject> result = new ArrayList<IProject>( projects.length );
+
+    for( final IProject project : projects )
+    {
+      if( !project.isOpen() )
+        continue;
+
+      try
+      {
+        final IProjectDescription description = project.getDescription();
+        // REMARK: description is used here instead of IProject#getNature in order to avoid
+        // the nature's plug-ins to get activated.
+        final String[] natureIds = description.getNatureIds();
+        for( final String id : natureIds )
+        {
+          if( natureId.equals( id ) )
+          {
+            result.add( project );
+            break;
+          }
+        }
+      }
+      catch( final CoreException e )
+      {
+        // REMARK: according to the javadoc of IProject#getDescription this should never happen
+        e.printStackTrace();
+      }
+    }
+
+    return result.toArray( new IProject[result.size()] );
   }
 
 }
