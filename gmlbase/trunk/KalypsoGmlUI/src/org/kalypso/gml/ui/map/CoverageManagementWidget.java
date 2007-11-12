@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -64,6 +65,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -82,6 +84,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -118,6 +121,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
@@ -153,6 +157,20 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  private static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
+  {
+    public boolean decide( IKalypsoTheme theme )
+    {
+      if( !(theme instanceof IKalypsoFeatureTheme) )
+        return false;
+
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+      final FeatureList featureList = ft.getFeatureList();
+      final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+      return coveragesFeature != null;
+    }
+  };
+
   private ICoverageCollection m_coverages;
 
   private ICoverage m_selectedCoverage;
@@ -166,7 +184,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     @Override
     public void themeActivated( IMapModell source, IKalypsoTheme previouslyActive, IKalypsoTheme nowActive )
     {
-      handleThemeActivated( nowActive );
+      refreshThemeCombo();
     }
   };
 
@@ -189,6 +207,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private StyledLayerDescriptor m_sld;
 
+  private ComboViewer m_themeCombo;
+
   public CoverageManagementWidget( )
   {
     super( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
@@ -207,8 +227,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     mapModell.addMapModelListener( m_mapModelListener );
 
-    final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
-    handleThemeActivated( activeTheme );
+    refreshThemeCombo();
   }
 
   protected void handleThemeActivated( final IKalypsoTheme activeTheme )
@@ -221,9 +240,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
       if( coveragesFeature != null )
-      {
         setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
-      }
+
+      // TODO set combo selection
     }
   }
 
@@ -266,6 +285,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     // Basic Layout
 
+    /* Theme selection combo */
+    final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
+    themeSelectionPanel.setLayout( new GridLayout( 2, false ) );
+    themeSelectionPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    toolkit.createLabel( themeSelectionPanel, "Thema: ", SWT.NONE );
+    m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
+    m_themeCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
     final TableWrapLayout coveragePanelLayout = new TableWrapLayout();
@@ -298,12 +325,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     featureviewFactory.addView( getClass().getResource( "resources/coverage.gft" ) );
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
+
+    final IKalypsoFeatureTheme theme = m_theme;
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
-        m_theme.postCommand( changeCommand, null );
+        theme.postCommand( changeCommand, null );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -337,29 +366,25 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     initializeColorMapTableViewer( m_colorMapTableViewer );
     initalizeColorMapActions( toolkit, colormapPanelButtonPanel );
 
-    // Hook Events
+    /* Hook Events */
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        handleListSelectionChanged( parent, sc, panel, coverageInfoGroup, featureComposite, event );
+      }
+    } );
+
+    m_themeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        m_selectedCoverage = (ICoverage) selection.getFirstElement();
-
-        featureComposite.disposeControl();
-
-        if( m_selectedCoverage != null )
-        {
-          featureComposite.setFeature( m_selectedCoverage.getWrappedFeature() );
-          featureComposite.createControl( coverageInfoGroup, SWT.NONE );
-          parent.layout( true, true );
-        }
-
-        sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-
-        getMapPanel().repaint();
+        handleThemeComboSelected( event );
       }
     } );
+
+    initializeThemeCombo();
 
     if( m_coverages != null && m_coverages.size() > 0 )
       m_coverageViewer.setSelection( new StructuredSelection( m_coverages.get( 0 ) ) );
@@ -367,6 +392,91 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 
     return panel;
+  }
+
+  private void initializeThemeCombo( )
+  {
+    m_themeCombo.setContentProvider( new ArrayContentProvider() );
+    m_themeCombo.setLabelProvider( new LabelProvider() );
+
+    refreshThemeCombo();
+  }
+
+  protected void refreshThemeCombo( )
+  {
+    if( m_themeCombo == null || m_themeCombo.getControl().isDisposed() )
+      return;
+
+    final MapPanel mapPanel = getMapPanel();
+    final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
+    final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
+
+    final List<IKalypsoTheme> themesForCombo = new ArrayList<IKalypsoTheme>();
+
+    if( COVERAGE_PREDICATE.decide( activeTheme ) )
+      themesForCombo.add( activeTheme );
+    else if( activeTheme instanceof IMapModell )
+    {
+      final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
+      for( final IKalypsoTheme kalypsoTheme : allThemes )
+      {
+        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
+          themesForCombo.add( kalypsoTheme );
+      }
+    }
+
+    final Control control = m_themeCombo.getControl();
+    final ComboViewer themeCombo = m_themeCombo;
+    control.getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        if( control.isDisposed() )
+          return; // may be disposed meanwhile
+
+        themeCombo.setInput( themesForCombo );
+
+        if( themesForCombo.size() > 0 )
+          themeCombo.setSelection( new StructuredSelection( themesForCombo.get( 0 ) ) );
+      }
+    } );
+
+  }
+
+  protected void handleThemeComboSelected( final SelectionChangedEvent event )
+  {
+    setCoverages( null, null );
+
+    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final Object firstElement = selection.getFirstElement();
+
+    if( firstElement instanceof IKalypsoFeatureTheme )
+    {
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
+      final FeatureList featureList = ft.getFeatureList();
+      final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+      if( coveragesFeature != null )
+        setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
+    }
+  }
+
+  protected void handleListSelectionChanged( final Composite parent, final ScrolledComposite sc, final Composite panel, final Group coverageInfoGroup, final FeatureComposite featureComposite, final SelectionChangedEvent event )
+  {
+    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    m_selectedCoverage = (ICoverage) selection.getFirstElement();
+
+    featureComposite.disposeControl();
+
+    if( m_selectedCoverage != null )
+    {
+      featureComposite.setFeature( m_selectedCoverage.getWrappedFeature() );
+      featureComposite.createControl( coverageInfoGroup, SWT.NONE );
+      parent.layout( true, true );
+    }
+
+    sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+
+    getMapPanel().repaint();
   }
 
   /**
@@ -389,7 +499,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    *            the style file in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
    */
-  private RasterSymbolizer findRasterSymbolizer( IFile styleFile )
+  private RasterSymbolizer findRasterSymbolizer( final IFile styleFile )
   {
     try
     {
@@ -437,14 +547,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void handleGenerateColorMap( final Event event )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
-    TreeMap<Double, ColorMapEntry> input = symb.getColorMap();
+    final TreeMap<Double, ColorMapEntry> input = symb.getColorMap();
 
     if( input != null )
     {
       final List<ColorMapEntry> entryList = new LinkedList<ColorMapEntry>();
 
       // convert map into an array
-      for( ColorMapEntry entry : input.values() )
+      for( final ColorMapEntry entry : input.values() )
       {
         entryList.add( entry );
       }
@@ -484,7 +594,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           {
             final String sldXML = m_sld.exportAsXML();
             final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-
             /* get sld from maps folder */
             final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
             final IFolder mapFolder = scenarioFolder.getFolder( "maps" );
@@ -493,7 +602,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
             /* set new content */
             styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
           }
-          catch( CoreException e )
+          catch( final CoreException e )
           {
             e.printStackTrace();
           }
@@ -509,15 +618,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * update the colorMap of the {@link RasterSymbolizer}
    */
-  private void updateRasterSymbolizer( ColorMapEntry[] entries )
+  private void updateRasterSymbolizer( final ColorMapEntry[] entries )
   {
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
 
     try
     {
-      for( int i = 0; i < entries.length; i++ )
+      for( final ColorMapEntry colorMapEntry : entries )
       {
-        final ColorMapEntry colorMapEntry = entries[i];
         if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
           new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
         else
@@ -526,7 +634,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       MessageDialog.openError( m_colorMapTableViewer.getControl().getShell(), "Fehler bei Erstellung der Farbtabelle", "Werte dürfen nicht doppelt vorkommen." );
     }
@@ -698,7 +806,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       /* save the model */
       // we cannot allow the model not to be saved, as the underlying files will then not be
-      // deleted
+    // deleted
       // TODO: use a flag if the model should be getting saved
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       final CommandableWorkspace workspace = theme.getWorkspace();
