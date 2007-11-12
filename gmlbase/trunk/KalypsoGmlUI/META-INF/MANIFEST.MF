@@ -22,5 +22,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.kalypso.afgui
 Export-Package: org.kalypso.gml.ui,
+ org.kalypso.gml.ui.map,
  org.kalypso.gml.ui.wizard.grid
 Eclipse-LazyStart: true

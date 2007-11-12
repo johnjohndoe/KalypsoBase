@@ -41,7 +41,10 @@
 package org.kalypso.gml.ui.map;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
@@ -51,6 +54,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * @author Thomas Jung
@@ -74,26 +82,40 @@ public class CoverageManagmentHelper
   /**
    * Deletes an existing grid file.<br>
    */
-  public static IStatus deleteGridFile( final URL url )
+  public static IStatus deleteGridFile( final ICoverage coverageToDelete )
   {
-    final File gridFile = getGridFile( url );
-    if( !gridFile.delete() == true )
-      return Status.CANCEL_STATUS;
-    else
+    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
+    final Feature feature = coverage.getWrappedFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final RangeSetType rangeSet = coverage.getRangeSet();
+    final String fileName = rangeSet.getFile().getFileName();
+
+    try
     {
-      final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
-      try
+      final URL url = new URL( workspace.getContext(), fileName );
+
+      final File gridFile = getGridFile( url );
+      if( !gridFile.delete() == true )
+        return Status.CANCEL_STATUS;
+      else
       {
+        final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
         eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
       }
-      catch( CoreException e )
-      {
-        e.printStackTrace();
-
-        return e.getStatus();
-      }
-
-      return Status.OK_STATUS;
     }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
+    }
+
+    return Status.OK_STATUS;
   }
+
 }

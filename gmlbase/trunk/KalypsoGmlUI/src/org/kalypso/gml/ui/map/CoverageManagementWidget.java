@@ -43,14 +43,10 @@ package org.kalypso.gml.ui.map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
-
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
@@ -78,11 +74,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -95,14 +94,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeControlListener;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
@@ -275,14 +272,28 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
-    sc.setExpandHorizontal( true );
+    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
+    sc.setMinWidth( 200 );
     sc.setExpandVertical( true );
-    final Composite panel = toolkit.createComposite( sc );
-    panel.setLayout( new TableWrapLayout() );
-    sc.setContent( panel );
-    parent.addControlListener( new ScrolledCompositeControlListener( sc ) );
+    sc.setExpandHorizontal( true );
 
+    final Composite panel = toolkit.createComposite( sc, SWT.NONE );
+    panel.setLayout( new GridLayout() );
+
+    sc.setContent( panel );
+    parent.addControlListener( new ControlAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+       */
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+        panel.setSize( size );
+        sc.setMinHeight( size.y );
+      }
+    } );
     // Basic Layout
 
     /* Theme selection combo */
@@ -295,29 +306,32 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
-    final TableWrapLayout coveragePanelLayout = new TableWrapLayout();
-    coveragePanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
-    coveragePanelLayout.numColumns = 2;
-    coveragePanelLayout.rightMargin = 0;
-    coveragePanelLayout.topMargin = 0;
-    coveragePanelLayout.bottomMargin = 0;
-    coveragePanelLayout.leftMargin = 0;
+    final GridLayout coveragePanelLayout = new GridLayout( 2, false );
+    final GridData coveragePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    coveragePanelData.heightHint = 200;
+    coveragePanel.setLayoutData( coveragePanelData );
+    coveragePanelLayout.marginHeight = 0;
+    coveragePanelLayout.marginWidth = 0;
     coveragePanel.setLayout( coveragePanelLayout );
 
-    m_coverageViewer = new ListViewer( coveragePanel, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL );
-    m_coverageViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
-    toolkit.adapt( m_coverageViewer.getControl(), true, true );
+    m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    final GridData coverageViewerData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    coverageViewerData.heightHint = 100;
+    m_coverageViewer.getControl().setLayoutData( coverageViewerData );
+    toolkit.adapt( m_coverageViewer.getControl(), true, false );
 
     final Composite coverageButtonPanel = toolkit.createComposite( coveragePanel );
     final FillLayout coverageButtonPanelLayout = new FillLayout( SWT.VERTICAL );
     coverageButtonPanelLayout.spacing = 4;
     coverageButtonPanel.setLayout( coverageButtonPanelLayout );
-    coverageButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB ) );
+    coverageButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
     /* Info view */
-    final Group coverageInfoGroup = new Group( panel, SWT.NONE );
+    final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
+
     coverageInfoGroup.setLayout( new GridLayout() );
-    coverageInfoGroup.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    coverageInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( coverageInfoGroup );
     coverageInfoGroup.setText( "Info" );
 
@@ -341,23 +355,29 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     } );
 
     /* Color Map table */
-    final Composite colormapPanel = toolkit.createComposite( panel, SWT.BORDER );
-    final TableWrapLayout colormapPanelLayout = new TableWrapLayout();
+    final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
+    final GridLayout colormapPanelLayout = new GridLayout();
     colormapPanelLayout.numColumns = 2;
     colormapPanelLayout.makeColumnsEqualWidth = false;
-    colormapPanel.setLayout( colormapPanelLayout );
-    colormapPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    colormapPanelLayout.marginWidth = 0;
+    colormapPanelLayout.marginHeight = 0;
 
-    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER );
-    m_colorMapTableViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    colormapPanel.setLayout( colormapPanelLayout );
+    final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    colormapPanel.setLayoutData( colormapPanelData );
+
+    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER | SWT.H_SCROLL );
+    final GridData colormapTableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+
+    m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
     toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
 
-    final Composite colormapPanelButtonPanel = toolkit.createComposite( colormapPanel, SWT.BORDER );
+    final Composite colormapPanelButtonPanel = toolkit.createComposite( colormapPanel, SWT.NONE );
     final GridLayout colormapButtonPanelLayout = new GridLayout();
     colormapButtonPanelLayout.marginHeight = 0;
     colormapButtonPanelLayout.marginWidth = 0;
     colormapPanelButtonPanel.setLayout( colormapButtonPanelLayout );
-    colormapPanelButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL ) );
+    colormapPanelButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, false ) );
 
     // Fill contents
     initalizeCoverageViewer( m_coverageViewer );
@@ -649,7 +669,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Table viewerTable = viewer.getTable();
     viewerTable.setLinesVisible( true );
     viewerTable.setHeaderVisible( true );
-    viewerTable.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    viewerTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     updateStylePanel( m_colorMapTableViewer );
   }
@@ -662,7 +682,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
     final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
 
-    createButton( toolkit, parent, new Action( "Add Coverage", addID )
+    final Action addAction = new Action( "Add Coverage", addID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -672,9 +692,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageAdded( event );
       }
-    } );
+    };
+    addAction.setDescription( "Geländedaten hinzufügen" );
 
-    createButton( toolkit, parent, new Action( "Remove Coverage", removeID )
+    final Action removeAction = new Action( "Remove Coverage", removeID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -684,9 +705,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageRemoved( event );
       }
-    } );
+    };
+    removeAction.setDescription( "Geländedaten löschen" );
 
-    createButton( toolkit, parent, new Action( "Move Coverage Up", upID )
+    final Action moveUpAction = new Action( "Move Coverage Up", upID )
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -696,9 +718,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageMove( -1 );
       }
-    } );
+    };
+    moveUpAction.setDescription( "Nach Oben verschieben" );
 
-    createButton( toolkit, parent, new Action( "Move Coverage Down", downID )
+    final Action moveDownAction = new Action( "Move Coverage Down", downID )
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -708,9 +731,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageMove( 1 );
       }
-    } );
+    };
+    moveDownAction.setDescription( "Nach Unten verschieben" );
 
-    createButton( toolkit, parent, new Action( "Jump To Coverage", jumptoID )
+    final Action jumpToAction = new Action( "Jump To Coverage", jumptoID )
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -720,7 +744,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageJumpTo();
       }
-    } );
+    };
+    jumpToAction.setDescription( "Springe zu" );
+
+    createButton( toolkit, parent, addAction );
+    createButton( toolkit, parent, removeAction );
+    createButton( toolkit, parent, moveUpAction );
+    createButton( toolkit, parent, moveDownAction );
+    createButton( toolkit, parent, jumpToAction );
+
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
@@ -728,6 +760,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Button button = toolkit.createButton( parent, null, SWT.PUSH );
     final Image image = action.getImageDescriptor().createImage( true );
     button.setImage( image );
+    button.setToolTipText( action.getDescription() );
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -806,7 +839,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       /* save the model */
       // we cannot allow the model not to be saved, as the underlying files will then not be
-    // deleted
+      // deleted
       // TODO: use a flag if the model should be getting saved
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       final CommandableWorkspace workspace = theme.getWorkspace();
@@ -831,11 +864,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final CommandableWorkspace workspace = theme.getWorkspace();
 
       /* Delete underlying grid grid file */
-      final RectifiedGridCoverage coverage = (RectifiedGridCoverage) m_selectedCoverage;
-      final RangeSetType rangeSet = coverage.getRangeSet();
-      final String fileName = rangeSet.getFile().getFileName();
-      final URL url = new URL( workspace.getContext(), fileName );
-      final IStatus status = CoverageManagmentHelper.deleteGridFile( url );
+      final IStatus status = CoverageManagmentHelper.deleteGridFile( m_selectedCoverage );
       ErrorDialog.openError( event.display.getActiveShell(), "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + m_selectedCoverage.getName() + ") konnte nicht gelöscht werden.", status );
 
       if( status == Status.OK_STATUS )
@@ -849,17 +878,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         theme.postCommand( command, m_refreshCoverageViewerRunnable );
 
         /* save the model */
-        // we cannot allow the model not to be saved, as the underlying files will then not be
-        // deleted
         // TODO: use a flag if the model should be getting save
         final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
         pool.saveObject( workspace, new NullProgressMonitor() );
       }
-    }
-    catch( final MalformedURLException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
     }
     catch( LoaderException e )
     {
