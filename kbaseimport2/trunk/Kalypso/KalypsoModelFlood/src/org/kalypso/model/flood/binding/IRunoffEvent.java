@@ -64,6 +64,8 @@ public interface IRunoffEvent extends IFeatureWrapper2
 
   public ICoverageCollection getResultCoverages( );
 
+  public void setResultCoverages( final ICoverageCollection collection );
+
   public IFeatureWrapperCollection<ITinReference> getTins( );
 
   public IPath getDataPath( );
