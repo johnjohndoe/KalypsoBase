@@ -80,7 +80,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
 
   private IKalypsoFeatureTheme m_theme;
 
-  private String m_formatString;
+  public String m_formatString;
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
@@ -115,40 +115,48 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
   @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
+    try
+    {
+      final Double value = getValue( pos );
+      if( value == null )
+        return;
+      formatter.format( m_formatString, value );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      formatter.format( "Fehler: %s%n", e.toString() );
+    }
+  }
+
+  // extracted getting the value for easier class extending
+  public Double getValue( final GM_Position pos ) throws Exception
+  {
     Assert.isNotNull( m_theme );
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
-
     final FeatureList featureList = m_theme.getFeatureList();
     if( featureList == null )
-      return;
+      return null;
 
     final List coverages = featureList.query( pos, null );
     for( final Object object : coverages )
     {
-      try
-      {
-        /* Search for the first grid which provides a value */
-
-        final Feature feature = FeatureHelper.getFeature( workspace, object );
-        final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
-        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
-        final Coordinate crd = JTSAdapter.export( pos );
-
-        final double value = grid.getValue( crd );
-
-        if( !Double.isNaN( value ) )
-        {
-          formatter.format( m_formatString, value );
-          return;
-        }
-      }
-      catch( final Throwable e )
-      {
-        e.printStackTrace();
-
-        formatter.format( "Fehler: %s%n", e.toString() );
-      }
+      /* Search for the first grid which provides a value */
+      final Feature feature = FeatureHelper.getFeature( workspace, object );
+      final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
+      final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+      final Coordinate crd = JTSAdapter.export( pos );
+      final double value = grid.getValue( crd );
+      if( !Double.isNaN( value ) )
+        return value;
+      return null;
     }
+    return null;
+  }
+
+  public String getFormatString( )
+  {
+    return m_formatString;
   }
 }
