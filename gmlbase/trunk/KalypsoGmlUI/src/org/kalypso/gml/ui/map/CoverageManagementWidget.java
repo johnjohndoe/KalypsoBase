@@ -628,9 +628,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         saveStyle();
 
         m_colorMapTableViewer.refresh();
-
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
+
       }
+      getMapPanel().getMapModell().invalidate( null );
     }
   }
 
@@ -842,9 +843,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, coverageFeature, step );
 
-    final IKalypsoTheme activeTheme = getMapPanel().getMapModell().getActiveTheme();
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-    theme.postCommand( command, m_refreshCoverageViewerRunnable );
+    m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
   protected void handleCoverageAdded( final Event event )
@@ -860,8 +859,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
     wizardDialog.open();
 
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
-    theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
+    m_theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
 
     try
     {
@@ -870,7 +868,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       // deleted
       // TODO: use a flag if the model should be getting saved
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      final CommandableWorkspace workspace = theme.getWorkspace();
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
       pool.saveObject( workspace, new NullProgressMonitor() );
     }
     catch( LoaderException e )
@@ -888,8 +886,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     try
     {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
-      final CommandableWorkspace workspace = theme.getWorkspace();
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
 
       /* Delete underlying grid grid file */
       final IStatus status = CoverageManagmentHelper.deleteGridFile( m_selectedCoverage );
@@ -903,7 +900,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
 
         final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
-        theme.postCommand( command, m_refreshCoverageViewerRunnable );
+        m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
 
         /* save the model */
         // TODO: use a flag if the model should be getting save
