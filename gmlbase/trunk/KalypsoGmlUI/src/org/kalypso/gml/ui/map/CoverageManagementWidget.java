@@ -48,13 +48,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.apache.tools.ant.filters.StringInputStream;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -90,24 +90,27 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -130,10 +133,9 @@ import org.kalypso.ui.editor.sldEditor.RasterColorMapLabelProvider;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -142,7 +144,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -164,7 +165,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
-      return coveragesFeature != null;
+
+      if( coveragesFeature == null )
+        return false;
+
+      return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
     }
   };
 
@@ -199,10 +204,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private IKalypsoFeatureTheme m_theme;
 
   private TableViewer m_colorMapTableViewer;
-
-  private RasterSymbolizer m_symb;
-
-  private StyledLayerDescriptor m_sld;
 
   private ComboViewer m_themeCombo;
 
@@ -248,10 +249,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_coverages = coverages;
     m_theme = theme;
 
+    updateStylePanel();
+
     final ListViewer coverageViewer = m_coverageViewer;
     if( coverageViewer != null && !coverageViewer.getControl().isDisposed() )
     {
-      coverageViewer.getControl().getDisplay().asyncExec( new Runnable()
+      coverageViewer.getControl().getDisplay().syncExec( new Runnable()
       {
         public void run( )
         {
@@ -299,7 +302,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     /* Theme selection combo */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
     themeSelectionPanel.setLayout( new GridLayout( 2, false ) );
-    themeSelectionPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toolkit.createLabel( themeSelectionPanel, "Thema: ", SWT.NONE );
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
     m_themeCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -315,6 +318,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     coveragePanel.setLayout( coveragePanelLayout );
 
     m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+
     final GridData coverageViewerData = new GridData( SWT.FILL, SWT.FILL, true, false );
     coverageViewerData.heightHint = 100;
     m_coverageViewer.getControl().setLayoutData( coverageViewerData );
@@ -340,13 +344,18 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
 
-    final IKalypsoFeatureTheme theme = m_theme;
+// final IKalypsoFeatureTheme theme = m_theme;
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
-        theme.postCommand( changeCommand, null );
+        m_theme.postCommand( changeCommand, null );
+
+        // REMARK: directly refreshes the list, if name changes
+        // The list does not get refreshed, if the model changes from elsewhere
+        // TODO: add modell-listeners to current theme and refresh generally
+        ViewerUtilities.refresh( m_coverageViewer, true );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -502,41 +511,50 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * sets the input of the style panel by reading the raster sld.
    */
-  protected void updateStylePanel( final TableViewer viewer )
+  protected void updateStylePanel( )
   {
     /* get sld from maps folder */
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    final IFolder mapFolder = scenarioFolder.getFolder( "maps" );
-    final IFile styleFile = mapFolder.getFile( "grids.sld" );
-    m_symb = findRasterSymbolizer( styleFile );
-    viewer.setInput( m_symb );
+
+    // TODO: get style from theme instead!
+    if( m_theme == null )
+      return;
+
+    final UserStyle[] styles = m_theme.getStyles();
+
+    RasterSymbolizer symb = findRasterSymbolizer( styles );
+
+    if( m_colorMapTableViewer != null && !m_colorMapTableViewer.getControl().isDisposed() )
+      m_colorMapTableViewer.setInput( symb );
   }
 
   /**
-   * returns the {@link RasterSymbolizer} from a given sld file.
+   * returns the first {@link RasterSymbolizer} from the given user styles
    * 
-   * @param styleFile
-   *            the style file in which the raster symbolizer is
+   * @param styles
+   *            The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
    */
-  private RasterSymbolizer findRasterSymbolizer( final IFile styleFile )
+  private RasterSymbolizer findRasterSymbolizer( final UserStyle[] styles )
   {
-    try
+    for( UserStyle userStyle : styles )
     {
-      m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
-      final NamedLayer gridLayer = m_sld.getNamedLayer( "dtmGrid" );
-      final UserStyle style = (UserStyle) gridLayer.getStyle( "dtmGridUserStyle" );
-      final FeatureTypeStyle dtmFts = style.getFeatureTypeStyle( "dtmGridFeatureTypeStyle" );
-      final Rule dtmRule = dtmFts.getRule( "dtmGridRule" );
-      return (RasterSymbolizer) dtmRule.getSymbolizers()[0];
+      final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
+      for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
+      {
+        final Rule[] rules = featureTypeStyle.getRules();
+        for( Rule rule : rules )
+        {
+          final Symbolizer[] symbolizers = rule.getSymbolizers();
+          for( Symbolizer symbolizer : symbolizers )
+          {
+            if( symbolizer instanceof RasterSymbolizer )
+              return (RasterSymbolizer) symbolizer;
+          }
+        }
+      }
     }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
 
-      return null;
-    }
+    return null;
   }
 
   /**
@@ -605,28 +623,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
       if( dialog.open() == Window.OK )
       {
-        // save sld-file
-        updateRasterSymbolizer( dialog.getColorMap() );
+        updateRasterSymbolizer( symb, dialog.getColorMap() );
 
-        if( m_sld != null )
-        {
-          try
-          {
-            final String sldXML = m_sld.exportAsXML();
-            final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-            /* get sld from maps folder */
-            final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-            final IFolder mapFolder = scenarioFolder.getFolder( "maps" );
-            final IFile styleFile = mapFolder.getFile( "grids.sld" );
-
-            /* set new content */
-            styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-          }
-        }
+        saveStyle();
 
         m_colorMapTableViewer.refresh();
 
@@ -635,10 +634,38 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   }
 
+  private void saveStyle( )
+  {
+    if( m_theme == null )
+      return;
+
+    final UserStyle[] styles = m_theme.getStyles();
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      {
+        monitor.beginTask( "Speichere Styles", styles.length );
+
+        for( UserStyle userStyle : styles )
+        {
+          if( userStyle instanceof GisTemplateUserStyle )
+            ((GisTemplateUserStyle) userStyle).save( new SubProgressMonitor( monitor, 1 ) );
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    Shell shell = m_colorMapTableViewer.getControl().getShell();
+    ErrorDialog.openError( shell, "Styles speichern", "Fehler beim Speichern eines Style", result );
+  }
+
   /**
    * update the colorMap of the {@link RasterSymbolizer}
    */
-  private void updateRasterSymbolizer( final ColorMapEntry[] entries )
+  private void updateRasterSymbolizer( RasterSymbolizer symb, final ColorMapEntry[] entries )
   {
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
 
@@ -658,7 +685,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       MessageDialog.openError( m_colorMapTableViewer.getControl().getShell(), "Fehler bei Erstellung der Farbtabelle", "Werte dürfen nicht doppelt vorkommen." );
     }
-    m_symb.setColorMap( new_colorMap );
+
+    symb.setColorMap( new_colorMap );
   }
 
   private void initializeColorMapTableViewer( final TableViewer viewer )
@@ -671,7 +699,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     viewerTable.setHeaderVisible( true );
     viewerTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    updateStylePanel( m_colorMapTableViewer );
+    updateStylePanel();
   }
 
   private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent )
