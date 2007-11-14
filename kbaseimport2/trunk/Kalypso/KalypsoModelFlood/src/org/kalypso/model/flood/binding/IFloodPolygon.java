@@ -54,4 +54,9 @@ public interface IFloodPolygon extends IFeatureWrapper2
   public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "AbstractFloodPolygon" );
 
   public static final QName QNAME_PROP_AREA = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "areaMember" );
+
+  public static final QName QNAME_PROP_EVENT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
+
+  public IRunoffEvent getEvent( );
+
 }
