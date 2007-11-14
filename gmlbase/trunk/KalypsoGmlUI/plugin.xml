@@ -109,10 +109,6 @@
             class="org.kalypso.gml.ui.map.CoverageThemeInfo"
             id="org.kalypso.gml.ui.map.CoverageThemeInfo">
       </themeInfo>
-      <themeInfo
-            class="org.kalypso.gml.ui.map.RiskZonesThemeInfo"
-            id="org.kalypso.gml.ui.map.RiskZonesThemeInfo">
-      </themeInfo>
    </extension>
 
 </plugin>
