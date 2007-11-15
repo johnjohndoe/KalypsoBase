@@ -207,9 +207,17 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private ComboViewer m_themeCombo;
 
+  /** If <code>true</code>, a colormap editor is shown for the current raster style. Default to <code>true</code>. */
+  private boolean m_showStyle = true;
+
   public CoverageManagementWidget( )
   {
-    super( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
+    this( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
+  }
+
+  public CoverageManagementWidget( final String name, final String tooltip )
+  {
+    super( name, tooltip );
   }
 
   /**
@@ -239,8 +247,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
       if( coveragesFeature != null )
         setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
-
-      // TODO set combo selection
     }
   }
 
@@ -373,6 +379,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     colormapPanel.setLayout( colormapPanelLayout );
     final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    colormapPanelData.exclude = !m_showStyle;
+    colormapPanel.setVisible( m_showStyle );
     colormapPanel.setLayoutData( colormapPanelData );
 
     m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER | SWT.H_SCROLL );
@@ -521,7 +529,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final UserStyle[] styles = m_theme.getStyles();
 
-    RasterSymbolizer symb = findRasterSymbolizer( styles );
+    final RasterSymbolizer symb = findRasterSymbolizer( styles );
 
     if( m_colorMapTableViewer != null && !m_colorMapTableViewer.getControl().isDisposed() )
       m_colorMapTableViewer.setInput( symb );
@@ -536,16 +544,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   private RasterSymbolizer findRasterSymbolizer( final UserStyle[] styles )
   {
-    for( UserStyle userStyle : styles )
+    for( final UserStyle userStyle : styles )
     {
       final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
       for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
       {
         final Rule[] rules = featureTypeStyle.getRules();
-        for( Rule rule : rules )
+        for( final Rule rule : rules )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
-          for( Symbolizer symbolizer : symbolizers )
+          for( final Symbolizer symbolizer : symbolizers )
           {
             if( symbolizer instanceof RasterSymbolizer )
               return (RasterSymbolizer) symbolizer;
@@ -602,7 +610,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       BigDecimal min = new BigDecimal( Double.MAX_VALUE );
       BigDecimal max = new BigDecimal( Double.MIN_VALUE );
 
-      for( ICoverage coverage : m_coverages )
+      for( final ICoverage coverage : m_coverages )
       {
         try
         {
@@ -613,7 +621,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           // dispose it
           geoGrid.dispose();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -658,15 +666,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       }
     };
 
-    IStatus result = ProgressUtilities.busyCursorWhile( operation );
-    Shell shell = m_colorMapTableViewer.getControl().getShell();
+    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    final Shell shell = m_colorMapTableViewer.getControl().getShell();
     ErrorDialog.openError( shell, "Styles speichern", "Fehler beim Speichern eines Style", result );
   }
 
   /**
    * update the colorMap of the {@link RasterSymbolizer}
    */
-  private void updateRasterSymbolizer( RasterSymbolizer symb, final ColorMapEntry[] entries )
+  private void updateRasterSymbolizer( final RasterSymbolizer symb, final ColorMapEntry[] entries )
   {
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
 
@@ -871,7 +879,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final CommandableWorkspace workspace = m_theme.getWorkspace();
       pool.saveObject( workspace, new NullProgressMonitor() );
     }
-    catch( LoaderException e )
+    catch( final LoaderException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -908,7 +916,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         pool.saveObject( workspace, new NullProgressMonitor() );
       }
     }
-    catch( LoaderException e )
+    catch( final LoaderException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -966,6 +974,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       g.drawRect( x, y, width, height );
     }
 
+  }
+
+  /**
+   * Sets the showStyle flag of this widget. Must be called before createControl is invoked.
+   */
+  public void setShowStyle( final boolean showStyle )
+  {
+    m_showStyle = showStyle;
   }
 
 }
