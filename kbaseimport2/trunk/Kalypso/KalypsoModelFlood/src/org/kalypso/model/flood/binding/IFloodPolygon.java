@@ -57,6 +57,6 @@ public interface IFloodPolygon extends IFeatureWrapper2
 
   public static final QName QNAME_PROP_EVENT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
 
-  public IRunoffEvent getEvent( );
+  public boolean appliesToEvent( String eventId );
 
 }
