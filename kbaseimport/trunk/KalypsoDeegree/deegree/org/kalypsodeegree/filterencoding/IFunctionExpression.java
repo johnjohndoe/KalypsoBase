@@ -59,5 +59,5 @@ public interface IFunctionExpression
 
   public String getLabel( );
 
-  public Object evaluate( final Feature feature, final List<Expression> args );
+  public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException;
 }
