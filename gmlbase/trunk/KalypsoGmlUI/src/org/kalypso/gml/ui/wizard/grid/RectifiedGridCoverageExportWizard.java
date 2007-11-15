@@ -98,16 +98,26 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
     final List<ICoverage> coverages = new ArrayList<ICoverage>();
     for( final Object object : list )
     {
-      if( object instanceof Feature )
-      {
-        final Feature f = (Feature) object;
-        final Object coverage = f.getAdapter( ICoverage.class );
-        if( coverage != null )
-          coverages.add( (ICoverage) coverage );
-      }
+      final ICoverage coverage = toCoverage( object );
+      if( coverage != null )
+        coverages.add( coverage );
     }
 
     m_coverages = coverages.toArray( new ICoverage[coverages.size()] );
+  }
+
+  private ICoverage toCoverage( final Object object )
+  {
+    if( object instanceof Feature )
+    {
+      final Feature f = (Feature) object;
+      return (ICoverage) f.getAdapter( ICoverage.class );
+    }
+
+    if( object instanceof ICoverage )
+      return (ICoverage) object;
+
+    return null;
   }
 
   /**

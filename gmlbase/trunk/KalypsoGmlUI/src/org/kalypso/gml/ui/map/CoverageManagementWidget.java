@@ -103,6 +103,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -729,6 +730,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_showAddRemoveButtons )
     {
       final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+      final ImageDescriptor exportID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT );
       final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
 
       final Action addAction = new Action( "Add Coverage", addID )
@@ -744,6 +746,19 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       };
       addAction.setDescription( "Geländedaten hinzufügen" );
 
+      final Action exportAction = new Action( "Export Coverage", exportID )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
+        @Override
+        public void runWithEvent( final Event event )
+        {
+          handleCoverageExport( event );
+        }
+      };
+      exportAction.setDescription( "Geländedaten exportieren" );
+
       final Action removeAction = new Action( "Remove Coverage", removeID )
       {
         /**
@@ -756,8 +771,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         }
       };
       removeAction.setDescription( "Geländedaten löschen" );
-      
+
       createButton( toolkit, parent, addAction );
+      createButton( toolkit, parent, exportAction );
       createButton( toolkit, parent, removeAction );
     }
 
@@ -869,6 +885,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   protected void handleCoverageAdded( final Event event )
   {
+    // TODO: put into operation in order to show busy-cursor/progress
+
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
 
@@ -900,6 +918,22 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
+  protected void handleCoverageExport( final Event event )
+  {
+    if( m_selectedCoverage == null )
+      return;
+
+    // open wizard to locate destination
+    final RectifiedGridCoverageExportWizard wizard = new RectifiedGridCoverageExportWizard();
+
+    final IStructuredSelection selection = (IStructuredSelection) m_coverageViewer.getSelection();
+    wizard.init( PlatformUI.getWorkbench(), selection );
+
+    final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
+    wizardDialog.open();
+
+  }
+
   protected void handleCoverageRemoved( final Event event )
   {
     if( m_selectedCoverage == null )
@@ -907,6 +941,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     try
     {
+      // TODO: put into operation in order to show busy-cursor/progress
+
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
       /* Delete underlying grid grid file */

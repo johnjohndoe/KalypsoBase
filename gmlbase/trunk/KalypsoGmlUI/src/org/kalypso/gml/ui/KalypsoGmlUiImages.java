@@ -16,6 +16,7 @@ public class KalypsoGmlUiImages
   {
     COVERAGE_ADD("icons/cview16/addCoverage.gif"),
     COVERAGE_REMOVE("icons/cview16/removeCoverage.gif"),
+    COVERAGE_EXPORT("icons/cview16/exportCoverage.gif"),
     COVERAGE_UP("icons/cview16/upCoverage.gif"),
     COVERAGE_DOWN("icons/cview16/downCoverage.gif"),
     COVERAGE_JUMP("icons/cview16/jumptoCoverage.gif"),
