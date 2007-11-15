@@ -210,6 +210,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /** If <code>true</code>, a colormap editor is shown for the current raster style. Default to <code>true</code>. */
   private boolean m_showStyle = true;
 
+  /** If <code>true</code>, Add and Remove coverage buttons are shown. Default to <code>true</code>. */
+  private boolean m_showAddRemoveButtons = true;
+
   public CoverageManagementWidget( )
   {
     this( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
@@ -719,37 +722,44 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent )
   {
-    final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
-    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
     final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
 
-    final Action addAction = new Action( "Add Coverage", addID )
+    if( m_showAddRemoveButtons )
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
-      @Override
-      public void runWithEvent( final Event event )
-      {
-        handleCoverageAdded( event );
-      }
-    };
-    addAction.setDescription( "Geländedaten hinzufügen" );
+      final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+      final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
 
-    final Action removeAction = new Action( "Remove Coverage", removeID )
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
-      @Override
-      public void runWithEvent( final Event event )
+      final Action addAction = new Action( "Add Coverage", addID )
       {
-        handleCoverageRemoved( event );
-      }
-    };
-    removeAction.setDescription( "Geländedaten löschen" );
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
+        @Override
+        public void runWithEvent( final Event event )
+        {
+          handleCoverageAdded( event );
+        }
+      };
+      addAction.setDescription( "Geländedaten hinzufügen" );
+
+      final Action removeAction = new Action( "Remove Coverage", removeID )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
+        @Override
+        public void runWithEvent( final Event event )
+        {
+          handleCoverageRemoved( event );
+        }
+      };
+      removeAction.setDescription( "Geländedaten löschen" );
+      
+      createButton( toolkit, parent, addAction );
+      createButton( toolkit, parent, removeAction );
+    }
 
     final Action moveUpAction = new Action( "Move Coverage Up", upID )
     {
@@ -790,12 +800,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
     jumpToAction.setDescription( "Springe zu" );
 
-    createButton( toolkit, parent, addAction );
-    createButton( toolkit, parent, removeAction );
     createButton( toolkit, parent, moveUpAction );
     createButton( toolkit, parent, moveDownAction );
     createButton( toolkit, parent, jumpToAction );
-
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
@@ -988,6 +995,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public void setShowStyle( final boolean showStyle )
   {
     m_showStyle = showStyle;
+  }
+
+  /**
+   * Sets the showAddRemoveButtons flag of this widget. Must be called before createControl is invoked.
+   */
+  public void setShowAddRemoveButtons( final boolean showAddRemoveButtons )
+  {
+    m_showAddRemoveButtons = showAddRemoveButtons;
   }
 
 }
