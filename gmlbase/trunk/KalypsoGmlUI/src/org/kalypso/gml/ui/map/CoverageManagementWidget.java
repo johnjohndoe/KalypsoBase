@@ -311,7 +311,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toolkit.createLabel( themeSelectionPanel, "Thema: ", SWT.NONE );
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
-    m_themeCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final GridData comboGridData = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
+    m_themeCombo.getControl().setLayoutData( comboGridData );
 
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
@@ -659,7 +660,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         for( UserStyle userStyle : styles )
         {
           if( userStyle instanceof GisTemplateUserStyle )
-            ((GisTemplateUserStyle) userStyle).save( new SubProgressMonitor( monitor, 1 ) );
+          {
+            GisTemplateUserStyle style = (GisTemplateUserStyle) userStyle;
+
+            style.save( new SubProgressMonitor( monitor, 1 ) );
+            style.fireStyleChanged();
+          }
         }
 
         return Status.OK_STATUS;
