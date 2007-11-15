@@ -18,7 +18,8 @@ public class KalypsoGmlUiImages
     COVERAGE_REMOVE("icons/cview16/removeCoverage.gif"),
     COVERAGE_UP("icons/cview16/upCoverage.gif"),
     COVERAGE_DOWN("icons/cview16/downCoverage.gif"),
-    COVERAGE_JUMP("icons/cview16/jumptoCoverage.gif");
+    COVERAGE_JUMP("icons/cview16/jumptoCoverage.gif"),
+    STYLE_EDIT("icons/cview16/style_edit.gif");
 
     private final String m_imagePath;
 

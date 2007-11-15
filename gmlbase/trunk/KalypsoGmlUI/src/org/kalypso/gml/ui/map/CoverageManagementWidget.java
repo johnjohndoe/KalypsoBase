@@ -575,7 +575,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void initalizeColorMapActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
-    final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+    final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
     createButton( toolkit, parent, new Action( "Generate ColorMap", generateID )
     {

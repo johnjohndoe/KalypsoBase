@@ -71,6 +71,9 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -171,24 +174,29 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     // TODO: make file path relative to gml path
     final URL outputGridUrl = ResourceUtilities.createURL( outputGridFile );
     final String fileName = outputGridUrl.toExternalForm();
-    ICoverage newCoverage = CoverageCollection.addCoverage( coverages, m_domain, fileName, mimeType );
+    final ICoverage newCoverage = CoverageCollection.addCoverage( coverages, m_domain, fileName, mimeType );
     newCoverage.setName( m_inputGridFile.getName() );
 
     ProgressUtilities.worked( progress, 1 );
 
-    if( m_coverages != null ) // do not save if coverages already exists
-      return;
-
-    final SetContentHelper contentHelper = new SetContentHelper()
+    final Feature coveragesFeature = coverages.getWrappedFeature();
+    if( m_coverages == null ) // do not save if coverages already exists
     {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
+      final SetContentHelper contentHelper = new SetContentHelper()
       {
-        GmlSerializer.serializeWorkspace( writer, coverages.getWrappedFeature().getWorkspace() );
-      }
-    };
-    contentHelper.setFileContents( m_gmlFile, false, true, new SubProgressMonitor( monitor, 1 ) );
-    ProgressUtilities.worked( progress, 10 );
+        @Override
+        protected void write( final OutputStreamWriter writer ) throws Throwable
+        {
+          GmlSerializer.serializeWorkspace( writer, coveragesFeature.getWorkspace() );
+        }
+      };
+      contentHelper.setFileContents( m_gmlFile, false, true, new SubProgressMonitor( monitor, 1 ) );
+      ProgressUtilities.worked( progress, 10 );
+    }
+
+    /* Fire model event */
+    final GMLWorkspace workspace = coveragesFeature.getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   private IStatus importExternalFiles( final IProgressMonitor monitor, final File gridFile ) throws InvocationTargetException, InterruptedException
