@@ -214,6 +214,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /** If <code>true</code>, Add and Remove coverage buttons are shown. Default to <code>true</code>. */
   private boolean m_showAddRemoveButtons = true;
 
+  private String m_featureTemplateGft = "resources/coverage.gft";
+
   public CoverageManagementWidget( )
   {
     this( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
@@ -351,7 +353,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     coverageInfoGroup.setText( "Info" );
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    featureviewFactory.addView( getClass().getResource( "resources/coverage.gft" ) );
+    featureviewFactory.addView( getClass().getResource( m_featureTemplateGft ) );
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
 
@@ -726,11 +728,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
     final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
+    final ImageDescriptor exportID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT );
 
     if( m_showAddRemoveButtons )
     {
       final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
-      final ImageDescriptor exportID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT );
       final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
 
       final Action addAction = new Action( "Add Coverage", addID )
@@ -746,19 +748,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       };
       addAction.setDescription( "Geländedaten hinzufügen" );
 
-      final Action exportAction = new Action( "Export Coverage", exportID )
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
-        @Override
-        public void runWithEvent( final Event event )
-        {
-          handleCoverageExport( event );
-        }
-      };
-      exportAction.setDescription( "Geländedaten exportieren" );
-
       final Action removeAction = new Action( "Remove Coverage", removeID )
       {
         /**
@@ -773,9 +762,21 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       removeAction.setDescription( "Geländedaten löschen" );
 
       createButton( toolkit, parent, addAction );
-      createButton( toolkit, parent, exportAction );
       createButton( toolkit, parent, removeAction );
     }
+    
+    final Action exportAction = new Action( "Export Coverage", exportID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        handleCoverageExport( event );
+      }
+    };
+    exportAction.setDescription( "Geländedaten exportieren" );
 
     final Action moveUpAction = new Action( "Move Coverage Up", upID )
     {
@@ -816,6 +817,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
     jumpToAction.setDescription( "Springe zu" );
 
+    createButton( toolkit, parent, exportAction );
     createButton( toolkit, parent, moveUpAction );
     createButton( toolkit, parent, moveDownAction );
     createButton( toolkit, parent, jumpToAction );
@@ -1039,6 +1041,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public void setShowAddRemoveButtons( final boolean showAddRemoveButtons )
   {
     m_showAddRemoveButtons = showAddRemoveButtons;
+  }
+
+  public void setFeatureTemplateGft( final String featureTemplateGft )
+  {
+    m_featureTemplateGft = featureTemplateGft;
   }
 
 }
