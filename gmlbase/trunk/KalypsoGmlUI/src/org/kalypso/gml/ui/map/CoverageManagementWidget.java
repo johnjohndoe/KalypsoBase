@@ -315,7 +315,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toolkit.createLabel( themeSelectionPanel, "Thema: ", SWT.NONE );
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
-    final GridData comboGridData = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
+    final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     m_themeCombo.getControl().setLayoutData( comboGridData );
 
     /* Coverage table + info pane */

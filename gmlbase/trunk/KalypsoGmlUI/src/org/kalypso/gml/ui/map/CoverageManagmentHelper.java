@@ -96,20 +96,16 @@ public class CoverageManagmentHelper
       final URL url = new URL( workspace.getContext(), fileName );
 
       final File gridFile = getGridFile( url );
-      if( !gridFile.delete() == true )
-        return Status.CANCEL_STATUS;
-      else
-      {
-        final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
-        eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-      }
+      gridFile.delete();
+      final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
+      eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
