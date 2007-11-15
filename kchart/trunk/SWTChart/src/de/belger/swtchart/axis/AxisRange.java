@@ -26,13 +26,13 @@ public class AxisRange
 
   private final double m_screenRatio;
 
-  private final String m_label;
+  private String m_label;
 
   private final int m_gapSpace;
 
-  public AxisRange( final String lable, final SwitchDelegate coordSwitcher )
+  public AxisRange( final String label, final SwitchDelegate coordSwitcher )
   {
-    this( lable, coordSwitcher, false );
+    this( label, coordSwitcher, false );
   }
 
   public AxisRange( final String label, final SwitchDelegate coordSwitcher, boolean inverted )
@@ -40,9 +40,9 @@ public class AxisRange
     this( label, coordSwitcher, inverted, 0, 1.0 );
   }
 
-  public AxisRange( final String lable, final SwitchDelegate coordSwitcher, final boolean inverted, final int gapSpace, double screenRatio )
+  public AxisRange( final String label, final SwitchDelegate coordSwitcher, final boolean inverted, final int gapSpace, double screenRatio )
   {
-    m_label = lable;
+    m_label = label;
     m_switchDelegate = coordSwitcher;
     m_inverted = inverted;
     m_screenRatio = screenRatio;
@@ -66,30 +66,30 @@ public class AxisRange
 
   public double screen2Logical( final int x )
   {
-    return m_logicalFrom + (x - m_screenFrom ) / m_ratio;
+    return m_logicalFrom + (x - m_screenFrom) / m_ratio;
   }
 
   public void setLogicalRange( final LogicalRange value )
   {
-    setLogicalRange(value,false);
+    setLogicalRange( value, false );
   }
-  public void setLogicalRange( final LogicalRange value,final Boolean keepRatio )
+
+  public void setLogicalRange( final LogicalRange value, final Boolean keepRatio )
   {
-    if (keepRatio)
+    if( keepRatio )
     {
       m_ratio = (m_screenTo - m_screenFrom) / (m_logicalTo - m_logicalFrom);
       final double deltaX = (m_screenTo - m_screenFrom) * m_ratio / 2;
       m_logicalFrom = -deltaX;
       m_logicalTo = +deltaX;
     }
-    
+
     m_logicalFrom = value.getFrom();
     m_logicalTo = value.getTo();
-    
+
     recalcRatio();
   }
-  
-  
+
   public void setScreenRange( final int screenFrom, final int screenTo )
   {
 
@@ -161,7 +161,8 @@ public class AxisRange
     return m_ratio;
   }
 
-  
-  
-
+  public void setLabel( String label )
+  {
+    m_label = label;
+  }
 }
