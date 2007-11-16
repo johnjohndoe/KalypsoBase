@@ -55,10 +55,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.grid.IGridMetaReader;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
@@ -78,6 +78,8 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   private ICoverageCollection m_coverages;
 
   private IFolder m_gridFolder;
+
+  private ICoverage m_newCoverage;
 
   public RectifiedGridCoverageImportWizard( )
   {
@@ -174,9 +176,12 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
         gmlFile = null;
       final IContainer gridFolder = m_gridFolder == null ? gmlFile.getParent() : m_gridFolder;
 
-      final ICoreRunnableWithProgress op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder );
+      final RectifiedGridCoverageImportFinishWorker op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder );
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
+
+      m_newCoverage = op.getNewCoverage();
+
       ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Import einer Datei", status );
       return status.isOK();
     }
@@ -199,5 +204,10 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   public void setGridFolder( final IFolder gridFolder )
   {
     m_gridFolder = gridFolder;
+  }
+
+  public ICoverage getNewCoverage( )
+  {
+    return m_newCoverage;
   }
 }

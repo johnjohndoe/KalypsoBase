@@ -42,6 +42,7 @@ package org.kalypso.gml.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -766,7 +767,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           handleCoverageAdded( event );
         }
       };
-      addAction.setDescription( "Geländedaten hinzufügen" );
+      addAction.setDescription( "Kachel hinzufügen" );
 
       final Action removeAction = new Action( "Remove Coverage", removeID )
       {
@@ -779,7 +780,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           handleCoverageRemoved( event );
         }
       };
-      removeAction.setDescription( "Geländedaten löschen" );
+      removeAction.setDescription( "Kachel löschen" );
 
       createButton( toolkit, parent, addAction );
       createButton( toolkit, parent, removeAction );
@@ -796,7 +797,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageExport( event );
       }
     };
-    exportAction.setDescription( "Geländedaten exportieren" );
+    exportAction.setDescription( "Kachel exportieren" );
 
     final Action moveUpAction = new Action( "Move Coverage Up", upID )
     {
@@ -809,7 +810,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageMove( -1 );
       }
     };
-    moveUpAction.setDescription( "Nach Oben verschieben" );
+    moveUpAction.setDescription( "Kachel nach Oben verschieben" );
 
     final Action moveDownAction = new Action( "Move Coverage Down", downID )
     {
@@ -822,7 +823,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageMove( 1 );
       }
     };
-    moveDownAction.setDescription( "Nach Unten verschieben" );
+    moveDownAction.setDescription( "Kachel nach Unten verschieben" );
 
     final Action jumpToAction = new Action( "Jump To Coverage", jumptoID )
     {
@@ -835,7 +836,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageJumpTo();
       }
     };
-    jumpToAction.setDescription( "Springe zu" );
+    jumpToAction.setDescription( "Springe zu Kachel" );
 
     createButton( toolkit, parent, exportAction );
     createButton( toolkit, parent, moveUpAction );
@@ -907,37 +908,56 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   protected void handleCoverageAdded( final Event event )
   {
-    // TODO: put into operation in order to show busy-cursor/progress
+    final IKalypsoFeatureTheme theme = m_theme;
+    final ICoverageCollection coverages = m_coverages;
+    final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
+
+    final Shell shell = event.display.getActiveShell();
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
 
     final RectifiedGridCoverageImportWizard wizard = new RectifiedGridCoverageImportWizard();
-    wizard.setCoverageCollection( m_coverages );
+    wizard.setCoverageCollection( coverages );
     wizard.init( PlatformUI.getWorkbench(), null );
     wizard.setGridFolder( gridFolder );
 
-    final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
-    wizardDialog.open();
+    final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+    if( wizardDialog.open() != Window.OK )
+      return;
 
-    m_theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
+    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( wizard.getNewCoverage().getEnvelope(), 1.05 );
+    getMapPanel().setBoundingBox( scaledBox );
 
-    try
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      /* save the model */
-      // we cannot allow the model not to be saved, as the underlying files will then not be
-      // deleted
-      // TODO: use a flag if the model should be getting saved
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      final CommandableWorkspace workspace = m_theme.getWorkspace();
-      pool.saveObject( workspace, new NullProgressMonitor() );
-    }
-    catch( final LoaderException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
 
+        theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+
+        try
+        {
+          /* save the model */
+          // we cannot allow the model not to be saved, as the underlying files will then not be deleted
+          // TODO: use a flag if the model should be getting saved
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final CommandableWorkspace workspace = theme.getWorkspace();
+          pool.saveObject( workspace, new NullProgressMonitor() );
+
+          return Status.OK_STATUS;
+        }
+        catch( final LoaderException e )
+        {
+          e.printStackTrace();
+
+          throw new InvocationTargetException( e );
+        }
+      }
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( shell, "Kachel hinzufügen", "Die Kachel konnte nicht hinzugeladen werden.", status );
   }
 
   protected void handleCoverageExport( final Event event )
@@ -961,37 +981,50 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_selectedCoverage == null )
       return;
 
-    try
+    final ICoverage selectedCoverage = m_selectedCoverage;
+    final IKalypsoFeatureTheme theme = m_theme;
+    final ICoverageCollection coverages = m_coverages;
+    final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      // TODO: put into operation in order to show busy-cursor/progress
-
-      final CommandableWorkspace workspace = m_theme.getWorkspace();
-
-      /* Delete underlying grid grid file */
-      final IStatus status = CoverageManagmentHelper.deleteGridFile( m_selectedCoverage );
-      ErrorDialog.openError( event.display.getActiveShell(), "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + m_selectedCoverage.getName() + ") konnte nicht gelöscht werden.", status );
-
-      if( status == Status.OK_STATUS )
+      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
       {
-        /* Delete coverage from collection */
-        final Feature parentFeature = m_coverages.getWrappedFeature();
-        final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-        final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
+        try
+        {
+          final CommandableWorkspace workspace = theme.getWorkspace();
 
-        final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
-        m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
+          /* Delete underlying grid grid file */
+          final IStatus status = CoverageManagmentHelper.deleteGridFile( selectedCoverage );
+          if( !status.isOK() )
+            return status;
 
-        /* save the model */
-        // TODO: use a flag if the model should be getting save
-        final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-        pool.saveObject( workspace, new NullProgressMonitor() );
+          /* Delete coverage from collection */
+          final Feature parentFeature = coverages.getWrappedFeature();
+          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+          final Feature coverageFeature = selectedCoverage.getWrappedFeature();
+
+          final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
+          theme.postCommand( command, refreshRunnable );
+
+          /* save the model */
+          // TODO: use a flag if the model should be getting save
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          pool.saveObject( workspace, new NullProgressMonitor() );
+
+          return Status.OK_STATUS;
+        }
+        catch( final LoaderException e )
+        {
+          e.printStackTrace();
+
+          throw new InvocationTargetException( e );
+        }
       }
-    }
-    catch( final LoaderException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( event.display.getActiveShell(), "Kachel entfernen", "Fehler beim Entfernen der Kachel", status );
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )

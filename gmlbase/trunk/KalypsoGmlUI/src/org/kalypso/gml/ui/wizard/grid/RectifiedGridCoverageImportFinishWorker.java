@@ -98,6 +98,8 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
   private final IContainer m_outputGridFolder;
 
+  private ICoverage m_newCoverage;
+
   public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder )
   {
     m_shell = shell;
@@ -141,7 +143,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
       final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
 
       final IFile outputGridFile = m_outputGridFolder.getFile( new Path( convertedGridFile.getName() ) );
-      createGmlWorkspace( outputGridFile, coverages, progress.newChild( 20 ) );
+      m_newCoverage = createGmlWorkspace( outputGridFile, coverages, progress.newChild( 20 ) );
 
       return Status.OK_STATUS;
     }
@@ -165,7 +167,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
   }
 
-  private void createGmlWorkspace( final IFile outputGridFile, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
+  private ICoverage createGmlWorkspace( final IFile outputGridFile, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1 + 10 );
 
@@ -197,6 +199,8 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     /* Fire model event */
     final GMLWorkspace workspace = coveragesFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    return newCoverage;
   }
 
   private IStatus importExternalFiles( final IProgressMonitor monitor, final File gridFile ) throws InvocationTargetException, InterruptedException
@@ -245,6 +249,11 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
 
     return gridFile;
+  }
+
+  public ICoverage getNewCoverage( )
+  {
+    return m_newCoverage;
   }
 
 }
