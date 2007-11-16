@@ -71,7 +71,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class FileChooserGroup
 {
-
   static public class FileChooserDelegate
   {
     private final FILE_CHOOSER_GROUP_TYPE m_type;
@@ -80,12 +79,11 @@ public class FileChooserGroup
     {
       eOpen,
       eSave
-    };
+    }
 
     public FileChooserDelegate( final FILE_CHOOSER_GROUP_TYPE type )
     {
       m_type = type;
-      // TODO Auto-generated constructor stub
     }
 
     public int getTextBoxStyle( )
