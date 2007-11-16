@@ -140,6 +140,8 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -216,9 +218,24 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private String m_featureTemplateGft = "resources/coverage.gft";
 
+  private final ModellEventListener m_modellistener = new ModellEventListener()
+  {
+
+    public void onModellChange( ModellEvent modellEvent )
+    {
+      refreshControl();
+    }
+
+  };
+
   public CoverageManagementWidget( )
   {
     this( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
+  }
+
+  protected void refreshControl( )
+  {
+    ViewerUtilities.refresh( m_coverageViewer, true );
   }
 
   public CoverageManagementWidget( final String name, final String tooltip )
@@ -258,8 +275,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private void setCoverages( final ICoverageCollection coverages, final IKalypsoFeatureTheme theme )
   {
+    // remove listener
+    if( m_theme != null )
+      m_theme.getWorkspace().removeModellListener( m_modellistener );
+
     m_coverages = coverages;
     m_theme = theme;
+
+    // add listener
+    if( m_theme != null )
+      m_theme.getWorkspace().addModellListener( m_modellistener );
 
     updateStylePanel();
 
@@ -345,7 +370,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Info view */
     final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
-
     coverageInfoGroup.setLayout( new GridLayout() );
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     coverageInfoGroup.setLayoutData( infoGroupData );
@@ -357,18 +381,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
 
-// final IKalypsoFeatureTheme theme = m_theme;
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
-
-        // REMARK: directly refreshes the list, if name changes
-        // The list does not get refreshed, if the model changes from elsewhere
-        // TODO: add modell-listeners to current theme and refresh generally
-        ViewerUtilities.refresh( m_coverageViewer, true );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -433,7 +451,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_coverages != null && m_coverages.size() > 0 )
       m_coverageViewer.setSelection( new StructuredSelection( m_coverages.get( 0 ) ) );
 
-    sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+    final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    panel.setSize( size );
+    sc.setMinHeight( size.y );
 
     return panel;
   }
@@ -518,7 +538,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       parent.layout( true, true );
     }
 
-    sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+    final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    panel.setSize( size );
+    sc.setMinHeight( size.y );
 
     getMapPanel().repaint();
   }
@@ -528,9 +550,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   protected void updateStylePanel( )
   {
-    /* get sld from maps folder */
-
-    // TODO: get style from theme instead!
+    /* get sld from theme */
     if( m_theme == null )
       return;
 
@@ -764,7 +784,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       createButton( toolkit, parent, addAction );
       createButton( toolkit, parent, removeAction );
     }
-    
+
     final Action exportAction = new Action( "Export Coverage", exportID )
     {
       /**
@@ -997,6 +1017,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public void disposeControl( )
   {
+    if( m_theme != null )
+      m_theme.getWorkspace().removeModellListener( m_modellistener );
   }
 
   /**
