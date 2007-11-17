@@ -121,6 +121,7 @@ import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
@@ -175,6 +176,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
       return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
     }
+  };
+
+  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )
+  {
   };
 
   private ICoverageCollection m_coverages;
@@ -258,6 +263,19 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     mapModell.addMapModelListener( m_mapModelListener );
 
     refreshThemeCombo();
+
+    m_infoWidget.activate( commandPoster, mapPanel );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    super.finish();
+
+    m_infoWidget.finish();
   }
 
   protected void handleThemeActivated( final IKalypsoTheme activeTheme )
@@ -286,6 +304,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     // add listener
     if( m_theme != null )
       m_theme.getWorkspace().addModellListener( m_modellistener );
+
+    if( m_theme == null )
+      m_infoWidget.setThemes( null );
+    else
+      m_infoWidget.setThemes( new IKalypsoTheme[] { m_theme } );
 
     updateStylePanel();
 
@@ -409,7 +432,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     colormapPanel.setVisible( m_showStyle );
     colormapPanel.setLayoutData( colormapPanelData );
 
-    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER | SWT.H_SCROLL );
+    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL );
     final GridData colormapTableData = new GridData( SWT.FILL, SWT.FILL, true, true );
 
     m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
@@ -1055,6 +1078,17 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( final java.awt.Point p )
+  {
+    super.moved( p );
+
+    m_infoWidget.moved( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -1080,6 +1114,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       g.drawRect( x, y, width, height );
     }
 
+    m_infoWidget.paint( g );
   }
 
   /**
