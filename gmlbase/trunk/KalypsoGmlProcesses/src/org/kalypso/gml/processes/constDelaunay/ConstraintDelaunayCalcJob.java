@@ -12,14 +12,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
@@ -37,16 +33,13 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -124,7 +117,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" );
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
+      final CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -189,7 +182,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
       final GMLWorkspace elementWorkspace = readElements( nodeReader, eleReader, crs );
-      ConstraintDelaunayHelper.writePolyFile( strmPolyInput, (List) calcObject, pwSimuLog );
+      ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
 
       nodeReader.close();
       eleReader.close();
@@ -233,7 +226,5 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
     return workspace;
   }
-
-
 
 }
