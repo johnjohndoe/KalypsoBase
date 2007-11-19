@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector;
 
-import de.renew.workflow.Activity;
-import de.renew.workflow.WorkItem;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
  * @author Stefan Kurzbach
- *
+ * 
  */
 public interface IWorkflowConnector extends IActiveContextChangeListener<Case>
 {
