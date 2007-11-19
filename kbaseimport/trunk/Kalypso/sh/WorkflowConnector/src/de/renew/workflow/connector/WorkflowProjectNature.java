@@ -90,14 +90,14 @@ public class WorkflowProjectNature implements IProjectNature
   }
 
   /**
-   * Returns the current workflow description
+   * Returns the current workflow description <br>
+   * TODO: method name still correct? Better: getWorkflow ?
    */
   public Workflow getCurrentWorklist( ) throws CoreException
   {
     if( m_workflow == null )
-    {
       m_workflow = new WorkflowSystem( m_project );
-    }
+
     return m_workflow.getCurrentWorkflow();
   }
 
