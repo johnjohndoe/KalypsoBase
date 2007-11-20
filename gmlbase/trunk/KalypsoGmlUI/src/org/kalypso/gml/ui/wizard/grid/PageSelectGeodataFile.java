@@ -490,8 +490,8 @@ public class PageSelectGeodataFile extends WizardPage
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
 
-    dialog.setFilterExtensions( new String[] { "*.jpg;*.gif;*.tif;*.asc;*.dat", "*.tif", "*.jpg", "*.gif", "*.asc;*.dat" } );
-    dialog.setFilterNames( new String[] { "All supported files", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF image (*.gif)", "ASCII grid (*.asc, *.dat)" } );
+    dialog.setFilterExtensions( new String[] { "*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat", "*.tif", "*.jpg", "*.gif", "*.asc;*.dat;*.asg" } );
+    dialog.setFilterNames( new String[] { "All supported files", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF image (*.gif)", "ASCII grid (*.asc, *.dat, *.asg)" } );
 
     final String result = dialog.open();
     if( result == null )
