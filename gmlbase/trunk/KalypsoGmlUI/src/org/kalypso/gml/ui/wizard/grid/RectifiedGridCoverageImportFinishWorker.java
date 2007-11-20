@@ -237,7 +237,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1 );
 
-    if( gridFile.getName().toLowerCase().endsWith( ".asc" ) )
+    if( gridFile.getName().toLowerCase().endsWith( ".asc" ) || gridFile.getName().toLowerCase().endsWith( ".asg" ) )
     {
       final File binFile = File.createTempFile( gridFile.getName(), ".bin" );
       binFile.deleteOnExit();
