@@ -65,6 +65,8 @@ import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -342,19 +344,27 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, CS_CoordinateSystem crs )
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, CS_CoordinateSystem crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
-    for( GM_SurfacePatch surfacePatch : surface )
+    GM_Object[] objects = polygonSurface.getAll();
+    for( GM_Object object : objects )
     {
-      GM_Position[] exterior = surfacePatch.getExteriorRing();
-      GM_Position[][] interior = surfacePatch.getInteriorRings();
-      GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
-      if( triangles != null )
+      if( object instanceof GM_Surface )
       {
-        for( GM_Triangle triangle : triangles )
+        GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
+        for( GM_SurfacePatch surfacePatch : surface )
         {
-          triangleList.add( triangle );
+          GM_Position[] exterior = surfacePatch.getExteriorRing();
+          GM_Position[][] interior = surfacePatch.getInteriorRings();
+          GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
+          if( triangles != null )
+          {
+            for( GM_Triangle triangle : triangles )
+            {
+              triangleList.add( triangle );
+            }
+          }
         }
       }
     }
@@ -365,7 +375,7 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( GM_Position[] exterior, GM_Position[][] interior, CS_CoordinateSystem crs )
+  private static GM_Triangle[] createGM_Triangles( GM_Position[] exterior, GM_Position[][] interior, CS_CoordinateSystem crs ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -380,7 +390,12 @@ public class ConstraintDelaunayHelper
     {
       return triangulatePolygon( exterior, interiorPolygons, crs );
     }
-    return null;
+    else
+    {
+      GM_Triangle[] tri = new GM_Triangle[1];
+      tri[0] = GeometryFactory.createGM_Triangle( exterior[0], exterior[1], exterior[2], crs );
+      return tri;
+    }
   }
 
   /**
