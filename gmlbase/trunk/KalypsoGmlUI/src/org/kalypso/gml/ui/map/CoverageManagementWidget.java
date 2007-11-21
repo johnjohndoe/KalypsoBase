@@ -411,6 +411,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
+        updateGridProperties();
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -480,6 +481,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     sc.setMinHeight( size.y );
 
     return panel;
+  }
+
+  protected void updateGridProperties( )
+  {
+    if( m_theme == null )
+      m_infoWidget.setThemes( null );
+    else
+      m_infoWidget.setThemes( new IKalypsoTheme[] { m_theme } );
+
   }
 
   private void initializeThemeCombo( )
