@@ -75,6 +75,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * Helper class for tringle.exe<BR>
+ * for more information goto: http://www.cs.cmu.edu/~quake/triangle.html
+ * 
  * @author Thomas Jung
  */
 public class ConstraintDelaunayHelper
@@ -82,7 +85,7 @@ public class ConstraintDelaunayHelper
   public static final long PROCESS_TIMEOUT = 50000;
 
   /**
-   * writes out a polyfile with linestrings for the console program Triangle.exe
+   * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
   @SuppressWarnings("unchecked")
   public static CS_CoordinateSystem writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
@@ -123,34 +126,52 @@ public class ConstraintDelaunayHelper
     }
 
     final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
+
+    /* node file */
+
+    /* write header */
+    // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
     writer.print( totalPointCount );
     writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0
-    int pointIndex = 1;
-    for( final GM_LineString breakline : breaklines )
-    {
-      for( int i = 0; i < breakline.getNumberOfPoints(); i++ )
-      {
-        final GM_Position pos = breakline.getPositionAt( i );
-        writer.print( pointIndex++ );
-        writer.print( ' ' );
-        writer.print( pos.getX() );
-        writer.print( ' ' );
-        writer.print( pos.getY() );
-        writer.print( ' ' );
-        writer.print( pos.getZ() );
-        writer.println();
-      }
-    }
 
+    // Remaining lines: <vertex #> <x> <y> [attributes] [boundary marker]
+    int pointIndex = 1;
+    writeNodes( breaklines, writer, pointIndex );
+
+    // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
     writer.print( totalSegmentCount );
     writer.println( " 0" ); // Border Markers 0
 
+    // Following lines: <vertex #> <x> <y> [attributes] [boundary marker]
     int segmentIndex = 1;
     // we reuse pointindex and iterate through the segments in the same way as before
     pointIndex = 1;
-    for( final GM_LineString breakline : breaklines )
+    writeElements( breaklines, writer, pointIndex, segmentIndex );
+
+    // One line: <# of segments> <# of boundary markers (0 or 1)>
+    // Following lines: <segment #> <endpoint> <endpoint> [boundary marker]
+    writer.println( "0" );
+    writer.println( "" );
+
+    // One line: <# of holes>
+    // Following lines: <hole #> <x> <y>
+
+    // Optional line: <# of regional attributes and/or area constraints>
+    // Optional following lines: <region #> <x> <y> <attribute> <maximum area>
+
+    writer.flush();
+
+    return crs;
+  }
+
+  /**
+   * writes the elements of the given {@link GM_LineString} to the given {@link PrintWriter}
+   */
+  protected static void writeElements( final List<GM_LineString> lines, final PrintWriter writer, int pointIndex, int segmentIndex )
+  {
+    for( final GM_LineString line : lines )
     {
-      for( int i = 0; i < breakline.getNumberOfPoints() - 1; i++ )
+      for( int i = 0; i < line.getNumberOfPoints() - 1; i++ )
       {
         writer.print( segmentIndex++ );
         writer.print( ' ' );
@@ -163,20 +184,93 @@ public class ConstraintDelaunayHelper
       // increase pointIndex one more, because we have one segment less than points per line string
       pointIndex++;
     }
+  }
 
-    writer.println( "0" );
-    writer.println( "" );
+  /**
+   * writes the points of the given {@link GM_LineString} to the given {@link PrintWriter}
+   */
+  protected static void writeNodes( final List<GM_LineString> lines, final PrintWriter writer, int pointIndex )
+  {
+    for( final GM_LineString line : lines )
+    {
+      for( int i = 0; i < line.getNumberOfPoints(); i++ )
+      {
+        final GM_Position pos = line.getPositionAt( i );
+        writer.print( pointIndex++ );
+        writer.print( ' ' );
+        writer.print( pos.getX() );
+        writer.print( ' ' );
+        writer.print( pos.getY() );
+        writer.print( ' ' );
+        writer.print( pos.getZ() );
+        writer.println();
+      }
+    }
+  }
+
+  public static IStatus writePolyFile( final BufferedOutputStream polyStream, final TrianglePolyFileData data )
+  {
+    final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
+
+    // node header
+    writer.print( data.getVertexHeader() );
+    writer.println();
+
+    // nodes
+    List<TriangleVertex> nodeList = data.getNodeList();
+    for( int i = 0; i < nodeList.size(); i++ )
+    {
+      TriangleVertex triangleVertex = nodeList.get( i );
+      writer.print( i + " " + triangleVertex.getLine() );
+      writer.println();
+    }
+
+    // segment header
+    writer.print( data.getSegmentHeader() );
+    writer.println();
+
+    // segments
+    List<TriangleSegment> segmentList = data.getSegmentList();
+    for( int i = 0; i < segmentList.size(); i++ )
+    {
+      TriangleSegment segment = segmentList.get( i );
+      writer.print( i + " " + segment.getLine() );
+      writer.println();
+
+    }
+
+    List<TriangleHole> holeList = data.getHoleList();
+    if( holeList != null && holeList.size() > 0 )
+    {
+
+      // holes header
+      writer.print( data.getHoleHeader() );
+      writer.println();
+
+      // holes
+      for( int i = 0; i < holeList.size(); i++ )
+      {
+        TriangleHole hole = holeList.get( i );
+        writer.print( i + " " + hole.getLine() );
+        writer.println();
+      }
+    }
+    else
+    {
+      writer.print( "0" );
+      writer.println();
+    }
 
     writer.flush();
 
-    return crs;
+    return Status.OK_STATUS;
   }
 
   /**
    * writes out a polyfile of polygons for the console program Triangle.exe
    */
   @SuppressWarnings("unchecked")
-  public static org.eclipse.core.runtime.IStatus writePolyFileForPolygon( final OutputStream polyStream, final GM_Position[] posArray )
+  public static IStatus writePolyFileForPolygon( final OutputStream polyStream, final GM_Position[] posArray )
   {
     final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
     writer.print( posArray.length );
@@ -344,27 +438,41 @@ public class ConstraintDelaunayHelper
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, CS_CoordinateSystem crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
+
     GM_Object[] objects = polygonSurface.getAll();
     for( GM_Object object : objects )
     {
       if( object instanceof GM_Surface )
       {
         GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-        for( GM_SurfacePatch surfacePatch : surface )
+        GM_Triangle[] triangles = convertToTriangles( surface, crs );
+        for( GM_Triangle triangle : triangles )
         {
-          GM_Position[] exterior = surfacePatch.getExteriorRing();
-          GM_Position[][] interior = surfacePatch.getInteriorRings();
-          GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
-          if( triangles != null )
-          {
-            for( GM_Triangle triangle : triangles )
-            {
-              triangleList.add( triangle );
-            }
-          }
+          triangleList.add( triangle );
+        }
+      }
+    }
+    return triangleList.toArray( new GM_Triangle[triangleList.size()] );
+  }
+
+  private static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
+
+    for( GM_SurfacePatch surfacePatch : surface )
+    {
+      GM_Position[] exterior = surfacePatch.getExteriorRing();
+      GM_Position[][] interior = surfacePatch.getInteriorRings();
+      GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
+      if( triangles != null )
+      {
+        for( GM_Triangle triangle : triangles )
+        {
+          triangleList.add( triangle );
         }
       }
     }
@@ -447,6 +555,27 @@ public class ConstraintDelaunayHelper
     PrintWriter pwSimuLog;
     final List<GM_Triangle> triangles = new LinkedList<GM_Triangle>();
 
+    /* prepare */
+    final List<TriangleVertex> nodeList = new LinkedList<TriangleVertex>();
+    final List<TriangleSegment> segmentList = new LinkedList<TriangleSegment>();
+
+    // handle the points
+    for( GM_Position pos : exterior )
+    {
+      TriangleVertex vertex = new TriangleVertex( pos, true, pos.getZ() );
+      nodeList.add( vertex );
+    }
+
+    // handle the polygon
+    for( int i = 0; i < exterior.length - 1; i++ )
+    {
+      TriangleSegment segment = new TriangleSegment( i, i + 1, true );
+      segmentList.add( segment );
+    }
+
+    // collect the data
+    TrianglePolyFileData trianglePolyFileData = new TrianglePolyFileData( nodeList, segmentList, null );
+
     try
     {
       pwSimuLog = new PrintWriter( System.out );
@@ -456,7 +585,9 @@ public class ConstraintDelaunayHelper
 
       BufferedOutputStream strmPolyInput = null;
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      IStatus writeStatus = writePolyFileForPolygon( strmPolyInput, exterior );
+
+      IStatus writeStatus = writePolyFile( strmPolyInput, trianglePolyFileData );
+// IStatus writeStatus = writePolyFileForPolygon( strmPolyInput, exterior );
       strmPolyInput.close();
 
       if( writeStatus != Status.OK_STATUS )
