@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -56,15 +54,6 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   public SbkStructWeir( final IModelMember model, final Feature node )
   {
     super( model, node );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   /**
@@ -108,7 +97,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
    */
   public String getFlowDirection( )
   {
-    // TODO ggf. noc "Übersetzung" des Strings... von nofdp -> SBK
+    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
     return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION );
   }
 
