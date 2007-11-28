@@ -67,14 +67,18 @@ public class QNameUtilities
    *         &lt;namespace&gt;#&lt;localpart&gt;
    * </pre>
    * 
-   * example: fragmentedFullQName = www.w3c.org#index.html
+   * example: fragmentedFullQName = www.w3c.org#index.html<br/> If no '#' is given, a qname with only a localPart is
+   * created.
    * 
    * @return qname from fragmentedFullQName
    */
   public static QName createQName( final String fragmentedFullQName )
   {
     final String[] parts = fragmentedFullQName.split( "#" );
-    return new QName( parts[0], parts[1] );
+    if( parts.length == 2 )
+      return new QName( parts[0], parts[1] );
+
+    return QName.valueOf( fragmentedFullQName );
   }
 
   public static QName[] createQNames( final String fragmentedFullQNameList, final String separator )
@@ -89,20 +93,23 @@ public class QNameUtilities
   }
 
   /**
-   * Parses a {@link QName} from a string in xml-syntax using a prefix resolver.
-   * <p>
-   * Syntax of the qname:
+   * Parses a {@link QName} from a string in xml-syntax using a prefix resolver. <br/> Syntax of the qname:
    * 
    * <pre>
    *    prefix:localPart
    * </pre>
    * 
-   * </p>
-   * If either the prefix is empty or the namespaceContext is null, returns a qname with empty local part (due to
-   * XML-Spec).
+   * <br/> For backwards compability, also the {@link QName#toString()} form (i.e. {namespace}localPart) form is
+   * recognized.<br/> If either the prefix is empty or the namespaceContext is null, returns a qname with empty local
+   * part (due to XML-Spec).
    */
   public static QName createQName( final String condition, final NamespaceContext namespaceContext )
   {
+    // REMARK: First, check if it is formatted like {namespaceUri}localPart (which is not regular, but still recognized
+    // for backwards compability
+    if( condition.contains( "{" ) )
+      return QName.valueOf( condition );
+
     final String[] split = condition.split( ":" );
     if( split.length == 0 || split.length > 2 )
       return null;
