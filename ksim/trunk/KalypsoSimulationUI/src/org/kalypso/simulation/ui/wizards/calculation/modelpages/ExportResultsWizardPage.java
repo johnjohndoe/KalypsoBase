@@ -124,18 +124,18 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 public class ExportResultsWizardPage extends AbstractCalcWizardPage
 {
   // Beispiel:
-  //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
+  // <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
   // pageTitle="Kontrolle der Ergebnisse"
   // imageLocation="icons/calcwizard/boden.gif" >
-  //        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte2.gmt"/>
-  //        <arg name="tableTemplate"
+  // <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte2.gmt"/>
+  // <arg name="tableTemplate"
   // value=".modellTyp/vorlagen/rechenfall/table2.gtt"/>
-  //        <arg name="timeseriesPropertyNames"
+  // <arg name="timeseriesPropertyNames"
   // value="Wasserstand#Wasserstand_gerechnet"/>
-  //        <arg name="mainSash" value="50"/>
-  //        <arg name="rightSash" value="40"/>
-  //        <arg name="grafikToolTemplate" value=".modellTyp/grafik.exe_"/>
-  //    </page>
+  // <arg name="mainSash" value="50"/>
+  // <arg name="rightSash" value="40"/>
+  // <arg name="grafikToolTemplate" value=".modellTyp/grafik.exe_"/>
+  // </page>
   //  
 
   private static final String STR_EXPORT_PROGNOSEN = "Vorhersagen exportieren";
@@ -144,8 +144,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
    * arguments, they must be followed by some arbitrary string.
    * <p>
-   * For the sustained arguments, @see MultiExporter
-   * </p>
+   * For the sustained arguments,
+   * 
+   * @see MultiExporter
+   *      </p>
    */
   private static final String PROP_EXPORTER = "exporter";
 
@@ -168,7 +170,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
   protected Obsdiagview m_obsdiagviewType;
 
-  public ExportResultsWizardPage()
+  public ExportResultsWizardPage( )
   {
     super( "<ViewResultsWizardPage>", SELECT_FROM_MAPVIEW );
   }
@@ -194,28 +196,21 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       rightBottomPanel.setLayout( new GridLayout() );
 
       initDiagram( rightBottomPanel ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      initButtons( rightBottomPanel, "Zeitreihe(n) bearbeiten",
-          "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung", new SelectionAdapter()
-          {
-            @Override
-            public void widgetSelected( final SelectionEvent e )
-            {
-              startGrafik();
-            }
-          } );
+      initButtons( rightBottomPanel, "Zeitreihe(n) bearbeiten", "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung", new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          startGrafik();
+        }
+      } );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-      sashForm.setWeights( new int[]
-      {
-          mainWeight,
-          100 - mainWeight } );
+      sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
 
-      rightSash.setWeights( new int[]
-      {
-          rightWeight,
-          100 - rightWeight } );
+      rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -228,7 +223,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
       if( diagFileName != null )
       {
-        final IFile diagFile = (IFile)getProject().findMember( diagFileName );
+        final IFile diagFile = (IFile) getProject().findMember( diagFileName );
         try
         {
           m_obsdiagviewType = DiagViewUtils.loadDiagramTemplateXML( diagFile.getContents() );
@@ -251,8 +246,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     treeGroup.setText( "Rechenvarianten im Diagramm" );
     treeGroup.setLayout( new GridLayout() );
 
-    final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER
-        | SWT.SINGLE | SWT.CHECK | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
+    final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER | SWT.SINGLE | SWT.CHECK | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
     calcCaseViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     calcCaseViewer.setInput( getProject().getFolder( ModelNature.PROGNOSE_FOLDER ) );
     calcCaseViewer.setSelection( new StructuredSelection( getCalcFolder() ), true );
@@ -267,8 +261,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     } );
     calcCaseViewer.setChecked( getCalcFolder(), true );
     // the last line will not notify the listeners, so do it myself
-    m_checkedElements = new Object[]
-    { getCalcFolder() };
+    m_checkedElements = new Object[] { getCalcFolder() };
 
     return treeGroup;
   }
@@ -289,7 +282,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         exportPrognoseTimeseries();
       }
@@ -305,7 +298,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         exportSelectedDocuments();
       }
@@ -313,7 +306,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     // show button only if there is any configured exporter
     final IExporter[] exporters = createExporters();
-    berichtsablageButton.setEnabled( !( exporters == null || exporters.length == 0 ) );
+    berichtsablageButton.setEnabled( !(exporters == null || exporters.length == 0) );
 
     // Rechenvariante archivieren
     final Button archiveButton = new Button( buttonGroup, SWT.PUSH );
@@ -326,7 +319,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         archiveCalcCase();
       }
@@ -335,9 +328,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     return buttonGroup;
   }
 
-  protected void archiveCalcCase()
+  protected void archiveCalcCase( )
   {
-    final CalcWizard wizard = (CalcWizard)getWizard();
+    final CalcWizard wizard = (CalcWizard) getWizard();
     final ModelSynchronizer synchronizer = wizard.getModelSynchronizer();
     final IFolder calcFolder = getCalcFolder();
 
@@ -360,14 +353,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, op );
-    ErrorDialog.openError( getContainer().getShell(), "Rechenvariante archivieren",
-        "Fehler beim Archivieren der Rechenvariante", status );
+    ErrorDialog.openError( getContainer().getShell(), "Rechenvariante archivieren", "Fehler beim Archivieren der Rechenvariante", status );
   }
 
   /**
    * Exports for all selected document types
    */
-  protected void exportSelectedDocuments()
+  protected void exportSelectedDocuments( )
   {
     final Shell shell = getContainer().getShell();
 
@@ -378,14 +370,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
       // init target with common properties
       final IFolder currentCalcCase = getCalcFolder();
-      final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+      final ModelNature nature = (ModelNature) currentCalcCase.getProject().getNature( ModelNature.ID );
       final String scenarioId = nature.getScenario( currentCalcCase ).getId();
       target.setProperty( "currentScenarioId", scenarioId );
       target.setProperty( "calcCaseName", currentCalcCase.getName() );
-      target.setProperty( "calcCaseDescription", (String)nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
+      target.setProperty( "calcCaseDescription", (String) nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
       target.setProperty( "projectName", currentCalcCase.getProject().getName() );
       target.setProperty( "autor", KalypsoAuthPlugin.getDefault().getCurrentUser().getUserName() );
-      
+
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
@@ -399,15 +391,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Berichtsablage", "Berichtsablagedienst konnte nicht initialisiert werden.", e
-          .getStatus() );
+      ErrorDialog.openError( shell, "Berichtsablage", "Berichtsablagedienst konnte nicht initialisiert werden.", e.getStatus() );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus(
-          IStatus.ERROR, "Siehe Details", e ) );
+      ErrorDialog.openError( shell, "Berichtsabalge", "Fehler sind aufgetreten", StatusUtilities.createStatus( IStatus.ERROR, "Siehe Details", e ) );
     }
   }
 
@@ -423,7 +413,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * 
    * @return newly created list of exporters
    */
-  private IExporter[] createExporters()
+  private IExporter[] createExporters( )
   {
     final Collection<IStatus> stati = new ArrayList<IStatus>();
 
@@ -435,13 +425,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         return new ExporterSupplier( args );
       }
     };
-    
+
     final Collection<IExporter> exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
 
     if( stati.size() > 0 )
     {
-      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati
-          .toArray( new IStatus[stati.size()] ), "", null );
+      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "", null );
       ErrorDialog.openError( getContainer().getShell(), "", "", status );
     }
 
@@ -456,11 +445,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
       final URL context = ResourceUtilities.createURL( calcCase );
       final FeatureList features = filterForValidTimeseriesLinks( getFeatures(), resultProperty, context );
-      final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty,
-          context );
+      final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty, context );
       // view it!
       final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-      final IFeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() ).getFeatureType();
+      final IFeatureType featureType = ((IKalypsoFeatureTheme) getMapModell().getActiveTheme()).getFeatureType();
       final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( nameProperty );
       if( ftp == null )
       {
@@ -468,19 +456,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
         return null;
       }
 
-      final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
-      final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features,
-          new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
+      final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp, null ) );
+      final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), features, new ArrayContentProvider(), labelProvider, "Die Daten folgender Pegel werden exportiert:" );
       dialog.setInitialElementSelections( selectedFeatures );
       dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
       if( dialog.open() != Window.OK )
         return null;
 
       final Object[] result = dialog.getResult();
-      final Feature[] resultFeatures = org.kalypso.contribs.java.util.Arrays.castArray( result,
-          new Feature[result.length] );
-      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(),
-          resultFeatures );
+      final Feature[] resultFeatures = org.kalypso.contribs.java.util.Arrays.castArray( result, new Feature[result.length] );
+      return FeatureFactory.createFeatureList( features.getParentFeature(), features.getParentFeatureTypeProperty(), resultFeatures );
     }
     catch( final MalformedURLException e )
     {
@@ -494,18 +479,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * 
    * @return List of features that have valid timeserieslinks
    */
-  protected FeatureList filterForValidTimeseriesLinks( final FeatureList featureList,
-      final String propertyNameTimeserieslink, final URL context )
+  protected FeatureList filterForValidTimeseriesLinks( final FeatureList featureList, final String propertyNameTimeserieslink, final URL context )
   {
-    final FeatureList result = FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList
-        .getParentFeatureTypeProperty() );
+    final FeatureList result = FeatureFactory.createFeatureList( featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() );
 
     final UrlResolver resolver = new UrlResolver();
     URL resultURL;
-    for( Iterator iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
-      final Feature fe = (Feature)iter.next();
-      final TimeseriesLinkType resultLink = (TimeseriesLinkType)fe.getProperty( propertyNameTimeserieslink );
+      final Feature fe = (Feature) iter.next();
+      final TimeseriesLinkType resultLink = (TimeseriesLinkType) fe.getProperty( propertyNameTimeserieslink );
       if( resultLink == null )
         continue;
 
@@ -519,7 +502,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       }
       catch( final Exception ignored )
       {
-        //   nothing, as exception is expected if result is not there
+        // nothing, as exception is expected if result is not there
       }
     }
     return result;
@@ -529,7 +512,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * Allows user to export selected timeseries into repository. Handles UI selection and delegates call to
    * performPrognoseExport.
    */
-  protected void exportPrognoseTimeseries()
+  protected void exportPrognoseTimeseries( )
   {
     final IFolder calcFolder = getCalcFolder();
     final FeatureList featureList = chooseSelectedFeatures( calcFolder );
@@ -540,19 +523,18 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     final StringBuffer sb = new StringBuffer();
     for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
-      final Feature f = (Feature)iter.next();
+      final Feature f = (Feature) iter.next();
       final String featurePath = new FeaturePath( f ).toString();
       sb.append( featurePath );
       if( iter.hasNext() )
         sb.append( ';' );
     }
-    
+
     final Arguments antProps = new Arguments();
     antProps.put( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
-    launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN,
-        "Fehler bemi Speichern der Vorhersage-Zeotreihen", antProps );
+    launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN, "Fehler bemi Speichern der Vorhersage-Zeotreihen", antProps );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -564,7 +546,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void startGrafik()
+  protected void startGrafik( )
   {
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
@@ -604,7 +586,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere Rechenfälle ausführen
    */
   @Override
-  public void refreshDiagram()
+  public void refreshDiagram( )
   {
     m_diagView.removeAllItems();
 
@@ -616,11 +598,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     // selektierten Rechenfälle aufgelöst
     final TSLinkWithName[] obs = getObservations( true );
 
-    for( int i = 0; i < m_checkedElements.length; i++ )
+    for( final Object element : m_checkedElements )
     {
       try
       {
-        final IFolder calcCase = (IFolder)m_checkedElements[i];
+        final IFolder calcCase = (IFolder) element;
         final URL context = ResourceUtilities.createURL( calcCase );
         refreshDiagramForContext( obs, context );
       }
@@ -674,10 +656,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       // Tricky clone-hack to produce new supplier on a subset of the arguments.
       // This is used by the MultiExporter.
       if( request instanceof Arguments )
-        return new ExporterSupplier( (Arguments)request );
-      
-      Logger.getLogger( getClass().getName() ).warning(
-          "Supplier asked for " + request.toString() + " but request could not be satisfied" );
+        return new ExporterSupplier( (Arguments) request );
+
+      Logger.getLogger( getClass().getName() ).warning( "Supplier asked for " + request.toString() + " but request could not be satisfied" );
 
       return null;
     }
