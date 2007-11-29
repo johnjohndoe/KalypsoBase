@@ -314,7 +314,7 @@ public class ChartFactory
       for( final RefType styleRef : styleRefArray )
       {
         final StyleType st = (StyleType) rr.resolveReference( styleRef.getRef() );
-        final ProviderType provider = st.getProvider();
+        final ProviderType provider = st == null ? null : st.getProvider();
         if( provider != null )
         {
           IStyledElementProvider sp = null;
