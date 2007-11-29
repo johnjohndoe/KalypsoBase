@@ -30,7 +30,7 @@
 package org.kalypso.gmlschema.property.restriction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class ContentRestrictionFactory
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
     if( enumerationArray.length > 0 )
     {
-      Map<Object, ILanguageAnnontationProvider> map = new HashMap<Object, ILanguageAnnontationProvider>();
+      Map<Object, ILanguageAnnontationProvider> map = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
 
       for( int i = 0; i < enumerationArray.length; i++ )
       {
