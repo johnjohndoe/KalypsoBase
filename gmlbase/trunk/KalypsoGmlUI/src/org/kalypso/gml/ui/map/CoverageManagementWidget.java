@@ -1084,7 +1084,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public void disposeControl( )
   {
     if( m_theme != null && m_modellistener != null )
-      m_theme.getWorkspace().removeModellListener( m_modellistener );
+    {
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( m_modellistener );
+    }
   }
 
   /**
