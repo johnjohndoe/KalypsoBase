@@ -65,11 +65,11 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -119,7 +119,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
     reinit();
   }
 
-  private void reinit( )
+  protected void reinit( )
   {
     m_theme = null;
     m_featureList = null;
@@ -184,26 +184,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    /* Draw drag rect if rectangle is big enoeugh */
-    if( m_rectangleSelector != null )
-    {
-      final Rectangle rectangle = m_rectangleSelector.getRectangle();
-      if( rectangle != null && (rectangle.width > m_grabRadius || rectangle.height > m_grabRadius) )
-      {
-        g.drawRect( rectangle.x, rectangle.y, rectangle.width, rectangle.height );
-        return;
-      }
-    }
-
-    if( m_foundFeature == null )
-      return;
-    final GM_Object geom = (GM_Object) m_foundFeature.getProperty( m_geomQName );
-    if( geom == null )
-      return;
-
-    final int smallRect = 10;
-    final Point nodePoint = MapUtilities.retransform( getMapPanel(), geom.getCentroid() );
-    g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    MapUtils.paintRect( g, getMapPanel(), m_foundFeature, m_geomQName, m_rectangleSelector, m_grabRadius );
   }
 
   /**
@@ -219,6 +200,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftReleased( final Point p )
   {
@@ -245,7 +227,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
           for( int i = 0; i < selectedFeatures.length; i++ )
             selectedFeatures[i] = FeatureHelper.getFeature( workspace, result.get( i ) );
 
-          flowRelationGrabbed( m_theme.getWorkspace(), selectedFeatures );
+          featureGrabbed( m_theme.getWorkspace(), selectedFeatures );
         }
         catch( final Throwable t )
         {
@@ -301,7 +283,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
 
     try
     {
-      flowRelationGrabbed( m_theme.getWorkspace(), new Feature[] { m_foundFeature } );
+      featureGrabbed( m_theme.getWorkspace(), new Feature[] { m_foundFeature } );
 
       getMapPanel().repaint();
     }
@@ -320,5 +302,10 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
     }
   }
 
-  protected abstract void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception;
+  protected abstract void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception;
+
+  public void setFeatureList( FeatureList featureList )
+  {
+    m_featureList = featureList;
+  }
 }
