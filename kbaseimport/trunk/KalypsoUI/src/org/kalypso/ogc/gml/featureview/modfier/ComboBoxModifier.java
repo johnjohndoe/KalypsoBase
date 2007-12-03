@@ -58,6 +58,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
+ * A modifier which handles feature-relations: shows a combo-box as cell-editor.
+ * 
  * @author Gernot Belger
  */
 public class ComboBoxModifier implements IFeatureModifier
