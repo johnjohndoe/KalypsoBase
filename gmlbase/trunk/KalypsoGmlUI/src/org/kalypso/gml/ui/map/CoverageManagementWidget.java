@@ -108,7 +108,6 @@ import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.loader.LoaderException;
@@ -1016,7 +1015,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final ICoverage selectedCoverage = m_selectedCoverage;
     final IKalypsoFeatureTheme theme = m_theme;
-    final ICoverageCollection coverages = m_coverages;
     final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
@@ -1033,11 +1031,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
             return status;
 
           /* Delete coverage from collection */
-          final Feature parentFeature = coverages.getWrappedFeature();
-          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
           final Feature coverageFeature = selectedCoverage.getWrappedFeature();
 
-          final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
+          final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           theme.postCommand( command, refreshRunnable );
 
           /* save the model */
