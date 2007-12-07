@@ -128,6 +128,10 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
         e.printStackTrace();
       }
     }
+    else
+    {
+      System.out.println();
+    }
     m_isOpen = true;
   }
 
@@ -138,6 +142,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       // Value-Listen aufbauen
       final ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
       final ArrayList<T_target> targetValues = new ArrayList<T_target>();
+      m_result.sort();
       for( int i = 0; i < m_result.size(); i++ )
       {
         final IRecord record = m_result.get( i );
@@ -161,6 +166,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
         domainValues.add( domainValue );
         targetValues.add( targetValue );
+        Logger.logInfo( Logger.TOPIC_LOG_DATA, domainValue.toString() );
       }
       setDomainValues( domainValues );
       setTargetValues( targetValues );
