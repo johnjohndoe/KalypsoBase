@@ -47,15 +47,16 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 
 /**
  * @author kuch
  */
 public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDelegate
 {
-  public StrokeArrowPaintDelegateSegment( ARROW_TYPE arrowType, ARROW_ALIGNMENT arrowAlignment, Double arrowSize, double strokeWidth )
+  public StrokeArrowPaintDelegateSegment( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final double strokeWidth )
   {
-    super( arrowType, arrowAlignment, arrowSize );
+    super( arrowType, arrowWidget, arrowAlignment, arrowSize );
   }
 
   /**
@@ -63,7 +64,7 @@ public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDel
    *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve )
+  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve )
   {
     throw (new NotImplementedException());
   }

@@ -47,6 +47,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 
 /**
  * @author kuch
@@ -57,20 +58,21 @@ public class StrokeArrowPainter implements IAdditionalStrokePainter
 
   private final Map< ? , ? > m_cssParameters;
 
-  public StrokeArrowPainter( Map< ? , ? > cssParameters, GeoTransform projection )
+  public StrokeArrowPainter( final Map< ? , ? > cssParameters, final GeoTransform projection )
   {
     m_cssParameters = cssParameters;
     m_projection = projection;
   }
 
-  public void paint( Graphics2D g2, GM_Curve curve, int[][] positions )
+  public void paint( final Graphics2D g2, final GM_Curve curve, final int[][] positions )
   {
-    ARROW_TYPE arrowType = StrokeArrowHelper.getArrowType( m_cssParameters );
-    ARROW_ALIGNMENT arrowAlignment = StrokeArrowHelper.getArrowAlignment( m_cssParameters );
-    Double arrowSize = StrokeArrowHelper.getArrowSize( m_cssParameters );
-    Double strokeWidth = StrokeArrowHelper.getStrokeWidth( m_cssParameters );
+    final ARROW_TYPE arrowType = StrokeArrowHelper.getArrowType( m_cssParameters );
+    final ARROW_WIDGET arrowWidget = StrokeArrowHelper.getArrowWidget( m_cssParameters );
+    final ARROW_ALIGNMENT arrowAlignment = StrokeArrowHelper.getArrowAlignment( m_cssParameters );
+    final Double arrowSize = StrokeArrowHelper.getArrowSize( m_cssParameters );
+    final Double strokeWidth = StrokeArrowHelper.getStrokeWidth( m_cssParameters );
 
-    IStrokeArrowPaintDelegate painter = AbstractStrokeArrowPaintDelegate.getPaintDelegate( arrowType, arrowAlignment, arrowSize, strokeWidth );
+    final IStrokeArrowPaintDelegate painter = AbstractStrokeArrowPaintDelegate.getPaintDelegate( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
     painter.paint( g2, m_projection, curve );
   }
 }
