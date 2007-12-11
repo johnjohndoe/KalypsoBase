@@ -79,12 +79,10 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     m_fixedWidth = fixedWidth;
   }
 
-  private String getLabel( Number value, Format format )
+  private String getLabel( final Number value, final Format format )
   {
-    if( m_tick_label_formater.contains( "%s" ) )
-    {
+    if( m_tick_label_formater.trim().equals( "%s" ) )
       return format.format( value );
-    }
     else
       return String.format( m_tick_label_formater, value );
   }
@@ -95,15 +93,15 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   public Point calcTickLabelSize( final GCWrapper gc, final IAxis<Number> axis )
   {
-    Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
-    String testStringMax = format.format( axis.getLogicalRange().getMax() );
-    String testStringMin = format.format( axis.getLogicalRange().getMin() );
+    final Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
+    final String testStringMax = format.format( axis.getLogicalRange().getMax() );
+    final String testStringMin = format.format( axis.getLogicalRange().getMin() );
 
-    Font oldfont = gc.getFont();
+    final Font oldfont = gc.getFont();
     gc.setFont( getFont( getFontDataTickLabel(), gc.getDevice() ) );
 
-    Point tickLabelSizeMax = gc.textExtent( testStringMax );
-    Point tickLabelSizeMin = gc.textExtent( testStringMin );
+    final Point tickLabelSizeMax = gc.textExtent( testStringMax );
+    final Point tickLabelSizeMin = gc.textExtent( testStringMin );
 
     gc.setFont( oldfont );
 
@@ -144,9 +142,9 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     // wenn null, dann muss es neu erzeugt werden
     if( tickMapElement == null )
     {
-      Image img = new Image( Display.getDefault(), 1, 1 );
-      GC gc = new GC( img );
-      GCWrapper gcw = new GCWrapper( gc );
+      final Image img = new Image( Display.getDefault(), 1, 1 );
+      final GC gc = new GC( img );
+      final GCWrapper gcw = new GCWrapper( gc );
 
       NumberTickCalculator.calcTicks( gcw, axis, m_minDisplayInterval );
       tickMapElement = getTickMapElement( axis );
@@ -216,7 +214,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    */
   private void drawTicks( final GCWrapper gc, final IAxis<Number> axis, final int startX, final int startY )
   {
-    Number[] ticks = getTicks( axis );
+    final Number[] ticks = getTicks( axis );
 
     if( (gc == null) || (axis == null) || (ticks == null) )
       return;
@@ -236,7 +234,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
     final int axisMax = axis.logicalToScreen( dataRange.getMax() );
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
-    for( Number value : ticks )
+    for( final Number value : ticks )
     {
       int y1, y2, x1, x2, tickPos;
       String label;
@@ -405,7 +403,7 @@ public class NumberAxisRenderer extends AbstractAxisRenderer<Number>
    * calculates the extent of a Double using a certain fontdata
    */
   @Override
-  protected Point getTextExtent( final GCWrapper gc, final Number value, final FontData fd, Format format )
+  protected Point getTextExtent( final GCWrapper gc, final Number value, final FontData fd, final Format format )
   {
     String label = "";
     try
