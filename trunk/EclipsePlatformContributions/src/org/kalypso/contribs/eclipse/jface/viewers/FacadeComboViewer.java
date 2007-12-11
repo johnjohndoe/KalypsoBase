@@ -90,6 +90,11 @@ public class FacadeComboViewer
 
   public void draw( final Composite parent, final GridData layout, final int style )
   {
+    draw( parent, layout, style, true );
+  }
+
+  public void draw( final Composite parent, final GridData layout, final int style, final boolean enableSingleElement )
+  {
     m_comboViewer = new ComboViewer( parent, style );
     m_comboViewer.getCombo().setLayoutData( layout );
     m_comboViewer.setContentProvider( new ArrayContentProvider() );
@@ -112,14 +117,16 @@ public class FacadeComboViewer
     final Object[] inputData = m_delegate.getInputData();
     m_comboViewer.setInput( inputData );
 
-    if( inputData.length == 1 )
-    {
-      final StructuredSelection selection = new StructuredSelection( inputData[0] );
-      m_comboViewer.setSelection( selection );
-      m_selection = selection;
-      m_comboViewer.getCombo().setEnabled( false );
-    }
-    else if( inputData.length == 0 )
+    if( enableSingleElement )
+      if( inputData.length == 1 )
+      {
+        final StructuredSelection selection = new StructuredSelection( inputData[0] );
+        m_comboViewer.setSelection( selection );
+        m_selection = selection;
+        m_comboViewer.getCombo().setEnabled( false );
+      }
+
+    if( inputData.length == 0 )
       m_comboViewer.getCombo().setEnabled( false );
     else
     {
