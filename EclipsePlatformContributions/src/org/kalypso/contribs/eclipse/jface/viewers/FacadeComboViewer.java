@@ -70,17 +70,43 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class FacadeComboViewer
 {
-  protected final IFCVDelegate m_delegate;
-
   private final List<Runnable> m_listener = new LinkedList<Runnable>();
 
-  protected ISelection m_selection;
+  protected ISelection m_selection = new StructuredSelection();
 
   protected ComboViewer m_comboViewer;
 
+  private Object[] m_inputData;
+
+  protected final IFCVDelegate m_delegate;
+
+  private final boolean m_enableSingleElementSelection;
+
   public FacadeComboViewer( final IFCVDelegate delegate )
   {
+    this( delegate, false );
+  }
+
+  public FacadeComboViewer( final IFCVDelegate delegate, final boolean enableSingleElementSelection )
+  {
     m_delegate = delegate;
+    m_enableSingleElementSelection = enableSingleElementSelection;
+    initSelection();
+  }
+
+  private void initSelection( )
+  {
+    m_inputData = m_delegate.getInputData();
+
+    if( m_enableSingleElementSelection )
+      if( m_inputData.length == 1 )
+      {
+        final StructuredSelection selection = new StructuredSelection( m_inputData[0] );
+        m_selection = selection;
+      }
+
+    if( m_inputData.length > 0 )
+      m_selection = m_delegate.getDefaultKey();
   }
 
   public void addSelectionChangedListener( final Runnable selectionChangedListener )
@@ -89,11 +115,6 @@ public class FacadeComboViewer
   }
 
   public void draw( final Composite parent, final GridData layout, final int style )
-  {
-    draw( parent, layout, style, true );
-  }
-
-  public void draw( final Composite parent, final GridData layout, final int style, final boolean enableSingleElement )
   {
     m_comboViewer = new ComboViewer( parent, style );
     m_comboViewer.getCombo().setLayoutData( layout );
@@ -114,19 +135,18 @@ public class FacadeComboViewer
       }
     } );
 
-    final Object[] inputData = m_delegate.getInputData();
-    m_comboViewer.setInput( inputData );
+    m_comboViewer.setInput( m_inputData );
 
-    if( enableSingleElement )
-      if( inputData.length == 1 )
+    if( m_enableSingleElementSelection )
+      if( m_inputData.length == 1 )
       {
-        final StructuredSelection selection = new StructuredSelection( inputData[0] );
+        final StructuredSelection selection = new StructuredSelection( m_inputData[0] );
         m_comboViewer.setSelection( selection );
         m_selection = selection;
         m_comboViewer.getCombo().setEnabled( false );
       }
 
-    if( inputData.length == 0 )
+    if( m_inputData.length == 0 )
       m_comboViewer.getCombo().setEnabled( false );
     else
     {
