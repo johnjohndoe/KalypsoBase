@@ -56,6 +56,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class ListPropertyToStringExpression extends AbstractFunctionExpression
 {
   /**
+   * Returns a concatenation of a labels of the features of a feature list. <br/>Works only for list-properties.
+   * <br/>The following argument are needed:
+   * <ul>
+   * <li>The property-name of the list-property.</li>
+   * <li>A string; used as separator berween two labels.</li>
+   * </ul>
+   * 
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#evaluate(org.kalypsodeegree.model.feature.Feature,
    *      java.util.List)
    */
