@@ -63,7 +63,7 @@ public class LogHelper
     m_log = log;
     m_monitor = monitor;
   }
-  
+
   public ISimulationMonitor getMonitor( )
   {
     return m_monitor;
@@ -71,7 +71,7 @@ public class LogHelper
 
   /**
    * @param updateMonitor
-   *          if true, the message is also set to the monitor
+   *            if true, the message is also set to the monitor
    */
   public void log( final boolean updateMonitor, final String format, final Object... args )
   {
