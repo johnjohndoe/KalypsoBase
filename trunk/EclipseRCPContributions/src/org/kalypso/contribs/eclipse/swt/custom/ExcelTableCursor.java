@@ -500,6 +500,9 @@ public class ExcelTableCursor extends TableCursor
       final Table table = getViewer().getTable();
       final TableItem row2 = getRow();
 
+      if( row2 == null )
+        return;
+
       final int row = table.indexOf( row2 ) + dy;
       final int col = getColumn() + dx;
       final int rowCount = table.getItemCount();
