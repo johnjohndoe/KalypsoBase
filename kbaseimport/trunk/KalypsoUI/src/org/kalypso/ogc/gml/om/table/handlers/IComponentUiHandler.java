@@ -41,30 +41,31 @@
 package org.kalypso.ogc.gml.om.table.handlers;
 
 import org.eclipse.jface.viewers.CellEditor;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
 
 /**
  * Implementors of this class are responsible for UI-representation of values of tuple-result components.
  * 
  * @author Dirk Kuch
+ * @author Gernot Belger
  * @see org.kalypso.observation.result.TupleResult
  * @see org.kalypso.observation.result.IComponent
  */
 public interface IComponentUiHandler
 {
-  void addColumn( DefaultTableViewer tableviewer );
-
-  CellEditor createCellEditor( );
+  CellEditor createCellEditor( final Table table );
 
   String getIdentity( );
 
   boolean isEditable( );
 
+  boolean isResizeable( );
+
   IComponent getComponent( );
 
   /**
-   * Format value for cell editor
+   * Format value for the cell editor
    * 
    * @return Must not return <code>null</code>.
    */
@@ -77,5 +78,25 @@ public interface IComponentUiHandler
    */
   Object parseValue( Object value );
 
+  /**
+   * String representation of the value. Used to show the value in a table.
+   */
   String getStringRepresentation( Object value );
+
+  /**
+   * The width of the column in pixels.
+   */
+  int getColumnWidth( );
+
+  /**
+   * The width of the column in percent of the total table width. If -1, the columnWidth property is used instead.
+   * <br/>No other validity checks are performed, so column wider than the table may be configured.<br/> If >0, the
+   * columnWidth property is interpreted as the minimum width.
+   */
+  int getColumnWidthPercent( );
+
+  int getColumnStyle( );
+
+  String getColumnLabel( );
+
 }

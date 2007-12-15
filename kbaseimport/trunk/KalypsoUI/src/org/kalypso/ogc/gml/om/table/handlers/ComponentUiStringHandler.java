@@ -43,82 +43,28 @@ package org.kalypso.ogc.gml.om.table.handlers;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * @author kuch
+ * Handles string values.
+ * 
+ * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ComponentUiStringHandler extends AbstractComponentHandler
+public class ComponentUiStringHandler extends AbstractComponentUiHandler
 {
-
-  public ComponentUiStringHandler( final IComponent component )
+  public ComponentUiStringHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
-    super( component );
-
-    mkeStyle( component );
-  }
-
-  private void mkeStyle( final IComponent component )
-  {
-    final IRestriction[] restrictions = component.getRestrictions();
-
-// final String id = component.getId();
-//
-// if( (descriptor == null) && (descType == null) )
-// {
-// return SWT.CENTER;
-// }
-//
-// final String alignment;
-// if( descriptor != null )
-// {
-// alignment = descriptor.getAlignment();
-// }
-// else if( descType != null )
-// {
-// alignment = descType.getAlignment();
-// }
-// else
-// {
-// alignment = null;
-// }
-//
-// if( alignment == null )
-// {
-// return SWT.CENTER;
-// }
-//
-// final int style = SWTUtilities.createStyleFromString( alignment );
-//
-// if( style == SWT.NONE )
-// {
-// return SWT.CENTER;
-// }
-//
-// return style;
-
+    super( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#addColumn(org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
-  @Override
-  public void addColumn( final DefaultTableViewer tableviewer )
+  public CellEditor createCellEditor( final Table table )
   {
-    super.addColumn( tableviewer );
-
-    tableviewer.addColumn( getComponent().getId(), getComponent().getName(), getComponent().getDescription(), 100, isEditable(), SWT.NONE );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor()
-   */
-  public CellEditor createCellEditor( )
-  {
-    // TODO set style
-    return new TextCellEditor( getTableViewer().getTable(), SWT.NONE );
+    return new TextCellEditor( table, SWT.NONE );
   }
 
   /**
@@ -126,16 +72,10 @@ public class ComponentUiStringHandler extends AbstractComponentHandler
    */
   public Object formatValue( final Object value )
   {
-    return value;
-  }
+    if( value == null )
+      return "";
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
-   */
-  public boolean isEditable( )
-  {
-    // FIXME
-    return true;
+    return getStringRepresentation( value );
   }
 
   /**
@@ -143,14 +83,7 @@ public class ComponentUiStringHandler extends AbstractComponentHandler
    */
   public Object parseValue( final Object value )
   {
+    // TODO: maybe handle null case differently?
     return value;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
-   */
-  public String getStringRepresentation( final Object value )
-  {
-    return value.toString();
   }
 }
