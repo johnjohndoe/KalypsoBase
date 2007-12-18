@@ -63,4 +63,6 @@ public interface IGMLSchema
   public IFeatureType getFeatureType( final QName qName );
 
   public IFeatureType[] getAllFeatureTypes( );
+  
+  public IGMLSchema[] getAdditionalSchemas();
 }

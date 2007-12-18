@@ -206,6 +206,11 @@ public class GMLSchemaFactory
   {
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
+  
+  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema )
+  {
+    return new CustomFeatureType( schema, qName, properties );
+  }
 
   /**
    * TODO: the valueQName is not needed, because we can get it from the typeHandler

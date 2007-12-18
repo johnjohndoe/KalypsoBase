@@ -103,4 +103,12 @@ public class EmptyGMLSchema implements IGMLSchema
     allSchemas.add( this );
   }
 
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#getAdditionalSchemas()
+   */
+  public IGMLSchema[] getAdditionalSchemas( )
+  {
+    return new IGMLSchema[0];
+  }
+
 }

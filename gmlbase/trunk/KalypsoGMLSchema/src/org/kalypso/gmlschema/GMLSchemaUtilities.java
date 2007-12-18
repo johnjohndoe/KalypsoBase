@@ -568,7 +568,7 @@ public class GMLSchemaUtilities
 
   /**
    * Similiar to
-   * {@link #createSchemaArchive(URL, File), but the schema is already loaded and the files are not zipped but put simply into the given directory.  }
+   * {@link #createSchemaArchive(URL, File)}, but the schema is already loaded and the files are not zipped but put simply into the given directory.  }
    */
   public static void createSchemaDir( final URL schemaURL, final SchemaDocument schemaDocument, final File archiveDir ) throws XmlException, IOException
   {
