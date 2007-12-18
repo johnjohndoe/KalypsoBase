@@ -116,8 +116,12 @@ public class ResourceUtilities
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IPath rootLocation = root.getLocation();
-    final File rootFile = rootLocation.toFile();
-    return new File( rootFile, resource.toString() );
+    //note: this works for linked files
+    IFile[] files = root.findFilesForLocation( rootLocation.append( resource ) );
+    if( files.length == 1 )
+      return files[0].getLocation().toFile();
+    else
+      throw new IllegalStateException( "More than one matching resource found for path " + resource + "!" );
   }
 
   public static IProject findProjectFromURL( final URL baseURL )
