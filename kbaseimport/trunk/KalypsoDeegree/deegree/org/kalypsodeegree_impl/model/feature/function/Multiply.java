@@ -44,13 +44,18 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
- * multiplies (double) all values whose propertyNames are handed over
+ * multiplies (double) all values whose propertyNames are handed over <br>
+ * accepts GMLXPathes <br>
+ * and constant values (double)
  * 
  * @author thuel2
  */
@@ -75,34 +80,42 @@ public class Multiply extends FeaturePropertyFunction
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
 
-    final IFeatureType featureType = feature.getFeatureType();
+    final GMLWorkspace workspace = feature.getWorkspace();
 
     double multResult = 1.0;
     Object objNumber = null;
     for( String property : m_properties.values() )
     {
+      // decide if property is a constant (double)
       try
       {
-        final QName numberName = property == null ? null : QName.valueOf( property );
-
-        if( numberName == null )
-          return null;
-
-        final IPropertyType numberProperty = featureType.getProperty( numberName );
-        if( numberProperty == null )
-          return null;
-
-        objNumber = feature.getProperty( numberProperty );
-
-        if( !(objNumber instanceof Number) )
-          return null;
-
-        multResult = multResult * ((Number) objNumber).doubleValue();
-
+        multResult = multResult * Double.parseDouble( property );
       }
-      catch( final IllegalArgumentException e )
+      catch( NumberFormatException numForE )
       {
-        e.printStackTrace();
+        try
+        {
+          GMLXPath path = new GMLXPath( feature );
+          final String[] xPathSegs = property.split( "/" );
+          for( int i = 0; i < xPathSegs.length; i++ )
+          {
+            if( xPathSegs[i] != null )
+            {
+              path = new GMLXPath( path, QName.valueOf( xPathSegs[i] ) );
+            }
+          }
+
+          objNumber = GMLXPathUtilities.query( path, workspace );
+          if( !(objNumber instanceof Number) )
+            return null;
+
+          multResult = multResult * ((Number) objNumber).doubleValue();
+        }
+        catch( GMLXPathException e )
+        {
+          e.printStackTrace();
+          return null;
+        }
       }
     }
     return multResult;
