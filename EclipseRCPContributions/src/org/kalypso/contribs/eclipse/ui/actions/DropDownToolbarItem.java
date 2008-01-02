@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -133,13 +136,17 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     {
       final Set<Command> commands = new LinkedHashSet<Command>();
 
+      /* REMARK: map ht is unsorted - sort commands by param id! */
       final Map<String, String> ht = (Map<String, String>) data;
-      for( final Map.Entry<String, String> entry : ht.entrySet() )
-      {
-        final String name = entry.getKey();
-        final String value = entry.getValue();
 
-        if( name.toLowerCase().startsWith( "command" ) )
+      final List<String> keys = new ArrayList<String>();
+      keys.addAll( ht.keySet() );
+      Collections.sort( keys );
+
+      for( final String key : keys )
+      {
+        final String value = ht.get( key );
+        if( key.toLowerCase().startsWith( "command" ) )
         {
           commands.add( commandService.getCommand( value ) );
         }
