@@ -50,9 +50,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -82,6 +82,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementReference;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.commands.ICommandImageService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.progress.UIJob;
@@ -101,13 +102,17 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   protected Command m_currentCommand;
 
+  private final IHandlerService m_handlerService;
+
   public DropDownToolbarItem( )
   {
+    // REMARK: we are using the most global service locator here, that is not
+    // the very best choice... however, how do we find a better one?
     final IWorkbench serviceLocator = PlatformUI.getWorkbench();
 
 // menuService = (IMenuService) serviceLocator.getService( IMenuService.class );
-    commandService = (ICommandService) serviceLocator.getService( ICommandService.class );
-// handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
+    m_commandService = (ICommandService) serviceLocator.getService( ICommandService.class );
+    m_handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
 // bindingService = (IBindingService) serviceLocator.getService( IBindingService.class );
   }
 
@@ -148,7 +153,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
         final String value = ht.get( key );
         if( key.toLowerCase().startsWith( "command" ) )
         {
-          commands.add( commandService.getCommand( value ) );
+          commands.add( m_commandService.getCommand( value ) );
         }
       }
 
@@ -191,7 +196,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   private Widget widget;
 
-  private ICommandService commandService;
+  private ICommandService m_commandService;
 
 // private final IHandlerService handlerService;
 // private final IMenuService menuService;
@@ -411,10 +416,10 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   {
     if( elementRef != null )
     {
-      commandService.unregisterElement( elementRef );
+      m_commandService.unregisterElement( elementRef );
       elementRef = null;
     }
-    commandService = null;
+    m_commandService = null;
     disposeOldImages();
 
     final Set<Entry<Command, IExecutionListener>> entrySet = m_commandListeners.entrySet();
@@ -479,7 +484,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
           {
             try
             {
-              m_currentCommand.execute( new ExecutionEvent() );
+              m_handlerService.executeCommand( m_currentCommand.getId(), event );
+
+// m_currentCommand.execute( new ExecutionEvent() );
             }
             catch( final ExecutionException e )
             {
@@ -488,6 +495,16 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
             catch( final NotHandledException e )
             {
               return Status.CANCEL_STATUS;
+            }
+            catch( NotDefinedException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            catch( NotEnabledException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
             }
             return Status.OK_STATUS;
           }
