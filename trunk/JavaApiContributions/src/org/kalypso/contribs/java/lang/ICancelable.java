@@ -41,15 +41,14 @@
 package org.kalypso.contribs.java.lang;
 
 /**
- * Ein Ding, was man abbrechen kann.
+ * Anything that may be canceled.<br>
+ * Used by the simulation-framework and the {@link org.kalypso.commons.java.lang.ProcessHelper}.
  * 
- * Wird zur Zeit vom org.kalypso.commons.java.lang.ProcessHelperund vom CalcService benutzt.
- * 
- * @author belger
+ * @author Gernot Belger
  */
 public interface ICancelable
 {
-  public void cancel();
+  public void cancel( );
 
-  public boolean isCanceled();
+  public boolean isCanceled( );
 }

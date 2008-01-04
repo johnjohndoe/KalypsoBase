@@ -40,13 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.operation;
 
-
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
@@ -73,14 +74,19 @@ public final class RunnableContextHelper
     {
       m_context.run( fork, cancelable, runnable );
     }
+    catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
+    }
     catch( final Throwable t )
     {
-      // TODO log stacktrace somewhere
-      return StatusUtilities.statusFromThrowable( t );
+      final IStatus status = StatusUtilities.statusFromThrowable( t );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
+      return status;
     }
 
     if( runnable instanceof CoreRunnableWrapper )
-      return ( (CoreRunnableWrapper)runnable ).getStatus();
+      return ((CoreRunnableWrapper) runnable).getStatus();
 
     return Status.OK_STATUS;
   }
@@ -100,8 +106,7 @@ public final class RunnableContextHelper
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus}object.
    */
-  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable,
-      final IRunnableWithProgress runnable )
+  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
   {
     final RunnableContextHelper helper = new RunnableContextHelper( context );
     return helper.execute( fork, cancelable, runnable );
@@ -111,8 +116,7 @@ public final class RunnableContextHelper
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus} object.
    */
-  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable,
-      final ICoreRunnableWithProgress runnable )
+  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable, final ICoreRunnableWithProgress runnable )
   {
     final RunnableContextHelper helper = new RunnableContextHelper( context );
     return helper.execute( fork, cancelable, runnable );
@@ -121,8 +125,7 @@ public final class RunnableContextHelper
   /**
    * Runs a runnable in a progress monitor dialog.
    */
-  public final static IStatus executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable,
-      final IErrorHandler errorHandler )
+  public final static IStatus executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable, final IErrorHandler errorHandler )
   {
     // run the execute method in a Progress-Dialog
     final ProgressMonitorDialog dialog = new ProgressMonitorDialog( shell );
