@@ -293,9 +293,9 @@ public final class StatusUtilities
   /**
    * Creates a ok-status with given message and null throwable.
    */
-  public static IStatus createOkStatus( final String warningMessage )
+  public static IStatus createOkStatus( final String message )
   {
-    return createStatus( IStatus.OK, warningMessage, null );
+    return createStatus( IStatus.OK, message, null );
   }
 
   /**
