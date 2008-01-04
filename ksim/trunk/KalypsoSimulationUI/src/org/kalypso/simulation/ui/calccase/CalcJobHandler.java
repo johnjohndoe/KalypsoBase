@@ -79,6 +79,7 @@ import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
+import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -221,7 +222,7 @@ public class CalcJobHandler
       {
         if( m_jobID != null )
         {
-          if( !"true".equals( Platform.getDebugOption( "org.kalypso.simulation.ui/debug/keepSimulationFiles" ) ) )
+          if( !Boolean.valueOf( Platform.getDebugOption( IKalypsoSimulationUIConstants.DEBUG_KEEP_SIM_FILES ) ) )
           {
             m_calcService.disposeJob( m_jobID );
 
@@ -336,7 +337,7 @@ public class CalcJobHandler
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Input input : inputList )
       {
-//        System.out.println();
+// System.out.println();
         final String inputPath = input.getPath();
         final String inputId = input.getId();
         final SimulationDescription description = inputdescriptionMap.get( inputId );

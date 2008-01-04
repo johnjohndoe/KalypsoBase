@@ -42,7 +42,6 @@ package org.kalypso.simulation.core.internal.local;
 
 import javax.activation.DataHandler;
 
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
@@ -63,15 +62,15 @@ public class LocalSimulationService implements ISimulationService
 {
   private final ISimulationService m_service;
 
-  private LocalSimulationFactory m_simulationFactory;
+  private final LocalSimulationFactory m_simulationFactory;
 
-  private LocalURLCatalog m_urlCatalog;
+  private final LocalURLCatalog m_urlCatalog;
 
   public LocalSimulationService( )
   {
     m_simulationFactory = new LocalSimulationFactory();
     m_urlCatalog = new LocalURLCatalog();
-    m_service = new QueuedSimulationService( m_simulationFactory, m_urlCatalog, 2, 2000, FileUtilities.TMP_DIR );
+    m_service = new QueuedSimulationService( m_simulationFactory, m_urlCatalog, 2, 2000 );
   }
 
   /**
@@ -85,7 +84,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#disposeJob(java.lang.String)
    */
-  public void disposeJob( String jobID ) throws SimulationException
+  public void disposeJob( final String jobID ) throws SimulationException
   {
     m_service.disposeJob( jobID );
   }
@@ -93,7 +92,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getCurrentResults(java.lang.String)
    */
-  public String[] getCurrentResults( String jobID ) throws SimulationException
+  public String[] getCurrentResults( final String jobID ) throws SimulationException
   {
     return m_service.getCurrentResults( jobID );
   }
@@ -101,7 +100,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getDeliveringResults(java.lang.String)
    */
-  public SimulationDescription[] getDeliveringResults( String typeID ) throws SimulationException
+  public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     return m_service.getDeliveringResults( typeID );
   }
@@ -109,7 +108,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getJob(java.lang.String)
    */
-  public SimulationInfo getJob( String jobID ) throws SimulationException
+  public SimulationInfo getJob( final String jobID ) throws SimulationException
   {
     return m_service.getJob( jobID );
   }
@@ -133,7 +132,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getRequiredInput(java.lang.String)
    */
-  public SimulationDescription[] getRequiredInput( String typeID ) throws SimulationException
+  public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     return m_service.getRequiredInput( typeID );
   }
@@ -141,7 +140,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getSchema(java.lang.String)
    */
-  public DataHandler getSchema( String namespace ) throws SimulationException
+  public DataHandler getSchema( final String namespace ) throws SimulationException
   {
     return m_service.getSchema( namespace );
   }
@@ -149,7 +148,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java.lang.String)
    */
-  public long getSchemaValidity( String namespace ) throws SimulationException
+  public long getSchemaValidity( final String namespace ) throws SimulationException
   {
     return m_service.getSchemaValidity( namespace );
   }
@@ -167,7 +166,7 @@ public class LocalSimulationService implements ISimulationService
    *      javax.activation.DataHandler, org.kalypso.simulation.core.SimulationDataPath[],
    *      org.kalypso.simulation.core.SimulationDataPath[])
    */
-  public SimulationInfo startJob( String typeID, String description, DataHandler zipHandler, SimulationDataPath[] input, SimulationDataPath[] output ) throws SimulationException
+  public SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
   {
     return m_service.startJob( typeID, description, zipHandler, input, output );
   }
@@ -175,7 +174,7 @@ public class LocalSimulationService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults(java.lang.String)
    */
-  public DataHandler transferCurrentResults( String jobID ) throws SimulationException
+  public DataHandler transferCurrentResults( final String jobID ) throws SimulationException
   {
     return m_service.transferCurrentResults( jobID );
   }

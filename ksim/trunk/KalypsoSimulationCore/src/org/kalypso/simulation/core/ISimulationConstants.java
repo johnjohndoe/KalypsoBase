@@ -53,11 +53,17 @@ public interface ISimulationConstants
     FINISHED,
     CANCELED,
     ERROR
-  };
+  }
 
   public final String OUTPUT_DIR_NAME = "output";
 
   public final String RESULT_DIR_NAME = "Ergebnisse";
 
   public final String CALC_DIR_NAME = "calc";
+
+  /**
+   * The directory, where all temporary simulation files are stored. If not set, <code>java.io.tmpdir</code> will be
+   * used instead.
+   */
+  public final String SYSPROP_SIM_DIR = "kalypso.simulation.dir";
 }

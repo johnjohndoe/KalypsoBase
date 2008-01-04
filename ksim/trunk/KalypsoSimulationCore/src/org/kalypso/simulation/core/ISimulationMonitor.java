@@ -45,7 +45,7 @@ import org.kalypso.contribs.java.lang.ICancelable;
 /**
  * Überwachungsmonitor für den {@link org.kalypso.services.calculation.job.ICalcJob}.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public interface ISimulationMonitor extends ICancelable
 {

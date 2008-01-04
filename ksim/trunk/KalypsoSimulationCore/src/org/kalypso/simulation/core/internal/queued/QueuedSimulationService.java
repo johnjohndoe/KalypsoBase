@@ -41,6 +41,7 @@
 package org.kalypso.simulation.core.internal.queued;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -56,7 +57,6 @@ import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
@@ -66,6 +66,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
@@ -102,15 +103,12 @@ public class QueuedSimulationService implements ISimulationService
 
   private final IUrlCatalog m_catalog;
 
-  private final File m_tmpDir;
-
-  public QueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
+  public QueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod )
   {
     m_calcJobFactory = factory;
     m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
-    m_tmpDir = tmpDir;
   }
 
   /**
@@ -214,9 +212,9 @@ public class QueuedSimulationService implements ISimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+      for( final Object element : m_threads )
       {
-        final SimulationThread cjt = (SimulationThread) jIt.next();
+        final SimulationThread cjt = (SimulationThread) element;
 
         if( cjt.getJobBean().getId().equals( jobID ) )
           return cjt;
@@ -259,12 +257,20 @@ public class QueuedSimulationService implements ISimulationService
       if( id == -1 )
         id = m_threads.size();
 
+      File tmpdir;
+      try
+      {
+        tmpdir = SimulationUtilitites.createSimulationTmpDir( "" + id );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        throw new SimulationException( "Temporäres Simulationsverzeichnis konnte nicht erzeugt werden", e );
+      }
+
       final ModelspecData modelspec = getModelspec( typeID );
 
       final ISimulation job = m_calcJobFactory.createJob( typeID );
-
-      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
-      tmpdir.deleteOnExit();
 
       cjt = new SimulationThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output, tmpdir );
 
@@ -288,9 +294,9 @@ public class QueuedSimulationService implements ISimulationService
       // count running thread
       int runningCount = 0;
       int waitingCount = 0;
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+      for( final Object element : m_threads )
       {
-        final SimulationThread cjt = (SimulationThread) jIt.next();
+        final SimulationThread cjt = (SimulationThread) element;
         if( cjt.isAlive() )
           runningCount++;
 
@@ -316,9 +322,9 @@ public class QueuedSimulationService implements ISimulationService
       }
 
       // start one waiting job, if maximum is not reached
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+      for( final Object element : m_threads )
       {
-        final SimulationThread cjt = (SimulationThread) jIt.next();
+        final SimulationThread cjt = (SimulationThread) element;
 
         final SimulationInfo jobBean = cjt.getJobBean();
         if( jobBean.getState() == ISimulationConstants.STATE.WAITING )
@@ -342,9 +348,9 @@ public class QueuedSimulationService implements ISimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
+      for( final Object element : m_threads )
       {
-        final SimulationThread cjt = (SimulationThread) iter.next();
+        final SimulationThread cjt = (SimulationThread) element;
         final SimulationInfo jobBean = cjt.getJobBean();
         disposeJob( jobBean.getId() );
       }
@@ -367,7 +373,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
    */
-  public String[] getCurrentResults( String jobID ) throws SimulationException
+  public String[] getCurrentResults( final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
     return thread.getCurrentResults();
@@ -391,7 +397,7 @@ public class QueuedSimulationService implements ISimulationService
       e.printStackTrace();
       throw new SimulationException( "Unable to initialize jaxb unmarshaller", e );
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
       throw new SimulationException( "Error while reading sim-service specs", e );

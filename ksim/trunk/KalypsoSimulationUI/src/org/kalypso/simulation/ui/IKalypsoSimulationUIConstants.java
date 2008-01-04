@@ -48,4 +48,6 @@ public interface IKalypsoSimulationUIConstants
   public static final String PROGNOSE_PERSPECTIVE = "org.kalypso.simulation.ui.startscreen.PrognosePerspective";
 
   public static final String ID_PROGNOSE_VIEW = "org.kalypso.view.prognose";
+
+  public static final String DEBUG_KEEP_SIM_FILES = "org.kalypso.simulation.ui/debug/keepSimulationFiles";
 }
