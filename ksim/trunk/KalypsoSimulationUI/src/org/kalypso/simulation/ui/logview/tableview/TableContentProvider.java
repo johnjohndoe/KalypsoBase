@@ -47,12 +47,13 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-/*
+/**
  * The content provider class is responsible for providing objects to the view. It can wrap existing objects in adapters
  * or simply return objects as-is. These objects may be sensitive to the current input of the view, or ignore it and
- * always show the same content (like Task List, for example). @author Madan
+ * always show the same content (like Task List, for example).
+ * 
+ * @author Madan
  */
-
 public class TableContentProvider implements IStructuredContentProvider
 {
   private File logFile = null;
@@ -68,7 +69,7 @@ public class TableContentProvider implements IStructuredContentProvider
 
   }
 
-  public TableContentProvider( TableViewer viewer, IFile file )
+  public TableContentProvider( final TableViewer viewer, final IFile file )
   {
     this.viewer = viewer;
     if( file != null )
@@ -77,12 +78,12 @@ public class TableContentProvider implements IStructuredContentProvider
     }
   }
 
-  public void setLogFile( String file )
+  public void setLogFile( final String file )
   {
     setLogFile( new File( file ) );
   }
 
-  public void setLogFile( File file )
+  public void setLogFile( final File file )
   {
     this.logFile = file;
   }
@@ -124,7 +125,7 @@ public class TableContentProvider implements IStructuredContentProvider
     return logFileReader.getRowCount();
   }
 
-  public Object[] getElements( Object parent )
+  public Object[] getElements( final Object parent )
   {
     if( logFileReader == null && logIFile != null )
     {
@@ -134,7 +135,7 @@ public class TableContentProvider implements IStructuredContentProvider
     return new Object[0];
   }
 
-  public void inputChanged( Viewer v, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer v, final Object oldInput, final Object newInput )
   {
     // nothing?
   }
