@@ -65,6 +65,9 @@ public class DefaultTableViewer extends TableViewer
 
   public static final String COLUMN_PROP_WIDTH_PERCENT = "columnWidthPercent";
 
+  /** HACK: stop looping inside the resized handler */
+  protected static boolean isResizing = false;
+
   /**
    * True when this viewer is being disposed. This information is held so that removeAllColumns does not remove the
    * columns if this viewer is being disposed, it else leads to conflicts with SWT
@@ -100,28 +103,42 @@ public class DefaultTableViewer extends TableViewer
       @Override
       public void controlResized( final ControlEvent e )
       {
-        final Table table = getTable();
-        final int totalWidth = table.getSize().x;
-
-        final TableColumn[] columns = table.getColumns();
-        for( final TableColumn tableColumn : columns )
+        try
         {
-          if( tableColumn.getText() == null )
-            continue;
+          // HACK: packing inside this code causes eventually an endless loop; so we force that this code is
+          // not called from itself
+          if( isResizing )
+            return;
 
-          final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
-          final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
+          isResizing = true;
 
-          if( minWidth == -1 )
-            tableColumn.pack();
-          else if( widthPercent == -1 )
-            tableColumn.setWidth( minWidth );
-          else
+          final Table table = getTable();
+          final int totalWidth = table.getSize().x;
+
+          final TableColumn[] columns = table.getColumns();
+          for( final TableColumn tableColumn : columns )
           {
-            final int width = totalWidth * widthPercent / 100;
-            final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
-            tableColumn.setWidth( widthToSet );
+            if( tableColumn.getText() == null )
+              continue;
+
+            final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
+            final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
+
+            if( minWidth == -1 )
+              tableColumn.pack();
+            else if( widthPercent == -1 )
+              tableColumn.setWidth( minWidth );
+            else
+            {
+              final int width = totalWidth * widthPercent / 100;
+              final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
+              tableColumn.setWidth( widthToSet );
+            }
           }
+        }
+        finally
+        {
+          isResizing = false;
         }
       }
     } );
@@ -165,6 +182,22 @@ public class DefaultTableViewer extends TableViewer
     tc.setText( title );
     tc.setToolTipText( tooltip );
 
+    /* Refresh column properties */
+    final Object[] columnProperties = getColumnProperties();
+    Object[] oldColumnProperties;
+    if( columnProperties == null )
+      oldColumnProperties = new Object[] {};
+    else
+      oldColumnProperties = columnProperties;
+
+    final String[] newColumnProperties = new String[oldColumnProperties.length + 1];
+    for( int i = 0; i < oldColumnProperties.length; i++ )
+      newColumnProperties[i] = oldColumnProperties[i] == null ? null : oldColumnProperties[i].toString();
+
+    newColumnProperties[oldColumnProperties.length] = name;
+
+    setColumnProperties( newColumnProperties );
+
     return tc;
   }
 
@@ -178,26 +211,6 @@ public class DefaultTableViewer extends TableViewer
     for( final TableColumn element : columns )
       element.dispose();
 
-    refreshColumnProperties();
-  }
-
-  /**
-   * Refreshes the column properties according to the current list of columns
-   * 
-   * @see org.eclipse.jface.viewers.TableViewer#getColumnProperties()
-   */
-  public void refreshColumnProperties( )
-  {
-    final Table table = getTable();
-    if( m_disposing || table.isDisposed() )
-      return;
-
-    final TableColumn[] columns = table.getColumns();
-    final String[] properties = new String[columns.length];
-
-    for( int i = 0; i < properties.length; i++ )
-      properties[i] = columns[i].getData( COLUMN_PROP_NAME ).toString();
-
-    setColumnProperties( properties );
+    setColumnProperties( new String[] {} );
   }
 }
