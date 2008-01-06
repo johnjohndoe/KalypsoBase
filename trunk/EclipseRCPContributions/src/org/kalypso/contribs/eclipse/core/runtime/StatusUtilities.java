@@ -263,7 +263,15 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.getID(), 0, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), -1, message, t );
+  }
+
+  /**
+   * Creates a status with given severity, message, code and throwable
+   */
+  public static IStatus createStatus( final int severity, final int code, final String message, final Throwable t )
+  {
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), code, message, t );
   }
 
   /**
