@@ -103,43 +103,38 @@ public class DefaultTableViewer extends TableViewer
       @Override
       public void controlResized( final ControlEvent e )
       {
-        try
+        // HACK: packing inside this code causes eventually an endless loop; so we force that this code is
+        // not called from itself
+        if( isResizing )
+          return;
+
+        isResizing = true;
+
+        final Table table = getTable();
+        final int totalWidth = table.getSize().x;
+
+        final TableColumn[] columns = table.getColumns();
+        for( final TableColumn tableColumn : columns )
         {
-          // HACK: packing inside this code causes eventually an endless loop; so we force that this code is
-          // not called from itself
-          if( isResizing )
-            return;
+          if( tableColumn.getText() == null )
+            continue;
 
-          isResizing = true;
+          final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
+          final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
 
-          final Table table = getTable();
-          final int totalWidth = table.getSize().x;
-
-          final TableColumn[] columns = table.getColumns();
-          for( final TableColumn tableColumn : columns )
+          if( minWidth == -1 )
+            tableColumn.pack();
+          else if( widthPercent == -1 )
+            tableColumn.setWidth( minWidth );
+          else
           {
-            if( tableColumn.getText() == null )
-              continue;
-
-            final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
-            final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
-
-            if( minWidth == -1 )
-              tableColumn.pack();
-            else if( widthPercent == -1 )
-              tableColumn.setWidth( minWidth );
-            else
-            {
-              final int width = totalWidth * widthPercent / 100;
-              final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
-              tableColumn.setWidth( widthToSet );
-            }
+            final int width = totalWidth * widthPercent / 100;
+            final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
+            tableColumn.setWidth( widthToSet );
           }
         }
-        finally
-        {
-          isResizing = false;
-        }
+
+        isResizing = false;
       }
     } );
   }
