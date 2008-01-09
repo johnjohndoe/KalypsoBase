@@ -43,6 +43,7 @@ package org.kalypso.contribs.eclipse.jface.wizard;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -72,7 +73,7 @@ public class WizardDialog2 extends WizardDialog
   {
     m_doRememberSize = doRemember;
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
    */
@@ -82,11 +83,22 @@ public class WizardDialog2 extends WizardDialog
     final IDialogSettings wizardSettings = getWizard().getDialogSettings();
     if( !m_doRememberSize || wizardSettings == null )
       return super.getDialogBoundsSettings();
-    
+
     final IDialogSettings boundsSettings = wizardSettings.getSection( SECTION_BOUNDS );
     if( boundsSettings == null )
       return wizardSettings.addNewSection( SECTION_BOUNDS );
 
     return boundsSettings;
+  }
+
+  @Override
+  /**
+   * Overridden in order to make public.
+   * 
+   * @see WizardDialog#getButton(int id)
+   */
+  public Button getButton( final int id )
+  {
+    return super.getButton( id );
   }
 }

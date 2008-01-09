@@ -44,9 +44,12 @@ import org.eclipse.jface.wizard.IWizardContainer2;
 
 /**
  * Adds publisher-observer bahaviour to {@link org.eclipse.jface.wizard.IWizardContainer2}.
- *
+ * 
+ * @deprecated WizardDialog implements now the {@link org.eclipse.jface.dialogs.IPageChangedListener} interface. Use
+ *             that instead.
  * @author belger
  */
+@Deprecated
 public interface IWizardContainer3 extends IWizardContainer2
 {
   public void addWizardContainerListener( final IWizardContainerListener l );
