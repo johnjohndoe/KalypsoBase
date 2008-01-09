@@ -98,22 +98,6 @@ public final class DateUtilities
     return cal.getTime();
   }
 
-  /**
-   * Convert a date from one timezone to another timezone
-   */
-  public final static Date convert( final Date d, final TimeZone source, final TimeZone dest )
-  {
-    calSrc.setTimeZone( source );
-    calDest.setTimeZone( dest );
-
-    calSrc.setTimeInMillis( d.getTime() );
-
-    calDest.clear();
-    calDest.set( calSrc.get( Calendar.YEAR ), calSrc.get( Calendar.MONTH ), calSrc.get( Calendar.DAY_OF_MONTH ), calSrc.get( Calendar.HOUR_OF_DAY ), calSrc.get( Calendar.MINUTE ), calSrc.get( Calendar.SECOND ) );
-
-    return calDest.getTime();
-  }
-
   public static Date toDate( final XMLGregorianCalendar xmlGregorianCalendar )
   {
     if( xmlGregorianCalendar == null )
@@ -123,13 +107,19 @@ public final class DateUtilities
     return greg.getTime();
   }
 
+  /**
+   * Converts a date into a {@link XMLGregorianCalendar}. <br>
+   * Important: it is assumed, that all dates in memory are in UTC timezone. Never do anything else!
+   */
   public static XMLGregorianCalendar toXMLGregorianCalendar( final Date date )
   {
     if( date == null )
       return null;
 
-    final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
+    final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance( timeZone );
     calendar.setTime( date );
+
     return DATATYPE_FACTORY.newXMLGregorianCalendar( calendar );
   }
 }
