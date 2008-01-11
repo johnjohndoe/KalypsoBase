@@ -69,13 +69,9 @@ public final class DateUtilities
     }
   }
 
-  private static Calendar calSrc = Calendar.getInstance();
-
-  private static Calendar calDest = Calendar.getInstance();
-
   private DateUtilities( )
   {
-    // not intended to be instanciated
+    // not intended to be instantiated
   }
 
   /**
@@ -116,7 +112,7 @@ public final class DateUtilities
     if( date == null )
       return null;
 
-    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
+    final TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
     final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance( timeZone );
     calendar.setTime( date );
 
