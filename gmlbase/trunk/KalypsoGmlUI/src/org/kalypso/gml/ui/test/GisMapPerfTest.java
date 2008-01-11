@@ -54,7 +54,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.performance.TimeLogger;
-import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -219,11 +218,8 @@ public class GisMapPerfTest extends TestCase
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( final IKalypsoTheme theme : themes )
     {
-      if( theme instanceof IPooledObject )
-      {
-        if( !((IPooledObject) theme).isLoaded() )
-          return false;
-      }
+      if( !theme.isLoaded() )
+        return false;
     }
     return true;
   }
