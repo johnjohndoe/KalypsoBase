@@ -41,7 +41,7 @@
 package org.kalypso.simulation.core;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface ISimulationConstants
 {
