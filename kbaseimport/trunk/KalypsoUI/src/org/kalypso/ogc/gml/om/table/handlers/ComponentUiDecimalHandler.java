@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * Handles decimal values.
+ * Handles decimal values (i.e. BigDecimal in java).
  * 
  * @author Dirk Kuch
  * @author Gernot Belger
