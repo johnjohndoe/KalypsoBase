@@ -60,12 +60,10 @@ public class ContentRestrictionFactory
     final NoFixedFacet[] enumerationArray = restriction.getEnumerationArray();
     if( enumerationArray.length > 0 )
     {
-      Map<Object, ILanguageAnnontationProvider> map = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+      final Map<Object, ILanguageAnnontationProvider> map = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
 
-      for( int i = 0; i < enumerationArray.length; i++ )
+      for( final NoFixedFacet facet : enumerationArray )
       {
-        final NoFixedFacet facet = enumerationArray[i];
-
         final String stringValue = facet.getValue().getStringValue();
 
         final String platformLang = AnnotationAdapterFactory.getPlatformLang();
@@ -81,9 +79,8 @@ public class ContentRestrictionFactory
     if( patternArray.length > 0 )
     {
       final List<String> list = new ArrayList<String>();
-      for( int i = 0; i < patternArray.length; i++ )
+      for( final Pattern pattern : patternArray )
       {
-        final Pattern pattern = patternArray[i];
         final String stringValue = pattern.getValue().getStringValue();
         list.add( stringValue );
       }
@@ -110,51 +107,56 @@ public class ContentRestrictionFactory
     if( restriction.getMinExclusiveArray().length > 0 )
       result.add( new MinExclusiveRestriction( getMaxAsDouble( restriction.getMinExclusiveArray() ) ) );
 
+    // fraction digits
+
+    if( restriction.getFractionDigitsArray().length > 0 )
+      result.add( new FractionDigitRestriction( getMaxAsInt( restriction.getFractionDigitsArray() ) ) );
+
     return result.toArray( new IRestriction[result.size()] );
   }
 
-  private static int getMinAsInt( NumFacet[] array )
+  private static int getMinAsInt( final NumFacet[] array )
   {
     int result = Integer.MAX_VALUE;
-    for( int i = 0; i < array.length; i++ )
+    for( final NumFacet element : array )
     {
-      final int value = intValue( array[i] );
+      final int value = intValue( element );
       if( value < result )
         result = value;
     }
     return result;
   }
 
-  private static int getMaxAsInt( NumFacet[] array )
+  private static int getMaxAsInt( final NumFacet[] array )
   {
     int result = Integer.MIN_VALUE;
-    for( int i = 0; i < array.length; i++ )
+    for( final NumFacet element : array )
     {
-      final int value = intValue( array[i] );
+      final int value = intValue( element );
       if( value > result )
         result = value;
     }
     return result;
   }
 
-  private static double getMinAsDouble( Facet[] facets )
+  private static double getMinAsDouble( final Facet[] facets )
   {
     double result = Double.MAX_VALUE;
-    for( int i = 0; i < facets.length; i++ )
+    for( final Facet element : facets )
     {
-      final double value = doubleValue( facets[i] );
+      final double value = doubleValue( element );
       if( value < result )
         result = value;
     }
     return result;
   }
 
-  private static double getMaxAsDouble( Facet[] facets )
+  private static double getMaxAsDouble( final Facet[] facets )
   {
     double result = -Double.MAX_VALUE;
-    for( int i = 0; i < facets.length; i++ )
+    for( final Facet element : facets )
     {
-      final double value = doubleValue( facets[i] );
+      final double value = doubleValue( element );
       if( value > result )
         result = value;
     }
@@ -164,16 +166,18 @@ public class ContentRestrictionFactory
   /**
    * @param facet
    */
-  private static int intValue( NumFacet facet )
+  private static int intValue( final NumFacet facet )
   {
     final XmlAnySimpleType value = facet.getValue();
     return Integer.parseInt( value.getStringValue() );
   }
 
   /**
+   * TODO: change to big decimal
+   * 
    * @param facet
    */
-  private static double doubleValue( Facet facet )
+  private static double doubleValue( final Facet facet )
   {
     return Double.parseDouble( facet.getValue().getStringValue() );
   }
