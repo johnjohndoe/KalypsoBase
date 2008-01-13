@@ -225,12 +225,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final ModellEventListener m_modellistener = new ModellEventListener()
   {
-
     public void onModellChange( ModellEvent modellEvent )
     {
       refreshControl();
     }
-
   };
 
   public CoverageManagementWidget( )
@@ -946,6 +944,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final Shell shell = event.display.getActiveShell();
 
+    // FIXME: must be removed from here! The widget is a general widget and should never depend
+    // on another plug-in
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
 
