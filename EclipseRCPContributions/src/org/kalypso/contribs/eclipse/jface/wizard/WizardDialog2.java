@@ -40,19 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.ModalRunnableContext;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
 /**
  * Extension of the {@link WizardDialog}.
  * <p>
- * Exnhances the existing class by the following features:
+ * Enhances the existing class by the following features:
  * </p>
  * <ul>
  * <li>remember the size of the dialog in the wizard' s dialog settings</li>
+ * <li>allow access to buttons</li>
+ * <li>allow running operations without blocking the user interface</li>
  * </ul>
  * 
  * @author Gernot Belger
@@ -100,5 +108,55 @@ public class WizardDialog2 extends WizardDialog
   public Button getButton( final int id )
   {
     return super.getButton( id );
+  }
+
+  /**
+   * Executes the given runnable in this dialog (similar to
+   * {@link org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean, org.eclipse.jface.operation.IRunnableWithProgress)},
+   * but does NOT block the user interface while the operation is running.
+   */
+  public IStatus executeUnblocked( final boolean cancelable, final ICoreRunnableWithProgress runnable )
+  {
+    final ProgressMonitorPart progressMonitorPart = (ProgressMonitorPart) getProgressMonitor();
+    final boolean needsProgressMonitor = getWizard().needsProgressMonitor();
+    final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
+
+    try
+    {
+      /* Disable buttons */
+      enableButton( IDialogConstants.FINISH_ID, false );
+      if( !cancelable )
+        enableButton( IDialogConstants.CANCEL_ID, false );
+
+      if( needsProgressMonitor )
+      {
+        progressMonitorPart.attachToCancelComponent( cancelButton );
+        progressMonitorPart.setVisible( true );
+      }
+
+      final ModalRunnableContext rc = new ModalRunnableContext( progressMonitorPart, getShell().getDisplay() );
+      return RunnableContextHelper.execute( rc, true, cancelable, runnable );
+    }
+    finally
+    {
+      // shell may be disposed, if dialog was canceled
+      final Shell shell = getShell();
+      if( shell != null && !shell.isDisposed() )
+      {
+        enableButton( IDialogConstants.CANCEL_ID, true );
+
+        progressMonitorPart.setVisible( false );
+        progressMonitorPart.removeFromCancelComponent( cancelButton );
+
+        updateButtons();
+      }
+    }
+  }
+
+  private void enableButton( final int buttonId, final boolean enabled )
+  {
+    final Button button = getButton( buttonId );
+    if( button != null )
+      button.setEnabled( enabled );
   }
 }
