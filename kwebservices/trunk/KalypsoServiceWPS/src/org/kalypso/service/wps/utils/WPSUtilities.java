@@ -47,12 +47,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.net.ProxyUtilities;
@@ -98,8 +96,7 @@ public class WPSUtilities
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ) );
-    client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( 0, true ) );
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
 
     /* All certificates should be accepted! */
     SSLUtilities.acceptSelfSignedCertificatesSSL();
