@@ -60,14 +60,16 @@ public class ElementUpdateHelper
    * with chart handler state
    */
   @SuppressWarnings("unused")
-  public static void updateElement( UIElement element, Map< ? , ? > parameters, Class< ? > handlerClass )
+  public static void updateElement( final UIElement element, final Map< ? , ? > parameters, final Class< ? > handlerClass )
   {
+    // TODO: we get NPEs here
+
     // chart finden,
-    IWorkbenchPart activePart = Workbench.getInstance().getActiveWorkbenchWindow().getPartService().getActivePart();
+    final IWorkbenchPart activePart = Workbench.getInstance().getActiveWorkbenchWindow().getPartService().getActivePart();
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {
-      IChartDragHandler activeHandler = chartPart.getChartDragHandler().getActiveHandler();
+      final IChartDragHandler activeHandler = chartPart.getChartDragHandler().getActiveHandler();
       if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
       {
         element.setChecked( true );
