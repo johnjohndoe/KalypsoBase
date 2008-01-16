@@ -13,20 +13,18 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * ExcelAdapter enables Copy-Paste Clipboard functionality on JTables. The clipboard data format
- * used by the adapter is compatible with the clipboard format used by Excel. This provides for
- * clipboard interoperability between enabled JTables and Excel.
+ * ExcelAdapter enables Copy-Paste Clipboard functionality on JTables. The clipboard data format used by the adapter is
+ * compatible with the clipboard format used by Excel. This provides for clipboard interoperability between enabled
+ * JTables and Excel.
  * <p>
- * This code is adapted from the Online Article at {see
- * http://www.javaworld.com/javaworld/javatips/jw-javatip77.html}
+ * This code is adapted from the Online Article at {see http://www.javaworld.com/javaworld/javatips/jw-javatip77.html}
  */
 public final class ExcelClipboardAdapter
 {
   private final TableViewer m_viewer;
 
   /**
-   * The Excel Adapter is constructed with a JTable on which it enables Copy-Paste and acts as a
-   * Clipboard listener.
+   * The Excel Adapter is constructed with a JTable on which it enables Copy-Paste and acts as a Clipboard listener.
    */
   public ExcelClipboardAdapter( final TableViewer viewer )
   {
@@ -34,8 +32,8 @@ public final class ExcelClipboardAdapter
   }
 
   /**
-   * Copies the currently selected TableItems into the System-Clipboard. Non continous selections
-   * will produce a continous paste.
+   * Copies the currently selected TableItems into the System-Clipboard. Non continuous selections will produce a
+   * continuous paste.
    */
   public void doCopy( )
   {
@@ -113,13 +111,11 @@ public final class ExcelClipboardAdapter
   {
     try
     {
-      return (String)(Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this )
-          .getTransferData( DataFlavor.stringFlavor ));
+      return (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      Logger.getLogger( getClass().getName() ).log( Level.SEVERE,
-          "Zwischenablage konnte nicht ausgelesen werden.", e );
+      Logger.getLogger( getClass().getName() ).log( Level.SEVERE, "Zwischenablage konnte nicht ausgelesen werden.", e );
 
       return "";
     }
