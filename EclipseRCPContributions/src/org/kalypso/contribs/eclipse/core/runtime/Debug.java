@@ -104,7 +104,7 @@ public class Debug
   }
 
   /**
-   * Convienience method for {@link #printf(IStatus.INFO, String, Object...)}-
+   * Convenience method for {@link #printf(IStatus.INFO, String, Object...)}-
    */
   public void printf( final String format, final Object... args )
   {
