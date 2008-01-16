@@ -46,8 +46,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * Tagging interface for classes representing a simBase:_Model
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public interface IModel extends IFeatureWrapper2
 {
+  public static final String NO_VERSION = null;
+
+  public String getVersion( );
 }
