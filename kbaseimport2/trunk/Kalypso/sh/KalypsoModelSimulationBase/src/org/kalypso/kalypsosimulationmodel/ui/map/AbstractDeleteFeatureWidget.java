@@ -53,9 +53,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractDeleteFeatureWidget extends AbstractSelectFeatureWidget
 {
-  public AbstractDeleteFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnameToDelete, final QName geomQName )
+  public AbstractDeleteFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName[] qnamesToDelete, final QName geomQName )
   {
-    super( name, toolTip, allowMultipleSelection, qnameToDelete, geomQName );
+    super( name, toolTip, allowMultipleSelection, qnamesToDelete, geomQName );
   }
 
   /**
