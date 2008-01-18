@@ -126,7 +126,11 @@ public class GMLSchemaUtilities
 
   private static final int CONSTRUCTION_ANYTYPE = 6;
 
-  private static IUrlResolver m_urlUtitilies = new UrlUtilities();
+  private static final IUrlResolver m_urlUtitilies = new UrlUtilities();
+
+  private static final Map<QName, Map<String, FindSubstitutesGMLSchemaVisitor>> m_substitutesResultMap = new HashMap<QName, Map<String, FindSubstitutesGMLSchemaVisitor>>();
+
+  private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
 
   /**
    * @param substitueeName
@@ -139,10 +143,32 @@ public class GMLSchemaUtilities
       return true;
 
     final IFeatureType substitutionGroupFT = type.getSubstitutionGroupFT();
+    final boolean substitutesResult;
     if( substitutionGroupFT == null )
-      return false;
+      substitutesResult = false;
+    else
+    {
+      final QName keyQName = substitutionGroupFT.getQName();
+      Map<QName, Boolean> substitutesList = m_substitutesCache.get( keyQName );
+      if( substitutesList == null )
+      {
+        substitutesList = new HashMap<QName, Boolean>();
+        m_substitutesCache.put( keyQName, substitutesList );
+      }
 
-    return substitutes( substitutionGroupFT, substitueeName );
+      final Boolean cachedResult = substitutesList.get( substitueeName );
+      if( cachedResult != null )
+      {
+        substitutesResult = cachedResult;
+      }
+      else
+      {
+        substitutesResult = substitutes( substitutionGroupFT, substitueeName );
+        substitutesList.put( substitueeName, substitutesResult );
+      }
+    }
+
+    return substitutesResult;
   }
 
   /**
@@ -979,10 +1005,25 @@ public class GMLSchemaUtilities
     if( contextSchema == null )
       contextSchema = ft.getGMLSchema();
 
-    // query for it
-    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( ft, includeAbstract, inclusiveThis );
-    contextSchema.accept( visitor );
-    return visitor.getSubstitutes();
+    final QName cacheFTKey = ft.getQName();
+    Map<String, FindSubstitutesGMLSchemaVisitor> map = m_substitutesResultMap.get( cacheFTKey );
+    if( map == null )
+    {
+      map = new HashMap<String, FindSubstitutesGMLSchemaVisitor>();
+      m_substitutesResultMap.put( cacheFTKey, map );
+    }
+
+    final String cacheSchemaKey = contextSchema.getTargetNamespace() + "#" + contextSchema.getGMLVersion();
+
+    FindSubstitutesGMLSchemaVisitor visitor = map.get( cacheSchemaKey );
+    if( visitor == null )
+    {
+      // query for it
+      visitor = new FindSubstitutesGMLSchemaVisitor( ft );
+      contextSchema.accept( visitor );
+      map.put( cacheSchemaKey, visitor );
+    }
+    return visitor.getSubstitutes( includeAbstract, inclusiveThis );
   }
 
 }
