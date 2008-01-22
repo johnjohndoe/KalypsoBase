@@ -73,8 +73,8 @@ public class SimplePropertySheetViewer extends Viewer
   private final void createControl( final Composite parent )
   {
     m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.addColumn( "property", "Eigenschaft", null, m_propColSize, -1, false, SWT.CENTER, true );
-    m_viewer.addColumn( "value", "Wert", null, m_valueColSize, -1, false, SWT.CENTER, true );
+    m_viewer.addColumn( "property", "Eigenschaft", null, m_propColSize, -1, false, SWT.CENTER, true, false );
+    m_viewer.addColumn( "value", "Wert", null, m_valueColSize, -1, false, SWT.CENTER, true, false );
 
     m_viewer.setLabelProvider( new PropertySheetTableLabelProvider( null ) );
     m_viewer.setContentProvider( new PropertySheetTableContentProvider() );
