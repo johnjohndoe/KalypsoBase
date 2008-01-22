@@ -11,7 +11,9 @@ import org.kalypso.chart.framework.view.ChartComposite;
 
 public class MaximizeHandler extends AbstractHandler
 {
-
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( ExecutionEvent event ) throws ExecutionException
   {
@@ -20,11 +22,10 @@ public class MaximizeHandler extends AbstractHandler
 
     final ChartComposite chart = (ChartComposite) part.getAdapter( ChartComposite.class );
     if( chart == null )
-      return null;
-    else
-    {
-      ChartUtilities.maximize( chart.getModel() );
-    }
+      throw new ExecutionException( "No chart available" );
+
+    ChartUtilities.maximize( chart.getModel() );
+
     return null;
   }
 
