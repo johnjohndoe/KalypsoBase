@@ -155,13 +155,13 @@ public class DefaultTableViewer extends TableViewer
    */
   public TableColumn addColumn( final String name, final String title, final int width, final int widthPercent, final boolean isEditable )
   {
-    return addColumn( name, title, null, width, widthPercent, isEditable, SWT.CENTER, true );
+    return addColumn( name, title, null, width, widthPercent, isEditable, SWT.CENTER, true, true );
   }
 
   /**
    * Adds a column to the underlying table control.
    */
-  public TableColumn addColumn( final String name, final String title, final String tooltip, final int width, final int widthPercent, final boolean isEditable, final int style, final boolean isResizeable )
+  public TableColumn addColumn( final String name, final String title, final String tooltip, final int width, final int widthPercent, final boolean isEditable, final int style, final boolean isResizeable, final boolean isMoveable )
   {
     if( m_disposing )
       throw new IllegalStateException();
@@ -173,6 +173,7 @@ public class DefaultTableViewer extends TableViewer
     tc.setData( COLUMN_PROP_WIDTH_PERCENT, new Integer( widthPercent ) );
     tc.setWidth( width );
     tc.setResizable( isResizeable );
+    tc.setMoveable( isMoveable );
 
     tc.setText( title );
     tc.setToolTipText( tooltip );

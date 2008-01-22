@@ -38,17 +38,20 @@ public final class ExcelClipboardAdapter
   public void doCopy( )
   {
     final Table table = m_viewer.getTable();
-
+    final boolean fullSelection = table.getSelectionCount() == 0;
     final StringBuffer sbf = new StringBuffer();
 
     final int columnCount = table.getColumnCount();
     for( int i = 0; i < table.getItemCount(); i++ )
     {
-      if( table.isSelected( i ) )
+      if( fullSelection || table.isSelected( i ) )
       {
         final TableItem item = table.getItem( i );
         for( int j = 0; j < columnCount; j++ )
         {
+// TableColumn tc;
+// int j = table.indexOf( tc );
+
           final String text = item.getText( j );
           sbf.append( text );
 
