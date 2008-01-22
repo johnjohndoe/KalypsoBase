@@ -43,7 +43,7 @@ package org.kalypso.chart.ui.editor;
 import java.util.Map;
 
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.ui.IChartPart;
@@ -65,7 +65,7 @@ public class ElementUpdateHelper
     // TODO: we get NPEs here
 
     // chart finden,
-    final IWorkbenchPart activePart = Workbench.getInstance().getActiveWorkbenchWindow().getPartService().getActivePart();
+    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {

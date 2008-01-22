@@ -28,20 +28,15 @@ import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
  */
 public class PlotCanvas extends Canvas implements PaintListener, Listener
 {
-
   private Image m_bufferImg = null;
 
   private final ILayerManager m_manager;
-
-  private IChartDragHandler m_mouseHandler;
 
   private EditInfo m_hoverInfo;
 
   private Rectangle m_dragArea = null;
 
   private Point m_panOffset = new Point( 0, 0 );
-
-  private final IChartDragHandler m_dragListener = null;
 
   private boolean m_isEditing = false;
 
@@ -53,7 +48,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     addPaintListener( this );
     addListener( SWT.Resize, this );
 
-    AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
+    final AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
     {
       /**
        * @see org.kalypso.chart.framework.model.layer.impl.AbstractLayerManagerEventListener#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
@@ -149,7 +144,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     gcw.dispose();
   }
 
-  private void paintDragArea( GCWrapper gcw )
+  private void paintDragArea( final GCWrapper gcw )
   {
     // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
     if( m_dragArea != null )
@@ -168,14 +163,14 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     }
   }
 
-  private void paintTooltip( GCWrapper gcw )
+  private void paintTooltip( final GCWrapper gcw )
   {
     // Tooltips zeichnen
     if( m_hoverInfo != null )
     {
       final Rectangle shape = m_hoverInfo.shape;
       gcw.drawRectangle( shape.x, shape.y, shape.width, shape.height );
-      Rectangle screen = gcw.getClipping();
+      final Rectangle screen = gcw.getClipping();
 
       final String tooltiptext = m_hoverInfo.text;
       final Point mousePos = m_hoverInfo.pos;
@@ -258,15 +253,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     return usedBufferImage;
   }
 
-  /** Forces a repaint of the complete chart. The buffered image is disposed. */
-  @Override
-  public void redraw( )
-  {
-
-    if( !isDisposed() )
-      super.redraw();
-  }
-
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
    */
@@ -276,10 +262,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       invalidate();
   }
 
-  public void setTooltipInfo( EditInfo hoverInfo )
+  public void setTooltipInfo( final EditInfo hoverInfo )
   {
     m_hoverInfo = hoverInfo;
-
   }
 
   public EditInfo getTooltipInfo( )
@@ -292,7 +277,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     return m_isEditing;
   }
 
-  public void setIsEditing( boolean isEditing )
+  public void setIsEditing( final boolean isEditing )
   {
     m_isEditing = isEditing;
   }
@@ -303,7 +288,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     return false;
   }
 
-  public void setDragArea( Rectangle dragArea )
+  public void setDragArea( final Rectangle dragArea )
   {
     m_dragArea = dragArea;
     redraw();

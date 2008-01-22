@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.eclipse.core.commands.Command;
 import org.eclipse.swt.SWT;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
@@ -55,41 +54,33 @@ import org.kalypso.chart.framework.view.PlotCanvas;
  */
 public class ChartDragHandlerDelegate
 {
-
   private IChartDragHandler m_handler;
-
-  private final PlotCanvas m_plot;
 
   private final ChartComposite m_chartComposite;
 
-  private Command m_command;
-
-  public ChartDragHandlerDelegate( ChartComposite chartComposite )
+  public ChartDragHandlerDelegate( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
-
-    m_plot = chartComposite.getPlot();
-
   }
 
-  public void setActiveHandler( IChartDragHandler handler )
+  public void setActiveHandler( final IChartDragHandler handler )
   {
+    final PlotCanvas plot = m_chartComposite.getPlot();
 
     if( m_handler != null )
     {
-      m_plot.removeMouseListener( m_handler );
-      m_plot.removeMouseMoveListener( m_handler );
+      plot.removeMouseListener( m_handler );
+      plot.removeMouseMoveListener( m_handler );
     }
     m_handler = handler;
-    if( handler != null )
-    {
-      m_plot.addMouseListener( handler );
-      m_plot.addMouseMoveListener( handler );
-      m_plot.setCursor( handler.getCursor() );
-    }
+
+    if( handler == null )
+      plot.setCursor( plot.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
     else
     {
-      m_plot.setCursor( m_plot.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
+      plot.addMouseListener( handler );
+      plot.addMouseMoveListener( handler );
+      plot.setCursor( handler.getCursor() );
     }
   }
 
@@ -97,5 +88,4 @@ public class ChartDragHandlerDelegate
   {
     return m_handler;
   }
-
 }

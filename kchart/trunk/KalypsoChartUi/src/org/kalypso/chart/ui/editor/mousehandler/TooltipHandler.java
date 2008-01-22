@@ -17,12 +17,6 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
 {
   private final ChartComposite m_chart;
 
-  private boolean m_editingAllowed = false;
-
-  private final int m_treshold = 3;
-
-  private Point m_clickPoint;
-
   public TooltipHandler( final ChartComposite chart )
   {
     m_chart = chart;
@@ -38,14 +32,6 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
       m_chart.removeMouseListener( this );
       m_chart.removeMouseMoveListener( this );
     }
-  }
-
-  /**
-   * If true, editing is allowed, else no editing can happen. Hover info however is always displayed.
-   */
-  public void setEditingAllowed( boolean editingAllowed )
-  {
-    m_editingAllowed = editingAllowed;
   }
 
   /**
@@ -77,7 +63,6 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
    */
   public void mouseMove( final MouseEvent e )
   {
-
     if( m_chart.getPlot().isEditing() )
     {
       m_chart.getPlot().getTooltipInfo().pos = new Point( e.x, e.y );

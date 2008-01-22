@@ -4,45 +4,38 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
 
 public class PanHandler extends AbstractHandler implements IElementUpdater
 {
-
-  private final Class m_handlerClass = DragPanHandler.class;
-
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
 
-    final IChartPart chartPart = (IChartPart) part.getAdapter( IChartPart.class );
+    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
+
     if( chartPart == null )
       return null;
-    else
-    {
-      DragPanHandler dragPanHandler = new DragPanHandler( chartPart.getChartComposite() );
-      chartPart.getChartDragHandler().setActiveHandler( dragPanHandler );
-      ChartPartListener.updateElements( part );
-    }
+
+    final DragPanHandler dragPanHandler = new DragPanHandler( chartPart.getChartComposite() );
+    chartPart.getChartDragHandler().setActiveHandler( dragPanHandler );
+    ChartHandlerUtilities.updateElements( chartPart );
+
     return null;
   }
 
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  public void updateElement( UIElement element, Map parameters )
+  @SuppressWarnings("unchecked")
+  public void updateElement( final UIElement element, final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, m_handlerClass );
+    ElementUpdateHelper.updateElement( element, parameters, DragPanHandler.class );
   }
 }

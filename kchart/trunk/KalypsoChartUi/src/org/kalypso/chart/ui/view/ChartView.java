@@ -69,7 +69,6 @@ import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.ksp.chart.factory.ChartConfigurationDocument;
 import org.ksp.chart.factory.ChartType;
 
 /**
@@ -80,8 +79,6 @@ public class ChartView extends ViewPart implements IChartPart
   public static final String ID = "org.kalypso.chart.ui.view.ChartView";
 
   private Composite m_composite = null;
-
-  private ChartConfigurationDocument m_configuration = null;
 
   private IChartModel m_chartModel = null;
 
@@ -103,7 +100,7 @@ public class ChartView extends ViewPart implements IChartPart
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.NONE );
     m_composite.setLayout( new FillLayout() );
@@ -118,13 +115,10 @@ public class ChartView extends ViewPart implements IChartPart
 
     // prepare for exception
     m_chartType = null;
-    m_configuration = null;
 
     try
     {
-
       m_chartConfigurationLoader = new ChartConfigurationLoader( m_input );
-      m_configuration = m_chartConfigurationLoader.getChartConfigurationDocument();
       final ChartType[] charts = m_chartConfigurationLoader.getCharts();
       m_chartType = charts[0];
 
@@ -257,7 +251,7 @@ public class ChartView extends ViewPart implements IChartPart
   }
 
   @Override
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( ChartComposite.class.equals( adapter ) )
       return m_chartComposite;

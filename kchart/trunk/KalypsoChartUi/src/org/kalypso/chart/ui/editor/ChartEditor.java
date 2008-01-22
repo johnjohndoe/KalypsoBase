@@ -177,7 +177,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
       final ChartConfigurationDocument config = m_configuration;
 
-      XmlOptions options = new XmlOptions();
+      final XmlOptions options = new XmlOptions();
       // Ausgabe menschenlesbar formatieren
       // Namespace prefixes setzen
       final Map<String, String> prefixes = (new HashMap<String, String>());
@@ -302,7 +302,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
           m_chartModel = new ChartModel();
 
-          AbstractMapperRegistryEventListener mapperRegistryListener = new AbstractMapperRegistryEventListener()
+          final AbstractMapperRegistryEventListener mapperRegistryListener = new AbstractMapperRegistryEventListener()
           {
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
@@ -316,7 +316,7 @@ public class ChartEditor extends EditorPart implements IChartPart
           };
           m_chartModel.getMapperRegistry().addListener( mapperRegistryListener );
 
-          AbstractLayerManagerEventListener layerManagerListener = new AbstractLayerManagerEventListener()
+          final AbstractLayerManagerEventListener layerManagerListener = new AbstractLayerManagerEventListener()
           {
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
@@ -340,7 +340,7 @@ public class ChartEditor extends EditorPart implements IChartPart
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
 
-          AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
+          final AbstractChartModelEventListener chartModelEventListener = new AbstractChartModelEventListener()
           {
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener#onModelChanged()
@@ -386,23 +386,23 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
-            AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
-            List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
-            IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
-            for( AxisType axisType : axisArray )
+            final AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
+            final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
+            final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
+            for( final AxisType axisType : axisArray )
             {
-              String min = axisType.getMinVal();
-              String max = axisType.getMaxVal();
+              final String min = axisType.getMinVal();
+              final String max = axisType.getMaxVal();
               if( min.trim().equals( "" ) || max.trim().equals( "" ) )
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
             // TooltipHandler - meldet sich selbst an
-            TooltipHandler eh = new TooltipHandler( m_chartComposite );
+            final TooltipHandler eh = new TooltipHandler( m_chartComposite );
 
             // AxisZoom-Handler setzen - meldet sich selbst and
-            AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite );
+            final AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
@@ -411,7 +411,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite );
 
             // PartListener
-            ChartPartListener chartPartListener = new ChartPartListener( this );
+            final ChartPartListener chartPartListener = new ChartPartListener();
             getSite().getPage().addPartListener( chartPartListener );
 
           }
@@ -491,7 +491,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     return m_configuration;
   }
 
-  public void setConfiguration( ChartConfigurationDocument doc )
+  public void setConfiguration( final ChartConfigurationDocument doc )
   {
     m_configuration = doc;
   }

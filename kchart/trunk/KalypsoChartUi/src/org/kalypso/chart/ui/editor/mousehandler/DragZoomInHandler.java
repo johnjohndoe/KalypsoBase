@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.framework.view.PlotCanvas;
-import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
  * @author Gernot Belger
@@ -74,7 +73,7 @@ public class DragZoomInHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
-  public void mouseDoubleClick( MouseEvent e )
+  public void mouseDoubleClick( final MouseEvent e )
   {
 
   }
@@ -131,18 +130,6 @@ public class DragZoomInHandler implements IChartDragHandler
       m_plot.setDragArea( m_mouseDragRect );
 
     }
-  }
-
-  public void dispose( )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void setDragAction( IChartDragAction chartDragAction )
-  {
-    // TODO Auto-generated method stub
-    System.out.println( "!!!!!!!!!!!!!!!!! TODO: DragAction Setzen" );
   }
 
   /**

@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
-import org.kalypso.chart.ui.editor.actions.IChartDragAction;
 
 /**
  * @author burtscher1
@@ -66,7 +65,7 @@ public class DragPanHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
-  public void mouseDoubleClick( MouseEvent e )
+  public void mouseDoubleClick( final MouseEvent e )
   {
     m_start = null;
   }
@@ -77,7 +76,6 @@ public class DragPanHandler implements IChartDragHandler
   public void mouseDown( final MouseEvent e )
   {
     m_start = new Point( e.x, e.y );
-    // m_axisMap = m_chartComposite.getModel().getMapperRegistry().getNumericRangeAxisSnapshot();
   }
 
   /**
@@ -106,19 +104,8 @@ public class DragPanHandler implements IChartDragHandler
     if( m_start != null )
     {
       m_chartComposite.getPlot().setPanOffset( new Point( m_start.x - e.x, m_start.y - e.y ) );
+      m_chartComposite.getPlot().redraw();
     }
-  }
-
-  public void dispose( )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void setDragAction( IChartDragAction chartDragAction )
-  {
-    // TODO Auto-generated method stub
-    System.out.println( "!!!!!!!!!!!!!!!!! TODO: DragAction Setzen" );
   }
 
   /**

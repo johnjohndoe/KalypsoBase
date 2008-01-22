@@ -18,8 +18,6 @@ public class DragEditHandler implements IChartDragHandler
 {
   private final ChartComposite m_chart;
 
-  private IEditableChartLayer< ? , ? > m_layer;
-
   private EditInfo m_editInfo = null;
 
   private boolean m_isEditing = false;
@@ -27,13 +25,6 @@ public class DragEditHandler implements IChartDragHandler
   public DragEditHandler( final ChartComposite chart )
   {
     m_chart = chart;
-  }
-
-  /**
-   * If true, editing is allowed, else no editing can happen.
-   */
-  public void setEditingAllowed( boolean editingAllowed )
-  {
   }
 
   /**
@@ -48,7 +39,7 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
-    PlotCanvas plot = m_chart.getPlot();
+    final PlotCanvas plot = m_chart.getPlot();
     m_editInfo = m_chart.getPlot().getTooltipInfo();
     if( m_editInfo == null )
       return;
@@ -69,7 +60,7 @@ public class DragEditHandler implements IChartDragHandler
       System.out.println();
       m_editInfo = null;
       m_isEditing = false;
-      PlotCanvas plot = m_chart.getPlot();
+      final PlotCanvas plot = m_chart.getPlot();
       plot.setIsEditing( false );
       plot.setTooltipInfo( null );
     }
@@ -82,9 +73,9 @@ public class DragEditHandler implements IChartDragHandler
   {
     if( m_isEditing )
     {
-      IEditableChartLayer layer = m_editInfo.layer;
-      Point editPoint = new Point( e.x, e.y );
-      EditInfo editMoveInfo = layer.edit( editPoint, m_editInfo );
+      final IEditableChartLayer layer = m_editInfo.layer;
+      final Point editPoint = new Point( e.x, e.y );
+      final EditInfo editMoveInfo = layer.edit( editPoint, m_editInfo );
       m_chart.getPlot().setTooltipInfo( editMoveInfo );
     }
   }
