@@ -78,6 +78,26 @@ public class SWT_AWT_Utilities
     return result[0];
   }
 
+  /**
+   * Calls {@link MessageDialog#openInformation(Shell, String, String)} on the currentyl active shell.<br>
+   * This code can be called even outside a SWT thread.
+   * 
+   * @return The result of the call to {@link MessageDialog#openInformation(Shell, String, String)}
+   */
+  public static void showSwtMessageBoxInformation( final String title, final String message )
+  {
+    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
+    // Force it into swt
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        MessageDialog.openInformation( shell, title, message );
+      }
+    } );
+  }
+
   public static Color getSWTFromAWT( final java.awt.Color awtColor, final Display display )
   {
     return new Color( display, awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
