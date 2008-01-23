@@ -109,10 +109,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
         m_result = m_observation.getResult();
 
-        // TODO: for some reason there occured unsorted entries in result list.
-        // HACK: resort again. Better: identify and fix the bug.
-        m_result.sort();
-
         resolveComponents();
 
         createValueLists();
@@ -142,7 +138,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       // Value-Listen aufbauen
       final ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
       final ArrayList<T_target> targetValues = new ArrayList<T_target>();
-      m_result.sort();
       for( int i = 0; i < m_result.size(); i++ )
       {
         final IRecord record = m_result.get( i );

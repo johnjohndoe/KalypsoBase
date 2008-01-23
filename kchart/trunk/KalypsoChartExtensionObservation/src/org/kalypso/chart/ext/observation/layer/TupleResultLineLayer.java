@@ -64,7 +64,6 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     data.open();
 
     final TupleResult result = data.getTupleResult();
-    result.sort();
 
     Object[] xValues = null;
     Object[] yValues = null;
