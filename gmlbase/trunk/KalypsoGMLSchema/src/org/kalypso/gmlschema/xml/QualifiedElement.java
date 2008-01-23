@@ -31,8 +31,7 @@ package org.kalypso.gmlschema.xml;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterManager;
@@ -118,15 +117,10 @@ public class QualifiedElement implements IAdaptable
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof QualifiedElement == false )
-      return false;
+    if( obj instanceof QualifiedElement )
+      return ObjectUtils.equals( m_qName, ((QualifiedElement) obj).m_qName );
 
-    if( this == obj )
-      return true;
-
-    final QualifiedElement rhs = (QualifiedElement) obj;
-    return new EqualsBuilder().append( m_qName, rhs.m_qName ).isEquals();
-
+    return false;
   }
 
   /**
@@ -135,9 +129,7 @@ public class QualifiedElement implements IAdaptable
   @Override
   public int hashCode( )
   {
-    // you pick a hard-coded, randomly chosen, non-zero, odd number
-    // ideally different for each class
-    return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
+    return ObjectUtils.hashCode( m_qName );
   }
 
   /**
