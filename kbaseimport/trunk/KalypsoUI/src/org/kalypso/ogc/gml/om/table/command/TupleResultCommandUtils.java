@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.om.table.command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * Utility methods for tuple-result command handlers.
@@ -76,6 +77,19 @@ public class TupleResultCommandUtils
     final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
     if( variable instanceof TableViewer )
       return (TableViewer) variable;
+
+    return null;
+  }
+
+  public static TupleResult findTupleResult( final ExecutionEvent event )
+  {
+    final TableViewer tableViewer = findTableViewer( event );
+    if( tableViewer == null )
+      return null;
+
+    final Object input = tableViewer.getInput();
+    if( input instanceof TupleResult )
+      return (TupleResult) input;
 
     return null;
   }
