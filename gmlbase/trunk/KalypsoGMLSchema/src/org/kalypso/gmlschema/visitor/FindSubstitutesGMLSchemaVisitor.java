@@ -30,7 +30,9 @@
 package org.kalypso.gmlschema.visitor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -45,7 +47,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 {
-  private final List<IFeatureType> m_result = new ArrayList<IFeatureType>();
+  private final Set<IFeatureType> m_result = new HashSet<IFeatureType>();
 
   private final QName m_subsHeadQName;
 
@@ -83,9 +85,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     final IFeatureType[] fT = m_result.toArray( new IFeatureType[m_result.size()] );
     for( final IFeatureType ft : fT )
     {
-      if( includeAbstract && !ft.isAbstract() )
-        continue;
-      else if( !result.contains( ft ) )
+      if( !ft.isAbstract() || includeAbstract )
         result.add( ft );
     }
     return result.toArray( new IFeatureType[result.size()] );
