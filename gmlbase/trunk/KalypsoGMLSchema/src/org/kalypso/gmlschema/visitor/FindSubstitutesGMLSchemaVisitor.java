@@ -66,9 +66,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     for( final IFeatureType ft : allFeatureTypes )
     {
       if( GMLSchemaUtilities.substitutes( ft, m_subsHeadQName ) )
-      {
         m_result.add( ft );
-      }
     }
     return true;
   }
@@ -77,7 +75,11 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
   {
     final List<IFeatureType> result = new ArrayList<IFeatureType>();
     if( includeThis )
-      result.add( m_substitutionHeadFT );
+    {
+      if( !m_substitutionHeadFT.isAbstract() || includeAbstract )
+        result.add( m_substitutionHeadFT );
+    }
+
     final IFeatureType[] fT = m_result.toArray( new IFeatureType[m_result.size()] );
     for( final IFeatureType ft : fT )
     {
