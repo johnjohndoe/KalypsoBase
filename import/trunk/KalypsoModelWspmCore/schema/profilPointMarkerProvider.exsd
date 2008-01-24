@@ -57,7 +57,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider"/>
                </appInfo>
             </annotation>
          </attribute>
