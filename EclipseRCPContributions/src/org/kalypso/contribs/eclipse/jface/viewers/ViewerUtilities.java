@@ -175,4 +175,30 @@ public final class ViewerUtilities
       }
     }
   }
+
+  public static void update( final StructuredViewer viewer, final Object[] elements, final String[] properties, final boolean async )
+  {
+    if( viewer != null )
+    {
+      final Control control = viewer.getControl();
+      if( control != null && !control.isDisposed() )
+      {
+        final Runnable runner = new Runnable()
+        {
+          public void run( )
+          {
+            if( !viewer.getControl().isDisposed() )
+              viewer.update( elements, properties );
+          }
+        };
+
+        final Display display = control.getDisplay();
+
+        if( async )
+          display.asyncExec( runner );
+        else
+          display.syncExec( runner );
+      }
+    }
+  }
 }
