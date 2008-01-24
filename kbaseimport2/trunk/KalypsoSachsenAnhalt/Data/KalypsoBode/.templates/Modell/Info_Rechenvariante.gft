@@ -79,7 +79,7 @@
 	</view>
 	<view typename="BatchID" style="SWT.NONE">
  		<gridLayout numColumns="1" horizontalSpacing="10"/>
-        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="run1.bat">
+        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="RUN1.BAT">
             <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
         </radiobutton>
         <radiobutton text="Q-Prognose oh. Speicher" style="SWT.NONE" tooltip="Abfluss-Prognose oberhalb Speicher" property="id" valueToSet="run2.bat">
