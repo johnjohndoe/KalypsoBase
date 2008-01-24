@@ -42,11 +42,12 @@ import org.ksp.chart.factory.LayerType.Mapper;
 import org.ksp.chart.factory.LayerType.Style;
 
 /**
- * @author alibu Creates a chart object from a configuration
+ * Creates a chart object from a configuration
+ * 
+ * @author alibu
  */
 public class ChartFactory
 {
-
   /**
    * Keys for saving providers in chart elements
    */

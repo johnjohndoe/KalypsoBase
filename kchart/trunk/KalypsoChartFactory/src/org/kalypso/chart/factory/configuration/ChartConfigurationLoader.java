@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.chart.factory.util.IReferenceResolver;
@@ -37,27 +38,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
   private ChartConfigurationDocument m_document;
 
   private HashMap<String, XmlObject> m_idMap = null;
-
-  // TODO: @Alex: machen die beiden nächsten Construktoren noch sinn? Da kann man doch gleich die Document selbst
-  // nehmen...
-  /**
-   * @param path
-   *            file system path where the configuration file can be found
-   * @throws XmlException
-   */
-  public ChartConfigurationLoader( final String path ) throws XmlException
-  {
-    System.out.println( path );
-    try
-    {
-      m_document = ChartConfigurationDocument.Factory.parse( path );
-    }
-    catch( XmlException e )
-    {
-      System.out.println( e.getMessage() );
-    }
-
-  }
 
   /**
    * @param path
@@ -98,7 +78,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
       m_document = ChartConfigurationDocument.Factory.parse( is );
       is.close();
     }
-    // TODO: @Alex: do not do such a thing! Throw exceptions, the caller must be able to handle errors!
     finally
     {
       IOUtils.closeQuietly( is );
@@ -243,6 +222,18 @@ public class ChartConfigurationLoader implements IReferenceResolver
     else
       Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + node.getNodeName() );
     return obj;
+  }
+
+  public static XmlOptions configureXmlOptions( final String charset )
+  {
+    final XmlOptions options = new XmlOptions();
+    final Map<String, String> prefixes = new HashMap<String, String>();
+    prefixes.put( "http://www.ksp.org/chart/factory", "" );
+    options.setSaveSuggestedPrefixes( prefixes );
+    options.setSavePrettyPrint();
+    options.setCharacterEncoding( charset );
+
+    return options;
   }
 
 }

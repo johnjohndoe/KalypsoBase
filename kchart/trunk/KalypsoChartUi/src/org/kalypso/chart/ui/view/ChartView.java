@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -250,6 +251,7 @@ public class ChartView extends ViewPart implements IChartPart
     m_tooltipHandler.dispose();
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -260,5 +262,16 @@ public class ChartView extends ViewPart implements IChartPart
       return this;
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * Overridden in order to make public.
+   * 
+   * @see org.eclipse.ui.part.WorkbenchPart#setTitleImage(org.eclipse.swt.graphics.Image)
+   */
+  @Override
+  public void setTitleImage( final Image titleImage )
+  {
+    super.setTitleImage( titleImage );
   }
 }

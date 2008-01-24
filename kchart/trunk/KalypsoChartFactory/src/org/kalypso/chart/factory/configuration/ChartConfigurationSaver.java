@@ -41,6 +41,7 @@
 package org.kalypso.chart.factory.configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypso.chart.factory.provider.IAxisProvider;
 import org.kalypso.chart.factory.provider.IAxisRendererProvider;
@@ -73,100 +74,98 @@ import org.ksp.chart.factory.ChartType.Layers;
  */
 public class ChartConfigurationSaver
 {
-
-  public static ChartConfigurationDocument createChartConfiguration( IChartModel model )
+  public static ChartConfigurationDocument createChartConfiguration( final IChartModel model )
   {
-    ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();
-    ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
-    ILayerManager lm = model.getLayerManager();
+    final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();
+    final ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
+    final ILayerManager lm = model.getLayerManager();
 
     // Chart
-    ChartType chartType = chartconf.addNewChart();
+    final ChartType chartType = chartconf.addNewChart();
     chartType.setId( model.getId() );
     chartType.setDescription( model.getDescription() );
     chartType.setTitle( model.getTitle() );
 
     // LayerReferenzen
-    Layers layerTypes = chartType.addNewLayers();
-    IChartLayer[] layers = lm.getLayers();
-    for( IChartLayer chartLayer : layers )
+    final Layers layerTypes = chartType.addNewLayers();
+    final IChartLayer[] layers = lm.getLayers();
+    for( final IChartLayer chartLayer : layers )
     {
-      RefType layerRef = layerTypes.addNewLayerRef();
+      final RefType layerRef = layerTypes.addNewLayerRef();
       layerRef.setRef( chartLayer.getId() );
     }
 
-    chartconf.setLayerArray( (LayerType[]) extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
-    chartconf.setAxisArray( (AxisType[]) extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
-    chartconf.setMapperArray( (MapperType[]) extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
-    chartconf.setAxisRendererArray( (AxisRendererType[]) extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
-    chartconf.setStyleArray( (StyleType[]) extractStyledElements( model.getLayerManager() ).values().toArray( new StyleType[] {} ) );
+    chartconf.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
+    chartconf.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
+    chartconf.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
+    chartconf.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
+    chartconf.setStyleArray( extractStyledElements( model.getLayerManager() ).values().toArray( new StyleType[] {} ) );
 
     return ccd;
   }
 
-  private static HashMap<String, AxisType> extractAxes( IMapperRegistry registry )
+  private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
-    HashMap<String, AxisType> axisTypes = new HashMap<String, AxisType>();
-    IAxis[] axes = registry.getAxes();
-    for( IAxis axis : axes )
+    final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
+    final IAxis[] axes = registry.getAxes();
+    for( final IAxis axis : axes )
     {
-      IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+      final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
       axisTypes.put( axis.getIdentifier(), provider.getXMLType( axis ) );
-      // aveAxisRenderer( registry.getRenderer( axis ) );
     }
     return axisTypes;
   }
 
-  private static HashMap<String, AxisRendererType> extractAxisRenderers( IMapperRegistry registry )
+  private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
   {
-    HashMap<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
-    IAxis[] axes = registry.getAxes();
-    for( IAxis axis : axes )
+    final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
+    final IAxis[] axes = registry.getAxes();
+    for( final IAxis axis : axes )
     {
-      IAxisProvider axisProvider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
-      IAxisRenderer renderer = registry.getRenderer( axis );
+      final IAxisProvider axisProvider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+      final IAxisRenderer renderer = registry.getRenderer( axis );
       if( renderer != null )
       {
-        IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer.getData( ChartFactory.AXISRENDERER_PROVIDER_KEY );
+        final IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer.getData( ChartFactory.AXISRENDERER_PROVIDER_KEY );
         axisRendererTypes.put( renderer.getId(), axisRendererProvider.getXMLType( renderer ) );
       }
     }
     return axisRendererTypes;
   }
 
-  private static HashMap<String, MapperType> extractMappers( IMapperRegistry registry )
+  private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
-    HashMap<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
-    IMapper[] mappers = registry.getMappers();
-    for( IMapper mapper : mappers )
+    final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
+    final IMapper[] mappers = registry.getMappers();
+    for( final IMapper mapper : mappers )
     {
-      IMapperProvider provider = (IMapperProvider) mapper.getData( ChartFactory.MAPPER_PROVIDER_KEY );
+      final IMapperProvider provider = (IMapperProvider) mapper.getData( ChartFactory.MAPPER_PROVIDER_KEY );
       mapperTypes.put( mapper.getIdentifier(), provider.getXMLType( mapper ) );
     }
     return mapperTypes;
   }
 
-  private static HashMap<String, LayerType> extractLayers( ILayerManager manager )
+  private static Map<String, LayerType> extractLayers( final ILayerManager manager )
   {
-    HashMap<String, LayerType> layerTypes = new HashMap<String, LayerType>();
-    for( IChartLayer layer : manager.getLayers() )
+    final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
+    for( final IChartLayer layer : manager.getLayers() )
     {
-      ILayerProvider provider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
+      final ILayerProvider provider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
       layerTypes.put( layer.getId(), provider.getXMLType( layer ) );
     }
     return layerTypes;
   }
 
-  private static HashMap<String, StyleType> extractStyledElements( ILayerManager manager )
+  private static Map<String, StyleType> extractStyledElements( final ILayerManager manager )
   {
-    HashMap<String, StyleType> styleTypes = new HashMap<String, StyleType>();
-    for( IChartLayer layer : manager.getLayers() )
+    final Map<String, StyleType> styleTypes = new HashMap<String, StyleType>();
+    for( final IChartLayer layer : manager.getLayers() )
     {
-      ILayerProvider lProvider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
-      IStyledElement[] styledElements = layer.getStyle().getElements();
-      for( IStyledElement styledElement : styledElements )
+      final ILayerProvider lProvider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
+      final IStyledElement[] styledElements = layer.getStyle().getElements();
+      for( final IStyledElement styledElement : styledElements )
       {
-        IStyledElementProvider sProvider = (IStyledElementProvider) styledElement.getData( ChartFactory.STYLE_PROVIDER_KEY );
+        final IStyledElementProvider sProvider = (IStyledElementProvider) styledElement.getData( ChartFactory.STYLE_PROVIDER_KEY );
         styleTypes.put( styledElement.getId(), sProvider.getXMLType( styledElement ) );
       }
     }

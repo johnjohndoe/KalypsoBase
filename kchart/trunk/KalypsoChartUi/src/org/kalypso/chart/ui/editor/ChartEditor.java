@@ -1,13 +1,11 @@
 package org.kalypso.chart.ui.editor;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -53,7 +51,6 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.AxisType;
@@ -158,48 +155,31 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void doSave( final IProgressMonitor monitor )
   {
     // save only possible when input is a file
-    if( !(getEditorInput() instanceof FileEditorInput) )
+    final IEditorInput editorInput = getEditorInput();
+    if( !(editorInput instanceof FileEditorInput) )
     {
       // given user a chance to use save-as
+      // TODO: sehr witzig! Save as geht nämlich nicht....
       MessageDialog.openInformation( getSite().getShell(), "Speichern", "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" + "keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n"
           + "sich möglicherweise um eine 'virtuelle' Vorlage\n" + "Bitte benutzen Sie das 'Speichern als' Kommando." );
 
       return;
     }
 
-    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
-    if( input == null )
-      return; // should never happen
-
     try
     {
-      // m_isSaving = true;
+      final IFileEditorInput input = (IFileEditorInput) editorInput;
+      final IFile file = input.getFile();
 
-      final ChartConfigurationDocument config = m_configuration;
+      final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( file.getCharset() );
 
-      final XmlOptions options = new XmlOptions();
-      // Ausgabe menschenlesbar formatieren
-      // Namespace prefixes setzen
-      final Map<String, String> prefixes = (new HashMap<String, String>());
-      prefixes.put( "http://www.ksp.org/chart/factory", "" );
-      options.setSaveSuggestedPrefixes( prefixes );
-      options.setSavePrettyPrint();
       final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getModel() );
-      final XmlOptions xmloptions = options;
-      final SetContentHelper helper = new SetContentHelper()
-      {
-        @Override
-        protected void write( final OutputStreamWriter writer ) throws Throwable
-        {
-          xmloptions.setCharacterEncoding( writer.getEncoding() );
-          savedConfig.save( writer, xmloptions );
-        }
-      };
 
-      helper.setFileContents( input.getFile(), false, true, monitor );
+      final InputStream is = savedConfig.newInputStream( options );
+      file.setContents( is, false, true, monitor );
+      is.close();
 
-      m_dirty = false;
-      firePropertyChange( PROP_DIRTY );
+      setDirty( false );
     }
     catch( final CoreException e )
     {
@@ -207,11 +187,12 @@ public class ChartEditor extends EditorPart implements IChartPart
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
     }
-    finally
+    catch( final IOException e )
     {
-      // m_isSaving = false;
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
+      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
     }
-
   }
 
   /**
@@ -310,8 +291,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             @Override
             public void onMapperRangeChanged( IMapper mapper )
             {
-              m_dirty = true;
-              firePropertyChange( PROP_DIRTY );
+              setDirty( true );
             }
           };
           m_chartModel.getMapperRegistry().addListener( mapperRegistryListener );
@@ -324,8 +304,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             @Override
             public void onLayerVisibilityChanged( IChartLayer layer )
             {
-              m_dirty = true;
-              firePropertyChange( PROP_DIRTY );
+              setDirty( true );
             }
 
             /**
@@ -334,8 +313,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             @Override
             public void onLayerMoved( IChartLayer layer )
             {
-              m_dirty = true;
-              firePropertyChange( PROP_DIRTY );
+              setDirty( true );
             }
           };
           m_chartModel.getLayerManager().addListener( layerManagerListener );
@@ -348,8 +326,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             @Override
             public void onModelChanged( )
             {
-              m_dirty = true;
-              firePropertyChange( PROP_DIRTY );
+              setDirty( true );
             }
           };
           m_chartModel.addListener( chartModelEventListener );
@@ -422,15 +399,12 @@ public class ChartEditor extends EditorPart implements IChartPart
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-
       }
-
     }
     m_composite.layout();
 
     if( m_outlinePage != null )
       m_outlinePage.updateControl();
-
   }
 
   public ChartComposite getChartComposite( )
@@ -499,6 +473,15 @@ public class ChartEditor extends EditorPart implements IChartPart
   public ChartDragHandlerDelegate getChartDragHandler( )
   {
     return m_chartDragHandler;
+  }
+
+  protected void setDirty( final boolean dirty )
+  {
+    if( m_dirty == dirty )
+      return;
+
+    m_dirty = dirty;
+    firePropertyChange( PROP_DIRTY );
   }
 
 }
