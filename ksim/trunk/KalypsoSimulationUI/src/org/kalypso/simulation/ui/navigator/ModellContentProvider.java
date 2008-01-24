@@ -123,7 +123,9 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
     if( parentElement instanceof IProject )
     {
       final KeyWrapper wrapperForProject = wrapperForProject( (IProject) parentElement );
-      if( wrapperForProject.getWorkspace() == null )
+      if( wrapperForProject == null )
+        return new Object[0];
+      else if( wrapperForProject.getWorkspace() == null )
         return new Object[] { wrapperForProject.getStatus() };
     }
 
