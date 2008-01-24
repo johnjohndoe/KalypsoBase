@@ -74,4 +74,11 @@ public interface IGeometryBuilder
    * Paints the geometry, while drawing.
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point p );
+
+  /**
+   * right click? -> remove last setted geometry point
+   */
+  public void removeLastPoint( );
+
+  public void reset( );
 }
