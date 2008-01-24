@@ -72,7 +72,7 @@ public class DefaultTableViewer extends TableViewer
    * True when this viewer is being disposed. This information is held so that removeAllColumns does not remove the
    * columns if this viewer is being disposed, it else leads to conflicts with SWT
    */
-  private boolean m_disposing = false;
+  protected boolean m_disposing = false;
 
   public DefaultTableViewer( final Composite parent )
   {
@@ -208,5 +208,6 @@ public class DefaultTableViewer extends TableViewer
       element.dispose();
 
     setColumnProperties( new String[] {} );
+
   }
 }
