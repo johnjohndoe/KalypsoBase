@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -68,10 +67,12 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
@@ -107,16 +108,15 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget(
-      null, null ), 0, 0 );
+  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget( null, null ), 0, 0 );
 
-  public MapAndFeatureWizardPage()
+  public MapAndFeatureWizardPage( )
   {
     super( "<MapAndFeatureWizardPage>", SELECT_FROM_FEATUREVIEW );
   }
 
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_templateviewer != null )
       m_templateviewer.dispose();
@@ -131,7 +131,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     try
     {
       final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
-      
+
       createMapPanel( sashForm );
       createRightPanel( sashForm );
 
@@ -160,8 +160,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     createFeaturePanel( rightSash );
     initDiagram( rightSash );
 
-    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) )
-        .booleanValue();
+    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) ).booleanValue();
     if( hideCalcButton )
       initButtons( rightPanel, null, null, null );
     else
@@ -177,15 +176,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-    sashForm.setWeights( new int[]
-    {
-        mainWeight,
-        100 - mainWeight } );
+    sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
 
-    rightSash.setWeights( new int[]
-    {
-        rightWeight,
-        100 - rightWeight } );
+    rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( new ControlAdapter()
@@ -217,7 +210,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState()
    */
   @Override
-  public void restoreState() throws CoreException
+  public void restoreState( ) throws CoreException
   {
     super.restoreState();
 
@@ -240,15 +233,21 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
         InputStream contents = null;
         try
         {
-          final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+          final IFile templateFile = (IFile) getProject().findMember( templateFileName );
           if( templateFile != null && templateFile.exists() )
           {
-            contents = new BufferedInputStream( templateFile.getContents() );
-            m_templateviewer.loadInput( contents, getContext(), monitor, featureTemplateProps );
+            final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( templateFile );
+
+            final String featurePath = featureTemplateProps.getProperty( "featurepath", "" );
+            final String href = featureTemplateProps.getProperty( "href", null );
+            final String linktype = featureTemplateProps.getProperty( "linktype", "gml" );
+
+            m_templateviewer.setTemplate( template, getContext(), featurePath, href, linktype );
+
             contents.close();
             parent.getDisplay().asyncExec( new Runnable()
             {
-              public void run()
+              public void run( )
               {
                 m_templateviewer.createControls( parent, viewStyle );
               }
@@ -271,8 +270,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
     {
-      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName,
-          status );
+      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName, status );
 
       m_templateviewer.dispose();
 
@@ -290,7 +288,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void showFeatureInFeatureView()
+  protected void showFeatureInFeatureView( )
   {
     // if the featureToSelect property is set, we use the map!
     final String[] fid = getFeaturesToSelect();
@@ -307,7 +305,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
        * @see java.lang.Thread#run()
        */
       @Override
-      public void run()
+      public void run( )
       {
         super.run();
         int max = 10;
@@ -342,7 +340,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getSelectedFeatures()
    */
   @Override
-  protected FeatureList getSelectedFeatures()
+  protected FeatureList getSelectedFeatures( )
   {
     final FeatureList list = FeatureFactory.createFeatureList( null, null );
     final Feature feature = m_templateviewer.getFeature();
@@ -355,7 +353,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#getFeatures()
    */
   @Override
-  protected FeatureList getFeatures()
+  protected FeatureList getFeatures( )
   {
     final FeatureList result = FeatureFactory.createFeatureList( null, null );
     final Feature feature = m_templateviewer.getFeature();
@@ -376,7 +374,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final ISelection selection = event.getSelection();
     if( selection instanceof IFeatureSelection )
     {
-      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
+      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
       if( feature != null )
       {
@@ -386,7 +384,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
         if( control != null && !control.isDisposed() )
           control.getDisplay().asyncExec( new Runnable()
           {
-            public void run()
+            public void run( )
             {
               m_templateviewer.setFeature( workspace, feature );
             }
