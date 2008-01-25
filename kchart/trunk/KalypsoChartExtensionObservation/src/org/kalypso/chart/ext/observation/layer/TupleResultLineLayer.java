@@ -88,9 +88,16 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     {
       for( int i = 0; i < result.size(); i++ )
       {
-        final int x = xAxis.logicalToScreen( xValues[i] );
-        final int y = yAxis.logicalToScreen( yValues[i] );
-        path.add( new Point( x, y ) );
+        Object xObj = xValues[i];
+        Object yObj = yValues[i];
+        // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
+        // in that case
+        if( xObj != null && yObj != null )
+        {
+          final int x = xAxis.logicalToScreen( xObj );
+          final int y = yAxis.logicalToScreen( yObj );
+          path.add( new Point( x, y ) );
+        }
       }
     }
 
