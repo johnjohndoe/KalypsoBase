@@ -139,6 +139,7 @@
 		<MaxVal>100.0</MaxVal>
 		<RendererRef ref="NumberAxisRenderer" />
 	</Axis>
+	
 	<AxisRenderer id="NumberWspAxisRenderer">
 		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
 			<Parameters>
