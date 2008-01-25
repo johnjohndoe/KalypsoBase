@@ -66,7 +66,6 @@ public class ChartFactoryUtilities
     catch( final ClassCastException e )
     {
       System.out.println( "kann nicht gecastet werden; " + childClass + " " + parentClass );
-      System.out.println();
     }
 
     return false;

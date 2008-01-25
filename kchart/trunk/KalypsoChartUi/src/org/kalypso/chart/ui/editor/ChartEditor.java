@@ -379,7 +379,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             final TooltipHandler eh = new TooltipHandler( m_chartComposite );
 
             // AxisZoom-Handler setzen - meldet sich selbst and
-            final AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite );
+            final AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite, false );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );

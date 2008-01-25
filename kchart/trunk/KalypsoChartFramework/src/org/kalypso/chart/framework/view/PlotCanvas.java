@@ -140,7 +140,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     m_bufferImg = paintBuffered( gcw, screenArea, m_bufferImg );
     paintDragArea( gcw );
     paintTooltip( gcw );
-
     gcw.dispose();
   }
 

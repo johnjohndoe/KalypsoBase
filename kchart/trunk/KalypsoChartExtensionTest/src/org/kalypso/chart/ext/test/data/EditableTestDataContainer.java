@@ -76,7 +76,6 @@ public class EditableTestDataContainer implements IDataContainer
     m_targetRange = new ComparableDataRange<Number>( (Number[]) m_targetData.toArray( new Number[] {} ) );
     m_domainRange = new ComparableDataRange<Number>( (Number[]) m_domainData.toArray( new Number[] {} ) );
 
-    System.out.println();
   }
 
   /**

@@ -170,7 +170,7 @@ public class ChartView extends ViewPart implements IChartPart
           // TooltipHandler setzen - meldet sich selbst an
           m_tooltipHandler = new TooltipHandler( m_chartComposite );
           // AxisZoomHandler setzen - meldet sich selbst an
-          m_axisDragZoomInHandler = new AxisDragZoomInHandler( m_chartComposite );
+          m_axisDragZoomInHandler = new AxisDragZoomInHandler( m_chartComposite, false );
 
           // Titel der View setzen
           setPartName( m_chartModel.getTitle() );

@@ -78,11 +78,14 @@ public class AxisDragZoomInHandler implements IChartDragHandler
 
   private final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
 
-  public AxisDragZoomInHandler( final ChartComposite chartComposite )
+  private final boolean m_zoomAll;
+
+  public AxisDragZoomInHandler( final ChartComposite chartComposite, final boolean zoomAll )
   {
     m_chartComposite = chartComposite;
+    m_zoomAll = zoomAll;
 
-    // zugehörige Achse rausfinden
+    // zugehörige Achsen rausfinden
     final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
     final IAxis< ? >[] axes = reg.getAxes();
     for( final IAxis< ? > axis : axes )
@@ -123,23 +126,34 @@ public class AxisDragZoomInHandler implements IChartDragHandler
       return;
     m_mouseDragEnd = getPos( e );
 
-    final AxisCanvas curAc = (AxisCanvas) e.getSource();
-    final IAxis curAxis = m_axes.get( curAc );
-    final ORIENTATION ori = curAxis.getPosition().getOrientation();
-
     if( Math.abs( m_mouseDragStart - m_mouseDragEnd ) > 5 )
     {
-      for( final AxisCanvas ac : m_axes.keySet() )
+
+      final AxisCanvas curAc = (AxisCanvas) e.getSource();
+      final IAxis curAxis = m_axes.get( curAc );
+      final ORIENTATION ori = curAxis.getPosition().getOrientation();
+
+      if( m_zoomAll )
       {
-        final IAxis axis = m_axes.get( ac );
-        // achsen mit gleicher orientierung behandeln
-        if( axis.getPosition().getOrientation().equals( ori ) )
+        for( final AxisCanvas ac : m_axes.keySet() )
         {
-          final Number num1 = axis.screenToNumeric( m_mouseDragStart );
-          final Number num2 = axis.screenToNumeric( m_mouseDragEnd );
-          axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { num1, num2 } ) );
-          ac.setDragInterval( -1, -1 );
+          final IAxis axis = m_axes.get( ac );
+          // achsen mit gleicher orientierung behandeln
+          if( axis.getPosition().getOrientation().equals( ori ) )
+          {
+            final Number num1 = axis.screenToNumeric( m_mouseDragStart );
+            final Number num2 = axis.screenToNumeric( m_mouseDragEnd );
+            axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { num1, num2 } ) );
+            ac.setDragInterval( -1, -1 );
+          }
         }
+      }
+      else
+      {
+        final Number num1 = curAxis.screenToNumeric( m_mouseDragStart );
+        final Number num2 = curAxis.screenToNumeric( m_mouseDragEnd );
+        curAxis.setNumericRange( new ComparableDataRange<Number>( new Number[] { num1, num2 } ) );
+        curAc.setDragInterval( -1, -1 );
       }
 
     }
@@ -163,22 +177,31 @@ public class AxisDragZoomInHandler implements IChartDragHandler
       final IAxis curAxis = m_axes.get( curAc );
       final ORIENTATION ori = curAxis.getPosition().getOrientation();
 
-      for( final AxisCanvas ac : m_axes.keySet() )
+      if( m_zoomAll )
       {
-        final IAxis axis = m_axes.get( ac );
-        if( axis.getPosition().getOrientation().equals( ori ) )
+        // zoom-Rechteck im AxisCanvas
+        for( final AxisCanvas ac : m_axes.keySet() )
         {
-          ac.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
+          final IAxis axis = m_axes.get( ac );
+          if( axis.getPosition().getOrientation().equals( ori ) )
+          {
+            ac.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
+          }
         }
+        // zoom-Rechteck im Plot
+        Rectangle dragArea;
+        final Rectangle plotBounds = m_chartComposite.getPlot().getBounds();
+        if( ori == ORIENTATION.HORIZONTAL )
+          dragArea = new Rectangle( Math.min( m_mouseDragStart, m_mouseDragEnd ), 0, Math.abs( m_mouseDragStart - m_mouseDragEnd ), plotBounds.height );
+        else
+          dragArea = new Rectangle( 0, Math.min( m_mouseDragStart, m_mouseDragEnd ), plotBounds.width, Math.abs( m_mouseDragStart - m_mouseDragEnd ) );
+        m_chartComposite.getPlot().setDragArea( dragArea );
       }
-      // zoom-Rechteck im Plot
-      Rectangle dragArea;
-      final Rectangle plotBounds = m_chartComposite.getPlot().getBounds();
-      if( ori == ORIENTATION.HORIZONTAL )
-        dragArea = new Rectangle( Math.min( m_mouseDragStart, m_mouseDragEnd ), 0, Math.abs( m_mouseDragStart - m_mouseDragEnd ), plotBounds.height );
       else
-        dragArea = new Rectangle( 0, Math.min( m_mouseDragStart, m_mouseDragEnd ), plotBounds.width, Math.abs( m_mouseDragStart - m_mouseDragEnd ) );
-      m_chartComposite.getPlot().setDragArea( dragArea );
+      {
+        curAc.setDragInterval( m_mouseDragStart, m_mouseDragEnd );
+      }
+
     }
   }
 

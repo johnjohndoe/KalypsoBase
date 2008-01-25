@@ -124,10 +124,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
         e.printStackTrace();
       }
     }
-    else
-    {
-      System.out.println();
-    }
     m_isOpen = true;
   }
 

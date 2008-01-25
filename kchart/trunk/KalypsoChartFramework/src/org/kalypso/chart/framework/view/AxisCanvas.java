@@ -111,7 +111,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
   {
     if( m_dragInterval != null )
     {
-
       Color bg = gc.getBackground();
       gc.setBackground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
 
@@ -282,5 +281,6 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
       m_dragInterval = new Point( y1, y2 );
     }
     redraw();
+
   }
 }

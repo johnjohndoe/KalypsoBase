@@ -35,12 +35,12 @@ public class NumberTickCalculator
     if( (gc == null) || (axis == null) || (axis.getPosition() == null) )
       renderer.setTickMapElement( axis, null );
 
-    // grï¿½ï¿½tes Tick<-Label berechnen
+    // größtes Tick<-Label berechnen
     final Point ticklabelSize = renderer.calcTickLabelSize( gc, axis );
     if( ticklabelSize == null )
       renderer.setTickMapElement( axis, null );
 
-    // TickLabelGrï¿½ï¿½e + 2 wegen Rundungsfehlern beim positionieren
+    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     /*
      * minimaler Bildschirmabstand zwischen zwei labels
      */
@@ -50,7 +50,7 @@ public class NumberTickCalculator
     else
       minScreenInterval = ticklabelSize.y;
 
-    // Collection fï¿½r Ticks
+    // Collection für Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
     final SortedSet<Double> ticks = new TreeSet<Double>();
 
@@ -68,7 +68,7 @@ public class NumberTickCalculator
 
     final double logicalRange = Math.abs( logicalMax - logicalMin );
 
-    // der minimale logische Abstand; TODO: ï¿½berprï¿½fen, ob das auch mit negativen Werten geht
+    // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
     final double minLogInterval = Math.abs( axis.screenToLogical( minScreenInterval ).doubleValue() - axis.screenToLogical( 0 ).doubleValue() );
 
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
