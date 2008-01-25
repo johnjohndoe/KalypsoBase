@@ -64,14 +64,14 @@ public final class Arrays
    * or subclasses will be accepted.
    * 
    * @param source
-   *          object from this source will be added to dest if they are instances of the desiredclass
+   *            object from this source will be added to dest if they are instances of the desiredclass
    * @param dest
-   *          destination
+   *            destination
    * @param desiredclass
-   *          instances of this class or subclasses of it will be added to dest
+   *            instances of this class or subclasses of it will be added to dest
    */
   @SuppressWarnings("unchecked")
-  public static void addAllOfClass( final Collection source, final Collection dest, final Class<?> desiredclass )
+  public static void addAllOfClass( final Collection source, final Collection dest, final Class< ? > desiredclass )
   {
     for( final Object obj : source )
     {
@@ -84,7 +84,7 @@ public final class Arrays
    * creates an array of raw ints with a given array of Integer Objects by copying the int values.
    * 
    * @throws IllegalArgumentException
-   *           if argument is null
+   *             if argument is null
    */
   public static int[] rawIntegers( Integer[] objDs )
   {
@@ -103,7 +103,7 @@ public final class Arrays
    * creates an array of raw doubles with a given array of Double Objects by copying the double values
    * 
    * @throws IllegalArgumentException
-   *           if argument is null
+   *             if argument is null
    */
   public static double[] rawDoubles( Double[] objDs )
   {
@@ -122,7 +122,7 @@ public final class Arrays
    * creates an array of object doubles with a given array of doubles by copying the double values
    * 
    * @throws IllegalArgumentException
-   *           if argument is null
+   *             if argument is null
    */
   public static Double[] objectDoubles( double[] rawDs )
   {
@@ -275,11 +275,10 @@ public final class Arrays
    * the array if it is not already contained.
    * 
    * @param arr
-   *          array to be truncated, must be sorted. Unpredictable results if not sorted
+   *            array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
-   *          the value that will serve as upper bound when truncating. It will be added into the resulting array if it
-   *          is not already inside
-   * 
+   *            the value that will serve as upper bound when truncating. It will be added into the resulting array if
+   *            it is not already inside
    */
   public static double[] truncSmaller( double[] arr, double value )
   {
@@ -315,11 +314,10 @@ public final class Arrays
    * the array if it is not already contained.
    * 
    * @param arr
-   *          array to be truncated, must be sorted. Unpredictable results if not sorted
+   *            array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
-   *          the value that will serve as lower bound when truncating. It will be added into the resulting array if it
-   *          is not already inside
-   * 
+   *            the value that will serve as lower bound when truncating. It will be added into the resulting array if
+   *            it is not already inside
    */
   public static double[] truncBigger( double[] arr, double value )
   {
@@ -350,7 +348,6 @@ public final class Arrays
   /**
    * Merges the contents of the given array into one String, separating the elements with separator. You can restrict
    * the elements to fetch from the array by setting from and to.
-   * 
    */
   public static String implode( String[] array, String separator, int from, int to )
   {
@@ -368,7 +365,6 @@ public final class Arrays
    * Removes a new array same as da but without duplicates, given the array da is sorted! This method looks
    * sequentially, checking if the elements at position i and i+1 are equal. <br>
    * If you call this method on a potentially unsorted array, it might not change anything.
-   * 
    */
   public static double[] removeDupicates( double[] da, double delta )
   {
@@ -439,7 +435,7 @@ public final class Arrays
    * @param a
    * @param b
    * @param lengthB
-   *          the length of b to merge
+   *            the length of b to merge
    */
   public static byte[] append( byte[] a, byte[] b, int lengthB )
   {
@@ -457,7 +453,7 @@ public final class Arrays
    * @param a
    * @param b
    * @param length
-   *          compare till this position
+   *            compare till this position
    */
   public static boolean equals( byte[] a, byte[] b, int length )
   {
@@ -471,7 +467,7 @@ public final class Arrays
 
   /**
    * @param array
-   *          the data
+   *            the data
    * @param fromPos
    * @param toPos
    */
@@ -504,17 +500,16 @@ public final class Arrays
    * Concatenate the two given arrays in a new one containing all of the elements.
    * 
    * @param array1
-   *          first array to append
+   *            first array to append
    * @param array2
-   *          second array to append
+   *            second array to append
    * @param type
-   *          type of the array to create
-   * 
+   *            type of the array to create
    * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
    */
-  public static Object[] concat( final Object[] array1, final Object[] array2, final Object[] type )
+  public static <T extends Object> T[] concat( final T[] array1, final T[] array2, final T[] type )
   {
-    final ArrayList<Object> list = new ArrayList<Object>( array1.length + array2.length );
+    final ArrayList<T> list = new ArrayList<T>( array1.length + array2.length );
     list.addAll( java.util.Arrays.asList( array1 ) );
     list.addAll( java.util.Arrays.asList( array2 ) );
 
@@ -525,15 +520,14 @@ public final class Arrays
    * Return new array containing the given one with the given object appended at the end of it.
    * 
    * @param object
-   *          object to append to array
+   *            object to append to array
    * @param type
-   *          type of the array to create
-   * 
+   *            type of the array to create
    * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
    */
-  public static Object[] concat( final Object[] array, final Object object, final Object[] type )
+  public static <T extends Object> T[] concat( final T[] array, final T object, final T[] type )
   {
-    final ArrayList<Object> list = new ArrayList<Object>( array.length + 1 );
+    final ArrayList<T> list = new ArrayList<T>( array.length + 1 );
     list.addAll( java.util.Arrays.asList( array ) );
     list.add( object );
 
@@ -545,6 +539,7 @@ public final class Arrays
    * <p>
    * The two arrays are equivalent, if and only if they contain the same elements.
    * </p>
+   * TODO: this method does not work correctly if the arrays contain the same number of duplicates of different elements
    */
   public static boolean equalsUnordered( final Object[] array1, final Object[] array2 )
   {
