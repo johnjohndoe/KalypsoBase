@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.view;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
@@ -59,7 +55,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
@@ -161,32 +156,8 @@ public class ChartView extends ViewPart implements IChartPart
 
         m_chartModel = new ChartModel();
 
-        try
-        {
-          m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-          ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
-        }
-        // TODO: provide message to user instead of eating the exceptions.
-        catch( final ConfigurationException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final CoreException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final XmlException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final IOException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        m_chartConfigurationLoader = new ChartConfigurationLoader( file );
+        ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
 
         if( m_chartModel != null )
         {
@@ -207,10 +178,11 @@ public class ChartView extends ViewPart implements IChartPart
         }
         // else: TODO: what?
       }
-      catch( final MalformedURLException e )
+      catch( final Exception e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoChartUiPlugin.getDefault().getLog().log( status );
+        ErrorDialog.openError( getSite().getShell(), "Update input", "Failed to update view.", status );
       }
     }
 
@@ -247,8 +219,12 @@ public class ChartView extends ViewPart implements IChartPart
   public void dispose( )
   {
     super.dispose();
-    m_axisDragZoomInHandler.dispose();
-    m_tooltipHandler.dispose();
+
+    if( m_axisDragZoomInHandler != null )
+      m_axisDragZoomInHandler.dispose();
+
+    if( m_tooltipHandler != null )
+      m_tooltipHandler.dispose();
   }
 
   @SuppressWarnings("unchecked")
