@@ -147,6 +147,39 @@
 					</element>
 					<element name="MinVal" type="string" />
 					<element name="MaxVal" type="string" />
+					<element name="PreferredAdjustment" minOccurs="0">
+					<annotation>
+						<documentation>
+							sets the preferred relation for auto adjustement
+						</documentation>
+					</annotation>
+					<complexType>
+						<attribute name="before" use="required" >
+						<simpleType>
+						<restriction base="int">
+							<minInclusive value="0"></minInclusive>
+							<maxInclusive value="100"></maxInclusive>
+						</restriction>
+						</simpleType>
+						</attribute>
+						<attribute name="range" use="required">
+						<simpleType>
+						<restriction base="int">
+							<minInclusive value="1"></minInclusive>
+							<maxInclusive value="100"></maxInclusive>
+						</restriction>
+						</simpleType>
+						</attribute>
+						<attribute name="after" use="required" >
+						<simpleType>
+						<restriction base="int">
+							<minInclusive value="0"></minInclusive>
+							<maxInclusive value="100"></maxInclusive>
+						</restriction>
+						</simpleType>
+						</attribute>
+					</complexType>
+					</element>
 					<element name="RendererRef" type="kcc:RefType" />
 				</sequence>
 			</extension>

@@ -48,7 +48,7 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -379,7 +379,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             final TooltipHandler eh = new TooltipHandler( m_chartComposite );
 
             // AxisZoom-Handler setzen - meldet sich selbst and
-            final AxisDragZoomInHandler adzh = new AxisDragZoomInHandler( m_chartComposite, false );
+            final AxisDragHandlerDelegate adzh = new AxisDragHandlerDelegate( m_chartComposite );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );

@@ -73,4 +73,14 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    */
   public int numericToScreen( Number value );
 
+  /**
+   * if an axis contains a preferred axis adjustment, than the auto adjustment will range the axis in a way that there
+   * can also be some space before and after the data range;
+   * 
+   * @return the preferred adjustment or null if there isn't any
+   */
+  public AxisAdjustment getPreferredAdjustment( );
+
+  public void setPreferredAdjustment( AxisAdjustment adj );
+
 }

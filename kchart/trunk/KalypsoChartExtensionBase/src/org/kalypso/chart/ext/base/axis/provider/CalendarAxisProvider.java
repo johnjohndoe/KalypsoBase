@@ -12,10 +12,12 @@ import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
+import org.kalypso.chart.framework.model.mapper.AxisAdjustment;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
+import org.ksp.chart.factory.AxisType.PreferredAdjustment;
 
 /**
  * @author alibu
@@ -38,6 +40,15 @@ public class CalendarAxisProvider extends AbstractAxisProvider
     final IAxis<Calendar> axis = new CalendarAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, dateFormatString );
     if( axis != null )
     {
+      // set preferred adjustment
+      PreferredAdjustment adj = getAxisType().getPreferredAdjustment();
+      if( adj != null )
+      {
+        AxisAdjustment axisAdjustment = new AxisAdjustment( adj.getBefore(), adj.getRange(), adj.getAfter() );
+        axis.setPreferredAdjustment( axisAdjustment );
+      }
+
+      // set axis range
       final CalendarParser gcp = new CalendarParser();
       final String minValStr = getAxisType().getMinVal();
       final String maxValStr = getAxisType().getMaxVal();

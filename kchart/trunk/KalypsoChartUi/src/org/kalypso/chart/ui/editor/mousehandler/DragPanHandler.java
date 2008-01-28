@@ -45,6 +45,11 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+import org.kalypso.chart.framework.view.AxisCanvas;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 
@@ -84,7 +89,8 @@ public class DragPanHandler implements IChartDragHandler
   public void mouseUp( final MouseEvent e )
   {
     // pan offset zurücksetzen
-    m_chartComposite.getPlot().setPanOffset( new Point( 0, 0 ) );
+    m_chartComposite.getPlot().setPanOffset( null, new Point( 0, 0 ) );
+    setAxisPanOffset( 0, 0, 0, 0 );
 
     // dann pannen
     if( m_start != null )
@@ -103,8 +109,9 @@ public class DragPanHandler implements IChartDragHandler
   {
     if( m_start != null )
     {
-      m_chartComposite.getPlot().setPanOffset( new Point( m_start.x - e.x, m_start.y - e.y ) );
-      m_chartComposite.getPlot().redraw();
+      m_chartComposite.getPlot().setPanOffset( null, new Point( m_start.x - e.x, m_start.y - e.y ) );
+      setAxisPanOffset( m_start.x, e.x, m_start.y, e.y );
+
     }
   }
 
@@ -114,6 +121,25 @@ public class DragPanHandler implements IChartDragHandler
   public Cursor getCursor( )
   {
     return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
+  }
+
+  private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
+  {
+    IMapperRegistry mapperRegistry = m_chartComposite.getModel().getMapperRegistry();
+    IAxis< ? >[] axes = mapperRegistry.getAxes();
+    for( IAxis< ? > axis : axes )
+    {
+      IAxisComponent component = mapperRegistry.getComponent( axis );
+      if( component != null && component instanceof AxisCanvas )
+      {
+        AxisCanvas ac = (AxisCanvas) component;
+        if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+          ac.setPanOffsetInterval( new Point( panXStart, panXEnd ) );
+        else
+          ac.setPanOffsetInterval( new Point( panYStart, panYEnd ) );
+      }
+    }
+
   }
 
 }

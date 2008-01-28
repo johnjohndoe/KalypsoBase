@@ -12,11 +12,13 @@ import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
+import org.kalypso.chart.framework.model.mapper.AxisAdjustment;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.ksp.chart.factory.AxisType.PreferredAdjustment;
 
 /**
  * @author alibu
@@ -40,6 +42,15 @@ public class NumberAxisProvider extends AbstractAxisProvider
     final IAxis<Number> axis = new NumberAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, nc );
     if( axis != null )
     {
+      // set preferred adjustment
+      PreferredAdjustment adj = getAxisType().getPreferredAdjustment();
+      if( adj != null )
+      {
+        AxisAdjustment axisAdjustment = new AxisAdjustment( adj.getBefore(), adj.getRange(), adj.getAfter() );
+        axis.setPreferredAdjustment( axisAdjustment );
+      }
+
+      // set range
       double min = 0;
       double max = 1;
       final DoubleParser dp = new DoubleParser();

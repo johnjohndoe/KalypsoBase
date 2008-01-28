@@ -16,6 +16,7 @@ import org.kalypso.chart.framework.model.event.impl.ChartModelEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.model.layer.impl.LayerManager;
+import org.kalypso.chart.framework.model.mapper.AxisAdjustment;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
@@ -245,8 +246,27 @@ public class ChartModel implements IChartModel
           mergedDataRange = axis.getDataOperator().getDefaultRange();
       }
 
+      // first: set logical range; we have to do this right now as we get logical ranges out of layers / data containers
       axis.setLogicalRange( mergedDataRange );
-      m_eventHandler.fireModelChanged();
+      // now check if axis has a preferred Adjustment
+      AxisAdjustment adj = axis.getPreferredAdjustment();
+      if( adj != null )
+      {
+        double adjBefore = adj.getBefore();
+        double adjRange = adj.getRange();
+        double adjAfter = adj.getAfter();
+
+        IDataRange<Number> numericRange = axis.getNumericRange();
+        double rangeMax = numericRange.getMax().doubleValue();
+        double rangeMin = numericRange.getMin().doubleValue();
+        double rangeSize = rangeMax - rangeMin;
+
+        double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
+        double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
+
+        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
+
+      }
     }
 
   }
@@ -477,7 +497,7 @@ public class ChartModel implements IChartModel
         axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }
     }
-    m_eventHandler.fireModelChanged();
+    // m_eventHandler.fireModelChanged();
   }
 
   public void panTo( final Point start, final Point end )
@@ -510,7 +530,7 @@ public class ChartModel implements IChartModel
       axis.setNumericRange( newRange );
 
     }
-    m_eventHandler.fireModelChanged();
+    // m_eventHandler.fireModelChanged();
   }
 
 }

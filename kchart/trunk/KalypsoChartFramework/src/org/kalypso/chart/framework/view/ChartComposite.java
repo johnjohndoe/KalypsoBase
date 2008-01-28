@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.event.impl.AbstractChartModelEventListener;
 import org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -97,11 +98,15 @@ public class ChartComposite extends Composite
       @Override
       public void onMapperRangeChanged( IMapper mapper )
       {
-        m_plot.invalidate();
+
         layout();
         if( mapper instanceof IAxis )
         {
           IAxis axis = (IAxis) mapper;
+
+          IChartLayer[] changedLayers = (IChartLayer[]) getModel().getAxis2Layers().get( axis ).toArray( new IChartLayer[] {} );
+          m_plot.invalidate( changedLayers );
+
           AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
           ac.layout();
         }

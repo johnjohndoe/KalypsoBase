@@ -60,7 +60,7 @@ import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -88,7 +88,7 @@ public class ChartView extends ViewPart implements IChartPart
 
   private ChartDragHandlerDelegate m_chartDragHandler;
 
-  private AxisDragZoomInHandler m_axisDragZoomInHandler;
+  private AxisDragHandlerDelegate m_axisDragZoomInHandler;
 
   private TooltipHandler m_tooltipHandler;
 
@@ -170,7 +170,7 @@ public class ChartView extends ViewPart implements IChartPart
           // TooltipHandler setzen - meldet sich selbst an
           m_tooltipHandler = new TooltipHandler( m_chartComposite );
           // AxisZoomHandler setzen - meldet sich selbst an
-          m_axisDragZoomInHandler = new AxisDragZoomInHandler( m_chartComposite, false );
+          m_axisDragZoomInHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
           setPartName( m_chartModel.getTitle() );

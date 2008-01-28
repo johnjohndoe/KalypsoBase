@@ -37,6 +37,8 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
 
   private Point m_dragInterval;
 
+  private Point m_panOffset = new Point( 0, 0 );
+
   public AxisCanvas( final IAxis<T> axis, final Composite parent, final int style )
   {
     super( parent, style );
@@ -172,7 +174,7 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
     else
       usedBufferImage = bufferImage;
 
-    gcw.drawImage( usedBufferImage, screen.x, screen.y );
+    gcw.drawImage( usedBufferImage, screen.x + m_panOffset.x, screen.y + m_panOffset.y );
 
     return usedBufferImage;
   }
@@ -281,6 +283,13 @@ public class AxisCanvas<T> extends Canvas implements PaintListener, IAxisCompone
       m_dragInterval = new Point( y1, y2 );
     }
     redraw();
+  }
 
+  public void setPanOffsetInterval( Point offset )
+  {
+    if( true )
+      return;
+    m_panOffset = offset;
+    redraw();
   }
 }

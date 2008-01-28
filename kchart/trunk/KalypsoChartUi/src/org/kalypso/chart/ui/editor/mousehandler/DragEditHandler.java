@@ -4,6 +4,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.framework.model.layer.EditInfo;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
@@ -77,6 +78,7 @@ public class DragEditHandler implements IChartDragHandler
       final Point editPoint = new Point( e.x, e.y );
       final EditInfo editMoveInfo = layer.edit( editPoint, m_editInfo );
       m_chart.getPlot().setTooltipInfo( editMoveInfo );
+      m_chart.getPlot().invalidate( new IChartLayer[] { layer } );
     }
   }
 
