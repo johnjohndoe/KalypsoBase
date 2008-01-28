@@ -48,6 +48,7 @@ import java.io.IOException;
 
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.internal.ole.win32.FORMATETC;
 
 /**
  * @author burtscher1 Transfer object for drag-and-drop of chart layers inside the chart editor outline; the only thing
@@ -138,4 +139,21 @@ public class ChartLayerTransfer extends ByteArrayTransfer
     }
   }
 
+  /**
+   * @see org.eclipse.swt.dnd.ByteArrayTransfer#isSupportedType(org.eclipse.swt.dnd.TransferData)
+   */
+  @Override
+  public boolean isSupportedType( TransferData transferData )
+  {
+    if( transferData == null )
+      return false;
+    int[] types = getTypeIds();
+    for( int i = 0; i < types.length; i++ )
+    {
+      FORMATETC format = transferData.formatetc;
+      if( format.cfFormat == 15 )
+        return true;
+    }
+    return false;
+  }
 }
