@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="annotationProvider" name="annotationProvider" schema="schema/annotationProvider.exsd"/>
+   <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
    <extension
          id="KalypsoGMLSchema.adapters"
          name="KalypsoGMLSchemaadapters"
