@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.debug.gml.typehandler;
 
@@ -44,13 +44,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Clears the type handler registry and reloads the defined types
@@ -70,7 +65,7 @@ public class ReloadTypeRegistryActionDelegate implements IWorkbenchWindowActionD
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void init( IWorkbenchWindow window )
+  public void init( final IWorkbenchWindow window )
   {
     // empty
   }
@@ -78,23 +73,17 @@ public class ReloadTypeRegistryActionDelegate implements IWorkbenchWindowActionD
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-
-    marshallingRegistry.clearRegistry();
-    guiRegistry.clearRegistry();
-
-    KalypsoCorePlugin.getDefault().registerTypeHandler();
-    KalypsoGisPlugin.getDefault().registerGuiTypeHandler( );
+    MarshallingTypeRegistrySingleton.reloadTypeRegistry();
+    GuiTypeRegistrySingleton.reloadTypeRegistry();
   }
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     // empty
   }
