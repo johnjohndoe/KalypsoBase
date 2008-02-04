@@ -52,21 +52,21 @@ import org.kalypso.chart.framework.view.PlotCanvas;
  * @author burtscher1
  * 
  */
-public class ChartDragHandlerDelegate
+public class PlotDragHandlerDelegate
 {
   private IChartDragHandler m_handler;
 
   private final ChartComposite m_chartComposite;
 
-  public ChartDragHandlerDelegate( final ChartComposite chartComposite )
+  public PlotDragHandlerDelegate( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
   }
 
   public void setActiveHandler( final IChartDragHandler handler )
   {
-    final PlotCanvas plot = m_chartComposite.getPlot();
 
+    PlotCanvas plot = m_chartComposite.getPlot();
     if( m_handler != null )
     {
       plot.removeMouseListener( m_handler );
@@ -87,5 +87,15 @@ public class ChartDragHandlerDelegate
   public IChartDragHandler getActiveHandler( )
   {
     return m_handler;
+  }
+
+  public void dispose( )
+  {
+    PlotCanvas plot = m_chartComposite.getPlot();
+    if( m_handler != null && plot != null && !plot.isDisposed() )
+    {
+      plot.removeMouseListener( m_handler );
+      plot.removeMouseMoveListener( m_handler );
+    }
   }
 }

@@ -61,7 +61,7 @@ import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -86,11 +86,11 @@ public class ChartView extends ViewPart implements IChartPart
 
   private IFile m_input;
 
-  private ChartDragHandlerDelegate m_chartDragHandler;
-
-  private AxisDragHandlerDelegate m_axisDragZoomInHandler;
+  private PlotDragHandlerDelegate m_plotDragHandler;
 
   private TooltipHandler m_tooltipHandler;
+
+  private AxisDragHandlerDelegate m_axisDragHandler;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -166,11 +166,11 @@ public class ChartView extends ViewPart implements IChartPart
           m_chartComposite.getModel().setAutoscale( true );
 
           // DragHandler erzeugen
-          m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite );
+          m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
+          m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
+
           // TooltipHandler setzen - meldet sich selbst an
           m_tooltipHandler = new TooltipHandler( m_chartComposite );
-          // AxisZoomHandler setzen - meldet sich selbst an
-          m_axisDragZoomInHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
           setPartName( m_chartModel.getTitle() );
@@ -210,9 +210,9 @@ public class ChartView extends ViewPart implements IChartPart
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
-  public ChartDragHandlerDelegate getChartDragHandler( )
+  public PlotDragHandlerDelegate getPlotDragHandler( )
   {
-    return m_chartDragHandler;
+    return m_plotDragHandler;
   }
 
   @Override
@@ -220,8 +220,11 @@ public class ChartView extends ViewPart implements IChartPart
   {
     super.dispose();
 
-    if( m_axisDragZoomInHandler != null )
-      m_axisDragZoomInHandler.dispose();
+    if( m_axisDragHandler != null )
+      m_axisDragHandler.dispose();
+
+    if( m_plotDragHandler != null )
+      m_plotDragHandler.dispose();
 
     if( m_tooltipHandler != null )
       m_tooltipHandler.dispose();
@@ -249,5 +252,13 @@ public class ChartView extends ViewPart implements IChartPart
   public void setTitleImage( final Image titleImage )
   {
     super.setTitleImage( titleImage );
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    return m_axisDragHandler;
   }
 }

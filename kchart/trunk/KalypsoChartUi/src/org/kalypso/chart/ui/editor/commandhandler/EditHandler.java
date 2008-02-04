@@ -24,7 +24,7 @@ public class EditHandler extends AbstractHandler implements IElementUpdater
       return null;
 
     final DragEditHandler dragEditHandler = new DragEditHandler( chartPart.getChartComposite() );
-    chartPart.getChartDragHandler().setActiveHandler( dragEditHandler );
+    chartPart.getPlotDragHandler().setActiveHandler( dragEditHandler );
     ChartHandlerUtilities.updateElements( chartPart );
 
     return null;

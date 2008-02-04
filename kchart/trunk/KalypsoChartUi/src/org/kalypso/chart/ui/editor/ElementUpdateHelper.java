@@ -69,7 +69,7 @@ public class ElementUpdateHelper
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {
-      final IChartDragHandler activeHandler = chartPart.getChartDragHandler().getActiveHandler();
+      final IChartDragHandler activeHandler = chartPart.getPlotDragHandler().getActiveHandler();
       if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
       {
         element.setChecked( true );

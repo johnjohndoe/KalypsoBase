@@ -49,7 +49,7 @@ import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -79,7 +79,9 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private ChartComposite m_chartComposite = null;
 
-  private ChartDragHandlerDelegate m_chartDragHandler;
+  private PlotDragHandlerDelegate m_plotDragHandler;
+
+  private AxisDragHandlerDelegate m_axisDragHandler;
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -143,6 +145,20 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       m_outlinePage.dispose();
       m_outlinePage = null;
+    }
+
+    if( m_plotDragHandler != null )
+    {
+      m_plotDragHandler.dispose();
+    }
+    if( m_axisDragHandler != null )
+    {
+      m_axisDragHandler.dispose();
+    }
+
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+    {
+      m_chartComposite.dispose();
     }
 
     super.dispose();
@@ -378,14 +394,12 @@ public class ChartEditor extends EditorPart implements IChartPart
             // TooltipHandler - meldet sich selbst an
             final TooltipHandler eh = new TooltipHandler( m_chartComposite );
 
-            // AxisZoom-Handler setzen - meldet sich selbst and
-            final AxisDragHandlerDelegate adzh = new AxisDragHandlerDelegate( m_chartComposite );
-
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
 
-            // ChartDragDelegate
-            m_chartDragHandler = new ChartDragHandlerDelegate( m_chartComposite );
+            // drag delegates
+            m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
+            m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
             // PartListener
             final ChartPartListener chartPartListener = new ChartPartListener();
@@ -470,9 +484,14 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_configuration = doc;
   }
 
-  public ChartDragHandlerDelegate getChartDragHandler( )
+  public PlotDragHandlerDelegate getPlotDragHandler( )
   {
-    return m_chartDragHandler;
+    return m_plotDragHandler;
+  }
+
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    return m_axisDragHandler;
   }
 
   protected void setDirty( final boolean dirty )

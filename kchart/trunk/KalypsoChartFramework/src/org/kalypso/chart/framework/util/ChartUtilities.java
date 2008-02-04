@@ -48,6 +48,7 @@ public class ChartUtilities
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setLineJoin( SWT.JOIN_ROUND );
     gc.setAlpha( 255 );
+    gc.setAntialias( SWT.ON );
   }
 
   /**

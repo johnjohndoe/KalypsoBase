@@ -42,9 +42,12 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import java.util.Map.Entry;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.logging.Logger;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -68,8 +71,7 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
    */
   public Cursor getCursor( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
   }
 
   /**
@@ -161,8 +163,10 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
 
   protected void performZoomAction( IAxis axis )
   {
+
     final Number numDragStart = axis.screenToNumeric( m_mouseDragStart );
     final Number numDragEnd = axis.screenToNumeric( m_mouseDragEnd );
+    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Zooming from " + m_mouseDragStart + " (" + numDragStart + ") to " + m_mouseDragEnd + " (" + numDragEnd + ")" );
     axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { numDragStart, numDragEnd } ) );
 
   }

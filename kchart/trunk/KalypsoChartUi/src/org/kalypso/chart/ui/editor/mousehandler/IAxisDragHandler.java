@@ -46,12 +46,11 @@ import org.kalypso.chart.framework.view.IChartDragHandler;
 /**
  * @author burtscher1
  * 
+ * also implements KeyListener interface in order to switch between applying drag action on all axes by the same
+ * orientation or just the one axis corresponding to the axis component the mouse is over
+ * 
  */
 public interface IAxisDragHandler extends IChartDragHandler, KeyListener
 {
-  /**
-   * @param useCurrentAxis
-   *            if true, all actions are applied only to axis belonging to the AxisCanvas the action was applied to
-   */
-  // public void setUseCurrentAxis( boolean useCurrentAxis );
+
 }

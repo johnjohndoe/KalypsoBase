@@ -42,9 +42,11 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import java.util.Map.Entry;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
@@ -80,8 +82,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
    */
   public Cursor getCursor( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
   /**

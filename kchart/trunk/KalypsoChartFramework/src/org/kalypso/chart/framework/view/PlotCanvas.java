@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -166,6 +167,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
+
+    if( m_layerImageMap != null )
+    {
+      for( Image img : m_layerImageMap.values() )
+      {
+        if( img != null && !img.isDisposed() )
+          img.dispose();
+      }
+    }
     super.dispose();
   }
 
@@ -255,7 +265,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
       final GC buffGc = new GC( usedBufferImage );
       final GCWrapper buffGcw = new GCWrapper( buffGc );
-      buffGcw.setAntialias( SWT.OFF );
       try
       {
         final IChartLayer< ? , ? >[] layers = m_manager.getLayers();
@@ -265,8 +274,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
             ChartUtilities.resetGC( buffGcw.m_gc );
             try
             {
-              // layer.paint( buffGcw );
-
               m_layerImageMap.put( layer, paintBufferedLayer( gcw, screen, layer, m_layerImageMap.get( layer ) ) );
 
               if( m_panLayers != null && m_panLayers.contains( layer ) )
@@ -313,10 +320,10 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     final Image usedBufferImage;
     if( layerImage == null )
     {
-      // ImageData id = new ImageData( screen.width, screen.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
       ImageData id = new ImageData( screen.width, screen.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
-      Color white = Display.getDefault().getSystemColor( SWT.COLOR_WHITE );
-      id.transparentPixel = 0xffffff;
+      Color transparentColor = new Color( gcw.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
+
+      id.transparentPixel = 0xfffffe;
 
       usedBufferImage = new Image( Display.getDefault(), id );
 
@@ -324,9 +331,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       final GCWrapper buffGcw = new GCWrapper( buffGc );
 
       // Hintergrund explizit malen - der wird später transparent gezeichnet
-      buffGcw.setBackground( white );
+      buffGcw.setBackground( transparentColor );
       buffGcw.fillRectangle( screen );
-      buffGcw.setAntialias( SWT.ON );
 
       try
       {
@@ -346,6 +352,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       }
       finally
       {
+
+        transparentColor.dispose();
         buffGc.dispose();
         buffGcw.dispose();
       }

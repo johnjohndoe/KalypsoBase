@@ -44,51 +44,87 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.view.AxisCanvas;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
- * handler to manage zooming all axes of the same orientation
+ * 
+ * delegate to manage handlers for mouse dragging; only one handler is active at a time
  * 
  * @author burtscher1
+ * 
  */
-public class AxisDragHandlerDelegate implements KeyListener
+public class AxisDragHandlerDelegate
 {
-
-  /**
-   * drag end in screen koordinates
-   */
-  private final int m_mouseDragEnd = -1;
+  private IAxisDragHandler m_handler;
 
   private final ChartComposite m_chartComposite;
 
-  private final boolean m_applyOnAllAxes = false;
-
-  private IAxisDragHandler m_activeHandler = null;
-
-  private enum DRAG_ACTION
-  {
-    PAN,
-    ZOOM_IN,
-    ZOOM_OUT
-  };
-
-  private final Map<DRAG_ACTION, IAxisDragHandler> m_handlerMap = new HashMap<DRAG_ACTION, IAxisDragHandler>();
-
-  private final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
-
-  public AxisDragHandlerDelegate( ChartComposite chartComposite )
+  public AxisDragHandlerDelegate( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
+  }
 
-    // zugehörige Achsen rausfinden
+  public void setActiveHandler( final IAxisDragHandler handler )
+  {
+    if( m_handler != null )
+    {
+      for( AxisCanvas ac : getAxesMap().keySet() )
+      {
+        ac.removeMouseListener( m_handler );
+        ac.removeMouseMoveListener( m_handler );
+        ac.removeKeyListener( m_handler );
+      }
+
+    }
+    m_handler = handler;
+
+    for( AxisCanvas ac : getAxesMap().keySet() )
+    {
+      if( handler == null )
+        ac.setCursor( ac.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
+      else
+      {
+        ac.setCursor( m_handler.getCursor() );
+        ac.addMouseListener( m_handler );
+        ac.addMouseMoveListener( m_handler );
+        ac.addKeyListener( m_handler );
+      }
+    }
+
+  }
+
+  public IChartDragHandler getActiveHandler( )
+  {
+    return m_handler;
+  }
+
+  public void dispose( )
+  {
+    if( m_handler != null )
+    {
+      for( final AxisCanvas ac : getAxesMap().keySet() )
+      {
+        if( !ac.isDisposed() )
+        {
+          ac.removeMouseListener( m_handler );
+          ac.removeMouseMoveListener( m_handler );
+          ac.removeKeyListener( m_handler );
+        }
+      }
+    }
+  }
+
+  /**
+   * this needs to be called each time axes are needed, as it might be that no axes exist at initialisation time
+   */
+  private Map<AxisCanvas, IAxis> getAxesMap( )
+  {
+    Map<AxisCanvas, IAxis> axesMap = new HashMap<AxisCanvas, IAxis>();
     final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
     final IAxis< ? >[] axes = reg.getAxes();
     for( final IAxis< ? > axis : axes )
@@ -97,85 +133,9 @@ public class AxisDragHandlerDelegate implements KeyListener
       if( component != null )
       {
         final AxisCanvas ac = (AxisCanvas) component;
-        m_axes.put( ac, axis );
-        // selbst als Key-Listener anmelden (zum Umschalten der Aktionen)
-        ac.addKeyListener( this );
+        axesMap.put( ac, axis );
       }
     }
-
-    // Handler-Map initialisieren
-    m_handlerMap.put( DRAG_ACTION.PAN, new AxisDragPanHandler( m_chartComposite ) );
-    m_handlerMap.put( DRAG_ACTION.ZOOM_IN, new AxisDragZoomInHandler( m_chartComposite ) );
-    m_handlerMap.put( DRAG_ACTION.ZOOM_OUT, new AxisDragZoomOutHandler( m_chartComposite ) );
-
-    // ersten aktiven Handler setzen
-    setActiveHandler( m_handlerMap.get( DRAG_ACTION.ZOOM_IN ) );
-
+    return axesMap;
   }
-
-  public void setActiveHandler( IAxisDragHandler handler )
-  {
-    for( AxisCanvas ac : m_axes.keySet() )
-    {
-      if( m_activeHandler != null )
-      {
-        ac.removeMouseListener( m_activeHandler );
-        ac.removeMouseMoveListener( m_activeHandler );
-        ac.removeKeyListener( m_activeHandler );
-      }
-
-      ac.addKeyListener( handler );
-      ac.addMouseListener( handler );
-      ac.addMouseMoveListener( handler );
-    }
-
-    m_activeHandler = handler;
-  }
-
-  public void dispose( )
-  {
-    for( final AxisCanvas ac : m_axes.keySet() )
-    {
-      if( !ac.isDisposed() )
-      {
-        ac.removeMouseListener( m_activeHandler );
-        ac.removeMouseMoveListener( m_activeHandler );
-        ac.removeKeyListener( m_activeHandler );
-
-      }
-    }
-    m_chartComposite.removeKeyListener( this );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
-   */
-  public Cursor getCursor( )
-  {
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_CROSS );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyPressed( KeyEvent e )
-  {
-    if( e.keyCode == SWT.CTRL )
-      setActiveHandler( m_handlerMap.get( DRAG_ACTION.PAN ) );
-    else if( e.keyCode == SWT.SHIFT )
-      setActiveHandler( m_handlerMap.get( DRAG_ACTION.ZOOM_OUT ) );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyReleased( KeyEvent e )
-  {
-    if( e.keyCode == SWT.CTRL )
-      setActiveHandler( m_handlerMap.get( DRAG_ACTION.ZOOM_IN ) );
-    else if( e.keyCode == SWT.SHIFT )
-      setActiveHandler( m_handlerMap.get( DRAG_ACTION.ZOOM_IN ) );
-
-  }
-
 }

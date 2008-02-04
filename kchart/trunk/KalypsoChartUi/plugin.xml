@@ -284,7 +284,7 @@
       <definition
             id="org.kalypso.chart.ui.chartEditorActive">
          <with
-               variable="activePartId">
+               variable="activeEditorId">
                <equals
                      value="org.kalypso.chart.ui.editor.ChartEditor">
                </equals>

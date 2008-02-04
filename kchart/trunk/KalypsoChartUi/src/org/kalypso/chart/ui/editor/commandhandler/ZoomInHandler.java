@@ -9,6 +9,7 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
 
 public class ZoomInHandler extends AbstractHandler implements IElementUpdater
@@ -22,8 +23,11 @@ public class ZoomInHandler extends AbstractHandler implements IElementUpdater
     if( chartPart == null )
       return null;
 
-    final DragZoomInHandler dragZoomInHandler = new DragZoomInHandler( chartPart.getChartComposite() );
-    chartPart.getChartDragHandler().setActiveHandler( dragZoomInHandler );
+    final DragZoomInHandler plotDragZoomInHandler = new DragZoomInHandler( chartPart.getChartComposite() );
+    chartPart.getPlotDragHandler().setActiveHandler( plotDragZoomInHandler );
+    final AxisDragZoomInHandler axisDragZoomInHandler = new AxisDragZoomInHandler( chartPart.getChartComposite() );
+    chartPart.getAxisDragHandler().setActiveHandler( axisDragZoomInHandler );
+
     ChartHandlerUtilities.updateElements( chartPart );
 
     return null;
