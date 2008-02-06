@@ -49,6 +49,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
@@ -68,6 +69,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Not for automatik testing. Test methods changed to 'tost' for this reason.
@@ -98,7 +100,7 @@ public class GisMapPerfTest extends TestCase
     }
   }
 
-  private void mapLoadingAndVisualization( final URL gmtResource ) throws JAXBException, IOException, CoreException
+  private void mapLoadingAndVisualization( final URL gmtResource ) throws JAXBException, IOException, CoreException, SAXException, ParserConfigurationException
   {
     final TimeLogger logger = new TimeLogger( "Starting test: " + gmtResource.getPath() );
 
