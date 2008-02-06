@@ -124,7 +124,12 @@ public final class RunnableContextHelper
 
   /**
    * Runs a runnable in a progress monitor dialog.
+   * 
+   * @deprecated Use
+   *             {@link org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)}
+   *             instead.
    */
+  @Deprecated
   public final static IStatus executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable, final IErrorHandler errorHandler )
   {
     // run the execute method in a Progress-Dialog
