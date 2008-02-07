@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.restriction;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 
 /**
  * @author Gernot Belger
@@ -64,4 +68,22 @@ public class RestrictionUtilities
 
     return null;
   }
+
+  public static Map<Object, ILanguageAnnontationProvider> getEnumerationItems( final IRestriction[] restrictions )
+  {
+    final Map<Object, ILanguageAnnontationProvider> items = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+
+    for( final IRestriction restriction : restrictions )
+    {
+      if( restriction instanceof EnumerationRestriction )
+      {
+        final EnumerationRestriction r = (EnumerationRestriction) restriction;
+
+        items.putAll( r.getMapping() );
+      }
+    }
+
+    return items;
+  }
+
 }
