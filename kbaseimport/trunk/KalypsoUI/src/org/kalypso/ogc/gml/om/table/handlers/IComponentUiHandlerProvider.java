@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import org.kalypso.observation.result.IComponent;
+import java.util.Map;
+
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * A factory for creating {@link IComponentUiHandler}'s.
@@ -49,5 +51,8 @@ import org.kalypso.observation.result.IComponent;
  */
 public interface IComponentUiHandlerProvider
 {
-  public IComponentUiHandler[] createComponentHandler( final IComponent[] components );
+  /**
+   * @return A map that maps tuple result indices to component handlers.
+   */
+  public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult );
 }
