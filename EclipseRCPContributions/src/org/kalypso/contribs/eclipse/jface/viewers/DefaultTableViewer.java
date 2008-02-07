@@ -210,4 +210,14 @@ public class DefaultTableViewer extends TableViewer
     setColumnProperties( new String[] {} );
 
   }
+
+  public String getProperty( final int columnIndex )
+  {
+    final TableColumn column = getTable().getColumn( columnIndex );
+    final Object property = column.getData( DefaultTableViewer.COLUMN_PROP_NAME );
+    if( property == null )
+      return null;
+
+    return property.toString();
+  }
 }
