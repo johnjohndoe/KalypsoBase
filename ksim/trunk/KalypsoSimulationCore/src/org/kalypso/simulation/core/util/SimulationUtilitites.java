@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationConstants;
@@ -54,6 +55,9 @@ import org.kalypso.simulation.core.ISimulationConstants;
 @SuppressWarnings("restriction")
 public class SimulationUtilitites
 {
+  // TODO: change this tracing option to be part of the core plug-in (on server side, no ui-plug-in will be available).
+  public static final String DEBUG_KEEP_SIM_FILES = "org.kalypso.simulation.ui/debug/keepSimulationFiles";
+
   public SimulationUtilitites( )
   {
     throw new UnsupportedOperationException( "Do not instantiate helper class" );
@@ -71,4 +75,15 @@ public class SimulationUtilitites
     return tmpDir;
   }
 
+  /**
+   * Deletes the directory, if simulation files should not be kept.
+   */
+  public static void clearTmpDir( final File tmpDir )
+  {
+    if( Boolean.valueOf( Platform.getDebugOption( DEBUG_KEEP_SIM_FILES ) ) )
+      return;
+
+    if( tmpDir != null )
+      FileUtilities.deleteRecursive( tmpDir );
+  }
 }

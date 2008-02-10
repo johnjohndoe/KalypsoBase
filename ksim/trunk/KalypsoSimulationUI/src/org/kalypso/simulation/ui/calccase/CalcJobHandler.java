@@ -79,7 +79,7 @@ import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
-import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -222,7 +222,7 @@ public class CalcJobHandler
       {
         if( m_jobID != null )
         {
-          if( !Boolean.valueOf( Platform.getDebugOption( IKalypsoSimulationUIConstants.DEBUG_KEEP_SIM_FILES ) ) )
+          if( !Boolean.valueOf( Platform.getDebugOption( SimulationUtilitites.DEBUG_KEEP_SIM_FILES ) ) )
           {
             m_calcService.disposeJob( m_jobID );
 
