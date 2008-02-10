@@ -102,17 +102,12 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
   public Format getFormat( final IDataRange<Number> range )
   {
     Number min = range.getMin();
-    // FIXME while runs into endlos loop
     if( Double.valueOf( min.doubleValue() ).isInfinite() )
       min = 0.0;
 
-    final Number max = range.getMax();
-    // FIXME while runs into endlos loop
-    if( Double.valueOf( min.doubleValue() ).isInfinite() )
-      min = 0.0;
-
-    // Differenz bilden und sicherstellen, dass sie positiv ist
-    Double diff = Math.abs( max.doubleValue() - min.doubleValue() );
+    Number max = range.getMax();
+    if( Double.valueOf( max.doubleValue() ).isInfinite() )
+      max = 0.0;
 
     final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
@@ -128,27 +123,36 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
     // Vorkommastellen ausrechnen
     double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
-    if( tmpmax >= 1 )
+    if( tmpmax >= 1 && !Double.isInfinite( tmpmax ) )
+    {
       while( tmpmax >= 1 )
       {
         tmpmax /= 10;
         id++;
       }
+    }
 
+    // Differenz bilden und sicherstellen, dass sie positiv ist
+    double diff = Math.abs( max.doubleValue() - min.doubleValue() );
     // Bereichs-10er-potenz ausmachen
     int pow = 0;
-    if( diff >= 1 )
+    if( diff >= 1 && !Double.isInfinite( diff ) )
+    {
       while( diff >= 1 )
       {
         diff /= 10;
         pow++;
       }
+    }
     else if( diff != 0 )
+    {
       while( diff <= 0.1 )
       {
         diff *= 10;
         pow--;
       }
+    }
+
     //
     if( pow >= 0 )
       fd = pow > validDigits ? 0 : Math.abs( validDigits - pow );

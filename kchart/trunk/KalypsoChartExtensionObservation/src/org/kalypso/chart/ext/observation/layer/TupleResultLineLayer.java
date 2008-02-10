@@ -55,7 +55,6 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 
   public void paint( final GCWrapper gc )
   {
-    final Rectangle c = gc.getClipping();
     final IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
     final IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );
     final List<Point> path = new ArrayList<Point>();
@@ -88,8 +87,8 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     {
       for( int i = 0; i < result.size(); i++ )
       {
-        Object xObj = xValues[i];
-        Object yObj = yValues[i];
+        final Object xObj = xValues[i];
+        final Object yObj = yValues[i];
         // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
         // in that case
         if( xObj != null && yObj != null )
