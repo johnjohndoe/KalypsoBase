@@ -181,7 +181,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
     ProgressUtilities.worked( progress, 1 );
 
-    final Feature coveragesFeature = coverages.getWrappedFeature();
+    final Feature coveragesFeature = coverages.getFeature();
     if( m_coverages == null ) // do not save if coverages already exists
     {
       final SetContentHelper contentHelper = new SetContentHelper()
@@ -198,7 +198,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
     /* Fire model event */
     final GMLWorkspace workspace = coveragesFeature.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     return newCoverage;
   }

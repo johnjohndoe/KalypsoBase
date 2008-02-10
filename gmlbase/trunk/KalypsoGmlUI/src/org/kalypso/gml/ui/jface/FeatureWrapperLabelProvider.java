@@ -99,7 +99,7 @@ public class FeatureWrapperLabelProvider extends LabelProvider implements ITable
     if( prop == null )
       return null;
 
-    final Feature feature = ((IFeatureWrapper2) element).getWrappedFeature();
+    final Feature feature = ((IFeatureWrapper2) element).getFeature();
     final IPropertyType pt = feature.getFeatureType().getProperty( prop );
     final Object value = feature.getProperty( prop );
 
@@ -121,7 +121,7 @@ public class FeatureWrapperLabelProvider extends LabelProvider implements ITable
     if( prop == null )
       return super.getText( element );
 
-    final Feature feature = ((IFeatureWrapper2) element).getWrappedFeature();
+    final Feature feature = ((IFeatureWrapper2) element).getFeature();
     final IPropertyType pt = feature.getFeatureType().getProperty( prop );
     final Object value = feature.getProperty( prop );
 

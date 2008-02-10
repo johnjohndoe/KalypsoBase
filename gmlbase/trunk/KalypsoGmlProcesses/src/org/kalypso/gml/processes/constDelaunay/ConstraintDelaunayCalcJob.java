@@ -64,7 +64,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @SuppressWarnings("unchecked")
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" );
     final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" );
@@ -85,7 +85,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     {
       pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
 
-      final LogHelper log = new LogHelper( pwSimuLog, monitor );
+      final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
 
       log.log( true, "Parsing GMLXPath: %s", geometryXPath );
 
@@ -216,9 +216,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
 
-    List<GM_Surface> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+    final List<GM_Surface> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
-    for( GM_Surface surface : surfaces )
+    for( final GM_Surface surface : surfaces )
     {
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
       newFeature.setProperty( geomName, surface );

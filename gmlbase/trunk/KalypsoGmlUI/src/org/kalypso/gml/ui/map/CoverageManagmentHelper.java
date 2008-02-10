@@ -85,7 +85,7 @@ public class CoverageManagmentHelper
   public static IStatus deleteGridFile( final ICoverage coverageToDelete )
   {
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
-    final Feature feature = coverage.getWrappedFeature();
+    final Feature feature = coverage.getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
 
     final RangeSetType rangeSet = coverage.getRangeSet();

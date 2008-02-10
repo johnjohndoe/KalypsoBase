@@ -154,7 +154,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
         {
           try
           {
-            final IGeoGrid grid = new RectifiedGridCoverageGeoGrid( coverage.getWrappedFeature() );
+            final IGeoGrid grid = new RectifiedGridCoverageGeoGrid( coverage.getFeature() );
 
             final AscGridExporter gridExporter = new AscGridExporter( -9999, 2 );
             monitor.beginTask( "Schreibe Raster", 100 );

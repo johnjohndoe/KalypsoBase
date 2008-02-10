@@ -564,7 +564,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( m_selectedCoverage != null )
     {
-      featureComposite.setFeature( m_selectedCoverage.getWrappedFeature() );
+      featureComposite.setFeature( m_selectedCoverage.getFeature() );
       featureComposite.createControl( coverageInfoGroup, SWT.NONE );
       parent.layout( true, true );
     }
@@ -922,9 +922,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_selectedCoverage == null )
       return;
 
-    final Feature parentFeature = m_coverages.getWrappedFeature();
+    final Feature parentFeature = m_coverages.getFeature();
     final IPropertyType pt = parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-    final Feature coverageFeature = m_selectedCoverage.getWrappedFeature();
+    final Feature coverageFeature = m_selectedCoverage.getFeature();
 
     final List featureList = (List) parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( coverageFeature ) + step;
@@ -1031,7 +1031,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
             return status;
 
           /* Delete coverage from collection */
-          final Feature coverageFeature = selectedCoverage.getWrappedFeature();
+          final Feature coverageFeature = selectedCoverage.getFeature();
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           theme.postCommand( command, refreshRunnable );
