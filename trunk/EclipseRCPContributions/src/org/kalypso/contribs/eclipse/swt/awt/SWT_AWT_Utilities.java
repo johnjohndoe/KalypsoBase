@@ -56,7 +56,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 public class SWT_AWT_Utilities
 {
   /**
-   * Calls {@link MessageDialog#openConfirm(Shell, String, String)} on the currentyl active shell.<br>
+   * Calls {@link MessageDialog#openConfirm(Shell, String, String)} on the currently active shell.<br>
    * This code can be called even outside a SWT thread.
    * 
    * @return The result of the call to {@link MessageDialog#openConfirm(Shell, String, String)}
@@ -79,7 +79,7 @@ public class SWT_AWT_Utilities
   }
 
   /**
-   * Calls {@link MessageDialog#openInformation(Shell, String, String)} on the currentyl active shell.<br>
+   * Calls {@link MessageDialog#openInformation(Shell, String, String)} on the currently active shell.<br>
    * This code can be called even outside a SWT thread.
    * 
    * @return The result of the call to {@link MessageDialog#openInformation(Shell, String, String)}
