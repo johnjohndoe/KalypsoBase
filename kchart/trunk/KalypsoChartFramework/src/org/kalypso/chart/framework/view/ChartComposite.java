@@ -35,11 +35,7 @@ public class ChartComposite extends Composite
   /** drawing space for the plot itself */
   private PlotCanvas m_plot;
 
-  private final boolean m_autoscale = false;
-
   private final Color m_bgColor;
-
-  // private final Color m_black;
 
   private final IChartModel m_model;
 
@@ -47,7 +43,7 @@ public class ChartComposite extends Composite
 
   private final AbstractChartModelEventListener m_chartModelListener;
 
-  public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
+  public ChartComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
     m_model = model;
@@ -96,18 +92,18 @@ public class ChartComposite extends Composite
        * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
        */
       @Override
-      public void onMapperRangeChanged( IMapper mapper )
+      public void onMapperRangeChanged( final IMapper mapper )
       {
 
         layout();
         if( mapper instanceof IAxis )
         {
-          IAxis axis = (IAxis) mapper;
+          final IAxis axis = (IAxis) mapper;
 
-          IChartLayer[] changedLayers = (IChartLayer[]) getModel().getAxis2Layers().get( axis ).toArray( new IChartLayer[] {} );
+          final IChartLayer[] changedLayers = getModel().getAxis2Layers().get( axis ).toArray( new IChartLayer[] {} );
           m_plot.invalidate( changedLayers );
 
-          AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
+          final AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
           ac.layout();
         }
         redraw();
@@ -280,7 +276,7 @@ public class ChartComposite extends Composite
   /**
    * resizes the chart according to a given plot size;
    */
-  public void setPlotSize( int width, int height )
+  public void setPlotSize( final int width, final int height )
   {
     final Composite l = m_axisPlaces.get( POSITION.LEFT );
     final Composite r = m_axisPlaces.get( POSITION.RIGHT );
@@ -314,7 +310,7 @@ public class ChartComposite extends Composite
 
   }
 
-  public void setHideUnusedAxes( boolean hide )
+  public void setHideUnusedAxes( final boolean hide )
   {
     m_model.setHideUnusedAxes( hide );
     redraw();

@@ -65,8 +65,7 @@ public class PlotDragHandlerDelegate
 
   public void setActiveHandler( final IChartDragHandler handler )
   {
-
-    PlotCanvas plot = m_chartComposite.getPlot();
+    final PlotCanvas plot = m_chartComposite.getPlot();
     if( m_handler != null )
     {
       plot.removeMouseListener( m_handler );
@@ -91,7 +90,7 @@ public class PlotDragHandlerDelegate
 
   public void dispose( )
   {
-    PlotCanvas plot = m_chartComposite.getPlot();
+    final PlotCanvas plot = m_chartComposite.getPlot();
     if( m_handler != null && plot != null && !plot.isDisposed() )
     {
       plot.removeMouseListener( m_handler );

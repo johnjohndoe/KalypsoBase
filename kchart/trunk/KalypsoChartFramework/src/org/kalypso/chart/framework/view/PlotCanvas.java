@@ -66,7 +66,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     addPaintListener( this );
     addListener( SWT.Resize, this );
 
-    for( IChartLayer layer : manager.getLayers() )
+    for( final IChartLayer layer : manager.getLayers() )
     {
       m_layerImageMap.put( layer, null );
     }
@@ -123,8 +123,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       @Override
       public void onLayerContentChanged( IChartLayer< ? , ? > layer )
       {
-        m_layerImageMap.put( layer, null );
-        redraw();
+        invalidate( new IChartLayer[] { layer } );
       }
     };
     manager.addListener( m_almel );
@@ -135,13 +134,13 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    * @param layers
    *            Array of layers which should be redrawn; if null, only the bufferImage is redrawn
    */
-  public void invalidate( IChartLayer[] layers )
+  public void invalidate( final IChartLayer[] layers )
   {
     if( layers != null )
     {
-      for( IChartLayer layer : layers )
+      for( final IChartLayer layer : layers )
       {
-        Image image = m_layerImageMap.get( layer );
+        final Image image = m_layerImageMap.get( layer );
         if( image != null && !image.isDisposed() )
           image.dispose();
         m_layerImageMap.put( layer, null );
@@ -170,7 +169,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
     if( m_layerImageMap != null )
     {
-      for( Image img : m_layerImageMap.values() )
+      for( final Image img : m_layerImageMap.values() )
       {
         if( img != null && !img.isDisposed() )
           img.dispose();
@@ -315,13 +314,13 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     return usedBufferImage;
   }
 
-  private Image paintBufferedLayer( GCWrapper gcw, Rectangle screen, IChartLayer< ? , ? > layer, Image layerImage )
+  private Image paintBufferedLayer( final GCWrapper gcw, final Rectangle screen, final IChartLayer< ? , ? > layer, final Image layerImage )
   {
     final Image usedBufferImage;
     if( layerImage == null )
     {
-      ImageData id = new ImageData( screen.width, screen.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
-      Color transparentColor = new Color( gcw.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
+      final ImageData id = new ImageData( screen.width, screen.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
+      final Color transparentColor = new Color( gcw.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
 
       id.transparentPixel = 0xfffffe;
 
@@ -413,13 +412,13 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    * @param offset
    *            positive value moves buffer to right / down, negative value to left / up
    */
-  public void setPanOffset( IChartLayer[] layers, final Point offset )
+  public void setPanOffset( final IChartLayer[] layers, final Point offset )
   {
     m_panOffset = offset;
     if( layers != null )
     {
       m_panLayers = new HashSet<IChartLayer>();
-      for( IChartLayer layer : layers )
+      for( final IChartLayer layer : layers )
       {
         m_panLayers.add( layer );
       }

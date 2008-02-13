@@ -49,6 +49,7 @@ import org.kalypso.chart.framework.model.layer.IChartLayer;
  */
 public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener>
 {
+  // TODO: to restricted. better: fireRepaintRequest( BoundingBox );
   public void fireLayerContentChanged( final IChartLayer< ? , ? > layer )
   {
     for( final ILayerEventListener l : getListeners() )
