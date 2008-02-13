@@ -50,7 +50,6 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 
     gcw.dispose();
     gc.dispose();
-
   }
 
   public void paint( final GCWrapper gc )
@@ -83,6 +82,7 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
       yAxis = getDomainAxis();
       xAxis = getTargetAxis();
     }
+
     if( xValues.length > 0 && yValues.length > 0 )
     {
       for( int i = 0; i < result.size(); i++ )
@@ -104,7 +104,6 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     sl.paint( gc );
     sp.setPath( path );
     sp.paint( gc );
-
   }
 
 }
