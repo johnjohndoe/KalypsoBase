@@ -19,7 +19,7 @@ public class LayerStyle implements ILayerStyle
     m_elements = new ArrayList<IStyledElement>();
   }
 
-  public void add( IStyledElement se )
+  public void add( final IStyledElement se )
   {
     m_elements.add( se );
   }
@@ -28,7 +28,7 @@ public class LayerStyle implements ILayerStyle
    * @see org.kalypso.chart.framework.styles.ILayerStyle#getElement(org.kalypso.chart.framework.styles.IStyleConstants.SE_TYPE,
    *      int)
    */
-  public IStyledElement getElement( SE_TYPE type, int pos )
+  public IStyledElement getElement( final SE_TYPE type, final int pos )
   {
     IStyledElement elt = null;
     int count = 0;
@@ -37,9 +37,9 @@ public class LayerStyle implements ILayerStyle
       if( se.getType() == type )
       {
         elt = se;
-        count++;
         if( pos == count )
           break;
+        count++;
       }
     }
     if( elt == null )
@@ -51,7 +51,7 @@ public class LayerStyle implements ILayerStyle
   }
 
   private IStyledElement getDefaultElement( @SuppressWarnings("unused")
-  SE_TYPE type )
+  final SE_TYPE type )
   {
     return new StyleDummy();
   }
