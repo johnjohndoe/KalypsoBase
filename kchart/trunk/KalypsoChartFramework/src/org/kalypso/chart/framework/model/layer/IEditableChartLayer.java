@@ -52,6 +52,9 @@ public interface IEditableChartLayer<T_domain, T_target> extends IChartLayer<T_d
 
   public void setActivePoint( Object data );
 
+  /**
+   * TODO: comment: what does the return value mean here?
+   */
   public EditInfo edit( Point point, EditInfo data );
 
   public boolean alwaysAllowsEditing( );
