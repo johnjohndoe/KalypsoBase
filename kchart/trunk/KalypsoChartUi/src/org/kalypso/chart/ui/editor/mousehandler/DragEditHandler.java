@@ -15,6 +15,8 @@ import org.kalypso.chart.framework.view.PlotCanvas;
  * 
  * @author alibu
  */
+// TODO: introduce an abstract clas, the extends from KeyAdapter, MouseAdapter and so on, so you only need to implement
+// what you really whant to.
 public class DragEditHandler implements IChartDragHandler
 {
   private final ChartComposite m_chart;

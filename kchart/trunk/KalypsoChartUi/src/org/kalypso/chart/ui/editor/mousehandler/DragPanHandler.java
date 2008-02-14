@@ -123,16 +123,16 @@ public class DragPanHandler implements IChartDragHandler
     return Display.getDefault().getSystemCursor( SWT.CURSOR_SIZEALL );
   }
 
-  private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
+  private void setAxisPanOffset( final int panXStart, final int panXEnd, final int panYStart, final int panYEnd )
   {
-    IMapperRegistry mapperRegistry = m_chartComposite.getModel().getMapperRegistry();
-    IAxis< ? >[] axes = mapperRegistry.getAxes();
-    for( IAxis< ? > axis : axes )
+    final IMapperRegistry mapperRegistry = m_chartComposite.getModel().getMapperRegistry();
+    final IAxis< ? >[] axes = mapperRegistry.getAxes();
+    for( final IAxis< ? > axis : axes )
     {
-      IAxisComponent component = mapperRegistry.getComponent( axis );
+      final IAxisComponent component = mapperRegistry.getComponent( axis );
       if( component != null && component instanceof AxisCanvas )
       {
-        AxisCanvas ac = (AxisCanvas) component;
+        final AxisCanvas ac = (AxisCanvas) component;
         if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
           ac.setPanOffsetInterval( new Point( panXStart, panXEnd ) );
         else

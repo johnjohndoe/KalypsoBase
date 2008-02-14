@@ -49,5 +49,7 @@ import org.eclipse.swt.graphics.Cursor;
  */
 public interface IChartDragHandler extends MouseListener, MouseMoveListener
 {
+  // TODO: Too constrained. Let the handler set the cursor to the chart, it may change depending on the state of the
+  // mouse-handler.
   public Cursor getCursor( );
 }

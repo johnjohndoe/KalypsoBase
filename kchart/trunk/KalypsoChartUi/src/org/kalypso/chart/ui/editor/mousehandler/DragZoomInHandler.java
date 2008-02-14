@@ -41,6 +41,7 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
@@ -54,7 +55,7 @@ import org.kalypso.chart.framework.view.PlotCanvas;
  * @author Gernot Belger
  * @author burtscher1
  */
-public class DragZoomInHandler implements IChartDragHandler
+public class DragZoomInHandler extends KeyAdapter implements IChartDragHandler
 {
   private Rectangle m_mouseDragRect = null;
 
