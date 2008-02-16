@@ -35,7 +35,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
   public void autoscale( IAxis< ? >[] axes );
 
   /**
-   * sets automatical autoscaling of axes
+   * sets automatic autoscaling of axes
    */
   public void setAutoscale( boolean b );
 
@@ -51,6 +51,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public void setDescription( String description );
 
+  // TODO: replace the three next methods by a 'setExtent' method
   public <T_logical> void zoomIn( Point start, Point end );
 
   public <T_logical> void zoomOut( Point start, Point end );

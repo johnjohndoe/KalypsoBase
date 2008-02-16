@@ -52,14 +52,13 @@ import org.kalypso.chart.framework.model.styles.IStyledElement;
  */
 public abstract class AbstractStyledElement implements IStyledElement
 {
-
   private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
   private List<Point> m_path;
 
   private final String m_id;
 
-  public AbstractStyledElement( String id )
+  public AbstractStyledElement( final String id )
   {
     m_id = id;
   }
@@ -68,7 +67,7 @@ public abstract class AbstractStyledElement implements IStyledElement
    * @see org.kalypso.chart.framework.styles.IStyledElement#setPath(java.util.List) The path is used draw a styled point
    *      at each point of the path; the Point is regarded as the center position of the element
    */
-  public void setPath( List<Point> path )
+  public void setPath( final List<Point> path )
   {
     m_path = path;
   }
@@ -76,7 +75,7 @@ public abstract class AbstractStyledElement implements IStyledElement
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
-  public void setData( String id, Object data )
+  public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
@@ -84,7 +83,7 @@ public abstract class AbstractStyledElement implements IStyledElement
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
-  public Object getData( String id )
+  public Object getData( final String id )
   {
     return m_data.get( id );
   }

@@ -50,7 +50,7 @@ public class ChartModel implements IChartModel
 
   public ChartModel( )
   {
-    AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
+    final AbstractLayerManagerEventListener m_layerMana = new AbstractLayerManagerEventListener()
     {
       /*
        * (non-Javadoc)
@@ -249,20 +249,20 @@ public class ChartModel implements IChartModel
       // first: set logical range; we have to do this right now as we get logical ranges out of layers / data containers
       axis.setLogicalRange( mergedDataRange );
       // now check if axis has a preferred Adjustment
-      AxisAdjustment adj = axis.getPreferredAdjustment();
+      final AxisAdjustment adj = axis.getPreferredAdjustment();
       if( adj != null )
       {
-        double adjBefore = adj.getBefore();
-        double adjRange = adj.getRange();
-        double adjAfter = adj.getAfter();
+        final double adjBefore = adj.getBefore();
+        final double adjRange = adj.getRange();
+        final double adjAfter = adj.getAfter();
 
-        IDataRange<Number> numericRange = axis.getNumericRange();
-        double rangeMax = numericRange.getMax().doubleValue();
-        double rangeMin = numericRange.getMin().doubleValue();
-        double rangeSize = rangeMax - rangeMin;
+        final IDataRange<Number> numericRange = axis.getNumericRange();
+        final double rangeMax = numericRange.getMax().doubleValue();
+        final double rangeMin = numericRange.getMin().doubleValue();
+        final double rangeSize = rangeMax - rangeMin;
 
-        double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
-        double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
+        final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
+        final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 
         axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
 
@@ -320,7 +320,7 @@ public class ChartModel implements IChartModel
   /**
    * @see org.kalypso.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
    */
-  public void addListener( IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     m_eventHandler.addListener( listener );
   }
@@ -328,7 +328,7 @@ public class ChartModel implements IChartModel
   /**
    * @see org.kalypso.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
    */
-  public void removeListener( IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     m_eventHandler.removeListener( listener );
   }
@@ -344,7 +344,7 @@ public class ChartModel implements IChartModel
   /**
    * @see org.kalypso.chart.framework.model.IChartModel#setId()
    */
-  public void setId( String id )
+  public void setId( final String id )
   {
     m_id = id;
   }
@@ -368,7 +368,7 @@ public class ChartModel implements IChartModel
   /**
    * @see org.kalypso.chart.framework.model.IChartModel#setDescription(java.lang.String)
    */
-  public void setDescription( String description )
+  public void setDescription( final String description )
   {
     m_description = description;
   }
@@ -376,13 +376,13 @@ public class ChartModel implements IChartModel
   /**
    * @see org.kalypso.chart.framework.model.IChartModel#setTitle(java.lang.String)
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
     m_title = title;
   }
 
   /**
-   * maximises the content of the plot to the values inside a dragged rectangle
+   * Maximizes the content of the plot to the values inside a dragged rectangle
    */
   @SuppressWarnings("unchecked")
   public <T_logical> void zoomIn( final Point start, final Point end )
@@ -483,16 +483,16 @@ public class ChartModel implements IChartModel
 
       if( from != Double.NaN && to != Double.NaN )
       {
-        IDataRange<Number> numericRange = axis.getNumericRange();
+        final IDataRange<Number> numericRange = axis.getNumericRange();
 
-        double oldmin = numericRange.getMin().doubleValue();
-        double oldmax = numericRange.getMax().doubleValue();
-        double oldrange = Math.abs( oldmin - oldmax );
-        double mouserange = Math.abs( from - to );
-        double newrange = (oldrange / mouserange) * oldrange;
+        final double oldmin = numericRange.getMin().doubleValue();
+        final double oldmax = numericRange.getMax().doubleValue();
+        final double oldrange = Math.abs( oldmin - oldmax );
+        final double mouserange = Math.abs( from - to );
+        final double newrange = (oldrange / mouserange) * oldrange;
 
-        double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
-        double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
+        final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+        final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
 
         axis.setNumericRange( new ComparableDataRange( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }
@@ -503,8 +503,8 @@ public class ChartModel implements IChartModel
   public void panTo( final Point start, final Point end )
 
   {
-    IAxis< ? >[] axes = getMapperRegistry().getAxes();
-    for( IAxis< ? > axis : axes )
+    final IAxis< ? >[] axes = getMapperRegistry().getAxes();
+    for( final IAxis< ? > axis : axes )
     {
       double newmin = 0;
       double newmax = 0;
@@ -521,12 +521,12 @@ public class ChartModel implements IChartModel
         nowNum = axis.screenToNumeric( end.y );
         startNum = axis.screenToNumeric( start.y );
       }
-      double diff = startNum.doubleValue() - nowNum.doubleValue();
-      IDataRange<Number> initRange = axis.getNumericRange();
+      final double diff = startNum.doubleValue() - nowNum.doubleValue();
+      final IDataRange<Number> initRange = axis.getNumericRange();
       newmin = initRange.getMin().doubleValue() + diff;
       newmax = initRange.getMax().doubleValue() + diff;
 
-      IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
+      final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
       axis.setNumericRange( newRange );
 
     }

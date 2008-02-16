@@ -12,6 +12,8 @@ import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 /**
+ * TODO: use separate alpha for border and filling.
+ * 
  * @author burtscher
  */
 public class StyledPoint extends AbstractStyledElement implements IStyledElement
@@ -28,7 +30,7 @@ public class StyledPoint extends AbstractStyledElement implements IStyledElement
 
   private final int m_alpha;
 
-  public StyledPoint( String id, int width, int height, RGB fillColor, int borderWidth, RGB borderColor, int alpha )
+  public StyledPoint( final String id, final int width, final int height, final RGB fillColor, final int borderWidth, final RGB borderColor, final int alpha )
   {
     super( id );
     m_alpha = alpha;
@@ -43,7 +45,7 @@ public class StyledPoint extends AbstractStyledElement implements IStyledElement
    * Wandelt einen Point, der das Zentrum des Elements angibt, in einen Point um, der die linke obere Ecke des Elements
    * angibt
    */
-  private Point centerToLeftTop( Point p )
+  private Point centerToLeftTop( final Point p )
   {
     return new Point( p.x - ((int) (0.5 * m_width)), p.y - ((int) (0.5 * m_height)) );
   }
@@ -52,12 +54,12 @@ public class StyledPoint extends AbstractStyledElement implements IStyledElement
    * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
     final Device dev = gc.getDevice();
     ChartUtilities.resetGC( gc.m_gc );
     gc.setAlpha( m_alpha );
-    List<Point> path = getPath();
+    final List<Point> path = getPath();
 
     final Color borderColor = new Color( dev, m_borderColor );
     final Color fillColor = new Color( dev, m_fillColor );
@@ -87,7 +89,7 @@ public class StyledPoint extends AbstractStyledElement implements IStyledElement
 
   public static StyledPoint getDefault( )
   {
-    String defaultId = "defaultPointStyle_" + System.currentTimeMillis() + Math.random() * 10000;
+    final String defaultId = "defaultPointStyle_" + System.currentTimeMillis() + Math.random() * 10000;
     return new StyledPoint( defaultId, 3, 3, new RGB( 230, 230, 230 ), 1, new RGB( 0, 0, 0 ), 255 );
   }
 
