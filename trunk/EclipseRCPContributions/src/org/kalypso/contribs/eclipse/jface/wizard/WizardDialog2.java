@@ -115,7 +115,7 @@ public class WizardDialog2 extends WizardDialog
    * {@link org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean, org.eclipse.jface.operation.IRunnableWithProgress)},
    * but does NOT block the user interface while the operation is running.
    */
-  public IStatus executeUnblocked( final boolean cancelable, final ICoreRunnableWithProgress runnable )
+  public IStatus executeUnblocked( final boolean cancelable, final boolean enablePageNavigation, final ICoreRunnableWithProgress runnable )
   {
     final ProgressMonitorPart progressMonitorPart = (ProgressMonitorPart) getProgressMonitor();
     final boolean needsProgressMonitor = getWizard().needsProgressMonitor();
@@ -127,6 +127,12 @@ public class WizardDialog2 extends WizardDialog
       enableButton( IDialogConstants.FINISH_ID, false );
       if( !cancelable )
         enableButton( IDialogConstants.CANCEL_ID, false );
+
+      if( !enablePageNavigation )
+      {
+        enableButton( IDialogConstants.NEXT_ID, false );
+        enableButton( IDialogConstants.BACK_ID, false );
+      }
 
       if( needsProgressMonitor )
       {
