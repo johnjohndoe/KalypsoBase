@@ -23,12 +23,12 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
 /**
- * @author burtscher Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the
- *         AxisRegistry;
+ * Chart widget; parent for AxisComponent and Plot also acts as LayerManager and contains the AxisRegistry.
+ * 
+ * @author burtscher
  */
 public class ChartComposite extends Composite
 {
-
   /** axis pos --> axis placeholder */
   private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
