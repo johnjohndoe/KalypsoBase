@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -65,7 +66,6 @@ import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.grid.AscGridExporter;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -94,7 +94,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final List list = selection.toList();
+    final List< ? > list = selection.toList();
     final List<ICoverage> coverages = new ArrayList<ICoverage>();
     for( final Object object : list )
     {
@@ -108,14 +108,11 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
 
   private ICoverage toCoverage( final Object object )
   {
-    if( object instanceof Feature )
-    {
-      final Feature f = (Feature) object;
-      return (ICoverage) f.getAdapter( ICoverage.class );
-    }
-
     if( object instanceof ICoverage )
       return (ICoverage) object;
+
+    if( object instanceof IAdaptable )
+      return (ICoverage) ((IAdaptable) object).getAdapter( ICoverage.class );
 
     return null;
   }

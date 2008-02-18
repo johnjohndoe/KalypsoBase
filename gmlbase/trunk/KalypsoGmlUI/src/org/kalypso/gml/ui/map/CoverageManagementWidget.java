@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -95,7 +96,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -181,10 +181,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
   };
 
-  private ICoverageCollection m_coverages;
-
-  private ICoverage m_selectedCoverage;
-
   private final IMapModellListener m_mapModelListener = new MapModellAdapter()
   {
     /**
@@ -206,6 +202,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       ViewerUtilities.refresh( m_coverageViewer, true );
     }
   };
+
+  private ICoverageCollection m_coverages;
+
+  private ICoverage m_selectedCoverage;
+
+  private IFolder m_gridFolder;
 
   private ListViewer m_coverageViewer;
 
@@ -944,15 +946,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final Shell shell = event.display.getActiveShell();
 
-    // FIXME: must be removed from here! The widget is a general widget and should never depend
-    // on another plug-in
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    final IFolder gridFolder = scenarioFolder.getFolder( "grids" );
+    // TODO: what to do if gridFolder is null? Maybe ask user for target folder?
+    Assert.isNotNull( m_gridFolder );
 
     final RectifiedGridCoverageImportWizard wizard = new RectifiedGridCoverageImportWizard();
     wizard.setCoverageCollection( coverages );
     wizard.init( PlatformUI.getWorkbench(), null );
-    wizard.setGridFolder( gridFolder );
+    wizard.setGridFolder( m_gridFolder );
 
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
@@ -965,14 +965,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-
-        theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
-
         try
         {
           /* save the model */
           // we cannot allow the model not to be saved, as the underlying files will then not be deleted
-          // TODO: use a flag if the model should be getting saved
+          theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
           final CommandableWorkspace workspace = theme.getWorkspace();
           pool.saveObject( workspace, new NullProgressMonitor() );
@@ -999,13 +996,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     // open wizard to locate destination
     final RectifiedGridCoverageExportWizard wizard = new RectifiedGridCoverageExportWizard();
-
-    final IStructuredSelection selection = (IStructuredSelection) m_coverageViewer.getSelection();
-    wizard.init( PlatformUI.getWorkbench(), selection );
+    wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( m_selectedCoverage ) );
 
     final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
     wizardDialog.open();
-
   }
 
   protected void handleCoverageRemoved( final Event event )
@@ -1037,9 +1031,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           theme.postCommand( command, refreshRunnable );
 
           /* save the model */
-          // TODO: use a flag if the model should be getting save
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-          pool.saveObject( workspace, new NullProgressMonitor() );
+          pool.saveObject( workspace, monitor );
 
           return Status.OK_STATUS;
         }
@@ -1148,4 +1141,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_featureTemplateGft = featureTemplateGft;
   }
 
+  public void setGridFolder( final IFolder gridFolder )
+  {
+    m_gridFolder = gridFolder;
+  }
 }
