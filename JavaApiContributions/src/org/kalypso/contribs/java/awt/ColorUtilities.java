@@ -155,4 +155,23 @@ public class ColorUtilities
     final int blue = color.getBlue();
     return new Color( red, green, blue, alpha );
   }
+
+  public static Color interpolateLinear( final Color color1, final Color color2, final double factor )
+  {
+    final float[] hsba1 = new float[4];
+    final float[] hsba2 = new float[4];
+
+    Color.RGBtoHSB( color1.getRed(), color1.getGreen(), color1.getBlue(), hsba1 );
+    hsba1[3] = color1.getAlpha();
+
+    Color.RGBtoHSB( color2.getRed(), color2.getGreen(), color2.getBlue(), hsba2 );
+    hsba2[3] = color2.getAlpha();
+
+    final double[] hsba = new double[4];
+    for( int i = 0; i < hsba.length; i++ )
+      hsba[i] = hsba1[i] + (hsba2[i] - hsba1[i]) * factor;
+
+    final Color hsbColor = Color.getHSBColor( (float) hsba[0], (float) hsba[1], (float) hsba[2] );
+    return new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), (int) hsba[3] );
+  }
 }

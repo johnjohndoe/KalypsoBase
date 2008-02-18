@@ -65,9 +65,9 @@ public class SWT_AWT_Utilities
   {
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
-    // Force it into swt
+    // Force it into SWT-thread
     final boolean[] result = new boolean[1];
-    shell.getDisplay().syncExec( new Runnable()
+    shell.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
       {
@@ -89,7 +89,7 @@ public class SWT_AWT_Utilities
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
     // Force it into swt
-    shell.getDisplay().syncExec( new Runnable()
+    shell.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
       {
