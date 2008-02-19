@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ods="http://www.openali.de/odysseus/style" targetNamespace="http://www.openali.de/odysseus/style" elementFormDefault="qualified">
+
+<element name="StyleSet" type="ods:StyleSetType" />
+<element name="Line" type="ods:LineType" />
+ <element name="Point" type="ods:PointType"/>
+ <element name="Area" type="ods:AreaType"/>
+    
+<element name="root">
+    <complexType> 
+        <sequence maxOccurs="unbounded">
+        <choice>
+            <element ref="ods:StyleSet"></element>
+            <element ref="ods:Point"></element>
+            <element ref="ods:Line"></element>
+            <element ref="ods:Area"></element>
+        </choice>          
+        </sequence>
+    </complexType>
+</element>
+   
+    
+    <element name="StyleSetRef">
+        <complexType>
+        <attribute name="styleRef" type="ods:StyleSetIDREFType"></attribute>
+        </complexType>
+    </element>
+    
+    <element name="StyleRef">
+        <complexType>
+            <attribute name="styleRef" type="ods:StyleIDREFType"></attribute>
+        </complexType>
+    </element>
+
+<simpleType name="StyleIDREFType">
+    <restriction base="IDREF">
+        <pattern value="style.[a-zA-Z0-9]*"></pattern>
+    </restriction>
+</simpleType>
+    
+    <complexType name="AbstractStyleType">
+        <attribute name="id" type="ods:StyleIDType"></attribute>
+    </complexType>
+    
+    <simpleType name="StyleIDType">
+        <restriction base="ID">
+            <pattern value="style.[a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="StyleSetIDREFType">
+        <restriction base="IDREF">
+            <pattern value="styleSet.[a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="StyleSetIDType">
+        <restriction base="ID">
+            <pattern value="styleSet.[a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+    
+    <complexType name="StyleSetType">
+        <sequence maxOccurs="unbounded">
+                <element ref="ods:StyleRef"></element>
+        </sequence>
+        <attribute name="id" type="ID" />
+    </complexType>
+    
+    <complexType name="LineType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+        <choice>
+            <element name="Stroke" type="ods:StippledStrokeType"></element>
+            <element name="PointLine" type="ods:PointLineType"></element>
+        </choice>
+                </extension>
+    </complexContent>
+    </complexType>
+    
+    <complexType name="SolidStrokeType">
+        <sequence>
+            <element name="width"></element>
+            <element name="color" type="ods:ColorType"></element>
+        </sequence>
+    </complexType>
+    
+    <complexType name="StippledStrokeType">
+        <complexContent>
+            <extension base="ods:SolidStrokeType">
+                <sequence>
+                <element name="stipple">
+                    <complexType>
+                        <attribute name="sequence" type="ods:StippleType">
+                        </attribute>
+                    </complexType>
+                </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="PointLineType">
+        <sequence>
+            <element name="Point" >
+                <complexType>
+                    <complexContent>
+                        <extension base="ods:PointType">
+                            <attribute name="gap" type="int"></attribute>
+                        </extension>
+                    </complexContent>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+    
+    <simpleType name="ColorType">
+        <restriction base="string">
+            <pattern value="#[0-9a-f]{8}"></pattern>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="StippleType">
+        <restriction base="string">
+            <pattern value="[0-9]+;[0-9]+(;[0-9]+;[0-9]+)*"></pattern>
+        </restriction>
+    </simpleType>
+    
+    <complexType name="PointType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+        <sequence>
+            <element name="width"></element>
+            <element name="height"></element>
+            <element name="color" type="ods:ColorType"></element>
+        </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="GeometryPointType">
+        <sequence>
+            <element name="Outline" type="ods:SolidStrokeType"></element>
+            <element name="Fill" type="ods:ColorType"></element>
+        <choice>
+            <element name="Rectangle">
+                <complexType>
+                    <sequence>
+                        <element name="width"></element>
+                        <element name="height"></element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="Elipsis">
+                <complexType>
+                    <sequence>
+                        <element name="width"></element>
+                        <element name="height"></element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="Polygon">
+                <complexType>
+                    <sequence minOccurs="3" maxOccurs="unbounded">
+                        <element name="Position">
+                            <complexType>
+                                <attribute name="x" type="int" use="required"></attribute>
+                                <attribute name="y" type="int" use="required"></attribute>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </choice>
+        </sequence>
+    </complexType>
+
+    
+    <complexType name="ImagePointType">
+        <sequence>
+            <element name="href" type="anyURI"></element>
+        </sequence>
+    </complexType>
+    
+    <complexType name="AreaType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+        <choice>
+            <element name="ColorFill" type="ods:ColorType">
+            </element>
+            <element name="TextureFill"></element>
+        </choice>
+            </extension>
+            </complexContent>
+    </complexType>
+
+</schema>
