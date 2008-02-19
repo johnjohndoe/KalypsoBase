@@ -19,7 +19,7 @@ Bundle-ClassPath: lib/jakarta-slide/antlr.jar,
  lib/commons-vfs/commons-net-1.4.1.jar,
  lib/commons-vfs/jakarta-oro-2.0.8.jar,
  lib/commons-httpclient-2.0.2.jar,
- .
+ build/bin
 Export-Package: org.apache.commons.vfs,
  org.apache.commons.vfs.auth,
  org.apache.commons.vfs.cache,
