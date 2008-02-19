@@ -1,7 +1,8 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.framework.model.data.IStringParser;
+
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu

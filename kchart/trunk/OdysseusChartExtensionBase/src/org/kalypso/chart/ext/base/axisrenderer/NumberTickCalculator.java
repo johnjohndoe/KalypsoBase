@@ -7,12 +7,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.eclipse.swt.graphics.GC;
+
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
 public class NumberTickCalculator
 {

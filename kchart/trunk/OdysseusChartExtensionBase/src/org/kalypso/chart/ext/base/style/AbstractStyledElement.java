@@ -44,7 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
+
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 /**
  * @author burtscher1

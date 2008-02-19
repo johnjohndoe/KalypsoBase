@@ -8,15 +8,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.impl.model.data.DataRange;
-import org.kalypso.chart.framework.model.data.IDataOperator;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DATATYPE;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.eclipse.swt.graphics.GC;
+
+import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
+import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
+import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu

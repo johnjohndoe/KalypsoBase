@@ -6,18 +6,19 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
-import org.kalypso.chart.framework.impl.model.event.LayerEventHandler;
-import org.kalypso.chart.framework.impl.model.legend.LegendItem;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataOperator;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.event.ILayerEventListener;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.legend.ILegendItem;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
-import org.kalypso.chart.framework.model.styles.ILayerStyle;
+
+import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
+import de.openali.odysseus.chart.framework.impl.model.event.LayerEventHandler;
+import de.openali.odysseus.chart.framework.impl.model.legend.LegendItem;
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.styles.ILayerStyle;
 
 /**
  * @author alibu

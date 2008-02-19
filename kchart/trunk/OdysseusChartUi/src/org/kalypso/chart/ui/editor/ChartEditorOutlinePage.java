@@ -62,10 +62,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
+
+import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author Gernot Belger

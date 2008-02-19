@@ -3,10 +3,11 @@ package org.kalypso.chart.factory.provider;
 import java.net.URL;
 
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.ksp.chart.factory.LayerType;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher A LayerProvider is needed to create layers from configuration data. Theres no 1:1 mapping from data

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ext.base.layer;
 
-import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 
 /**
  * @author burtscher1

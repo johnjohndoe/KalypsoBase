@@ -8,14 +8,15 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.model.data.IStringParser;
 import org.ksp.chart.factory.ParameterListType;
 import org.ksp.chart.factory.ParameterMapType;
 import org.ksp.chart.factory.ParameterType;
 import org.ksp.chart.factory.ParametersType;
 import org.ksp.chart.factory.ParameterMapType.Element;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * The class provides some help for extracting values from a set of configuration parameters

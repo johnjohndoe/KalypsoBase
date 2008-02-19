@@ -53,11 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
-import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.framework.impl.model.ChartModel;
-import org.kalypso.chart.framework.impl.view.ChartComposite;
-import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -65,7 +60,13 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.ksp.chart.factory.ChartType;
+
+import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartFactory;
+import de.openali.odysseus.chart.framework.impl.model.ChartModel;
+import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chartconfig.x010.ChartType;
 
 /**
  * @author Thomas Jung
@@ -132,14 +133,18 @@ public class ChartView extends ViewPart implements IChartPart
   private void updateControl( )
   {
     if( m_composite == null || m_composite.isDisposed() )
+    {
       return;
+    }
 
     m_chartModel = null;
 
     /* Reset controls */
     final Control[] children = m_composite.getChildren();
     for( final Control control : children )
+    {
       control.dispose();
+    }
 
     if( m_chartType == null )
     {
@@ -221,13 +226,19 @@ public class ChartView extends ViewPart implements IChartPart
     super.dispose();
 
     if( m_axisDragHandler != null )
+    {
       m_axisDragHandler.dispose();
+    }
 
     if( m_plotDragHandler != null )
+    {
       m_plotDragHandler.dispose();
+    }
 
     if( m_tooltipHandler != null )
+    {
       m_tooltipHandler.dispose();
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -235,10 +246,14 @@ public class ChartView extends ViewPart implements IChartPart
   public Object getAdapter( final Class adapter )
   {
     if( ChartComposite.class.equals( adapter ) )
+    {
       return m_chartComposite;
+    }
 
     if( IChartPart.class.equals( adapter ) )
+    {
       return this;
+    }
 
     return super.getAdapter( adapter );
   }

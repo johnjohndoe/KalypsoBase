@@ -5,11 +5,12 @@ import java.util.List;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.framework.impl.util.ChartUtilities;
-import org.kalypso.chart.framework.impl.util.StyleUtils;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.eclipse.swt.graphics.GC;
+
+import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
+import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author burtscher

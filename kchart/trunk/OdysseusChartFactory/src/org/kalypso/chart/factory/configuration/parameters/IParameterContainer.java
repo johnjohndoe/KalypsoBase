@@ -3,7 +3,7 @@ package org.kalypso.chart.factory.configuration.parameters;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.chart.framework.model.data.IStringParser;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * The interface provides access to a collection of parameters, grouped by namespaces

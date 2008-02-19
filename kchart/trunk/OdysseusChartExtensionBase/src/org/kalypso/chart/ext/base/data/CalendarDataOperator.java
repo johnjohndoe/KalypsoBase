@@ -6,10 +6,11 @@ import java.util.Calendar;
 import java.util.Comparator;
 
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.impl.model.data.AbstractDataOperator;
-import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
-import org.kalypso.chart.framework.model.data.IDataRange;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
+import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 {

@@ -1,16 +1,21 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoChartFactory Plug-in
-Bundle-SymbolicName: org.kalypso.chart.factory;singleton:=true
+Bundle-Name: OdysseusChartFactory Plug-in
+Bundle-SymbolicName: de.openali.odysseus.chart.factory;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: srcbind/,
  .
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
- org.kalypso.chart.framework;visibility:=reexport,
- KalypsoChartFrameworkImpl;visibility:=reexport
-Export-Package: org.kalypso.chart.factory,
+ de.openali.odysseus.chart.framework.impl;visibility:=reexport
+Export-Package: de.openali.odysseus.chart.factory.config,
+ de.openali.odysseus.chart.factory.config.parameters.impl,
+ de.openali.odysseus.chart.factory.provider,
+ de.openali.odysseus.chart.factory.util,
+ de.openali.odysseus.chartconfig.x010,
+ de.openali.odysseus.chartconfig.x010.impl,
+ org.kalypso.chart.factory,
  org.kalypso.chart.factory.configuration,
  org.kalypso.chart.factory.configuration.exception,
  org.kalypso.chart.factory.configuration.parameters,

@@ -2,8 +2,9 @@ package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.ksp.chart.factory.MapperType;
+
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 
 public abstract class AbstractMapperProvider implements IMapperProvider
 {

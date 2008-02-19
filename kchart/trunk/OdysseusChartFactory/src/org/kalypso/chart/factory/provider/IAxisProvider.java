@@ -1,8 +1,9 @@
 package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.exception.AxisProviderException;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.ksp.chart.factory.AxisType;
+
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author burtscher A LayerProvider is needed to create layers from configuration data. There's no 1:1 mapping from data

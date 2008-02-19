@@ -1,7 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.model.data.IStringParser;
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu

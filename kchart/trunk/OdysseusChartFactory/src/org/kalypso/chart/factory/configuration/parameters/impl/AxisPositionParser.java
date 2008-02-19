@@ -1,7 +1,7 @@
 package org.kalypso.chart.factory.configuration.parameters.impl;
 
-import org.kalypso.chart.framework.model.data.IStringParser;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * @author alibu

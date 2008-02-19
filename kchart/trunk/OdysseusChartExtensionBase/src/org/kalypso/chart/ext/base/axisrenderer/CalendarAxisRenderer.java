@@ -20,12 +20,13 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.impl.util.InsetsHelper;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
+
+import de.openali.odysseus.chart.framework.impl.util.InsetsHelper;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * @author burtscher

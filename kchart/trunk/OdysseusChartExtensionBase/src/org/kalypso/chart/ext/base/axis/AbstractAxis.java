@@ -3,14 +3,15 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Comparator;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.kalypso.chart.framework.model.mapper.IAxisAdjustment;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
+
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete

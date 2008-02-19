@@ -9,14 +9,15 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ext.base.style.StyledLine;
-import org.kalypso.chart.framework.impl.model.legend.LegendItem;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.legend.ILegendItem;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.eclipse.swt.graphics.GC;
+
+import de.openali.odysseus.chart.framework.impl.model.legend.LegendItem;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
+import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for

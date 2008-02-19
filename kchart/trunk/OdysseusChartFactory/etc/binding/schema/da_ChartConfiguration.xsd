@@ -144,19 +144,27 @@
 
 	<complexType name="ChartConfigurationType">
 		<choice minOccurs="0" maxOccurs="unbounded">
-			<element name="Chart" type="ods:ChartType"/>
-			<element name="Layer" type="ods:LayerType"/>
-			<element name="Axis" type="ods:AxisType"/>
-			<element name="Mapper" type="ods:MapperType"/>
-			<element name="AxisRenderer" type="ods:AxisRendererType"/>
-			<element name="LineStyle" type="ods:LineStyleType"/>
-			<element name="PointStyle" type="ods:PointStyleType"/>
-			<element name="AreaStyle" type="ods:AreaStyleType"/>
+			<element ref="ods:Chart"></element>
+			<element ref="ods:Layer"></element>
+			<element ref="ods:Axis"></element>
+			<element ref="ods:Mapper"></element>
+			<element ref="ods:AxisRenderer"></element>
+			<element ref="ods:LineStyle"></element>
+			<element ref="ods:PointStyle"></element>
+			<element ref="ods:AreaStyle"></element>
+			<element ref="ods:TextStyle"></element> 
 		</choice>
 
 
 
 	</complexType>
+
+	<element name="Chart" type="ods:ChartType"/>
+	<element name="Layer" type="ods:LayerType"/>
+	<element name="Axis" type="ods:AxisType"/>
+	<element name="Mapper" type="ods:MapperType"/>
+	<element name="AxisRenderer" type="ods:AxisRendererType"/>
+
 
 	<complexType name="AbstractConfigurationType" abstract="true">
 		<complexContent>
@@ -285,21 +293,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="DataType" minOccurs="0">
-						<annotation>
-							<documentation> TODO: Only uses temporarily to check axis type for
-								testing purposes concerning GenericLinearAxis; </documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="NUMBER"/>
-								<enumeration value="DATE"/>
-								<enumeration value="STRING"/>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="MinVal" type="string"/>
-					<element name="MaxVal" type="string"/>
+					<element ref="ods:AbstractAxisRange"></element>
 					<element name="PreferredAdjustment" minOccurs="0">
 						<annotation>
 							<documentation> sets the preferred relation for auto adjustement
@@ -338,6 +332,80 @@
 		</complexContent>
 	</complexType>
 
+
+	<complexType name="AbstractAxisRangeType" abstract="true">
+		<sequence>
+		<element name="minValue" />
+		<element name="maxValue"/>
+		</sequence>
+	</complexType>
+
+	<element name="AbstractAxisRange" type="ods:AbstractAxisRangeType" abstract="true"></element>
+
+	<complexType name="AxisNumberRangeType">
+		<complexContent>
+			<restriction base="ods:AbstractAxisRangeType">
+				<sequence>
+					<element name="minValue" type="double"></element>
+					<element name="maxValue" type="double"></element>
+				</sequence>
+			</restriction> 
+		</complexContent>
+	</complexType>
+	
+	<element name="NumberRange" substitutionGroup="ods:AbstractAxisRange" type="ods:AxisNumberRangeType"></element>
+	
+	<complexType name="AxisDateRangeType">
+		<complexContent>
+			<restriction base="ods:AbstractAxisRangeType">
+				<sequence>
+					<element name="minValue" type="dateTime"></element>
+					<element name="maxValue" type="dateTime"></element>
+				</sequence>
+			</restriction> 
+		</complexContent>
+	</complexType>
+	
+	<element name="DateRange" substitutionGroup="ods:AbstractAxisRange"  type="ods:AxisDateRangeType"></element>
+	
+	<complexType name="AxisDurationRangeType">
+		<complexContent>
+			<restriction base="ods:AbstractAxisRangeType">
+				<sequence>
+					<element name="minValue" type="duration"></element>
+					<element name="maxValue" type="duration"></element>
+				</sequence>
+			</restriction> 
+		</complexContent>
+	</complexType>
+	
+	<element name="DurationRange" substitutionGroup="ods:AbstractAxisRange"  type="ods:AxisDurationRangeType"></element>
+	
+	
+	
+	<complexType name="AbstractAxisStringRangeType">
+		<complexContent>
+			<restriction base="ods:AbstractAxisRangeType">
+				<sequence>
+					<element name="minValue" type="string"></element>
+					<element name="maxValue" type="string"></element>
+				</sequence>
+			</restriction> 
+		</complexContent>
+	</complexType>
+	
+	
+	<complexType name="AxisStringRangeType">
+		<complexContent>
+			<extension base="ods:AbstractAxisStringRangeType">
+				<sequence>
+					<element name="value" type="string" maxOccurs="unbounded"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="StringRange" substitutionGroup="ods:AbstractAxisRange"  type="ods:AxisStringRangeType"></element>
 
 	<complexType name="AxisRendererType">
 		<complexContent>

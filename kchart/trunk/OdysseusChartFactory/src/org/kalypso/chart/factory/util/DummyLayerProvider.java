@@ -44,8 +44,9 @@ import java.net.URL;
 
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
+
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher1

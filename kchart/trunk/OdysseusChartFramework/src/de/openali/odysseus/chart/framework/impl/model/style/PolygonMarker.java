@@ -1,0 +1,25 @@
+package de.openali.odysseus.chart.framework.impl.model.style;
+
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+
+import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+
+public class PolygonMarker extends AbstractMarker
+{
+	private final Point[] m_points;
+
+	public PolygonMarker(Point[] points)
+	{
+		m_points = points;
+	}
+
+	public void paint(GC gc, Point p, int width, int height)
+	{
+		Point[] resized = FigureUtilities.resizeInOrigin(m_points, width, height);
+		Point[] translated = FigureUtilities.translateTo(resized, p);
+		int[] intArray = FigureUtilities.pointArrayToIntArray(translated);
+		gc.fillPolygon(intArray);
+		gc.drawPolygon(intArray);
+	}
+}

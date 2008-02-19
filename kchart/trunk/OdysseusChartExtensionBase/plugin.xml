@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.kalypso.chart.factory.AxisProvider">
+         point="de.openali.odysseus.chart.factory.AxisProvider">
       <provider
             class="org.kalypso.chart.ext.base.axis.provider.NumberAxisProvider"
             id="org.kalypso.chart.ext.axis.provider.Number"/>
@@ -11,7 +11,7 @@
             id="org.kalypso.chart.ext.axis.provider.Calendar"/>
    </extension>
    <extension
-         point="org.kalypso.chart.factory.LayerProvider">
+         point="de.openali.odysseus.chart.factory.LayerProvider">
       <provider
             class="org.kalypso.chart.ext.base.layer.provider.GridLayerProvider"
             id="org.kalypso.chart.ext.layer.provider.Grid"/>
@@ -26,7 +26,7 @@
             id="org.kalypso.chart.ext.layer.provider.UVF"/>
    </extension>
    <extension
-         point="org.kalypso.chart.factory.StyledElementProvider">
+         point="de.openali.odysseus.chart.factory.StyledElementProvider">
       <provider
             class="org.kalypso.chart.ext.base.style.provider.DefaultStyledLineProvider"
             id="org.kalypso.chart.ext.style.provider.DefaultStyledLine"/>
@@ -41,7 +41,7 @@
             id="org.kalypso.chart.ext.style.provider.DefaultStyledText"/>
    </extension>
    <extension
-         point="org.kalypso.chart.factory.AxisRendererProvider">
+         point="de.openali.odysseus.chart.factory.AxisRendererProvider">
       <provider
             class="org.kalypso.chart.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
             id="org.kalypso.chart.ext.axisrenderer.provider.Calendar"/>

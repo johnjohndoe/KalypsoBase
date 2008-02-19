@@ -2,8 +2,9 @@ package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.ksp.chart.factory.StyleType;
+
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 public abstract class AbstractStyledElementProvider implements IStyledElementProvider
 {

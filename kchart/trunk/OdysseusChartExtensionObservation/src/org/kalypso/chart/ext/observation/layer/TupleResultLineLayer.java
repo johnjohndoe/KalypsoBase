@@ -9,12 +9,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.observation.result.TupleResult;
+
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
+import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 // TODO why do we still have several tuple result layer?
 // @Alex: please combine them to ONE implementation!

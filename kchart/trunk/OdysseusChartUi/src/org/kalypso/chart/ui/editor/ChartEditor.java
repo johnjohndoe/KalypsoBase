@@ -36,16 +36,6 @@ import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartConfigurationSaver;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
-import org.kalypso.chart.framework.impl.model.ChartModel;
-import org.kalypso.chart.framework.impl.model.event.AbstractChartModelEventListener;
-import org.kalypso.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
-import org.kalypso.chart.framework.impl.model.event.AbstractMapperRegistryEventListener;
-import org.kalypso.chart.framework.impl.view.ChartComposite;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IMapper;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -56,6 +46,17 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartConfigurationDocument;
 import org.ksp.chart.factory.ChartType;
+
+import de.openali.odysseus.chart.framework.impl.model.ChartModel;
+import de.openali.odysseus.chart.framework.impl.model.event.AbstractChartModelEventListener;
+import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
+import de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener;
+import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
  * @author Gernot Belger

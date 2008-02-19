@@ -7,7 +7,8 @@ import org.kalypso.chart.factory.configuration.parameters.impl.DoubleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
 import org.kalypso.chart.factory.provider.AbstractStyledElementProvider;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
+
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 public class DefaultStyledTextProvider extends AbstractStyledElementProvider
 {

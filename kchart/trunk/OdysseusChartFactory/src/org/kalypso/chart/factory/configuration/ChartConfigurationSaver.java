@@ -48,14 +48,6 @@ import org.kalypso.chart.factory.provider.IAxisRendererProvider;
 import org.kalypso.chart.factory.provider.ILayerProvider;
 import org.kalypso.chart.factory.provider.IMapperProvider;
 import org.kalypso.chart.factory.provider.IStyledElementProvider;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IMapper;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.ksp.chart.factory.AxisRendererType;
 import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartConfigurationDocument;
@@ -66,6 +58,15 @@ import org.ksp.chart.factory.MapperType;
 import org.ksp.chart.factory.RefType;
 import org.ksp.chart.factory.StyleType;
 import org.ksp.chart.factory.ChartType.Layers;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 /**
  * saves a chart to an XML document

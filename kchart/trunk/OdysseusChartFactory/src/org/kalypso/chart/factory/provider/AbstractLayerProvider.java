@@ -4,9 +4,10 @@ import java.net.URL;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.ksp.chart.factory.LayerType;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 public abstract class AbstractLayerProvider implements ILayerProvider
 {

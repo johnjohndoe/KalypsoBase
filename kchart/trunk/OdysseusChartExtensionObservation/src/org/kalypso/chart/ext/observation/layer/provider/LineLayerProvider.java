@@ -7,8 +7,9 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
+
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 //TODO why do we still have several tuple result layer?
 //@Alex: please combine them to ONE implementation!

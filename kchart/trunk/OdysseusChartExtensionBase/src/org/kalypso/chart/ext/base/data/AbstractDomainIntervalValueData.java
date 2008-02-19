@@ -3,7 +3,7 @@ package org.kalypso.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 
 public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {

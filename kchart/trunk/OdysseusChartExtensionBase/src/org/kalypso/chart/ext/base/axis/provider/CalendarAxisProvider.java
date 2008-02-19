@@ -8,16 +8,17 @@ import org.kalypso.chart.factory.configuration.parameters.impl.AxisDirectionPars
 import org.kalypso.chart.factory.configuration.parameters.impl.AxisPositionParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
 import org.kalypso.chart.factory.provider.AbstractAxisProvider;
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.impl.model.data.DataRange;
-import org.kalypso.chart.framework.impl.model.mapper.AxisAdjustment;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import org.ksp.chart.factory.AxisType.PreferredAdjustment;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
+import de.openali.odysseus.chart.framework.impl.model.mapper.AxisAdjustment;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 
 /**
  * @author alibu

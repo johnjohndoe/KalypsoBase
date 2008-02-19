@@ -12,7 +12,8 @@ import org.kalypso.chart.factory.provider.IAxisRendererProvider;
 import org.kalypso.chart.factory.provider.ILayerProvider;
 import org.kalypso.chart.factory.provider.IMapperProvider;
 import org.kalypso.chart.factory.provider.IStyledElementProvider;
-import org.kalypso.chart.framework.impl.logging.Logger;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 
 /**
  * @author burtscher

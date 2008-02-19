@@ -5,46 +5,44 @@
     <element name="LineStyle" type="ods:LineStyleType" />
     <element name="PointStyle" type="ods:PointStyleType"/>
     <element name="AreaStyle" type="ods:AreaStyleType"/>
+    <element name="TextStyle" type="ods:TextStyleType"/>
         
     <complexType name="AbstractStyleType">
         <sequence>
-            <element name="isVisible" type="boolean" minOccurs="0"></element>
-            <element name="alpha" minOccurs="0">
+            <element name="Alpha" minOccurs="0">
                 <simpleType>
-                    <restriction base="int">
-                        <minInclusive value="0"></minInclusive>
-                        <maxInclusive value="255"></maxInclusive>
-                    </restriction>
-                </simpleType>
+                   <restriction base="hexBinary">
+                            <length value="2"></length>
+                        </restriction>
+                   </simpleType>
             </element>
         </sequence>
+            <attribute name="isVisible" type="boolean" />
     </complexType>
     
     <complexType name="LineStyleType" >
         <complexContent>
             <extension base="ods:StrokeType">
                 <attribute name="id"  type="ID" use="required"></attribute>
-            </extension>
+                </extension>
         </complexContent>
     </complexType>
     
     <complexType name="StrokeType">
         <complexContent>
             <extension base="ods:AbstractStyleType">
-                
-                
                 <sequence>
-                    <element name="width" type="int" minOccurs="0"/>  
-                    <element name="lineColor" type="ods:ColorType"  minOccurs="0"/>
-                    <element name="dashOffset" type="int" minOccurs="0"/>
-                    <element name="dashArray" minOccurs="0">
+                    <element name="Width"  type="int" minOccurs="0"/>  
+                    <element name="LineColor" type="ods:ColorType"  minOccurs="0"/>
+                    <element name="DashOffset" type="int" minOccurs="0"/>
+                    <element name="DashArray" minOccurs="0">
                         <simpleType>
                             <list itemType="int"></list>
                         </simpleType>
                     </element>
-                    <element name="lineCap" type="ods:LineCapType" minOccurs="0"></element>
-                    <element name="lineJoin" type="ods:LineJoinType" minOccurs="0"></element>
-                    <element name="miterLimit" type="int" minOccurs="0" />
+                    <element name="LineCap" type="ods:LineCapType" minOccurs="0"></element>
+                    <element name="LineJoin" type="ods:LineJoinType" minOccurs="0"></element>
+                    <element name="MiterLimit" type="int" minOccurs="0" />
                 </sequence>
             </extension>
         </complexContent>
@@ -68,8 +66,8 @@
     </simpleType>
     
     <simpleType name="ColorType">
-        <restriction base="string">
-            <pattern value="#[0-9a-f]{6}"></pattern>
+        <restriction base="hexBinary">
+            <length value="6"></length>
         </restriction>
     </simpleType>
     
@@ -79,36 +77,36 @@
         <complexContent>
             <extension base="ods:AbstractStyleType">
                 <sequence>
-                    <element name="width" minOccurs="0"></element>
-                    <element name="height" minOccurs="0"></element>
-                    <element name="outlineStyle" type="ods:StrokeType" minOccurs="0"></element>
-                    <element ref="ods:marker" minOccurs="0"></element>
-                    <element name="fillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="Width" type="int" minOccurs="0" />
+                    <element name="Height" type="int" minOccurs="0" />
+                    <element name="StrokeStyle" type="ods:StrokeType" minOccurs="0" />
+                    <element ref="ods:AbstractMarker" minOccurs="0" />
+                    <element name="FillColor" type="ods:ColorType" minOccurs="0" />
                 </sequence>
-                <attribute name="id" type="ID" use="required"></attribute>
+                <attribute name="id" type="ID" use="required" ></attribute>
             </extension>
         </complexContent>
     </complexType>
+
     
+    <element name="AbstractMarker" type="ods:AbstractMarkerType"></element>
+    <element name="OvalMarker" type="ods:OvalMarkerType" substitutionGroup="ods:AbstractMarker"></element>
+    <element name="ImageMarker" type="ods:ImageMarkerType"  substitutionGroup="ods:AbstractMarker"></element>
+    <element name="PolygonMarker" type="ods:PolygonMarkerType"  substitutionGroup="ods:AbstractMarker"></element>
     
-    <element name="marker" type="ods:MarkerType"></element>
-    <element name="ovalMarker" type="ods:OvalMarkerType" substitutionGroup="ods:marker"></element>
-    <element name="imageMarker" type="ods:ImageMarkerType"  substitutionGroup="ods:marker"></element>
-    <element name="polygonMarker" type="ods:PolygonMarkerType"  substitutionGroup="ods:marker"></element>
-    
-    <complexType name="MarkerType" abstract="true"></complexType>
+    <complexType name="AbstractMarkerType" abstract="true"></complexType>
     
     <complexType name="OvalMarkerType">
         <complexContent>
-            <extension base="ods:MarkerType"></extension>
+            <extension base="ods:AbstractMarkerType"></extension>
         </complexContent>
     </complexType>
     
     <complexType name="ImageMarkerType">
         <complexContent>
-            <extension base="ods:MarkerType">
+            <extension base="ods:AbstractMarkerType">
                 <sequence>
-                    <element name="path" type="anyURI"></element>
+                    <element name="Path" type="anyURI"></element>
                 </sequence>        
             </extension>
         </complexContent>
@@ -116,7 +114,7 @@
     
     <complexType name="PolygonMarkerType">
         <complexContent>
-            <extension base="ods:MarkerType">
+            <extension base="ods:AbstractMarkerType">
                 <sequence>
                     <element name="Point" type="ods:PointType" minOccurs="3" maxOccurs="unbounded">
                     </element>
@@ -134,12 +132,41 @@
         <complexContent>
             <extension base="ods:AbstractStyleType">
                 <sequence>
-                    <element name="fillColor" type="ods:ColorType" minOccurs="0"></element>
-                    <element name="outlineStyle" type="ods:StrokeType" minOccurs="0" ></element>
+                    <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="OutlineStyle" type="ods:StrokeType" minOccurs="0" ></element>
                 </sequence>               
                 <attribute name="id" type="ID" use="required"></attribute>
             </extension>
         </complexContent>
     </complexType>
+    
+    <complexType name="TextStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="Size" type="int" minOccurs="0"></element>
+                    <element name="TextColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="FontFamily" type="string" minOccurs="0"></element>
+                    <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="FontWeight" type="ods:FontWeightType" minOccurs="0"></element>
+                    <element name="FontStyle" type="ods:FontStyleType" minOccurs="0"></element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <simpleType name="FontStyleType">
+        <restriction base="string">
+            <enumeration value="NORMAL"></enumeration>
+            <enumeration value="ITALIC"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="FontWeightType">
+        <restriction base="string">
+            <enumeration value="NORMAL"></enumeration>
+            <enumeration value="BOLD"></enumeration>
+        </restriction>
+    </simpleType>
     
 </schema> 

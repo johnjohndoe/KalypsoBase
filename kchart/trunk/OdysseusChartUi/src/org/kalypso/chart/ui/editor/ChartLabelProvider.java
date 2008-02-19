@@ -48,7 +48,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.factory.util.DummyLayer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger

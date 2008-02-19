@@ -6,9 +6,10 @@ import org.kalypso.chart.ext.base.layer.GridLayer;
 import org.kalypso.chart.ext.base.layer.GridLayer.GridOrientation;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
+
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * Provider for gauge data from O&M data; it's looking for a feature named "wasserstandsmessung", then tries to

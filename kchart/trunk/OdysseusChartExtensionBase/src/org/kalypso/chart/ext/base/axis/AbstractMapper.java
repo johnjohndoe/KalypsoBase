@@ -4,10 +4,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.kalypso.chart.framework.impl.model.event.MapperEventHandler;
-import org.kalypso.chart.framework.model.event.IMapperEventListener;
-import org.kalypso.chart.framework.model.mapper.IMapper;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+
+import de.openali.odysseus.chart.framework.impl.model.event.MapperEventHandler;
+import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete

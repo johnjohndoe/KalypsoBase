@@ -2,8 +2,9 @@ package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
 import org.ksp.chart.factory.AxisRendererType;
+
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 public abstract class AbstractAxisRendererProvider implements IAxisRendererProvider
 {

@@ -45,8 +45,9 @@ import java.util.Map;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.ui.IChartPart;
+
+import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1

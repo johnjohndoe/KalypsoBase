@@ -5,15 +5,16 @@ import java.util.Date;
 
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.CalendarDataOperator;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
-import org.kalypso.chart.framework.model.data.IDataOperator;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DATATYPE;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.model.mapper.IAxisConstants.PROPERTY;
-import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
+import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
  * logical range consist of calendar values, internal range consists of long values (time in millis)

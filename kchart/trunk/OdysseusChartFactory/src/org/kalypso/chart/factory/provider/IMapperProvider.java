@@ -1,8 +1,9 @@
 package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.exception.MapperProviderException;
-import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.ksp.chart.factory.MapperType;
+
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 
 /**
  * @author alibu

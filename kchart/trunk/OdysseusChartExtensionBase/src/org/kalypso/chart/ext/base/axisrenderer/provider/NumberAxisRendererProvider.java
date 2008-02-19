@@ -12,7 +12,8 @@ import org.kalypso.chart.factory.configuration.parameters.impl.FontDataParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
 import org.kalypso.chart.factory.provider.AbstractAxisRendererProvider;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
+
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
 {

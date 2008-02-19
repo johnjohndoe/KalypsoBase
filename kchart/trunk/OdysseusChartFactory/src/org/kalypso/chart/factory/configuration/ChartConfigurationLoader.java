@@ -14,7 +14,6 @@ import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.chart.factory.util.IReferenceResolver;
-import org.kalypso.chart.framework.impl.logging.Logger;
 import org.ksp.chart.factory.AxisDocument;
 import org.ksp.chart.factory.AxisRendererDocument;
 import org.ksp.chart.factory.AxisType;
@@ -29,6 +28,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 
 /**
  * @author alibu

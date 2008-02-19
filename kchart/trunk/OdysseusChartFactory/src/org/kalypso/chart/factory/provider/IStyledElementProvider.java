@@ -1,8 +1,9 @@
 package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.exception.StyledElementProviderException;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.ksp.chart.factory.StyleType;
+
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 /**
  * @author burtscher A LayerProvider is needed to create layers from configuration data. Theres no 1:1 mapping from data

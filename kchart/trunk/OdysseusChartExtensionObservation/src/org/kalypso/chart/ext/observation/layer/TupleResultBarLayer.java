@@ -2,8 +2,9 @@ package org.kalypso.chart.ext.observation.layer;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.eclipse.swt.graphics.GC;
+
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 public class TupleResultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
 {

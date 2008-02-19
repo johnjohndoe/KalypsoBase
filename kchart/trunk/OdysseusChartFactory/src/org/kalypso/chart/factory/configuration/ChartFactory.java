@@ -19,18 +19,6 @@ import org.kalypso.chart.factory.provider.IStyledElementProvider;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
 import org.kalypso.chart.factory.util.DummyLayerProvider;
 import org.kalypso.chart.factory.util.IReferenceResolver;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.impl.model.mapper.CoordinateMapper;
-import org.kalypso.chart.framework.impl.model.styles.LayerStyle;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
-import org.kalypso.chart.framework.model.mapper.IMapper;
-import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.ksp.chart.factory.AxisRendererType;
 import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.ChartType;
@@ -43,6 +31,19 @@ import org.ksp.chart.factory.StyleType;
 import org.ksp.chart.factory.ChartType.Layers;
 import org.ksp.chart.factory.LayerType.Mapper;
 import org.ksp.chart.factory.LayerType.Style;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.impl.model.mapper.CoordinateMapper;
+import de.openali.odysseus.chart.framework.impl.model.styles.LayerStyle;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
 
 /**
  * Creates a chart object from a configuration

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ext.base.axiscomponent;
 
-import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
  * @author alibu

@@ -2,10 +2,11 @@ package org.kalypso.chart.factory.provider;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.util.ChartFactoryUtilities;
-import org.kalypso.chart.framework.model.data.IDataOperator;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.ksp.chart.factory.AxisType;
+
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 public abstract class AbstractAxisProvider implements IAxisProvider
 {

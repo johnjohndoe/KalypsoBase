@@ -11,10 +11,11 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.kalypso.chart.framework.impl.util.img.ChartImageFactory;
-import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
+
+import de.openali.odysseus.chart.framework.impl.util.img.ChartImageFactory;
+import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 
 public class ExportHandler extends AbstractHandler
 {

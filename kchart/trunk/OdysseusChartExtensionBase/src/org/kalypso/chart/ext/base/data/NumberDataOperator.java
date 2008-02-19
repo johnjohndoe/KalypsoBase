@@ -5,12 +5,13 @@ import java.text.Format;
 import java.text.NumberFormat;
 import java.util.Comparator;
 
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.impl.model.data.AbstractDataOperator;
-import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
-import org.kalypso.chart.framework.impl.model.data.DataRange;
-import org.kalypso.chart.framework.model.data.IDataRange;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
+import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
+import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
+import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
 {

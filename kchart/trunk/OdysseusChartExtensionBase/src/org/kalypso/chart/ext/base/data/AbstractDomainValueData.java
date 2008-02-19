@@ -3,7 +3,7 @@ package org.kalypso.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.chart.framework.model.data.ITabularDataContainer;
+import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 
 public abstract class AbstractDomainValueData<T_domain, T_target> implements ITabularDataContainer<T_domain, T_target>
 {

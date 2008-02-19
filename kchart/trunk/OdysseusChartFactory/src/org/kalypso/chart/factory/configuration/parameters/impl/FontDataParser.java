@@ -3,8 +3,9 @@ package org.kalypso.chart.factory.configuration.parameters.impl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.model.data.IStringParser;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu

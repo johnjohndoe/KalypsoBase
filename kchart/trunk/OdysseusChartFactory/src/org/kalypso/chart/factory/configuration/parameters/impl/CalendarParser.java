@@ -11,9 +11,10 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.impl.logging.Logger;
-import org.kalypso.chart.framework.model.data.IStringParser;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
  * @author alibu StringParser implementation for dates - these dates are Strings like "2006-10-23T10:00:00" Not
