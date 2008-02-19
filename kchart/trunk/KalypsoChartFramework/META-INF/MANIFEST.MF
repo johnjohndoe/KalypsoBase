@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoChartFramework Plug-in
 Bundle-SymbolicName: org.kalypso.chart.framework
 Bundle-Version: 1.0.0
-Bundle-ClassPath: .
+Bundle-ClassPath: bin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.swt;visibility:=reexport,
  org.eclipse.core.runtime,

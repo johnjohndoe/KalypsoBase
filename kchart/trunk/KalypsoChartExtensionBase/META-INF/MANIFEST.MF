@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
 Bundle-SymbolicName: org.kalypso.chart.ext.base;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: .
+Bundle-ClassPath: bin
 Bundle-Localization: plugin
 Export-Package: org.kalypso.chart.ext.base.axis,
  org.kalypso.chart.ext.base.axis.provider,
