@@ -45,12 +45,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.view.AxisCanvas;
-import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**

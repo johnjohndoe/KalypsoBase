@@ -6,31 +6,21 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.swt;visibility:=reexport,
- org.kalypso.commons;visibility:=reexport
+ org.eclipse.core.runtime
 Export-Package: org.kalypso.chart.framework,
  org.kalypso.chart.framework.controll,
  org.kalypso.chart.framework.exception,
  org.kalypso.chart.framework.logging,
  org.kalypso.chart.framework.model,
  org.kalypso.chart.framework.model.data,
- org.kalypso.chart.framework.model.data.impl,
  org.kalypso.chart.framework.model.event,
- org.kalypso.chart.framework.model.event.impl,
- org.kalypso.chart.framework.model.impl,
  org.kalypso.chart.framework.model.layer,
- org.kalypso.chart.framework.model.layer.impl,
  org.kalypso.chart.framework.model.legend,
  org.kalypso.chart.framework.model.mapper,
  org.kalypso.chart.framework.model.mapper.component,
- org.kalypso.chart.framework.model.mapper.impl,
  org.kalypso.chart.framework.model.mapper.registry,
- org.kalypso.chart.framework.model.mapper.registry.impl,
  org.kalypso.chart.framework.model.mapper.renderer,
  org.kalypso.chart.framework.model.styles,
- org.kalypso.chart.framework.model.styles.impl,
- org.kalypso.chart.framework.trash,
- org.kalypso.chart.framework.util,
- org.kalypso.chart.framework.util.math,
  org.kalypso.chart.framework.view
 Bundle-Activator: org.kalypso.chart.framework.ChartPlugin
 Eclipse-LazyStart: true

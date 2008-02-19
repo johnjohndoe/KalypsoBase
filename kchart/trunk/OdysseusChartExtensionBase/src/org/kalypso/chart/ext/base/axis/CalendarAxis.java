@@ -5,10 +5,10 @@ import java.util.Date;
 
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.CalendarDataOperator;
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;

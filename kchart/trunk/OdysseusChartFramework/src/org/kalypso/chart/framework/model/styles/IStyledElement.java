@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher an ISTyledElement is a helper for drawing geometric primitives according to an external
@@ -22,7 +22,7 @@ public interface IStyledElement
   /**
    * paints the element into the given GC
    */
-  public void paint( GCWrapper gc );
+  public void paint( GC gc );
 
   /**
    * @return type of the element (point, line, polygon, etc.)

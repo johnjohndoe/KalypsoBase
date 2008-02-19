@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
 import org.kalypso.chart.framework.model.data.IStringParser;
 import org.ksp.chart.factory.ParameterListType;
 import org.ksp.chart.factory.ParameterMapType;

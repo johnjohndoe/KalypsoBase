@@ -6,10 +6,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.chart.framework.impl.util.ChartUtilities;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher
@@ -49,13 +49,13 @@ public class StyledPoint extends AbstractStyledElement implements IStyledElement
   }
 
   /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
     final Device dev = gc.getDevice();
-    ChartUtilities.resetGC( gc.m_gc );
+    ChartUtilities.resetGC( gc );
     gc.setAlpha( m_alpha );
     List<Point> path = getPath();
 

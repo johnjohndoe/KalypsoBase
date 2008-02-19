@@ -6,14 +6,14 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.ITabularDataContainer;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author alibu
@@ -30,7 +30,6 @@ public class DefaultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_d
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
-    final GCWrapper gcw = new GCWrapper( gc );
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -45,19 +44,18 @@ public class DefaultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_d
     final IStyledElement point = getStyle().getElement( SE_TYPE.POINT, 1 );
 
     line.setPath( path );
-    line.paint( gcw );
+    line.paint( gc );
     point.setPath( path );
-    point.paint( gcw );
+    point.paint( gc );
 
-    gcw.dispose();
     gc.dispose();
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
     final ITabularDataContainer<T_domain, T_target> dataContainer = getDataContainer();
     if( dataContainer != null )

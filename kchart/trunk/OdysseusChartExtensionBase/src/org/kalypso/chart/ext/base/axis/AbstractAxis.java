@@ -3,8 +3,8 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Comparator;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.kalypso.chart.framework.model.mapper.IAxisAdjustment;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.AxisAdjustment;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -32,7 +32,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
 
   private IDataRange<T> m_dataRange;
 
-  private AxisAdjustment m_preferredAdjustment = null;
+  private IAxisAdjustment m_preferredAdjustment = null;
 
   /**
    * Uses a ComparableComparator as dataComparator
@@ -128,12 +128,12 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
     getEventHandler().fireMapperRangeChanged( this );
   }
 
-  public AxisAdjustment getPreferredAdjustment( )
+  public IAxisAdjustment getPreferredAdjustment( )
   {
     return m_preferredAdjustment;
   }
 
-  public void setPreferredAdjustment( AxisAdjustment adj )
+  public void setPreferredAdjustment( IAxisAdjustment adj )
   {
     m_preferredAdjustment = adj;
   }

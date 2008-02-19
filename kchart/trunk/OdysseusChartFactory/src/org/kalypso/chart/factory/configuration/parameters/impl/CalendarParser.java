@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kalypso.chart.framework.exception.MalformedValueException;
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
 import org.kalypso.chart.framework.model.data.IStringParser;
 
 /**

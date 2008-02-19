@@ -20,13 +20,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.impl.util.InsetsHelper;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.POSITION;
-import org.kalypso.chart.framework.util.InsetsHelper;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 /**
  * @author burtscher
@@ -61,7 +60,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     super( id, foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
   }
 
-  public Point calcTickLabelSize( GCWrapper gc, final IAxis<Calendar> axis )
+  public Point calcTickLabelSize( GC gc, final IAxis<Calendar> axis )
   {
     final IDataRange<Calendar> range = axis.getLogicalRange();
     Format format = axis.getDataOperator().getFormat( axis.getLogicalRange() );
@@ -79,7 +78,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     return new Point( x, y );
   }
 
-  protected void drawTicks( GCWrapper gc, IAxis<Calendar> axis, int startX, int startY, Collection<Calendar> ticks )
+  protected void drawTicks( GC gc, IAxis<Calendar> axis, int startX, int startY, Collection<Calendar> ticks )
   {
     gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
@@ -182,7 +181,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   /**
    * Calculates the ticks shown for the given Axis
    */
-  public Collection<Calendar> calcTicks( GCWrapper gc, final IAxis<Calendar> axis )
+  public Collection<Calendar> calcTicks( GC gc, final IAxis<Calendar> axis )
   {
 
     // größtes Tick<-Label berechnen
@@ -343,7 +342,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
   }
 
   @Override
-  protected Point getTextExtent( GCWrapper gc, final Calendar value, FontData fd, Format format )
+  protected Point getTextExtent( GC gc, final Calendar value, FontData fd, Format format )
   {
     final String label = format.format( new Date( value.getTimeInMillis() ) );
     final Point p = getTextExtent( gc, label, fd );
@@ -399,7 +398,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     return new int[] { startX, startY, endX, endY };
   }
 
-  public void paint( GCWrapper gc, final IAxis<Calendar> axis, final Rectangle screen )
+  public void paint( GC gc, final IAxis<Calendar> axis, final Rectangle screen )
   {
     final Device dev = gc.getDevice();
 
@@ -421,7 +420,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     background.dispose();
   }
 
-  protected void drawAxisLabel( GCWrapper gc, IAxis<Calendar> axis, int startX, int startY, int endX, int endY )
+  protected void drawAxisLabel( GC gc, IAxis<Calendar> axis, int startX, int startY, int endX, int endY )
   {
     if( axis.getLabel() != null )
     {
@@ -487,7 +486,7 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     }
   }
 
-  protected void drawAxisLine( GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
+  protected void drawAxisLine( GC gc, final int x1, final int y1, final int x2, final int y2 )
   {
     gc.setLineWidth( getLineWidth() );
     gc.setLineStyle( SWT.LINE_SOLID );
@@ -505,12 +504,10 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     {
       Image img = new Image( Display.getDefault(), 1, 1 );
       GC gc = new GC( img );
-      GCWrapper gcw = new GCWrapper( gc );
 
-      calcTicks( gcw, axis );
+      calcTicks( gc, axis );
       tickMapElement = getTickMapElement( axis );
 
-      gcw.dispose();
       gc.dispose();
       img.dispose();
     }
@@ -534,9 +531,8 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     final Display dev = Display.getCurrent();
     final Image img = new Image( dev, 1, 1 );
     final GC gc = new GC( img );
-    final GCWrapper gcw = new GCWrapper( gc );
 
-    final Point tls = calcTickLabelSize( gcw, axis );
+    final Point tls = calcTickLabelSize( gc, axis );
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -555,10 +551,9 @@ public class CalendarAxisRenderer extends AbstractAxisRenderer<Calendar>
     width += tickLength;
 
     // Jetzt noch den Text
-    final Point labelExtent = getTextExtent( gcw, axis.getLabel(), getFontDataLabel() );
+    final Point labelExtent = getTextExtent( gc, axis.getLabel(), getFontDataLabel() );
     width += labelExtent.y;
 
-    gcw.dispose();
     gc.dispose();
     img.dispose();
 

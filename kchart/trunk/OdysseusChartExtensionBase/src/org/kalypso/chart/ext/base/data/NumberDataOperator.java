@@ -7,10 +7,10 @@ import java.util.Comparator;
 
 import org.kalypso.chart.framework.exception.MalformedValueException;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
+import org.kalypso.chart.framework.impl.model.data.AbstractDataOperator;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.model.data.DataRange;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.AbstractDataOperator;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
 {
@@ -20,7 +20,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     super( comparator );
   }
 
-  public DataRange<Number> getContainingInterval( final Number numVal, final Number numIntervalWidth, final Number numFixedPoint )
+  public IDataRange<Number> getContainingInterval( final Number numVal, final Number numIntervalWidth, final Number numFixedPoint )
   {
     double min = numFixedPoint.doubleValue();
     double max = numVal.doubleValue();

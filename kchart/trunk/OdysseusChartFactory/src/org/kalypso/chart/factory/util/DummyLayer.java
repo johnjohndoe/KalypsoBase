@@ -46,19 +46,19 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageData; 
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.impl.model.event.LayerEventHandler;
+import org.kalypso.chart.framework.impl.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.event.ILayerEventListener;
-import org.kalypso.chart.framework.model.event.impl.LayerEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
-import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher1
@@ -279,9 +279,9 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
     // TODO Auto-generated method stub
 

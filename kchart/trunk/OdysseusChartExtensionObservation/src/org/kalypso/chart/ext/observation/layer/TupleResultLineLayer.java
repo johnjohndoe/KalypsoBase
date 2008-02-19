@@ -13,7 +13,7 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 import org.kalypso.observation.result.TupleResult;
 
 // TODO why do we still have several tuple result layer?
@@ -27,7 +27,6 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
-    final GCWrapper gcw = new GCWrapper( gc );
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -41,14 +40,13 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     final IStyledElement element = getStyle().getElement( SE_TYPE.LINE, 1 );
 
     element.setPath( path );
-    element.paint( gcw );
+    element.paint( gc );
 
-    gcw.dispose();
     gc.dispose();
 
   }
 
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
     final IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
     final IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );

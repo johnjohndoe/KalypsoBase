@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui;
 
-import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 

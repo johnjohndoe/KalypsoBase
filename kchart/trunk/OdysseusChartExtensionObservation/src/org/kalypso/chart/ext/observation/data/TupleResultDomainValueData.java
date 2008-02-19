@@ -8,10 +8,10 @@ import java.util.TreeMap;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;

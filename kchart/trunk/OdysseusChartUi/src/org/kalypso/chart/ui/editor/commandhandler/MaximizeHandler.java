@@ -3,7 +3,7 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.chart.framework.util.ChartUtilities;
+import org.kalypso.chart.framework.impl.util.ChartUtilities;
 import org.kalypso.chart.ui.IChartPart;
 
 public class MaximizeHandler extends AbstractHandler

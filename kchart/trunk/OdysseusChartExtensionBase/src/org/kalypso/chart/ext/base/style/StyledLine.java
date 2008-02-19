@@ -3,11 +3,11 @@ package org.kalypso.chart.ext.base.style;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.chart.framework.impl.util.ChartUtilities;
+import org.kalypso.chart.framework.impl.util.StyleUtils;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.chart.framework.util.StyleUtils;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher
@@ -33,20 +33,20 @@ public class StyledLine extends AbstractStyledElement implements IStyledElement
   }
 
   /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gcw )
+  public void paint( GC gc )
   {
-    ChartUtilities.resetGC( gcw.m_gc );
-    gcw.setAlpha( m_alpha );
-    final Color lineColor = new Color( gcw.getDevice(), m_lineColor );
+    ChartUtilities.resetGC( gc);
+    gc.setAlpha( m_alpha );
+    final Color lineColor = new Color( gc.getDevice(), m_lineColor );
 
     final int[] intPath = StyleUtils.pointListToIntArray( getPath() );
-    gcw.setForeground( lineColor );
-    gcw.setLineWidth( m_width );
-    gcw.setLineStyle( m_swtStyle );
-    gcw.drawPolyline( intPath );
+    gc.setForeground( lineColor );
+    gc.setLineWidth( m_width );
+    gc.setLineStyle( m_swtStyle );
+    gc.drawPolyline( intPath );
 
     lineColor.dispose();
 

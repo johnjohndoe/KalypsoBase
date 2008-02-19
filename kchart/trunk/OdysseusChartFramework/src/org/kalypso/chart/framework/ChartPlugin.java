@@ -42,7 +42,7 @@ public class ChartPlugin extends Plugin
   @Override
   public void stop( BundleContext context ) throws Exception
   {
-    plugin = null;
+    plugin = null; // NOPMD by alibu on 17.02.08 17:43
     super.stop( context );
   }
 

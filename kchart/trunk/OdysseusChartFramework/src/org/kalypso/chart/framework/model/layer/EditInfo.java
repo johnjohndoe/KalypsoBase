@@ -3,6 +3,7 @@ package org.kalypso.chart.framework.model.layer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+
 /**
  * @author gernot
  */

@@ -9,14 +9,14 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ext.base.style.StyledLine;
+import org.kalypso.chart.framework.impl.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
-import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -44,11 +44,11 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
   @SuppressWarnings("unchecked")
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
 
     gc.setLineWidth( 5 );
@@ -153,7 +153,6 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
-    final GCWrapper gcw = new GCWrapper( gc );
 
     final IStyledElement line = getStyle().getElement( SE_TYPE.LINE, 0 );
 
@@ -164,26 +163,25 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
       points.add( new Point( 0, (int) (height * 0.3) ) );
       points.add( new Point( width, (int) (height * 0.3) ) );
       line.setPath( points );
-      line.paint( gcw );
+      line.paint( gc );
       points.clear();
       points.add( new Point( 0, (int) (height * 0.7) ) );
       points.add( new Point( width, (int) (height * 0.7) ) );
       line.setPath( points );
-      line.paint( gcw );
+      line.paint( gc );
       points.clear();
       points.add( new Point( (int) (width * 0.3), 0 ) );
       points.add( new Point( (int) (width * 0.3), height ) );
       line.setPath( points );
-      line.paint( gcw );
+      line.paint( gc );
       points.clear();
       points.add( new Point( (int) (width * 0.7), 0 ) );
       points.add( new Point( (int) (width * 0.7), height ) );
       line.setPath( points );
-      line.paint( gcw );
+      line.paint( gc );
       points.clear();
     }
 
     gc.dispose();
-    gcw.dispose();
   }
 }

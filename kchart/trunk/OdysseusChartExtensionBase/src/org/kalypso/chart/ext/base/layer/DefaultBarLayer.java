@@ -9,14 +9,14 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
+import org.kalypso.chart.framework.impl.model.data.DataRange;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author alibu
@@ -33,7 +33,6 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
-    final GCWrapper gcw = new GCWrapper( gc );
     final IStyledElement element = getStyle().getElement( SE_TYPE.POLYGON, 1 );
 
     ArrayList<Point> path = new ArrayList<Point>();
@@ -42,7 +41,7 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
     path.add( new Point( width / 2, height / 2 ) );
     path.add( new Point( width / 2, height ) );
     element.setPath( path );
-    element.paint( gcw );
+    element.paint( gc );
 
     path = new ArrayList<Point>();
     path.add( new Point( width / 2, height ) );
@@ -50,19 +49,18 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
     path.add( new Point( width, 0 ) );
     path.add( new Point( width, height ) );
     element.setPath( path );
-    element.paint( gcw );
+    element.paint( gc );
 
-    gcw.dispose();
     gc.dispose();
 
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
   @SuppressWarnings("unchecked")
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
     AbstractDomainIntervalValueData<T_domain, T_target> dataContainer = getDataContainer();
 
@@ -76,8 +74,8 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
       final ArrayList<Point> path = new ArrayList<Point>();
       final IStyledElement poly = getStyle().getElement( SE_TYPE.POLYGON, 1 );
 
-      IDataOperator dopDomain = getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
-      IDataOperator dopTarget = getTargetAxis().getDataOperator( targetComponent[0].getClass() );
+      IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
+      IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
 
       ICoordinateMapper cm = getCoordinateMapper();
 

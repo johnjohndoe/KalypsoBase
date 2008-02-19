@@ -3,12 +3,12 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.PlotCanvas;
 import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
-import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 
 /**
  * Registers itself upon creation and deregisters at disposal.

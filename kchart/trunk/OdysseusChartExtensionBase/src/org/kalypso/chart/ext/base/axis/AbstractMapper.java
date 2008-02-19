@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.kalypso.chart.framework.impl.model.event.MapperEventHandler;
 import org.kalypso.chart.framework.model.event.IMapperEventListener;
-import org.kalypso.chart.framework.model.event.impl.MapperEventHandler;
 import org.kalypso.chart.framework.model.mapper.IMapper;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 
@@ -22,7 +22,7 @@ public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_l
   private final Comparator<T_logical> m_dataComparator;
 
   private final Class< ? > m_dataClass;
-
+ 
   private final MapperEventHandler m_handler = new MapperEventHandler();
 
   /**

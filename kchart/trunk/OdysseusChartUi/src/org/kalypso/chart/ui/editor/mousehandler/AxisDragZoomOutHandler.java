@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.view.ChartComposite;
 
 /**
  * @author burtscher1

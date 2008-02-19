@@ -47,12 +47,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.logging.Logger;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
+import org.kalypso.chart.framework.impl.logging.Logger;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import org.kalypso.chart.framework.view.AxisCanvas;
-import org.kalypso.chart.framework.view.ChartComposite;
 
 /**
  * @author burtscher1

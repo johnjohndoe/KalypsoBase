@@ -2,6 +2,7 @@ package org.kalypso.chart.framework.model.layer;
 
 import java.util.Map;
 
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.kalypso.chart.framework.model.data.IDataContainer;
@@ -11,7 +12,6 @@ import org.kalypso.chart.framework.model.event.ILayerEventListener;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
 import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
@@ -105,19 +105,13 @@ public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEv
   public void setStyle( final ILayerStyle style );
 
   /**
-   * draws the layer using the given GCWrapper and Device
+   * draws the layer using the given GC and Device
    */
-  public void paint( final GCWrapper gc );
+  public void paint( final GC gc );
 
   public void setVisible( final boolean isVisible );
 
   public boolean isVisible( );
-
-  // TODO: @Alex This does NOT belong into the Layer interface! It is not needed, and will never be needed!
-  // This is absolutely implementation depenmdedn and MUST be hidden inside the implementation and not EXHIBITET to the
-  // interface!
-  @Deprecated
-  public IDataContainer<T_domain, T_target> getDataContainer( );
 
   /**
    * method to store arbitrary data objects;

@@ -49,38 +49,15 @@ package org.kalypso.chart.framework.model.mapper;
  * the data range;
  * 
  */
-public class AxisAdjustment
+public interface IAxisAdjustment
 {
 
-  private final double m_before;
 
-  private final double m_range;
 
-  private final double m_after;
+  public double getBefore( );
 
-  private final double m_size;
+  public double getRange( );
 
-  public AxisAdjustment( int before, int range, int after )
-  {
-    m_before = before;
-    m_range = range;
-    m_after = after;
-    m_size = m_before + m_range + m_after;
-  }
-
-  public double getBefore( )
-  {
-    return m_before;
-  }
-
-  public double getRange( )
-  {
-    return m_range;
-  }
-
-  public double getAfter( )
-  {
-    return m_after;
-  }
+  public double getAfter( );
 
 }

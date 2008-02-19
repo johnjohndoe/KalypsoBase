@@ -15,9 +15,9 @@ import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultBarLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 
 /**

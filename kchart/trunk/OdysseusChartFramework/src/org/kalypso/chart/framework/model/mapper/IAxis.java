@@ -83,9 +83,9 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
    * 
    * @return the preferred adjustment or null if there isn't any
    */
-  public AxisAdjustment getPreferredAdjustment( );
+  public IAxisAdjustment getPreferredAdjustment( );
 
-  public void setPreferredAdjustment( AxisAdjustment adj );
+  public void setPreferredAdjustment( IAxisAdjustment adj );
 
   public DATATYPE getDataType( );
 

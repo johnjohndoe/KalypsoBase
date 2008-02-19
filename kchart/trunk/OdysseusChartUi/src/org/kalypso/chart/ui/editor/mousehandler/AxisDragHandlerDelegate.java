@@ -44,11 +44,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.chart.framework.view.AxisCanvas;
-import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**

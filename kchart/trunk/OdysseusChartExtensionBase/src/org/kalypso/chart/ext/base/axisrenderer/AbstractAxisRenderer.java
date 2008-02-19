@@ -13,7 +13,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author alibu
@@ -64,9 +64,9 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
     m_fontDataTick = fdTick;
   }
 
-  protected abstract Point getTextExtent( GCWrapper gcw, T_logical value, FontData fontData, Format format );
+  protected abstract Point getTextExtent( GC gcw, T_logical value, FontData fontData, Format format );
 
-  protected Point getTextExtent( GCWrapper gc, final String value, FontData fd )
+  protected Point getTextExtent( GC gc, final String value, FontData fd )
   {
     Font oldFont = gc.getFont();
     final Font f = getFont( fd, gc.getDevice() );
@@ -79,7 +79,7 @@ public abstract class AbstractAxisRenderer<T_logical> implements IAxisRenderer<T
   /**
    * draws a given text at the position using special fontData
    */
-  protected void drawText( GCWrapper gc, String text, int x, int y, FontData fd )
+  protected void drawText( GC gc, String text, int x, int y, FontData fd )
   {
     gc.setTextAntialias( SWT.ON );
     Font oldfont = gc.getFont();

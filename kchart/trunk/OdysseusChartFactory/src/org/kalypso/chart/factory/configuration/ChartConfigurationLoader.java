@@ -14,7 +14,7 @@ import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.chart.factory.util.IReferenceResolver;
-import org.kalypso.chart.framework.logging.Logger;
+import org.kalypso.chart.framework.impl.logging.Logger;
 import org.ksp.chart.factory.AxisDocument;
 import org.ksp.chart.factory.AxisRendererDocument;
 import org.ksp.chart.factory.AxisType;

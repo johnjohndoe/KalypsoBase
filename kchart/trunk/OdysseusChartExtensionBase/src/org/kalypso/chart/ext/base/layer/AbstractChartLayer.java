@@ -6,15 +6,15 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.model.event.LayerEventHandler;
+import org.kalypso.chart.framework.impl.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataOperator;
 import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.event.ILayerEventListener;
-import org.kalypso.chart.framework.model.event.impl.LayerEventHandler;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.legend.ILegendItem;
-import org.kalypso.chart.framework.model.legend.LegendItem;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.ICoordinateMapper;
 import org.kalypso.chart.framework.model.styles.ILayerStyle;
@@ -164,10 +164,6 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
     m_handler.fireLayerVisibilityChanged( this );
   }
 
-  public IDataContainer<T_domain, T_target> getDataContainer( )
-  {
-    return m_dataContainer;
-  }
 
   public void setDataContainer( final IDataContainer data )
   {
@@ -259,6 +255,11 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   public void init( )
   {
 
+  }
+  
+  protected IDataContainer<T_domain, T_target> getDataContainer()
+  {
+    return m_dataContainer;
   }
 
 }

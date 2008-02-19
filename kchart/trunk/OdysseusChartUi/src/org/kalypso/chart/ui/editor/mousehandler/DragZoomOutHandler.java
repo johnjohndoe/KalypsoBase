@@ -46,9 +46,9 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.PlotCanvas;
 import org.kalypso.chart.framework.view.IChartDragHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 
 /**
  * @author Gernot Belger

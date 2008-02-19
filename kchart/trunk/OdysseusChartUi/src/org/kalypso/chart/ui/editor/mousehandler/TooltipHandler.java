@@ -4,9 +4,9 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.framework.model.layer.EditInfo;
 import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
-import org.kalypso.chart.framework.view.ChartComposite;
 
 /**
  * handler to manage tooltips; registers on creation, deregisters on disposation

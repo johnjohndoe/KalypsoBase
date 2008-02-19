@@ -11,8 +11,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.framework.view.ChartImageFactory;
+import org.kalypso.chart.framework.impl.util.img.ChartImageFactory;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
 

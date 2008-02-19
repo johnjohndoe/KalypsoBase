@@ -5,11 +5,11 @@ import java.util.List;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.chart.framework.impl.util.ChartUtilities;
+import org.kalypso.chart.framework.impl.util.StyleUtils;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.chart.framework.util.StyleUtils;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher
@@ -35,12 +35,12 @@ public class StyledPolygon extends AbstractStyledElement implements IStyledEleme
   }
 
   /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   * @see org.kalypso.chart.framework.styles.IStyledElement#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
-    ChartUtilities.resetGC( gc.m_gc );
+    ChartUtilities.resetGC( gc);
     gc.setAlpha( m_alpha );
     final Color fillColor = new Color( gc.getDevice(), m_fillColor );
     Color borderColor = null;

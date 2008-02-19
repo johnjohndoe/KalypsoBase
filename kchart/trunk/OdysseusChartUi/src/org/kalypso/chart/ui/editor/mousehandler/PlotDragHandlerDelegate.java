@@ -41,9 +41,9 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
-import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.PlotCanvas;
 import org.kalypso.chart.framework.view.IChartDragHandler;
-import org.kalypso.chart.framework.view.PlotCanvas;
 
 /**
  * 

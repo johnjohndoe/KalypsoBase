@@ -12,7 +12,7 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 
 public class NumberTickCalculator
 {
@@ -24,7 +24,7 @@ public class NumberTickCalculator
    *            interval division should stop when intervals become smaller than this value
    */
   @SuppressWarnings("cast")
-  public static void calcTicks( final GCWrapper gc, final IAxis<Number> axis, final double minDisplayInterval )
+  public static void calcTicks( final GC gc, final IAxis<Number> axis, final double minDisplayInterval )
   {
     final IMapperRegistry registry = axis.getRegistry();
     final NumberAxisRenderer renderer = (NumberAxisRenderer) registry.getRenderer( axis );

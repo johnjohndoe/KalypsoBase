@@ -12,7 +12,7 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.GC;
 import org.kalypso.observation.result.TupleResult;
 
 public class TupleResultPointLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
@@ -24,7 +24,7 @@ public class TupleResultPointLayer<T_domain, T_target> extends AbstractChartLaye
 
   }
 
-  public void paint( GCWrapper gc )
+  public void paint( GC gc )
   {
     final Rectangle c = gc.getClipping();
     final IStyledElement se = getStyle().getElement( SE_TYPE.POINT, 0 );

@@ -38,26 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.framework.model.event.impl;
-
-import org.kalypso.chart.framework.model.event.ILayerEventListener;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
+package org.kalypso.chart.framework.logging;
 
 /**
- * @author burtscher1
- * 
+ * @author alibu
+ *
  */
-public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener>
+public abstract class LoggerFactory
 {
-  public void fireLayerContentChanged( final IChartLayer< ? , ? > layer )
+  public static ILogger getLogger()
   {
-    for( final ILayerEventListener l : getListeners() )
-      l.onLayerContentChanged( layer );
-  }
-
-  public void fireLayerVisibilityChanged( final IChartLayer< ? , ? > layer )
-  {
-    for( final ILayerEventListener l : getListeners() )
-      l.onLayerVisibilityChanged( layer );
+    return null;
   }
 }
