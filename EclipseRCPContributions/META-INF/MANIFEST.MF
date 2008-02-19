@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.net,

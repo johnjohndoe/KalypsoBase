@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.contribs.java.JavaApiContributionsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.contribs.java,
  org.kalypso.contribs.java.awt,
  org.kalypso.contribs.java.io,
