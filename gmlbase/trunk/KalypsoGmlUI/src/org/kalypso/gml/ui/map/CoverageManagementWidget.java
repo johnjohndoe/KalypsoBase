@@ -842,7 +842,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageMove( -1 );
       }
     };
-    moveUpAction.setDescription( "Kachel nach Oben verschieben" );
+    moveUpAction.setDescription( "Kachel nach oben verschieben" );
 
     final Action moveDownAction = new Action( "Move Coverage Down", downID )
     {
@@ -855,7 +855,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleCoverageMove( 1 );
       }
     };
-    moveDownAction.setDescription( "Kachel nach Unten verschieben" );
+    moveDownAction.setDescription( "Kachel nach unten verschieben" );
 
     final Action jumpToAction = new Action( "Jump To Coverage", jumptoID )
     {
