@@ -16,3 +16,5 @@ Require-Bundle: org.kalypso.contribs.java,
  de.openali.odysseus.chart.factory;visibility:=reexport,
  de.openali.odysseus.chart.framework;visibility:=reexport,
  de.openali.odysseus.chart.framework.impl;visibility:=reexport
+Bundle-Activator: org.kalypso.chart.ext.base.Activator
+Eclipse-LazyStart: true

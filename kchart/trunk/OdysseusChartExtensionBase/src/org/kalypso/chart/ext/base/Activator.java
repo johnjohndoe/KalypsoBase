@@ -1,24 +1,20 @@
-package de.openali.odysseus.chart.framework;
+package org.kalypso.chart.ext.base;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class ChartPlugin extends Plugin
+public class Activator extends Plugin
 {
-
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.chart.framework";
+  public static final String PLUGIN_ID = "org.kalypso.chart.ext.base";
 
   // The shared instance
-  private static ChartPlugin plugin;
+  private static Activator plugin;
 
   /**
    * The constructor
    */
-  public ChartPlugin( )
+  public Activator( )
   {
     plugin = this;
   }
@@ -51,7 +47,7 @@ public class ChartPlugin extends Plugin
    * 
    * @return the shared instance
    */
-  public static ChartPlugin getDefault( )
+  public static Activator getDefault( )
   {
     return plugin;
   }

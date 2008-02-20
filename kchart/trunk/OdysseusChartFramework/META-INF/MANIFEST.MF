@@ -23,5 +23,5 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.model.mapper.renderer,
  de.openali.odysseus.chart.framework.model.style,
  de.openali.odysseus.chart.framework.view
-Bundle-Activator: de.openali.odysseus.chart.framework.ChartPlugin
+Bundle-Activator: de.openali.odysseus.chart.framework.Activator
 Eclipse-LazyStart: true

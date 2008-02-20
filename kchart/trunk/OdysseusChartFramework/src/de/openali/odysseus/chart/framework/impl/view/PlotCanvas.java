@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -377,8 +378,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 					long start = System.currentTimeMillis();
 					layer.paint(buffGc);
 					long end = System.currentTimeMillis();
-					System.out.println("Time to paint layer ("
-					        + layer.getTitle() + "): " + (end - start) + " ms");
+					Logger.logInfo(Logger.TOPIC_LOG_PLOT,
+					        "Time to paint layer (" + layer.getTitle() + "): "
+					                + (end - start) + " ms");
 				}
 				catch (final SWTException e)
 				{

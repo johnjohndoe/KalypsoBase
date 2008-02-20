@@ -9,7 +9,8 @@ import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 public class PolygonFigure extends AbstractFigure<AreaStyle>
 {
 
-	private Point[] m_points = new Point[] { new Point(10, 10), new Point(100, 100) };
+	private Point[] m_points = new Point[] { new Point(10, 10),
+	        new Point(100, 100) };
 
 	@Override
 	public void paintFigure(GC gc)
@@ -36,9 +37,13 @@ public class PolygonFigure extends AbstractFigure<AreaStyle>
 	{
 		AreaStyle style = super.getStyle();
 		if (style != null)
+		{
 			return style;
+		}
 		else
+		{
 			return FigureUtilities.getDefaultStyle(AreaStyle.class);
+		}
 	}
 
 }

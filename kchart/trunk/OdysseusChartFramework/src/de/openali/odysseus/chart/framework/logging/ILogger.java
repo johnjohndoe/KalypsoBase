@@ -1,9 +1,8 @@
 package de.openali.odysseus.chart.framework.logging;
 
-
 /**
  * interface for logging purposes
- *
+ * 
  * @author alibu
  */
 public interface ILogger
@@ -30,10 +29,10 @@ public interface ILogger
 
   public void logInfo( String topic, String msg );
 
-  public void logError( String topic, String msg );
-
   public void logWarning( String topic, String msg );
 
-  
-  
+  public void logError( String topic, String msg );
+
+  public void logFatal( String topic, String msg );
+
 }
