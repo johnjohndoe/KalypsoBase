@@ -2,15 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="de.openali.odysseus.chart.factory.AxisProvider">
-      <provider
-            class="org.kalypso.chart.ext.base.axis.provider.NumberAxisProvider"
-            id="org.kalypso.chart.ext.axis.provider.Number"/>
-      <provider
-            class="org.kalypso.chart.ext.base.axis.provider.CalendarAxisProvider"
-            id="org.kalypso.chart.ext.axis.provider.Calendar"/>
-   </extension>
-   <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
       <provider
             class="org.kalypso.chart.ext.base.layer.provider.GridLayerProvider"
@@ -25,28 +16,22 @@
             class="org.kalypso.chart.ext.base.layer.provider.UVFLayerProvider"
             id="org.kalypso.chart.ext.layer.provider.UVF"/>
    </extension>
-   <extension
-         point="de.openali.odysseus.chart.factory.StyledElementProvider">
+      <extension
+         point="de.openali.odysseus.chart.factory.AxisProvider">
       <provider
-            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledLineProvider"
-            id="org.kalypso.chart.ext.style.provider.DefaultStyledLine"/>
-      <provider
-            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPointProvider"
-            id="org.kalypso.chart.ext.style.provider.DefaultStyledPoint"/>
-      <provider
-            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPolygonProvider"
-            id="org.kalypso.chart.ext.style.provider.DefaultStyledPolygon"/>
-      <provider
-            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledTextProvider"
-            id="org.kalypso.chart.ext.style.provider.DefaultStyledText"/>
+            class="org.kalypso.chart.ext.base.axis.provider.GenericLinearAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.GenericLinear">
+      </provider>
    </extension>
-   <extension
+      <extension
          point="de.openali.odysseus.chart.factory.AxisRendererProvider">
       <provider
-            class="org.kalypso.chart.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
-            id="org.kalypso.chart.ext.axisrenderer.provider.Calendar"/>
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider"
+            id="org.kalypso.chart.ext.test.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+      </provider>
       <provider
-            class="org.kalypso.chart.ext.base.axisrenderer.provider.NumberAxisRendererProvider"
-            id="org.kalypso.chart.ext.axisrenderer.provider.Number"/>
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+      </provider>
    </extension>
 </plugin>

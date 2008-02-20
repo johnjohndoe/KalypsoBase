@@ -14,8 +14,8 @@ import java.util.TimeZone;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultBarLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -24,16 +24,16 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 /**
  * @author alibu
  */
-public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvider
+public class CSVBarLayerProvider extends AbstractLayerProvider
 {
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @SuppressWarnings( { "unused", "unchecked" })
-  public IChartLayer< ? , ? > getLayer( URL context ) throws LayerProviderException
+  public IChartLayer getLayer( URL context ) throws LayerProviderException
   {
-    return new DefaultBarLayer<T_domain, T_target>();
+    return new DefaultBarLayer();
   }
 
   private Calendar createDate( String s )
@@ -69,7 +69,7 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
    */
   public IDataContainer getDataContainer( ) throws LayerProviderException
   {
-    final AbstractDomainIntervalValueFileData<T_domain, T_target> data = new AbstractDomainIntervalValueFileData<T_domain, T_target>()
+    final AbstractDomainIntervalValueFileData data = new AbstractDomainIntervalValueFileData()
     {
 
       @SuppressWarnings("cast")
@@ -82,10 +82,10 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
         {
           fr = new FileReader( getInputFile() );
 
-          List<T_domain> domainValues = new ArrayList<T_domain>();
-          List<T_domain> domainIntervalStartValues = new ArrayList<T_domain>();
-          List<T_domain> domainIntervalEndValues = new ArrayList<T_domain>();
-          List<T_target> targetValues = new ArrayList<T_target>();
+          List<Object> domainValues = new ArrayList<Object>();
+          List<Object> domainIntervalStartValues = new ArrayList<Object>();
+          List<Object> domainIntervalEndValues = new ArrayList<Object>();
+          List<Object> targetValues = new ArrayList<Object>();
 
           BufferedReader br = new BufferedReader( fr );
           String s = "";
@@ -107,9 +107,9 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
 
               if( cols.length >= 2 )
               {
-                T_domain domStart = null;
-                T_domain domEnd = null;
-                T_domain domVal = null;
+                Object domStart = null;
+                Object domEnd = null;
+                Object domVal = null;
                 if( domType.equals( "DATE" ) )
                 {
                   Calendar calVal = createDate( cols[0] );
@@ -127,23 +127,23 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
 
                   calEnd.add( Calendar.DAY_OF_MONTH, +1 );
 
-                  domVal = (T_domain) calVal;
-                  domStart = (T_domain) calStart;
-                  domEnd = (T_domain) calEnd;
+                  domVal = (Object) calVal;
+                  domStart = (Object) calStart;
+                  domEnd = (Object) calEnd;
 
                 }
                 else
                 {
                   Number numVal = createNumber( cols[0] );
-                  domVal = (T_domain) numVal;
-                  domStart = (T_domain) (new Double( numVal.doubleValue() - 0.5 ));
-                  domEnd = (T_domain) (new Double( numVal.doubleValue() + 0.5 ));
+                  domVal = numVal;
+                  domStart = new Double( numVal.doubleValue() - 0.5 );
+                  domEnd = new Double( numVal.doubleValue() + 0.5 );
                 }
 
-                domainValues.add( (T_domain) domVal );
-                domainIntervalStartValues.add( (T_domain) domStart );
-                domainIntervalEndValues.add( (T_domain) domEnd );
-                targetValues.add( (T_target) createNumber( cols[1] ) );
+                domainValues.add( (Object) domVal );
+                domainIntervalStartValues.add( domStart );
+                domainIntervalEndValues.add( domEnd );
+                targetValues.add( createNumber( cols[1] ) );
 
               }
               setDomainIntervalEndValues( domainIntervalEndValues );
@@ -175,22 +175,22 @@ public class CSVBarLayerProvider<T_domain, T_target> extends AbstractLayerProvid
 
       }
 
-      public IDataRange<T_domain> getDomainRange( )
+      public IDataRange getDomainRange( )
       {
-        T_domain[] domainStart = getDomainDataIntervalStart();
-        T_domain[] domainEnd = getDomainDataIntervalEnd();
+        Object[] domainStart = getDomainDataIntervalStart();
+        Object[] domainEnd = getDomainDataIntervalEnd();
         Object[] merged = new Object[domainStart.length + domainEnd.length];
         for( int i = 0; i < domainStart.length; i++ )
         {
           merged[i] = domainStart[i];
           merged[i + domainStart.length] = domainEnd[i];
         }
-        return new ComparableDataRange<T_domain>( (T_domain[]) merged );
+        return new ComparableDataRange<Object>( merged );
       }
 
-      public IDataRange<T_target> getTargetRange( )
+      public IDataRange<Object> getTargetRange( )
       {
-        return new ComparableDataRange<T_target>( getTargetValues() );
+        return new ComparableDataRange<Object>( getTargetValues() );
       }
 
     };

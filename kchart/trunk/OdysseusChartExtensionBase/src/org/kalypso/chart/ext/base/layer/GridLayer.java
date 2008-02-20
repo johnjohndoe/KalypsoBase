@@ -8,16 +8,14 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.ext.base.style.StyledLine;
-import org.eclipse.swt.graphics.GC;
 
+import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
 import de.openali.odysseus.chart.framework.impl.model.legend.LegendItem;
+import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
-import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -27,7 +25,7 @@ import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
  *         width of the chart bars in milliseconds (e.g. 86400000 for one day) The following styled elements are used:
  *         Polygon: used to draw the individual bars
  */
-public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
+public class GridLayer extends AbstractChartLayer
 {
 
   public enum GridOrientation
@@ -53,14 +51,13 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
   {
 
     gc.setLineWidth( 5 );
-    // gc.drawLine(0,0, 200, 200);
-
-    final StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
     IAxis hAxis = null;
     IAxis vAxis = null;
+
+    PolylineFigure figure = getPolylineFigure();
 
     // Welche ist die horizontale, welche die horizontale Achse?
     if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -88,8 +85,8 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
           path.clear();
           path.add( new Point( xfrom, vAxis.numericToScreen( vTick ) ) );
           path.add( new Point( xto, vAxis.numericToScreen( vTick ) ) );
-          sl.setPath( path );
-          sl.paint( gc );
+          figure.setPoints( path.toArray( new Point[] {} ) );
+          figure.paint( gc );
         }
       }
     }
@@ -107,12 +104,11 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
           path.clear();
           path.add( new Point( hAxis.numericToScreen( hTick ), yfrom ) );
           path.add( new Point( hAxis.numericToScreen( hTick ), yto ) );
-          sl.setPath( path );
-          sl.paint( gc );
+          figure.setPoints( path.toArray( new Point[] {} ) );
+          figure.paint( gc );
         }
       }
     }
-    sl.setPath( path );
   }
 
   /**
@@ -155,34 +151,40 @@ public class GridLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, 
     final int width = bounds.width;
     final GC gc = new GC( img );
 
-    final IStyledElement line = getStyle().getElement( SE_TYPE.LINE, 0 );
+    PolylineFigure figure = getPolylineFigure();
 
-    if( line != null )
-    {
-      final ArrayList<Point> points = new ArrayList<Point>();
-      // Linie von links nach rechts
-      points.add( new Point( 0, (int) (height * 0.3) ) );
-      points.add( new Point( width, (int) (height * 0.3) ) );
-      line.setPath( points );
-      line.paint( gc );
-      points.clear();
-      points.add( new Point( 0, (int) (height * 0.7) ) );
-      points.add( new Point( width, (int) (height * 0.7) ) );
-      line.setPath( points );
-      line.paint( gc );
-      points.clear();
-      points.add( new Point( (int) (width * 0.3), 0 ) );
-      points.add( new Point( (int) (width * 0.3), height ) );
-      line.setPath( points );
-      line.paint( gc );
-      points.clear();
-      points.add( new Point( (int) (width * 0.7), 0 ) );
-      points.add( new Point( (int) (width * 0.7), height ) );
-      line.setPath( points );
-      line.paint( gc );
-      points.clear();
-    }
+    final ArrayList<Point> points = new ArrayList<Point>();
+    // Linie von links nach rechts
+    points.add( new Point( 0, (int) (height * 0.3) ) );
+    points.add( new Point( width, (int) (height * 0.3) ) );
+    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.paint( gc );
+    points.clear();
+    points.add( new Point( 0, (int) (height * 0.7) ) );
+    points.add( new Point( width, (int) (height * 0.7) ) );
+    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.paint( gc );
+    points.clear();
+    points.add( new Point( (int) (width * 0.3), 0 ) );
+    points.add( new Point( (int) (width * 0.3), height ) );
+    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.paint( gc );
+    points.clear();
+    points.add( new Point( (int) (width * 0.7), 0 ) );
+    points.add( new Point( (int) (width * 0.7), height ) );
+    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.paint( gc );
+    points.clear();
 
     gc.dispose();
+  }
+
+  private PolylineFigure getPolylineFigure( )
+  {
+    LineStyle style = getStyles().getStyle( "line", LineStyle.class );
+    PolylineFigure figure = new PolylineFigure();
+    figure.setStyle( style );
+    return figure;
+
   }
 }

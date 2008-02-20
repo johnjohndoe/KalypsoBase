@@ -38,68 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.base.style;
+package org.kalypso.chart.ext.base.axisrenderer;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.eclipse.swt.graphics.Point;
-
-import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
- * @author burtscher1
+ * @author alibu
  * 
  */
-public abstract class AbstractStyledElement implements IStyledElement
+public interface ILabelCreator
 {
-
-  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
-
-  private List<Point> m_path;
-
-  private final String m_id;
-
-  public AbstractStyledElement( String id )
-  {
-    m_id = id;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.styles.IStyledElement#setPath(java.util.List) The path is used draw a styled point
-   *      at each point of the path; the Point is regarded as the center position of the element
-   */
-  public void setPath( List<Point> path )
-  {
-    m_path = path;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
-  public void setData( String id, Object data )
-  {
-    m_data.put( id, data );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-   */
-  public Object getData( String id )
-  {
-    return m_data.get( id );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.styles.IStyledElement#getId()
-   */
-  public String getId( )
-  {
-    return m_id;
-  }
-
-  protected List<Point> getPath( )
-  {
-    return m_path;
-  }
+  public String getLabel( Number value, IDataRange<Number> range );
 }

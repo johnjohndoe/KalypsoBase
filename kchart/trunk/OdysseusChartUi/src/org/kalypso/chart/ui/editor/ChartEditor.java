@@ -32,9 +32,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
-import org.kalypso.chart.factory.configuration.ChartConfigurationSaver;
-import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -43,10 +40,12 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.ksp.chart.factory.AxisType;
-import org.ksp.chart.factory.ChartConfigurationDocument;
-import org.ksp.chart.factory.ChartType;
 
+import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartConfigurationSaver;
+import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
+import de.openali.odysseus.chart.factory.config.ChartFactory;
+import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.impl.model.ChartModel;
 import de.openali.odysseus.chart.framework.impl.model.event.AbstractChartModelEventListener;
 import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
@@ -57,6 +56,13 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chartconfig.x010.AxisDateRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisDurationRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisNumberRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisStringRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisType;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x010.ChartType;
 
 /**
  * @author Gernot Belger
@@ -91,7 +97,9 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
+    {
       throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" );
+    }
 
     setSite( site );
     setInput( input );
@@ -274,7 +282,9 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void updateControl( )
   {
     if( m_composite == null || m_composite.isDisposed() )
+    {
       return;
+    }
 
     if( m_chartModel == null )
     {
@@ -282,7 +292,9 @@ public class ChartEditor extends EditorPart implements IChartPart
       /* Reset controls */
       final Control[] children = m_composite.getChildren();
       for( final Control control : children )
+      {
         control.dispose();
+      }
 
       if( m_chartType == null )
       {
@@ -351,7 +363,8 @@ public class ChartEditor extends EditorPart implements IChartPart
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-            ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
+            IExtensionLoader cel = ChartExtensionLoader.getInstance();
+            ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), cel, context );
           }
           // TODO: provide message to user instead of eating the exceptions.
           catch( final ConfigurationException e )
@@ -385,10 +398,38 @@ public class ChartEditor extends EditorPart implements IChartPart
             final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
             for( final AxisType axisType : axisArray )
             {
-              final String min = axisType.getMinVal();
-              final String max = axisType.getMaxVal();
-              if( min.trim().equals( "" ) || max.trim().equals( "" ) )
+              Object min = null;
+              Object max = null;
+
+              if( axisType.isSetDateRange() )
+              {
+                AxisDateRangeType range = axisType.getDateRange();
+                min = range.getMinValue();
+                max = range.getMaxValue();
+              }
+              else if( axisType.isSetDurationRange() )
+              {
+                AxisDurationRangeType range = axisType.getDurationRange();
+                min = range.getMinValue();
+                max = range.getMaxValue();
+              }
+              else if( axisType.isSetStringRange() )
+              {
+                AxisStringRangeType range = axisType.getStringRange();
+                min = range.getMinValue();
+                max = range.getMaxValue();
+              }
+              else if( axisType.isSetNumberRange() )
+              {
+                AxisNumberRangeType range = axisType.getNumberRange();
+                min = range.getMinValue();
+                max = range.getMaxValue();
+              }
+
+              if( min == null || max == null )
+              {
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
+              }
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
@@ -419,7 +460,9 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_composite.layout();
 
     if( m_outlinePage != null )
+    {
       m_outlinePage.updateControl();
+    }
   }
 
   public ChartComposite getChartComposite( )
@@ -447,16 +490,22 @@ public class ChartEditor extends EditorPart implements IChartPart
     if( IContentOutlinePage.class.equals( adapter ) )
     {
       if( m_outlinePage == null )
+      {
         m_outlinePage = new ChartEditorOutlinePage( this );
+      }
 
       return m_outlinePage;
     }
 
     if( ChartComposite.class.equals( adapter ) )
+    {
       return m_chartComposite;
+    }
 
     if( IChartPart.class.equals( adapter ) )
+    {
       return this;
+    }
 
     return super.getAdapter( adapter );
   }
@@ -498,7 +547,9 @@ public class ChartEditor extends EditorPart implements IChartPart
   protected void setDirty( final boolean dirty )
   {
     if( m_dirty == dirty )
+    {
       return;
+    }
 
     m_dirty = dirty;
     firePropertyChange( PROP_DIRTY );

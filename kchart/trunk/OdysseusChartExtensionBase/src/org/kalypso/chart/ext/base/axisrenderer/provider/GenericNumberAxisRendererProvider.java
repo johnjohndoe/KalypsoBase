@@ -4,21 +4,22 @@ import java.awt.Insets;
 
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.ext.base.axisrenderer.NumberAxisRenderer;
+import org.kalypso.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import org.kalypso.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
+import org.kalypso.chart.ext.base.axisrenderer.NumberLabelCreator;
 import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.configuration.parameters.impl.BooleanParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontDataParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
-import org.kalypso.chart.factory.provider.AbstractAxisRendererProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
-public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
+public class GenericNumberAxisRendererProvider extends AbstractAxisRendererProvider
 {
 
-  @SuppressWarnings("unused")
   public IAxisRenderer< ? > getAxisRenderer( ) throws AxisRendererProviderException
   {
     final RGBParser rgbp = new RGBParser();
@@ -65,8 +66,8 @@ public class NumberAxisRendererProvider extends AbstractAxisRendererProvider
     final BooleanParser bp = new BooleanParser();
     final boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
 
-    final IAxisRenderer<Number> tmpNumberAxisRenderer = new NumberAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, gap, fdLabel, fdTick, minTickInteval, fixedWidth, hideCut, tick_label_formater );
-    return tmpNumberAxisRenderer;
+    final IAxisRenderer<Number> axisRenderer = new GenericAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, 0, fdLabel, fdTick, new NumberLabelCreator( tick_label_formater ), new GenericNumberTickCalculator(), minTickInteval, hideCut );
+    return axisRenderer;
   }
 
   public Class< ? > getDataClass( )

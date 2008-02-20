@@ -62,7 +62,9 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
+import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.impl.model.ChartModel;
 import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -162,7 +164,8 @@ public class ChartView extends ViewPart implements IChartPart
         m_chartModel = new ChartModel();
 
         m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-        ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
+        IExtensionLoader el = ChartExtensionLoader.getInstance();
+        ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), el, context );
 
         if( m_chartModel != null )
         {

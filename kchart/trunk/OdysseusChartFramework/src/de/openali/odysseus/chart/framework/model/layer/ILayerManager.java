@@ -8,13 +8,13 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
-  public void addLayer( IChartLayer< ? , ? > layer );
+  public void addLayer( IChartLayer layer );
 
-  public void addLayer( IChartLayer< ? , ? > layer, int position );
+  public void addLayer( IChartLayer layer, int position );
 
-  public int getLayerPosition( IChartLayer< ? , ? > layer );
+  public int getLayerPosition( IChartLayer layer );
 
-  public void removeLayer( IChartLayer< ? , ? > layer );
+  public void removeLayer( IChartLayer layer );
 
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
@@ -28,16 +28,16 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    * 
    * @return
    */
-  public IChartLayer< ? , ? >[] getLayers( );
+  public IChartLayer[] getLayers( );
 
-  public void moveLayerToPosition( IChartLayer< ? , ? > layer, int position );
+  public void moveLayerToPosition( IChartLayer layer, int position );
 
-  public IChartLayer< ? , ? > getLayerById( String id );
+  public IChartLayer getLayerById( String id );
 
   public int getSize( );
 
   /**
    * returns only layers which are editable (
    */
-  public IEditableChartLayer< ? , ? >[] getEditableLayers( );
+  public IEditableChartLayer[] getEditableLayers( );
 }

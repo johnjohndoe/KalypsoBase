@@ -17,7 +17,7 @@ import de.openali.odysseus.chart.framework.impl.logging.Logger;
 /**
  * @author burtscher
  */
-public class ChartExtensionLoader
+public class ChartExtensionLoader implements IExtensionLoader
 {
   /**
    * Map for LayerProviders
@@ -30,11 +30,6 @@ public class ChartExtensionLoader
   private static Map<String, IConfigurationElement> AP_MAP = null;
 
   /**
-   * Map for StyledElementProviders
-   */
-  private static Map<String, IConfigurationElement> SP_MAP = null;
-
-  /**
    * Map for AxisRendererProviders
    */
   private static Map<String, IConfigurationElement> ARP_MAP = null;
@@ -44,9 +39,22 @@ public class ChartExtensionLoader
    */
   private static Map<String, IConfigurationElement> MP_MAP = null;
 
+  private final static String PLUGIN_ID = "de.openali.odysseus.chart.factory";
+
+  private static ChartExtensionLoader m_instance = null;
+
   private ChartExtensionLoader( )
   {
-    // will not be instantiated
+
+  }
+
+  public static synchronized ChartExtensionLoader getInstance( )
+  {
+    if( m_instance == null )
+    {
+      m_instance = new ChartExtensionLoader();
+    }
+    return m_instance;
   }
 
   public static ILayerProvider createLayerProvider( final String id ) throws CoreException
@@ -55,7 +63,9 @@ public class ChartExtensionLoader
 
     final IConfigurationElement element = elts.get( id );
     if( element == null )
+    {
       return null;
+    }
 
     return (ILayerProvider) element.createExecutableExtension( "class" );
   }
@@ -66,7 +76,9 @@ public class ChartExtensionLoader
 
     final IConfigurationElement element = elts.get( id );
     if( element == null )
+    {
       return null;
+    }
 
     return (IAxisProvider) element.createExecutableExtension( "class" );
   }
@@ -77,7 +89,9 @@ public class ChartExtensionLoader
 
     final IConfigurationElement element = elts.get( id );
     if( element == null )
+    {
       return null;
+    }
 
     return (IMapperProvider) element.createExecutableExtension( "class" );
   }
@@ -88,22 +102,25 @@ public class ChartExtensionLoader
 
     final IConfigurationElement element = elts.get( id );
     if( element == null )
+    {
       return null;
+    }
 
     return (IAxisRendererProvider) element.createExecutableExtension( "class" );
   }
 
-
   private synchronized static Map<String, IConfigurationElement> getLayerProviders( )
   {
     if( LP_MAP != null && LP_MAP.size() > 0 )
+    {
       return LP_MAP;
+    }
 
     LP_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.chart.factory.LayerProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".LayerProvider" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "id" );
@@ -112,20 +129,24 @@ public class ChartExtensionLoader
       }
     }
     else
+    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+    }
     return LP_MAP;
   }
 
   private synchronized static Map<String, IConfigurationElement> getAxisProviders( )
   {
     if( AP_MAP != null && AP_MAP.size() > 0 )
+    {
       return AP_MAP;
+    }
 
     AP_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.chart.factory.AxisProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisProvider" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "id" );
@@ -134,20 +155,24 @@ public class ChartExtensionLoader
       }
     }
     else
+    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+    }
     return AP_MAP;
   }
 
   private synchronized static Map<String, IConfigurationElement> getMapperProviders( )
   {
     if( MP_MAP != null && MP_MAP.size() > 0 )
+    {
       return MP_MAP;
+    }
 
     MP_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.chart.factory.MapperProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".MapperProvider" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "id" );
@@ -156,20 +181,24 @@ public class ChartExtensionLoader
       }
     }
     else
+    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+    }
     return MP_MAP;
   }
 
   private synchronized static Map<String, IConfigurationElement> getAxisRendererProviders( )
   {
     if( ARP_MAP != null && ARP_MAP.size() > 0 )
+    {
       return ARP_MAP;
+    }
 
     ARP_MAP = new HashMap<String, IConfigurationElement>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.chart.factory.AxisRendererProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisRendererProvider" );
       for( final IConfigurationElement element : configurationElementsFor )
       {
         final String id = element.getAttribute( "id" );
@@ -178,9 +207,46 @@ public class ChartExtensionLoader
       }
     }
     else
+    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+    }
     return ARP_MAP;
   }
-  
+
+  /**
+   * @see de.openali.odysseus.chart.factory.config.IExtensionLoader#getExtension(java.lang.Class, java.lang.String)
+   */
+  @SuppressWarnings("unchecked")
+  public <T> T getExtension( Class<T> extensionClass, String id )
+  {
+    try
+    {
+      if( IAxisProvider.class.isAssignableFrom( extensionClass ) )
+      {
+        return (T) createAxisProvider( id );
+      }
+      if( IAxisRendererProvider.class.isAssignableFrom( extensionClass ) )
+      {
+        return (T) createAxisRendererProvider( id );
+      }
+      if( ILayerProvider.class.isAssignableFrom( extensionClass ) )
+      {
+        return (T) createLayerProvider( id );
+      }
+      if( IMapperProvider.class.isAssignableFrom( extensionClass ) )
+      {
+        return (T) createMapperProvider( id );
+      }
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    Logger.logError( Logger.TOPIC_LOG_GENERAL, "Extensions to type not supported: " + extensionClass );
+    // no extendable clas
+
+    return null;
+  }
 
 }

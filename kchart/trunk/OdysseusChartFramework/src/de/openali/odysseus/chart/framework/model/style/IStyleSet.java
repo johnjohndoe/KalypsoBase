@@ -38,36 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.factory.util;
-
-import java.net.URL;
-
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+package de.openali.odysseus.chart.framework.model.style;
 
 /**
- * @author burtscher1
+ * @author alibu
+ * 
  */
-public class DummyLayerProvider extends AbstractLayerProvider
+public interface IStyleSet
 {
+  public void addStyle( String id, IStyle style );
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
-  public IChartLayer getLayer( URL context ) throws LayerProviderException
-  {
-    return new DummyLayer( null, null );
-  }
+  public <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
-  public IDataContainer getDataContainer( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  public void dispose( );
 }

@@ -4,57 +4,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
-import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
 import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
+import de.openali.odysseus.chart.framework.impl.model.figure.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
-import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
-import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
 /**
  * @author alibu
  */
-public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
+public class DefaultBarLayer extends AbstractBarLayer
 {
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  public void drawIcon( Image img )
-  {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-    final IStyledElement element = getStyle().getElement( SE_TYPE.POLYGON, 1 );
-
-    ArrayList<Point> path = new ArrayList<Point>();
-    path.add( new Point( 0, height ) );
-    path.add( new Point( 0, height / 2 ) );
-    path.add( new Point( width / 2, height / 2 ) );
-    path.add( new Point( width / 2, height ) );
-    element.setPath( path );
-    element.paint( gc );
-
-    path = new ArrayList<Point>();
-    path.add( new Point( width / 2, height ) );
-    path.add( new Point( width / 2, 0 ) );
-    path.add( new Point( width, 0 ) );
-    path.add( new Point( width, height ) );
-    element.setPath( path );
-    element.paint( gc );
-
-    gc.dispose();
-
-  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
@@ -63,17 +28,20 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
   @SuppressWarnings("unchecked")
   public void paint( GC gc )
   {
-    AbstractDomainIntervalValueData<T_domain, T_target> dataContainer = getDataContainer();
+    AbstractDomainIntervalValueData dataContainer = getDataContainer();
 
     if( dataContainer != null )
     {
+
+      PolygonFigure pf = getPolygonFigure();
+
       dataContainer.open();
-      final T_domain[] domainStartComponent = dataContainer.getDomainDataIntervalStart();
-      final T_domain[] domainEndComponent = dataContainer.getDomainDataIntervalEnd();
-      final T_target[] targetComponent = dataContainer.getTargetValues();
+
+      final Object[] domainStartComponent = dataContainer.getDomainDataIntervalStart();
+      final Object[] domainEndComponent = dataContainer.getDomainDataIntervalEnd();
+      final Object[] targetComponent = dataContainer.getTargetValues();
 
       final ArrayList<Point> path = new ArrayList<Point>();
-      final IStyledElement poly = getStyle().getElement( SE_TYPE.POLYGON, 1 );
 
       IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
       IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
@@ -83,9 +51,9 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
       for( int i = 0; i < domainStartComponent.length; i++ )
       {
 
-        final T_domain startValue = domainStartComponent[i];
-        final T_domain endValue = domainEndComponent[i];
-        final T_target targetValue = targetComponent[i];
+        final Object startValue = domainStartComponent[i];
+        final Object endValue = domainEndComponent[i];
+        final Object targetValue = targetComponent[i];
 
         Point p1 = cm.numericToScreen( dopDomain.logicalToNumerical( startValue ), 0 );
         Point p2 = cm.numericToScreen( dopDomain.logicalToNumerical( startValue ), dopTarget.logicalToNumerical( targetValue ) );
@@ -97,16 +65,16 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
         path.add( p3 );
         path.add( p4 );
 
-        poly.setPath( path );
-        poly.paint( gc );
+        pf.setPoints( path.toArray( new Point[] {} ) );
+        pf.paint( gc );
       }
     }
   }
 
   @Override
-  public AbstractDomainIntervalValueData<T_domain, T_target> getDataContainer( )
+  public AbstractDomainIntervalValueData getDataContainer( )
   {
-    return (AbstractDomainIntervalValueData<T_domain, T_target>) super.getDataContainer();
+    return (AbstractDomainIntervalValueData) super.getDataContainer();
   }
 
   @Override
@@ -114,15 +82,21 @@ public class DefaultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_do
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
 
-    IDataRange<T_target> targetRange = getDataContainer().getTargetRange();
+    IDataRange targetRange = getDataContainer().getTargetRange();
     DATATYPE dataType = getTargetAxis().getDataType();
     IDataOperator dop = null;
     if( dataType.equals( "STRING" ) )
+    {
       dop = getTargetAxis().getDataOperator( String.class );
+    }
     else if( dataType.equals( "DATE" ) )
+    {
       dop = getTargetAxis().getDataOperator( Calendar.class );
+    }
     else
+    {
       dop = getTargetAxis().getDataOperator( Number.class );
+    }
 
     try
     {

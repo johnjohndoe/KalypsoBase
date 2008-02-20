@@ -12,8 +12,8 @@ import java.util.List;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
@@ -23,7 +23,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 /**
  * @author alibu
  */
-public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvider
+public class CSVLineLayerProvider extends AbstractLayerProvider
 {
 
   /**
@@ -39,7 +39,7 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
    */
   public IDataContainer getDataContainer( ) throws LayerProviderException
   {
-    final AbstractDomainValueFileData<T_domain, T_target> data = new AbstractDomainValueFileData<T_domain, T_target>()
+    final AbstractDomainValueFileData data = new AbstractDomainValueFileData()
     {
 
       @SuppressWarnings("unchecked")
@@ -54,8 +54,8 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
           BufferedReader br = new BufferedReader( fr );
           String s = "";
           int count = 0;
-          List<T_domain> domainValues = new ArrayList<T_domain>();
-          List<T_target> targetValues = new ArrayList<T_target>();
+          List<Object> domainValues = new ArrayList<Object>();
+          List<Object> targetValues = new ArrayList<Object>();
 
           while( (s = br.readLine()) != null )
           {
@@ -63,12 +63,12 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
             // YearString
             if( cols.length >= 2 )
             {
-              T_domain domainVal = null;
-              T_target targetVal = null;
+              Object domainVal = null;
+              Object targetVal = null;
               try
               {
-                domainVal = (T_domain) new Double( cols[0].trim() );
-                targetVal = (T_target) new Double( cols[1].trim() );
+                domainVal = new Double( cols[0].trim() );
+                targetVal = new Double( cols[1].trim() );
                 if( domainVal != null && targetVal != null )
                 {
 
@@ -103,12 +103,12 @@ public class CSVLineLayerProvider<T_domain, T_target> extends AbstractLayerProvi
 
       public IDataRange getDomainRange( )
       {
-        return new ComparableDataRange<T_domain>( getDomainValues() );
+        return new ComparableDataRange<Object>( getDomainValues() );
       }
 
       public IDataRange getTargetRange( )
       {
-        return new ComparableDataRange<T_target>( getTargetValues() );
+        return new ComparableDataRange<Object>( getTargetValues() );
       }
 
     };

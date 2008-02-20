@@ -38,15 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.base.layer;
-
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+package de.openali.odysseus.chart.factory.config;
 
 /**
- * @author burtscher1
- * 
+ * @author alibu
  */
-public abstract class AbstractEditableChartLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target> implements IEditableChartLayer<T_domain, T_target>
+public interface IExtensionLoader
 {
-
+  public <T> T getExtension( Class<T> extensionClass, String id );
 }

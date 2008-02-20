@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.Point;
  * @author burtscher1
  * 
  */
-public interface IEditableChartLayer<T_domain, T_target> extends IChartLayer<T_domain, T_target>
+public interface IEditableChartLayer extends IChartLayer
 {
   public EditInfo getEditInfo( Point p );
 

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -58,16 +58,16 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.styles.ILayerStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
  */
-public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_target>
+public class DummyLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
 
-  private ILayerStyle m_style = null;
+  private IStyleSet m_style = null;
 
   private String m_title = "";
 
@@ -77,11 +77,11 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
 
   private boolean m_isActive = false;
 
-  private final IAxis<T_target> m_targetAxis;
+  private final IAxis m_targetAxis;
 
-  private final IAxis<T_domain> m_domainAxis;
+  private final IAxis m_domainAxis;
 
-  private final IDataContainer<T_domain, T_target> m_dataContainer = null;
+  private final IDataContainer m_dataContainer = null;
 
   private final LayerEventHandler m_handler = new LayerEventHandler();
 
@@ -92,7 +92,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
 
   private ICoordinateMapper m_coordinateMapper;
 
-  public DummyLayer( final IAxis<T_domain> domainAxis, final IAxis<T_target> targetAxis )
+  public DummyLayer( final IAxis domainAxis, final IAxis targetAxis )
   {
     m_targetAxis = targetAxis;
     m_domainAxis = domainAxis;
@@ -109,7 +109,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainAxis()
    */
-  public IAxis<T_domain> getDomainAxis( )
+  public IAxis getDomainAxis( )
   {
     return m_domainAxis;
   }
@@ -133,7 +133,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
    */
-  public ILayerStyle getStyle( )
+  public IStyleSet getStyles( )
   {
     return m_style;
   }
@@ -141,7 +141,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetAxis()
    */
-  public IAxis<T_target> getTargetAxis( )
+  public IAxis getTargetAxis( )
   {
     return m_targetAxis;
   }
@@ -197,7 +197,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
-  public void setStyle( final ILayerStyle style )
+  public void setStyles( final IStyleSet style )
   {
     m_style = style;
   }
@@ -211,7 +211,7 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
     m_handler.fireLayerVisibilityChanged( this );
   }
 
-  public IDataContainer<T_domain, T_target> getDataContainer( )
+  public IDataContainer getDataContainer( )
   {
     return m_dataContainer;
   }
@@ -330,6 +330,15 @@ public class DummyLayer<T_domain, T_target> implements IChartLayer<T_domain, T_t
   public void init( )
   {
     // nothing to do
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+
   }
 
 }

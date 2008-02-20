@@ -1,0 +1,55 @@
+package de.openali.odysseus.chart.framework.impl.model.style;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+
+public class StyleSet implements IStyleSet
+{
+	private final Map<String, IStyle> m_styleMap = new HashMap<String, IStyle>();
+
+	public void addStyle(String id, IStyle style)
+	{
+		m_styleMap.put(id, style);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends IStyle> T getStyle(String id, Class<T> styleClass)
+	{
+		IStyle style = m_styleMap.get(id);
+		if (style == null)
+		{
+			Logger.logWarning(Logger.TOPIC_LOG_STYLE, "No style for id '" + id
+			        + "'. Needed " + styleClass + ". Returning default style");
+			return FigureUtilities.getDefaultStyle(styleClass);
+		}
+
+		T castedStyle = null;
+		try
+		{
+			castedStyle = (T) style;
+		}
+		catch (ClassCastException e)
+		{
+			Logger.logWarning(Logger.TOPIC_LOG_STYLE,
+			        "Wrong style type for id '" + id + "'. Expected "
+			                + styleClass + ", got " + style.getClass()
+			                + ". Using default style");
+			return FigureUtilities.getDefaultStyle(styleClass);
+		}
+		return castedStyle;
+	}
+
+	public void dispose()
+	{
+		for (IStyle style : m_styleMap.values())
+		{
+			style.dispose();
+		}
+	}
+
+}

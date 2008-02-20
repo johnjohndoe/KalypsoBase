@@ -5,8 +5,8 @@ import java.net.URL;
 import org.kalypso.chart.ext.base.layer.GridLayer;
 import org.kalypso.chart.ext.base.layer.GridLayer.GridOrientation;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -26,15 +26,15 @@ public class GridLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer< ? , ? > getLayer( URL context )
+  public IChartLayer getLayer( URL context )
   {
-    IChartLayer< ? , ? > icl = null;
+    IChartLayer icl = null;
 
     try
     {
 
-      final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
-      final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
+      final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
+      final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
 
       final IAxis< ? > domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
       final IAxis< ? > valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
@@ -43,11 +43,17 @@ public class GridLayerProvider extends AbstractLayerProvider
       final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
 
       if( orientation.compareTo( "VERTICAL" ) == 0 )
+      {
         go = GridOrientation.VERTICAL;
+      }
       else if( orientation.compareTo( "HORIZONTAL" ) == 0 )
+      {
         go = GridOrientation.HORIZONTAL;
+      }
       else
+      {
         go = GridOrientation.BOTH;
+      }
 
       icl = new GridLayer( go );
     }

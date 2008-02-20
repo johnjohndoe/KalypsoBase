@@ -16,8 +16,8 @@ import java.util.TimeZone;
 import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -36,7 +36,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
   @SuppressWarnings( { "unchecked", "unused" })
   public IChartLayer getLayer( URL context ) throws LayerProviderException
   {
-    return new DefaultLineLayer<Calendar, Number>();
+    return new DefaultLineLayer();
   }
 
   /**
@@ -44,8 +44,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
    */
   public IDataContainer getDataContainer( ) throws LayerProviderException
   {
-    final String domainAxisId = getLayerType().getMapper().getDomainAxisRef().getRef();
-    final String targetAxisId = getLayerType().getMapper().getTargetAxisRef().getRef();
+    final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
+    final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
 
     final IAxis<Calendar> domAxis = (IAxis<Calendar>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
     final IAxis<Number> valAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( targetAxisId );

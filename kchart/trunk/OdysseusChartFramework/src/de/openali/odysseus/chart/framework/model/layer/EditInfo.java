@@ -3,7 +3,6 @@ package de.openali.odysseus.chart.framework.model.layer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-
 /**
  * @author gernot
  */
@@ -11,7 +10,7 @@ public class EditInfo
 {
   public final Rectangle shape;
 
-  public final IEditableChartLayer< ? , ? > layer;
+  public final IEditableChartLayer layer;
 
   public final Object data;
 
@@ -19,7 +18,7 @@ public class EditInfo
 
   public String text;
 
-  public EditInfo( final IEditableChartLayer< ? , ? > editLayer, final Rectangle editShape, final Object editData, final String editText, final Point mousePos )
+  public EditInfo( final IEditableChartLayer editLayer, final Rectangle editShape, final Object editData, final String editText, final Point mousePos )
   {
     layer = editLayer;
     shape = editShape;

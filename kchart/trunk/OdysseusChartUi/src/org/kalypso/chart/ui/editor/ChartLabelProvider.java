@@ -47,8 +47,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.factory.util.DummyLayer;
 
+import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -74,7 +74,9 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
     super.dispose();
 
     for( final Image img : m_images.values() )
+    {
       img.dispose();
+    }
     m_images.clear();
   }
 
@@ -86,9 +88,13 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
   {
     // Falls das Layer nicht erzeugt werden konnte sollte das in der Legende ersichtlich sein
     if( element instanceof DummyLayer )
+    {
       return "ERROR: could not load '" + ((IChartLayer) element).getTitle() + "'";
+    }
     else if( element instanceof IChartLayer )
+    {
       return ((IChartLayer) element).getTitle();
+    }
     return super.getText( element );
   }
 
@@ -102,7 +108,9 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
     {
       final IChartLayer chartLayer = (IChartLayer) element;
       if( m_images.containsKey( chartLayer ) )
+      {
         return m_images.get( chartLayer );
+      }
 
       final Image img = new Image( m_editor.getChartComposite().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
       m_editor.drawLegendIcon( chartLayer.getId(), img );

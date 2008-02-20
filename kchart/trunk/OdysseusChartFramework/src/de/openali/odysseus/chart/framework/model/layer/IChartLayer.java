@@ -12,13 +12,13 @@ import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.styles.ILayerStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEventListener>
+public interface IChartLayer extends IEventProvider<ILayerEventListener>
 {
 
   /**
@@ -52,18 +52,6 @@ public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEv
   public String getDescription( );
 
   /**
-   * @return the IAxis object used with domain data
-   * @deprecated use getCoordinateMapper().getDomainAxis() instead
-   * @Deprecated
-   */
-  // public IAxis<T_domain> getDomainAxis( );
-  /**
-   * @return the IAxis object used with value data
-   * @deprecated use getCoordinateMapper().getDomainAxis() instead
-   * @Deprecated
-   */
-  // public IAxis<T_target> getTargetAxis( );
-  /**
    * TODO: remove this from IChartLayer interface ILegendItem should be constructed upon layers, client should always
    * use drawIcon and getName only the legend should know about legend-items
    * 
@@ -96,14 +84,14 @@ public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEv
   public void setActive( boolean isActive );
 
   /**
-   * @return the layer style
+   * @return the layer styles
    */
-  public ILayerStyle getStyle( );
+  public IStyleSet getStyles( );
 
   /**
-   * sets the layer's style
+   * sets the layer styles
    */
-  public void setStyle( final ILayerStyle style );
+  public void setStyles( final IStyleSet styles );
 
   /**
    * draws the layer using the given GC and Device
@@ -136,5 +124,7 @@ public interface IChartLayer<T_domain, T_target> extends IEventProvider<ILayerEv
 
   // Initialization method; to be called after setAxes, setDataContainer
   public void init( );
+
+  public void dispose( );
 
 }

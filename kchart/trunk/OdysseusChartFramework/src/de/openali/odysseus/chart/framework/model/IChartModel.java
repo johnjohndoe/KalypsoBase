@@ -21,7 +21,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public void clear( );
 
-  public Map<IAxis< ? >, List<IChartLayer< ? , ? >>> getAxis2Layers( );
+  public Map<IAxis< ? >, List<IChartLayer>> getAxis2Layers( );
 
   /**
    * @param b

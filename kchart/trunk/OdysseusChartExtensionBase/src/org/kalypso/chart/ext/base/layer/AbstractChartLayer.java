@@ -18,16 +18,16 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.styles.ILayerStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
  */
-public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLayer<T_domain, T_target>
+public abstract class AbstractChartLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
 
-  private ILayerStyle m_style = null;
+  private IStyleSet m_style = null;
 
   private String m_title = "";
 
@@ -37,9 +37,9 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
 
   private boolean m_isActive = false;
 
-  private IAxis<T_target> m_targetAxis;
+  private IAxis m_targetAxis;
 
-  private IAxis<T_domain> m_domainAxis;
+  private IAxis m_domainAxis;
 
   private IDataContainer m_dataContainer = null;
 
@@ -61,9 +61,9 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainAxis()
+   * convenience method; same as getCoordinateMapper().getDomainAxis()
    */
-  public IAxis<T_domain> getDomainAxis( )
+  protected IAxis getDomainAxis( )
   {
     return getCoordinateMapper().getDomainAxis();
   }
@@ -85,17 +85,17 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyles()
    */
-  public ILayerStyle getStyle( )
+  public IStyleSet getStyles( )
   {
     return m_style;
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetAxis()
+   * convenience method; same as getCoordinateMapper().getTargetAxis()
    */
-  public IAxis<T_target> getTargetAxis( )
+  protected IAxis getTargetAxis( )
   {
     return getCoordinateMapper().getTargetAxis();
   }
@@ -151,9 +151,9 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
    */
-  public void setStyle( final ILayerStyle style )
+  public void setStyles( final IStyleSet styles )
   {
-    m_style = style;
+    m_style = styles;
   }
 
   /**
@@ -164,7 +164,6 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
     m_isVisible = isVisible;
     m_handler.fireLayerVisibilityChanged( this );
   }
-
 
   public void setDataContainer( final IDataContainer data )
   {
@@ -221,8 +220,8 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
    */
   public IDataRange<Number> getDomainRange( )
   {
-    IDataRange<T_domain> logRange = getDataContainer().getDomainRange();
-    T_domain min = logRange.getMin();
+    IDataRange logRange = getDataContainer().getDomainRange();
+    Object min = logRange.getMin();
     IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
     return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
   }
@@ -232,8 +231,8 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
    */
   public IDataRange<Number> getTargetRange( )
   {
-    IDataRange<T_target> logRange = getDataContainer().getTargetRange();
-    T_target min = logRange.getMin();
+    IDataRange logRange = getDataContainer().getTargetRange();
+    Object min = logRange.getMin();
     IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
     return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
   }
@@ -257,10 +256,19 @@ public abstract class AbstractChartLayer<T_domain, T_target> implements IChartLa
   {
 
   }
-  
-  protected IDataContainer<T_domain, T_target> getDataContainer()
+
+  protected IDataContainer getDataContainer( )
   {
     return m_dataContainer;
+  }
+
+  public void dispose( )
+  {
+    IStyleSet styles = getStyles();
+    if( styles != null )
+    {
+      styles.dispose();
+    }
   }
 
 }

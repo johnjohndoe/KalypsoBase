@@ -1,17 +1,19 @@
 package org.kalypso.chart.ext.base.axisrenderer.provider;
 
 import java.awt.Insets;
-import java.util.Calendar;
 
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.ext.base.axisrenderer.CalendarAxisRenderer;
+import org.kalypso.chart.ext.base.axisrenderer.DateLabelCreator;
+import org.kalypso.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import org.kalypso.chart.ext.base.axisrenderer.GenericDateTickCalculator;
 import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
+import org.kalypso.chart.factory.configuration.parameters.impl.BooleanParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontDataParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.FontStyleParser;
 import org.kalypso.chart.factory.configuration.parameters.impl.RGBParser;
-import org.kalypso.chart.factory.provider.AbstractAxisRendererProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
@@ -55,12 +57,16 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author alibu
  * 
  */
-public class CalendarAxisRendererProvider extends AbstractAxisRendererProvider
+public class GenericCalendarAxisRendererProvider extends AbstractAxisRendererProvider
 {
 
   @SuppressWarnings("unused")
   public IAxisRenderer< ? > getAxisRenderer( ) throws AxisRendererProviderException
   {
+
+    String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
+    dateFormat = dateFormat.replace( "\\n", "\n" );
+
     final RGBParser rgbp = new RGBParser();
     final RGB fgRGB = getParameterContainer().getParsedParameterValue( "color", "#000000", rgbp );
     final RGB bgRGB = getParameterContainer().getParsedParameterValue( "background-color", "#ffffff", rgbp );
@@ -79,13 +85,21 @@ public class CalendarAxisRendererProvider extends AbstractAxisRendererProvider
     final int insetLabel = Integer.parseInt( getParameterContainer().getParameterValue( "inset_label", "1" ) );
     final Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
 
-    final IAxisRenderer<Calendar> calendarAxisRenderer = new CalendarAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick );
+    final int lineWidth = Integer.parseInt( getParameterContainer().getParameterValue( "line_width", "1" ) );
+    final int tickLength = Integer.parseInt( getParameterContainer().getParameterValue( "tick_length", "5" ) );
+
+    BooleanParser bp = new BooleanParser();
+    final boolean hideCut = getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp );
+
+    // final IAxisRenderer<Number> calendarAxisRenderer = new GenericCalendarAxisRenderer(
+    // getAxisRendererType().getId(), fgRGB, bgRGB, 1, 5, insetsTick, insetsLabel, 0, fdLabel, fdTick );
+    final IAxisRenderer<Number> calendarAxisRenderer = new GenericAxisRenderer( getAxisRendererType().getId(), fgRGB, bgRGB, lineWidth, tickLength, insetsTick, insetsLabel, 0, fdLabel, fdTick, new DateLabelCreator( dateFormat ), new GenericDateTickCalculator(), null, hideCut );
     return calendarAxisRenderer;
   }
 
   public Class< ? > getDataClass( )
   {
-    return Calendar.class;
+    return Number.class;
   }
 
 }

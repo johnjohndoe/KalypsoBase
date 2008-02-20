@@ -12,7 +12,7 @@
             <element name="Alpha" minOccurs="0">
                 <simpleType>
                    <restriction base="hexBinary">
-                            <length value="2"></length>
+                            <length value="1"></length>
                         </restriction>
                    </simpleType>
             </element>
@@ -67,7 +67,7 @@
     
     <simpleType name="ColorType">
         <restriction base="hexBinary">
-            <length value="6"></length>
+            <length value="3"></length>
         </restriction>
     </simpleType>
     
@@ -80,7 +80,11 @@
                     <element name="Width" type="int" minOccurs="0" />
                     <element name="Height" type="int" minOccurs="0" />
                     <element name="StrokeStyle" type="ods:StrokeType" minOccurs="0" />
-                    <element ref="ods:AbstractMarker" minOccurs="0" />
+                    <choice minOccurs="0">
+                        <element name="OvalMarker" />
+                        <element name="ImageMarker" type="ods:ImageMarkerType" />
+                        <element name="PolygonMarker" type="ods:PolygonMarkerType"/>
+                    </choice>
                     <element name="FillColor" type="ods:ColorType" minOccurs="0" />
                 </sequence>
                 <attribute name="id" type="ID" use="required" ></attribute>
@@ -89,38 +93,18 @@
     </complexType>
 
     
-    <element name="AbstractMarker" type="ods:AbstractMarkerType"></element>
-    <element name="OvalMarker" type="ods:OvalMarkerType" substitutionGroup="ods:AbstractMarker"></element>
-    <element name="ImageMarker" type="ods:ImageMarkerType"  substitutionGroup="ods:AbstractMarker"></element>
-    <element name="PolygonMarker" type="ods:PolygonMarkerType"  substitutionGroup="ods:AbstractMarker"></element>
-    
-    <complexType name="AbstractMarkerType" abstract="true"></complexType>
-    
-    <complexType name="OvalMarkerType">
-        <complexContent>
-            <extension base="ods:AbstractMarkerType"></extension>
-        </complexContent>
-    </complexType>
     
     <complexType name="ImageMarkerType">
-        <complexContent>
-            <extension base="ods:AbstractMarkerType">
-                <sequence>
+        <sequence>
                     <element name="Path" type="anyURI"></element>
                 </sequence>        
-            </extension>
-        </complexContent>
-    </complexType>
+          </complexType>
     
     <complexType name="PolygonMarkerType">
-        <complexContent>
-            <extension base="ods:AbstractMarkerType">
-                <sequence>
+        <sequence>
                     <element name="Point" type="ods:PointType" minOccurs="3" maxOccurs="unbounded">
                     </element>
                 </sequence>
-            </extension>
-        </complexContent>
     </complexType>
     
     <complexType name="PointType">
