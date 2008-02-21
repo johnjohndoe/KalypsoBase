@@ -42,8 +42,6 @@ package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.rmi.RemoteException;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,14 +74,11 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class PageSelectGeodataFile extends WizardPage
 {
@@ -184,8 +179,7 @@ public class PageSelectGeodataFile extends WizardPage
     } );
 
     /* coordinate system */
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final CoordinateSystem[] csSystem = csFac.getKnownCoordinateSystems();
+    final String[] csSystem = CRSHelper.getAllNames().toArray( new String[] {} );
 
     final Label lCoord = new Label( container, SWT.NONE );
     lCoord.setText( "Projection " );
@@ -200,11 +194,8 @@ public class PageSelectGeodataFile extends WizardPage
       @Override
       public String getText( final Object element )
       {
-        if( element instanceof CoordinateSystem )
-        {
-          final CoordinateSystem sys = (CoordinateSystem) element;
-          return sys.getName( null );
-        }
+        if( element instanceof String )
+          return (String) element;
 
         return null;
       }
@@ -317,22 +308,15 @@ public class PageSelectGeodataFile extends WizardPage
     final IDialogSettings dialogSettings = getDialogSettings();
     final String fullPath = dialogSettings.get( SETTINGS_FILE_PATH );
     final String srsName = dialogSettings.get( SETTINGS_SRS_NAME );
-    String srsDefaultName = null;
-    try
-    {
-      srsDefaultName = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
-    }
-    catch( final RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+    String srsDefaultName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
     final String srsToShow = srsName == null ? srsDefaultName : srsName;
 
     if( fullPath != null )
       m_tFile.setText( fullPath );
-    final CoordinateSystem srs = csFac.getCSByName( srsToShow );
-    if( srs != null )
-      m_cViewer.setSelection( new StructuredSelection( srs ), true );
+
+    if( srsToShow != null )
+      m_cViewer.setSelection( new StructuredSelection( srsToShow ), true );
   }
 
   protected void updatePageComplete( )
@@ -383,19 +367,19 @@ public class PageSelectGeodataFile extends WizardPage
     }
 
     final Object element = m_comboSel.getFirstElement();
-    if( element instanceof CoordinateSystem )
+    if( element instanceof String )
     {
-      final CoordinateSystem cs = (CoordinateSystem) element;
-      final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
+      final String cs = (String) element;
 
       try
       {
-        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), adapter.export( cs ) );
+        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), cs );
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
+
       updateTextBoxes( m_rasterReader );
     }
 
@@ -405,7 +389,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     /* If page is complete, we may save the settings */
     getDialogSettings().put( SETTINGS_FILE_PATH, m_sFile );
-    getDialogSettings().put( SETTINGS_SRS_NAME, ((CoordinateSystem) m_comboSel.getFirstElement()).getName( Locale.ENGLISH ) );
+    getDialogSettings().put( SETTINGS_SRS_NAME, (String) m_comboSel.getFirstElement() );
 
     // TODO: why disable these controls here?
 // m_tFile.setEnabled( false );
@@ -513,16 +497,11 @@ public class PageSelectGeodataFile extends WizardPage
     return file;
   }
 
-  public CS_CoordinateSystem getProjection( )
+  public String getProjection( )
   {
     final Object element = m_comboSel.getFirstElement();
-    if( element instanceof CoordinateSystem )
-    {
-      final CoordinateSystem cs = (CoordinateSystem) element;
-      final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
-      return adapter.export( cs );
-    }
+    if( element instanceof String )
+      return (String) element;
 
     return null;
   }

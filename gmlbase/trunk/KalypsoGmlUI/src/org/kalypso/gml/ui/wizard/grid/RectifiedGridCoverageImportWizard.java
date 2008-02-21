@@ -62,7 +62,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -157,7 +156,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   {
     // read/copy input
     final File selectedFile = m_pageSelect.getSelectedFile();
-    final CS_CoordinateSystem crs = m_pageSelect.getProjection();
+    final String crs = m_pageSelect.getProjection();
     final OffsetVector offsetX = m_pageSelect.getOffsetX();
     final OffsetVector offsetY = m_pageSelect.getOffsetY();
     final Double[] ulc = m_pageSelect.getUpperLeftCorner();

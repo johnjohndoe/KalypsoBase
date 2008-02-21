@@ -66,8 +66,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -104,7 +102,7 @@ public class GisMapPerfTest extends TestCase
   {
     final TimeLogger logger = new TimeLogger( "Starting test: " + gmtResource.getPath() );
 
-    final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+    final String crs = "EPSG:31467";
 
     logger.takeInterimTime();
     logger.printCurrentInterim( "Loading map: " );
@@ -172,7 +170,7 @@ public class GisMapPerfTest extends TestCase
   }
 
   /** @return null, iff not all data was loaded in time. */
-  private GisTemplateMapModell loadMapAndWaitForData( final Gismapview gismapview, final URL resource, final CS_CoordinateSystem crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager )
+  private GisTemplateMapModell loadMapAndWaitForData( final Gismapview gismapview, final URL resource, final String crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager )
   {
     logger.takeInterimTime();
     logger.printCurrentInterim( "Loading map modell..." );
@@ -252,5 +250,4 @@ public class GisMapPerfTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentTotal( "TOTAL: " );
   }
-
 }
