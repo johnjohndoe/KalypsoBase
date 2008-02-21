@@ -148,7 +148,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
@@ -519,7 +518,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       throw new CoreException( StatusUtilities.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName ) );
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
 
     // TODO this might cause problems with active map contexts?
