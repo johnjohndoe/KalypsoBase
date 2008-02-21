@@ -72,7 +72,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Helper class for tringle.exe<BR>
@@ -88,13 +87,13 @@ public class ConstraintDelaunayHelper
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
   @SuppressWarnings("unchecked")
-  public static CS_CoordinateSystem writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
+  public static String writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
     int totalPointCount = 0;
     int totalSegmentCount = 0;
 
-    CS_CoordinateSystem crs = null;
+    String crs = null;
 
     for( final Object geoObject : list )
     {
@@ -315,7 +314,7 @@ public class ConstraintDelaunayHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static final List<GM_Surface> parseTriangleElementOutput( final BufferedReader eleReader, final CS_CoordinateSystem crs, final GM_Position[] points ) throws IOException, GM_Exception
+  public static final List<GM_Surface> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
     List<GM_Surface> surfaces = new ArrayList<GM_Surface>();
 
@@ -439,7 +438,7 @@ public class ConstraintDelaunayHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
@@ -459,7 +458,7 @@ public class ConstraintDelaunayHelper
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
-  private static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final CS_CoordinateSystem crs ) throws GM_Exception
+  private static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
@@ -483,7 +482,7 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( GM_Position[] exterior, GM_Position[][] interior, CS_CoordinateSystem crs ) throws GM_Exception
+  private static GM_Triangle[] createGM_Triangles( GM_Position[] exterior, GM_Position[][] interior, String crs ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -548,7 +547,7 @@ public class ConstraintDelaunayHelper
     return false;
   }
 
-  public static GM_Triangle[] triangulatePolygon( GM_Position[] exterior, GM_Position[][] interiorPolygons, final CS_CoordinateSystem crs )
+  public static GM_Triangle[] triangulatePolygon( GM_Position[] exterior, GM_Position[][] interiorPolygons, final String crs )
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;

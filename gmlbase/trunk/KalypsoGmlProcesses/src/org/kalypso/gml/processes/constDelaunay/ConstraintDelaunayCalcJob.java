@@ -40,7 +40,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author thuel2
@@ -117,7 +116,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" );
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
+      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -206,7 +205,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
   }
 
   @SuppressWarnings("unchecked")
-  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final CS_CoordinateSystem crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
+  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
   {
     final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
