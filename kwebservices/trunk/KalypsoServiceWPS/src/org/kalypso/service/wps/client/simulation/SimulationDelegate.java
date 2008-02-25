@@ -186,9 +186,9 @@ public class SimulationDelegate implements IWPSDelegate
   }
 
   /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#getInputFiles(net.opengeospatial.wps.ProcessDescriptionType)
+   * @see org.kalypso.service.wps.client.IWPSDelegate#copyInputFiles(net.opengeospatial.wps.ProcessDescriptionType)
    */
-  public IFile[] getInputFiles( ProcessDescriptionType description ) throws WPSException
+  public void copyInputFiles( ProcessDescriptionType description ) throws WPSException
   {
     /* Get the list with the input. */
     List<Modeldata.Input> inputList = m_data.getInput();
@@ -263,13 +263,19 @@ public class SimulationDelegate implements IWPSDelegate
       throw new WPSException( "Could not collect the input files ...", ex );
     }
 
-    return visitor.getFiles();
+    /* Copy all collected files. */
+    IFile[] files = visitor.getFiles();
+    if( files.length > 0 )
+      copyInputFiles( files );
   }
 
   /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#copyInputFiles(org.eclipse.core.resources.IFile[])
+   * This function copies all input files.
+   * 
+   * @param files
+   *            The files to copy.
    */
-  public void copyInputFiles( IFile[] files ) throws WPSException
+  private void copyInputFiles( IFile[] files ) throws WPSException
   {
     if( files.length > 0 )
     {

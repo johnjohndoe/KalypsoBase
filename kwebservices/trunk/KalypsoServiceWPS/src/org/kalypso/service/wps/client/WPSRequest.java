@@ -69,7 +69,6 @@ import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -88,7 +87,7 @@ import org.kalypso.service.wps.utils.ogc.OGCUtilities;
  * 
  * @author Holger Albert
  */
-public class WPSClient
+public class WPSRequest
 {
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
@@ -139,7 +138,7 @@ public class WPSClient
    * @param timeout
    *            After this period of time, the job gives up, waiting for a result of the service.
    */
-  public WPSClient( IWPSDelegate delegate, long timeout )
+  public WPSRequest( IWPSDelegate delegate, long timeout )
   {
     /* No results so far. */
     m_references = null;
@@ -206,17 +205,12 @@ public class WPSClient
       /* There could be only one description, because we have asked for a special one. */
       ProcessDescriptionType description = processDescription.get( 0 );
 
-      /* Collect the data. */
-      IFile[] inputFiles = m_delegate.getInputFiles( description );
-      if( inputFiles.length > 0 )
-      {
-        /* Copy the data to the server. */
-        monitor.setTaskName( "Kopiere auf den Server ..." );
-        Debug.println( "Copy to the server ..." );
+      /* Copy the data to the server. */
+      monitor.setTaskName( "Kopiere auf den Server ..." );
+      Debug.println( "Copy to the server ..." );
 
-        /* Copy ... */
-        m_delegate.copyInputFiles( inputFiles );
-      }
+      /* Copy ... */
+      m_delegate.copyInputFiles( description );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );

@@ -59,7 +59,7 @@ import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.service.calcjobs.sendmail.utils.MailUtilities;
-import org.kalypso.service.wps.client.WPSClient;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
@@ -161,7 +161,7 @@ public class SendMailJobTest
     SimulationDelegate delegate = new SimulationDelegate( simulationName, calcCaseFolder, modelData );
 
     /* Start the simulation with a timeout of 300000 ms. */
-    WPSClient simulationJob = new WPSClient( delegate, 300000 );
+    WPSRequest simulationJob = new WPSRequest( delegate, 300000 );
     IStatus status = simulationJob.run( new NullProgressMonitor() );
 
     /* The end report. */

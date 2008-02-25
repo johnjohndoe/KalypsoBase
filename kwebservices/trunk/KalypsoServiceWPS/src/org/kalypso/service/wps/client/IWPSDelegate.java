@@ -47,7 +47,6 @@ import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
-import org.eclipse.core.resources.IFile;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 
 /**
@@ -63,21 +62,12 @@ public interface IWPSDelegate
   public void init( ) throws WPSException;
 
   /**
-   * This function collects all input files.
+   * This function copies all input data to a place, where the WPS can read it.
    * 
    * @param description
    *            The description of the process.
-   * @return The input files list.
    */
-  public IFile[] getInputFiles( ProcessDescriptionType description ) throws WPSException;
-
-  /**
-   * This function copies all input data to a place, where the WPS can read it.
-   * 
-   * @param files
-   *            The files to copy.
-   */
-  public void copyInputFiles( IFile[] files ) throws WPSException;
+  public void copyInputFiles( ProcessDescriptionType description ) throws WPSException;
 
   /**
    * This function creates the data inputs which the client provides for the wps.
