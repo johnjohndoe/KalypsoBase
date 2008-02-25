@@ -107,6 +107,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void createPartControl( final Composite parent )
   {
+
     m_composite = new Composite( parent, SWT.NONE );
     m_composite.setLayout( new FillLayout() );
     getSite().getPage().addSelectionListener( this );

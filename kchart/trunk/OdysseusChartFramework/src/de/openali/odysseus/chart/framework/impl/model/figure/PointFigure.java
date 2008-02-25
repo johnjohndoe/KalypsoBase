@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
@@ -22,8 +23,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 	public void setCenterPosition(Point pos)
 	{
 		IPointStyle style = getStyle();
-		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(),
-		        style.getHeight()));
+		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(), style.getHeight()));
 	}
 
 	/**
@@ -48,8 +48,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 			{
 				marker = IDefaultStyles.DEFAULT_MARKER;
 			}
-			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle()
-			        .getHeight());
+			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle().getHeight());
 		}
 
 	}
@@ -68,7 +67,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 		}
 		else
 		{
-			return FigureUtilities.getDefaultStyle(PointStyle.class);
+			return StyleUtils.getDefaultStyle(PointStyle.class);
 		}
 	}
 

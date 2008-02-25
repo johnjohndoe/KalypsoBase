@@ -21,9 +21,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	private float[] m_dashArray;
 	private int m_miterLimit;
 
-	public LineStyle( int width, RGB rgb, int alpha, int dashOffset,
-	        int[] dashArray, LINEJOIN lineJoin, LINECAP lineCap,
-	        int miterLimit, boolean isVisible )
+	public LineStyle( int width, RGB rgb, int alpha, int dashOffset, int[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible )
 	{
 		setWidth(width);
 		setColor(rgb);
@@ -125,8 +123,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
 		int lineJoin = m_lineJoin.toSWT();
 
-		LineAttributes la = new LineAttributes(m_width, lineCap, lineJoin,
-		        SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit);
+		LineAttributes la = new LineAttributes(m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit);
 		gc.setLineAttributes(la);
 
 	}
@@ -142,5 +139,10 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 		{
 			m_color.dispose();
 		}
+	}
+
+	public int getWidth()
+	{
+		return m_width;
 	}
 }

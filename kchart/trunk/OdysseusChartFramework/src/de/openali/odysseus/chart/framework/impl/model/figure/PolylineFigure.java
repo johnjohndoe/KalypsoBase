@@ -5,13 +5,13 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 public class PolylineFigure extends AbstractFigure<ILineStyle>
 {
 
-	private Point[] m_points = new Point[] { new Point(10, 10),
-	        new Point(100, 100) };
+	private Point[] m_points = new Point[] { new Point(10, 10), new Point(100, 100) };
 
 	@Override
 	public void paintFigure(GC gc)
@@ -19,7 +19,20 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
 		if (m_points != null)
 		{
 			int[] path = FigureUtilities.pointArrayToIntArray(m_points);
-			gc.drawPolyline(path);
+			// if too many points are set, swt crashes
+			if (m_points.length > 500)
+			{
+				for (int i = 0; i < m_points.length - 2; i++)
+				{
+					Point p1 = m_points[i];
+					Point p2 = m_points[i + 1];
+					gc.drawLine(p1.x, p1.y, p2.x, p2.y);
+				}
+			}
+			else
+			{
+				gc.drawPolyline(path);
+			}
 		}
 	}
 
@@ -42,7 +55,7 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
 		}
 		else
 		{
-			return FigureUtilities.getDefaultStyle(LineStyle.class);
+			return StyleUtils.getDefaultStyle(LineStyle.class);
 		}
 	}
 }

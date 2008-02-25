@@ -233,6 +233,7 @@ public class ChartComposite extends Canvas implements IChartView
 		final Label lbl33 = new Label(parent, SWT.NONE);
 		lbl33.setSize(0, 0);
 		lbl33.setVisible(false);
+
 	}
 
 	/**

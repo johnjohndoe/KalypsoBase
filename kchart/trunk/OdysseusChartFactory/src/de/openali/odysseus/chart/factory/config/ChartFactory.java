@@ -201,6 +201,7 @@ public class ChartFactory
                   try
                   {
                     axisRenderer = arp.getAxisRenderer();
+                    axisRenderer.setStyles( creatStyleSet( rendererType.getStyles(), rr ) );
                     ar.setRenderer( axis.getIdentifier(), axisRenderer );
                   }
                   catch( AxisRendererProviderException e )
@@ -313,34 +314,36 @@ public class ChartFactory
   {
     // Styles erzeugen
     IStyleSet styleSet = new StyleSet();
-
-    RoleReferencingType[] asArray = styles.getAreaStyleRefArray();
-    for( RoleReferencingType rrt : asArray )
+    if( styles != null )
     {
-      AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
-      IAreaStyle as = StyleFactory.createAreaStyle( ast );
-      styleSet.addStyle( rrt.getRole(), as );
-    }
-    RoleReferencingType[] psArray = styles.getPointStyleRefArray();
-    for( RoleReferencingType rrt : psArray )
-    {
-      PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
-      IPointStyle ps = StyleFactory.createPointStyle( pst );
-      styleSet.addStyle( rrt.getRole(), ps );
-    }
-    RoleReferencingType[] lsArray = styles.getLineStyleRefArray();
-    for( RoleReferencingType rrt : lsArray )
-    {
-      LineStyleType lst = (LineStyleType) rr.resolveReference( rrt.getRef() );
-      ILineStyle ls = StyleFactory.createLineStyle( lst );
-      styleSet.addStyle( rrt.getRole(), ls );
-    }
-    RoleReferencingType[] tsArray = styles.getTextStyleRefArray();
-    for( RoleReferencingType rrt : tsArray )
-    {
-      TextStyleType tst = (TextStyleType) rr.resolveReference( rrt.getRef() );
-      ITextStyle ls = StyleFactory.createTextStyle( tst );
-      styleSet.addStyle( rrt.getRole(), ls );
+      RoleReferencingType[] asArray = styles.getAreaStyleRefArray();
+      for( RoleReferencingType rrt : asArray )
+      {
+        AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
+        IAreaStyle as = StyleFactory.createAreaStyle( ast );
+        styleSet.addStyle( rrt.getRole(), as );
+      }
+      RoleReferencingType[] psArray = styles.getPointStyleRefArray();
+      for( RoleReferencingType rrt : psArray )
+      {
+        PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
+        IPointStyle ps = StyleFactory.createPointStyle( pst );
+        styleSet.addStyle( rrt.getRole(), ps );
+      }
+      RoleReferencingType[] lsArray = styles.getLineStyleRefArray();
+      for( RoleReferencingType rrt : lsArray )
+      {
+        LineStyleType lst = (LineStyleType) rr.resolveReference( rrt.getRef() );
+        ILineStyle ls = StyleFactory.createLineStyle( lst );
+        styleSet.addStyle( rrt.getRole(), ls );
+      }
+      RoleReferencingType[] tsArray = styles.getTextStyleRefArray();
+      for( RoleReferencingType rrt : tsArray )
+      {
+        TextStyleType tst = (TextStyleType) rr.resolveReference( rrt.getRef() );
+        ITextStyle ls = StyleFactory.createTextStyle( tst );
+        styleSet.addStyle( rrt.getRole(), ls );
+      }
     }
     return styleSet;
   }

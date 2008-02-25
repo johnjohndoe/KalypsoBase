@@ -22,8 +22,8 @@ import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.PolygonMarker;
-import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.impl.util.Sleak;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
@@ -80,7 +80,7 @@ public class StyleTest implements PaintListener
 		// Polygon
 		Point[] points0 = createPolygonPoints(pointSize);
 		PolygonFigure pf = new PolygonFigure();
-		IAreaStyle as = FigureUtilities.getDefaultAreaStyle();
+		IAreaStyle as = StyleUtils.getDefaultAreaStyle();
 		as.setInlineColor(new RGB(255, 0, 0));
 		pf.setStyle(as);
 		pf.setPoints(points0);
@@ -89,7 +89,7 @@ public class StyleTest implements PaintListener
 		// bars
 		Point[][] bars = createBars(20);
 		PolygonFigure bf = new PolygonFigure();
-		IAreaStyle asBar = FigureUtilities.getDefaultAreaStyle();
+		IAreaStyle asBar = StyleUtils.getDefaultAreaStyle();
 		asBar.setInlineColor(new RGB(0, 0, 255));
 		asBar.setAlpha(100);
 		bf.setStyle(asBar);
@@ -115,11 +115,11 @@ public class StyleTest implements PaintListener
 		IMarker m3 = new PolygonMarker(markerPoints);
 
 		// Point
-		IPointStyle ps = FigureUtilities.getDefaultPointStyle();
+		IPointStyle ps = StyleUtils.getDefaultPointStyle();
 		PointFigure pf2 = new PointFigure();
 
 		// Text
-		ITextStyle ts = FigureUtilities.getDefaultTextStyle();
+		ITextStyle ts = StyleUtils.getDefaultTextStyle();
 		ts.setFamily("Ani");
 		TextFigure tf = new TextFigure();
 

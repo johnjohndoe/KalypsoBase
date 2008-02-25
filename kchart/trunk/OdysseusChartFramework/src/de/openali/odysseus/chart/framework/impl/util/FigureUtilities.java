@@ -2,17 +2,6 @@ package de.openali.odysseus.chart.framework.impl.util;
 
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.impl.model.figure.IDefaultStyles;
-import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.TextStyle;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-
 public class FigureUtilities
 {
 
@@ -182,51 +171,6 @@ public class FigureUtilities
 			}
 		}
 		return new Point(maxX, maxY);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T_style extends IStyle> T_style getDefaultStyle(Class<T_style> clazz)
-	{
-		if (PointStyle.class.isAssignableFrom(clazz))
-		{
-			return (T_style) getDefaultPointStyle();
-		}
-		else if (LineStyle.class.isAssignableFrom(clazz))
-		{
-			return (T_style) getDefaultLineStyle();
-		}
-		else if (TextStyle.class.isAssignableFrom(clazz))
-		{
-			return (T_style) getDefaultTextStyle();
-		}
-		else if (AreaStyle.class.isAssignableFrom(clazz))
-		{
-			return (T_style) getDefaultAreaStyle();
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	public static ILineStyle getDefaultLineStyle()
-	{
-		return new LineStyle(IDefaultStyles.DEFAULT_STROKE_WIDTH, IDefaultStyles.DEFAULT_RGB_FOREGROUND, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_DASHOFFSET, IDefaultStyles.DEFAULT_DASHARRAY, IDefaultStyles.DEFAULT_LINEJOIN, IDefaultStyles.DEFAULT_LINECAP, IDefaultStyles.DEFAULT_MITERLIMIT, IDefaultStyles.DEFAULT_VISIBILITY);
-	}
-
-	public static IPointStyle getDefaultPointStyle()
-	{
-		return new PointStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_WIDTH, IDefaultStyles.DEFAULT_HEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY);
-	}
-
-	public static IAreaStyle getDefaultAreaStyle()
-	{
-		return new AreaStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_ALPHA, getDefaultLineStyle(), IDefaultStyles.DEFAULT_VISIBILITY);
-	}
-
-	public static ITextStyle getDefaultTextStyle()
-	{
-		return new TextStyle(IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
 }

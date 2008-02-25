@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.RGB;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.PolygonMarker;
-import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -76,7 +76,7 @@ public class StyleFactory
 
   public static IPointStyle createPointStyle( PointStyleType pst )
   {
-    IPointStyle style = FigureUtilities.getDefaultPointStyle();
+    IPointStyle style = StyleUtils.getDefaultPointStyle();
 
     style.setTitle( pst.getTitle() );
 
@@ -145,7 +145,7 @@ public class StyleFactory
     StrokeType strokeStyle = pst.getStroke();
     if( strokeStyle != null )
     {
-      ILineStyle ls = FigureUtilities.getDefaultLineStyle();
+      ILineStyle ls = StyleUtils.getDefaultLineStyle();
       setStrokeAttributes( ls, strokeStyle );
       style.setStroke( ls );
     }
@@ -155,7 +155,7 @@ public class StyleFactory
 
   public static ILineStyle createLineStyle( LineStyleType lst )
   {
-    ILineStyle style = FigureUtilities.getDefaultLineStyle();
+    ILineStyle style = StyleUtils.getDefaultLineStyle();
 
     style.setTitle( lst.getTitle() );
 
@@ -259,7 +259,7 @@ public class StyleFactory
 
   public static IAreaStyle createAreaStyle( AreaStyleType ast )
   {
-    IAreaStyle style = FigureUtilities.getDefaultAreaStyle();
+    IAreaStyle style = StyleUtils.getDefaultAreaStyle();
 
     style.setTitle( ast.getTitle() );
     // visible
@@ -284,7 +284,7 @@ public class StyleFactory
     // outline
     if( ast.isSetStroke() )
     {
-      ILineStyle ls = FigureUtilities.getDefaultLineStyle();
+      ILineStyle ls = StyleUtils.getDefaultLineStyle();
       setStrokeAttributes( ls, ast.getStroke() );
       style.setStroke( ls );
     }
@@ -294,7 +294,7 @@ public class StyleFactory
 
   public static ITextStyle createTextStyle( TextStyleType tst )
   {
-    ITextStyle style = FigureUtilities.getDefaultTextStyle();
+    ITextStyle style = StyleUtils.getDefaultTextStyle();
 
     style.setTitle( tst.getTitle() );
     // visible

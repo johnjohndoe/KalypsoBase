@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.TextStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
@@ -62,7 +63,7 @@ public class TextFigure extends AbstractFigure<ITextStyle>
 		}
 		else
 		{
-			return FigureUtilities.getDefaultStyle(TextStyle.class);
+			return StyleUtils.getDefaultStyle(TextStyle.class);
 		}
 	}
 }

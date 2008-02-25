@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 public class PolygonFigure extends AbstractFigure<IAreaStyle>
@@ -42,7 +43,7 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
 		}
 		else
 		{
-			return FigureUtilities.getDefaultStyle(AreaStyle.class);
+			return StyleUtils.getDefaultStyle(AreaStyle.class);
 		}
 	}
 

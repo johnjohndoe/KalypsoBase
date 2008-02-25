@@ -3,14 +3,10 @@ package org.kalypso.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
@@ -21,7 +17,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
- 
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+
 /**
  * @author burtscher
  */
@@ -54,9 +52,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
    * @param gap
    *            space between axis and component border
    */
-  public GenericAxisRenderer( final String id, final RGB foregroundRGB, final RGB backgroundRGB, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut )
   {
-    super( id, foregroundRGB, backgroundRGB, lineWidth, tickLength, tickLabelInsets, labelInsets, gap, fdLabel, fdTick );
+    super( id, tickLength, tickLabelInsets, labelInsets, gap );
     m_tickCalculator = tickCalculator;
     m_labelCreator = labelCreator;
     m_minTickInterval = minTickInterval;
@@ -69,8 +67,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
     final String logicalfrom = m_labelCreator.getLabel( range.getMin(), range );
     final String logicalto = m_labelCreator.getLabel( range.getMax(), range );
-    final Point fromTextExtent = getTextExtent( gc, logicalfrom, getFontDataTickLabel() );
-    final Point toTextExtent = getTextExtent( gc, logicalto, getFontDataTickLabel() );
+    final Point fromTextExtent = getTextExtent( gc, logicalfrom, getStyles().getStyle( "tickLabel", ITextStyle.class ) );
+    final Point toTextExtent = getTextExtent( gc, logicalto, getStyles().getStyle( "tickLabel", ITextStyle.class ) );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
     final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
@@ -89,16 +87,14 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
   {
 
     if( (gc == null) || (axis == null) || (ticks == null) )
+    {
       return;
-
-    gc.setLineWidth( getLineWidth() );
-    gc.setLineStyle( SWT.LINE_SOLID );
+    }
 
     int textX = 0;
     int textY = 0;
 
     final int tickLength = getTickLength();
-    final FontData fontDataTick = getFontDataTickLabel();
     final Insets tickLabelInsets = getTickLabelInsets();
 
     IDataRange<Number> range = axis.getNumericRange();
@@ -106,6 +102,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     final int axisMax = axis.numericToScreen( range.getMax() );
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
+
+    ITextStyle tickLabelStyle = getTickLabelStyle();
+    ILineStyle tickLineStyle = getTickLineStyle();
 
     for( final Number value : ticks )
     {
@@ -116,7 +115,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       boolean drawTick = true;
 
       tickPos = axis.numericToScreen( value );
-      final Point tickExtent = getTextExtent( gc, label, fontDataTick );
+      final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
@@ -138,7 +137,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
         }
 
         if( m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax)) )
+        {
           drawTick = false;
+        }
       }
       // VERTICAL
       else
@@ -160,12 +161,15 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
           textX = x2 + tickLabelInsets.top;
         }
         if( m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax)) )
+        {
           drawTick = false;
+        }
       }
 
       if( drawTick )
       {
-        drawText( gc, label, textX, textY, fontDataTick );
+        drawText( gc, label, textX, textY, tickLabelStyle );
+        tickLineStyle.apply( gc );
         gc.drawLine( x1, y1, x2, y2 );
       }
     }
@@ -173,8 +177,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
   protected void drawTicks2( GC gc, IAxis<Number> axis, int startX, int startY, Number[] ticks )
   {
-    gc.setLineWidth( getLineWidth() );
-    gc.setLineStyle( SWT.LINE_SOLID );
+    ITextStyle tickLabelStyle = getTickLabelStyle();
+    ILineStyle tickLineStyle = getTickLineStyle();
 
     int textXDate = 0;
     int textYDate = 0;
@@ -190,12 +194,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       {
         final int tickPos = axis.numericToScreen( value );
         final String labelDate = m_labelCreator.getLabel( value, range );
-        final Point tickExtentDate = getTextExtent( gc, labelDate, getFontDataTickLabel() );
+        final Point tickExtentDate = getTextExtent( gc, labelDate, tickLabelStyle );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textXDate = tickPos - tickExtentDate.x / 2;
         textYDate = y2 + getTickLabelInsets().top;
-        drawText( gc, labelDate, textXDate, textYDate, getFontDataTickLabel() );
+        drawText( gc, labelDate, textXDate, textYDate, tickLabelStyle );
       }
     }
     else if( axis.getPosition() == POSITION.TOP )
@@ -207,12 +211,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       {
         final int tickPos = axis.numericToScreen( value );
         final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
+        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
 
         gc.drawLine( tickPos, y1, tickPos, y2 );
         textXDate = tickPos - tickExtent.x / 2;
         textYDate = y2 - getTickLabelInsets().top - tickExtent.y;
-        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
+        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
       }
     }
     else if( axis.getPosition() == POSITION.LEFT )
@@ -224,12 +228,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       {
         final int tickPos = axis.numericToScreen( value );
         final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
+        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
         textXDate = x1 - tickExtent.x - getTickLabelInsets().right - getTickLength();
         textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
+        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
       }
     }
     else if( axis.getPosition() == POSITION.RIGHT )
@@ -241,13 +245,13 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       {
         final int tickPos = axis.numericToScreen( value );
         final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, getFontDataTickLabel() );
+        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
 
         gc.drawLine( x1, tickPos, x2, tickPos );
         textXDate = tickPos - x2 + getTickLabelInsets().top;
         textXDate = x1 + getTickLabelInsets().left + getTickLength();
         textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, getFontDataTickLabel() );
+        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
       }
     }
 
@@ -259,20 +263,26 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     InsetsHelper ihelper = new InsetsHelper( insets );
 
     if( axis.getPosition() == POSITION.TOP )
+    {
       ihelper = ihelper.mirrorTopBottom();
+    }
     if( axis.getPosition() == POSITION.LEFT )
+    {
       ihelper = ihelper.hor2vert();
+    }
     if( axis.getPosition() == POSITION.RIGHT )
+    {
       ihelper = ihelper.hor2vert().mirrorLeftRight();
+    }
 
     return ihelper;
   }
 
   @Override
-  protected Point getTextExtent( GC gc, final Number value, FontData fd, Format format, IDataRange<Number> range )
+  protected Point getTextExtent( GC gc, final Number value, ITextStyle style, Format format, IDataRange<Number> range )
   {
     final String label = m_labelCreator.getLabel( value, range );
-    final Point p = getTextExtent( gc, label, fd );
+    final Point p = getTextExtent( gc, label, style );
     return p;
   }
 
@@ -344,9 +354,13 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
+      {
         startY = screen.y + gap + 1;
+      }
       else
+      {
         startY = screen.y + screen.height - 1 - gap;
+      }
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -362,9 +376,13 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
+      {
         startX = screen.x + gap + 1;
+      }
       else
+      {
         startX = screen.x + screen.width - 1 - gap;
+      }
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -382,11 +400,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
   {
     final Device dev = gc.getDevice();
 
-    final Color foreground = new Color( dev, getRgbForeground() );
-    final Color background = new Color( dev, getRgbBackground() );
-    gc.setForeground( foreground );
-    gc.setBackground( background );
-
     // draw axis line
     final int[] coords = createAxisSegment( axis, screen );
     assert coords != null && coords.length == 4;
@@ -396,15 +409,13 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     drawTicks( gc, axis, coords[0], coords[1], ticks );
     drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
 
-    foreground.dispose();
-    background.dispose();
   }
 
   protected void drawAxisLabel( GC gc, IAxis<Number> axis, int startX, int startY, int endX, int endY )
   {
     if( axis.getLabel() != null )
     {
-      final Point textExtent = getTextExtent( gc, axis.getLabel(), getFontDataLabel() );
+      final Point textExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
 
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
 
@@ -413,7 +424,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
       final Insets labelInsets = getLabelInsets();
       final int tickLength = getTickLength();
-      final int lineWidth = getLineWidth();
+      final int lineWidth = getLineStyle().getWidth();
 
       final Transform tr = new Transform( gc.getDevice() );
       try
@@ -460,12 +471,14 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
         {
           gc.setTransform( tr );
         }
-        drawText( gc, axis.getLabel(), x, y, getFontDataLabel() );
+        drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally
       {
         if( tr != null )
+        {
           tr.dispose();
+        }
       }
     }
 
@@ -473,8 +486,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
   protected void drawAxisLine( GC gc, final int x1, final int y1, final int x2, final int y2 )
   {
-    gc.setLineWidth( getLineWidth() );
-    gc.setLineStyle( SWT.LINE_SOLID );
+    getLineStyle().apply( gc );
     gc.drawLine( x1, y1, x2, y2 );
   }
 
@@ -521,7 +533,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     int width = 0;
     int label = 0;
     final int gap = getGap();
-    final int lineWidth = getLineWidth();
+    final int lineWidth = getLineStyle().getWidth();
     final int tickLength = getTickLength();
 
     final Insets labelInsets = getLabelInsets();
@@ -550,7 +562,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     width += tickLength;
 
     // Jetzt noch den Text
-    final Point labelExtent = getTextExtent( gc, axis.getLabel(), getFontDataLabel() );
+    final Point labelExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
     width += labelExtent.y;
 
     gc.dispose();

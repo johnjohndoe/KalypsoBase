@@ -18,6 +18,8 @@ public interface ILineStyle extends IStyle
 
   public void setWidth( int width );
 
+  public int getWidth( );
+
   public void setMiterLimit( int miterLimit );
 
 }

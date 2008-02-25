@@ -3,19 +3,16 @@ package org.kalypso.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 import java.util.HashMap;
-import java.util.Map;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
  * @author alibu
@@ -25,25 +22,15 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
 
   private final int m_tickLength;
 
-  private final int m_lineWidth;
-
   private final int m_gap;
 
   private final Insets m_labelInsets;
 
   private final Insets m_tickLabelInsets;
 
-  private final FontData m_fontDataLabel;
-
-  private final FontData m_fontDataTick;
-
-  private final RGB m_rgbForeground;
-
-  private final RGB m_rgbBackground;
-
   private final String m_id;
 
-  private final Map<FontData, Font> m_fontMap = new HashMap<FontData, Font>();
+  private IStyleSet m_styles;
 
   /**
    * Hashmap to store arbitrary key value pairs
@@ -52,52 +39,46 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
 
   private final HashMap<IAxis<T_logical>, T_logical[]> m_tickMap = new HashMap<IAxis<T_logical>, T_logical[]>();
 
-  public AbstractGenericAxisRenderer( final String id, final RGB rgbForeground, final RGB rgbBackground, final int lineWidth, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final FontData fdLabel, final FontData fdTick )
+  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap )
   {
     m_id = id;
-    m_rgbForeground = rgbForeground;
-    m_rgbBackground = rgbBackground;
     m_tickLength = tickLength;
-    m_lineWidth = lineWidth;
     m_tickLabelInsets = tickLabelInsets;
     m_labelInsets = labelInsets;
     m_gap = gap;
-    m_fontDataLabel = fdLabel;
-    m_fontDataTick = fdTick;
   }
 
-  protected abstract Point getTextExtent( GC gcw, T_logical value, FontData fontData, Format format, IDataRange<Number> range );
+  protected abstract Point getTextExtent( GC gcw, T_logical value, ITextStyle style, Format format, IDataRange<Number> range );
 
-  protected Point getTextExtent( GC gc, final String value, FontData fd )
+  public void setStyles( IStyleSet styles )
   {
-    Font oldFont = gc.getFont();
-    final Font f = getFont( fd, gc.getDevice() );
-    gc.setFont( f );
+    m_styles = styles;
+  }
+
+  public IStyleSet getStyles( )
+  {
+    return m_styles;
+  }
+
+  protected Point getTextExtent( GC gc, final String value, ITextStyle style )
+  {
+    style.apply( gc );
     final Point point = gc.textExtent( value );
-    gc.setFont( oldFont );
     return point;
   }
 
   /**
    * draws a given text at the position using special fontData
    */
-  protected void drawText( GC gc, String text, int x, int y, FontData fd )
+  protected void drawText( GC gc, String text, int x, int y, ITextStyle style )
   {
-    gc.setTextAntialias( SWT.ON );
-    Font oldfont = gc.getFont();
-    gc.setFont( getFont( fd, gc.getDevice() ) );
+    style.apply( gc );
     gc.drawText( text, x, y );
-    gc.setFont( oldfont );
   }
 
   public int getTickLength( )
   {
     return m_tickLength;
-  }
-
-  public int getLineWidth( )
-  {
-    return m_lineWidth;
   }
 
   public int getGap( )
@@ -113,26 +94,6 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
   public Insets getTickLabelInsets( )
   {
     return m_tickLabelInsets;
-  }
-
-  public FontData getFontDataLabel( )
-  {
-    return m_fontDataLabel;
-  }
-
-  public FontData getFontDataTickLabel( )
-  {
-    return m_fontDataTick;
-  }
-
-  public RGB getRgbForeground( )
-  {
-    return m_rgbForeground;
-  }
-
-  public RGB getRgbBackground( )
-  {
-    return m_rgbBackground;
   }
 
   public void setTickMapElement( IAxis<T_logical> axis, T_logical[] ticks )
@@ -175,22 +136,30 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
 
   public void dispose( )
   {
-    for( Font f : m_fontMap.values() )
+    if( m_styles != null )
     {
-      if( !f.isDisposed() )
-        f.dispose();
+      m_styles.dispose();
     }
   }
 
-  public synchronized Font getFont( FontData fd, Device dev )
+  public ILineStyle getTickLineStyle( )
   {
-    Font font = m_fontMap.get( fd );
-    if( font == null )
-    {
-      font = new Font( dev, fd );
-      m_fontMap.put( fd, font );
-    }
-    return font;
-
+    return getStyles().getStyle( "tickLine", ILineStyle.class );
   }
+
+  public ILineStyle getLineStyle( )
+  {
+    return getStyles().getStyle( "line", ILineStyle.class );
+  }
+
+  public ITextStyle getLabelStyle( )
+  {
+    return getStyles().getStyle( "label", ITextStyle.class );
+  }
+
+  public ITextStyle getTickLabelStyle( )
+  {
+    return getStyles().getStyle( "tickLabel", ITextStyle.class );
+  }
+
 }

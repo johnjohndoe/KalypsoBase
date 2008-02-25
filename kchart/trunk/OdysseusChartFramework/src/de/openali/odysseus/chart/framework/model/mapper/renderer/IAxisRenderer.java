@@ -1,9 +1,10 @@
 package de.openali.odysseus.chart.framework.model.mapper.renderer;
 
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu Interface used to render an IAxis object into an IAxisComponent
@@ -46,5 +47,9 @@ public interface IAxisRenderer<T_logical>
   public void invalidateTicks( IAxis axis );
 
   public void dispose( );
+
+  public void setStyles( IStyleSet styles );
+
+  public IStyleSet getStyles( );
 
 }

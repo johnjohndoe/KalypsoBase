@@ -408,7 +408,11 @@
 
 	<complexType name="AxisRendererType">
 		<complexContent>
-			<extension base="ods:AbstractConfigurationType"> </extension>
+			<extension base="ods:AbstractConfigurationType"> 
+			<sequence>
+				<element name="Styles" type="ods:StylesType" minOccurs="0"/>
+			</sequence>
+			</extension>
 		</complexContent>
 	</complexType>
 
