@@ -46,19 +46,25 @@ import java.util.List;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
-import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
-import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.PolygonMarker;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
 import de.openali.odysseus.chartconfig.x010.AreaStyleType;
 import de.openali.odysseus.chartconfig.x010.ImageMarkerType;
+import de.openali.odysseus.chartconfig.x010.LineStyleType;
 import de.openali.odysseus.chartconfig.x010.PointStyleType;
 import de.openali.odysseus.chartconfig.x010.PointType;
 import de.openali.odysseus.chartconfig.x010.PolygonMarkerType;
 import de.openali.odysseus.chartconfig.x010.StrokeType;
+import de.openali.odysseus.chartconfig.x010.TextStyleType;
+import de.openali.odysseus.chartconfig.x010.FontStyleType.Enum;
 
 /**
  * @author alibu
@@ -68,9 +74,11 @@ public class StyleFactory
 
   // TODO: save ConfigStyle info
 
-  public static PointStyle createPointStyle( PointStyleType pst )
+  public static IPointStyle createPointStyle( PointStyleType pst )
   {
-    PointStyle style = FigureUtilities.getDefaultPointStyle();
+    IPointStyle style = FigureUtilities.getDefaultPointStyle();
+
+    style.setTitle( pst.getTitle() );
 
     // visible
     if( pst.isSetIsVisible() )
@@ -82,6 +90,18 @@ public class StyleFactory
     if( pst.isSetAlpha() )
     {
       style.setAlpha( byteToInt( pst.getAlpha()[0] ) );
+    }
+
+    // width
+    if( pst.isSetWidth() )
+    {
+      style.setWidth( pst.getWidth() );
+    }
+
+    // height
+    if( pst.isSetHeight() )
+    {
+      style.setHeight( pst.getHeight() );
     }
 
     // fill color
@@ -122,18 +142,79 @@ public class StyleFactory
       // do nothing - use default
     }
 
-    StrokeType strokeStyle = pst.getStrokeStyle();
+    StrokeType strokeStyle = pst.getStroke();
     if( strokeStyle != null )
     {
-      style.setOutline( createLineStyle( strokeStyle ) );
+      ILineStyle ls = FigureUtilities.getDefaultLineStyle();
+      setStrokeAttributes( ls, strokeStyle );
+      style.setStroke( ls );
     }
 
     return style;
   }
 
-  public static LineStyle createLineStyle( StrokeType st )
+  public static ILineStyle createLineStyle( LineStyleType lst )
   {
-    LineStyle style = FigureUtilities.getDefaultLineStyle();
+    ILineStyle style = FigureUtilities.getDefaultLineStyle();
+
+    style.setTitle( lst.getTitle() );
+
+    // visible
+    if( lst.isSetIsVisible() )
+    {
+      boolean isVisible = lst.getIsVisible();
+      style.setVisible( isVisible );
+    }
+
+    // alpha
+    if( lst.isSetAlpha() )
+    {
+      style.setAlpha( byteToInt( lst.getAlpha()[0] ) );
+    }
+
+    // width
+    if( lst.isSetWidth() )
+    {
+      style.setWidth( lst.getWidth() );
+    }
+
+    // dashArray
+    int dashOffset = 0;
+    int[] dashArray = null;
+
+    if( lst.isSetDashArray1() )
+    {
+      List dashArray1 = lst.getDashArray1();
+      dashArray = new int[dashArray1.size()];
+      for( int i = 0; i < dashArray.length; i++ )
+      {
+        Object elt = dashArray1.get( i );
+        if( elt instanceof Integer )
+        {
+          dashArray[i] = ((Integer) elt).intValue();
+        }
+      }
+    }
+    if( lst.isSetDashOffset() )
+    {
+      dashOffset = lst.getDashOffset();
+    }
+    style.setDash( dashOffset, dashArray );
+
+    // color
+    if( lst.isSetLineColor() )
+    {
+      style.setColor( colorByteToRGB( lst.getLineColor() ) );
+    }
+
+    return style;
+  }
+
+  /**
+   * this is needed as separate method, as Strokes don't contain title elements
+   */
+  public static void setStrokeAttributes( ILineStyle style, StrokeType st )
+  {
 
     // visible
     if( st.isSetIsVisible() )
@@ -174,13 +255,13 @@ public class StyleFactory
     {
       style.setColor( colorByteToRGB( st.getLineColor() ) );
     }
-    return style;
   }
 
-  public static AreaStyle createAreaStyle( AreaStyleType ast )
+  public static IAreaStyle createAreaStyle( AreaStyleType ast )
   {
-    AreaStyle style = FigureUtilities.getDefaultAreaStyle();
+    IAreaStyle style = FigureUtilities.getDefaultAreaStyle();
 
+    style.setTitle( ast.getTitle() );
     // visible
     if( ast.isSetIsVisible() )
     {
@@ -201,9 +282,95 @@ public class StyleFactory
     }
 
     // outline
-    if( ast.isSetOutlineStyle() )
+    if( ast.isSetStroke() )
     {
-      style.setOutline( createLineStyle( ast.getOutlineStyle() ) );
+      ILineStyle ls = FigureUtilities.getDefaultLineStyle();
+      setStrokeAttributes( ls, ast.getStroke() );
+      style.setStroke( ls );
+    }
+
+    return style;
+  }
+
+  public static ITextStyle createTextStyle( TextStyleType tst )
+  {
+    ITextStyle style = FigureUtilities.getDefaultTextStyle();
+
+    style.setTitle( tst.getTitle() );
+    // visible
+    if( tst.isSetIsVisible() )
+    {
+      boolean isVisible = tst.getIsVisible();
+      style.setVisible( isVisible );
+    }
+
+    // alpha
+    if( tst.isSetAlpha() )
+    {
+      int alpha = byteToInt( tst.getAlpha()[0] );
+      style.setAlpha( alpha );
+    }
+
+    // font family
+    if( tst.isSetFontFamily() )
+    {
+      // TODO: check if family exists
+      style.setFamily( tst.getFontFamily() );
+
+    }
+
+    // background color
+    if( tst.isSetFillColor() )
+    {
+      style.setFillColor( colorByteToRGB( tst.getFillColor() ) );
+    }
+
+    // text color
+    if( tst.isSetTextColor() )
+    {
+      style.setTextColor( colorByteToRGB( tst.getTextColor() ) );
+    }
+
+    // text size
+    if( tst.isSetSize() )
+    {
+      style.setHeight( tst.getSize() );
+    }
+
+    // font style
+    if( tst.isSetFontStyle() )
+    {
+      Enum configfontStyle = tst.getFontStyle();
+      if( configfontStyle.equals( FONTSTYLE.ITALIC.toString() ) )
+      {
+        style.setFontStyle( FONTSTYLE.ITALIC );
+      }
+      else if( configfontStyle.equals( FONTSTYLE.NORMAL.toString() ) )
+      {
+        style.setFontStyle( FONTSTYLE.NORMAL );
+      }
+      else
+      {
+        // keep default
+      }
+    }
+
+    // font weight
+    if( tst.isSetFontWeight() )
+    {
+      de.openali.odysseus.chartconfig.x010.FontWeightType.Enum fontWeight = tst.getFontWeight();
+      if( fontWeight.equals( FONTWEIGHT.BOLD.toString() ) )
+      {
+        style.setWeight( FONTWEIGHT.BOLD );
+      }
+      if( fontWeight.equals( FONTWEIGHT.NORMAL.toString() ) )
+      {
+        style.setWeight( FONTWEIGHT.NORMAL );
+      }
+      else
+      {
+        // keep default
+      }
     }
 
     return style;
@@ -215,11 +382,7 @@ public class StyleFactory
    */
   private static int byteToInt( byte b )
   {
-
-    int i = b;
-    i &= 0x000000FF;
-
-    return i;
+    return b & 0xff;
   }
 
   /**

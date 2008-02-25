@@ -6,8 +6,9 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.framework.impl.model.style.TextStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
-public class TextFigure extends AbstractFigure<TextStyle>
+public class TextFigure extends AbstractFigure<ITextStyle>
 {
 
 	private Point m_centerPos;
@@ -34,14 +35,15 @@ public class TextFigure extends AbstractFigure<TextStyle>
 		IStyle style = getStyle();
 		if (style != null && m_centerPos != null)
 		{
-			TextStyle ts = (TextStyle) style;
 			style.apply(gc);
 
 			Point textExtent = gc.textExtent(m_text);
 			Point leftTopPos = FigureUtilities.centerToLeftTo(m_centerPos, textExtent.x, textExtent.y);
 
 			if (m_text != null)
+			{
 				gc.drawText(m_text, leftTopPos.x, leftTopPos.y);
+			}
 		}
 
 	}
@@ -51,12 +53,16 @@ public class TextFigure extends AbstractFigure<TextStyle>
 	 * point style
 	 */
 	@Override
-	public TextStyle getStyle()
+	public ITextStyle getStyle()
 	{
-		TextStyle style = super.getStyle();
+		ITextStyle style = super.getStyle();
 		if (style != null)
+		{
 			return style;
+		}
 		else
+		{
 			return FigureUtilities.getDefaultStyle(TextStyle.class);
+		}
 	}
 }

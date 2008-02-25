@@ -43,8 +43,12 @@ package org.kalypso.chart.ui.view;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -52,6 +56,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -73,7 +79,7 @@ import de.openali.odysseus.chartconfig.x010.ChartType;
 /**
  * @author Thomas Jung
  */
-public class ChartView extends ViewPart implements IChartPart
+public class ChartView extends ViewPart implements IChartPart, ISelectionListener
 {
   public static final String ID = "org.kalypso.chart.ui.view.ChartView";
 
@@ -103,6 +109,7 @@ public class ChartView extends ViewPart implements IChartPart
   {
     m_composite = new Composite( parent, SWT.NONE );
     m_composite.setLayout( new FillLayout() );
+    getSite().getPage().addSelectionListener( this );
 
     updateControl();
 
@@ -112,6 +119,11 @@ public class ChartView extends ViewPart implements IChartPart
   {
     m_input = input;
 
+    if( m_chartComposite != null )
+    {
+      m_chartComposite.dispose();
+      m_chartComposite = null;
+    }
     // prepare for exception
     m_chartType = null;
 
@@ -130,6 +142,7 @@ public class ChartView extends ViewPart implements IChartPart
     }
 
     updateControl();
+
   }
 
   private void updateControl( )
@@ -171,8 +184,6 @@ public class ChartView extends ViewPart implements IChartPart
         {
           m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
-          m_chartComposite.getModel().setAutoscale( true );
-
           // DragHandler erzeugen
           m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
           m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
@@ -183,6 +194,7 @@ public class ChartView extends ViewPart implements IChartPart
           // Titel der View setzen
           setPartName( m_chartModel.getTitle() );
 
+          // m_chartComposite.getChartModel().setAutoscale( true );
         }
         // else: TODO: what?
       }
@@ -278,5 +290,42 @@ public class ChartView extends ViewPart implements IChartPart
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_axisDragHandler;
+  }
+
+  /**
+   * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( IWorkbenchPart part, ISelection selection )
+  {
+
+    // TODO Auto-generated method stub
+    if( selection instanceof ITreeSelection )
+    {
+
+      ITreeSelection ts = (ITreeSelection) selection;
+      TreePath[] paths = ts.getPaths();
+      for( TreePath treePath : paths )
+      {
+        Object ls = treePath.getLastSegment();
+        if( ls instanceof IFile )
+        {
+          IFile f = (IFile) ls;
+          if( f.getFileExtension().equals( "kod" ) )
+          {
+            try
+            {
+              f.refreshLocal( 1, null );
+            }
+            catch( CoreException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            setInput( f );
+          }
+        }
+      }
+    }
   }
 }

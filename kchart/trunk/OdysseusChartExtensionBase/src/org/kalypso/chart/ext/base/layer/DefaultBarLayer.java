@@ -50,6 +50,7 @@ public class DefaultBarLayer extends AbstractBarLayer
 
       for( int i = 0; i < domainStartComponent.length; i++ )
       {
+        path.clear();
 
         final Object startValue = domainStartComponent[i];
         final Object endValue = domainEndComponent[i];

@@ -96,7 +96,7 @@ public class DragPanHandler implements IChartDragHandler
     // dann pannen
     if( m_start != null )
     {
-      m_chartComposite.getModel().panTo( m_start, new Point( e.x, e.y ) );
+      m_chartComposite.getChartModel().panTo( m_start, new Point( e.x, e.y ) );
     }
 
     // dann pan resetten
@@ -126,7 +126,7 @@ public class DragPanHandler implements IChartDragHandler
 
   private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
   {
-    IMapperRegistry mapperRegistry = m_chartComposite.getModel().getMapperRegistry();
+    IMapperRegistry mapperRegistry = m_chartComposite.getChartModel().getMapperRegistry();
     IAxis< ? >[] axes = mapperRegistry.getAxes();
     for( IAxis< ? > axis : axes )
     {

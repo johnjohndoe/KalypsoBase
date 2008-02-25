@@ -5,12 +5,12 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
-public class PolygonFigure extends AbstractFigure<AreaStyle>
+public class PolygonFigure extends AbstractFigure<IAreaStyle>
 {
 
-	private Point[] m_points = new Point[] { new Point(10, 10),
-	        new Point(100, 100) };
+	private Point[] m_points = new Point[] { new Point(10, 10), new Point(100, 100) };
 
 	@Override
 	public void paintFigure(GC gc)
@@ -19,7 +19,7 @@ public class PolygonFigure extends AbstractFigure<AreaStyle>
 		{
 			int[] intArray = FigureUtilities.pointArrayToIntArray(m_points);
 			gc.fillPolygon(intArray);
-			gc.drawPolyline(intArray);
+			gc.drawPolygon(intArray);
 		}
 	}
 
@@ -33,9 +33,9 @@ public class PolygonFigure extends AbstractFigure<AreaStyle>
 	 * point style
 	 */
 	@Override
-	public AreaStyle getStyle()
+	public IAreaStyle getStyle()
 	{
-		AreaStyle style = super.getStyle();
+		IAreaStyle style = super.getStyle();
 		if (style != null)
 		{
 			return style;

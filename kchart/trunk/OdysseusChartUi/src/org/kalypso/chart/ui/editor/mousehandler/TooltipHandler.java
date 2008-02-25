@@ -73,7 +73,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
     {
       final Point point = new Point( e.x, e.y );
 
-      for( final IEditableChartLayer layer : m_chart.getModel().getLayerManager().getEditableLayers() )
+      for( final IEditableChartLayer layer : m_chart.getChartModel().getLayerManager().getEditableLayers() )
       {
         if( layer.isVisible() )
         {

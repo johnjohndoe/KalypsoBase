@@ -64,7 +64,7 @@ public class ChartImageFactory
     gcw.drawImage( tmpImg, 0, 0, plotCanvas.getBounds().width, plotCanvas.getBounds().height, plotCanvas.getBounds().x, plotCanvas.getBounds().y, plotCanvas.getBounds().width, plotCanvas.getBounds().height );
     tmpGc.fillRectangle( 0, 0, tmpImg.getBounds().width, tmpImg.getBounds().height );
 
-    final IMapperRegistry ar = chart.getModel().getMapperRegistry();
+    final IMapperRegistry ar = chart.getChartModel().getMapperRegistry();
     final Map<IAxis< ? >, IAxisComponent> components = ar.getAxesToComponentsMap();
     final Set<Entry<IAxis< ? >, IAxisComponent>> acs = components.entrySet();
     for( final Entry<IAxis< ? >, IAxisComponent> ac : acs )

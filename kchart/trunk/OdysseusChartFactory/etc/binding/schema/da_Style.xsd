@@ -9,43 +9,57 @@
         
     <complexType name="AbstractStyleType">
         <sequence>
-            <element name="Alpha" minOccurs="0">
-                <simpleType>
-                   <restriction base="hexBinary">
-                            <length value="1"></length>
-                        </restriction>
-                   </simpleType>
-            </element>
+            <element name="Title" type="string" />
+            <element ref="ods:Alpha" minOccurs="0" />
         </sequence>
-            <attribute name="isVisible" type="boolean" />
+        <attribute name="id" type="ID" use="required" ></attribute>
+        <attribute name="isVisible" type="boolean" />
     </complexType>
+  
+  <element name="Alpha">
+    <simpleType> 
+        <restriction base="hexBinary">
+            <length value="1"></length>
+        </restriction>
+    </simpleType>
+    </element>
+  
     
-    <complexType name="LineStyleType" >
-        <complexContent>
-            <extension base="ods:StrokeType">
-                <attribute name="id"  type="ID" use="required"></attribute>
-                </extension>
-        </complexContent>
-    </complexType>
-    
-    <complexType name="StrokeType">
+       <complexType name="LineStyleType" >
         <complexContent>
             <extension base="ods:AbstractStyleType">
                 <sequence>
-                    <element name="Width"  type="int" minOccurs="0"/>  
-                    <element name="LineColor" type="ods:ColorType"  minOccurs="0"/>
-                    <element name="DashOffset" type="int" minOccurs="0"/>
-                    <element name="DashArray" minOccurs="0">
-                        <simpleType>
-                            <list itemType="int"></list>
-                        </simpleType>
-                    </element>
-                    <element name="LineCap" type="ods:LineCapType" minOccurs="0"></element>
-                    <element name="LineJoin" type="ods:LineJoinType" minOccurs="0"></element>
-                    <element name="MiterLimit" type="int" minOccurs="0" />
+                    <group ref="ods:StrokeGroup"></group>
                 </sequence>
             </extension>
         </complexContent>
+     </complexType>
+    
+    
+    <group name="StrokeGroup">
+        <sequence>
+            <element name="Width"  type="int" minOccurs="0"/>  
+            <element name="LineColor" type="ods:ColorType"  minOccurs="0"/>
+            <element name="DashOffset" type="int" minOccurs="0"/>
+            <element name="DashArray" minOccurs="0">
+                <simpleType>
+                    <list itemType="int"></list>
+                </simpleType>
+            </element>
+            <element name="LineCap" type="ods:LineCapType" minOccurs="0"></element>
+            <element name="LineJoin" type="ods:LineJoinType" minOccurs="0"></element>
+            <element name="MiterLimit" type="int" minOccurs="0" />
+        </sequence>
+    </group>
+    
+    <element name="Stroke" type="ods:StrokeType" />
+    
+    <complexType name="StrokeType">
+        <sequence>
+            <element ref="ods:Alpha" minOccurs="0" />
+            <group ref="ods:StrokeGroup"></group>
+        </sequence>
+        <attribute name="isVisible" type="boolean" />
     </complexType>
     
     <simpleType name="LineJoinType">
@@ -79,7 +93,7 @@
                 <sequence>
                     <element name="Width" type="int" minOccurs="0" />
                     <element name="Height" type="int" minOccurs="0" />
-                    <element name="StrokeStyle" type="ods:StrokeType" minOccurs="0" />
+                    <element ref="ods:Stroke" minOccurs="0" />
                     <choice minOccurs="0">
                         <element name="OvalMarker" />
                         <element name="ImageMarker" type="ods:ImageMarkerType" />
@@ -87,7 +101,7 @@
                     </choice>
                     <element name="FillColor" type="ods:ColorType" minOccurs="0" />
                 </sequence>
-                <attribute name="id" type="ID" use="required" ></attribute>
+                
             </extension>
         </complexContent>
     </complexType>
@@ -117,12 +131,12 @@
             <extension base="ods:AbstractStyleType">
                 <sequence>
                     <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
-                    <element name="OutlineStyle" type="ods:StrokeType" minOccurs="0" ></element>
+                    <element ref="ods:Stroke" minOccurs="0" />
                 </sequence>               
-                <attribute name="id" type="ID" use="required"></attribute>
-            </extension>
+                </extension>
         </complexContent>
     </complexType>
+                   
     
     <complexType name="TextStyleType">
         <complexContent>
@@ -135,7 +149,7 @@
                     <element name="FontWeight" type="ods:FontWeightType" minOccurs="0"></element>
                     <element name="FontStyle" type="ods:FontStyleType" minOccurs="0"></element>
                 </sequence>
-            </extension>
+                 </extension>
         </complexContent>
     </complexType>
     

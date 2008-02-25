@@ -222,8 +222,12 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     IDataRange logRange = getDataContainer().getDomainRange();
     Object min = logRange.getMin();
-    IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-    return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
+    if( min != null )
+    {
+      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+      return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
+    }
+    return null;
   }
 
   /**
@@ -233,8 +237,12 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     IDataRange logRange = getDataContainer().getTargetRange();
     Object min = logRange.getMin();
-    IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-    return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
+    if( min != null )
+    {
+      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+      return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumerical( min ), dop.logicalToNumerical( logRange.getMax() ) } );
+    }
+    return null;
   }
 
   public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )

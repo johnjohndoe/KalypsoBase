@@ -6,10 +6,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
-public class LineStyle extends AbstractStyle
+public class LineStyle extends AbstractStyle implements ILineStyle
 {
 	private LINEJOIN m_lineJoin;
 	private LINECAP m_lineCap;
@@ -34,21 +35,42 @@ public class LineStyle extends AbstractStyle
 		setVisible(isVisible);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN)
+	 */
 	public void setLineJoin(LINEJOIN join)
 	{
 		m_lineJoin = join;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP)
+	 */
 	public void setLineCap(LINECAP cap)
 	{
 		m_lineCap = cap;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
+	 */
 	public void setColor(RGB rgb)
 	{
 		m_rgb = rgb;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int,
+	 *      int[])
+	 */
 	public void setDash(int dashOffset, int[] dashArray)
 	{
 		m_dashOffset = dashOffset;
@@ -63,16 +85,31 @@ public class LineStyle extends AbstractStyle
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
+	 */
 	public void setWidth(int width)
 	{
 		m_width = width;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
+	 */
 	public void setMiterLimit(int miterLimit)
 	{
 		m_miterLimit = miterLimit;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
+	 */
 	public void apply(GC gc)
 	{
 		if (m_color != null && !m_color.isDisposed())
@@ -94,6 +131,11 @@ public class LineStyle extends AbstractStyle
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#dispose()
+	 */
 	public void dispose()
 	{
 		if (m_color != null && !m_color.isDisposed())

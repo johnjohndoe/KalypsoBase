@@ -9,7 +9,7 @@ public class PolygonMarker extends AbstractMarker
 {
 	private final Point[] m_points;
 
-	public PolygonMarker(Point[] points)
+	public PolygonMarker( Point[] points )
 	{
 		m_points = points;
 	}
@@ -17,7 +17,8 @@ public class PolygonMarker extends AbstractMarker
 	public void paint(GC gc, Point p, int width, int height)
 	{
 		Point[] resized = FigureUtilities.resizeInOrigin(m_points, width, height);
-		Point[] translated = FigureUtilities.translateTo(resized, p);
+		Point[] inverted = FigureUtilities.invertY(resized);
+		Point[] translated = FigureUtilities.translateTo(inverted, p);
 		int[] intArray = FigureUtilities.pointArrayToIntArray(translated);
 		gc.fillPolygon(intArray);
 		gc.drawPolygon(intArray);

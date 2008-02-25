@@ -16,6 +16,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -181,7 +182,7 @@ public class GridLayer extends AbstractChartLayer
 
   private PolylineFigure getPolylineFigure( )
   {
-    LineStyle style = getStyles().getStyle( "line", LineStyle.class );
+    ILineStyle style = getStyles().getStyle( "line", LineStyle.class );
     PolylineFigure figure = new PolylineFigure();
     figure.setStyle( style );
     return figure;

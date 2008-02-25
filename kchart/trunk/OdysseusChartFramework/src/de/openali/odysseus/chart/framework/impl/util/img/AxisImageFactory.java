@@ -27,7 +27,7 @@ public class AxisImageFactory
     chart.update();
 
     // TODO: Idealerweise sollte hier kein Chart erzeugt werden, sondern nur der AxisCanvas
-    final IMapperRegistry mapperRegistry = chart.getModel().getMapperRegistry();
+    final IMapperRegistry mapperRegistry = chart.getChartModel().getMapperRegistry();
     final IAxis axis = mapperRegistry.getAxis( axisId );
     final AxisCanvas axisCanvas = (AxisCanvas) mapperRegistry.getComponent( axis );
     return createAxisImage( axisCanvas, dev );

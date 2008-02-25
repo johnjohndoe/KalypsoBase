@@ -4,20 +4,22 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
-public class PointStyle extends AbstractStyle
+public class PointStyle extends AbstractStyle implements IPointStyle
 {
 	private RGB m_inlineRGB;
 	private IMarker m_marker;
 	private int m_width;
 	private int m_height;
-	private LineStyle m_outline;
+	private ILineStyle m_stroke;
 	private Color m_inlineColor;
 
-	public PointStyle(LineStyle outline, int width, int height, int alpha, RGB inlineColor, IMarker marker, boolean isVisible)
+	public PointStyle( ILineStyle outline, int width, int height, int alpha, RGB inlineColor, IMarker marker, boolean isVisible )
 	{
-		setOutline(outline);
+		setStroke(outline);
 		setWidth(width);
 		setHeight(height);
 		setInlineColor(inlineColor);
@@ -26,41 +28,81 @@ public class PointStyle extends AbstractStyle
 		setVisible(isVisible);
 	}
 
-	public void setOutline(LineStyle outline)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setOutline(de.openali.odysseus.chart.framework.impl.model.style.ILineStyle)
+	 */
+	public void setStroke(ILineStyle stroke)
 	{
-		m_outline = outline;
+		m_stroke = stroke;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setWidth(int)
+	 */
 	public void setWidth(int width)
 	{
 		m_width = width;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setHeight(int)
+	 */
 	public void setHeight(int height)
 	{
 		m_height = height;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getWidth()
+	 */
 	public int getWidth()
 	{
 		return m_width;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getHeight()
+	 */
 	public int getHeight()
 	{
 		return m_height;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setInlineColor(org.eclipse.swt.graphics.RGB)
+	 */
 	public void setInlineColor(RGB rgb)
 	{
 		m_inlineRGB = rgb;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setMarker(de.openali.odysseus.chart.framework.model.style.IMarker)
+	 */
 	public void setMarker(IMarker marker)
 	{
 		m_marker = marker;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getMarker()
+	 */
 	public IMarker getMarker()
 	{
 		return m_marker;
@@ -68,7 +110,7 @@ public class PointStyle extends AbstractStyle
 
 	public void apply(GC gc)
 	{
-		m_outline.apply(gc);
+		m_stroke.apply(gc);
 
 		gc.setAlpha(getAlpha());
 
@@ -87,7 +129,9 @@ public class PointStyle extends AbstractStyle
 		{
 			m_inlineColor.dispose();
 		}
-		if (m_outline != null)
-			m_outline.dispose();
+		if (m_stroke != null)
+		{
+			m_stroke.dispose();
+		}
 	}
 }

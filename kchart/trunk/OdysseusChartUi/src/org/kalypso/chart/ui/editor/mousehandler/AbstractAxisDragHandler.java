@@ -76,7 +76,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     m_chartComposite = chartComposite;
 
     // zugehörige Achsen rausfinden
-    final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
+    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
     final IAxis< ? >[] axes = reg.getAxes();
     for( final IAxis< ? > axis : axes )
     {

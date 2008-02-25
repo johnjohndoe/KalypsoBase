@@ -12,6 +12,7 @@ import de.openali.odysseus.chart.framework.impl.model.figure.PointFigure;
 import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author alibu
@@ -62,7 +63,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   private PolylineFigure getPolylineFigure( )
   {
-    LineStyle ls = getStyles().getStyle( "line", LineStyle.class );
+    ILineStyle ls = getStyles().getStyle( "line", LineStyle.class );
     PolylineFigure lf = new PolylineFigure();
     lf.setStyle( ls );
     return lf;

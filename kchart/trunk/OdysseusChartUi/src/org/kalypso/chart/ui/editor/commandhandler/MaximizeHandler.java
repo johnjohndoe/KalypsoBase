@@ -20,7 +20,7 @@ public class MaximizeHandler extends AbstractHandler
     if( chartPart == null )
       return null;
 
-    ChartUtilities.maximize( chartPart.getChartComposite().getModel() );
+    ChartUtilities.maximize( chartPart.getChartComposite().getChartModel() );
 
     return null;
   }

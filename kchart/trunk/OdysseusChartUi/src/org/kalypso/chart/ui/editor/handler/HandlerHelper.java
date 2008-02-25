@@ -67,7 +67,7 @@ public class HandlerHelper
       if( activeHandler.getClass().equals( handler.getClass() ) )
       {
         element.setChecked( true );
-        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getModel().getTitle() );
+        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getChartModel().getTitle() );
       }
       else
       {

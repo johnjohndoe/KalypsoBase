@@ -17,9 +17,6 @@ import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.factory.util.DummyLayerProvider;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.impl.model.mapper.CoordinateMapper;
-import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.StyleSet;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -28,7 +25,11 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chartconfig.x010.AreaStyleType;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;
 import de.openali.odysseus.chartconfig.x010.AxisType;
@@ -41,6 +42,7 @@ import de.openali.odysseus.chartconfig.x010.ProviderType;
 import de.openali.odysseus.chartconfig.x010.ReferencingType;
 import de.openali.odysseus.chartconfig.x010.RoleReferencingType;
 import de.openali.odysseus.chartconfig.x010.StylesType;
+import de.openali.odysseus.chartconfig.x010.TextStyleType;
 import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x010.LayerType.Mappers;
 
@@ -316,21 +318,28 @@ public class ChartFactory
     for( RoleReferencingType rrt : asArray )
     {
       AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
-      AreaStyle as = StyleFactory.createAreaStyle( ast );
+      IAreaStyle as = StyleFactory.createAreaStyle( ast );
       styleSet.addStyle( rrt.getRole(), as );
     }
     RoleReferencingType[] psArray = styles.getPointStyleRefArray();
     for( RoleReferencingType rrt : psArray )
     {
       PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
-      PointStyle ps = StyleFactory.createPointStyle( pst );
+      IPointStyle ps = StyleFactory.createPointStyle( pst );
       styleSet.addStyle( rrt.getRole(), ps );
     }
     RoleReferencingType[] lsArray = styles.getLineStyleRefArray();
     for( RoleReferencingType rrt : lsArray )
     {
       LineStyleType lst = (LineStyleType) rr.resolveReference( rrt.getRef() );
-      LineStyle ls = StyleFactory.createLineStyle( lst );
+      ILineStyle ls = StyleFactory.createLineStyle( lst );
+      styleSet.addStyle( rrt.getRole(), ls );
+    }
+    RoleReferencingType[] tsArray = styles.getTextStyleRefArray();
+    for( RoleReferencingType rrt : tsArray )
+    {
+      TextStyleType tst = (TextStyleType) rr.resolveReference( rrt.getRef() );
+      ITextStyle ls = StyleFactory.createTextStyle( tst );
       styleSet.addStyle( rrt.getRole(), ls );
     }
     return styleSet;

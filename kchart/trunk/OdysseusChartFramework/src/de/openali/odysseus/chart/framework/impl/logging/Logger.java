@@ -96,10 +96,6 @@ public class Logger
 			log.log(new Status(statusCode, getPluginID(), IStatus.OK, logMsg,
 			        null));
 		}
-		else
-		{
-			System.out.println("Not logging: " + logMsg);
-		}
 	}
 
 	/**

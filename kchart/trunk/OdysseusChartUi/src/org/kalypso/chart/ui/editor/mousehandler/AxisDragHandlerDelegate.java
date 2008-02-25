@@ -126,7 +126,7 @@ public class AxisDragHandlerDelegate
   private Map<AxisCanvas, IAxis> getAxesMap( )
   {
     Map<AxisCanvas, IAxis> axesMap = new HashMap<AxisCanvas, IAxis>();
-    final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
+    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
     final IAxis< ? >[] axes = reg.getAxes();
     for( final IAxis< ? > axis : axes )
     {

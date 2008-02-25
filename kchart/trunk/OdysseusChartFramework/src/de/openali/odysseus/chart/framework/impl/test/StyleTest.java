@@ -18,18 +18,19 @@ import de.openali.odysseus.chart.framework.impl.model.figure.PointFigure;
 import de.openali.odysseus.chart.framework.impl.model.figure.PolygonFigure;
 import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
 import de.openali.odysseus.chart.framework.impl.model.figure.TextFigure;
-import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
-import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.PolygonMarker;
-import de.openali.odysseus.chart.framework.impl.model.style.TextStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.impl.util.Sleak;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
 public class StyleTest implements PaintListener
 {
@@ -79,7 +80,7 @@ public class StyleTest implements PaintListener
 		// Polygon
 		Point[] points0 = createPolygonPoints(pointSize);
 		PolygonFigure pf = new PolygonFigure();
-		AreaStyle as = FigureUtilities.getDefaultAreaStyle();
+		IAreaStyle as = FigureUtilities.getDefaultAreaStyle();
 		as.setInlineColor(new RGB(255, 0, 0));
 		pf.setStyle(as);
 		pf.setPoints(points0);
@@ -88,7 +89,7 @@ public class StyleTest implements PaintListener
 		// bars
 		Point[][] bars = createBars(20);
 		PolygonFigure bf = new PolygonFigure();
-		AreaStyle asBar = FigureUtilities.getDefaultAreaStyle();
+		IAreaStyle asBar = FigureUtilities.getDefaultAreaStyle();
 		asBar.setInlineColor(new RGB(0, 0, 255));
 		asBar.setAlpha(100);
 		bf.setStyle(asBar);
@@ -102,7 +103,7 @@ public class StyleTest implements PaintListener
 
 		// Polyline
 		PolylineFigure lf = new PolylineFigure();
-		LineStyle ls = new LineStyle(3, new RGB(0, 255, 0), 100, 0, new int[] {}, LINEJOIN.MITER, LINECAP.ROUND, 5, true);
+		ILineStyle ls = new LineStyle(3, new RGB(0, 255, 0), 100, 0, new int[] {}, LINEJOIN.MITER, LINECAP.ROUND, 5, true);
 		lf.setStyle(ls);
 		lf.setPoints(points1);
 
@@ -114,11 +115,11 @@ public class StyleTest implements PaintListener
 		IMarker m3 = new PolygonMarker(markerPoints);
 
 		// Point
-		PointStyle ps = FigureUtilities.getDefaultPointStyle();
+		IPointStyle ps = FigureUtilities.getDefaultPointStyle();
 		PointFigure pf2 = new PointFigure();
 
 		// Text
-		TextStyle ts = FigureUtilities.getDefaultTextStyle();
+		ITextStyle ts = FigureUtilities.getDefaultTextStyle();
 		ts.setFamily("Ani");
 		TextFigure tf = new TextFigure();
 
@@ -134,11 +135,17 @@ public class StyleTest implements PaintListener
 			ps.setAlpha(alpha);
 			int mod = i % 3;
 			if (mod == 0)
+			{
 				ps.setMarker(m1);
+			}
 			else if (mod == 1)
+			{
 				ps.setMarker(m2);
+			}
 			else
+			{
 				ps.setMarker(m3);
+			}
 
 			pf2.setStyle(ps);
 			pf2.setCenterPosition(p);

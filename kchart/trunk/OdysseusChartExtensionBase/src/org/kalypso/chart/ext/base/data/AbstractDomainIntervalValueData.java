@@ -3,6 +3,7 @@ package org.kalypso.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 
 public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
@@ -28,7 +29,7 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
     // nur öffnen, wenn nicht schon offen
     if( !m_isOpen )
     {
-      System.out.println( "opening Data " );
+      Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" );
       m_isOpen = openData();
     }
   }

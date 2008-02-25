@@ -2,12 +2,16 @@ package de.openali.odysseus.chart.framework.impl.util;
 
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.impl.model.figure.IDefaultStyles;
 import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants;
 import de.openali.odysseus.chart.framework.impl.model.style.TextStyle;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 public class FigureUtilities
 {
@@ -49,8 +53,8 @@ public class FigureUtilities
 	 */
 	public static Point centerToLeftTo(Point point, int width, int height)
 	{
-		int x = point.x - (int) ((float) width / 2.0f);
-		int y = point.y - (int) ((float) height / 2.0f);
+		int x = point.x - (int) (width / 2.0f);
+		int y = point.y - (int) (height / 2.0f);
 		return new Point(x, y);
 	}
 
@@ -79,6 +83,29 @@ public class FigureUtilities
 	}
 
 	/**
+	 * inverts the y-Coordinates of the points; the vertical screen coordinates
+	 * are counted from top to bottom; users think in coordinate systems which
+	 * count from bottom to top
+	 * 
+	 * @param points
+	 * @param pos
+	 * @return Array of inverted points
+	 */
+	public static Point[] invertY(Point[] points)
+	{
+		Point max = getMax(points);
+		Point[] invertedPolygon = new Point[points.length];
+
+		for (int i = 0; i < points.length; i++)
+		{
+			Point oldPoint = points[i];
+			Point newPoint = new Point(oldPoint.x, max.y - oldPoint.y);
+			invertedPolygon[i] = newPoint;
+		}
+		return invertedPolygon;
+	}
+
+	/**
 	 * moves a polygon to the origin and resizes it to fit into a rectangle by
 	 * the given width and height
 	 * 
@@ -95,7 +122,7 @@ public class FigureUtilities
 		// in Ursprung verschieben
 		Point[] translated = translateTo(points, new Point(0, 0));
 
-		// Grï¿½ï¿½e ï¿½ndern
+		// Größe ändern
 		Point[] resizedPolygon = new Point[points.length];
 		Point max = getMax(translated);
 
@@ -122,9 +149,13 @@ public class FigureUtilities
 		for (Point p : points)
 		{
 			if (p.x < minX)
+			{
 				minX = p.x;
+			}
 			if (p.y < minY)
+			{
 				minY = p.y;
+			}
 		}
 		return new Point(minX, minY);
 	}
@@ -142,9 +173,13 @@ public class FigureUtilities
 		for (Point p : points)
 		{
 			if (p.x > maxX)
+			{
 				maxX = p.x;
+			}
 			if (p.y > maxY)
+			{
 				maxY = p.y;
+			}
 		}
 		return new Point(maxX, maxY);
 	}
@@ -153,38 +188,45 @@ public class FigureUtilities
 	public static <T_style extends IStyle> T_style getDefaultStyle(Class<T_style> clazz)
 	{
 		if (PointStyle.class.isAssignableFrom(clazz))
+		{
 			return (T_style) getDefaultPointStyle();
+		}
 		else if (LineStyle.class.isAssignableFrom(clazz))
+		{
 			return (T_style) getDefaultLineStyle();
+		}
 		else if (TextStyle.class.isAssignableFrom(clazz))
+		{
 			return (T_style) getDefaultTextStyle();
+		}
 		else if (AreaStyle.class.isAssignableFrom(clazz))
+		{
 			return (T_style) getDefaultAreaStyle();
+		}
 		else
+		{
 			return null;
+		}
 	}
 
-	public static LineStyle getDefaultLineStyle()
+	public static ILineStyle getDefaultLineStyle()
 	{
-		return new LineStyle(StyleConstants.DEFAULT_STROKE_WIDTH, StyleConstants.DEFAULT_RGB_FOREGROUND, StyleConstants.DEFAULT_ALPHA, StyleConstants.DEFAULT_DASHOFFSET,
-				StyleConstants.DEFAULT_DASHARRAY, StyleConstants.DEFAULT_LINEJOIN, StyleConstants.DEFAULT_LINECAP, StyleConstants.DEFAULT_MITERLIMIT, StyleConstants.DEFAULT_VISIBILITY);
+		return new LineStyle(IDefaultStyles.DEFAULT_STROKE_WIDTH, IDefaultStyles.DEFAULT_RGB_FOREGROUND, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_DASHOFFSET, IDefaultStyles.DEFAULT_DASHARRAY, IDefaultStyles.DEFAULT_LINEJOIN, IDefaultStyles.DEFAULT_LINECAP, IDefaultStyles.DEFAULT_MITERLIMIT, IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
-	public static PointStyle getDefaultPointStyle()
+	public static IPointStyle getDefaultPointStyle()
 	{
-		return new PointStyle(getDefaultLineStyle(), StyleConstants.DEFAULT_WIDTH, StyleConstants.DEFAULT_HEIGHT, StyleConstants.DEFAULT_ALPHA, StyleConstants.DEFAULT_RGB_BACKGROUND,
-				StyleConstants.DEFAULT_MARKER, StyleConstants.DEFAULT_VISIBILITY);
+		return new PointStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_WIDTH, IDefaultStyles.DEFAULT_HEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
-	public static AreaStyle getDefaultAreaStyle()
+	public static IAreaStyle getDefaultAreaStyle()
 	{
-		return new AreaStyle(getDefaultLineStyle(), StyleConstants.DEFAULT_RGB_BACKGROUND, StyleConstants.DEFAULT_ALPHA, StyleConstants.DEFAULT_VISIBILITY);
+		return new AreaStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_ALPHA, getDefaultLineStyle(), IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
-	public static TextStyle getDefaultTextStyle()
+	public static ITextStyle getDefaultTextStyle()
 	{
-		return new TextStyle(StyleConstants.DEFAULT_FONT_HEIGHT, StyleConstants.DEFAULT_FONT_FAMILY, StyleConstants.DEFAULT_RGB_TEXT, StyleConstants.DEFAULT_RGB_TEXT_BACKGROUND,
-				StyleConstants.DEFAULT_FONT_STYLE, StyleConstants.DEFAULT_FONT_WEIGHT, StyleConstants.DEFAULT_ALPHA, StyleConstants.DEFAULT_VISIBILITY);
+		return new TextStyle(IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
 }

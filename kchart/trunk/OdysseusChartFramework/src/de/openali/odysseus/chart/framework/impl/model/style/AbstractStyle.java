@@ -7,6 +7,7 @@ public abstract class AbstractStyle implements IStyle
 
 	private int m_alpha;
 	private boolean m_isVisible;
+	private String m_title = "";
 
 	/**
 	 * 
@@ -18,8 +19,11 @@ public abstract class AbstractStyle implements IStyle
 		if (alpha < 0 || alpha > 255)
 		{
 			m_alpha = 255;
-		} else
+		}
+		else
+		{
 			m_alpha = alpha;
+		}
 	}
 
 	public int getAlpha()
@@ -35,5 +39,15 @@ public abstract class AbstractStyle implements IStyle
 	public boolean isVisible()
 	{
 		return m_isVisible;
+	}
+
+	public void setTitle(String title)
+	{
+		m_title = title;
+	}
+
+	public String getTitle()
+	{
+		return m_title;
 	}
 }

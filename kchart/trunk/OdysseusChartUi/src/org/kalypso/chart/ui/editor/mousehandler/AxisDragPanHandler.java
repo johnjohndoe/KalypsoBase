@@ -119,7 +119,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
       else
       {
         // zugehörige Layer rausfinden
-        IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
+        IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
         m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( 0, 0 ) );
 
         curAc.setPanOffsetInterval( new Point( 0, 0 ) );
@@ -197,7 +197,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
             curAc.setPanOffsetInterval( new Point( 0, diff ) );
 
           // zugehörige Layer rausfinden
-          IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
+          IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
 
           if( curAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
           {

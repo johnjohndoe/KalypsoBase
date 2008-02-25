@@ -4,12 +4,12 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.StyleConstants;
 import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 
-public class PointFigure extends AbstractFigure<PointStyle>
+public class PointFigure extends AbstractFigure<IPointStyle>
 {
 
 	private Point m_leftTopPos = new Point(0, 0);
@@ -21,8 +21,9 @@ public class PointFigure extends AbstractFigure<PointStyle>
 	 */
 	public void setCenterPosition(Point pos)
 	{
-		PointStyle style = getStyle();
-		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(), style.getHeight()));
+		IPointStyle style = getStyle();
+		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(),
+		        style.getHeight()));
 	}
 
 	/**
@@ -41,11 +42,14 @@ public class PointFigure extends AbstractFigure<PointStyle>
 		IStyle style = getStyle();
 		if (style != null && m_leftTopPos != null)
 		{
-			PointStyle ps = (PointStyle) style;
+			IPointStyle ps = (IPointStyle) style;
 			IMarker marker = ps.getMarker();
 			if (marker == null)
-				marker = StyleConstants.DEFAULT_MARKER;
-			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle().getHeight());
+			{
+				marker = IDefaultStyles.DEFAULT_MARKER;
+			}
+			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle()
+			        .getHeight());
 		}
 
 	}
@@ -55,13 +59,17 @@ public class PointFigure extends AbstractFigure<PointStyle>
 	 * point style
 	 */
 	@Override
-	public PointStyle getStyle()
+	public IPointStyle getStyle()
 	{
-		PointStyle style = super.getStyle();
+		IPointStyle style = super.getStyle();
 		if (style != null)
+		{
 			return style;
+		}
 		else
+		{
 			return FigureUtilities.getDefaultStyle(PointStyle.class);
+		}
 	}
 
 }

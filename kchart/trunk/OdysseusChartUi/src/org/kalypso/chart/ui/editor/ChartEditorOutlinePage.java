@@ -131,7 +131,7 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
       }
     };
 
-    m_editor.getChartComposite().getModel().getLayerManager().addListener( cmel );
+    m_editor.getChartComposite().getChartModel().getLayerManager().addListener( cmel );
 
     // Drag'n drop
 
@@ -170,7 +170,7 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
       public boolean performDrop( Object data )
       {
         String id = (String) data;
-        ILayerManager lm = m_editor.getChartComposite().getModel().getLayerManager();
+        ILayerManager lm = m_editor.getChartComposite().getChartModel().getLayerManager();
         IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
         // either the dragged layer is dropped on another layer, then it will be
         // moved to its position
@@ -270,7 +270,7 @@ public class ChartEditorOutlinePage implements IContentOutlinePage
 
   /* default-visible */void updateControl( )
   {
-    ILayerManager layerManager = m_editor.getChartComposite().getModel().getLayerManager();
+    ILayerManager layerManager = m_editor.getChartComposite().getChartModel().getLayerManager();
     IChartLayer[] layers = layerManager.getLayers();
 
     // Reihenfolge umkehren, damit zuerst gezeichnete Layer auch in der Liste weiter unten liegen

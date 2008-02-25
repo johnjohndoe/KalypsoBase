@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.impl.model.figure.PolygonFigure;
 import de.openali.odysseus.chart.framework.impl.model.style.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
  * @author alibu
@@ -51,7 +52,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
 
   protected PolygonFigure getPolygonFigure( )
   {
-    AreaStyle as = getStyles().getStyle( "area", AreaStyle.class );
+    IAreaStyle as = getStyles().getStyle( "area", AreaStyle.class );
     PolygonFigure pf = new PolygonFigure();
     pf.setStyle( as );
     return pf;

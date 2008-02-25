@@ -3,6 +3,7 @@ package org.kalypso.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 
 public abstract class AbstractDomainValueData<T_domain, T_target> implements ITabularDataContainer<T_domain, T_target>
@@ -42,7 +43,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
       }
       else
       {
-        System.out.println( "opening Data" );
+        Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" );
         m_isOpen = openData();
       }
     }

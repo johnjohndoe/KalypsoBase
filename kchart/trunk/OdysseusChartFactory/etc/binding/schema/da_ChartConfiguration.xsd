@@ -80,6 +80,16 @@
 			<selector xpath="ods:Layer/ods:Styles/ods:AreaStyleRef"/>
 			<field xpath="@ref"/>
 		</keyref>
+		
+		<!-- TextStyleKeys -->
+		<key name="textStyleKey" id="textStyleKey.key">
+			<selector xpath="ods:TextStyle"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:textStyleKey" name="textStyleKey.ref">
+			<selector xpath="ods:Layer/ods:Styles/ods:TextStyleRef"/>
+			<field xpath="@ref"/>
+		</keyref>
 
 		<!-- identische Mapper nur einmal pro layer -->
 		<!-- 
@@ -179,7 +189,7 @@
 		<complexContent>
 			<extension base="ods:ReferencableType">
 				<sequence>
-					<element name="Provider" type="ods:ProviderType" minOccurs="0"/>
+					<element name="Provider" type="ods:ProviderType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -203,7 +213,7 @@
 
 	<complexType name="ChartType">
 		<complexContent>
-			<extension base="ods:AbstractConfigurationType">
+			<extension base="ods:ReferencableType">
 				<sequence>
 					<element name="Title" type="string"/>
 					<element name="Description" type="string"/>
@@ -217,7 +227,7 @@
 					</element>
 				</sequence>
 			</extension>
-		</complexContent>
+			</complexContent>
 	</complexType>
 
 
@@ -447,6 +457,7 @@
 			<element name="LineStyleRef" type="ods:RoleReferencingType"/>
 			<element name="PointStyleRef" type="ods:RoleReferencingType"/>
 			<element name="AreaStyleRef" type="ods:RoleReferencingType"/>
+			<element name="TextStyleRef" type="ods:RoleReferencingType"/>
 		</choice>
 	</complexType>
 
