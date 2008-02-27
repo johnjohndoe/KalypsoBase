@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
@@ -45,6 +45,11 @@ package org.kalypso.simulation.core;
  */
 public class SimulationException extends Exception
 {
+  public SimulationException( final String s )
+  {
+    super( s );
+  }
+
   public SimulationException( final String s, final Throwable ex )
   {
     super( s, ex );
