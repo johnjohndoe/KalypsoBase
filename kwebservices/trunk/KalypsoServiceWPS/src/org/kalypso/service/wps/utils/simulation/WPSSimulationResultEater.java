@@ -85,7 +85,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * The process descriptions are containing the output data.
    */
-  private final ProcessDescriptionType m_processDescription;
+  private ProcessDescriptionType m_processDescription;
 
   /**
    * The execute request.
@@ -95,7 +95,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * The temporary directory.
    */
-  private final File m_tmpDir;
+  private File m_tmpDir;
 
   /**
    * The directory, where the results should be copied. The client is told that URL + [path to files].
@@ -129,7 +129,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * @param resultDir
    *            The FileObject contains information, where the results should be put, so that the client can read them.
    */
-  public WPSSimulationResultEater( final ProcessDescriptionType processDescription, final Execute execute, final File tmpDir, final FileObject resultDir ) throws SimulationException
+  public WPSSimulationResultEater( ProcessDescriptionType processDescription, Execute execute, File tmpDir, FileObject resultDir ) throws SimulationException
   {
     m_processDescription = processDescription;
     m_execute = execute;
@@ -146,7 +146,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
-  public void addResult( final String id, final Object result ) throws SimulationException
+  public void addResult( String id, Object result ) throws SimulationException
   {
     if( !m_outputList.containsKey( id ) )
       throw new SimulationException( "Server doesn't expect the output with the ID: " + id, null );
@@ -154,7 +154,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     if( !m_outputListClient.containsKey( id ) )
       throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
 
-    final OutputDefinitionType outputDefinition = m_outputListClient.get( id );
+    OutputDefinitionType outputDefinition = m_outputListClient.get( id );
     if( outputDefinition != null )
       m_results.put( id, result );
   }
@@ -178,16 +178,16 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       Debug.println( "Copying the results ..." );
 
       /* Stores the output descriptions. */
-      final List<IOValueType> ioValues = new LinkedList<IOValueType>();
+      List<IOValueType> ioValues = new LinkedList<IOValueType>();
 
       /* Get the expected output from the client. */
-      final Iterator<String> clientKeys = m_outputListClient.keySet().iterator();
+      Iterator<String> clientKeys = m_outputListClient.keySet().iterator();
 
       /* Check each expected output with the one, the server can provide. */
       while( clientKeys.hasNext() )
       {
         /* The identifier for output to check. */
-        final String clientKey = clientKeys.next();
+        String clientKey = clientKeys.next();
 
         /* First, is the output already available? */
         if( !m_results.containsKey( clientKey ) )
@@ -197,7 +197,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         }
 
         /* Getting the result. */
-        final Object result = m_results.get( clientKey );
+        Object result = m_results.get( clientKey );
 
         /* Second, is the result added with a null value? */
         if( result == null )
@@ -207,11 +207,11 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         }
 
         /* What type is that output? Get the description from the server, to check it. */
-        final OutputDescriptionType outputDescription = m_outputList.get( clientKey );
+        OutputDescriptionType outputDescription = m_outputList.get( clientKey );
 
-        final SupportedComplexDataType complexOutput = outputDescription.getComplexOutput();
-        final LiteralOutputType literalOutput = outputDescription.getLiteralOutput();
-        final SupportedCRSsType boundingBoxOutput = outputDescription.getBoundingBoxOutput();
+        SupportedComplexDataType complexOutput = outputDescription.getComplexOutput();
+        LiteralOutputType literalOutput = outputDescription.getLiteralOutput();
+        SupportedCRSsType boundingBoxOutput = outputDescription.getBoundingBoxOutput();
 
         /* Build the output value. */
         Object valueFormChoice = null;
@@ -226,7 +226,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         }
         else if( literalOutput != null )
         {
-          final String value = literalOutput.getDataType().getValue();
+          String value = literalOutput.getDataType().getValue();
           if( "string".equals( value ) )
           {
             if( result instanceof String )
@@ -273,14 +273,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         if( valueFormChoice != null )
         {
           /* Build io value. */
-          final IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
+          IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
           ioValues.add( ioValue );
         }
       }
 
       return ioValues;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new SimulationException( e.getLocalizedMessage(), e );
     }
@@ -293,24 +293,21 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *            The file to reference in the ComplexValueReference.
    * @return A ComplexValueReference with the given file.
    */
-  private ComplexValueReference addComplexValueReference( final File sourceFile ) throws Exception
+  private ComplexValueReference addComplexValueReference( File sourceFile ) throws Exception
   {
     /* Get a file system manager. */
-    final FileSystemManager manager = VFSUtilities.getManager();
+    FileSystemManager manager = VFSUtilities.getManager();
 
     /* Getting the relative path to the source file. */
-    final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
-
+    String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
     if( relativePathToSource == null )
-    {
       throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
-    }
 
     /* Converting the source file to a file object from VFS. */
-    final FileObject source = manager.toFileObject( sourceFile );
+    FileObject source = manager.toFileObject( sourceFile );
 
     /* Resolving the result file object. */
-    final FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
+    FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
 
     if( FileType.FOLDER.equals( source.getType() ) )
     {
@@ -341,7 +338,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *            One of the types String, Integer, Double and Boolean.
    * @return A LiteralValueType with the given value.
    */
-  private LiteralValueType addLiteralValueType( final Object result )
+  private LiteralValueType addLiteralValueType( Object result )
   {
     String value = "";
     String dataType = "";
@@ -382,14 +379,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *            The process description, containing the input data.
    * @return The indexed map.
    */
-  private Map<String, OutputDescriptionType> index( final ProcessDescriptionType processDescription )
+  private Map<String, OutputDescriptionType> index( ProcessDescriptionType processDescription )
   {
-    final Map<String, OutputDescriptionType> outputList = new LinkedHashMap<String, OutputDescriptionType>();
+    Map<String, OutputDescriptionType> outputList = new LinkedHashMap<String, OutputDescriptionType>();
 
-    final ProcessOutputs processOutputs = processDescription.getProcessOutputs();
-    final List<OutputDescriptionType> outputs = processOutputs.getOutput();
+    ProcessOutputs processOutputs = processDescription.getProcessOutputs();
+    List<OutputDescriptionType> outputs = processOutputs.getOutput();
 
-    for( final OutputDescriptionType output : outputs )
+    for( OutputDescriptionType output : outputs )
       outputList.put( output.getIdentifier().getValue(), output );
 
     return outputList;
@@ -402,14 +399,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *            The execute request contains the ouput expected from the client.
    * @return The indexed map.
    */
-  private Map<String, OutputDefinitionType> indexClient( final Execute execute )
+  private Map<String, OutputDefinitionType> indexClient( Execute execute )
   {
-    final Map<String, OutputDefinitionType> outputListClient = new LinkedHashMap<String, OutputDefinitionType>();
+    Map<String, OutputDefinitionType> outputListClient = new LinkedHashMap<String, OutputDefinitionType>();
 
-    final OutputDefinitionsType outputDefinitions = execute.getOutputDefinitions();
-    final List<OutputDefinitionType> outputs = outputDefinitions.getOutput();
+    OutputDefinitionsType outputDefinitions = execute.getOutputDefinitions();
+    List<OutputDefinitionType> outputs = outputDefinitions.getOutput();
 
-    for( final OutputDefinitionType output : outputs )
+    for( OutputDefinitionType output : outputs )
       outputListClient.put( output.getIdentifier().getValue(), output );
 
     return outputListClient;
@@ -422,10 +419,10 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   private void checkExpectedOutput( ) throws SimulationException
   {
     /* Check the, if the output, the client wants, is available. */
-    final Iterator<String> clientKeys = m_outputListClient.keySet().iterator();
+    Iterator<String> clientKeys = m_outputListClient.keySet().iterator();
     while( clientKeys.hasNext() )
     {
-      final String clientKey = clientKeys.next();
+      String clientKey = clientKeys.next();
       if( !m_outputList.containsKey( clientKey ) )
         throw new SimulationException( "The output for the identifier '" + clientKey + "' can not be provided from the server ...", null );
     }
