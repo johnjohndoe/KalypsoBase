@@ -85,8 +85,8 @@ public class UnzippedJarSimulationDataProvider implements ISimulationDataProvide
 
   /**
    * @param modelspec
-   *          The modelspec of the simulation. Used to determine the type of each input. If null, the default type is
-   *          URL for backwards compability.
+   *            The modelspec of the simulation. Used to determine the type of each input. If null, the default type is
+   *            URL for backwards compability.
    */
   public UnzippedJarSimulationDataProvider( final DataHandler zipHandler, final ModelspecData modelspec, final SimulationDataPath[] input )
   {
@@ -195,7 +195,7 @@ public class UnzippedJarSimulationDataProvider implements ISimulationDataProvide
       {
         // reset tmpdir on any error
         m_tmpdir = null;
-        
+
         throw e;
       }
       finally
