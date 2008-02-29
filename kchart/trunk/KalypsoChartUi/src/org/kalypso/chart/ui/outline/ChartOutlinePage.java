@@ -268,9 +268,6 @@ public class ChartOutlinePage implements IContentOutlinePage
         revertedLayers[i] = layers[layers.length - 1 - i];
       }
 
-      System.out.println( m_viewer );
-      System.out.println( m_viewer );
-
       m_viewer.setInput( revertedLayers );
       for( int i = 0; i < layers.length; i++ )
         m_viewer.setChecked( layers[i], layers[i].isVisible() );
