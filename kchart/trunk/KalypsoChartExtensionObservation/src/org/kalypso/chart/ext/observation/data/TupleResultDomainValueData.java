@@ -157,7 +157,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
         domainValues.add( domainValue );
         targetValues.add( targetValue );
-        Logger.logInfo( Logger.TOPIC_LOG_DATA, domainValue.toString() );
       }
       setDomainValues( domainValues );
       setTargetValues( targetValues );

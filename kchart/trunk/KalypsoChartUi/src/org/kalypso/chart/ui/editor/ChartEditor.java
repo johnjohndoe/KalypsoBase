@@ -51,6 +51,7 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
+import org.kalypso.chart.ui.outline.ChartOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.AxisType;
@@ -73,7 +74,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
-  private ChartEditorOutlinePage m_outlinePage = null;
+  private ChartOutlinePage m_outlinePage = null;
 
   private boolean m_dirty = false;
 
@@ -446,7 +447,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     if( IContentOutlinePage.class.equals( adapter ) )
     {
       if( m_outlinePage == null )
-        m_outlinePage = new ChartEditorOutlinePage( this );
+        m_outlinePage = new ChartOutlinePage( this );
 
       return m_outlinePage;
     }

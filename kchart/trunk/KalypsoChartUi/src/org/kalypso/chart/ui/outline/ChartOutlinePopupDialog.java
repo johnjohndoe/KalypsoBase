@@ -38,53 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor;
+package org.kalypso.chart.ui.outline;
 
-import java.util.Map;
-
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.menus.UIElement;
-import org.kalypso.chart.framework.view.IChartDragHandler;
+import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 
 /**
  * @author burtscher1
  * 
  */
-public class ElementUpdateHelper
+public class ChartOutlinePopupDialog extends PopupDialog
 {
 
-  /**
-   * function is called by all radio commands from updateElement (IElementUpdater) in order to synchronize toggle state
-   * with chart handler state
-   */
-  @SuppressWarnings("unused")
-  public static void updateElement( final UIElement element, final Map< ? , ? > parameters, final Class< ? > handlerClass )
+  private final IChartPart m_chartPart;
+
+  public ChartOutlinePopupDialog( Shell parentShell, IChartPart chartPart )
   {
-    // chart finden,
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if( window == null )
-      return;
+    super( parentShell, SWT.NONE, true, false, false, false, "", "" );
+    m_chartPart = chartPart;
+  }
 
-    // FIXME: this is not always the right chart! Must be found via the current context instead
-
-    final IWorkbenchPart activePart = window.getPartService().getActivePart();
-    final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
-    if( chartPart != null )
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createDialogArea( Composite parent )
+  {
+    if( m_chartPart != null && m_chartPart.getChartComposite() != null )
     {
-      final IChartDragHandler activeHandler = chartPart.getPlotDragHandler().getActiveHandler();
-      if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
-      {
-        element.setChecked( true );
-      }
-      else
-      {
-        element.setChecked( false );
-      }
-    }
+      Composite da = (Composite) super.createDialogArea( parent );
+      da.setLayout( new FillLayout() );
+      // ChartOutlinePage cop = new ChartOutlinePage( m_chartPart );
+      ChartOutlinePage cop = (ChartOutlinePage) m_chartPart.getAdapter( IContentOutlinePage.class );
 
+      cop.createControl( da );
+      setTitleText( m_chartPart.getChartComposite().getModel().getTitle() );
+      return da;
+    }
+    return new Composite( parent, SWT.NONE );
   }
 
 }

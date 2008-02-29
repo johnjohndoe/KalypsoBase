@@ -55,4 +55,6 @@ public interface IChartPart
   public AxisDragHandlerDelegate getAxisDragHandler( );
 
   public ChartComposite getChartComposite( );
+
+  public Object getAdapter( final Class adapter );
 }

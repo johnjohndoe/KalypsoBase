@@ -20,6 +20,13 @@
             id="org.kalypso.chart.ui.view.ChartView"
             name="Chart View">
       </view>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.chart.ui.outline.ChartOutlineView"
+            id="org.kalypso.chart.ui.view.ChartOutline"
+            name="Chart Outline">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -57,6 +64,11 @@
             id="org.kalypso.chart.ui.commands.export"
             name="Export">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.openOutline"
+            name="Open Outline">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -86,6 +98,10 @@
             commandId="org.kalypso.chart.ui.commands.export"
             icon="icons/elcl16/chart_export_img.gif">
       </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.openOutline"
+            icon="icons/elcl16/show_outline.gif">
+      </image>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -112,6 +128,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
             commandId="org.kalypso.chart.ui.commands.export">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
+            commandId="org.kalypso.chart.ui.commands.openOutline">
       </handler>
    </extension>
    <extension
@@ -223,6 +243,50 @@
          <command
                commandId="org.kalypso.chart.ui.commands.export"
                label="Export"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.openOutline"
+               label="Open Outline"
+               style="push">
+         </command>
+      
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.kalypso.chart.ui.view.ChartTestView">
+         
+       
+         
+               <command
+                     commandId="org.kalypso.chart.ui.commands.pan"
+                     id="panId"
+                     label="Pan"
+                     style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomIn"
+               id="zoomId"
+               label="Zoom In"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoomOut"
+               label="Zoom out"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="Maximize chart"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.export"
+               label="Export"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.openOutline"
+               label="Open Outline"
                style="push">
          </command>
       

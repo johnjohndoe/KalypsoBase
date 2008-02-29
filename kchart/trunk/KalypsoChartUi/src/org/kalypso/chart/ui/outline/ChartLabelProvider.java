@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor;
+package org.kalypso.chart.ui.outline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +49,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.factory.util.DummyLayer;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.util.ChartPartUtil;
 
 /**
  * @author Gernot Belger
@@ -57,11 +59,11 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
 {
   private final Map<IChartLayer, Image> m_images = new HashMap<IChartLayer, Image>();
 
-  private final ChartEditor m_editor;
+  private final IChartPart m_chartPart;
 
-  public ChartLabelProvider( final ChartEditor editor )
+  public ChartLabelProvider( final IChartPart chartPart )
   {
-    m_editor = editor;
+    m_chartPart = chartPart;
   }
 
   /**
@@ -103,8 +105,8 @@ public class ChartLabelProvider extends LabelProvider implements ITableLabelProv
       if( m_images.containsKey( chartLayer ) )
         return m_images.get( chartLayer );
 
-      final Image img = new Image( m_editor.getChartComposite().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
-      m_editor.drawLegendIcon( chartLayer.getId(), img );
+      final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), new Rectangle( 0, 0, 16, 16 ) );
+      ChartPartUtil.drawLegendIcon( m_chartPart, chartLayer.getId(), img );
       m_images.put( chartLayer, img );
       return img;
     }

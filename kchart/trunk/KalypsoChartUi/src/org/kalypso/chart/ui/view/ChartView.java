@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.framework.model.IChartModel;
@@ -63,6 +64,7 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
+import org.kalypso.chart.ui.outline.ChartOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.ksp.chart.factory.ChartType;
@@ -91,6 +93,8 @@ public class ChartView extends ViewPart implements IChartPart
   private TooltipHandler m_tooltipHandler;
 
   private AxisDragHandlerDelegate m_axisDragHandler;
+
+  private ChartOutlinePage m_outlinePage = null;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -125,7 +129,6 @@ public class ChartView extends ViewPart implements IChartPart
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editor input", status );
     }
-
     updateControl();
   }
 
@@ -186,6 +189,9 @@ public class ChartView extends ViewPart implements IChartPart
       }
     }
 
+    if( m_outlinePage != null )
+      m_outlinePage.updateControl();
+
     m_composite.layout();
   }
 
@@ -196,7 +202,6 @@ public class ChartView extends ViewPart implements IChartPart
   public void setFocus( )
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -220,6 +225,12 @@ public class ChartView extends ViewPart implements IChartPart
   {
     super.dispose();
 
+    if( m_outlinePage != null )
+    {
+      m_outlinePage.dispose();
+      m_outlinePage = null;
+    }
+
     if( m_axisDragHandler != null )
       m_axisDragHandler.dispose();
 
@@ -234,6 +245,19 @@ public class ChartView extends ViewPart implements IChartPart
   @Override
   public Object getAdapter( final Class adapter )
   {
+
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
+      {
+        if( m_chartComposite != null )
+          m_outlinePage = new ChartOutlinePage( this );
+        else
+          return null;
+      }
+      return m_outlinePage;
+    }
+
     if( ChartComposite.class.equals( adapter ) )
       return m_chartComposite;
 
@@ -261,4 +285,5 @@ public class ChartView extends ViewPart implements IChartPart
   {
     return m_axisDragHandler;
   }
+
 }
