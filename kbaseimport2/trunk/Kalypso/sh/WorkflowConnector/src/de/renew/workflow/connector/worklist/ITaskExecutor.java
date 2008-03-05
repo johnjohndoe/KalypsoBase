@@ -49,7 +49,6 @@ import de.renew.workflow.base.Task;
  */
 public interface ITaskExecutor
 {
-
   /**
    * Called when a task needs to be executed
    */
@@ -65,4 +64,19 @@ public interface ITaskExecutor
    */
   public boolean stopActiveTask( );
 
+  /**
+   * This function adds a task change listener.
+   * 
+   * @param listener
+   *            The listener, which should be added.
+   */
+  public void addTaskChangeListener( ITaskExecutionListener listener );
+
+  /**
+   * This function removes a task change listener. If it is not registerd, nothing will happen.
+   * 
+   * @param listener
+   *            The listener, which should be removed.
+   */
+  public void removeTaskChangeListener( ITaskExecutionListener listener );
 }
