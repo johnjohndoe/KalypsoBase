@@ -1,5 +1,8 @@
 package de.openali.odysseus.chart.framework.impl.model.style;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 
 public abstract class AbstractStyle implements IStyle
@@ -8,6 +11,7 @@ public abstract class AbstractStyle implements IStyle
 	private int m_alpha;
 	private boolean m_isVisible;
 	private String m_title = "";
+	private Map<String, Object> m_data = new HashMap<String, Object>();
 
 	/**
 	 * 
@@ -49,5 +53,21 @@ public abstract class AbstractStyle implements IStyle
 	public String getTitle()
 	{
 		return m_title;
+	}
+
+	/**
+	 * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+	 */
+	public void setData(String id, Object data)
+	{
+		m_data.put(id, data);
+	}
+
+	/**
+	 * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
+	 */
+	public Object getData(String id)
+	{
+		return m_data.get(id);
 	}
 }

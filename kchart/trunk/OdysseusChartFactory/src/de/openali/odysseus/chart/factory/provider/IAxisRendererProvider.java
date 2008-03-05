@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.factory.provider;
 
-import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
-
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;
 
@@ -16,10 +15,9 @@ public interface IAxisRendererProvider
   /**
    * @return axis created by the AxisProvider
    */
-  public IAxisRenderer getAxisRenderer( ) throws AxisRendererProviderException;
+  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
 
   public void init( final AxisRendererType at );
-
 
   /**
    * returns XML configuration element for the given chart element

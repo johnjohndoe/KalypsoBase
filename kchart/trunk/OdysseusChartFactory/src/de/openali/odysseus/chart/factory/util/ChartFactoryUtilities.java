@@ -1,10 +1,10 @@
 package de.openali.odysseus.chart.factory.util;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.XmlbeansParameterContainer;
 import de.openali.odysseus.chartconfig.x010.ParametersType;
 import de.openali.odysseus.chartconfig.x010.ProviderType;

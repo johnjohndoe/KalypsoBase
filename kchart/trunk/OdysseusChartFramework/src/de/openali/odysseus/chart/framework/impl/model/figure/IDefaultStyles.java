@@ -2,7 +2,9 @@ package de.openali.odysseus.chart.framework.impl.model.figure;
 
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.impl.model.style.ColorFill;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
+import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
@@ -22,6 +24,8 @@ public interface IDefaultStyles
 	public int DEFAULT_STROKE_WIDTH = 2;
 
 	public IMarker DEFAULT_MARKER = new OvalMarker();
+
+	public IFill DEFAULT_FILL = new ColorFill(DEFAULT_RGB_BACKGROUND);
 
 	public int DEFAULT_ALPHA = 255;
 

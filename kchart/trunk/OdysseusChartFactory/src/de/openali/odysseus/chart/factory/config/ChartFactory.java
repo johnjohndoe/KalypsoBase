@@ -2,19 +2,14 @@ package de.openali.odysseus.chart.factory.config;
 
 import java.net.URL;
 
-import org.kalypso.chart.factory.configuration.exception.AxisProviderException;
-import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
-import org.kalypso.chart.factory.configuration.exception.ConfigChartNotFoundException;
-import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.configuration.exception.MapperProviderException;
-import org.kalypso.chart.factory.util.IReferenceResolver;
-
+import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.factory.util.DummyLayerProvider;
+import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.impl.model.mapper.CoordinateMapper;
 import de.openali.odysseus.chart.framework.impl.model.style.StyleSet;
@@ -63,6 +58,8 @@ public class ChartFactory
   public static String AXISRENDERER_PROVIDER_KEY = "org.kalypso.chart.factory.axisrendererprovider";
 
   public static String MAPPER_PROVIDER_KEY = "org.kalypso.chart.factory.mapperprovider";
+
+  public static String STYLE_KEY = "org.kalypso.chart.factory.style";
 
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
@@ -131,7 +128,7 @@ public class ChartFactory
           mapper.setData( ChartFactory.AXIS_PROVIDER_KEY, mp );
           ar.addMapper( mapper );
         }
-        catch( final MapperProviderException e )
+        catch( final ConfigurationException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -174,11 +171,12 @@ public class ChartFactory
             ap.init( axisType );
             final IAxis axis = ap.getAxis();
             axis.setRegistry( ar );
-            // Provider in Element setzen - fï¿½rs speichern benï¿½tigt
+            // TODO: preferredAdjustment setzen
+            // Provider in Element setzen - fürs speichern benötigt
             axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
             ar.addMapper( axis );
 
-            // Renderer nur erzeugen, wenn es noch keinen fï¿½r die
+            // Renderer nur erzeugen, wenn es noch keinen für die
             // Achse gibt
             if( ar.getRenderer( axis ) == null )
             {
@@ -203,8 +201,9 @@ public class ChartFactory
                     axisRenderer = arp.getAxisRenderer();
                     axisRenderer.setStyles( creatStyleSet( rendererType.getStyles(), rr ) );
                     ar.setRenderer( axis.getIdentifier(), axisRenderer );
+                    axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                   }
-                  catch( AxisRendererProviderException e )
+                  catch( ConfigurationException e )
                   {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -218,10 +217,8 @@ public class ChartFactory
             Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
           }
         }
-        catch( final AxisProviderException e )
+        catch( final ConfigurationException e )
         {
-          // TODO Auto-generated catch block
-          // TODO throw Exception
           e.printStackTrace();
         }
       }
@@ -304,7 +301,7 @@ public class ChartFactory
         Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Adding Layer: " + icl.getTitle() );
       }
     }
-    catch( final LayerProviderException e )
+    catch( final ConfigurationException e )
     {
       e.printStackTrace();
     }
@@ -321,6 +318,7 @@ public class ChartFactory
       {
         AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
         IAreaStyle as = StyleFactory.createAreaStyle( ast );
+        as.setData( STYLE_KEY, ast );
         styleSet.addStyle( rrt.getRole(), as );
       }
       RoleReferencingType[] psArray = styles.getPointStyleRefArray();
@@ -328,6 +326,7 @@ public class ChartFactory
       {
         PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
         IPointStyle ps = StyleFactory.createPointStyle( pst );
+        ps.setData( STYLE_KEY, pst );
         styleSet.addStyle( rrt.getRole(), ps );
       }
       RoleReferencingType[] lsArray = styles.getLineStyleRefArray();
@@ -335,14 +334,16 @@ public class ChartFactory
       {
         LineStyleType lst = (LineStyleType) rr.resolveReference( rrt.getRef() );
         ILineStyle ls = StyleFactory.createLineStyle( lst );
+        ls.setData( STYLE_KEY, lst );
         styleSet.addStyle( rrt.getRole(), ls );
       }
       RoleReferencingType[] tsArray = styles.getTextStyleRefArray();
       for( RoleReferencingType rrt : tsArray )
       {
         TextStyleType tst = (TextStyleType) rr.resolveReference( rrt.getRef() );
-        ITextStyle ls = StyleFactory.createTextStyle( tst );
-        styleSet.addStyle( rrt.getRole(), ls );
+        ITextStyle ts = StyleFactory.createTextStyle( tst );
+        ts.setData( STYLE_KEY, tst );
+        styleSet.addStyle( rrt.getRole(), ts );
       }
     }
     return styleSet;

@@ -2,8 +2,7 @@ package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
 
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -22,7 +21,7 @@ public interface ILayerProvider
    * @param context
    *            context path - needed to resolve relative paths from xml configuration
    */
-  public IChartLayer getLayer( final URL context ) throws LayerProviderException;
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException;
 
   // TODO: move chart parameter to getLayers
   public void init( final IChartModel model, final LayerType layerType, final URL context );
@@ -37,5 +36,5 @@ public interface ILayerProvider
    */
   public IChartModel getChartModel( );
 
-  public IDataContainer getDataContainer( ) throws LayerProviderException;
+  public IDataContainer getDataContainer( ) throws ConfigurationException;
 }

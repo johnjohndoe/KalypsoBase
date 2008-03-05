@@ -47,22 +47,22 @@ public class DefaultLineLayer extends AbstractLineLayer
         boolean setPoint = false;
         final Object domVal = domainData[i];
 
-        if( dopDomain.logicalToNumerical( domVal ).doubleValue() > min.doubleValue() && dopDomain.logicalToNumerical( domVal ).doubleValue() < max.doubleValue() )
+        if( dopDomain.logicalToNumeric( domVal ).doubleValue() > min.doubleValue() && dopDomain.logicalToNumeric( domVal ).doubleValue() < max.doubleValue() )
         {
           setPoint = true;
         }
-        else if( dopDomain.logicalToNumerical( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
+        else if( dopDomain.logicalToNumeric( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
         {
           Object next = domainData[i + 1];
-          if( dopDomain.logicalToNumerical( next ).doubleValue() > min.doubleValue() )
+          if( dopDomain.logicalToNumeric( next ).doubleValue() > min.doubleValue() )
           {
             setPoint = true;
           }
         }
-        else if( dopDomain.logicalToNumerical( domVal ).doubleValue() > max.doubleValue() && i > 0 )
+        else if( dopDomain.logicalToNumeric( domVal ).doubleValue() > max.doubleValue() && i > 0 )
         {
           Object prev = domainData[i - 1];
-          if( dopDomain.logicalToNumerical( prev ).doubleValue() < max.doubleValue() )
+          if( dopDomain.logicalToNumeric( prev ).doubleValue() < max.doubleValue() )
           {
             setPoint = true;
           }
@@ -72,8 +72,8 @@ public class DefaultLineLayer extends AbstractLineLayer
         if( setPoint )
         {
           final Object targetVal = targetData[i];
-          final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumerical( domVal ) );
-          final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumerical( targetVal ) );
+          final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
+          final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
           // Koordinaten switchen
           Point unswitched = new Point( domScreen, valScreen );
           path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );

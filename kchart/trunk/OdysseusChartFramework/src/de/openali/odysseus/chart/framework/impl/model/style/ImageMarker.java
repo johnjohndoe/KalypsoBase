@@ -14,10 +14,9 @@ public class ImageMarker extends AbstractMarker
 	private final File m_file;
 	private final ImageData m_id;
 
-	public ImageMarker(File imgFile)
+	public ImageMarker( File imgFile )
 	{
 		m_file = imgFile;
-
 		ImageLoader il = new ImageLoader();
 		ImageData[] ids = il.load(m_file.getAbsolutePath());
 		m_id = ids[0];

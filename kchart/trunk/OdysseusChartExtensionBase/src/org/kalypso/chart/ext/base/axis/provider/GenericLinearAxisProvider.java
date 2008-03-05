@@ -44,21 +44,19 @@ import java.util.Calendar;
 import java.util.Comparator;
 
 import org.kalypso.chart.ext.base.axis.GenericLinearAxis;
-import org.kalypso.chart.factory.configuration.exception.AxisProviderException;
-import org.kalypso.chart.factory.configuration.parameters.impl.AxisDirectionParser;
-import org.kalypso.chart.factory.configuration.parameters.impl.AxisPositionParser;
-import org.kalypso.chart.factory.configuration.parameters.impl.DoubleParser;
 import org.kalypso.contribs.java.util.DoubleComparator;
 
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.factory.config.parameters.impl.AxisDirectionParser;
+import de.openali.odysseus.chart.factory.config.parameters.impl.AxisPositionParser;
+import de.openali.odysseus.chart.factory.config.parameters.impl.DoubleParser;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import de.openali.odysseus.chartconfig.x010.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x010.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x010.AxisStringRangeType;
@@ -74,7 +72,7 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */
-  public IAxis getAxis( ) throws AxisProviderException
+  public IAxis getAxis( ) throws ConfigurationException
   {
     final AxisPositionParser app = new AxisPositionParser();
     final AxisType at = getAxisType();
@@ -87,24 +85,24 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
 
     String[] valueArray = null;
 
-    DATATYPE type = DATATYPE.NUMBER;
+    Class< ? > dataClazz = Number.class;
     if( at.isSetDateRange() )
     {
-      type = DATATYPE.DATE;
+      dataClazz = Calendar.class;
     }
     else if( at.isSetDurationRange() )
     {
-      type = DATATYPE.DATE;
+      dataClazz = Calendar.class;
 
     }
     else if( at.isSetStringRange() )
     {
       AxisStringRangeType range = at.getStringRange();
       valueArray = range.getValueSet().getValueArray();
-      type = DATATYPE.STRING;
+      dataClazz = String.class;
     }
 
-    final GenericLinearAxis axis = new GenericLinearAxis( getAxisType().getId(), getAxisType().getLabel(), PROPERTY.CONTINUOUS, pos, dir, valueArray, type );
+    final GenericLinearAxis axis = new GenericLinearAxis( getAxisType().getId(), getAxisType().getLabel(), pos, dir, valueArray, dataClazz );
     if( axis != null )
     {
 
@@ -117,9 +115,9 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
         AxisDateRangeType range = at.getDateRange();
         IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
         Calendar minValue = range.getMinValue();
-        min = dataOperator.logicalToNumerical( minValue );
+        min = dataOperator.logicalToNumeric( minValue );
         Calendar maxValue = range.getMaxValue();
-        max = dataOperator.logicalToNumerical( maxValue );
+        max = dataOperator.logicalToNumeric( maxValue );
       }
       if( at.isSetNumberRange() )
       {
@@ -129,14 +127,12 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
         max = range.getMaxValue();
 
       }
-      // TODO: String und Duration
-
       IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
       axis.setNumericRange( range );
     }
     else
     {
-      throw new AxisProviderException();
+      throw new ConfigurationException();
     }
 
     return axis;
@@ -158,31 +154,6 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   @Override
   public AxisType getXMLType( IAxis axis )
   {
-    AxisType at = (AxisType) getAxisType().copy();
-
-    String dataType = (String) axis.getData( "type" );
-    IDataOperator dop = null;
-    if( dataType != null )
-    {
-      if( dataType.equals( "DATE" ) )
-      {
-        dop = axis.getDataOperator( Calendar.class );
-      }
-      else if( dataType.equals( "NUMBER" ) )
-      {
-        dop = axis.getDataOperator( Number.class );
-      }
-      else if( dataType.equals( "STRING" ) )
-      {
-        dop = axis.getDataOperator( String.class );
-      }
-    }
-
-    IDataRange<Number> dra = axis.getNumericRange();
-
-    // at.setMinVal( dop.logicalToString( dop.numericalToLogical( dra.getMin() ) ) );
-    // at.setMaxVal( dop.logicalToString( dop.numericalToLogical( dra.getMax() ) ) );
-    return at;
+    return super.getXMLType( axis );
   }
-
 }

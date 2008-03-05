@@ -4,8 +4,8 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.base.layer.GridLayer;
 import org.kalypso.chart.ext.base.layer.GridLayer.GridOrientation;
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -36,8 +36,8 @@ public class GridLayerProvider extends AbstractLayerProvider
       final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
       final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
 
-      final IAxis< ? > domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-      final IAxis< ? > valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
+      final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+      final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
       GridOrientation go;
       final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
@@ -69,7 +69,7 @@ public class GridLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws LayerProviderException
+  public IDataContainer getDataContainer( ) throws ConfigurationException
   {
     return null;
   }

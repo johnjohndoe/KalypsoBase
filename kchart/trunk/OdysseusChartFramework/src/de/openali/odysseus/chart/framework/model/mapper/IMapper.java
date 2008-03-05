@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
@@ -12,7 +11,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEventListener>
 {
   /**
-   * @return the axis' unique identifier
+   * @return the unique identifier
    */
   public String getIdentifier( );
 
@@ -22,11 +21,9 @@ public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEven
   public Class< ? > getDataClass( );
 
   /**
-   * @deprecated use numericToScreen instead
+   * 
    */
-  @Deprecated
-  public int logicalToScreen( T_logical value );
-
+  // public int logicalToScreen( T_logical value );
   public void setRegistry( IMapperRegistry mapperRegistry );
 
   public IMapperRegistry getRegistry( );
@@ -39,25 +36,9 @@ public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEven
   public Object getData( String identifier );
 
   /**
-   * returns a data converter which may be used to convert strings to data which can directly be used by the mapper (and
-   * vice versa)
-   * 
-   */
-  @Deprecated
-  public IDataOperator<T_logical> getDataOperator( );
-
-  /**
    * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and
    * vice versa)
    */
   public <T> IDataOperator<T> getDataOperator( Class<T> clazz );
 
-  public IDataRange<T_logical> getLogicalRange( );
-
-  /**
-   * sets visible range of mapped data
-   * 
-   * @param dataRange
-   */
-  public void setLogicalRange( IDataRange<T_logical> dataRange );
 }

@@ -15,8 +15,8 @@ import java.util.TimeZone;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
@@ -34,7 +34,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @SuppressWarnings( { "unchecked", "unused" })
-  public IChartLayer getLayer( URL context ) throws LayerProviderException
+  public IChartLayer getLayer( URL context )
   {
     return new DefaultLineLayer();
   }
@@ -42,13 +42,13 @@ public class UVFLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws LayerProviderException
+  public IDataContainer getDataContainer( ) throws ConfigurationException
   {
     final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
     final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
 
-    final IAxis<Calendar> domAxis = (IAxis<Calendar>) getChartModel().getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<Number> valAxis = (IAxis<Number>) getChartModel().getMapperRegistry().getAxis( targetAxisId );
+    final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
+    final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
 
     final AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
     {
@@ -112,19 +112,31 @@ public class UVFLayerProvider extends AbstractLayerProvider
 
       }
 
+      @SuppressWarnings("cast")
       public IDataRange<Calendar> getDomainRange( )
       {
-        return new ComparableDataRange<Calendar>( getDomainValues() );
+        /**
+         * Geht nicht wg. ClassCastException (Generics - Bug):
+         * 
+         * return new ComparableDataRange<GregorianCalendar>( getDomainValues() );
+         * 
+         * SuppressWarnings-Annotation ist wichtig, sonst löscht Eclipse Code-CleanUp den cast
+         */
+        return (IDataRange<Calendar>) new ComparableDataRange( getDomainValues() );
       }
 
+      @SuppressWarnings("cast")
       public IDataRange<Number> getTargetRange( )
       {
-        return new ComparableDataRange<Number>( getTargetValues() );
+        /*
+         * Geht nicht wg. ClassCastException (Generics - Bug): return (IDataRange<Number>) new ComparableDataRange(
+         * targetValues );
+         */
+        return (IDataRange<Number>) new ComparableDataRange( getTargetValues() );
       }
 
     };
     data.setInputFile( new File( getParameterContainer().getParameterValue( "url", getLayerType().getId() ) ) );
     return data;
   }
-
 }

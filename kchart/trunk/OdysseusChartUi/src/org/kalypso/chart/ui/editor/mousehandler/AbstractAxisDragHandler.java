@@ -77,8 +77,8 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
     // zugehörige Achsen rausfinden
     final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis< ? >[] axes = reg.getAxes();
-    for( final IAxis< ? > axis : axes )
+    final IAxis[] axes = reg.getAxes();
+    for( final IAxis axis : axes )
     {
       final IAxisComponent component = reg.getComponent( axis );
       if( component != null )
@@ -111,9 +111,13 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     final AxisCanvas ac = getEventSource( e );
     final IAxis axis = m_axes.get( ac );
     if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+    {
       return e.x;
+    }
     else
+    {
       return e.y;
+    }
   }
 
   protected AxisCanvas getEventSource( final MouseEvent e )
@@ -124,12 +128,16 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   public void keyPressed( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )
+    {
       m_applyOnAllAxes = false;
+    }
   }
 
   public void keyReleased( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )
+    {
       m_applyOnAllAxes = true;
+    }
   }
 }

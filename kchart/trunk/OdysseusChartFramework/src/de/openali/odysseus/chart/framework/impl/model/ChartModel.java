@@ -31,7 +31,7 @@ public class ChartModel implements IChartModel
 	private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
 	/** axis --> List of layers */
-	private final Map<IAxis<?>, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis<?>, List<IChartLayer>>();
+	private final Map<IAxis, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis, List<IChartLayer>>();
 
 	private final ILayerManager m_manager = new LayerManager();
 
@@ -88,13 +88,10 @@ public class ChartModel implements IChartModel
 	 *            if true, the layer will be added; if false, the layer will be
 	 *            removed
 	 */
-	protected void updateAxisLayerMap(final IChartLayer layer,
-	        final boolean bAdding)
+	protected void updateAxisLayerMap(final IChartLayer layer, final boolean bAdding)
 	{
-		List<IChartLayer> domList = m_axis2Layers.get(layer
-		        .getCoordinateMapper().getDomainAxis());
-		List<IChartLayer> valList = m_axis2Layers.get(layer
-		        .getCoordinateMapper().getTargetAxis());
+		List<IChartLayer> domList = m_axis2Layers.get(layer.getCoordinateMapper().getDomainAxis());
+		List<IChartLayer> valList = m_axis2Layers.get(layer.getCoordinateMapper().getTargetAxis());
 
 		if (bAdding)
 		{
@@ -118,14 +115,12 @@ public class ChartModel implements IChartModel
 
 			// axis-components must be visible
 
-			final IAxisComponent domainComp = m_mapperRegistry
-			        .getComponent(layer.getCoordinateMapper().getDomainAxis());
+			final IAxisComponent domainComp = m_mapperRegistry.getComponent(layer.getCoordinateMapper().getDomainAxis());
 			if (domainComp != null)
 			{
 				domainComp.setVisible(true);
 			}
-			final IAxisComponent valueComp = m_mapperRegistry
-			        .getComponent(layer.getCoordinateMapper().getTargetAxis());
+			final IAxisComponent valueComp = m_mapperRegistry.getComponent(layer.getCoordinateMapper().getTargetAxis());
 			if (valueComp != null)
 			{
 				valueComp.setVisible(true);
@@ -153,24 +148,18 @@ public class ChartModel implements IChartModel
 			{
 				if (domList == null || domList.size() == 0)
 				{
-					m_mapperRegistry.getComponent(
-					        layer.getCoordinateMapper().getDomainAxis())
-					        .setVisible(false);
+					m_mapperRegistry.getComponent(layer.getCoordinateMapper().getDomainAxis()).setVisible(false);
 				}
 				if (valList == null || valList.size() == 0)
 				{
-					m_mapperRegistry.getComponent(
-					        layer.getCoordinateMapper().getTargetAxis())
-					        .setVisible(false);
+					m_mapperRegistry.getComponent(layer.getCoordinateMapper().getTargetAxis()).setVisible(false);
 				}
 			}
 		}
 
 		if (m_autoscale)
 		{
-			autoscale(new IAxis[] {
-			        layer.getCoordinateMapper().getDomainAxis(),
-			        layer.getCoordinateMapper().getTargetAxis() });
+			autoscale(new IAxis[] { layer.getCoordinateMapper().getDomainAxis(), layer.getCoordinateMapper().getTargetAxis() });
 		}
 
 	}
@@ -212,7 +201,7 @@ public class ChartModel implements IChartModel
 	 * 
 	 * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
 	 */
-	public Map<IAxis<?>, List<IChartLayer>> getAxis2Layers()
+	public Map<IAxis, List<IChartLayer>> getAxis2Layers()
 	{
 		return m_axis2Layers;
 	}
@@ -226,8 +215,8 @@ public class ChartModel implements IChartModel
 	{
 		m_hideUnusedAxes = b;
 
-		final IAxis<?>[] axes = m_mapperRegistry.getAxes();
-		for (final IAxis<?> axis : axes)
+		final IAxis[] axes = m_mapperRegistry.getAxes();
+		for (final IAxis axis : axes)
 		{
 			final List<IChartLayer> list = m_axis2Layers.get(axis);
 			if (list == null || list.size() == 0)
@@ -257,8 +246,7 @@ public class ChartModel implements IChartModel
 				continue;
 			}
 
-			final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>(
-			        layers.size());
+			final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>(layers.size());
 
 			for (final IChartLayer layer : layers)
 			{
@@ -271,22 +259,20 @@ public class ChartModel implements IChartModel
 					}
 				}
 			}
-			IDataRange<Number> mergedDataRange = ChartUtilities
-			        .mergeDataRanges(ranges.toArray(new IDataRange[ranges
-			                .size()]));
+			IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges(ranges.toArray(new IDataRange[ranges.size()]));
 
 			if (mergedDataRange == null)
 			{
 				// if mergedDataRange is null, we keep the old range - if there
 				// is any
-				if (axis.getLogicalRange() != null)
+				if (axis.getNumericRange() != null)
 				{
 					continue;
 				}
 				else
 				{
 					// otherwise, we use a default range
-					mergedDataRange = axis.getDataOperator().getDefaultRange();
+					mergedDataRange = new ComparableDataRange<Number>(new Number[] { 0, 1 });
 				}
 			}
 
@@ -305,8 +291,7 @@ public class ChartModel implements IChartModel
 				double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
 				double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 
-				axis.setNumericRange(new ComparableDataRange<Number>(
-				        new Number[] { newMin, newMax }));
+				axis.setNumericRange(new ComparableDataRange<Number>(new Number[] { newMin, newMax }));
 			}
 			else
 			{
@@ -321,8 +306,7 @@ public class ChartModel implements IChartModel
 	 *         layer
 	 */
 	@SuppressWarnings("unchecked")
-	private IDataRange<Number> getRangeFor(final IChartLayer layer,
-	        final IAxis axis)
+	private IDataRange<Number> getRangeFor(final IChartLayer layer, final IAxis axis)
 	{
 		IDataRange<Number> numRange = null;
 		if (axis == layer.getCoordinateMapper().getDomainAxis())
@@ -360,7 +344,7 @@ public class ChartModel implements IChartModel
 	 */
 	public void maximize()
 	{
-		final IAxis<?>[] axes = getMapperRegistry().getAxes();
+		final IAxis[] axes = getMapperRegistry().getAxes();
 		autoscale(axes);
 		// ModelChangedEvent werfen, damit Composite das Model neu zeichnet
 	}
@@ -449,14 +433,12 @@ public class ChartModel implements IChartModel
 					switch (axis.getDirection())
 					{
 						case POSITIVE:
-							from = axis.screenToNumeric(Math
-							        .min(start.x, end.x));
+							from = axis.screenToNumeric(Math.min(start.x, end.x));
 							to = axis.screenToNumeric(Math.max(start.x, end.x));
 							break;
 
 						case NEGATIVE:
-							from = axis.screenToNumeric(Math
-							        .max(start.x, end.x));
+							from = axis.screenToNumeric(Math.max(start.x, end.x));
 							to = axis.screenToNumeric(Math.min(start.x, end.x));
 							break;
 					}
@@ -466,14 +448,12 @@ public class ChartModel implements IChartModel
 					switch (axis.getDirection())
 					{
 						case POSITIVE:
-							from = axis.screenToNumeric(Math
-							        .max(start.y, end.y));
+							from = axis.screenToNumeric(Math.max(start.y, end.y));
 							to = axis.screenToNumeric(Math.min(start.y, end.y));
 							break;
 
 						case NEGATIVE:
-							from = axis.screenToNumeric(Math
-							        .min(start.y, end.y));
+							from = axis.screenToNumeric(Math.min(start.y, end.y));
 							to = axis.screenToNumeric(Math.max(start.y, end.y));
 							break;
 					}
@@ -482,8 +462,7 @@ public class ChartModel implements IChartModel
 
 			if (from != null && to != null)
 			{
-				axis.setNumericRange(new ComparableDataRange(new Number[] {
-				        from, to }));
+				axis.setNumericRange(new ComparableDataRange(new Number[] { from, to }));
 			}
 		}
 		m_eventHandler.fireModelChanged();
@@ -509,17 +488,13 @@ public class ChartModel implements IChartModel
 					switch (axis.getDirection())
 					{
 						case POSITIVE:
-							from = axis.screenToNumeric(
-							        Math.min(start.x, end.x)).doubleValue();
-							to = axis.screenToNumeric(Math.max(start.x, end.x))
-							        .doubleValue();
+							from = axis.screenToNumeric(Math.min(start.x, end.x)).doubleValue();
+							to = axis.screenToNumeric(Math.max(start.x, end.x)).doubleValue();
 							break;
 
 						case NEGATIVE:
-							from = axis.screenToNumeric(
-							        Math.max(start.x, end.x)).doubleValue();
-							to = axis.screenToNumeric(Math.min(start.x, end.x))
-							        .doubleValue();
+							from = axis.screenToNumeric(Math.max(start.x, end.x)).doubleValue();
+							to = axis.screenToNumeric(Math.min(start.x, end.x)).doubleValue();
 							break;
 					}
 					break;
@@ -528,17 +503,13 @@ public class ChartModel implements IChartModel
 					switch (axis.getDirection())
 					{
 						case POSITIVE:
-							from = axis.screenToNumeric(
-							        Math.max(start.y, end.y)).doubleValue();
-							to = axis.screenToNumeric(Math.min(start.y, end.y))
-							        .doubleValue();
+							from = axis.screenToNumeric(Math.max(start.y, end.y)).doubleValue();
+							to = axis.screenToNumeric(Math.min(start.y, end.y)).doubleValue();
 							break;
 
 						case NEGATIVE:
-							from = axis.screenToNumeric(
-							        Math.min(start.y, end.y)).doubleValue();
-							to = axis.screenToNumeric(Math.max(start.y, end.y))
-							        .doubleValue();
+							from = axis.screenToNumeric(Math.min(start.y, end.y)).doubleValue();
+							to = axis.screenToNumeric(Math.max(start.y, end.y)).doubleValue();
 							break;
 					}
 					break;
@@ -554,13 +525,10 @@ public class ChartModel implements IChartModel
 				double mouserange = Math.abs(from - to);
 				double newrange = (oldrange / mouserange) * oldrange;
 
-				double newFrom = oldmin
-				        - ((Math.abs(from - oldmin) / oldrange) * newrange);
-				double newTo = oldmax
-				        + ((Math.abs(to - oldmax) / oldrange) * newrange);
+				double newFrom = oldmin - ((Math.abs(from - oldmin) / oldrange) * newrange);
+				double newTo = oldmax + ((Math.abs(to - oldmax) / oldrange) * newrange);
 
-				axis.setNumericRange(new ComparableDataRange(new Number[] {
-				        new Double(newFrom), new Double(newTo) }));
+				axis.setNumericRange(new ComparableDataRange(new Number[] { new Double(newFrom), new Double(newTo) }));
 			}
 		}
 		// m_eventHandler.fireModelChanged();
@@ -569,8 +537,8 @@ public class ChartModel implements IChartModel
 	public void panTo(final Point start, final Point end)
 
 	{
-		IAxis<?>[] axes = getMapperRegistry().getAxes();
-		for (IAxis<?> axis : axes)
+		IAxis[] axes = getMapperRegistry().getAxes();
+		for (IAxis axis : axes)
 		{
 			double newmin = 0;
 			double newmax = 0;
@@ -592,8 +560,7 @@ public class ChartModel implements IChartModel
 			newmin = initRange.getMin().doubleValue() + diff;
 			newmax = initRange.getMax().doubleValue() + diff;
 
-			IDataRange<Number> newRange = new ComparableDataRange<Number>(
-			        new Number[] { new Double(newmin), new Double(newmax) });
+			IDataRange<Number> newRange = new ComparableDataRange<Number>(new Number[] { new Double(newmin), new Double(newmax) });
 			axis.setNumericRange(newRange);
 
 		}

@@ -79,8 +79,16 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
   @SuppressWarnings("unchecked")
   public T_target[] getTargetValues( )
   {
+
     open();
-    final T_target[] toArray = (T_target[]) m_targetValues.toArray();
-    return toArray;
+    // (T_target[]) m_targetValues.toArray()
+    final Object[] toArray = new Object[m_targetValues.size()];
+
+    for( int i = 0; i < m_targetValues.size(); i++ )
+    {
+      toArray[i] = m_targetValues.get( i );
+    }
+
+    return (T_target[]) toArray;
   }
 }

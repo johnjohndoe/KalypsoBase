@@ -51,5 +51,5 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public interface ITickCalculator
 {
-  public Number[] calcTicks( final GC gc, final IAxis<Number> axis, final Number minDisplayInterval, final Point tickLabelSize );
+  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point tickLabelSize );
 }

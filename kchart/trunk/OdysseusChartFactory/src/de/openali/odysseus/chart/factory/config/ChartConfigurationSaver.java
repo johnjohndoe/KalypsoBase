@@ -54,14 +54,20 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chartconfig.x010.AreaStyleType;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;
 import de.openali.odysseus.chartconfig.x010.AxisType;
 import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x010.ChartType;
 import de.openali.odysseus.chartconfig.x010.LayerType;
+import de.openali.odysseus.chartconfig.x010.LineStyleType;
 import de.openali.odysseus.chartconfig.x010.MapperType;
+import de.openali.odysseus.chartconfig.x010.PointStyleType;
 import de.openali.odysseus.chartconfig.x010.ReferencingType;
+import de.openali.odysseus.chartconfig.x010.TextStyleType;
 import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
 
 /**
@@ -71,104 +77,135 @@ import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
  */
 public class ChartConfigurationSaver
 {
-	public static ChartConfigurationDocument createChartConfiguration(
-	        final IChartModel model)
-	{
-		final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory
-		        .newInstance();
-		final ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
-		final ILayerManager lm = model.getLayerManager();
+  public static ChartConfigurationDocument createChartConfiguration( final IChartModel model )
+  {
+    final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();
+    final ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
+    final ILayerManager lm = model.getLayerManager();
 
-		// Chart
-		final ChartType chartType = chartconf.addNewChart();
-		chartType.setId(model.getId());
-		chartType.setDescription(model.getDescription());
-		chartType.setTitle(model.getTitle());
+    // Chart
+    final ChartType chartType = chartconf.addNewChart();
+    chartType.setId( model.getId() );
+    chartType.setDescription( model.getDescription() );
+    chartType.setTitle( model.getTitle() );
 
-		// LayerReferenzen
-		final Layers layerTypes = chartType.addNewLayers();
-		final IChartLayer[] layers = lm.getLayers();
-		for (final IChartLayer chartLayer : layers)
-		{
-			final ReferencingType layerRef = layerTypes.addNewLayerRef();
-			layerRef.setRef(chartLayer.getId());
-		}
+    // LayerReferenzen
+    final Layers layerTypes = chartType.addNewLayers();
+    final IChartLayer[] layers = lm.getLayers();
+    for( final IChartLayer chartLayer : layers )
+    {
+      final ReferencingType layerRef = layerTypes.addNewLayerRef();
+      layerRef.setRef( chartLayer.getId() );
+    }
 
-		chartconf.setLayerArray(extractLayers(model.getLayerManager()).values()
-		        .toArray(new LayerType[] {}));
-		chartconf.setAxisArray(extractAxes(model.getMapperRegistry()).values()
-		        .toArray(new AxisType[] {}));
-		chartconf.setMapperArray(extractMappers(model.getMapperRegistry())
-		        .values().toArray(new MapperType[] {}));
-		chartconf.setAxisRendererArray(extractAxisRenderers(
-		        model.getMapperRegistry()).values().toArray(
-		        new AxisRendererType[] {}));
-		// FIXME: Styles setzen
+    chartconf.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
+    chartconf.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
+    chartconf.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
+    chartconf.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
 
-		return ccd;
-	}
+    // Styles
+    addStyles( model.getLayerManager(), chartconf );
 
-	private static Map<String, AxisType> extractAxes(
-	        final IMapperRegistry registry)
-	{
-		final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
-		final IAxis[] axes = registry.getAxes();
-		for (final IAxis axis : axes)
-		{
-			final IAxisProvider provider = (IAxisProvider) axis
-			        .getData(ChartFactory.AXIS_PROVIDER_KEY);
-			axisTypes.put(axis.getIdentifier(), provider.getXMLType(axis));
-		}
-		return axisTypes;
-	}
+    return ccd;
+  }
 
-	private static Map<String, AxisRendererType> extractAxisRenderers(
-	        final IMapperRegistry registry)
-	{
-		final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
-		final IAxis[] axes = registry.getAxes();
-		for (final IAxis axis : axes)
-		{
-			final IAxisProvider axisProvider = (IAxisProvider) axis
-			        .getData(ChartFactory.AXIS_PROVIDER_KEY);
-			final IAxisRenderer renderer = registry.getRenderer(axis);
-			if (renderer != null)
-			{
-				final IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer
-				        .getData(ChartFactory.AXISRENDERER_PROVIDER_KEY);
-				axisRendererTypes.put(renderer.getId(), axisRendererProvider
-				        .getXMLType(renderer));
-			}
-		}
-		return axisRendererTypes;
-	}
+  /**
+   * Adds style configuration to configufation document Warning: This method does not support styles which where changed
+   * from the chartfile; If a style is used by multiple layers, only the configuration of the styles' appearance in the
+   * last layer is saved.
+   */
+  private static void addStyles( ILayerManager layerManager, ChartConfigurationType chartconf )
+  {
+    Map<String, LineStyleType> lineStyleMap = new HashMap<String, LineStyleType>();
+    Map<String, PointStyleType> pointStyleMap = new HashMap<String, PointStyleType>();
+    Map<String, AreaStyleType> areaStyleMap = new HashMap<String, AreaStyleType>();
+    Map<String, TextStyleType> textStyleMap = new HashMap<String, TextStyleType>();
 
-	private static Map<String, MapperType> extractMappers(
-	        final IMapperRegistry registry)
-	{
-		final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
-		final IMapper[] mappers = registry.getMappers();
-		for (final IMapper mapper : mappers)
-		{
-			final IMapperProvider provider = (IMapperProvider) mapper
-			        .getData(ChartFactory.MAPPER_PROVIDER_KEY);
-			mapperTypes
-			        .put(mapper.getIdentifier(), provider.getXMLType(mapper));
-		}
-		return mapperTypes;
-	}
+    for( IChartLayer layer : layerManager.getLayers() )
+    {
+      IStyleSet styleSet = layer.getStyles();
+      IStyle[] styles = styleSet.getStyles();
+      for( IStyle style : styles )
+      {
+        Object styleType = style.getData( ChartFactory.STYLE_KEY );
+        if( styleType instanceof LineStyleType )
+        {
+          LineStyleType lst = (LineStyleType) styleType;
+          lineStyleMap.put( lst.getId(), lst );
+        }
+        else if( styleType instanceof AreaStyleType )
+        {
+          AreaStyleType ast = (AreaStyleType) styleType;
+          areaStyleMap.put( ast.getId(), ast );
+        }
+        else if( styleType instanceof PointStyleType )
+        {
+          PointStyleType pst = (PointStyleType) styleType;
+          pointStyleMap.put( pst.getId(), pst );
+        }
+        else if( styleType instanceof TextStyleType )
+        {
+          TextStyleType tst = (TextStyleType) styleType;
+          textStyleMap.put( tst.getId(), tst );
+        }
+      }
+    }
+    chartconf.setLineStyleArray( lineStyleMap.values().toArray( new LineStyleType[] {} ) );
+    chartconf.setTextStyleArray( textStyleMap.values().toArray( new TextStyleType[] {} ) );
+    chartconf.setPointStyleArray( pointStyleMap.values().toArray( new PointStyleType[] {} ) );
+    chartconf.setAreaStyleArray( areaStyleMap.values().toArray( new AreaStyleType[] {} ) );
+  }
 
-	private static Map<String, LayerType> extractLayers(
-	        final ILayerManager manager)
-	{
-		final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
-		for (final IChartLayer layer : manager.getLayers())
-		{
-			final ILayerProvider provider = (ILayerProvider) layer
-			        .getData(ChartFactory.LAYER_PROVIDER_KEY);
-			layerTypes.put(layer.getId(), provider.getXMLType(layer));
-		}
-		return layerTypes;
-	}
+  private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
+  {
+    final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
+    final IAxis[] axes = registry.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+      axisTypes.put( axis.getIdentifier(), provider.getXMLType( axis ) );
+    }
+    return axisTypes;
+  }
+
+  private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
+  {
+    final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
+    final IAxis[] axes = registry.getAxes();
+    for( final IAxis axis : axes )
+    {
+      final IAxisProvider axisProvider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+      final IAxisRenderer renderer = registry.getRenderer( axis );
+      if( renderer != null )
+      {
+        final IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer.getData( ChartFactory.AXISRENDERER_PROVIDER_KEY );
+        axisRendererTypes.put( renderer.getId(), axisRendererProvider.getXMLType( renderer ) );
+      }
+    }
+    return axisRendererTypes;
+  }
+
+  private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
+  {
+    final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
+    final IMapper[] mappers = registry.getMappers();
+    for( final IMapper mapper : mappers )
+    {
+      final IMapperProvider provider = (IMapperProvider) mapper.getData( ChartFactory.MAPPER_PROVIDER_KEY );
+      mapperTypes.put( mapper.getIdentifier(), provider.getXMLType( mapper ) );
+    }
+    return mapperTypes;
+  }
+
+  private static Map<String, LayerType> extractLayers( final ILayerManager manager )
+  {
+    final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
+    for( final IChartLayer layer : manager.getLayers() )
+    {
+      final ILayerProvider provider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
+      layerTypes.put( layer.getId(), provider.getXMLType( layer ) );
+    }
+    return layerTypes;
+  }
 
 }

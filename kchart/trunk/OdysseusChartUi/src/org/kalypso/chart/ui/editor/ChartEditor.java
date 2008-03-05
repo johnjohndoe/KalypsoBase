@@ -1,12 +1,14 @@
 package org.kalypso.chart.ui.editor;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -30,7 +32,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -40,9 +41,11 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartConfigurationSaver;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.impl.model.ChartModel;
 import de.openali.odysseus.chart.framework.impl.model.event.AbstractChartModelEventListener;
 import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
@@ -77,7 +80,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
-  private ChartEditorOutlinePage m_outlinePage = null;
+  private ChartEditorTreeOutlinePage m_outlinePage = null;
 
   private boolean m_dirty = false;
 
@@ -190,35 +193,35 @@ public class ChartEditor extends EditorPart implements IChartPart
     setDirty( false );
     // TODO: wieder einbauen, wenn speichern funktioniert
 
-    // try
-    // {
-    //            
-    // final IFileEditorInput input = (IFileEditorInput) editorInput;
-    // final IFile file = input.getFile();
-    //      
-    // final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( file.getCharset() );
-    //      
-    // final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration(
-    // getChartComposite().getModel() );
-    //      
-    // final InputStream is = savedConfig.newInputStream( options );
-    // file.setContents( is, false, true, monitor );
-    // is.close();
-    //
-    // setDirty( false );
-    // }
-    // catch( final CoreException e )
-    // {
-    // final IStatus status = e.getStatus();
-    // KalypsoChartUiPlugin.getDefault().getLog().log( status );
-    // ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
-    // }
-    // catch( final IOException e )
-    // {
-    // final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
-    // KalypsoChartUiPlugin.getDefault().getLog().log( status );
-    // ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
-    // }
+    try
+    {
+
+      final IFileEditorInput input = (IFileEditorInput) editorInput;
+      final IFile file = input.getFile();
+
+      final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( file.getCharset() );
+
+      final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getChartModel() );
+
+      final InputStream is = savedConfig.newInputStream( options );
+      file.setContents( is, false, true, monitor );
+      is.close();
+      System.out.println( savedConfig.toString() );
+
+      // setDirty( false );
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
+      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
+    }
   }
 
   /**
@@ -492,7 +495,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       if( m_outlinePage == null )
       {
-        m_outlinePage = new ChartEditorOutlinePage( this );
+        m_outlinePage = new ChartEditorTreeOutlinePage( this );
       }
 
       return m_outlinePage;

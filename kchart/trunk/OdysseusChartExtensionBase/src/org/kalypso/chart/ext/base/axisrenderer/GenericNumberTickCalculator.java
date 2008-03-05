@@ -23,7 +23,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
    * @param minDisplayInterval
    *            interval division should stop when intervals become smaller than this value
    */
-  public Number[] calcTicks( final GC gc, final IAxis<Number> axis, final Number minDisplayInterval, final Point ticklabelSize )
+  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
 
     // TickLabelGr��e + 2 wegen Rundungsfehlern beim positionieren
@@ -32,9 +32,13 @@ public class GenericNumberTickCalculator implements ITickCalculator
      */
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
       minScreenInterval = ticklabelSize.x;
+    }
     else
+    {
       minScreenInterval = ticklabelSize.y;
+    }
 
     // Collection f�r Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
@@ -91,7 +95,9 @@ public class GenericNumberTickCalculator implements ITickCalculator
     // Das Intervall verwendet zun�chst nur 10er Schritte
     double interval = Math.pow( 10, rangepow * (-1) - 1 );
     if( minDisplayInterval != null && interval < minDisplayInterval.doubleValue() )
+    {
       interval = minDisplayInterval.doubleValue();
+    }
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 w�rde z.B. schnell krumme werte erzeugen
@@ -104,7 +110,9 @@ public class GenericNumberTickCalculator implements ITickCalculator
     ticks.add( new Double( normmax ) );
 
     if( normmid == 1 )
+    {
       findBetweens( normmin, normmax, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
+    }
     else
     {
       final double normmiddle = normmin + (normmax - normmin) / 2;
@@ -127,7 +135,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
    *            value
    * @param axis
    */
-  private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final SortedSet<Number> ticks, final Number minDisplayInterval, final IAxis<Number> axis )
+  private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final SortedSet<Number> ticks, final Number minDisplayInterval, final IAxis axis )
   {
     final IDataRange<Number> dataRange = axis.getNumericRange();
 
@@ -137,11 +145,15 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
       // this prevents an endles loop below, if from == to
       if( betweenrange < 0.000000001 )
+      {
         return;
+      }
 
       double minDispInterval = 0;
       if( minDisplayInterval != null )
+      {
         minDispInterval = minDisplayInterval.doubleValue();
+      }
 
       if( (interval < betweenrange) && (betweenrange >= minDispInterval) )
       {
@@ -150,6 +162,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
         // Damit der letzte Wert nicht drin ist, wird sicherheitshalber der halbe Wertabstand abgezogen
         for( double i = from; i <= to - 0.5 * betweenrange; i += betweenrange )
+        {
           // nur berechenen, wenn wenigstens eine Intervallgrenze im sichtbaren Bereich liegt
           // oder die Intervallgrenzen den sichtbaren Bereich umschliessen
           if( (((i >= dataRange.getMin().doubleValue()) && (i <= dataRange.getMax().doubleValue())) || ((i + betweenrange >= dataRange.getMin().doubleValue()) && (i + betweenrange <= dataRange.getMax().doubleValue())))
@@ -160,7 +173,9 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
             // Der erste Wert ist schon auf höherer Ebene drin -> nicht einfügen
             if( count > 0 )
+            {
               ticks.add( new Double( i ) );
+            }
 
             // Divisoren rotieren, damit in der nächsten Ebene über den nächsten iteriert wird
             final ArrayList<Integer> newDivisors = new ArrayList<Integer>();
@@ -179,6 +194,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
           {
             count++;
           }
+        }
         // Tick setzen
         break;
 
@@ -186,7 +202,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
     }
   }
 
-  private static Point getScreenMinMax( final IAxis<Number> axis, final IDataRange<Number> range, final Point ticklabelSize )
+  private static Point getScreenMinMax( final IAxis axis, final IDataRange<Number> range, final Point ticklabelSize )
   {
     int screenMin;
     int screenMax;

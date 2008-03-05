@@ -65,15 +65,19 @@ public class GenericDateTickCalculator implements ITickCalculator
   /**
    * Calculates the ticks shown for the given Axis
    */
-  public Number[] calcTicks( GC gc, final IAxis<Number> axis, final Number minDisplayInterval, Point ticklabelSize )
+  public Number[] calcTicks( GC gc, final IAxis axis, final Number minDisplayInterval, Point ticklabelSize )
   {
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
       minScreenInterval = 2 + ticklabelSize.x;
+    }
     else
+    {
       minScreenInterval = 2 + ticklabelSize.y;
+    }
 
     // Mini- und maximalen ANZEIGBAREN Wert ermitteln anhand der Größe der Labels
     int screenMin, screenMax;
@@ -174,7 +178,9 @@ public class GenericDateTickCalculator implements ITickCalculator
   {
 
     if( from == to || minInterval == 0 )
+    {
       return;
+    }
 
     /*
      * TODO: hier muss noch irgendwie überprüft werden, in welchem Bereich sich die DateRange befindet - anhand der

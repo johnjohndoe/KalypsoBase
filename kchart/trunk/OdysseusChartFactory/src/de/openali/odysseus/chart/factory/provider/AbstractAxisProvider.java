@@ -1,9 +1,15 @@
 package de.openali.odysseus.chart.factory.provider;
 
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import java.util.Calendar;
 
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chartconfig.x010.AxisDateRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisNumberRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisStringRangeType;
 import de.openali.odysseus.chartconfig.x010.AxisType;
 
 public abstract class AbstractAxisProvider implements IAxisProvider
@@ -37,54 +43,34 @@ public abstract class AbstractAxisProvider implements IAxisProvider
    */
   public AxisType getXMLType( IAxis axis )
   {
-// AxisType at = (AxisType) m_at.copy();
-// IDataRange<Number> dra = axis.getNumericRange();
-// AbstractAxisRangeType aRange = at.getAbstractAxisRange();
-// if( aRange instanceof AxisNumberRangeType )
-// {
-// IDataOperator<Number> dop = axis.getDataOperator( Number.class );
-// AxisNumberRangeType range = (AxisNumberRangeType) aRange;
-// XmlDoubleImpl xmlMin = new XmlDoubleImpl();
-// xmlMin.set( dop.numericalToLogical( dra.getMin() ).doubleValue() );
-// XmlDoubleImpl xmlMax = new XmlDoubleImpl();
-// xmlMax.set( dop.numericalToLogical( dra.getMax() ).doubleValue() );
-// range.setMinValue( xmlMin );
-// range.setMaxValue( xmlMax );
-// }
-// else if( aRange instanceof AxisDateRangeType )
-// {
-// IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
-// AxisDateRangeType range = (AxisDateRangeType) aRange;
-// XmlDateTimeImpl xmlMin = new XmlDateTimeImpl();
-// xmlMin.set( dop.numericalToLogical( dra.getMin() ) );
-// XmlDateTimeImpl xmlMax = new XmlDateTimeImpl();
-// xmlMax.set( dop.numericalToLogical( dra.getMax() ) );
-// range.setMinValue( xmlMin );
-// range.setMaxValue( xmlMax );
-// }
-// else if( aRange instanceof AxisDurationRangeType )
-// {
-// IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
-// AxisStringRangeType range = (AxisStringRangeType) aRange;
-// XmlDurationImpl xmlMin = new XmlDurationImpl();
-// xmlMin.set( dop.numericalToLogical( dra.getMin() ) );
-// XmlDateTimeImpl xmlMax = new XmlDateTimeImpl();
-// xmlMax.set( dop.numericalToLogical( dra.getMax() ) );
-// range.setMinValue( xmlMin );
-// range.setMaxValue( xmlMax );
-// }
-// else if( aRange instanceof AxisStringRangeType )
-// {
-// IDataOperator<String> dop = axis.getDataOperator( String.class );
-// AxisStringRangeType range = (AxisStringRangeType) aRange;
-// XmlStringImpl xmlMin = new XmlStringImpl();
-// xmlMin.set( dop.numericalToLogical( dra.getMin() ) );
-// XmlDateTimeImpl xmlMax = new XmlDateTimeImpl();
-// xmlMax.set( dop.numericalToLogical( dra.getMax() ) );
-// range.setMinValue( xmlMin );
-// range.setMaxValue( xmlMax );
-// }
-// return at;
-    return null;
+    AxisType at = (AxisType) getAxisType().copy();
+
+    Class< ? > clazz = axis.getDataClass();
+    IDataRange<Number> numericRange = axis.getNumericRange();
+
+    if( Calendar.class.isAssignableFrom( clazz ) )
+    {
+      AxisDateRangeType range = at.getDateRange();
+      IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
+      range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
+      range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+    }
+    else if( Number.class.isAssignableFrom( clazz ) )
+    {
+      System.out.println( at );
+      AxisNumberRangeType range = at.getNumberRange();
+      IDataOperator<Number> dop = axis.getDataOperator( Number.class );
+      range.setMinValue( dop.numericToLogical( numericRange.getMin() ).doubleValue() );
+      range.setMaxValue( dop.numericToLogical( numericRange.getMax() ).doubleValue() );
+    }
+    else if( String.class.isAssignableFrom( clazz ) )
+    {
+      AxisStringRangeType range = at.getStringRange();
+      IDataOperator<String> dop = axis.getDataOperator( String.class );
+      range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
+      range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+    }
+
+    return at;
   }
 }

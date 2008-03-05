@@ -16,7 +16,7 @@
         <attribute name="isVisible" type="boolean" />
     </complexType>
   
-  <element name="Alpha">
+  <element name="Alpha"> 
     <simpleType> 
         <restriction base="hexBinary">
             <length value="1"></length>
@@ -110,7 +110,7 @@
     
     <complexType name="ImageMarkerType">
         <sequence>
-                    <element name="Path" type="anyURI"></element>
+                    <element name="ImageFile" type="anyURI"></element>
                 </sequence>        
           </complexType>
     
@@ -130,12 +130,36 @@
         <complexContent>
             <extension base="ods:AbstractStyleType">
                 <sequence>
-                    <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="Fill" type="ods:FillType" minOccurs="0"></element>
                     <element ref="ods:Stroke" minOccurs="0" />
                 </sequence>               
                 </extension>
         </complexContent>
     </complexType>
+    
+    <complexType name="FillType">
+        <sequence>
+            <choice>
+                <element name="ImageFill" type="ods:ImageFillType" />
+                    <element name="ColorFill" type="ods:ColorFillType" />
+                </choice>
+        </sequence>
+    </complexType>
+    
+    <complexType name="ImageFillType">
+            <sequence>
+                <element name="ImageFile" type="anyURI"></element>
+                <element name="Width" type="int" minOccurs="0"></element>
+                <element name="Height" type="int" minOccurs="0"></element>
+            </sequence>
+       </complexType>
+    
+    <complexType name="ColorFillType">
+       <sequence>
+                <element name="Color" type="ods:ColorType" />
+            </sequence>
+       </complexType>
+    
                    
     
     <complexType name="TextStyleType">
@@ -152,6 +176,8 @@
                  </extension>
         </complexContent>
     </complexType>
+    
+    
     
     <simpleType name="FontStyleType">
         <restriction base="string">

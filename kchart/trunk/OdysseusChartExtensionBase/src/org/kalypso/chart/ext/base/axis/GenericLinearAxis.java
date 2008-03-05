@@ -3,16 +3,14 @@ package org.kalypso.chart.ext.base.axis;
 import java.util.Calendar;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
-import org.kalypso.chart.ext.base.axis.AbstractAxis;
 import org.kalypso.chart.ext.base.data.CalendarDataOperator;
 import org.kalypso.chart.ext.base.data.NumberDataOperator;
+import org.kalypso.chart.ext.base.data.StringDataOperator;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
@@ -21,26 +19,23 @@ import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent
  * 
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
-public class GenericLinearAxis extends AbstractAxis<Number>
+public class GenericLinearAxis extends AbstractAxis
 {
   private final NumberDataOperator m_numberAdapter;
 
-  private final StringOperator m_stringAdapter;
+  private final StringDataOperator m_stringAdapter;
 
   private final CalendarDataOperator m_calendarAdapter;
 
   private IDataRange<Number> m_numericRange;
 
-  private final DATATYPE m_type;
-
-  public GenericLinearAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final String[] valueArray, final DATATYPE type )
+  public GenericLinearAxis( final String id, final String label, final POSITION pos, final DIRECTION dir, final String[] valueArray, Class< ? > clazz )
   {
-    super( id, label, prop, pos, dir, new ComparableComparator(), Number.class );
-    m_type = type;
+    super( id, label, pos, dir, new ComparableComparator(), clazz );
     m_numberAdapter = new NumberDataOperator( new ComparableComparator() );
     if( valueArray != null && valueArray.length > 1 )
     {
-      m_stringAdapter = new StringOperator( valueArray );
+      m_stringAdapter = new StringDataOperator( valueArray );
     }
     else
     {
@@ -49,22 +44,12 @@ public class GenericLinearAxis extends AbstractAxis<Number>
     m_calendarAdapter = new CalendarDataOperator( new ComparableComparator(), "" );
   }
 
-  public double logicalToNormalized( final Number value )
-  {
-    return numericToNormalized( value );
-  }
-
   public double numericToNormalized( final Number value )
   {
     final IDataRange<Number> dataRange = getNumericRange();
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
     final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
     return norm;
-  }
-
-  public Number normalizedToLogical( final double value )
-  {
-    return normalizedToNumeric( value );
   }
 
   private Number normalizedToNumeric( double value )
@@ -76,29 +61,6 @@ public class GenericLinearAxis extends AbstractAxis<Number>
     final double logical = value * r + dataRange.getMin().doubleValue();
 
     return logical;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#logicalToScreen(T)
-   */
-  public int logicalToScreen( final Number value )
-  {
-    // wir wollen weg von logical
-    assert (false);
-    return -100;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#screenToLogical(int)
-   */
-  public Number screenToLogical( final int value )
-  {
-    return screenToNumeric( value );
-  }
-
-  public int zeroToScreen( )
-  {
-    return numericToScreen( 0.0 );
   }
 
   public IDataOperator<Number> getDataOperator( )
@@ -134,7 +96,7 @@ public class GenericLinearAxis extends AbstractAxis<Number>
       return 0;
     }
 
-    return comp.normalizedToScreen( logicalToNormalized( value ) );
+    return comp.normalizedToScreen( numericToNormalized( value ) );
   }
 
   /**
@@ -201,14 +163,6 @@ public class GenericLinearAxis extends AbstractAxis<Number>
   {
     assert (false);
     return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#getType()
-   */
-  public DATATYPE getDataType( )
-  {
-    return m_type;
   }
 
 }

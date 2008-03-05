@@ -81,7 +81,7 @@ public class ChartComposite extends Canvas implements IChartView
 			{
 				if (mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis)
 				{
-					final IAxis<?> axis = (IAxis<?>) mapper;
+					final IAxis axis = (IAxis) mapper;
 					final Composite parent = m_axisPlaces.get(axis.getPosition());
 					final AxisCanvas component = new AxisCanvas(axis, parent, SWT.NONE);
 					component.setBackground(m_bgColor);

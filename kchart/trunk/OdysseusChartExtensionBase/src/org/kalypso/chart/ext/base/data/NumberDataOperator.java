@@ -5,12 +5,9 @@ import java.text.Format;
 import java.text.NumberFormat;
 import java.util.Comparator;
 
-
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
-import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
 import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
-import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
@@ -33,32 +30,29 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     final Double doubleIntervalWidth = numIntervalWidth.doubleValue();
 
     if( doubleFixedPoint.compareTo( doubleVal ) > 0 )
+    {
       dirFactor = -1;
+    }
     for( double d = doubleFixedPoint; d < doubleVal; d += dirFactor * doubleIntervalWidth )
+    {
       min = doubleFixedPoint + d;
+    }
     max = min + dirFactor * doubleIntervalWidth;
 
-    DataRange<Number> dataRange = null;
-    try
-    {
-      dataRange = new DataRange<Number>( Math.min( min, max ), Math.max( min, max ) );
-    }
-    catch( final ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
     return dataRange;
   }
 
-  public Double logicalToNumerical( final Number logVal )
+  public Double logicalToNumeric( final Number logVal )
   {
     if( logVal == null )
+    {
       return null;
+    }
     return logVal.doubleValue();
   }
 
-  public Number numericalToLogical( final Number numVal )
+  public Number numericToLogical( final Number numVal )
   {
     return new Double( numVal.doubleValue() );
   }
@@ -71,10 +65,15 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
   public Number stringToLogical( final String value ) throws MalformedValueException
   {
     if( value == null )
+    {
       return null;
+    }
     else if( "".equals( value.trim() ) )
+    {
       return null;
+    }
     else
+    {
       try
       {
         final double d = Double.parseDouble( value );
@@ -84,6 +83,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
       {
         throw new MalformedValueException( e );
       }
+    }
   }
 
   public String getFormatHint( )
@@ -104,11 +104,15 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
   {
     Number min = range.getMin();
     if( Double.valueOf( min.doubleValue() ).isInfinite() )
+    {
       min = 0.0;
+    }
 
     Number max = range.getMax();
     if( Double.valueOf( max.doubleValue() ).isInfinite() )
+    {
       max = 0.0;
+    }
 
     final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
@@ -120,7 +124,9 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
     // Minuszeichen einplanen
     if( max.doubleValue() < 0 || min.doubleValue() < 0 )
+    {
       id++;
+    }
 
     // Vorkommastellen ausrechnen
     double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
@@ -156,9 +162,13 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
 
     //
     if( pow >= 0 )
+    {
       fd = pow > validDigits ? 0 : Math.abs( validDigits - pow );
+    }
     else
+    {
       fd = Math.abs( pow ) + validDigits;
+    }
 
     nf.setMaximumIntegerDigits( id );
     nf.setMinimumIntegerDigits( 1 );

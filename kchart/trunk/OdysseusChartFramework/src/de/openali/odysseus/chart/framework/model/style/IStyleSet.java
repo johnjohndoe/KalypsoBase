@@ -50,5 +50,7 @@ public interface IStyleSet
 
   public <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
+  public IStyle[] getStyles( );
+
   public void dispose( );
 }

@@ -87,7 +87,9 @@ public class AxisDragHandlerDelegate
     for( AxisCanvas ac : getAxesMap().keySet() )
     {
       if( handler == null )
+      {
         ac.setCursor( ac.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
+      }
       else
       {
         ac.setCursor( m_handler.getCursor() );
@@ -127,8 +129,8 @@ public class AxisDragHandlerDelegate
   {
     Map<AxisCanvas, IAxis> axesMap = new HashMap<AxisCanvas, IAxis>();
     final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis< ? >[] axes = reg.getAxes();
-    for( final IAxis< ? > axis : axes )
+    final IAxis[] axes = reg.getAxes();
+    for( final IAxis axis : axes )
     {
       final IAxisComponent component = reg.getComponent( axis );
       if( component != null )

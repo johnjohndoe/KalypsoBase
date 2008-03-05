@@ -71,15 +71,6 @@ public interface IAxisConstants
   }
 
   /**
-   * The property of the data.
-   */
-  public enum PROPERTY
-  {
-    CONTINUOUS,
-    DISCRETE;
-  }
-
-  /**
    * An axis direction can be one of:
    * <ul>
    * <li>POSITIVE: from bottom to top, or from left to right
@@ -94,10 +85,4 @@ public interface IAxisConstants
     NEGATIVE;
   }
 
-  public enum DATATYPE
-  {
-    DATE,
-    NUMBER,
-    STRING
-  }
 }

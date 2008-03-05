@@ -17,7 +17,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 /**
  * @author alibu
  */
-public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRenderer<T_logical>
+public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
 
   private final int m_tickLength;
@@ -37,7 +37,7 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
    */
   private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
-  private final HashMap<IAxis<T_logical>, T_logical[]> m_tickMap = new HashMap<IAxis<T_logical>, T_logical[]>();
+  private final HashMap<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
 
   public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap )
   {
@@ -48,7 +48,7 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
     m_gap = gap;
   }
 
-  protected abstract Point getTextExtent( GC gcw, T_logical value, ITextStyle style, Format format, IDataRange<Number> range );
+  protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
 
   public void setStyles( IStyleSet styles )
   {
@@ -73,6 +73,9 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
   protected void drawText( GC gc, String text, int x, int y, ITextStyle style )
   {
     style.apply( gc );
+    // BUG in SWT (linux): Wenn Font-Größe geändert wird, besitzt der Hintergrund immer noch die Größe
+    // des alten Texts - funktioniert aber komischerweise, wenn man den TextExtent nochmal anfragt
+    Point textExtent = getTextExtent( gc, text, style );
     gc.drawText( text, x, y );
   }
 
@@ -96,14 +99,14 @@ public abstract class AbstractGenericAxisRenderer<T_logical> implements IAxisRen
     return m_tickLabelInsets;
   }
 
-  public void setTickMapElement( IAxis<T_logical> axis, T_logical[] ticks )
+  public void setTickMapElement( IAxis axis, Number[] ticks )
   {
     m_tickMap.put( axis, ticks );
   }
 
-  protected T_logical[] getTickMapElement( IAxis<T_logical> axis )
+  protected Number[] getTickMapElement( IAxis axis )
   {
-    T_logical[] tickMap = m_tickMap.get( axis );
+    Number[] tickMap = m_tickMap.get( axis );
     return tickMap;
   }
 

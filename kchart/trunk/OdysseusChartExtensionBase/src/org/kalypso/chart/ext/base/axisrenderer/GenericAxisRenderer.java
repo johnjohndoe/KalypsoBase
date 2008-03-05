@@ -3,6 +3,7 @@ package org.kalypso.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -23,7 +24,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 /**
  * @author burtscher
  */
-public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
+public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 {
 
   private final ITickCalculator m_tickCalculator;
@@ -61,7 +62,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     m_hideCut = hideCut;
   }
 
-  public Point calcTickLabelSize( GC gc, final IAxis<Number> axis )
+  public Point calcTickLabelSize( GC gc, final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
 
@@ -83,7 +84,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final IAxis<Number> axis, final int startX, final int startY, Number[] ticks )
+  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, Number[] ticks )
   {
 
     if( (gc == null) || (axis == null) || (ticks == null) )
@@ -175,7 +176,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     }
   }
 
-  protected void drawTicks2( GC gc, IAxis<Number> axis, int startX, int startY, Number[] ticks )
+  protected void drawTicks2( GC gc, IAxis axis, int startX, int startY, Number[] ticks )
   {
     ITextStyle tickLabelStyle = getTickLabelStyle();
     ILineStyle tickLineStyle = getTickLineStyle();
@@ -257,7 +258,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
   }
 
-  private Insets getConvertedInsets( final IAxis<Number> axis, final Insets insets )
+  private Insets getConvertedInsets( final IAxis axis, final Insets insets )
   {
     // POSITION BOTTOM is the default order for the insets
     InsetsHelper ihelper = new InsetsHelper( insets );
@@ -339,7 +340,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
    * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates for the axis
    *         line and endX/Y its end coordinates within the given Rectangle
    */
-  private int[] createAxisSegment( final IAxis<Number> axis, final Rectangle screen )
+  private int[] createAxisSegment( final IAxis axis, final Rectangle screen )
   {
     int startX;
     int startY;
@@ -396,9 +397,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     return new int[] { startX, startY, endX, endY };
   }
 
-  public void paint( GC gc, final IAxis<Number> axis, final Rectangle screen )
+  public void paint( GC gc, final IAxis axis, final Rectangle screen )
   {
     final Device dev = gc.getDevice();
+
+    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
+    // gc.fillRectangle( screen );
 
     // draw axis line
     final int[] coords = createAxisSegment( axis, screen );
@@ -411,7 +415,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
 
   }
 
-  protected void drawAxisLabel( GC gc, IAxis<Number> axis, int startX, int startY, int endX, int endY )
+  protected void drawAxisLabel( GC gc, IAxis axis, int startX, int startY, int endX, int endY )
   {
     if( axis.getLabel() != null )
     {
@@ -493,7 +497,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
   /**
    * @see org.kalypso.chart.framework.model.mapper.renderer.IAxisRenderer#getTicks(org.kalypso.chart.framework.model.mapper.IAxis)
    */
-  public Number[] getTicks( IAxis<Number> axis )
+  public Number[] getTicks( IAxis axis )
   {
     Number[] tickMapElement = getTickMapElement( axis );
     // wenn null, dann muss es neu erzeugt werden
@@ -511,7 +515,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
     return tickMapElement;
   }
 
-  public Number[] getTicks( IAxis<Number> axis, GC gc )
+  public Number[] getTicks( IAxis axis, GC gc )
   {
     Number[] tickMapElement = getTickMapElement( axis );
     // wenn null, dann muss es neu erzeugt werden
@@ -528,7 +532,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer<Number>
   /**
    * Gibt die Breite bzw. Tiefe einer Achse zurück. Dadurch wird die Grösse der AxisComponent bestimmt
    */
-  public int getAxisWidth( IAxis<Number> axis )
+  public int getAxisWidth( IAxis axis )
   {
     int width = 0;
     int label = 0;

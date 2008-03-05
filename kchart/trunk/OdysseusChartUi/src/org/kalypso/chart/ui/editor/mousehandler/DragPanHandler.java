@@ -127,17 +127,21 @@ public class DragPanHandler implements IChartDragHandler
   private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
   {
     IMapperRegistry mapperRegistry = m_chartComposite.getChartModel().getMapperRegistry();
-    IAxis< ? >[] axes = mapperRegistry.getAxes();
-    for( IAxis< ? > axis : axes )
+    IAxis[] axes = mapperRegistry.getAxes();
+    for( IAxis axis : axes )
     {
       IAxisComponent component = mapperRegistry.getComponent( axis );
       if( component != null && component instanceof AxisCanvas )
       {
         AxisCanvas ac = (AxisCanvas) component;
         if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+        {
           ac.setPanOffsetInterval( new Point( panXStart, panXEnd ) );
+        }
         else
+        {
           ac.setPanOffsetInterval( new Point( panYStart, panYEnd ) );
+        }
       }
     }
 

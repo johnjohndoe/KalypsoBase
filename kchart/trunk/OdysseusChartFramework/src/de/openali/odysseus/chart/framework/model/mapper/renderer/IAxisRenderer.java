@@ -9,14 +9,14 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 /**
  * @author alibu Interface used to render an IAxis object into an IAxisComponent
  */
-public interface IAxisRenderer<T_logical>
+public interface IAxisRenderer
 {
   /**
    * calculates axis values for which label and tick will be shown
    * 
    * @return Collection of tick-values
    */
-  public T_logical[] getTicks( IAxis<T_logical> axis );
+  public Number[] getTicks( IAxis axis );
 
   /**
    * draws the IAxis-Representation into the given GC;
@@ -24,13 +24,13 @@ public interface IAxisRenderer<T_logical>
    * @param screenArea
    *            Rectangle describing the axis size and location within the drawing area
    */
-  public void paint( GC gc, IAxis<T_logical> axis, Rectangle screenArea );
+  public void paint( GC gc, IAxis axis, Rectangle screenArea );
 
   /**
    * @return width of the rendered axis (which means vertical extension for horizontal axes or horizontal extension for
    *         vertical axes)
    */
-  public int getAxisWidth( IAxis<T_logical> axis );
+  public int getAxisWidth( IAxis axis );
 
   /**
    * method to store arbitrary data objects;

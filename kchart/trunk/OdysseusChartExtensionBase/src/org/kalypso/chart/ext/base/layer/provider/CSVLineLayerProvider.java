@@ -11,8 +11,8 @@ import java.util.List;
 
 import org.kalypso.chart.ext.base.data.AbstractDomainValueFileData;
 import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
@@ -29,7 +29,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws LayerProviderException
+  public IChartLayer getLayer( URL context ) throws ConfigurationException
   {
     return new DefaultLineLayer();
   }
@@ -37,7 +37,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws LayerProviderException
+  public IDataContainer getDataContainer( ) throws ConfigurationException
   {
     final AbstractDomainValueFileData data = new AbstractDomainValueFileData()
     {

@@ -46,6 +46,8 @@ import java.util.List;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.impl.model.style.ColorFill;
+import de.openali.odysseus.chart.framework.impl.model.style.ImageFill;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.OvalMarker;
 import de.openali.odysseus.chart.framework.impl.model.style.PolygonMarker;
@@ -57,6 +59,9 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
 import de.openali.odysseus.chartconfig.x010.AreaStyleType;
+import de.openali.odysseus.chartconfig.x010.ColorFillType;
+import de.openali.odysseus.chartconfig.x010.FillType;
+import de.openali.odysseus.chartconfig.x010.ImageFillType;
 import de.openali.odysseus.chartconfig.x010.ImageMarkerType;
 import de.openali.odysseus.chartconfig.x010.LineStyleType;
 import de.openali.odysseus.chartconfig.x010.PointStyleType;
@@ -71,8 +76,6 @@ import de.openali.odysseus.chartconfig.x010.FontStyleType.Enum;
  */
 public class StyleFactory
 {
-
-  // TODO: save ConfigStyle info
 
   public static IPointStyle createPointStyle( PointStyleType pst )
   {
@@ -129,7 +132,7 @@ public class StyleFactory
     else if( pst.isSetImageMarker() )
     {
       ImageMarkerType imageMarker = pst.getImageMarker();
-      String configPath = imageMarker.getPath();
+      String configPath = imageMarker.getImageFile();
       File file = new File( configPath );
       style.setMarker( new ImageMarker( file ) );
     }
@@ -137,10 +140,7 @@ public class StyleFactory
     {
       style.setMarker( new OvalMarker() );
     }
-    else
-    {
-      // do nothing - use default
-    }
+    // else: do nothing - use default
 
     StrokeType strokeStyle = pst.getStroke();
     if( strokeStyle != null )
@@ -276,9 +276,34 @@ public class StyleFactory
       style.setAlpha( alpha );
     }
 
-    if( ast.isSetFillColor() )
+    if( ast.isSetFill() )
     {
-      style.setInlineColor( colorByteToRGB( ast.getFillColor() ) );
+      FillType fill = ast.getFill();
+      if( fill.getColorFill() != null )
+      {
+        ColorFillType cft = fill.getColorFill();
+        ColorFill colorFill = new ColorFill( colorByteToRGB( cft.getColor() ) );
+        style.setFill( colorFill );
+      }
+      else if( fill.getImageFill() != null )
+      {
+        ImageFillType ift = fill.getImageFill();
+        String configPath = ift.getImageFile();
+        File file = new File( configPath );
+        int width = -1;
+        int height = -1;
+        if( ift.isSetWidth() )
+        {
+          width = ift.getWidth();
+        }
+        if( ift.isSetHeight() )
+        {
+          height = ift.getHeight();
+        }
+        ImageFill imageFill = new ImageFill( file, width, height );
+        style.setFill( imageFill );
+      }
+      // else: use default
     }
 
     // outline
@@ -341,11 +366,11 @@ public class StyleFactory
     if( tst.isSetFontStyle() )
     {
       Enum configfontStyle = tst.getFontStyle();
-      if( configfontStyle.equals( FONTSTYLE.ITALIC.toString() ) )
+      if( configfontStyle.toString().equals( FONTSTYLE.ITALIC.toString() ) )
       {
         style.setFontStyle( FONTSTYLE.ITALIC );
       }
-      else if( configfontStyle.equals( FONTSTYLE.NORMAL.toString() ) )
+      else if( configfontStyle.toString().equals( FONTSTYLE.NORMAL.toString() ) )
       {
         style.setFontStyle( FONTSTYLE.NORMAL );
       }
@@ -359,11 +384,11 @@ public class StyleFactory
     if( tst.isSetFontWeight() )
     {
       de.openali.odysseus.chartconfig.x010.FontWeightType.Enum fontWeight = tst.getFontWeight();
-      if( fontWeight.equals( FONTWEIGHT.BOLD.toString() ) )
+      if( fontWeight.toString().equals( FONTWEIGHT.BOLD.toString() ) )
       {
         style.setWeight( FONTWEIGHT.BOLD );
       }
-      if( fontWeight.equals( FONTWEIGHT.NORMAL.toString() ) )
+      if( fontWeight.toString().equals( FONTWEIGHT.NORMAL.toString() ) )
       {
         style.setWeight( FONTWEIGHT.NORMAL );
       }

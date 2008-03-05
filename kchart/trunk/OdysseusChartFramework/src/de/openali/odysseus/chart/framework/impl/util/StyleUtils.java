@@ -86,7 +86,7 @@ public class StyleUtils
 
 	public static IAreaStyle getDefaultAreaStyle()
 	{
-		return new AreaStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_ALPHA, getDefaultLineStyle(), IDefaultStyles.DEFAULT_VISIBILITY);
+		return new AreaStyle(getDefaultLineStyle(), IDefaultStyles.DEFAULT_FILL, IDefaultStyles.DEFAULT_ALPHA, getDefaultLineStyle(), IDefaultStyles.DEFAULT_VISIBILITY);
 	}
 
 	public static ITextStyle getDefaultTextStyle()

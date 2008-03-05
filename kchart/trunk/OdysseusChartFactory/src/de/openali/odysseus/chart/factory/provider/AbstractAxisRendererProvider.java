@@ -1,7 +1,7 @@
 package de.openali.odysseus.chart.factory.provider;
 
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;

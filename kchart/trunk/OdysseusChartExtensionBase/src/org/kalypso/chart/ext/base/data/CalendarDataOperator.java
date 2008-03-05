@@ -5,8 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 
-import org.kalypso.chart.factory.configuration.parameters.impl.CalendarParser;
-
+import de.openali.odysseus.chart.factory.config.parameters.impl.CalendarParser;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
 import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
@@ -46,22 +45,28 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
       min = longFixedPoint + d;
     }
     max = min + dirFactor * longIntervalWidth;
-    return new ComparableDataRange<Calendar>( new Calendar[] { numericalToLogical( Math.min( min, max ) ), numericalToLogical( Math.max( min, max ) ) } );
+    return new ComparableDataRange<Calendar>( new Calendar[] { numericToLogical( Math.min( min, max ) ), numericToLogical( Math.max( min, max ) ) } );
   }
 
-  public Long logicalToNumerical( Calendar logVal )
+  public Long logicalToNumeric( Calendar logVal )
   {
     if( logVal != null )
+    {
       return logVal.getTimeInMillis();
+    }
     return null;
   }
 
-  public Calendar numericalToLogical( Number numVal )
+  public Calendar numericToLogical( Number numVal )
   {
     if( numVal == null )
+    {
       return null;
+    }
     else if( numVal.longValue() < 0 )
+    {
       return null;
+    }
     final Calendar cal = Calendar.getInstance();
     cal.set( Calendar.DST_OFFSET, 0 );
     cal.set( Calendar.ZONE_OFFSET, 0 );
@@ -79,9 +84,13 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   public Calendar stringToLogical( String value ) throws MalformedValueException
   {
     if( value == null )
+    {
       return null;
+    }
     if( value.trim().equals( "" ) )
+    {
       return null;
+    }
     final Calendar cal = m_stringParser.stringToLogical( value );
     return cal;
   }
@@ -117,9 +126,9 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataOperator#getFormat(org.kalypso.chart.framework.model.data.IDataRange)
    */
-  public Format getFormat( IDataRange<Calendar> range )
+  public Format getFormat( IDataRange<Number> range )
   {
-    return (Format) m_dateFormat;
+    return m_dateFormat;
   }
 
 }

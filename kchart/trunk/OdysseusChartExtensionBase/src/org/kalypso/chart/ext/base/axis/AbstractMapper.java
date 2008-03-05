@@ -23,7 +23,7 @@ public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_l
   private final Comparator<T_logical> m_dataComparator;
 
   private final Class< ? > m_dataClass;
- 
+
   private final MapperEventHandler m_handler = new MapperEventHandler();
 
   /**

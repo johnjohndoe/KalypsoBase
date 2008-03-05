@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 
 /**
  * 
@@ -13,28 +12,13 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
  * 
  * @author burtscher
  */
-public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
+public interface IAxis extends IMapper<Number, Integer>
 {
-  /**
-   * @return the axis' unique identifier
-   */
-  public String getIdentifier( );
 
   /**
    * @return axis label
    */
   public String getLabel( );
-
-  /**
-   * @return DataClass which is understood by this axis
-   */
-  @Deprecated
-  public Class< ? > getDataClass( );
-
-  /**
-   * @return Axis property - discrete or continous
-   */
-  public IAxisConstants.PROPERTY getProperty( );
 
   /**
    * @return axis position - left, right, top, bottom
@@ -48,14 +32,6 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
 
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );
-
-  @Deprecated
-  public int logicalToScreen( T_logical value );
-
-  @Deprecated
-  public T_logical screenToLogical( int value );
-
-  public int zeroToScreen( );
 
   /**
    * returns the internally used number range
@@ -86,7 +62,5 @@ public interface IAxis<T_logical> extends IMapper<T_logical, Integer>
   public IAxisAdjustment getPreferredAdjustment( );
 
   public void setPreferredAdjustment( IAxisAdjustment adj );
-
-  public DATATYPE getDataType( );
 
 }

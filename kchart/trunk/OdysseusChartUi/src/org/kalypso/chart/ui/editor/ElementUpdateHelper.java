@@ -68,6 +68,11 @@ public class ElementUpdateHelper
 
     // chart finden,
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
+
+    if( activePart == null )
+    {
+      return;
+    }
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {

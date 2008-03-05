@@ -47,15 +47,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.impl.model.event.LayerEventHandler;
-import de.openali.odysseus.chart.framework.impl.model.legend.LegendItem;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -222,20 +220,6 @@ public class DummyLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem() returns an empty Image
-   */
-  public ILegendItem getLegendItem( )
-  {
-    ILegendItem l = null;
-    final Image img = new Image( Display.getCurrent(), 20, 20 );
-    drawIcon( img );
-    final ImageData id = img.getImageData();
-    img.dispose();
-    l = new LegendItem( null, getTitle(), id );
-    return l;
-  }
-
-  /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
   public void setData( String id, Object data )
@@ -339,6 +323,14 @@ public class DummyLayer implements IChartLayer
   {
     // TODO Auto-generated method stub
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
+   */
+  public ILegendEntry[] getLegendEntries( )
+  {
+    return new ILegendEntry[0];
   }
 
 }

@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
-import de.openali.odysseus.chart.framework.impl.model.legend.LegendItem;
+import de.openali.odysseus.chart.framework.impl.model.layer.LegendEntry;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -113,21 +111,6 @@ public class GridLayer extends AbstractChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
-   */
-  @Override
-  public ILegendItem getLegendItem( )
-  {
-    ILegendItem l = null;
-    final Image img = new Image( Display.getCurrent(), 20, 20 );
-    drawIcon( img );
-    final ImageData id = img.getImageData();
-    img.dispose();
-    l = new LegendItem( null, getId(), id );
-    return l;
-  }
-
-  /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   @Override
@@ -156,27 +139,33 @@ public class GridLayer extends AbstractChartLayer
 
     final ArrayList<Point> points = new ArrayList<Point>();
     // Linie von links nach rechts
-    points.add( new Point( 0, (int) (height * 0.3) ) );
-    points.add( new Point( width, (int) (height * 0.3) ) );
-    figure.setPoints( points.toArray( new Point[] {} ) );
-    figure.paint( gc );
-    points.clear();
-    points.add( new Point( 0, (int) (height * 0.7) ) );
-    points.add( new Point( width, (int) (height * 0.7) ) );
-    figure.setPoints( points.toArray( new Point[] {} ) );
-    figure.paint( gc );
-    points.clear();
-    points.add( new Point( (int) (width * 0.3), 0 ) );
-    points.add( new Point( (int) (width * 0.3), height ) );
-    figure.setPoints( points.toArray( new Point[] {} ) );
-    figure.paint( gc );
-    points.clear();
-    points.add( new Point( (int) (width * 0.7), 0 ) );
-    points.add( new Point( (int) (width * 0.7), height ) );
-    figure.setPoints( points.toArray( new Point[] {} ) );
-    figure.paint( gc );
-    points.clear();
-
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
+    {
+      points.add( new Point( 0, (int) (height * 0.3) ) );
+      points.add( new Point( width, (int) (height * 0.3) ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+      points.add( new Point( 0, (int) (height * 0.7) ) );
+      points.add( new Point( width, (int) (height * 0.7) ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+    }
+    // Linie von oben nach unten
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
+    {
+      points.add( new Point( (int) (width * 0.3), 0 ) );
+      points.add( new Point( (int) (width * 0.3), height ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+      points.add( new Point( (int) (width * 0.7), 0 ) );
+      points.add( new Point( (int) (width * 0.7), height ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+    }
     gc.dispose();
   }
 
@@ -187,5 +176,58 @@ public class GridLayer extends AbstractChartLayer
     figure.setStyle( style );
     return figure;
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+
+    ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final PolylineFigure pf = getPolylineFigure();
+    ILineStyle ls = pf.getStyle();
+    if( ls.isVisible() )
+    {
+
+      LegendEntry le = new LegendEntry( this, ls.getTitle() )
+      {
+
+        @Override
+        public void paintSymbol( GC gc, Point size )
+        {
+          final int height = size.x;
+          final int width = size.y;
+
+          final ArrayList<Point> points = new ArrayList<Point>();
+          // Linie von links nach rechts
+          points.add( new Point( 0, (int) (height * 0.3) ) );
+          points.add( new Point( width, (int) (height * 0.3) ) );
+          pf.setPoints( points.toArray( new Point[] {} ) );
+          pf.paint( gc );
+          points.clear();
+          points.add( new Point( 0, (int) (height * 0.7) ) );
+          points.add( new Point( width, (int) (height * 0.7) ) );
+          pf.setPoints( points.toArray( new Point[] {} ) );
+          pf.paint( gc );
+          points.clear();
+          points.add( new Point( (int) (width * 0.3), 0 ) );
+          points.add( new Point( (int) (width * 0.3), height ) );
+          pf.setPoints( points.toArray( new Point[] {} ) );
+          pf.paint( gc );
+          points.clear();
+          points.add( new Point( (int) (width * 0.7), 0 ) );
+          points.add( new Point( (int) (width * 0.7), height ) );
+          pf.setPoints( points.toArray( new Point[] {} ) );
+          pf.paint( gc );
+
+        }
+
+      };
+      entries.add( le );
+    }
+
+    return entries.toArray( new ILegendEntry[] {} );
   }
 }

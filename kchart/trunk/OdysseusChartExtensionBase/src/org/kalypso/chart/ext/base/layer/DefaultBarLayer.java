@@ -1,19 +1,16 @@
 package org.kalypso.chart.ext.base.layer;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
 
-import de.openali.odysseus.chart.framework.exception.ZeroSizeDataRangeException;
 import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
 import de.openali.odysseus.chart.framework.impl.model.figure.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DATATYPE;
 
 /**
  * @author alibu
@@ -56,10 +53,10 @@ public class DefaultBarLayer extends AbstractBarLayer
         final Object endValue = domainEndComponent[i];
         final Object targetValue = targetComponent[i];
 
-        Point p1 = cm.numericToScreen( dopDomain.logicalToNumerical( startValue ), 0 );
-        Point p2 = cm.numericToScreen( dopDomain.logicalToNumerical( startValue ), dopTarget.logicalToNumerical( targetValue ) );
-        Point p3 = cm.numericToScreen( dopDomain.logicalToNumerical( endValue ), dopTarget.logicalToNumerical( targetValue ) );
-        Point p4 = cm.numericToScreen( dopDomain.logicalToNumerical( endValue ), 0 );
+        Point p1 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), 0 );
+        Point p2 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), dopTarget.logicalToNumeric( targetValue ) );
+        Point p3 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), dopTarget.logicalToNumeric( targetValue ) );
+        Point p4 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), 0 );
 
         path.add( p1 );
         path.add( p2 );
@@ -82,32 +79,10 @@ public class DefaultBarLayer extends AbstractBarLayer
   public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
-
     IDataRange targetRange = getDataContainer().getTargetRange();
-    DATATYPE dataType = getTargetAxis().getDataType();
-    IDataOperator dop = null;
-    if( dataType.equals( "STRING" ) )
-    {
-      dop = getTargetAxis().getDataOperator( String.class );
-    }
-    else if( dataType.equals( "DATE" ) )
-    {
-      dop = getTargetAxis().getDataOperator( Calendar.class );
-    }
-    else
-    {
-      dop = getTargetAxis().getDataOperator( Number.class );
-    }
+    IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
 
-    try
-    {
-      return new DataRange<Number>( 0, dop.logicalToNumerical( targetRange.getMax() ) );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return null;
+    return new DataRange<Number>( 0, dop.logicalToNumeric( targetRange.getMax() ) );
   }
+
 }

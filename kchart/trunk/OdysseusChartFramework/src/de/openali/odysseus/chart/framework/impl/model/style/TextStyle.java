@@ -23,8 +23,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 	private Color m_textColor;
 	private FONTWEIGHT m_weight;
 
-	public TextStyle( int height, String family, RGB rgbText, RGB rgbFill,
-	        FONTSTYLE style, FONTWEIGHT weight, int alpha, boolean isVisible )
+	public TextStyle( int height, String family, RGB rgbText, RGB rgbFill, FONTSTYLE style, FONTWEIGHT weight, int alpha, boolean isVisible )
 	{
 		setFamily(family);
 		setHeight(height);
@@ -98,8 +97,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
 	public void apply(GC gc)
 	{
-		FontData fd = new FontData(m_family, m_size, m_style.toSWT()
-		        | m_weight.toSWT());
+		FontData fd = new FontData(m_family, m_size, m_style.toSWT() | m_weight.toSWT());
 
 		if (m_font != null && !m_font.isDisposed())
 		{

@@ -10,7 +10,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
-import de.openali.odysseus.chart.framework.model.legend.ILegendItem;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
@@ -50,17 +49,6 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
    * @return the layers description
    */
   public String getDescription( );
-
-  /**
-   * TODO: remove this from IChartLayer interface ILegendItem should be constructed upon layers, client should always
-   * use drawIcon and getName only the legend should know about legend-items
-   * 
-   * @deprecated use getSymbolMap() instead
-   * 
-   * @return ILegendItem which describes the Layers content and style
-   */
-  @Deprecated
-  public ILegendItem getLegendItem( );
 
   /**
    * draws a picture of a given size into the given Image; the icon will be used for the legend to describe the layers
@@ -126,5 +114,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   public void init( );
 
   public void dispose( );
+
+  public ILegendEntry[] getLegendEntries( );
 
 }

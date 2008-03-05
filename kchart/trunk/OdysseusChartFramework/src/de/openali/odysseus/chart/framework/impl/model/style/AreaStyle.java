@@ -1,10 +1,10 @@
 package de.openali.odysseus.chart.framework.impl.model.style;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 public class AreaStyle extends AbstractStyle implements IAreaStyle
@@ -12,11 +12,11 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
 	private ILineStyle m_stroke;
 	private RGB m_inlineRgb;
-	private Color m_inlineColor;
+	private IFill m_fill;
 
-	public AreaStyle( ILineStyle outline, RGB inlineRGB, int alpha, ILineStyle stroke, boolean isVisible )
+	public AreaStyle( ILineStyle outline, IFill fill, int alpha, ILineStyle stroke, boolean isVisible )
 	{
-		m_inlineRgb = inlineRGB;
+		setFill(fill);
 		setAlpha(alpha);
 		setVisible(isVisible);
 		setStroke(stroke);
@@ -32,16 +32,6 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 		m_stroke = stroke;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setInlineColor(org.eclipse.swt.graphics.RGB)
-	 */
-	public void setInlineColor(RGB rgb)
-	{
-		m_inlineRgb = rgb;
-	}
-
 	public void apply(GC gc)
 	{
 		if (m_stroke != null)
@@ -52,12 +42,10 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 		int alpha = getAlpha();
 		gc.setAlpha(alpha);
 
-		if (m_inlineColor != null && !m_inlineColor.isDisposed())
+		if (m_fill != null)
 		{
-			m_inlineColor.dispose();
+			m_fill.apply(gc);
 		}
-		m_inlineColor = new Color(gc.getDevice(), m_inlineRgb);
-		gc.setBackground(m_inlineColor);
 	}
 
 	public void dispose()
@@ -66,10 +54,15 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 		{
 			m_stroke.dispose();
 		}
-		if (m_inlineColor != null && !m_inlineColor.isDisposed())
+		if (m_fill != null)
 		{
-			m_inlineColor.dispose();
+			m_fill.dispose();
 		}
+	}
+
+	public void setFill(IFill fill)
+	{
+		m_fill = fill;
 	}
 
 }

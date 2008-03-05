@@ -9,7 +9,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.PROPERTY;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -17,7 +16,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> implements IAxis<T>
+public abstract class AbstractAxis extends AbstractMapper<Number, Integer> implements IAxis
 {
   private final IMapperRegistry m_registry = null;
 
@@ -25,13 +24,11 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
 
   private final String m_label;
 
-  private final PROPERTY m_prop;
-
   private final POSITION m_pos;
 
   private final DIRECTION m_dir;
 
-  private IDataRange<T> m_dataRange;
+  private IDataRange<Number> m_dataRange;
 
   private IAxisAdjustment m_preferredAdjustment = null;
 
@@ -39,17 +36,16 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
    * Uses a ComparableComparator as dataComparator
    */
   @SuppressWarnings("unchecked")
-  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Class< ? > dataClass )
+  public AbstractAxis( final String id, final String label, final POSITION pos, final DIRECTION dir, final Class< ? > dataClass )
   {
-    this( id, label, prop, pos, dir, new ComparableComparator(), dataClass );
+    this( id, label, pos, dir, new ComparableComparator(), dataClass );
   }
 
-  public AbstractAxis( final String id, final String label, final PROPERTY prop, final POSITION pos, final DIRECTION dir, final Comparator<T> dataComparator, final Class< ? > dataClass )
+  public AbstractAxis( final String id, final String label, final POSITION pos, final DIRECTION dir, final Comparator<Number> dataComparator, final Class< ? > dataClass )
   {
     super( id, dataComparator, dataClass );
     m_id = id;
     m_label = label;
-    m_prop = prop;
     m_pos = pos;
     m_dir = dir;
   }
@@ -59,14 +55,14 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
    */
   @SuppressWarnings("unchecked")
   @Deprecated
-  public IAxisRenderer<T> getRenderer( )
+  public IAxisRenderer getRenderer( )
   {
     if( m_registry == null )
     {
       throw new IllegalStateException( "Registry is null" );
     }
 
-    return (IAxisRenderer<T>) m_registry.getRenderer( this );
+    return m_registry.getRenderer( this );
   }
 
   /**
@@ -75,14 +71,6 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
   public String getLabel( )
   {
     return m_label;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getProperty()
-   */
-  public PROPERTY getProperty( )
-  {
-    return m_prop;
   }
 
   /**
@@ -118,12 +106,12 @@ public abstract class AbstractAxis<T> extends AbstractMapper<T, Integer> impleme
     return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
   }
 
-  public IDataRange<T> getLogicalRange( )
+  public IDataRange<Number> getLogicalRange( )
   {
     return m_dataRange;
   }
 
-  public void setLogicalRange( final IDataRange<T> dataRange )
+  public void setLogicalRange( final IDataRange<Number> dataRange )
   {
     m_dataRange = dataRange;
     getEventHandler().fireMapperRangeChanged( this );

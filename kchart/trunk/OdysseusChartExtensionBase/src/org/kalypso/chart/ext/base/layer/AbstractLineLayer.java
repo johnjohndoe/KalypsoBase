@@ -10,9 +10,12 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.impl.model.figure.PointFigure;
 import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
+import de.openali.odysseus.chart.framework.impl.model.layer.LegendEntry;
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
@@ -77,4 +80,63 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     return pf;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+
+    ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    ILineStyle ls = getPolylineFigure().getStyle();
+    if( ls.isVisible() )
+    {
+
+      LegendEntry le = new LegendEntry( this, ls.getTitle() )
+      {
+
+        @Override
+        public void paintSymbol( GC gc, Point size )
+        {
+          int sizeX = size.x;
+          int sizeY = size.y;
+
+          final ArrayList<Point> path = new ArrayList<Point>();
+          path.add( new Point( 0, sizeX / 2 ) );
+          path.add( new Point( sizeX / 5, sizeY / 2 ) );
+          path.add( new Point( sizeX / 5 * 2, sizeY / 4 ) );
+          path.add( new Point( sizeX / 5 * 3, sizeY / 4 * 3 ) );
+          path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
+          path.add( new Point( sizeX, sizeY / 2 ) );
+
+          drawLine( gc, path );
+        }
+
+      };
+      entries.add( le );
+
+    }
+
+    IPointStyle ps = getPointFigure().getStyle();
+    if( ps.isVisible() )
+    {
+
+      LegendEntry le = new LegendEntry( this, ps.getTitle() )
+      {
+        @Override
+        public void paintSymbol( GC gc, Point size )
+        {
+          final ArrayList<Point> path = new ArrayList<Point>();
+
+          path.add( new Point( size.x / 2, size.y / 2 ) );
+          drawPoints( gc, path );
+        }
+
+      };
+      entries.add( le );
+    }
+
+    return entries.toArray( new ILegendEntry[] {} );
+
+  }
 }

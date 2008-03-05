@@ -5,17 +5,17 @@ import java.awt.Insets;
 import org.kalypso.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import org.kalypso.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import org.kalypso.chart.ext.base.axisrenderer.NumberLabelCreator;
-import org.kalypso.chart.factory.configuration.exception.AxisRendererProviderException;
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.factory.configuration.parameters.impl.BooleanParser;
 
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 public class GenericNumberAxisRendererProvider extends AbstractAxisRendererProvider
 {
 
-  public IAxisRenderer< ? > getAxisRenderer( ) throws AxisRendererProviderException
+  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException
   {
     final IParameterContainer pc = getParameterContainer();
 
@@ -47,7 +47,7 @@ public class GenericNumberAxisRendererProvider extends AbstractAxisRendererProvi
     final BooleanParser bp = new BooleanParser();
     final boolean hideCut = pc.getParsedParameterValue( "hide_cut", "false", bp );
 
-    final IAxisRenderer<Number> axisRenderer = new GenericAxisRenderer( getAxisRendererType().getId(), tickLength, insetsTick, insetsLabel, 0, new NumberLabelCreator( tick_label_formater ), new GenericNumberTickCalculator(), minTickInteval, hideCut );
+    final IAxisRenderer axisRenderer = new GenericAxisRenderer( getAxisRendererType().getId(), tickLength, insetsTick, insetsLabel, 0, new NumberLabelCreator( tick_label_formater ), new GenericNumberTickCalculator(), minTickInteval, hideCut );
     return axisRenderer;
   }
 

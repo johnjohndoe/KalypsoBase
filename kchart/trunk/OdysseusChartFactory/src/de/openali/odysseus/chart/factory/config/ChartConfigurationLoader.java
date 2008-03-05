@@ -13,12 +13,12 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.chart.factory.util.IReferenceResolver;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chartconfig.x010.AreaStyleDocument;
 import de.openali.odysseus.chartconfig.x010.AxisDocument;
@@ -106,6 +106,30 @@ public class ChartConfigurationLoader implements IReferenceResolver
   public ChartType[] getCharts( )
   {
     return m_document.getChartConfiguration().getChartArray();
+  }
+
+  public ChartType getChartById( String id )
+  {
+    ChartType[] charts = getCharts();
+    for( int i = 0; i < charts.length; i++ )
+    {
+      if( charts[i].getId().equals( id ) )
+      {
+        return charts[i];
+      }
+    }
+    return null;
+  }
+
+  public String[] getChartIds( )
+  {
+    ChartType[] charts = getCharts();
+    String[] chartIds = new String[charts.length];
+    for( int i = 0; i < chartIds.length; i++ )
+    {
+      chartIds[i] = charts[i].getId();
+    }
+    return chartIds;
   }
 
   public AxisType[] getAxes( )
@@ -239,7 +263,9 @@ public class ChartConfigurationLoader implements IReferenceResolver
       obj = doc.getAxisRenderer();
     }
     else
+    {
       Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + node.getNodeName() );
+    }
     return obj;
   }
 
@@ -247,7 +273,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   {
     final XmlOptions options = new XmlOptions();
     final Map<String, String> prefixes = new HashMap<String, String>();
-    prefixes.put( "http://www.ksp.org/chart/factory", "" );
+    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.1.0/", "" );
     options.setSaveSuggestedPrefixes( prefixes );
     options.setSavePrettyPrint();
     options.setCharacterEncoding( charset );

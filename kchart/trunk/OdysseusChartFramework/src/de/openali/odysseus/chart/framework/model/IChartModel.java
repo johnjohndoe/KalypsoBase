@@ -21,7 +21,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
 
   public void clear( );
 
-  public Map<IAxis< ? >, List<IChartLayer>> getAxis2Layers( );
+  public Map<IAxis, List<IChartLayer>> getAxis2Layers( );
 
   /**
    * @param b
@@ -33,7 +33,7 @@ public interface IChartModel extends IEventProvider<IChartModelEventListener>
   /**
    * When called, all given axes set their DataRange so all ther layers data can be shown
    */
-  public void autoscale( IAxis< ? >[] axes );
+  public void autoscale( IAxis[] axes );
 
   /**
    * sets automatical autoscaling of axes

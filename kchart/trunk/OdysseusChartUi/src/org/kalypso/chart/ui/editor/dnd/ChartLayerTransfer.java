@@ -96,26 +96,31 @@ public class ChartLayerTransfer extends ByteArrayTransfer
   @Override
   protected void javaToNative( Object object, TransferData transferData )
   {
-    String id = (String) object;
-
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    DataOutputStream out = new DataOutputStream( byteOut );
-
-    byte[] bytes = null;
-
-    try
+    if( object != null )
     {
-      out.writeUTF( id );
-      out.close();
-      bytes = byteOut.toByteArray();
-    }
-    catch( IOException e )
-    {
-      // when in doubt send nothing
-    }
+      String id = (String) object;
 
-    if( bytes != null )
-      super.javaToNative( bytes, transferData );
+      ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+      DataOutputStream out = new DataOutputStream( byteOut );
+
+      byte[] bytes = null;
+
+      try
+      {
+        out.writeUTF( id );
+        out.close();
+        bytes = byteOut.toByteArray();
+      }
+      catch( IOException e )
+      {
+        // when in doubt send nothing
+      }
+
+      if( bytes != null )
+      {
+        super.javaToNative( bytes, transferData );
+      }
+    }
   }
 
   /*
