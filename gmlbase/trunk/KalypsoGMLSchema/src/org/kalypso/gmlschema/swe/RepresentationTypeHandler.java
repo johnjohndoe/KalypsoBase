@@ -42,9 +42,11 @@ package org.kalypso.gmlschema.swe;
 
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -247,7 +249,28 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           } // endFor j
         } // endFor i
 
-        if( hEnumerations.size() > 0 )
+        if( localName.equals( "Boolean" ) )
+        {
+          // Special case for boolean representations: use boolean values in enum
+          if( hEnumerations.size() != 2 )
+            throw new TypeRegistryException( "Boolean representation type must have exactly two enumeration restrictions." );
+
+          final Set<Entry<Object, ILanguageAnnontationProvider>> entrySet = hEnumerations.entrySet();
+          final Iterator<Entry<Object, ILanguageAnnontationProvider>> entryIt = entrySet.iterator();
+
+          final Entry<Object, ILanguageAnnontationProvider> falseEntry = entryIt.next();
+          final Entry<Object, ILanguageAnnontationProvider> trueEntry = entryIt.next();
+
+          final Map<Object, ILanguageAnnontationProvider> booleanEnum = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+          booleanEnum.put( Boolean.FALSE, falseEntry.getValue() );
+          booleanEnum.put( Boolean.TRUE, trueEntry.getValue() );
+
+          // TODO: if we ever support serialization of other string represantations as 'false' and 'true', we need
+          // to introduce a special type handler for that (see ObservationFeatureFactory#typeHanderForComponent) and
+          // we also need to give the string representations to the enumeration
+          myRestrictions.add( new EnumerationRestriction( booleanEnum ) );
+        }
+        else if( hEnumerations.size() > 0 )
         {
           myRestrictions.add( new EnumerationRestriction( hEnumerations ) );
         }

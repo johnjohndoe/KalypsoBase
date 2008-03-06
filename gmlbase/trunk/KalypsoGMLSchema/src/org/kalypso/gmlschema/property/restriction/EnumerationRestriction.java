@@ -53,14 +53,10 @@ import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
  */
 public class EnumerationRestriction implements IRestriction
 {
-  private String m_lang;
+  private final String m_lang;
 
   private final Map<Object, ILanguageAnnontationProvider> m_map;
 
-  /**
-   * @throws IllegalArgumentException
-   *             if 'values' and 'labels' does not have same length
-   */
   public EnumerationRestriction( Map<Object, ILanguageAnnontationProvider> map )
   {
     m_map = map;
@@ -87,11 +83,10 @@ public class EnumerationRestriction implements IRestriction
   {
     return getLabels( m_lang );
   }
-  
-  public Map<Object, ILanguageAnnontationProvider> getMapping()
+
+  public Map<Object, ILanguageAnnontationProvider> getMapping( )
   {
     return m_map;
   }
-  
-  
+
 }
