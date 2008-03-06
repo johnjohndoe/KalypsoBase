@@ -48,14 +48,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -66,6 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -74,7 +68,8 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
@@ -93,8 +88,6 @@ public class PageSelectGeodataFile extends WizardPage
   protected String m_sFile;
 
   protected GridFileVerifier verifier;
-
-  protected ComboViewer m_cViewer;
 
   protected StructuredSelection m_comboSel;
 
@@ -119,13 +112,17 @@ public class PageSelectGeodataFile extends WizardPage
 
   protected final WizardNewFileCreationPage m_creationPage;
 
+  private CRSSelectionPanel m_crsPanel;
+
+  private String m_crs;
+
   public PageSelectGeodataFile( final WizardNewFileCreationPage creationPage )
   {
     super( "importGeoData" );
     m_creationPage = creationPage;
 
     setTitle( "Rasterdaten-Import" );
-    setDescription( "Wählen Sie aus, welche Rasterdatei imporitert werden soll." );
+    setDescription( "Wählen Sie aus, welche Rasterdatei importiert werden soll." );
   }
 
   /**
@@ -144,7 +141,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     final Label label = new Label( container, SWT.NONE );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    label.setText( "Select the raster dataset for import:" );
+    label.setText( "Selektieren Sie die Rasterdatei, die importiert werden soll:" );
 
     m_tFile = new Text( container, SWT.BORDER );
     m_tFile.addModifyListener( new ModifyListener()
@@ -178,36 +175,33 @@ public class PageSelectGeodataFile extends WizardPage
       }
     } );
 
-    /* coordinate system */
-    final String[] csSystem = CRSHelper.getAllNames().toArray( new String[] {} );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( container, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
 
-    final Label lCoord = new Label( container, SWT.NONE );
-    lCoord.setText( "Projection " );
-    lCoord.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
 
-    m_cViewer = new ComboViewer( container, SWT.BORDER | SWT.READ_ONLY );
-    m_cViewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    m_cViewer.setContentProvider( new ArrayContentProvider() );
-    m_cViewer.setSorter( new ViewerSorter() );
-    m_cViewer.setLabelProvider( new LabelProvider()
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Raster-Datei" );
+
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      public String getText( final Object element )
+      protected void selectionChanged( String selectedCRS )
       {
-        if( element instanceof String )
-          return (String) element;
-
-        return null;
-      }
-    } );
-    m_cViewer.setInput( csSystem );
-    m_cViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        m_comboSel = (StructuredSelection) m_cViewer.getSelection();
+        m_crs = selectedCRS;
         updatePageComplete();
       }
+
     } );
 
     final Label lSpacer = new Label( container, SWT.NONE );
@@ -307,16 +301,10 @@ public class PageSelectGeodataFile extends WizardPage
 
     final IDialogSettings dialogSettings = getDialogSettings();
     final String fullPath = dialogSettings.get( SETTINGS_FILE_PATH );
-    final String srsName = dialogSettings.get( SETTINGS_SRS_NAME );
-    String srsDefaultName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
-    final String srsToShow = srsName == null ? srsDefaultName : srsName;
 
     if( fullPath != null )
       m_tFile.setText( fullPath );
 
-    if( srsToShow != null )
-      m_cViewer.setSelection( new StructuredSelection( srsToShow ), true );
   }
 
   protected void updatePageComplete( )
@@ -351,29 +339,19 @@ public class PageSelectGeodataFile extends WizardPage
       return;
     }
 
-    final ISelection sel = m_cViewer.getSelection();
-    if( sel instanceof StructuredSelection )
+    if( m_crs == null )
     {
-      final StructuredSelection selection = (StructuredSelection) sel;
-      final Object firstElement = selection.getFirstElement();
+      setMessage( null );
+      setErrorMessage( "No projection defined. Choose one projection from the list, please." );
 
-      if( firstElement == null )
-      {
-        setMessage( null );
-        setErrorMessage( "No projection defined. Choose one projection from the list, please." );
-
-        return;
-      }
+      return;
     }
 
-    final Object element = m_comboSel.getFirstElement();
-    if( element instanceof String )
+    if( m_crs != null )
     {
-      final String cs = (String) element;
-
       try
       {
-        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), cs );
+        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), m_crs );
       }
       catch( final MalformedURLException e )
       {
@@ -389,7 +367,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     /* If page is complete, we may save the settings */
     getDialogSettings().put( SETTINGS_FILE_PATH, m_sFile );
-    getDialogSettings().put( SETTINGS_SRS_NAME, (String) m_comboSel.getFirstElement() );
+    getDialogSettings().put( SETTINGS_SRS_NAME, m_crs );
 
     // TODO: why disable these controls here?
 // m_tFile.setEnabled( false );
@@ -499,11 +477,12 @@ public class PageSelectGeodataFile extends WizardPage
 
   public String getProjection( )
   {
-    final Object element = m_comboSel.getFirstElement();
-    if( element instanceof String )
-      return (String) element;
+// final Object element = m_comboSel.getFirstElement();
+// if( element instanceof String )
+// return (String) element;
 
-    return null;
+// return null;
+    return m_crs;
   }
 
   public RectifiedGridDomain.OffsetVector getOffsetX( )
