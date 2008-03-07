@@ -2,14 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Kalypso ODS Plug-in
 Bundle-SymbolicName: org.kalypso.service.ods;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.1.0
 Bundle-ClassPath: build/bin
 Bundle-Activator: org.kalypso.service.ods.ODSOperationsPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.chart.factory,
- org.kalypso.service.ogc,
- javax.servlet
+Require-Bundle: org.kalypso.chart.factory;bundle-version="[0.1.0,0.1.0]",
+ org.kalypso.service.ogc
 Export-Package: net.opengis.ows,
  net.opengis.ows.impl,
  org.kalypso.service.ods,
