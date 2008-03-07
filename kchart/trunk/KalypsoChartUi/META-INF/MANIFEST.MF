@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoChartUi Plug-in
 Bundle-SymbolicName: org.kalypso.chart.ui; singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 0.1.0
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.ui.views;visibility:=reexport,
- org.kalypso.chart.factory;visibility:=reexport,
+ org.kalypso.chart.factory;bundle-version="[0.1.0,0.1.0]";visibility:=reexport,
  org.eclipse.core.expressions;visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.chart.ui,
