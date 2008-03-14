@@ -76,7 +76,7 @@ public class ChartImageFactory
 
 			// Wenn man den GC nicht neu erzeugt, werden die AChsen nicht
 			// gezeichnet, sondern nochmal das Chart
-			// Zusï¿½tzlich muss das Image disposed werden, weil sonst noch
+			// Zusätzlich muss das Image disposed werden, weil sonst noch
 			// Teile des Plot in die AxisSpaces gezeichnet werden
 			tmpImg.dispose();
 			tmpImg = new Image(dev, width, height);

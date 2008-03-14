@@ -7,21 +7,17 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
+import org.kalypso.chart.ext.base.layer.AbstractLineLayer;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.eclipse.swt.graphics.GC;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.styles.IStyledElement;
-import de.openali.odysseus.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 
-// TODO why do we still have several tuple result layer?
-// @Alex: please combine them to ONE implementation!
-public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
+public class TupleResultLineLayer extends AbstractLineLayer
 {
 
+  @Override
   public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
@@ -38,19 +34,14 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
     path.add( new Point( width / 5 * 4, height / 2 ) );
     path.add( new Point( width, height / 2 ) );
 
-    final IStyledElement element = getStyle().getElement( SE_TYPE.LINE, 1 );
-
-    element.setPath( path );
-    element.paint( gc );
-
+    drawLine( gc, path );
     gc.dispose();
 
   }
 
+  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
-    final IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
-    final IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );
     final List<Point> path = new ArrayList<Point>();
     final TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
 
@@ -58,47 +49,32 @@ public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer
 
     final TupleResult result = data.getTupleResult();
 
-    Object[] xValues = null;
-    Object[] yValues = null;
-    IAxis xAxis = null;
-    IAxis yAxis = null;
+    Object[] domainValues = data.getDomainValues();
+    Object[] targetValues = data.getTargetValues();
 
-    if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    if( domainValues.length > 0 && targetValues.length > 0 )
     {
-      xValues = data.getDomainValues();
-      yValues = data.getTargetValues();
-      xAxis = getDomainAxis();
-      yAxis = getTargetAxis();
-    }
-    else
-    {
-      yValues = data.getDomainValues();
-      xValues = data.getTargetValues();
-      yAxis = getDomainAxis();
-      xAxis = getTargetAxis();
-    }
-    if( xValues.length > 0 && yValues.length > 0 )
-    {
+      IAxis domainAxis = getDomainAxis();
+      IAxis targetAxis = getTargetAxis();
+      IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
+      IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
+
       for( int i = 0; i < result.size(); i++ )
       {
-        final Object xObj = xValues[i];
-        final Object yObj = yValues[i];
+        final Object domainValue = domainValues[i];
+        final Object targetValue = targetValues[i];
+
         // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
         // in that case
-        if( xObj != null && yObj != null )
+        if( domainValue != null && targetValue != null )
         {
-          final int x = xAxis.logicalToScreen( xObj );
-          final int y = yAxis.logicalToScreen( yObj );
-          path.add( new Point( x, y ) );
+          Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
+          path.add( screen );
         }
       }
     }
 
-    sl.setPath( path );
-    sl.paint( gc );
-    sp.setPath( path );
-    sp.paint( gc );
-
+    drawLine( gc, path );
+    drawPoints( gc, path );
   }
-
 }

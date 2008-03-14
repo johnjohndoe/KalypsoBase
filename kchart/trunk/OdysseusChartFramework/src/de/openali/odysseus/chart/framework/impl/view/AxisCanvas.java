@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
@@ -108,6 +107,7 @@ public class AxisCanvas extends Canvas implements PaintListener,
 
 	private void paint(final GC gc)
 	{
+		setAxisHeight();
 		final Rectangle bounds = getClientArea();
 		final Rectangle b = new Rectangle(0, 0, bounds.width, bounds.height);
 		m_bufferImage = paintBuffered(gc, b, m_bufferImage);
@@ -187,67 +187,71 @@ public class AxisCanvas extends Canvas implements PaintListener,
 		return usedBufferImage;
 	}
 
-	/**
-	 * Uses the widgets' complete extension to alculates the screen value in
-	 * correspondance to a normalized value
-	 * 
-	 * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
-	 */
-	public int normalizedToScreen(final double normValue)
-	{
-		double myNormValue = normValue;
-		final int range = getRange();
-		if (ChartUtilities.isInverseScreenCoords(m_axis))
-		{
-			myNormValue = 1 - myNormValue;
-		}
-		final int screenValue = (int) (range * myNormValue);
-		return screenValue;
-	}
+	// /**
+	// * Uses the widgets' complete extension to calculate the screen value in
+	// * correspondance to a normalized value
+	// *
+	// * @see
+	// de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
+	// */
+	// public int normalizedToScreen(final double normValue)
+	// {
+	// double myNormValue = normValue;
+	// final int range = getRange();
+	// if (ChartUtilities.isInverseScreenCoords(m_axis))
+	// {
+	// myNormValue = 1 - myNormValue;
+	// }
+	// final int screenValue = (int) (range * myNormValue);
+	// return screenValue;
+	// }
+	//
+	// /**
+	// * Uses the widgets' complete extension to alculates the normalized value
+	// in
+	// * correspondance to a screen value
+	// *
+	// * @see
+	// de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
+	// */
+	// public double screenToNormalized(final int screenValue)
+	// {
+	// final int range = getRange();
+	// if (range == 0)
+	// {
+	// return 0;
+	// }
+	// final double normValue = (double) screenValue / range;
+	// if (ChartUtilities.isInverseScreenCoords(m_axis))
+	// {
+	// return 1 - normValue;
+	// }
+	//
+	// return normValue;
+	// }
 
-	/**
-	 * Uses the widgets' complete extension to alculates the normalized value in
-	 * correspondance to a screen value
-	 * 
-	 * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
-	 */
-	public double screenToNormalized(final int screenValue)
-	{
-		final int range = getRange();
-		if (range == 0)
-		{
-			return 0;
-		}
-		final double normValue = (double) screenValue / range;
-		if (ChartUtilities.isInverseScreenCoords(m_axis))
-		{
-			return 1 - normValue;
-		}
-
-		return normValue;
-	}
-
-	/**
-	 * calculates the significant (= not variable) extension of the widget
-	 */
-	private int getRange()
-	{
-		final Rectangle bounds = getBounds();
-		final int range;
-		if (m_axis.getPosition().getOrientation().equals(ORIENTATION.HORIZONTAL))
-		{
-			range = bounds.width;// horizontal
-		}
-		else
-		{
-			range = bounds.height; // vertical
-		}
-		return range;
-	}
+	// /**
+	// * calculates the significant (= not variable) extension of the widget
+	// */
+	// private int getRange()
+	// {
+	// final Rectangle bounds = getBounds();
+	// final int range;
+	// if (m_axis.getPosition().getOrientation().equals(ORIENTATION.HORIZONTAL))
+	// {
+	// range = bounds.width;// horizontal
+	// }
+	// else
+	// {
+	// range = bounds.height; // vertical
+	// }
+	// return range;
+	// }
 
 	@Override
 	public void layout()
 	{
+		setAxisHeight();
 		if (m_bufferImage != null)
 		{
 			m_bufferImage.dispose();
@@ -260,7 +264,7 @@ public class AxisCanvas extends Canvas implements PaintListener,
 	 */
 	public void handleEvent(final Event event)
 	{
-
+		setAxisHeight();
 		if (event.type == SWT.Resize)
 		{
 			if (m_bufferImage != null)
@@ -305,5 +309,31 @@ public class AxisCanvas extends Canvas implements PaintListener,
 		}
 		m_panOffset = offset;
 		redraw();
+	}
+
+	@Override
+	public void setSize(Point size)
+	{
+		super.setSize(size);
+		setAxisHeight();
+	}
+
+	@Override
+	public void setSize(int width, int height)
+	{
+		super.setSize(width, height);
+		setAxisHeight();
+	}
+
+	private void setAxisHeight()
+	{
+		if (m_axis.getPosition().getOrientation().equals(ORIENTATION.HORIZONTAL))
+		{
+			m_axis.setScreenHeight(getBounds().width);
+		}
+		else
+		{
+			m_axis.setScreenHeight(getBounds().height);
+		}
 	}
 }

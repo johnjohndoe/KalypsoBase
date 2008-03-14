@@ -84,7 +84,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, Number[] ticks )
+  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, Number[] ticks, int offset )
   {
 
     if( (gc == null) || (axis == null) || (ticks == null) )
@@ -120,10 +120,10 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
-        x1 = tickPos;
-        x2 = tickPos;
+        x1 = tickPos + offset;
+        x2 = x1;
         y1 = startY;
-        textX = tickPos - tickExtent.x / 2;
+        textX = tickPos - tickExtent.x / 2 + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -136,8 +136,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           y2 = y1 - tickLength;
           textY = y2 - tickLabelInsets.top - tickExtent.y;
         }
-
-        if( m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax)) )
+        // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
+        if( (m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax))) || (x1 < screenMin + offset || x1 > screenMax + offset) )
         {
           drawTick = false;
         }
@@ -146,9 +146,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       else
       {
         x1 = startX;
-        textY = tickPos - tickExtent.y / 2;
-        y1 = tickPos;
-        y2 = tickPos;
+        textY = tickPos - tickExtent.y / 2 + offset;
+        y1 = tickPos + offset;
+        y2 = y1;
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
         {
@@ -161,7 +161,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           x2 = x1 + tickLength;
           textX = x2 + tickLabelInsets.top;
         }
-        if( m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax)) )
+        // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
+        if( (m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax))) || (y1 < screenMin + offset || y1 > screenMax + offset) )
         {
           drawTick = false;
         }
@@ -176,87 +177,87 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     }
   }
 
-  protected void drawTicks2( GC gc, IAxis axis, int startX, int startY, Number[] ticks )
-  {
-    ITextStyle tickLabelStyle = getTickLabelStyle();
-    ILineStyle tickLineStyle = getTickLineStyle();
-
-    int textXDate = 0;
-    int textYDate = 0;
-
-    IDataRange<Number> range = axis.getNumericRange();
-
-    if( axis.getPosition() == POSITION.BOTTOM )
-    {
-      final int y1 = startY;
-      final int y2 = y1 + getTickLength();
-
-      for( final Number value : ticks )
-      {
-        final int tickPos = axis.numericToScreen( value );
-        final String labelDate = m_labelCreator.getLabel( value, range );
-        final Point tickExtentDate = getTextExtent( gc, labelDate, tickLabelStyle );
-
-        gc.drawLine( tickPos, y1, tickPos, y2 );
-        textXDate = tickPos - tickExtentDate.x / 2;
-        textYDate = y2 + getTickLabelInsets().top;
-        drawText( gc, labelDate, textXDate, textYDate, tickLabelStyle );
-      }
-    }
-    else if( axis.getPosition() == POSITION.TOP )
-    {
-      final int y1 = startY;
-      final int y2 = y1 - getTickLength();
-
-      for( final Number value : ticks )
-      {
-        final int tickPos = axis.numericToScreen( value );
-        final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
-
-        gc.drawLine( tickPos, y1, tickPos, y2 );
-        textXDate = tickPos - tickExtent.x / 2;
-        textYDate = y2 - getTickLabelInsets().top - tickExtent.y;
-        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
-      }
-    }
-    else if( axis.getPosition() == POSITION.LEFT )
-    {
-      final int x1 = startX;
-      final int x2 = x1 - getTickLength();
-
-      for( final Number value : ticks )
-      {
-        final int tickPos = axis.numericToScreen( value );
-        final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
-
-        gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = x1 - tickExtent.x - getTickLabelInsets().right - getTickLength();
-        textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
-      }
-    }
-    else if( axis.getPosition() == POSITION.RIGHT )
-    {
-      final int x1 = startX;
-      final int x2 = x1 + getTickLength();
-
-      for( final Number value : ticks )
-      {
-        final int tickPos = axis.numericToScreen( value );
-        final String label = m_labelCreator.getLabel( value, range );
-        final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
-
-        gc.drawLine( x1, tickPos, x2, tickPos );
-        textXDate = tickPos - x2 + getTickLabelInsets().top;
-        textXDate = x1 + getTickLabelInsets().left + getTickLength();
-        textYDate = tickPos - tickExtent.y / 2;
-        drawText( gc, label, textXDate, textYDate, tickLabelStyle );
-      }
-    }
-
-  }
+  // protected void drawTicks2( GC gc, IAxis axis, int startX, int startY, Number[] ticks )
+  // {
+  // ITextStyle tickLabelStyle = getTickLabelStyle();
+  // ILineStyle tickLineStyle = getTickLineStyle();
+  //
+  // int textXDate = 0;
+  // int textYDate = 0;
+  //
+  // IDataRange<Number> range = axis.getNumericRange();
+  //
+  // if( axis.getPosition() == POSITION.BOTTOM )
+  // {
+  // final int y1 = startY;
+  // final int y2 = y1 + getTickLength();
+  //
+  // for( final Number value : ticks )
+  // {
+  // final int tickPos = axis.numericToScreen( value );
+  // final String labelDate = m_labelCreator.getLabel( value, range );
+  // final Point tickExtentDate = getTextExtent( gc, labelDate, tickLabelStyle );
+  //
+  // gc.drawLine( tickPos, y1, tickPos, y2 );
+  // textXDate = tickPos - tickExtentDate.x / 2;
+  // textYDate = y2 + getTickLabelInsets().top;
+  // drawText( gc, labelDate, textXDate, textYDate, tickLabelStyle );
+  // }
+  // }
+  // else if( axis.getPosition() == POSITION.TOP )
+  // {
+  // final int y1 = startY;
+  // final int y2 = y1 - getTickLength();
+  //
+  // for( final Number value : ticks )
+  // {
+  // final int tickPos = axis.numericToScreen( value );
+  // final String label = m_labelCreator.getLabel( value, range );
+  // final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
+  //
+  // gc.drawLine( tickPos, y1, tickPos, y2 );
+  // textXDate = tickPos - tickExtent.x / 2;
+  // textYDate = y2 - getTickLabelInsets().top - tickExtent.y;
+  // drawText( gc, label, textXDate, textYDate, tickLabelStyle );
+  // }
+  // }
+  // else if( axis.getPosition() == POSITION.LEFT )
+  // {
+  // final int x1 = startX;
+  // final int x2 = x1 - getTickLength();
+  //
+  // for( final Number value : ticks )
+  // {
+  // final int tickPos = axis.numericToScreen( value );
+  // final String label = m_labelCreator.getLabel( value, range );
+  // final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
+  //
+  // gc.drawLine( x1, tickPos, x2, tickPos );
+  // textXDate = x1 - tickExtent.x - getTickLabelInsets().right - getTickLength();
+  // textYDate = tickPos - tickExtent.y / 2;
+  // drawText( gc, label, textXDate, textYDate, tickLabelStyle );
+  // }
+  // }
+  // else if( axis.getPosition() == POSITION.RIGHT )
+  // {
+  // final int x1 = startX;
+  // final int x2 = x1 + getTickLength();
+  //
+  // for( final Number value : ticks )
+  // {
+  // final int tickPos = axis.numericToScreen( value );
+  // final String label = m_labelCreator.getLabel( value, range );
+  // final Point tickExtent = getTextExtent( gc, label, tickLabelStyle );
+  //
+  // gc.drawLine( x1, tickPos, x2, tickPos );
+  // textXDate = tickPos - x2 + getTickLabelInsets().top;
+  // textXDate = x1 + getTickLabelInsets().left + getTickLength();
+  // textYDate = tickPos - tickExtent.y / 2;
+  // drawText( gc, label, textXDate, textYDate, tickLabelStyle );
+  // }
+  // }
+  //
+  // }
 
   private Insets getConvertedInsets( final IAxis axis, final Insets insets )
   {
@@ -401,21 +402,49 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   {
     final Device dev = gc.getDevice();
 
-    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
-    // gc.fillRectangle( screen );
+    if( screen.width > 0 && screen.height > 0 )
+    {
 
-    // draw axis line
-    final int[] coords = createAxisSegment( axis, screen );
-    assert coords != null && coords.length == 4;
-    drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
+      gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
+      // gc.fillRectangle( screen );
 
-    Number[] ticks = getTicks( axis, gc );
-    drawTicks( gc, axis, coords[0], coords[1], ticks );
-    drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3] );
+      // draw axis line
+      final int[] coords = createAxisSegment( axis, screen );
+      assert coords != null && coords.length == 4;
+      drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
+
+      int offset = 0;
+      if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
+      {
+        if( axis.getDirection().equals( DIRECTION.POSITIVE ) )
+        {
+          offset = coords[0];
+        }
+        else
+        {
+          offset = coords[2];
+        }
+      }
+      else
+      {
+        if( axis.getDirection().equals( DIRECTION.POSITIVE ) )
+        {
+          offset = coords[3];
+        }
+        else
+        {
+          offset = coords[1];
+        }
+      }
+
+      Number[] ticks = getTicks( axis, gc );
+      drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
+      drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3], offset );
+    }
 
   }
 
-  protected void drawAxisLabel( GC gc, IAxis axis, int startX, int startY, int endX, int endY )
+  protected void drawAxisLabel( GC gc, IAxis axis, int startX, int startY, int endX, int endY, int offset )
   {
     if( axis.getLabel() != null )
     {
@@ -435,7 +464,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       {
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
         {
-          x = Math.abs( endX - startX ) / 2 - textExtent.x / 2;
+          x = Math.abs( endX - startX ) / 2 - textExtent.x / 2 + offset;
           y = startY;
 
           if( axis.getPosition() == POSITION.TOP )
@@ -450,7 +479,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         else
         {
           x = startX;
-          y = Math.abs( endY - startY ) / 2;
+          y = Math.abs( endY - startY ) / 2 + offset;
 
           int rotation = 0;
 
@@ -518,6 +547,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   public Number[] getTicks( IAxis axis, GC gc )
   {
     Number[] tickMapElement = getTickMapElement( axis );
+
     // wenn null, dann muss es neu erzeugt werden
     if( tickMapElement == null )
     {

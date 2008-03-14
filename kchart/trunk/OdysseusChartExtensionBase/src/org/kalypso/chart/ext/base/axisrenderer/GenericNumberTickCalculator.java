@@ -58,7 +58,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     final double numericRange = Math.abs( numericMax - numericMin );
 
-    // der minimale logische Abstand; TODO: ï¿½berprï¿½fen, ob das auch mit negativen Werten geht
+    // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
     final double minLogInterval = Math.abs( axis.screenToNumeric( minScreenInterval ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
 
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
@@ -185,7 +185,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
             newDivisors.addAll( tail );
             newDivisors.addAll( head );
 
-            // Ãœber ZwischenrÃ¤ume weiter iterieren
+            // Über Zwischenräume weiter iterieren
             GenericNumberTickCalculator.findBetweens( i, i + betweenrange, interval, newDivisors, ticks, minDisplayInterval, axis );
             count++;
 

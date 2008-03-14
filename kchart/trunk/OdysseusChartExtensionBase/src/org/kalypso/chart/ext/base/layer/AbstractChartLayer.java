@@ -15,6 +15,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -50,6 +51,8 @@ public abstract class AbstractChartLayer implements IChartLayer
   private ICoordinateMapper m_coordinateMapper;
 
   private ILegendEntry[] m_legendEntries;
+
+  private Map<String, IMapper> m_mapperMap;
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
@@ -252,6 +255,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   }
 
+  @SuppressWarnings("unchecked")
   protected IDataContainer getDataContainer( )
   {
     return m_dataContainer;
@@ -275,6 +279,18 @@ public abstract class AbstractChartLayer implements IChartLayer
       m_legendEntries = createLegendEntries();
     }
     return m_legendEntries;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setMappers( Map<String, IMapper> mapperMap )
+  {
+    m_mapperMap = mapperMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected IMapper getMapper( String role )
+  {
+    return m_mapperMap.get( role );
   }
 
 }

@@ -42,13 +42,6 @@ public interface IStyleConstants
     }
   }
 
-  public enum GEOMETRY
-  {
-    POINT,
-    LINE,
-    AREA
-  }
-
   public enum FONTSTYLE implements ISWTable
   {
     NORMAL(SWT.NORMAL),

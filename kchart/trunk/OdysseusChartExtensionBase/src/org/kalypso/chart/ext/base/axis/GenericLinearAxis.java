@@ -7,11 +7,11 @@ import org.kalypso.chart.ext.base.data.CalendarDataOperator;
 import org.kalypso.chart.ext.base.data.NumberDataOperator;
 import org.kalypso.chart.ext.base.data.StringDataOperator;
 
+import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 
 /**
  * 
@@ -28,6 +28,8 @@ public class GenericLinearAxis extends AbstractAxis
   private final CalendarDataOperator m_calendarAdapter;
 
   private IDataRange<Number> m_numericRange;
+
+  private int m_height = 1;
 
   public GenericLinearAxis( final String id, final String label, final POSITION pos, final DIRECTION dir, final String[] valueArray, Class< ? > clazz )
   {
@@ -79,24 +81,24 @@ public class GenericLinearAxis extends AbstractAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
    */
-  public int numericToScreen( Number value )
+  public Integer numericToScreen( Number value )
   {
-    if( value == null )
-    {
-      return 0;
-    }
-    if( getRegistry() == null )
-    {
-      return 0;
-    }
+    // if( value == null )
+    // {
+    // return 0;
+    // }
+    // if( getRegistry() == null )
+    // {
+    // return 0;
+    // }
+    //
+    // final IAxisComponent comp = getRegistry().getComponent( this );
+    // if( comp == null )
+    // {
+    // return 0;
+    // }
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
-    if( comp == null )
-    {
-      return 0;
-    }
-
-    return comp.normalizedToScreen( numericToNormalized( value ) );
+    return normalizedToScreen( numericToNormalized( value ) );
   }
 
   /**
@@ -104,18 +106,19 @@ public class GenericLinearAxis extends AbstractAxis
    */
   public Number screenToNumeric( int value )
   {
-    if( getRegistry() == null )
-    {
-      return Double.NaN;
-    }
+    // if( getRegistry() == null )
+    // {
+    // return Double.NaN;
+    // }
+    //
+    // final IAxisComponent comp = getRegistry().getComponent( this );
+    // if( comp == null )
+    // {
+    // return Double.NaN;
+    // }
 
-    final IAxisComponent comp = getRegistry().getComponent( this );
-    if( comp == null )
-    {
-      return Double.NaN;
-    }
-
-    return normalizedToNumeric( comp.screenToNormalized( value ) );
+    // return normalizedToNumeric( comp.screenToNormalized( value ) );
+    return normalizedToNumeric( screenToNormalized( value ) );
   }
 
   /**
@@ -163,6 +166,59 @@ public class GenericLinearAxis extends AbstractAxis
   {
     assert (false);
     return null;
+  }
+
+  /**
+   * Uses the widgets' complete extension to calculate the screen value in correspondance to a normalized value
+   * 
+   * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
+   */
+  public int normalizedToScreen( final double normValue )
+  {
+    double myNormValue = normValue;
+    final int range = getScreenHeight();
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+    {
+      myNormValue = 1 - myNormValue;
+    }
+    final int screenValue = (int) (range * myNormValue);
+    return screenValue;
+  }
+
+  /**
+   * Uses the widgets' complete extension to alculates the normalized value in correspondance to a screen value
+   * 
+   * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
+   */
+  public double screenToNormalized( final int screenValue )
+  {
+    final int range = getScreenHeight();
+    if( range == 0 )
+    {
+      return 0;
+    }
+    final double normValue = (double) screenValue / range;
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+    {
+      return 1 - normValue;
+    }
+
+    return normValue;
+  }
+
+  /**
+   * TODO: to abstract axis
+   * 
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getScreenHeight()
+   */
+  public int getScreenHeight( )
+  {
+    return m_height;
+  }
+
+  public void setScreenHeight( int height )
+  {
+    m_height = height;
   }
 
 }

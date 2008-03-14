@@ -1,28 +1,27 @@
 package org.kalypso.chart.ext.observation.layer;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.chart.ext.base.layer.AbstractBarLayer;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
-public class TupleResultBarLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
+public class TupleResultBarLayer extends AbstractBarLayer
 {
-
-  public TupleResultBarLayer( IAxis<T_domain> domainAxis, IAxis<T_target> targetAxis )
-  {
-  }
-
-  public void drawIcon( Image img )
-  {
-    // TODO Auto-generated method stub
-
-  }
 
   public void paint( GC gc )
   {
     // TODO Auto-generated method stub
 
+  }
+
+  /**
+   * @see org.kalypso.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

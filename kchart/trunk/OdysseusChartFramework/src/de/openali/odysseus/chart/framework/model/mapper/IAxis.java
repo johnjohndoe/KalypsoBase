@@ -51,7 +51,7 @@ public interface IAxis extends IMapper<Number, Integer>
   /**
    * transforms a numeric value into a screen position
    */
-  public int numericToScreen( Number value );
+  public Integer numericToScreen( Number value );
 
   /**
    * if an axis contains a preferred axis adjustment, than the auto adjustment will range the axis in a way that there
@@ -62,5 +62,19 @@ public interface IAxis extends IMapper<Number, Integer>
   public IAxisAdjustment getPreferredAdjustment( );
 
   public void setPreferredAdjustment( IAxisAdjustment adj );
+
+  /**
+   * converts a double value into the corresponding screen value
+   */
+  public int normalizedToScreen( double d );
+
+  /**
+   * converts a screen value into a normalized value
+   */
+  public double screenToNormalized( int value );
+
+  public void setScreenHeight( int height );
+
+  public int getScreenHeight( );
 
 }

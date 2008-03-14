@@ -41,12 +41,16 @@
 package de.openali.odysseus.chart.factory.config;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
+import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -54,6 +58,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IStylable;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x010.AreaStyleType;
@@ -103,8 +108,20 @@ public class ChartConfigurationSaver
     chartconf.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
     chartconf.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
 
-    // Styles
-    addStyles( model.getLayerManager(), chartconf );
+    // Styles der Layer und AxisRenderer speichern
+
+    Set<IStylable> stylableList = new HashSet<IStylable>();
+    for( IAxis axis : model.getMapperRegistry().getAxes() )
+    {
+      IAxisRenderer renderer = model.getMapperRegistry().getRenderer( axis );
+      stylableList.add( renderer );
+    }
+    for( IChartLayer layer : model.getLayerManager().getLayers() )
+    {
+      stylableList.add( layer );
+    }
+
+    addStyles( stylableList.toArray( new IStylable[] {} ), chartconf );
 
     return ccd;
   }
@@ -114,39 +131,47 @@ public class ChartConfigurationSaver
    * from the chartfile; If a style is used by multiple layers, only the configuration of the styles' appearance in the
    * last layer is saved.
    */
-  private static void addStyles( ILayerManager layerManager, ChartConfigurationType chartconf )
+  private static void addStyles( IStylable[] stylables, ChartConfigurationType chartconf )
   {
     Map<String, LineStyleType> lineStyleMap = new HashMap<String, LineStyleType>();
     Map<String, PointStyleType> pointStyleMap = new HashMap<String, PointStyleType>();
     Map<String, AreaStyleType> areaStyleMap = new HashMap<String, AreaStyleType>();
     Map<String, TextStyleType> textStyleMap = new HashMap<String, TextStyleType>();
 
-    for( IChartLayer layer : layerManager.getLayers() )
+    for( IStylable stylable : stylables )
     {
-      IStyleSet styleSet = layer.getStyles();
-      IStyle[] styles = styleSet.getStyles();
-      for( IStyle style : styles )
+      IStyleSet styleSet = stylable.getStyles();
+      Map<String, IStyle> styleMap = styleSet.getStyles();
+      for( Entry<String, IStyle> mapEntry : styleMap.entrySet() )
       {
-        Object styleType = style.getData( ChartFactory.STYLE_KEY );
-        if( styleType instanceof LineStyleType )
+        Object styleType = mapEntry.getValue().getData( ChartFactory.STYLE_KEY );
+        if( styleType != null )
         {
-          LineStyleType lst = (LineStyleType) styleType;
-          lineStyleMap.put( lst.getId(), lst );
+          if( styleType instanceof LineStyleType )
+          {
+            LineStyleType lst = (LineStyleType) styleType;
+            lineStyleMap.put( lst.getId(), lst );
+          }
+          else if( styleType instanceof AreaStyleType )
+          {
+            AreaStyleType ast = (AreaStyleType) styleType;
+            areaStyleMap.put( ast.getId(), ast );
+          }
+          else if( styleType instanceof PointStyleType )
+          {
+            PointStyleType pst = (PointStyleType) styleType;
+            pointStyleMap.put( pst.getId(), pst );
+          }
+          else if( styleType instanceof TextStyleType )
+          {
+            TextStyleType tst = (TextStyleType) styleType;
+            textStyleMap.put( tst.getId(), tst );
+          }
         }
-        else if( styleType instanceof AreaStyleType )
+        else
         {
-          AreaStyleType ast = (AreaStyleType) styleType;
-          areaStyleMap.put( ast.getId(), ast );
-        }
-        else if( styleType instanceof PointStyleType )
-        {
-          PointStyleType pst = (PointStyleType) styleType;
-          pointStyleMap.put( pst.getId(), pst );
-        }
-        else if( styleType instanceof TextStyleType )
-        {
-          TextStyleType tst = (TextStyleType) styleType;
-          textStyleMap.put( tst.getId(), tst );
+          Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Style with role'" + mapEntry.getKey() + "' for chart component '" + stylable.getId()
+              + "' was not initially set in the chartfile, so it won't be saved" );
         }
       }
     }

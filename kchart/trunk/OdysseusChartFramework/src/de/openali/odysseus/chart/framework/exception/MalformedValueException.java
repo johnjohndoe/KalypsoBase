@@ -15,7 +15,12 @@ public class MalformedValueException extends Exception
 
   public MalformedValueException( )
   {
+    super();
+  }
 
+  public MalformedValueException( String msg )
+  {
+    super( msg );
   }
 
 }

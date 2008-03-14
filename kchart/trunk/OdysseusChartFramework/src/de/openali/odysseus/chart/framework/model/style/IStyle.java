@@ -10,9 +10,9 @@ public interface IStyle
 
   public boolean isVisible( );
 
-  public void setTitle( String title );
-
   public String getTitle( );
+
+  public void setTitle( String title );
 
   public void dispose( );
 

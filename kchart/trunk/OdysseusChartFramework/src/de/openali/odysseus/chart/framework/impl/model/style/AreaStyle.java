@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.impl.model.style;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IFill;
@@ -11,7 +10,6 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 {
 
 	private ILineStyle m_stroke;
-	private RGB m_inlineRgb;
 	private IFill m_fill;
 
 	public AreaStyle( ILineStyle outline, IFill fill, int alpha, ILineStyle stroke, boolean isVisible )

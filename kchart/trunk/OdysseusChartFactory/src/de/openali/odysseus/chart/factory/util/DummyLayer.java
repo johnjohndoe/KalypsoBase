@@ -56,6 +56,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -321,8 +322,7 @@ public class DummyLayer implements IChartLayer
    */
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
+    // nothing to do
   }
 
   /**
@@ -331,6 +331,15 @@ public class DummyLayer implements IChartLayer
   public ILegendEntry[] getLegendEntries( )
   {
     return new ILegendEntry[0];
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setMappers(java.util.Map)
+   */
+  public void setMappers( Map<String, IMapper> mapperMap )
+  {
+    // nothing to do
+
   }
 
 }

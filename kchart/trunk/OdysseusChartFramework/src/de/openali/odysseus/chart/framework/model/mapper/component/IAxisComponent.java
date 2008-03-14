@@ -1,19 +1,14 @@
 package de.openali.odysseus.chart.framework.model.mapper.component;
 
+import org.eclipse.swt.graphics.Point;
+
 /**
- * @author burtscher Widget to display chart axes; it also helps to calculate screen values from normalized values
+ * Widget to display chart axes; it also helps to calculate screen values from normalized values
+ * 
+ * @author burtscher
  */
 public interface IAxisComponent
 {
-  /**
-   * converts a double value into the corresponding screen value
-   */
-  public int normalizedToScreen( double d );
-
-  /**
-   * converts a screen value into a normalized value
-   */
-  public double screenToNormalized( int value );
 
   /**
    * disposes the widget
@@ -24,5 +19,7 @@ public interface IAxisComponent
    * sets the components' visibilty
    */
   public void setVisible( boolean b );
+
+  public Point computeSize( final int wHint, final int hHint, final boolean changed );
 
 }

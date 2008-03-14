@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.style;
 
+import java.util.Map;
+
 /**
  * @author alibu
  * 
@@ -50,7 +52,7 @@ public interface IStyleSet
 
   public <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
-  public IStyle[] getStyles( );
+  public Map<String, IStyle> getStyles( );
 
   public void dispose( );
 }

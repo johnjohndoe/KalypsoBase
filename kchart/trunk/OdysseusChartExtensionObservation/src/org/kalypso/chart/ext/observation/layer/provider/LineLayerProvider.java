@@ -5,17 +5,14 @@ import java.util.Calendar;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
-//TODO why do we still have several tuple result layer?
-//@Alex: please combine them to ONE implementation!
 public class LineLayerProvider extends AbstractLayerProvider
 {
-  public IChartLayer getLayer( final URL context ) throws LayerProviderException
+  public IChartLayer getLayer( final URL context )
   {
     return new TupleResultLineLayer();
   }
@@ -23,7 +20,7 @@ public class LineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws LayerProviderException
+  public IDataContainer getDataContainer( )
   {
     final String href = getParameterContainer().getParameterValue( "href", null );
 
@@ -33,7 +30,9 @@ public class LineLayerProvider extends AbstractLayerProvider
 
     TupleResultDomainValueData<Calendar, Double> data = null;
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
+    {
       data = new TupleResultDomainValueData<Calendar, Double>( getContext(), href, observationId, domainComponentName, targetComponentName );
+    }
     return data;
   }
 

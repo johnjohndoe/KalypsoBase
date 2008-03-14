@@ -54,9 +54,9 @@ public class StyleSet implements IStyleSet
 		}
 	}
 
-	public IStyle[] getStyles()
+	public Map<String, IStyle> getStyles()
 	{
-		return m_styleMap.values().toArray(new IStyle[] {});
+		return m_styleMap;
 	}
 
 }

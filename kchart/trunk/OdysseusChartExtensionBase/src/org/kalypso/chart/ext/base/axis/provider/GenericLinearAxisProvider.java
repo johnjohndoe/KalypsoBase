@@ -147,7 +147,7 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   }
 
   /**
-   * default behaviour: return original xml type; implement, if changes shall be saved TODO: implement me
+   * default behaviour: return original xml type; implement, if changes shall be saved
    * 
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IAxis)
    */

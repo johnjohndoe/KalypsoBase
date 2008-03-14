@@ -59,8 +59,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 	 */
 	private HashSet<IChartLayer> m_panLayers = new HashSet<IChartLayer>();
 
-	public PlotCanvas( final ILayerManager manager, final Composite parent,
-	        final int style )
+	public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
 	{
 		super(parent, style);
 		m_manager = manager;
@@ -212,8 +211,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 			gcw.setForeground(gcw.getDevice().getSystemColor(SWT.COLOR_BLACK));
 
 			gcw.setBackground(gcw.getDevice().getSystemColor(SWT.COLOR_BLUE));
-			final Rectangle r = RectangleUtils
-			        .createNormalizedRectangle(m_dragArea);
+			final Rectangle r = RectangleUtils.createNormalizedRectangle(m_dragArea);
 			// TODO: SWT-Bug mit drawFocus (wird nicht immer gezeichnet),
 			// irgendwann mal wieder �berpr�fen
 			gcw.setAlpha(50);
@@ -244,10 +242,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 				final Font bannerFont = JFaceResources.getTextFont();
 				gcw.setFont(bannerFont);
 
-				gcw.setBackground(getDisplay().getSystemColor(
-				        SWT.COLOR_INFO_BACKGROUND));
-				gcw.setForeground(getDisplay().getSystemColor(
-				        SWT.COLOR_INFO_FOREGROUND));
+				gcw.setBackground(getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+				gcw.setForeground(getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 				final Point toolsize = gcw.textExtent(tooltiptext);
 				int toolx = mousePos.x + shape.width + 5 + TOOLINSET;
 				if (toolx + toolsize.x > screen.width)
@@ -257,9 +253,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 				final int tooly = mousePos.y - 5 - TOOLINSET - toolsize.y;
 
 				gcw.setLineWidth(1);
-				final Rectangle toolrect = new Rectangle(toolx - TOOLINSET,
-				        tooly - TOOLINSET, toolsize.x + TOOLINSET * 2,
-				        toolsize.y + TOOLINSET * 2);
+				final Rectangle toolrect = new Rectangle(toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2);
 				gcw.fillRectangle(toolrect);
 				gcw.drawRectangle(toolrect);
 
@@ -274,14 +268,12 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 	 * double-buffered paint method; set to public in order to be used from
 	 * ouside, e.g. from ChartImageContainer
 	 */
-	public Image paintBuffered(final GC gcw, final Rectangle screen,
-	        final Image bufferImage)
+	public Image paintBuffered(final GC gcw, final Rectangle screen, final Image bufferImage)
 	{
 		final Image usedBufferImage;
 		if (bufferImage == null)
 		{
-			usedBufferImage = new Image(Display.getDefault(), screen.width,
-			        screen.height);
+			usedBufferImage = new Image(Display.getDefault(), screen.width, screen.height);
 
 			final GC buffGc = new GC(usedBufferImage);
 			try
@@ -294,20 +286,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 						ChartUtilities.resetGC(buffGc);
 						try
 						{
-							m_layerImageMap.put(layer, paintBufferedLayer(gcw,
-							        screen, layer, m_layerImageMap.get(layer)));
+							m_layerImageMap.put(layer, paintBufferedLayer(gcw, screen, layer, m_layerImageMap.get(layer)));
 
-							if (m_panLayers != null
-							        && m_panLayers.contains(layer))
+							if (m_panLayers != null && m_panLayers.contains(layer))
 							{
-								buffGc.drawImage(m_layerImageMap.get(layer),
-								        screen.x - m_panOffset.x, screen.y
-								                - m_panOffset.y);
+								buffGc.drawImage(m_layerImageMap.get(layer), screen.x - m_panOffset.x, screen.y - m_panOffset.y);
 							}
 							else
 							{
-								buffGc.drawImage(m_layerImageMap.get(layer), 0,
-								        0);
+								buffGc.drawImage(m_layerImageMap.get(layer), 0, 0);
 							}
 
 						}
@@ -337,8 +324,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 		// selstsamen effekten
 		if (m_panLayers == null)
 		{
-			gcw.drawImage(usedBufferImage, screen.x - m_panOffset.x, screen.y
-			        - m_panOffset.y);
+			gcw.drawImage(usedBufferImage, screen.x - m_panOffset.x, screen.y - m_panOffset.y);
 		}
 		else
 		{
@@ -348,16 +334,13 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 		return usedBufferImage;
 	}
 
-	private Image paintBufferedLayer(GC gcw, Rectangle screen,
-	        IChartLayer layer, Image layerImage)
+	private Image paintBufferedLayer(GC gcw, Rectangle screen, IChartLayer layer, Image layerImage)
 	{
 		final Image usedBufferImage;
 		if (layerImage == null)
 		{
-			ImageData id = new ImageData(screen.width, screen.height, 32,
-			        new PaletteData(0xFF, 0xFF00, 0xFF0000));
-			Color transparentColor = new Color(gcw.getDevice(), new RGB(0xfe,
-			        0xff, 0xff));
+			ImageData id = new ImageData(screen.width, screen.height, 32, new PaletteData(0xFF, 0xFF00, 0xFF0000));
+			Color transparentColor = new Color(gcw.getDevice(), new RGB(0xfe, 0xff, 0xff));
 
 			id.transparentPixel = 0xfffffe;
 
@@ -378,9 +361,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 					long start = System.currentTimeMillis();
 					layer.paint(buffGc);
 					long end = System.currentTimeMillis();
-					Logger.logInfo(Logger.TOPIC_LOG_PLOT,
-					        "Time to paint layer (" + layer.getTitle() + "): "
-					                + (end - start) + " ms");
+					Logger.logInfo(Logger.TOPIC_LOG_PLOT, "Time to paint layer (" + layer.getTitle() + "): " + (end - start) + " ms");
 				}
 				catch (final SWTException e)
 				{

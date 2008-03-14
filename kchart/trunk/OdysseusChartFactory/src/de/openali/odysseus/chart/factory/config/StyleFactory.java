@@ -153,6 +153,7 @@ public class StyleFactory
     return style;
   }
 
+  @SuppressWarnings("unchecked")
   public static ILineStyle createLineStyle( LineStyleType lst )
   {
     ILineStyle style = StyleUtils.getDefaultLineStyle();
@@ -211,7 +212,9 @@ public class StyleFactory
   }
 
   /**
-   * this is needed as separate method, as Strokes don't contain title elements
+   * this is needed as separate (and redundant) method: StrokeTypes aren't LineTypes (they don't contain title
+   * elements); their equivalent elements had to be declared as groups in XML Schema, so they aren't related to each
+   * other
    */
   public static void setStrokeAttributes( ILineStyle style, StrokeType st )
   {
@@ -242,7 +245,15 @@ public class StyleFactory
     if( st.isSetDashArray1() )
     {
       List dashArray1 = st.getDashArray1();
-      // TODO: weiter
+      dashArray = new int[dashArray1.size()];
+      for( int i = 0; i < dashArray.length; i++ )
+      {
+        Object elt = dashArray1.get( i );
+        if( elt instanceof Integer )
+        {
+          dashArray[i] = ((Integer) elt).intValue();
+        }
+      }
     }
     if( st.isSetDashOffset() )
     {

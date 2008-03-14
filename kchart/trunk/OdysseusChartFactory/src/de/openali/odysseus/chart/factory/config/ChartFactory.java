@@ -84,6 +84,7 @@ public class ChartFactory
     }
 
     doConfiguration( model, cl, dt, extLoader, context );
+
   }
 
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
@@ -199,7 +200,7 @@ public class ChartFactory
                   try
                   {
                     axisRenderer = arp.getAxisRenderer();
-                    axisRenderer.setStyles( creatStyleSet( rendererType.getStyles(), rr ) );
+                    axisRenderer.setStyles( createStyleSet( rendererType.getStyles(), rr ) );
                     ar.setRenderer( axis.getIdentifier(), axisRenderer );
                     axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                   }
@@ -235,21 +236,21 @@ public class ChartFactory
 
   public static void addLayer( IChartModel model, IReferenceResolver rr, URL context, LayerType layerType, final IExtensionLoader extLoader )
   {
-    // Achsen hinzufï¿½gen
+    // Achsen hinzufügen
     final Mappers mapper = layerType.getMappers();
     final AxisType domainAxisType = (AxisType) rr.resolveReference( mapper.getDomainAxisRef().getRef() );
     addAxis( model.getMapperRegistry(), rr, domainAxisType, extLoader );
     final AxisType targetAxisType = (AxisType) rr.resolveReference( mapper.getTargetAxisRef().getRef() );
     addAxis( model.getMapperRegistry(), rr, targetAxisType, extLoader );
 
-    // Restliche Mapper hinzufï¿½gen
+    // Restliche Mapper hinzufügen
     final RoleReferencingType[] mapperRefArray = mapper.getMapperRefArray();
     for( final RoleReferencingType mapperRef : mapperRefArray )
     {
       final MapperType mapperType = (MapperType) rr.resolveReference( mapperRef.getRef() );
       if( mapperType != null )
       {
-        // nur dann hinzufï¿½gen, wenn nicht schon vorhanden
+        // nur dann hinzufügen, wenn nicht schon vorhanden
         if( model.getMapperRegistry().getMapper( mapperType.getId() ) == null )
         {
           addMapper( model.getMapperRegistry(), mapperType, extLoader );
@@ -293,7 +294,7 @@ public class ChartFactory
         // setting the data container
         icl.setDataContainer( provider.getDataContainer() );
         // setting styles
-        icl.setStyles( creatStyleSet( layerType.getStyles(), rr ) );
+        icl.setStyles( createStyleSet( layerType.getStyles(), rr ) );
         // initialize layer
         icl.init();
 
@@ -307,7 +308,7 @@ public class ChartFactory
     }
   }
 
-  private static IStyleSet creatStyleSet( StylesType styles, IReferenceResolver rr )
+  private static IStyleSet createStyleSet( StylesType styles, IReferenceResolver rr )
   {
     // Styles erzeugen
     IStyleSet styleSet = new StyleSet();

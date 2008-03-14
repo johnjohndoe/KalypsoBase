@@ -1,6 +1,5 @@
 package de.openali.odysseus.chart.factory.config.exception;
 
-import java.net.MalformedURLException;
 
 public class ConfigurationException extends Exception
 {
@@ -15,7 +14,7 @@ public class ConfigurationException extends Exception
     super();
   }
 
-  public ConfigurationException( String string, MalformedURLException e )
+  public ConfigurationException( String string, Exception e )
   {
     super( string, e );
   }

@@ -4,12 +4,12 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.IStylable;
 
 /**
  * @author alibu Interface used to render an IAxis object into an IAxisComponent
  */
-public interface IAxisRenderer
+public interface IAxisRenderer extends IStylable
 {
   /**
    * calculates axis values for which label and tick will be shown
@@ -47,9 +47,5 @@ public interface IAxisRenderer
   public void invalidateTicks( IAxis axis );
 
   public void dispose( );
-
-  public void setStyles( IStyleSet styles );
-
-  public IStyleSet getStyles( );
 
 }

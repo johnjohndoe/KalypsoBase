@@ -10,8 +10,8 @@ public abstract class AbstractStyle implements IStyle
 
 	private int m_alpha;
 	private boolean m_isVisible;
-	private String m_title = "";
-	private Map<String, Object> m_data = new HashMap<String, Object>();
+	private String m_title;
+	private final Map<String, Object> m_data = new HashMap<String, Object>();
 
 	/**
 	 * 
@@ -70,4 +70,5 @@ public abstract class AbstractStyle implements IStyle
 	{
 		return m_data.get(id);
 	}
+
 }

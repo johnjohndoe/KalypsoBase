@@ -23,7 +23,8 @@ public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEven
   /**
    * 
    */
-  // public int logicalToScreen( T_logical value );
+  public T_visual numericToScreen( T_logical value );
+
   public void setRegistry( IMapperRegistry mapperRegistry );
 
   public IMapperRegistry getRegistry( );

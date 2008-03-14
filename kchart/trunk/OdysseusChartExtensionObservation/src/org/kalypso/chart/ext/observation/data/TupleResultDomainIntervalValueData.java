@@ -8,7 +8,7 @@ public class TupleResultDomainIntervalValueData<T_domain, T_target> implements I
 
   public void close( )
   {
-    // TODO Auto-generated method stub
+    // nothing to do
 
   }
 

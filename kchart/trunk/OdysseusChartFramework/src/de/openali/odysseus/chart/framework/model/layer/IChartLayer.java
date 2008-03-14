@@ -11,13 +11,14 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.style.IStylable;
 
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer extends IEventProvider<ILayerEventListener>
+public interface IChartLayer extends IEventProvider<ILayerEventListener>, IStylable
 {
 
   /**
@@ -72,16 +73,6 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   public void setActive( boolean isActive );
 
   /**
-   * @return the layer styles
-   */
-  public IStyleSet getStyles( );
-
-  /**
-   * sets the layer styles
-   */
-  public void setStyles( final IStyleSet styles );
-
-  /**
    * draws the layer using the given GC and Device
    */
   public void paint( final GC gc );
@@ -116,5 +107,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   public void dispose( );
 
   public ILegendEntry[] getLegendEntries( );
+
+  public void setMappers( Map<String, IMapper> mapperMap );
 
 }

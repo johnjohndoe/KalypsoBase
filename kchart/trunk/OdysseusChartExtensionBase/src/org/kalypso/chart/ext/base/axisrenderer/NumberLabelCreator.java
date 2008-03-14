@@ -72,7 +72,9 @@ public class NumberLabelCreator implements ILabelCreator
       return format.format( value );
     }
     else
+    {
       return String.format( m_formatString, value );
+    }
   }
 
   public Format getFormat( final IDataRange<Number> range )
@@ -80,12 +82,16 @@ public class NumberLabelCreator implements ILabelCreator
     Number min = range.getMin();
     // FIXME while runs into endlos loop
     if( Double.valueOf( min.doubleValue() ).isInfinite() )
+    {
       min = 0.0;
+    }
 
-    final Number max = range.getMax();
+    Number max = range.getMax();
     // FIXME while runs into endlos loop
-    if( Double.valueOf( min.doubleValue() ).isInfinite() )
-      min = 0.0;
+    if( Double.valueOf( max.doubleValue() ).isInfinite() )
+    {
+      max = 1.0;
+    }
 
     // Differenz bilden und sicherstellen, dass sie positiv ist
     Double diff = Math.abs( max.doubleValue() - min.doubleValue() );
@@ -100,36 +106,48 @@ public class NumberLabelCreator implements ILabelCreator
 
     // Minuszeichen einplanen
     if( max.doubleValue() < 0 || min.doubleValue() < 0 )
+    {
       id++;
+    }
 
     // Vorkommastellen ausrechnen
     double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
+    {
       while( tmpmax >= 1 )
       {
         tmpmax /= 10;
         id++;
       }
+    }
 
     // Bereichs-10er-potenz ausmachen
     int pow = 0;
     if( diff >= 1 )
+    {
       while( diff >= 1 )
       {
         diff /= 10;
         pow++;
       }
+    }
     else if( diff != 0 )
+    {
       while( diff <= 0.1 )
       {
         diff *= 10;
         pow--;
       }
+    }
     //
     if( pow >= 0 )
+    {
       fd = pow > validDigits ? 0 : Math.abs( validDigits - pow );
+    }
     else
+    {
       fd = Math.abs( pow ) + validDigits;
+    }
 
     nf.setMaximumIntegerDigits( id );
     nf.setMinimumIntegerDigits( 1 );

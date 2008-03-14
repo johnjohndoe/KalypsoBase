@@ -1,7 +1,53 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config.parameters.impl;
 
-import org.eclipse.swt.graphics.RGB;
+import static org.junit.Assert.fail;
 
+import java.math.BigInteger;
+
+import org.eclipse.swt.graphics.RGB;
+import org.junit.Test;
+
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
@@ -10,76 +56,71 @@ import de.openali.odysseus.chart.framework.model.data.IStringParser;
 public class RGBParser implements IStringParser<RGB>
 {
 
-  final String m_formatHint = "'#abcdef' or '255,255,255'";
-
   /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
-   */
-  public RGB stringToLogical( String value )
-  {
-    RGB rgb = null;
-    // Hexadezimalwert
-    if( value != null && !value.trim().equals( "" ) )
-    {
-      if( value.substring( 0, 1 ).compareTo( "#" ) == 0 )
-      {
-        final String hexval = value.substring( 1, 7 );
-        rgb = createRgbFromHex( hexval );
-      }
-      else if( value.split( "," ).length == 3 )
-      {
-        final String[] strings = value.split( "," );
-        final int r = Integer.parseInt( strings[0].trim() );
-        final int g = Integer.parseInt( strings[1].trim() );
-        final int b = Integer.parseInt( strings[2].trim() );
-        rgb = new RGB( r, g, b );
-      }
-    }
-    return rgb;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.data.IStringParser#getFormatHint()
+   * @see de.openali.odysseus.chart.framework.model.data.IStringParser#getFormatHint()
    */
   public String getFormatHint( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "String containing 6 hex values";
   }
 
   /**
-   * creates a rgb object from 3byte as returned by the unmarshalling process of heybinary values
+   * @see de.openali.odysseus.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public static RGB createRgbFromHex( String hexstr )
+  public RGB stringToLogical( String value ) throws MalformedValueException
   {
-    final int r = hexToInt( hexstr.substring( 0, 2 ) );
-    final int g = hexToInt( hexstr.substring( 2, 4 ) );
-    final int b = hexToInt( hexstr.substring( 4, 6 ) );
-    return new RGB( r, g, b );
-  }
-
-  /**
-   * transforms a hex string into an integer
-   * 
-   * @param strHex
-   *            hexdec representation of the number as String
-   * @return integer representation
-   */
-  public static int hexToInt( String strHex )
-  {
-    String str;
-    final String hexVals = "0123456789ABCDEF";
-    int i, val, n;
-
-    val = 0;
-    n = 1;
-    str = strHex.toUpperCase();
-
-    for( i = str.length() - 1; i >= 0; i--, n *= 16 )
+    if( value.length() != 6 )
     {
-      val += n * hexVals.indexOf( str.charAt( i ) );
+      throw new MalformedValueException( "value must have length 6" );
     }
-    return val;
+    String lValue = value.toLowerCase();
+
+    if( !lValue.matches( "[0-9a-f]{6}" ) )
+    {
+      throw new MalformedValueException( "each digit must be 0 - F" );
+    }
+
+    int red = new BigInteger( lValue.substring( 0, 2 ), 16 ).intValue();
+    int green = new BigInteger( lValue.substring( 2, 4 ), 16 ).intValue();
+    int blue = new BigInteger( lValue.substring( 4 ), 16 ).intValue();
+
+    return new RGB( red, green, blue );
   }
 
+  @Test
+  public void test( )
+  {
+    RGBParser p = new RGBParser();
+    try
+    {
+      p.stringToLogical( "aabbc" );
+      fail();
+    }
+    catch( MalformedValueException e )
+    {
+    }
+    try
+    {
+      p.stringToLogical( "AaBbCG" );
+      fail();
+    }
+    catch( MalformedValueException e )
+    {
+    }
+    try
+    {
+      RGB rgb = p.stringToLogical( "00ccff" );
+      System.out.println( rgb.toString() );
+
+    }
+    catch( MalformedValueException e )
+    {
+      fail();
+    }
+    catch( NumberFormatException e )
+    {
+      e.printStackTrace();
+      fail();
+    }
+  }
 }
