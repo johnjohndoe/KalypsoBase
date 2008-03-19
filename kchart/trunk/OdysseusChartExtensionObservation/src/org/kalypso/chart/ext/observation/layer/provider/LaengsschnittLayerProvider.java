@@ -59,7 +59,6 @@ import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chartconfig.x010.LayerType;
 
 /**
  * @author Gernot Belger
@@ -81,7 +80,6 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
   @SuppressWarnings("unchecked")
   public IDataContainer getDataContainer( ) throws ConfigurationException
   {
-    final LayerType lt = getLayerType();
     final IChartModel chartModel = getChartModel();
 
     final IParameterContainer pc = getParameterContainer();

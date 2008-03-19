@@ -112,7 +112,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
       }
 
     };
-    final String url = getParameterContainer().getParameterValue( "url", getLayerType().getId() );
+    final String url = getParameterContainer().getParameterValue( "url", getId() );
     data.setInputFile( new File( url ) );
     return data;
   }

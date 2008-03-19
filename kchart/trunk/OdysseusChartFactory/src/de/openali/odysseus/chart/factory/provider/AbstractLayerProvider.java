@@ -2,7 +2,6 @@ package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
 
-
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -53,14 +52,29 @@ public abstract class AbstractLayerProvider implements ILayerProvider
     return m_pc;
   }
 
-  public LayerType getLayerType( )
+  private LayerType getLayerType( )
   {
     return m_lt;
   }
 
-  public URL getContext( )
+  protected URL getContext( )
   {
     return m_context;
+  }
+
+  protected String getId( )
+  {
+    return m_lt.getId();
+  }
+
+  protected String getDomainAxisId( )
+  {
+    return getLayerType().getMappers().getDomainAxisRef().getRef();
+  }
+
+  protected String getTargetAxisId( )
+  {
+    return getLayerType().getMappers().getTargetAxisRef().getRef();
   }
 
 }

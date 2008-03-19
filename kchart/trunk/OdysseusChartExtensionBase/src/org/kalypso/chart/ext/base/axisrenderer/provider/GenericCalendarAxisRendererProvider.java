@@ -72,13 +72,11 @@ public class GenericCalendarAxisRendererProvider extends AbstractAxisRendererPro
     BooleanParser bp = new BooleanParser();
     final boolean hideCut = getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp );
 
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getAxisRendererType().getId(), tickLength, insetsTick, insetsLabel, 0, new DateLabelCreator( dateFormat ), new GenericDateTickCalculator(), null, hideCut );
-    return calendarAxisRenderer;
-  }
+    final int fixedWidth = Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) );
+    final int gap = Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) );
 
-  public Class< ? > getDataClass( )
-  {
-    return Number.class;
+    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, new DateLabelCreator( dateFormat ), new GenericDateTickCalculator(), null, hideCut, fixedWidth );
+    return calendarAxisRenderer;
   }
 
 }

@@ -1,6 +1,5 @@
 package de.openali.odysseus.chart.factory.provider;
 
-
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -34,9 +33,14 @@ public abstract class AbstractAxisRendererProvider implements IAxisRendererProvi
     return m_at;
   }
 
-  protected AxisRendererType getAxisRendererType( )
+  private AxisRendererType getAxisRendererType( )
   {
     return m_at;
+  }
+
+  protected String getId( )
+  {
+    return m_at.getId();
   }
 
 }

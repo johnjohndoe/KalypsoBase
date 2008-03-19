@@ -19,8 +19,6 @@ public interface IAxisProvider
 
   public void init( final AxisType at );
 
-  public Class< ? > getDataClass( );
-
   /**
    * returns XML configuration element for the given chart element
    */

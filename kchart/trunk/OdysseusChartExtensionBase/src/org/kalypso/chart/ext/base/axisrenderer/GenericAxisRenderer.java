@@ -35,6 +35,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   private final boolean m_hideCut;
 
+  private final int m_fixedWidth;
+
   /**
    * @param foreground
    *            Color of axis, ticks and text
@@ -52,14 +54,17 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @param labelInsets
    * @param gap
    *            space between axis and component border
+   * @param fixedWidth
+   *            if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth )
   {
     super( id, tickLength, tickLabelInsets, labelInsets, gap );
     m_tickCalculator = tickCalculator;
     m_labelCreator = labelCreator;
     m_minTickInterval = minTickInterval;
     m_hideCut = hideCut;
+    m_fixedWidth = fixedWidth;
   }
 
   public Point calcTickLabelSize( GC gc, final IAxis axis )
@@ -564,6 +569,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    */
   public int getAxisWidth( IAxis axis )
   {
+    // if width is fixed, return fixed width
+    if( m_fixedWidth > 0 )
+      return m_fixedWidth;
+
+    // Else: Calculate
     int width = 0;
     int label = 0;
     final int gap = getGap();

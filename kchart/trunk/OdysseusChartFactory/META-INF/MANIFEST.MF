@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartFactory Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.factory;singleton:=true
-Bundle-Version: 1.0.0
-Bundle-ClassPath: srcbind/,
- .
+Bundle-Version: 0.2.0
+Bundle-ClassPath: bin/
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
- de.openali.odysseus.chart.framework.impl;visibility:=reexport
+ de.openali.odysseus.chart.framework.impl;bundle-version="[0.2.0,0.2.0]";visibility:=reexport
 Export-Package: de.openali.odysseus.chart.factory.config,
  de.openali.odysseus.chart.factory.config.exception,
  de.openali.odysseus.chart.factory.config.parameters,
@@ -17,5 +16,5 @@ Export-Package: de.openali.odysseus.chart.factory.config,
  de.openali.odysseus.chart.factory.util,
  de.openali.odysseus.chartconfig.x010,
  de.openali.odysseus.chartconfig.x010.impl,
- org.ksp.chart.factory,
+ org.ksp.chart.factory, 
  org.ksp.chart.factory.impl

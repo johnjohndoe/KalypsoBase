@@ -32,9 +32,8 @@ public class GridLayerProvider extends AbstractLayerProvider
 
     try
     {
-
-      final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
-      final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
+      final String domainAxisId = getDomainAxisId();
+      final String targetAxisId = getTargetAxisId();
 
       final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
       final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );

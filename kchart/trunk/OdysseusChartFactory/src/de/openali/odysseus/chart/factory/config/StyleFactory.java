@@ -41,11 +41,13 @@
 package de.openali.odysseus.chart.factory.config;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.impl.model.style.ColorFill;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageFill;
 import de.openali.odysseus.chart.framework.impl.model.style.ImageMarker;
@@ -77,7 +79,7 @@ import de.openali.odysseus.chartconfig.x010.FontStyleType.Enum;
 public class StyleFactory
 {
 
-  public static IPointStyle createPointStyle( PointStyleType pst )
+  public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
   {
     IPointStyle style = StyleUtils.getDefaultPointStyle();
 
@@ -133,7 +135,7 @@ public class StyleFactory
     {
       ImageMarkerType imageMarker = pst.getImageMarker();
       String configPath = imageMarker.getImageFile();
-      File file = new File( configPath );
+      File file = ChartFactoryUtilities.getRelativeFile( context, configPath, pst );
       style.setMarker( new ImageMarker( file ) );
     }
     else if( pst.isSetOvalMarker() )
@@ -268,7 +270,7 @@ public class StyleFactory
     }
   }
 
-  public static IAreaStyle createAreaStyle( AreaStyleType ast )
+  public static IAreaStyle createAreaStyle( AreaStyleType ast, URL context )
   {
     IAreaStyle style = StyleUtils.getDefaultAreaStyle();
 
@@ -300,7 +302,7 @@ public class StyleFactory
       {
         ImageFillType ift = fill.getImageFill();
         String configPath = ift.getImageFile();
-        File file = new File( configPath );
+        File file = ChartFactoryUtilities.getRelativeFile( context, configPath, ift );
         int width = -1;
         int height = -1;
         if( ift.isSetWidth() )
@@ -352,7 +354,6 @@ public class StyleFactory
     {
       // TODO: check if family exists
       style.setFamily( tst.getFontFamily() );
-
     }
 
     // background color
@@ -432,4 +433,5 @@ public class StyleFactory
     int blue = byteToInt( color[2] );
     return new RGB( red, green, blue );
   }
+
 }

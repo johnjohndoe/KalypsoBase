@@ -191,7 +191,6 @@ public class ChartEditor extends EditorPart implements IChartPart
       return;
     }
     setDirty( false );
-    // TODO: wieder einbauen, wenn speichern funktioniert
 
     try
     {

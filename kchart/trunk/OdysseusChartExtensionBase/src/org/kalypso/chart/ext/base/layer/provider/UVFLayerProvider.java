@@ -44,8 +44,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
    */
   public IDataContainer getDataContainer( ) throws ConfigurationException
   {
-    final String domainAxisId = getLayerType().getMappers().getDomainAxisRef().getRef();
-    final String targetAxisId = getLayerType().getMappers().getTargetAxisRef().getRef();
+    final String domainAxisId = getDomainAxisId();
+    final String targetAxisId = getTargetAxisId();
 
     final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
     final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
@@ -136,7 +136,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
       }
 
     };
-    data.setInputFile( new File( getParameterContainer().getParameterValue( "url", getLayerType().getId() ) ) );
+    data.setInputFile( new File( getParameterContainer().getParameterValue( "url", getId() ) ) );
     return data;
   }
 }

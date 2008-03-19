@@ -29,8 +29,7 @@ import de.openali.odysseus.chart.framework.view.IChartView;
  * @author burtscher Chart widget; parent for AxisComponent and Plot also acts
  *         as LayerManager and contains the AxisRegistry;
  */
-public class ChartComposite extends Canvas implements IChartView
-{
+public class ChartComposite extends Canvas implements IChartView {
 
 	/** axis pos --> axis placeholder */
 	private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
@@ -48,8 +47,8 @@ public class ChartComposite extends Canvas implements IChartView
 
 	private AbstractChartModelEventListener m_chartModelListener;
 
-	public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
-	{
+	public ChartComposite(final Composite parent, final int style,
+			IChartModel model, RGB backgroundRGB) {
 		super(parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE);
 		m_model = model;
 
@@ -62,28 +61,25 @@ public class ChartComposite extends Canvas implements IChartView
 
 	}
 
-	public IChartModel getChartModel()
-	{
+	public IChartModel getChartModel() {
 		return m_model;
 	}
 
-	public void setChartModel(IChartModel model)
-	{
-		m_mapperListener = new AbstractMapperRegistryEventListener()
-		{
+	public void setChartModel(IChartModel model) {
+		m_mapperListener = new AbstractMapperRegistryEventListener() {
 			/**
 			 * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.axis.IAxis)
 			 *      adds an AxisComponent for any newly added axis and reports
 			 *      Axis and its AxisComponent to the AxisRegistry
 			 */
 			@Override
-			public void onMapperAdded(final IMapper<?, ?> mapper)
-			{
-				if (mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis)
-				{
+			public void onMapperAdded(final IMapper<?, ?> mapper) {
+				if (mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis) {
 					final IAxis axis = (IAxis) mapper;
-					final Composite parent = m_axisPlaces.get(axis.getPosition());
-					final AxisCanvas component = new AxisCanvas(axis, parent, SWT.NONE);
+					final Composite parent = m_axisPlaces.get(axis
+							.getPosition());
+					final AxisCanvas component = new AxisCanvas(axis, parent,
+							SWT.DOUBLE_BUFFERED);
 					component.setBackground(m_bgColor);
 					m_model.getMapperRegistry().setComponent(axis, component);
 					layout();
@@ -97,10 +93,8 @@ public class ChartComposite extends Canvas implements IChartView
 			 *      future)
 			 */
 			@Override
-			public void onMapperRemoved(final IMapper mapper)
-			{
-				if (mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis)
-				{
+			public void onMapperRemoved(final IMapper mapper) {
+				if (mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis) {
 					layout();
 				}
 			}
@@ -109,18 +103,19 @@ public class ChartComposite extends Canvas implements IChartView
 			 * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
 			 */
 			@Override
-			public void onMapperRangeChanged(IMapper mapper)
-			{
+			public void onMapperRangeChanged(IMapper mapper) {
 
 				layout();
-				if (mapper instanceof IAxis)
-				{
+				if (mapper instanceof IAxis) {
 					IAxis axis = (IAxis) mapper;
 
-					IChartLayer[] changedLayers = getChartModel().getAxis2Layers().get(axis).toArray(new IChartLayer[] {});
+					IChartLayer[] changedLayers = getChartModel()
+							.getAxis2Layers().get(axis).toArray(
+									new IChartLayer[] {});
 					m_plot.invalidate(changedLayers);
 
-					AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent(axis);
+					AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry()
+							.getComponent(axis);
 					ac.layout();
 				}
 				redraw();
@@ -130,14 +125,12 @@ public class ChartComposite extends Canvas implements IChartView
 
 		m_model.getMapperRegistry().addListener(m_mapperListener);
 
-		m_chartModelListener = new AbstractChartModelEventListener()
-		{
+		m_chartModelListener = new AbstractChartModelEventListener() {
 			/**
 			 * @see de.openali.odysseus.chart.framework.model.event.IChartModelEventListener#onAutoscale()
 			 */
 			@Override
-			public void onModelChanged()
-			{
+			public void onModelChanged() {
 				layout();
 				redraw();
 			}
@@ -150,8 +143,7 @@ public class ChartComposite extends Canvas implements IChartView
 
 		// Falls das Model schon gef�llt ist, m�ssen den vorhandenen Achsen
 		// noch Components hinzugef�gt werden
-		for (final IAxis axis : axes)
-		{
+		for (final IAxis axis : axes) {
 			m_mapperListener.onMapperAdded(axis);
 		}
 	}
@@ -160,8 +152,7 @@ public class ChartComposite extends Canvas implements IChartView
 	 * creates components for all 4 AxisComponent (TOP, RIGHT, BOTTOM, TOP) and
 	 * Plot
 	 */
-	private final void createControl(final Composite parent)
-	{
+	private final void createControl(final Composite parent) {
 		final GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -191,7 +182,8 @@ public class ChartComposite extends Canvas implements IChartView
 		lbl13.setVisible(false);
 
 		// 2.1
-		final Composite leftAxes = new SizedComposite(parent, axisContainerStyle);
+		final Composite leftAxes = new SizedComposite(parent,
+				axisContainerStyle);
 		leftAxes.setLayout(new FillLayout(SWT.HORIZONTAL));
 		final GridData lad = new GridData(SWT.NONE, SWT.FILL, false, true);
 		leftAxes.setLayoutData(lad);
@@ -202,14 +194,16 @@ public class ChartComposite extends Canvas implements IChartView
 		// m_plot = new PlotCanvas( m_model.getLayerManager(), parent,
 		// SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED |
 		// SWT.NO_FOCUS );
-		m_plot = new PlotCanvas(m_model.getLayerManager(), parent, SWT.LEFT_TO_RIGHT);
+		m_plot = new PlotCanvas(m_model.getLayerManager(), parent,
+				SWT.LEFT_TO_RIGHT | SWT.DOUBLE_BUFFERED);
 		m_plot.setLayout(new FillLayout());
 		final GridData pad = new GridData(SWT.FILL, SWT.FILL, true, true);
 		m_plot.setLayoutData(pad);
 		m_plot.setBackground(m_bgColor);
 
 		// 2.3
-		final Composite rightAxes = new SizedComposite(parent, axisContainerStyle);
+		final Composite rightAxes = new SizedComposite(parent,
+				axisContainerStyle);
 		rightAxes.setLayout(new FillLayout(SWT.HORIZONTAL));
 		final GridData rad = new GridData(SWT.NONE, SWT.FILL, false, true);
 		rightAxes.setLayoutData(rad);
@@ -222,7 +216,8 @@ public class ChartComposite extends Canvas implements IChartView
 		lbl31.setVisible(false);
 
 		// 3.2
-		final Composite bottomAxes = new SizedComposite(parent, axisContainerStyle);
+		final Composite bottomAxes = new SizedComposite(parent,
+				axisContainerStyle);
 		bottomAxes.setLayout(new FillLayout(SWT.VERTICAL));
 		final GridData bad = new GridData(SWT.FILL, SWT.NONE, true, false);
 		bottomAxes.setLayoutData(bad);
@@ -240,8 +235,7 @@ public class ChartComposite extends Canvas implements IChartView
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
 	@Override
-	public void dispose()
-	{
+	public void dispose() {
 		m_model.getMapperRegistry().removeListener(m_mapperListener);
 
 		m_model.clear();
@@ -260,13 +254,11 @@ public class ChartComposite extends Canvas implements IChartView
 	 * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
 	 */
 	@Override
-	public void setLayout(final Layout layout)
-	{
+	public void setLayout(final Layout layout) {
 		checkWidget();
 	}
 
-	public PlotCanvas getPlot()
-	{
+	public PlotCanvas getPlot() {
 		return m_plot;
 	}
 
@@ -274,20 +266,19 @@ public class ChartComposite extends Canvas implements IChartView
 	 * repaints all paintable elements (which are: Plot and AxisComponents)
 	 */
 	@Override
-	public void redraw()
-	{
+	public void redraw() {
 		// layout();
 
 		final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
 		final IAxis[] axes = mapperRegistry.getAxes();
-		for (final IAxis axis : axes)
-		{
+		for (final IAxis axis : axes) {
 			/*
 			 * zum Neuzeichnen der Achse muss nach die IAxisComponent nach
 			 * AxisComponent gecastet werden - sonst gibts keinen Zugriff auf
 			 * die Paint-Sachen
 			 */
-			final AxisCanvas ac = (AxisCanvas) mapperRegistry.getComponent(axis);
+			final AxisCanvas ac = (AxisCanvas) mapperRegistry
+					.getComponent(axis);
 			ac.redraw();
 		}
 		m_plot.redraw();
@@ -296,8 +287,7 @@ public class ChartComposite extends Canvas implements IChartView
 	/**
 	 * resizes the chart according to a given plot size;
 	 */
-	public void setPlotSize(int width, int height)
-	{
+	public void setPlotSize(int width, int height) {
 		final Composite l = m_axisPlaces.get(POSITION.LEFT);
 		final Composite r = m_axisPlaces.get(POSITION.RIGHT);
 		final Composite t = m_axisPlaces.get(POSITION.TOP);
@@ -305,8 +295,12 @@ public class ChartComposite extends Canvas implements IChartView
 
 		// setSize( width, height );
 		// TODO: check if border-width must be included
-		final int chartwidth = width + l.getBounds().width + r.getBounds().width + (2 * l.getBorderWidth()) + (2 * r.getBorderWidth());
-		final int chartheight = height + b.getBounds().height + t.getBounds().height + (2 * b.getBorderWidth()) + (2 * t.getBorderWidth());
+		final int chartwidth = width + l.getBounds().width
+				+ r.getBounds().width + (2 * l.getBorderWidth())
+				+ (2 * r.getBorderWidth());
+		final int chartheight = height + b.getBounds().height
+				+ t.getBounds().height + (2 * b.getBorderWidth())
+				+ (2 * t.getBorderWidth());
 
 		// getParent().setSize( chartwidth, chartheight );
 		setSize(chartwidth, chartheight);
@@ -319,28 +313,23 @@ public class ChartComposite extends Canvas implements IChartView
 		 */
 
 		// Vergr�ssern, falls zu klein
-		while (m_plot.getBounds().width < width)
-		{
+		while (m_plot.getBounds().width < width) {
 			setSize(getBounds().width + 1, getBounds().height);
 		}
-		while (m_plot.getBounds().height < height)
-		{
+		while (m_plot.getBounds().height < height) {
 			setSize(getBounds().width, getBounds().height + 1);
 		}
 		// Verkleinern, falls zu gross
-		while (m_plot.getBounds().width > width)
-		{
+		while (m_plot.getBounds().width > width) {
 			setSize(getBounds().width - 1, getBounds().height);
 		}
-		while (m_plot.getBounds().height > height)
-		{
+		while (m_plot.getBounds().height > height) {
 			setSize(getBounds().width, getBounds().height - 1);
 		}
 
 	}
 
-	public void setHideUnusedAxes(boolean hide)
-	{
+	public void setHideUnusedAxes(boolean hide) {
 		m_model.setHideUnusedAxes(hide);
 		redraw();
 	}

@@ -281,4 +281,9 @@ public class ChartConfigurationLoader implements IReferenceResolver
     return options;
   }
 
+  public String getDocumentSource( )
+  {
+    return m_document.documentProperties().getSourceName();
+  }
+
 }

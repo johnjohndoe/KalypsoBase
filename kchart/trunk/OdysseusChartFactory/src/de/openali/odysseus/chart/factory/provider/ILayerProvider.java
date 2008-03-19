@@ -23,7 +23,6 @@ public interface ILayerProvider
    */
   public IChartLayer getLayer( final URL context ) throws ConfigurationException;
 
-  // TODO: move chart parameter to getLayers
   public void init( final IChartModel model, final LayerType layerType, final URL context );
 
   /**

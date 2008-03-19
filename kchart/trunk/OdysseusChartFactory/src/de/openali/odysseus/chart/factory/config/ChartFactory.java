@@ -150,7 +150,7 @@ public class ChartFactory
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public static void addAxis( final IMapperRegistry ar, final IReferenceResolver rr, final AxisType axisType, final IExtensionLoader extLoader )
+  public static void addAxis( final IMapperRegistry ar, final IReferenceResolver rr, final AxisType axisType, final IExtensionLoader extLoader, final URL context )
   {
     if( axisType != null )
     {
@@ -200,7 +200,7 @@ public class ChartFactory
                   try
                   {
                     axisRenderer = arp.getAxisRenderer();
-                    axisRenderer.setStyles( createStyleSet( rendererType.getStyles(), rr ) );
+                    axisRenderer.setStyles( createStyleSet( rendererType.getStyles(), rr, context ) );
                     ar.setRenderer( axis.getIdentifier(), axisRenderer );
                     axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                   }
@@ -239,9 +239,9 @@ public class ChartFactory
     // Achsen hinzufügen
     final Mappers mapper = layerType.getMappers();
     final AxisType domainAxisType = (AxisType) rr.resolveReference( mapper.getDomainAxisRef().getRef() );
-    addAxis( model.getMapperRegistry(), rr, domainAxisType, extLoader );
+    addAxis( model.getMapperRegistry(), rr, domainAxisType, extLoader, context );
     final AxisType targetAxisType = (AxisType) rr.resolveReference( mapper.getTargetAxisRef().getRef() );
-    addAxis( model.getMapperRegistry(), rr, targetAxisType, extLoader );
+    addAxis( model.getMapperRegistry(), rr, targetAxisType, extLoader, context );
 
     // Restliche Mapper hinzufügen
     final RoleReferencingType[] mapperRefArray = mapper.getMapperRefArray();
@@ -294,7 +294,7 @@ public class ChartFactory
         // setting the data container
         icl.setDataContainer( provider.getDataContainer() );
         // setting styles
-        icl.setStyles( createStyleSet( layerType.getStyles(), rr ) );
+        icl.setStyles( createStyleSet( layerType.getStyles(), rr, context ) );
         // initialize layer
         icl.init();
 
@@ -308,7 +308,7 @@ public class ChartFactory
     }
   }
 
-  private static IStyleSet createStyleSet( StylesType styles, IReferenceResolver rr )
+  private static IStyleSet createStyleSet( StylesType styles, IReferenceResolver rr, URL context )
   {
     // Styles erzeugen
     IStyleSet styleSet = new StyleSet();
@@ -318,7 +318,7 @@ public class ChartFactory
       for( RoleReferencingType rrt : asArray )
       {
         AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
-        IAreaStyle as = StyleFactory.createAreaStyle( ast );
+        IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
         as.setData( STYLE_KEY, ast );
         styleSet.addStyle( rrt.getRole(), as );
       }
@@ -326,7 +326,7 @@ public class ChartFactory
       for( RoleReferencingType rrt : psArray )
       {
         PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
-        IPointStyle ps = StyleFactory.createPointStyle( pst );
+        IPointStyle ps = StyleFactory.createPointStyle( pst, context );
         ps.setData( STYLE_KEY, pst );
         styleSet.addStyle( rrt.getRole(), ps );
       }
