@@ -54,7 +54,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard;
-import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
