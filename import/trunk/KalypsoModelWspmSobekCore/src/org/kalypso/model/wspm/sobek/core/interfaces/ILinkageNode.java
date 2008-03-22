@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 /**
  * @author kuch
  */
-public interface ILinkageNode extends IAbstractConnectionNode
+public interface ILinkageNode extends IConnectionNode
 {
   public IBranch getLinkToBranch( );
 
