@@ -17,7 +17,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 	private ILineStyle m_stroke;
 	private Color m_inlineColor;
 
-	public PointStyle( ILineStyle outline, int width, int height, int alpha, RGB inlineColor, IMarker marker, boolean isVisible )
+	public PointStyle(ILineStyle outline, int width, int height, int alpha, RGB inlineColor, IMarker marker, boolean isVisible)
 	{
 		setStroke(outline);
 		setWidth(width);

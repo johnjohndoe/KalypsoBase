@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -80,11 +79,18 @@ public class ChartConfigurationLoader implements IReferenceResolver
     {
       is = new BufferedInputStream( configFile.getContents() );
       m_document = ChartConfigurationDocument.Factory.parse( is );
-      is.close();
     }
     finally
     {
-      IOUtils.closeQuietly( is );
+      try
+      {
+        if( is != null )
+          is.close();
+      }
+      catch( IOException e )
+      {
+        // wird ignoriert
+      }
     }
   }
 

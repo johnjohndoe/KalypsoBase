@@ -21,7 +21,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	private float[] m_dashArray;
 	private int m_miterLimit;
 
-	public LineStyle( int width, RGB rgb, int alpha, int dashOffset, int[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible )
+	public LineStyle(int width, RGB rgb, int alpha, int dashOffset, int[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible)
 	{
 		setWidth(width);
 		setColor(rgb);
@@ -73,13 +73,23 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	{
 		m_dashOffset = dashOffset;
 		// in float-Array umwandeln
-		if (dashArray != null)
+		if (dashArray != null && dashArray.length > 0)
 		{
 			m_dashArray = new float[dashArray.length];
 			for (int i = 0; i < dashArray.length; i++)
 			{
 				m_dashArray[i] = dashArray[i];
 			}
+		}
+		else
+		{
+			/**
+			 * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if
+			 * LineAttributes' dashArray is empty array
+			 */
+			// m_dashArray = new float[] {};
+			m_dashArray = null;
+
 		}
 	}
 
@@ -115,6 +125,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 			m_color.dispose();
 		}
 		m_color = new Color(gc.getDevice(), m_rgb);
+
 		gc.setForeground(m_color);
 
 		gc.setAlpha(getAlpha());
@@ -125,7 +136,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
 		LineAttributes la = new LineAttributes(m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit);
 		gc.setLineAttributes(la);
-
 	}
 
 	/*

@@ -5,8 +5,7 @@ import org.eclipse.swt.graphics.GC;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 
-public abstract class AbstractFigure<T_style extends IStyle> implements
-        IFigure<T_style>
+public abstract class AbstractFigure<T_style extends IStyle> implements IFigure<T_style>
 {
 
 	private T_style m_style;

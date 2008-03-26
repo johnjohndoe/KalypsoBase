@@ -8,24 +8,21 @@ import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
-public class PolygonFigure extends AbstractFigure<IAreaStyle>
-{
+public class PolygonFigure extends AbstractFigure<IAreaStyle> {
 
-	private Point[] m_points = new Point[] { new Point(10, 10), new Point(100, 100) };
+	private Point[] m_points = new Point[] { new Point(10, 10),
+			new Point(100, 100) };
 
 	@Override
-	public void paintFigure(GC gc)
-	{
-		if (m_points != null)
-		{
+	public void paintFigure(GC gc) {
+		if (m_points != null) {
 			int[] intArray = FigureUtilities.pointArrayToIntArray(m_points);
 			gc.fillPolygon(intArray);
 			gc.drawPolygon(intArray);
 		}
 	}
 
-	public void setPoints(Point[] points)
-	{
+	public void setPoints(Point[] points) {
 		m_points = points;
 	}
 
@@ -34,17 +31,17 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
 	 * point style
 	 */
 	@Override
-	public IAreaStyle getStyle()
-	{
+	public IAreaStyle getStyle() {
 		IAreaStyle style = super.getStyle();
-		if (style != null)
-		{
+		if (style != null) {
 			return style;
-		}
-		else
-		{
+		} else {
 			return StyleUtils.getDefaultStyle(AreaStyle.class);
 		}
+	}
+
+	public void dispose() {
+		// nothing to do;
 	}
 
 }

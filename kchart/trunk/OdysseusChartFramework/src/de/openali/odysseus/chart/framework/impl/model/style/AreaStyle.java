@@ -12,7 +12,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 	private ILineStyle m_stroke;
 	private IFill m_fill;
 
-	public AreaStyle( ILineStyle outline, IFill fill, int alpha, ILineStyle stroke, boolean isVisible )
+	public AreaStyle(ILineStyle outline, IFill fill, int alpha, ILineStyle stroke, boolean isVisible)
 	{
 		setFill(fill);
 		setAlpha(alpha);

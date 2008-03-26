@@ -31,56 +31,64 @@ public class DefaultLineLayer extends AbstractLineLayer
       final Object[] domainData = dataContainer.getDomainValues();
       final Object[] targetData = dataContainer.getTargetValues();
 
-      IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
-      IDataRange<Number> dr = getDomainAxis().getNumericRange();
-      IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
-
-      Number max = dr.getMax();
-      Number min = dr.getMin();
-
-      final ArrayList<Point> path = new ArrayList<Point>();
-
-      ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
-      for( int i = 0; i < domainData.length; i++ )
+      if( domainData.length > 0 )
       {
-        // nur zeichnen, wenn linie innerhalb des Sichtbarkeitsintervalls liegt
-        boolean setPoint = false;
-        final Object domVal = domainData[i];
 
-        if( dopDomain.logicalToNumeric( domVal ).doubleValue() > min.doubleValue() && dopDomain.logicalToNumeric( domVal ).doubleValue() < max.doubleValue() )
+        IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
+        IDataRange<Number> dr = getDomainAxis().getNumericRange();
+        IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
+
+        Number max = dr.getMax();
+        Number min = dr.getMin();
+
+        final ArrayList<Point> path = new ArrayList<Point>();
+
+        ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
+        for( int i = 0; i < domainData.length; i++ )
         {
-          setPoint = true;
-        }
-        else if( dopDomain.logicalToNumeric( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
-        {
-          Object next = domainData[i + 1];
-          if( dopDomain.logicalToNumeric( next ).doubleValue() > min.doubleValue() )
+          // nur zeichnen, wenn linie innerhalb des Sichtbarkeitsintervalls liegt
+          boolean setPoint = false;
+          final Object domVal = domainData[i];
+
+          if( dopDomain.logicalToNumeric( domVal ).doubleValue() > min.doubleValue() && dopDomain.logicalToNumeric( domVal ).doubleValue() < max.doubleValue() )
           {
             setPoint = true;
           }
-        }
-        else if( dopDomain.logicalToNumeric( domVal ).doubleValue() > max.doubleValue() && i > 0 )
-        {
-          Object prev = domainData[i - 1];
-          if( dopDomain.logicalToNumeric( prev ).doubleValue() < max.doubleValue() )
+          else if( dopDomain.logicalToNumeric( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
           {
-            setPoint = true;
+            Object next = domainData[i + 1];
+            if( dopDomain.logicalToNumeric( next ).doubleValue() > min.doubleValue() )
+            {
+              setPoint = true;
+            }
+          }
+          else if( dopDomain.logicalToNumeric( domVal ).doubleValue() > max.doubleValue() && i > 0 )
+          {
+            Object prev = domainData[i - 1];
+            if( dopDomain.logicalToNumeric( prev ).doubleValue() < max.doubleValue() )
+            {
+              setPoint = true;
+            }
+
           }
 
+          if( setPoint )
+          {
+            final Object targetVal = targetData[i];
+            final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
+            final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
+            // Koordinaten switchen
+            Point unswitched = new Point( domScreen, valScreen );
+            path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
+          }
         }
-
-        if( setPoint )
-        {
-          final Object targetVal = targetData[i];
-          final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
-          final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
-          // Koordinaten switchen
-          Point unswitched = new Point( domScreen, valScreen );
-          path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
-        }
+        drawLine( gc, path );
+        drawPoints( gc, path );
       }
-      drawLine( gc, path );
-      drawPoints( gc, path );
+      else
+      {
+        Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getId() + " has no data to draw." );
+      }
     }
     else
     {

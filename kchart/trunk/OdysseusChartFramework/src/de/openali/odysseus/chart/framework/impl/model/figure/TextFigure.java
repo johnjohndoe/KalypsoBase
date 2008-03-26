@@ -58,12 +58,13 @@ public class TextFigure extends AbstractFigure<ITextStyle>
 	{
 		ITextStyle style = super.getStyle();
 		if (style != null)
-		{
 			return style;
-		}
 		else
-		{
 			return StyleUtils.getDefaultStyle(TextStyle.class);
-		}
+	}
+
+	public void dispose()
+	{
+		// nothing to do;
 	}
 }

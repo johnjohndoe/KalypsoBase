@@ -15,4 +15,6 @@ public interface IFigure<T_style extends IStyle>
 
   public void paintFigure( GC gc );
 
+  public void dispose( );
+
 }

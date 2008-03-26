@@ -10,8 +10,7 @@ import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 
-public class PointFigure extends AbstractFigure<IPointStyle>
-{
+public class PointFigure extends AbstractFigure<IPointStyle> {
 
 	private Point m_leftTopPos = new Point(0, 0);
 
@@ -20,10 +19,10 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 	 * @param pos
 	 *            center position of the figure
 	 */
-	public void setCenterPosition(Point pos)
-	{
+	public void setCenterPosition(Point pos) {
 		IPointStyle style = getStyle();
-		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(), style.getHeight()));
+		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(),
+				style.getHeight()));
 	}
 
 	/**
@@ -31,24 +30,21 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 	 * @param point
 	 *            left top position of the figure
 	 */
-	public void setLeftTopPoint(Point pos)
-	{
+	public void setLeftTopPoint(Point pos) {
 		m_leftTopPos = pos;
 	}
 
 	@Override
-	public void paintFigure(GC gc)
-	{
+	public void paintFigure(GC gc) {
 		IStyle style = getStyle();
-		if (style != null && m_leftTopPos != null)
-		{
+		if (style != null && m_leftTopPos != null) {
 			IPointStyle ps = (IPointStyle) style;
 			IMarker marker = ps.getMarker();
-			if (marker == null)
-			{
+			if (marker == null) {
 				marker = IDefaultStyles.DEFAULT_MARKER;
 			}
-			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle().getHeight());
+			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle()
+					.getHeight());
 		}
 
 	}
@@ -58,17 +54,17 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 	 * point style
 	 */
 	@Override
-	public IPointStyle getStyle()
-	{
+	public IPointStyle getStyle() {
 		IPointStyle style = super.getStyle();
-		if (style != null)
-		{
+		if (style != null) {
 			return style;
-		}
-		else
-		{
+		} else {
 			return StyleUtils.getDefaultStyle(PointStyle.class);
 		}
+	}
+
+	public void dispose() {
+		// nothing to do;
 	}
 
 }

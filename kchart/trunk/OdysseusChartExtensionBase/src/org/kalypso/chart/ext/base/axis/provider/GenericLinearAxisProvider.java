@@ -45,7 +45,6 @@ import org.kalypso.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chartconfig.x010.AxisType;
 
 /**
  * @author alibu
@@ -67,14 +66,4 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
     return axis;
   }
 
-  /**
-   * default behaviour: return original xml type; implement, if changes shall be saved
-   * 
-   * @see org.kalypso.chart.factory.provider.IAxisProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IAxis)
-   */
-  @Override
-  public AxisType getXMLType( IAxis axis )
-  {
-    return super.getXMLType( axis );
-  }
 }

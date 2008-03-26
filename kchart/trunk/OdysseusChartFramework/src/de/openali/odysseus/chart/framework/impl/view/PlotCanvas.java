@@ -59,7 +59,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 	 */
 	private HashSet<IChartLayer> m_panLayers = new HashSet<IChartLayer>();
 
-	public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
+	public PlotCanvas(final ILayerManager manager, final Composite parent, final int style)
 	{
 		super(parent, style);
 		m_manager = manager;

@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.impl.model.figure;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
@@ -11,6 +12,8 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 public class PolylineFigure extends AbstractFigure<ILineStyle>
 {
 
+	Path m_path = null;
+
 	private Point[] m_points = new Point[] { new Point(10, 10), new Point(100, 100) };
 
 	@Override
@@ -18,19 +21,24 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
 	{
 		if (m_points != null)
 		{
-			int[] path = FigureUtilities.pointArrayToIntArray(m_points);
-			// if too many points are set, swt crashes
-			if (m_points.length > 500)
+			// if too many points are set, swt crashes on GTK; for GTK, 500
+			// seems ok
+			int limit = 500;
+
+			if (m_points.length > limit)
 			{
-				for (int i = 0; i < m_points.length - 2; i++)
+				for (int j = 0; j < m_points.length; j += limit - 1)
 				{
-					Point p1 = m_points[i];
-					Point p2 = m_points[i + 1];
-					gc.drawLine(p1.x, p1.y, p2.x, p2.y);
+					int newLength = Math.min(limit, m_points.length - j);
+					Point[] limitedPoints = new Point[newLength];
+					System.arraycopy(m_points, j, limitedPoints, 0, newLength);
+					int[] path = FigureUtilities.pointArrayToIntArray(limitedPoints);
+					gc.drawPolyline(path);
 				}
 			}
 			else
 			{
+				int[] path = FigureUtilities.pointArrayToIntArray(m_points);
 				gc.drawPolyline(path);
 			}
 		}
@@ -57,5 +65,11 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
 		{
 			return StyleUtils.getDefaultStyle(LineStyle.class);
 		}
+	}
+
+	public void dispose()
+	{
+		if (m_path != null && !m_path.isDisposed())
+			m_path.dispose();
 	}
 }

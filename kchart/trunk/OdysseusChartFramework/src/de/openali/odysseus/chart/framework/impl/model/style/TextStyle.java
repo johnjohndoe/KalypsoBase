@@ -23,7 +23,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 	private Color m_textColor;
 	private FONTWEIGHT m_weight;
 
-	public TextStyle( int height, String family, RGB rgbText, RGB rgbFill, FONTSTYLE style, FONTWEIGHT weight, int alpha, boolean isVisible )
+	public TextStyle(int height, String family, RGB rgbText, RGB rgbFill, FONTSTYLE style, FONTWEIGHT weight, int alpha, boolean isVisible)
 	{
 		setFamily(family);
 		setHeight(height);
