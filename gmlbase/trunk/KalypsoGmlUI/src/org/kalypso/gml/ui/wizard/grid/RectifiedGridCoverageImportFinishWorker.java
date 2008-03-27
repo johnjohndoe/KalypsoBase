@@ -99,8 +99,10 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   private final IContainer m_outputGridFolder;
 
   private ICoverage m_newCoverage;
+  
+  private final String m_sourceCRS;
 
-  public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder )
+  public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder, final String sourceCRS )
   {
     m_shell = shell;
     m_inputGridFile = selectedFile;
@@ -108,6 +110,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     m_domain = domain;
     m_gmlFile = gmlFile;
     m_outputGridFolder = gridFolder;
+    m_sourceCRS = sourceCRS;
   }
 
   /**
@@ -242,7 +245,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
       final File binFile = File.createTempFile( gridFile.getName(), ".bin" );
       binFile.deleteOnExit();
 
-      final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURL(), binFile, 2 );
+      final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURL(), binFile, 2, m_sourceCRS );
       converter.doConvert( progress.newChild( 1 ) );
 
       return binFile;

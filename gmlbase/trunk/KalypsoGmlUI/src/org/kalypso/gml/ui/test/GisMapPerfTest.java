@@ -128,7 +128,7 @@ public class GisMapPerfTest extends TestCase
     panel.setMapModell( modell );
     panel.setBoundingBox( modell.getFullExtentBoundingBox() );
     final GeoTransform transform = panel.getProjection();
-    transform.setDestRect( 0, 0, 1024, 1024 );
+    transform.setDestRect( 0, 0, 1024, 1024, null );
 
     final ThemePainter themePainter = new ThemePainter( panel );
 

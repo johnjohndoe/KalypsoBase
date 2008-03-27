@@ -175,7 +175,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
         gmlFile = null;
       final IContainer gridFolder = m_gridFolder == null ? gmlFile.getParent() : m_gridFolder;
 
-      final RectifiedGridCoverageImportFinishWorker op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder );
+      final RectifiedGridCoverageImportFinishWorker op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder, null );
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 

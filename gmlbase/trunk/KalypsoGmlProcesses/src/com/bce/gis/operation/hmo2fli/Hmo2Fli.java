@@ -70,7 +70,7 @@ public class Hmo2Fli
     final IGeoValueProvider dgmDiffer = new DiffGeoValueProvider( groUnten, groOben );
     final Coordinate offsetX = new Coordinate( rasterSize, 0 );
     final Coordinate offsetY = new Coordinate( 0, rasterSize );
-    final IGeoGrid raster = new DoubleFakeRaster( xCount, yCount, origin, offsetX, offsetY, dgmDiffer );
+    final IGeoGrid raster = new DoubleFakeRaster( xCount, yCount, origin, offsetX, offsetY, dgmDiffer, null );
 
     final boolean bSimple = false;
     final SegmentCollector gc = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
