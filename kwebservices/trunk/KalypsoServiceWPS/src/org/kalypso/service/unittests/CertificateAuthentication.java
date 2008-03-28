@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,9 +52,15 @@ import javax.xml.bind.JAXBException;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DescribeProcess;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
+import org.kalypso.commons.net.ProxyUtilities;
+import org.kalypso.commons.net.SSLUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
@@ -85,6 +94,45 @@ public class CertificateAuthentication
     System.setProperty( "http.proxySet", "true" );
     System.setProperty( "http.proxyHost", "proxy.bce01.de" );
     System.setProperty( "http.proxyPort", "8080" );
+
+    /* Create the client. */
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( SERVICE_URL ), 0 );
+
+    /* All certificates should be accepted! */
+    SSLUtilities.acceptSelfSignedCertificatesSSL();
+
+    /* Build the method. */
+    PostMethod post = new PostMethod( "https://informdss.bafg.de/svn/repos/projects/" );
+    InputStream inputStream = new FileInputStream( "C:/Albert/Temp/Projekte/InformDSS/InformDSS - Sonstiges/client.p12" );
+    post.setRequestEntity( new InputStreamRequestEntity( inputStream, "application/x-x509-email-cert" ) );
+
+    /* Let the method handle the authentication, if any. */
+    post.setDoAuthentication( true );
+
+    /* Execute the method. */
+    Debug.println( "Sending certificate for verification ..." );
+    Debug.println( "Asking for a directory listing ..." );
+
+    int status = client.executeMethod( post );
+
+    /* Close the input stream. */
+    inputStream.close();
+
+    /* Handle the response. */
+    Debug.println( "Status code: " + String.valueOf( status ) );
+
+    if( status != 200 )
+      throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
+
+    InputStream is = post.getResponseBodyAsStream();
+    if( is != null )
+    {
+      /* Print the response. */
+      Debug.println( MarshallUtilities.fromInputStream( is ) );
+    }
+
+    if( true )
+      return;
 
     /* Build the describe process request. */
     List<CodeType> identifier = new LinkedList<CodeType>();

@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Kalypso ODS Plug-in
 Bundle-SymbolicName: org.kalypso.service.ods;singleton:=true
 Bundle-Version: 0.1.0
-Bundle-ClassPath: build/bin
+Bundle-ClassPath: .,
+ srcbind/
 Bundle-Activator: org.kalypso.service.ods.ODSOperationsPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.chart.factory;bundle-version="[0.1.0,0.1.0]",
