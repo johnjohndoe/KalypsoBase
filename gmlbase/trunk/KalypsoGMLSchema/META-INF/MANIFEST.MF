@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp;visibility:=reexport
 Bundle-ClassPath: lib/schiftone/shiftone-cache.jar,
- build/bin
+ .
 Bundle-Vendor: kalypso.org
 Export-Package: org.kalypso.gmlschema,
  org.kalypso.gmlschema.adv,

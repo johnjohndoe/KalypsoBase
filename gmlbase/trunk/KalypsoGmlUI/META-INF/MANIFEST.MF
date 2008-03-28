@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.gml.ui.KalypsoGmlUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Require-Bundle: org.junit,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.processes,
