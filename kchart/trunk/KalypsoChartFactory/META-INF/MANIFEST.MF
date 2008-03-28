@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoChartFactory Plug-in
 Bundle-SymbolicName: org.kalypso.chart.factory;singleton:=true
 Bundle-Version: 0.1.0
-Bundle-ClassPath: bin
+Bundle-ClassPath: .,
+ srcbind/
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  org.kalypso.chart.framework;bundle-version="[0.1.0,0.1.0]";visibility:=reexport

@@ -6,7 +6,6 @@ Bundle-Version: 0.1.0
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
