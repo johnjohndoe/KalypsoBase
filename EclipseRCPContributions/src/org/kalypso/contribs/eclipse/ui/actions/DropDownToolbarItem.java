@@ -102,7 +102,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   protected Command m_currentCommand;
 
-  private final IHandlerService m_handlerService;
+  protected final IHandlerService m_handlerService;
 
   public DropDownToolbarItem( )
   {
@@ -397,7 +397,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   }
 
-  private void handleWidgetDispose( final Event event )
+  protected void handleWidgetDispose( final Event event )
   {
     if( event.widget == widget )
     {
@@ -467,7 +467,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     return menuItemListener;
   }
 
-  private void handleWidgetSelection( final Event event )
+  protected void handleWidgetSelection( final Event event )
   {
     // Special check for ToolBar dropdowns...
     if( openDropDownMenu( event ) )
