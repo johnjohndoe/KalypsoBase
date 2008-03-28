@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.debug.KalypsoDebugPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.debug,
  org.kalypso.debug.editor,
  org.kalypso.debug.view,

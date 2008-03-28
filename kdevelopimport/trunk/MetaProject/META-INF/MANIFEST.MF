@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: MetaProject Plug-in
 Bundle-SymbolicName: org.kalypso.metaproject; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/commons-io-1.0.jar,
- build/bin
+Bundle-ClassPath: MetaProject.jar,
+ lib/commons-io-1.0.jar
 Bundle-Activator: org.kalypso.metaproject.MetaProjectPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
