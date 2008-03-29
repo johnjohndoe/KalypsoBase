@@ -99,6 +99,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>, IStyla
 
   public void setCoordinateMapper( ICoordinateMapper coordinateMapper );
 
+  @SuppressWarnings("unchecked")
   public void setDataContainer( IDataContainer data );
 
   // Initialization method; to be called after setAxes, setDataContainer
@@ -108,6 +109,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>, IStyla
 
   public ILegendEntry[] getLegendEntries( );
 
+  @SuppressWarnings("unchecked")
   public void setMappers( Map<String, IMapper> mapperMap );
 
 }

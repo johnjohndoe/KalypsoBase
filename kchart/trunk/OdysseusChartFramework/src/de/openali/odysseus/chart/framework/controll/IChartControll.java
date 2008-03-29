@@ -58,6 +58,7 @@ public interface IChartControll
 
   public void setLayers( List<IChartLayer> layerMap );
 
+  @SuppressWarnings("unchecked")
   public void setAxisRanges( Map<IAxis, IDataRange> axisRangeMap );
 
   public void setChartSize( int width, int height );

@@ -1,7 +1,5 @@
 package de.openali.odysseus.chart.framework.impl.test;
 
-import java.io.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -33,6 +31,12 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
+/**
+ * TODO: auslagern in externes Test-Plugin
+ * 
+ * @author burtscher1
+ * 
+ */
 public class StyleTest implements PaintListener
 {
 
@@ -67,7 +71,7 @@ public class StyleTest implements PaintListener
 
 	public static void main(String... args)
 	{
-		StyleTest st = new StyleTest();
+		new StyleTest();
 
 	}
 
@@ -109,8 +113,8 @@ public class StyleTest implements PaintListener
 		lf.setPoints(points1);
 
 		IMarker m1 = new OvalMarker();
-		File file = new File("/mnt/space1/dev/workspaceChart3.3/de.openali.odysseus.chart.style/etc/img/smiley.jpg");
-		IMarker m2 = new ImageMarker(file);
+		// TODO: hier sollte natürlich eine URL reingefüllt werden
+		IMarker m2 = new ImageMarker(null);
 		Point[] markerPoints = getCrossMarker();
 
 		IMarker m3 = new PolygonMarker(markerPoints);
@@ -123,9 +127,6 @@ public class StyleTest implements PaintListener
 		ITextStyle ts = StyleUtils.getDefaultTextStyle();
 		ts.setFamily("Ani");
 		TextFigure tf = new TextFigure();
-
-		// Kontrollpunkt
-		PointFigure pf3 = new PointFigure();
 
 		for (int i = 0; i < points1.length; i++)
 		{

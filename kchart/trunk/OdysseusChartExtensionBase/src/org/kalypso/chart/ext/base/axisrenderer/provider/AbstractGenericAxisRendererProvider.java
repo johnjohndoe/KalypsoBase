@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ext.base.axisrenderer.provider;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -54,7 +53,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   /**
    * @see de.openali.odysseus.chart.factory.provider.IAxisRendererProvider#getAxisRenderer()
    */
-  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException
+  public IAxisRenderer getAxisRenderer( )
   {
     // TODO Auto-generated method stub
     return null;

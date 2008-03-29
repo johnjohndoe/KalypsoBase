@@ -1,10 +1,10 @@
 package org.kalypso.chart.ext.base.layer.provider;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,9 +62,13 @@ public class UVFLayerProvider extends AbstractLayerProvider
         setLoading( true );
         try
         {
-          FileReader fr = new FileReader( getInputFile() );
+          // FileReader fr = new FileReader( getInputURL() );
 
-          BufferedReader br = new BufferedReader( fr );
+          URL url = getInputURL();
+          InputStream is = url.openStream();
+          InputStreamReader isr = new InputStreamReader( is );
+
+          BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
           List<Calendar> domainValues = new ArrayList<Calendar>();
@@ -93,6 +97,11 @@ public class UVFLayerProvider extends AbstractLayerProvider
             }
             count++;
           }
+
+          br.close();
+          isr.close();
+          is.close();
+
           setDomainValues( domainValues );
           setTargetValues( targetValues );
         }
@@ -138,8 +147,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
 
     };
 
-    File input = ChartFactoryUtilities.getRelativeFile( getContext(), getParameterContainer().getParameterValue( "url", getId() ), null );
-    data.setInputFile( input );
+    URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
+    data.setInputURL( url );
     return data;
   }
 }

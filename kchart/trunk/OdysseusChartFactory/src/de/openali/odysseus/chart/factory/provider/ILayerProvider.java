@@ -35,5 +35,6 @@ public interface ILayerProvider
    */
   public IChartModel getChartModel( );
 
+  @SuppressWarnings("unchecked")
   public IDataContainer getDataContainer( ) throws ConfigurationException;
 }

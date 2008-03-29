@@ -45,44 +45,42 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 /**
  * @author burtscher1
  * 
- * AxisAdjustment is used when axes are adjusted automatically (e.g. maximize action); in general, auto adjustment means
- * that axes are ranged in a way that all data from all layers can be seen; if an axis contains a preferred axis
- * adjustment, than the auto adjustment will range the axis in a way that there can also be some space before and after
- * the data range;
+ * AxisAdjustment is used when axes are adjusted automatically (e.g. maximize
+ * action); in general, auto adjustment means that axes are ranged in a way that
+ * all data from all layers can be seen; if an axis contains a preferred axis
+ * adjustment, than the auto adjustment will range the axis in a way that there
+ * can also be some space before and after the data range;
  * 
  */
 public class AxisAdjustment implements IAxisAdjustment
 {
 
-  private final double m_before;
+	private final double m_before;
 
-  private final double m_range;
+	private final double m_range;
 
-  private final double m_after;
+	private final double m_after;
 
-  private final double m_size;
+	public AxisAdjustment(int before, int range, int after)
+	{
+		m_before = before;
+		m_range = range;
+		m_after = after;
+	}
 
-  public AxisAdjustment( int before, int range, int after )
-  {
-    m_before = before;
-    m_range = range;
-    m_after = after;
-    m_size = m_before + m_range + m_after;
-  }
+	public double getBefore()
+	{
+		return m_before;
+	}
 
-  public double getBefore( )
-  {
-    return m_before;
-  }
+	public double getRange()
+	{
+		return m_range;
+	}
 
-  public double getRange( )
-  {
-    return m_range;
-  }
-
-  public double getAfter( )
-  {
-    return m_after;
-  }
+	public double getAfter()
+	{
+		return m_after;
+	}
 
 }

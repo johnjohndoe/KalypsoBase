@@ -1,10 +1,11 @@
 package org.kalypso.chart.ext.base.layer.provider;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,7 +74,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
     final AbstractDomainIntervalValueFileData data = new AbstractDomainIntervalValueFileData()
     {
 
-      @SuppressWarnings("cast")
+      @SuppressWarnings( { "cast", "unchecked" })
       @Override
       public boolean openData( )
       {
@@ -81,14 +82,16 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
         FileReader fr;
         try
         {
-          fr = new FileReader( getInputFile() );
+          URL url = getInputURL();
+          InputStream is = url.openStream();
+          InputStreamReader isr = new InputStreamReader( is );
 
           List<Object> domainValues = new ArrayList<Object>();
           List<Object> domainIntervalStartValues = new ArrayList<Object>();
           List<Object> domainIntervalEndValues = new ArrayList<Object>();
           List<Object> targetValues = new ArrayList<Object>();
 
-          BufferedReader br = new BufferedReader( fr );
+          BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
           String domType = null;
@@ -155,6 +158,9 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
             count++;
 
           }
+          br.close();
+          isr.close();
+          is.close();
         }
         catch( FileNotFoundException e )
         {
@@ -196,8 +202,8 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
 
     };
 
-    File f = ChartFactoryUtilities.getRelativeFile( getContext(), getParameterContainer().getParameterValue( "url", getId() ), null );
-    data.setInputFile( f );
+    URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
+    data.setInputURL( url );
 
     return data;
   }

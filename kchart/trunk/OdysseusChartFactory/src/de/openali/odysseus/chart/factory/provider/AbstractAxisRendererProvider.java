@@ -33,7 +33,7 @@ public abstract class AbstractAxisRendererProvider implements IAxisRendererProvi
     return m_at;
   }
 
-  private AxisRendererType getAxisRendererType( )
+  protected AxisRendererType getAxisRendererType( )
   {
     return m_at;
   }

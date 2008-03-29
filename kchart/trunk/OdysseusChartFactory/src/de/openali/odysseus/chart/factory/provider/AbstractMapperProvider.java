@@ -1,6 +1,5 @@
 package de.openali.odysseus.chart.factory.provider;
 
-
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
@@ -34,6 +33,7 @@ public abstract class AbstractMapperProvider implements IMapperProvider
    * 
    * @see org.kalypso.chart.factory.provider.IMapperProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IMapper)
    */
+  @SuppressWarnings("unchecked")
   public MapperType getXMLType( IMapper mapper )
   {
     return m_mt;

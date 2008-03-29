@@ -4,7 +4,6 @@ import java.awt.Insets;
 import java.text.Format;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -405,8 +404,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   public void paint( GC gc, final IAxis axis, final Rectangle screen )
   {
-    final Device dev = gc.getDevice();
-
     if( screen.width > 0 && screen.height > 0 )
     {
 
@@ -613,12 +610,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     img.dispose();
 
     return width;
-  }
-
-  private Format getFormat( IDataRange<Number> range )
-  {
-    // TODO: implementiere mich
-    return null;
   }
 
 }

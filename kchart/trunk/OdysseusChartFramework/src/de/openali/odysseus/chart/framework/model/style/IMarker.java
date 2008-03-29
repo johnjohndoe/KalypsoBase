@@ -6,9 +6,10 @@ import org.eclipse.swt.graphics.Point;
 public interface IMarker
 {
 
-	/**
-	 * assumes that the style is already set
-	 */
-	public void paint(GC gc, Point p, int width, int height);
+  /**
+   * assumes that the style is already set
+   */
+  public void paint( GC gc, Point p, int width, int height );
 
+  public void dispose( );
 }

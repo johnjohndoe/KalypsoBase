@@ -1,10 +1,11 @@
 package org.kalypso.chart.ext.base.layer.provider;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +49,11 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
       {
         try
         {
-          FileReader fr;
-          fr = new FileReader( getInputFile() );
 
-          BufferedReader br = new BufferedReader( fr );
+          InputStream is = getInputURL().openStream();
+          InputStreamReader isr = new InputStreamReader( is );
+
+          BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
           List<Object> domainValues = new ArrayList<Object>();
@@ -78,12 +80,17 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
               }
               catch( NumberFormatException e )
               {
-                Logger.logWarning( Logger.TOPIC_LOG_DATA, getInputFile().getName() + ": Line " + count + " could not be parsed: \n" + s );
+                Logger.logWarning( Logger.TOPIC_LOG_DATA, getInputURL().toString() + ": Line " + count + " could not be parsed: \n" + s );
                 e.printStackTrace();
               }
             }
             count++;
           }
+
+          br.close();
+          isr.close();
+          is.close();
+
           setDomainValues( domainValues );
           setTargetValues( targetValues );
         }
@@ -113,8 +120,15 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
 
     };
     final String url = getParameterContainer().getParameterValue( "url", getId() );
-    data.setInputFile( new File( url ) );
+    try
+    {
+      data.setInputURL( new URL( url ) );
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     return data;
   }
-
 }

@@ -1,20 +1,20 @@
 package org.kalypso.chart.ext.base.data;
 
-import java.io.File;
+import java.net.URL;
 
 public abstract class AbstractDomainIntervalValueFileData<T_domain, T_target> extends AbstractDomainIntervalValueData<T_domain, T_target>
 {
 
-  private File m_file;
+  private URL m_url;
 
-  public void setInputFile( File f )
+  public void setInputURL( URL url )
   {
-    m_file = f;
+    m_url = url;
   }
 
-  public File getInputFile( )
+  public URL getInputURL( )
   {
-    return m_file;
+    return m_url;
   }
 
 }

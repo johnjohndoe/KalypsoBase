@@ -75,7 +75,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     style.apply( gc );
     // BUG in SWT (linux): Wenn Font-Größe geändert wird, besitzt der Hintergrund immer noch die Größe
     // des alten Texts - funktioniert aber komischerweise, wenn man den TextExtent nochmal anfragt
-    Point textExtent = getTextExtent( gc, text, style );
+    getTextExtent( gc, text, style );
     gc.drawText( text, x, y );
   }
 

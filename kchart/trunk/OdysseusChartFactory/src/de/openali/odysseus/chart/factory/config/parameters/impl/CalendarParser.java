@@ -11,7 +11,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
@@ -90,10 +89,7 @@ public class CalendarParser implements IStringParser<Calendar>
           }
 
           // DurationPart auswerten
-          if( (value.startsWith( "NOW" ) && value.length() > 3) || (value.startsWith( "TODAY" ) && value.length() > 5)
-
-          )
-            ;
+          if( (value.startsWith( "NOW" ) && value.length() > 3) || (value.startsWith( "TODAY" ) && value.length() > 5) )
           {
 
             final Pattern pattern = Pattern.compile( m_regexDuration );
@@ -106,7 +102,7 @@ public class CalendarParser implements IStringParser<Calendar>
             final Map<Integer, String> durationMap = new HashMap<Integer, String>();
 
             // Matcher initiualisieren
-            final boolean matches = matcher.matches();
+            matcher.matches();
 
             // Suche nach DurationDirection
             final String dir = matcher.group( 3 );

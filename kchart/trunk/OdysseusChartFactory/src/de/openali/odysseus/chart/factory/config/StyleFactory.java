@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
@@ -134,9 +134,9 @@ public class StyleFactory
     else if( pst.isSetImageMarker() )
     {
       ImageMarkerType imageMarker = pst.getImageMarker();
-      String configPath = imageMarker.getImageFile();
-      File file = ChartFactoryUtilities.getRelativeFile( context, configPath, pst );
-      style.setMarker( new ImageMarker( file ) );
+      String imgPath = imageMarker.getImageFile();
+      ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, -1, -1 );
+      style.setMarker( new ImageMarker( id ) );
     }
     else if( pst.isSetOvalMarker() )
     {
@@ -218,6 +218,7 @@ public class StyleFactory
    * elements); their equivalent elements had to be declared as groups in XML Schema, so they aren't related to each
    * other
    */
+  @SuppressWarnings("unchecked")
   public static void setStrokeAttributes( ILineStyle style, StrokeType st )
   {
 
@@ -301,8 +302,8 @@ public class StyleFactory
       else if( fill.getImageFill() != null )
       {
         ImageFillType ift = fill.getImageFill();
-        String configPath = ift.getImageFile();
-        File file = ChartFactoryUtilities.getRelativeFile( context, configPath, ift );
+        String imgPath = ift.getImageFile();
+
         int width = -1;
         int height = -1;
         if( ift.isSetWidth() )
@@ -313,10 +314,11 @@ public class StyleFactory
         {
           height = ift.getHeight();
         }
-        ImageFill imageFill = new ImageFill( file, width, height );
+        ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, width, height );
+        ImageFill imageFill = new ImageFill( id );
         style.setFill( imageFill );
       }
-      // else: use default
+      // else: use default fill
     }
 
     // outline

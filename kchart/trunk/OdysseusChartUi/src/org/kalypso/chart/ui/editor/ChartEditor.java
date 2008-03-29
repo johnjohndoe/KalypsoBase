@@ -19,7 +19,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -320,6 +319,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
              */
+            @SuppressWarnings("unchecked")
             @Override
             public void onMapperRangeChanged( IMapper mapper )
             {
@@ -437,7 +437,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
             // TooltipHandler - meldet sich selbst an
-            final TooltipHandler eh = new TooltipHandler( m_chartComposite );
+            new TooltipHandler( m_chartComposite );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
@@ -513,6 +513,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     return super.getAdapter( adapter );
   }
 
+  @SuppressWarnings("deprecation")
   public void drawLegendIcon( final String id, final Image img )
   {
     final IChartLayer[] layers = m_chartModel.getLayerManager().getLayers();
@@ -520,7 +521,6 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       if( layer.getId().equals( id ) )
       {
-        final Rectangle bounds = img.getBounds();
         layer.drawIcon( img );
         break;
       }

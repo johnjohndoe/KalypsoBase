@@ -71,7 +71,6 @@ public class CalendarFormat extends Format
     if( obj instanceof Calendar )
     {
       Calendar cal = (Calendar) obj;
-      long timeInMillis = cal.getTimeInMillis();
       return m_sdf.format( cal.getTimeInMillis(), toAppendTo, pos );
     }
     else if( obj instanceof Number )

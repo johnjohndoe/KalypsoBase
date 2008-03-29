@@ -50,6 +50,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.chart.ui.IChartPart;
 
 import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -64,13 +65,13 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
 
   private final Map<ILegendEntry, Image> m_legendEntryImages = new HashMap<ILegendEntry, Image>();
 
-  private final ChartEditor m_editor;
+  private final IChartPart m_chartPart;
 
   private final Point m_defaultIconSize = new Point( 20, 20 );
 
-  public ChartTreeLabelProvider( final ChartEditor editor )
+  public ChartTreeLabelProvider( final IChartPart editor )
   {
-    m_editor = editor;
+    m_chartPart = editor;
   }
 
   /**
@@ -127,13 +128,13 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       }
       if( entries.length == 1 )
       {
-        final Image img = new Image( m_editor.getChartComposite().getDisplay(), entries[0].getSymbol( m_defaultIconSize ) );
+        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), entries[0].getSymbol( m_defaultIconSize ) );
         m_layerImages.put( layer, img );
         return img;
       }
       else
       {
-        final Image img = new Image( m_editor.getChartComposite().getDisplay(), m_defaultIconSize.x, m_defaultIconSize.y );
+        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), m_defaultIconSize.x, m_defaultIconSize.y );
         GC gc = new GC( img );
         gc.setAntialias( SWT.ON );
         gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_GRAY ) );
@@ -190,7 +191,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         return m_legendEntryImages.get( le );
       }
 
-      final Image img = new Image( m_editor.getChartComposite().getDisplay(), le.getSymbol( m_defaultIconSize ) );
+      final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), le.getSymbol( m_defaultIconSize ) );
       m_legendEntryImages.put( le, img );
       return img;
     }

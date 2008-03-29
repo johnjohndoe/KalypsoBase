@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.factory.util;
 
 import java.net.URL;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -56,14 +55,15 @@ public class DummyLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( URL context )
   {
-    return new DummyLayer( null, null );
+    return new DummyLayer();
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
+  @SuppressWarnings("unchecked")
   public IDataContainer getDataContainer( )
   {
     return null;

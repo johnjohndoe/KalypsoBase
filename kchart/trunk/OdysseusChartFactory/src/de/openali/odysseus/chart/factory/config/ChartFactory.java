@@ -8,6 +8,7 @@ import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
+import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.factory.util.DummyLayerProvider;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.impl.logging.Logger;
@@ -113,6 +114,7 @@ public class ChartFactory
 
   /**
    */
+  @SuppressWarnings("unchecked")
   private static void addMapper( final IMapperRegistry ar, final MapperType mapperType, final IExtensionLoader extLoader )
   {
     if( mapperType != null )
@@ -283,13 +285,11 @@ public class ChartFactory
         IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMappers().getTargetAxisRef().getRef() );
         ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
         icl.setCoordinateMapper( cm );
-        // icl.setStyle(ls);
         icl.setId( layerType.getId() );
         icl.setTitle( layerType.getTitle() );
         icl.setDescription( layerType.getDescription() );
         icl.setVisible( layerType.getVisible() );
-        // saving the provider into the layer so it can be reused to
-        // save changed charts
+        // saving the provider into the layer so it can be reused to save changed charts
         icl.setData( LAYER_PROVIDER_KEY, provider );
         // setting the data container
         icl.setDataContainer( provider.getDataContainer() );
@@ -305,6 +305,16 @@ public class ChartFactory
     catch( final ConfigurationException e )
     {
       e.printStackTrace();
+    }
+    catch( Exception e )
+    {
+      IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMappers().getDomainAxisRef().getRef() );
+      IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMappers().getTargetAxisRef().getRef() );
+      ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
+      IChartLayer icl = new DummyLayer();
+      icl.setTitle( layerType.getTitle() );
+      icl.setCoordinateMapper( cm );
+      model.getLayerManager().addLayer( icl );
     }
   }
 

@@ -59,8 +59,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
+import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
@@ -100,6 +102,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   private TooltipHandler m_tooltipHandler;
 
   private AxisDragHandlerDelegate m_axisDragHandler;
+
+  private ChartEditorTreeOutlinePage m_outlinePage;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -271,6 +275,15 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       return this;
     }
 
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
+      {
+        m_outlinePage = new ChartEditorTreeOutlinePage( this );
+      }
+
+      return m_outlinePage;
+    }
     return super.getAdapter( adapter );
   }
 

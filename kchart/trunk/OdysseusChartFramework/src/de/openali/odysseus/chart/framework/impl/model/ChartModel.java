@@ -231,6 +231,7 @@ public class ChartModel implements IChartModel
 	 * automatically scales all given axes; scaling means here: show all
 	 * available values
 	 */
+	@SuppressWarnings("unchecked")
 	public void autoscale(IAxis[] axes)
 	{
 		if (axes == null)

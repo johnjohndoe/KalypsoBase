@@ -199,7 +199,6 @@ public class ChartConfigurationSaver
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      final IAxisProvider axisProvider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
       final IAxisRenderer renderer = registry.getRenderer( axis );
       if( renderer != null )
       {
@@ -210,6 +209,7 @@ public class ChartConfigurationSaver
     return axisRendererTypes;
   }
 
+  @SuppressWarnings("unchecked")
   private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
     final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();

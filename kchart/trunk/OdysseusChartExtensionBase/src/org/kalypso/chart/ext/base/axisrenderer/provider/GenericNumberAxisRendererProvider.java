@@ -6,7 +6,6 @@ import org.kalypso.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import org.kalypso.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import org.kalypso.chart.ext.base.axisrenderer.NumberLabelCreator;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -15,7 +14,7 @@ public class GenericNumberAxisRendererProvider extends AbstractGenericAxisRender
 {
 
   @Override
-  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException
+  public IAxisRenderer getAxisRenderer( )
   {
     final IParameterContainer pc = getParameterContainer();
 

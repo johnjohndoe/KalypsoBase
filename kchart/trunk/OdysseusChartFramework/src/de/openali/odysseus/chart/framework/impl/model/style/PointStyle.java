@@ -133,5 +133,9 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 		{
 			m_stroke.dispose();
 		}
+		if (m_marker != null)
+		{
+			m_marker.dispose();
+		}
 	}
 }

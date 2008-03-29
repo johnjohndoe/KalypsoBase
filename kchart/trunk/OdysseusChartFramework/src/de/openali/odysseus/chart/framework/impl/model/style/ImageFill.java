@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.impl.model.style;
 
-import java.io.File;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.widgets.Display;
 
@@ -58,46 +55,15 @@ import de.openali.odysseus.chart.framework.model.style.IFill;
 public class ImageFill implements IFill
 {
 
-	private final File m_file;
-	private final ImageData m_id;
-	private int m_width;
-	private int m_height;
 	private final Image m_img;
 	private final Pattern m_pattern;
 
 	/**
-	 * 
-	 * @param imgFile
-	 * @param width
-	 *            altered width of the image; if no altering shall be done, use
-	 *            value <1
-	 * @param height
-	 *            altered height of the image; if no altering shall be done, use
-	 *            value <1
+	 * @param url
 	 */
-	public ImageFill( File imgFile, int width, int height )
+	public ImageFill(ImageData id)
 	{
-		m_file = imgFile;
-		ImageLoader il = new ImageLoader();
-		ImageData[] ids = il.load(m_file.getAbsolutePath());
-		m_id = ids[0];
-		if (width > 0)
-		{
-			m_width = width;
-		}
-		else
-		{
-			m_width = m_id.width;
-		}
-		if (height > 0)
-		{
-			m_height = height;
-		}
-		else
-		{
-			m_height = m_id.height;
-		}
-		m_img = new Image(Display.getDefault(), m_id.scaledTo(m_width, m_height));
+		m_img = new Image(Display.getDefault(), id);
 		m_pattern = new Pattern(Display.getDefault(), m_img);
 	}
 

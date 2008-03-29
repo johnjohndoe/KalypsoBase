@@ -76,12 +76,6 @@ public class DummyLayer implements IChartLayer
 
   private boolean m_isActive = false;
 
-  private final IAxis m_targetAxis;
-
-  private final IAxis m_domainAxis;
-
-  private final IDataContainer m_dataContainer = null;
-
   private final LayerEventHandler m_handler = new LayerEventHandler();
 
   /**
@@ -91,10 +85,8 @@ public class DummyLayer implements IChartLayer
 
   private ICoordinateMapper m_coordinateMapper;
 
-  public DummyLayer( final IAxis domainAxis, final IAxis targetAxis )
+  public DummyLayer( )
   {
-    m_targetAxis = targetAxis;
-    m_domainAxis = domainAxis;
   }
 
   /**
@@ -110,7 +102,10 @@ public class DummyLayer implements IChartLayer
    */
   public IAxis getDomainAxis( )
   {
-    return m_domainAxis;
+    if( getCoordinateMapper() != null )
+      return getCoordinateMapper().getDomainAxis();
+    else
+      return null;
   }
 
   /**
@@ -142,7 +137,10 @@ public class DummyLayer implements IChartLayer
    */
   public IAxis getTargetAxis( )
   {
-    return m_targetAxis;
+    if( getCoordinateMapper() != null )
+      return getCoordinateMapper().getTargetAxis();
+    else
+      return null;
   }
 
   /**
@@ -210,11 +208,13 @@ public class DummyLayer implements IChartLayer
     m_handler.fireLayerVisibilityChanged( this );
   }
 
+  @SuppressWarnings("unchecked")
   public IDataContainer getDataContainer( )
   {
-    return m_dataContainer;
+    return null;
   }
 
+  @SuppressWarnings("unchecked")
   public void setDataContainer( final IDataContainer data )
   {
     // nothing to do;
@@ -254,13 +254,14 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image)
    */
-  public void drawIcon( Image img )
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void drawIcon( final Image img )
   {
     GC gc = new GC( img );
     gc.setBackground( img.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.fillRectangle( img.getBounds() );
     gc.dispose();
-
   }
 
   /**
@@ -336,6 +337,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setMappers(java.util.Map)
    */
+  @SuppressWarnings("unchecked")
   public void setMappers( Map<String, IMapper> mapperMap )
   {
     // nothing to do

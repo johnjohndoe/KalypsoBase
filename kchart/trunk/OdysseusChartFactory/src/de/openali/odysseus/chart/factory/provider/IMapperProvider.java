@@ -12,6 +12,7 @@ public interface IMapperProvider
   /**
    * @return axis created by the MapperProvider
    */
+  @SuppressWarnings("unchecked")
   public IMapper getMapper( ) throws ConfigurationException;
 
   public void init( final MapperType mt );
@@ -19,5 +20,6 @@ public interface IMapperProvider
   /**
    * returns XML configuration element for the given chart element
    */
+  @SuppressWarnings("unchecked")
   public MapperType getXMLType( IMapper mapper );
 }

@@ -31,6 +31,7 @@ public class GenericLinearAxis extends AbstractAxis
 
   private int m_height = 1;
 
+  @SuppressWarnings("unchecked")
   public GenericLinearAxis( final String id, final String label, final POSITION pos, final DIRECTION dir, final String[] valueArray, Class< ? > clazz )
   {
     super( id, label, pos, dir, new ComparableComparator(), clazz );

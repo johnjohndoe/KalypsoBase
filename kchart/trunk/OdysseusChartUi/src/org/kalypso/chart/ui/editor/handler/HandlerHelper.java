@@ -57,7 +57,9 @@ public class HandlerHelper
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  public static void updateElement( UIElement element, Map parameters, IChartPart part, IChartDragHandler handler )
+  @SuppressWarnings("unchecked")
+  public static void updateElement( UIElement element, @SuppressWarnings("unused")
+  Map parameters, IChartPart part, IChartDragHandler handler )
   {
     // chart suchen, rausfinden, welches tool aktiv
     if( part != null )
