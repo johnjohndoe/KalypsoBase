@@ -1,29 +1,33 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 
 /**
- * @author gernot
+ * @author Gernot Belger
  */
 public class EditInfo
 {
-  public final Rectangle shape;
+  public final IPaintable m_hoverFigure;
 
-  public final IEditableChartLayer layer;
+  public final IPaintable m_editFigure;
 
-  public final Object data;
+  public final IEditableChartLayer m_layer;
 
-  public Point pos;
+  public final Object m_data;
 
-  public String text;
+  public Point m_pos;
 
-  public EditInfo( final IEditableChartLayer editLayer, final Rectangle editShape, final Object editData, final String editText, final Point mousePos )
+  public String m_text;
+
+  public EditInfo( final IEditableChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
   {
-    layer = editLayer;
-    shape = editShape;
-    data = editData;
-    text = editText;
-    pos = mousePos;
+    m_layer = editLayer;
+    m_hoverFigure = hoverFigure;
+    m_editFigure = editFigure;
+    m_data = editData;
+    m_text = editText;
+    m_pos = mousePos;
   }
 }

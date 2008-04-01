@@ -57,14 +57,11 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   protected void drawPoints( GC gc, List<Point> path )
   {
     PointFigure pf = getPointFigure();
-    for( Point point : path )
-    {
-      pf.setCenterPosition( point );
-      pf.paint( gc );
-    }
+    pf.setPoints( path.toArray( new Point[] {} ) );
+    pf.paint( gc );
   }
 
-  private PolylineFigure getPolylineFigure( )
+  protected PolylineFigure getPolylineFigure( )
   {
     ILineStyle ls = getStyles().getStyle( "line", LineStyle.class );
     PolylineFigure lf = new PolylineFigure();
@@ -72,7 +69,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     return lf;
   }
 
-  private PointFigure getPointFigure( )
+  protected PointFigure getPointFigure( )
   {
     PointStyle ps = getStyles().getStyle( "point", PointStyle.class );
     PointFigure pf = new PointFigure();

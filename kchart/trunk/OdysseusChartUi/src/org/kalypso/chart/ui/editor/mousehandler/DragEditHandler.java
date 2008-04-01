@@ -57,9 +57,10 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( m_isEditing )
+    if( m_isEditing && m_editInfo != null )
     {
-      System.out.println();
+      final Point editPoint = new Point( e.x, e.y );
+      final EditInfo editMoveInfo = m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
       m_editInfo = null;
       m_isEditing = false;
       final PlotCanvas plot = m_chart.getPlot();
@@ -73,11 +74,11 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-    if( m_isEditing )
+    if( m_isEditing && m_editInfo != null )
     {
-      final IEditableChartLayer layer = m_editInfo.layer;
+      final IEditableChartLayer layer = m_editInfo.m_layer;
       final Point editPoint = new Point( e.x, e.y );
-      final EditInfo editMoveInfo = layer.edit( editPoint, m_editInfo );
+      final EditInfo editMoveInfo = layer.drag( editPoint, m_editInfo );
       m_chart.getPlot().setTooltipInfo( editMoveInfo );
       m_chart.getPlot().invalidate( new IChartLayer[] { layer } );
     }

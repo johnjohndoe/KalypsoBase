@@ -43,16 +43,13 @@ package de.openali.odysseus.chart.framework.model.layer;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * @author burtscher1
- * 
+ * @author Alex Burtscher
  */
 public interface IEditableChartLayer extends IChartLayer
 {
-  public EditInfo getEditInfo( Point p );
+  public EditInfo getHover( Point pos );
 
-  public void setActivePoint( Object data );
+  public EditInfo drag( Point newPos, EditInfo dragStartData );
 
-  public EditInfo edit( Point point, EditInfo data );
-
-  public boolean alwaysAllowsEditing( );
+  public EditInfo commitDrag( Point point, EditInfo dragStartData );
 }

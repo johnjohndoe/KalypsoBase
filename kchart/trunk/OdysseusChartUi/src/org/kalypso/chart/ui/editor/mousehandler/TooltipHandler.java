@@ -66,7 +66,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
   {
     if( m_chart.getPlot().isEditing() )
     {
-      m_chart.getPlot().getTooltipInfo().pos = new Point( e.x, e.y );
+      m_chart.getPlot().getTooltipInfo().m_pos = new Point( e.x, e.y );
       m_chart.getPlot().redraw();
     }
     else if( !m_chart.getPlot().isDragging() )
@@ -77,10 +77,10 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
       {
         if( layer.isVisible() )
         {
-          final EditInfo info = layer.getEditInfo( point );
+          final EditInfo info = layer.getHover( point );
           if( info != null )
           {
-            info.pos = point;
+            info.m_pos = point;
             m_chart.getPlot().setTooltipInfo( info );
             m_chart.getPlot().redraw();
             return;

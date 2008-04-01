@@ -40,18 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.view;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 /**
  * @author burtscher1
@@ -64,7 +67,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
 
   public ChartOutlinePopupDialog( Shell parentShell, IChartPart chartPart )
   {
-    super( parentShell, SWT.NONE, true, false, false, false, "", "" );
+    super( parentShell, SWT.RESIZE, true, false, false, false, "", "" );
     m_chartPart = chartPart;
   }
 
@@ -77,7 +80,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
     if( m_chartPart != null && m_chartPart.getChartComposite() != null )
     {
       final Composite da = (Composite) super.createDialogArea( parent );
-      da.setLayout( new FillLayout() );
+      da.setLayout( new GridLayout( 1, true ) );
       final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getAdapter( IContentOutlinePage.class );
       cop.createControl( da );
 
@@ -88,12 +91,22 @@ public class ChartOutlinePopupDialog extends PopupDialog
         public void treeCollapsed( TreeExpansionEvent event )
         {
           // TODO: need to resize dialog window according to new tree size
+          // parent.getParent().setSize( 200, 200 );
 
+          // das bringt nix;
+          // parent.setSize(200,200);
+
+          // parent.layout();
+          // tv.getTree().layout();
         }
 
         public void treeExpanded( TreeExpansionEvent event )
         {
           // TODO: need to resize dialog window according to new tree size
+          // parent.getParent().setSize( 400, 200 );
+          // parent.layout();
+          // da.layout();
+          // tv.getTree().layout();
         }
 
       } );
@@ -102,5 +115,14 @@ public class ChartOutlinePopupDialog extends PopupDialog
       return da;
     }
     return new Composite( parent, SWT.NONE );
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.PopupDialog#getDialogSettings()
+   */
+  @Override
+  protected IDialogSettings getDialogSettings( )
+  {
+    return PluginUtilities.getDialogSettings( KalypsoChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
   }
 }

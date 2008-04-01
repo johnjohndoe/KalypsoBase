@@ -150,12 +150,12 @@ public class StyleTest implements PaintListener
 			}
 
 			pf2.setStyle(ps);
-			pf2.setCenterPosition(p);
+			pf2.setPoints(new Point[] { p });
 			pf2.paint(gc);
 
 			ts.setAlpha(alpha);
 			tf.setStyle(ts);
-			tf.setCenterPosition(new Point(p.x, p.y + 20));
+			tf.setPoints(new Point[] { new Point(p.x, p.y + 20) });
 			tf.setText("Text " + i);
 			tf.paint(gc);
 

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.chart.ui.IChartPart;
 
-import de.openali.odysseus.chart.framework.impl.util.img.ChartImageFactory;
+import de.openali.odysseus.chart.framework.impl.util.img.AlternateChartImageFactory;
 import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 
 public class ExportHandler extends AbstractHandler implements PaintListener
@@ -43,7 +43,7 @@ public class ExportHandler extends AbstractHandler implements PaintListener
 
     final Rectangle bounds = chart.getBounds();
     shell.setSize( bounds.width, bounds.height );
-    final ImageData id = ChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
+    final ImageData id = AlternateChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
     final Image img = new Image( Display.getCurrent(), id );
 
     final Canvas c = new Canvas( shell, SWT.FILL );

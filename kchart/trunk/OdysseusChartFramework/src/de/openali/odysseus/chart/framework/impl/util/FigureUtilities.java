@@ -40,7 +40,7 @@ public class FigureUtilities
 	 * @return a new Point object representing the left top position of the
 	 *         rectangle
 	 */
-	public static Point centerToLeftTo(Point point, int width, int height)
+	public static Point centerToLeftTop(Point point, int width, int height)
 	{
 		int x = point.x - (int) (width / 2.0f);
 		int y = point.y - (int) (height / 2.0f);

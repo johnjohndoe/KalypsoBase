@@ -12,17 +12,20 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 public class TextFigure extends AbstractFigure<ITextStyle>
 {
 
-	private Point m_centerPos;
+	private Point[] m_centerPoints;
 	private String m_text = "";
+	private Point[] m_leftTopPoints;
 
 	/**
 	 * 
-	 * @param pos
+	 * @param points
 	 *            center position of the figure
 	 */
-	public void setCenterPosition(Point pos)
+	public void setPoints(Point[] points)
 	{
-		m_centerPos = pos;
+		m_centerPoints = points;
+		m_leftTopPoints = null;
+
 	}
 
 	public void setText(String text)
@@ -34,19 +37,27 @@ public class TextFigure extends AbstractFigure<ITextStyle>
 	public void paintFigure(GC gc)
 	{
 		IStyle style = getStyle();
-		if (style != null && m_centerPos != null)
+		if (style != null && m_centerPoints != null)
 		{
 			style.apply(gc);
 
-			Point textExtent = gc.textExtent(m_text);
-			Point leftTopPos = FigureUtilities.centerToLeftTo(m_centerPos, textExtent.x, textExtent.y);
-
-			if (m_text != null)
+			if (m_leftTopPoints == null)
 			{
-				gc.drawText(m_text, leftTopPos.x, leftTopPos.y);
+				m_leftTopPoints = new Point[m_centerPoints.length];
+				for (int i = 0; i < m_centerPoints.length; i++)
+				{
+					Point centerPoint = m_centerPoints[i];
+					Point textExtent = gc.textExtent(m_text);
+					m_leftTopPoints[i] = FigureUtilities.centerToLeftTop(centerPoint, textExtent.x, textExtent.y);
+				}
 			}
-		}
 
+			for (Point p : m_leftTopPoints)
+				if (m_text != null)
+				{
+					gc.drawText(m_text, p.x, p.y);
+				}
+		}
 	}
 
 	/**
@@ -66,5 +77,12 @@ public class TextFigure extends AbstractFigure<ITextStyle>
 	public void dispose()
 	{
 		// nothing to do;
+	}
+
+	@Override
+	public void setStyle(ITextStyle ts)
+	{
+		super.setStyle(ts);
+		m_leftTopPoints = null;
 	}
 }

@@ -8,43 +8,50 @@ import de.openali.odysseus.chart.framework.impl.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.impl.util.StyleUtils;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
 
-public class PointFigure extends AbstractFigure<IPointStyle> {
+public class PointFigure extends AbstractFigure<IPointStyle>
+{
 
-	private Point m_leftTopPos = new Point(0, 0);
+	private Point[] m_centerPoints;
+	private Point[] m_leftTopPoints;
 
 	/**
 	 * 
-	 * @param pos
+	 * @param points
 	 *            center position of the figure
 	 */
-	public void setCenterPosition(Point pos) {
-		IPointStyle style = getStyle();
-		setLeftTopPoint(FigureUtilities.centerToLeftTo(pos, style.getWidth(),
-				style.getHeight()));
-	}
+	public void setPoints(Point[] points)
+	{
+		m_centerPoints = points;
+		m_leftTopPoints = null;
 
-	/**
-	 * 
-	 * @param point
-	 *            left top position of the figure
-	 */
-	public void setLeftTopPoint(Point pos) {
-		m_leftTopPos = pos;
 	}
 
 	@Override
-	public void paintFigure(GC gc) {
-		IStyle style = getStyle();
-		if (style != null && m_leftTopPos != null) {
-			IPointStyle ps = (IPointStyle) style;
-			IMarker marker = ps.getMarker();
-			if (marker == null) {
+	public void paintFigure(GC gc)
+	{
+		IPointStyle style = getStyle();
+		if (style != null && m_centerPoints != null)
+		{
+			if (m_leftTopPoints == null)
+			{
+				m_leftTopPoints = new Point[m_centerPoints.length];
+				for (int i = 0; i < m_centerPoints.length; i++)
+				{
+					Point centerPoint = m_centerPoints[i];
+					m_leftTopPoints[i] = FigureUtilities.centerToLeftTop(centerPoint, style.getWidth(), style.getHeight());
+				}
+			}
+
+			IMarker marker = style.getMarker();
+			if (marker == null)
+			{
 				marker = IDefaultStyles.DEFAULT_MARKER;
 			}
-			marker.paint(gc, m_leftTopPos, getStyle().getWidth(), getStyle()
-					.getHeight());
+			for (Point p : m_leftTopPoints)
+			{
+				marker.paint(gc, p, getStyle().getWidth(), getStyle().getHeight());
+			}
 		}
 
 	}
@@ -54,17 +61,29 @@ public class PointFigure extends AbstractFigure<IPointStyle> {
 	 * point style
 	 */
 	@Override
-	public IPointStyle getStyle() {
+	public IPointStyle getStyle()
+	{
 		IPointStyle style = super.getStyle();
-		if (style != null) {
+		if (style != null)
+		{
 			return style;
-		} else {
+		}
+		else
+		{
 			return StyleUtils.getDefaultStyle(PointStyle.class);
 		}
 	}
 
-	public void dispose() {
+	public void dispose()
+	{
 		// nothing to do;
+	}
+
+	@Override
+	public void setStyle(IPointStyle ps)
+	{
+		super.setStyle(ps);
+		m_leftTopPoints = null;
 	}
 
 }

@@ -58,6 +58,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -96,6 +97,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   public void createControl( final Composite parent )
   {
     final Tree tree = new Tree( parent, SWT.CHECK );
+    tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final TreeColumn column = new TreeColumn( tree, SWT.NONE );
     column.setWidth( tree.getSize().x );
     tree.addControlListener( new ControlAdapter()

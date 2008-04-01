@@ -41,7 +41,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
 	private final ILayerManager m_manager;
 
-	private EditInfo m_hoverInfo;
+	private EditInfo m_editInfo;
 
 	final Map<IChartLayer, Image> m_layerImageMap = new HashMap<IChartLayer, Image>();
 
@@ -81,7 +81,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 			public void onLayerAdded(IChartLayer layer)
 			{
 				invalidate(new IChartLayer[] { layer });
-				// redraw();
 			}
 
 			/**
@@ -97,7 +96,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 				}
 				m_layerImageMap.remove(layer);
 				invalidate(null);
-				// redraw();
 			}
 
 			/**
@@ -107,7 +105,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 			public void onLayerMoved(IChartLayer layer)
 			{
 				invalidate(null);
-				// redraw();
 			}
 
 			/**
@@ -117,7 +114,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 			public void onLayerVisibilityChanged(IChartLayer layer)
 			{
 				invalidate(null);
-				// redraw();
 			}
 
 			/**
@@ -126,15 +122,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 			@Override
 			public void onLayerContentChanged(IChartLayer layer)
 			{
-				m_layerImageMap.put(layer, null);
-				redraw();
+				invalidate(new IChartLayer[] { layer });
 			}
 		};
 		manager.addListener(m_almel);
-
 	}
 
 	/**
+	 * invalidate is called when a redraw is needed
+	 * 
 	 * @param layers
 	 *            Array of layers which should be redrawn; if null, only the
 	 *            bufferImage is redrawn
@@ -199,7 +195,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 		final Rectangle screenArea = getClientArea();
 		m_bufferImg = paintBuffered(gc, screenArea, m_bufferImg);
 		paintDragArea(gc);
-		paintTooltip(gc);
+		paintEditInfo(gc);
 	}
 
 	private void paintDragArea(final GC gcw)
@@ -222,17 +218,23 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 		}
 	}
 
-	private void paintTooltip(final GC gcw)
+	private void paintEditInfo(final GC gcw)
 	{
-		// Tooltips zeichnen
-		if (m_hoverInfo != null)
+		if (m_editInfo != null)
 		{
-			final Rectangle shape = m_hoverInfo.shape;
-			gcw.drawRectangle(shape.x, shape.y, shape.width, shape.height);
+			// draw hover shape
+			if (m_editInfo.m_hoverFigure != null)
+				m_editInfo.m_hoverFigure.paint(gcw);
+			// draw edit shape
+			if (m_editInfo.m_editFigure != null)
+				m_editInfo.m_editFigure.paint(gcw);
+
+			// draw tooltip
+
 			final Rectangle screen = gcw.getClipping();
 
-			final String tooltiptext = m_hoverInfo.text;
-			final Point mousePos = m_hoverInfo.pos;
+			final String tooltiptext = m_editInfo.m_text;
+			final Point mousePos = m_editInfo.m_pos;
 			if (tooltiptext != null && mousePos != null)
 			{
 				final int TOOLINSET = 3;
@@ -245,7 +247,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 				gcw.setBackground(getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 				gcw.setForeground(getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 				final Point toolsize = gcw.textExtent(tooltiptext);
-				int toolx = mousePos.x + shape.width + 5 + TOOLINSET;
+				int toolx = mousePos.x + 20 + TOOLINSET;
 				if (toolx + toolsize.x > screen.width)
 				{
 					toolx = toolx - toolsize.x;
@@ -399,12 +401,12 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
 	public void setTooltipInfo(final EditInfo hoverInfo)
 	{
-		m_hoverInfo = hoverInfo;
+		m_editInfo = hoverInfo;
 	}
 
 	public EditInfo getTooltipInfo()
 	{
-		return m_hoverInfo;
+		return m_editInfo;
 	}
 
 	public boolean isEditing()

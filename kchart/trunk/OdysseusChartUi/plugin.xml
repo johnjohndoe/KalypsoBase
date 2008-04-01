@@ -57,6 +57,11 @@
             id="org.kalypso.chart.ui.commands.export"
             name="Export">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.openOutline"
+            name="Open outline">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -86,6 +91,10 @@
             commandId="org.kalypso.chart.ui.commands.export"
             icon="icons/elcl16/chart_export_img.gif">
       </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.openOutline"
+            icon="icons/elcl16/show_outline.gif">
+      </image>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -112,6 +121,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
             commandId="org.kalypso.chart.ui.commands.export">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
+            commandId="org.kalypso.chart.ui.commands.openOutline">
       </handler>
    </extension>
    <extension
@@ -223,6 +236,11 @@
          <command
                commandId="org.kalypso.chart.ui.commands.export"
                label="Export"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.openOutline"
+               label="Open outline"
                style="push">
          </command>
       
