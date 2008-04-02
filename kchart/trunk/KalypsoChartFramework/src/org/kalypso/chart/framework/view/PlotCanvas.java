@@ -146,6 +146,16 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         m_layerImageMap.put( layer, null );
       }
     }
+    else
+    {
+      for( final IChartLayer layer : m_layerImageMap.keySet() )
+      {
+        final Image image = m_layerImageMap.get( layer );
+        if( image != null && !image.isDisposed() )
+          image.dispose();
+        m_layerImageMap.put( layer, null );
+      }
+    }
     if( m_bufferImg != null && !m_bufferImg.isDisposed() )
     {
       m_bufferImg.dispose();
