@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.apache.commons.vfs.contrib;
 
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
@@ -59,26 +58,6 @@ public class SSLUtilities {
 	 * The constructor.
 	 */
 	private SSLUtilities() {
-	}
-
-	/**
-	 * This function will configure a given http client with the following
-	 * options:<br>
-	 * <ol>
-	 * <li>Accept every certificate, including self signed ones.</li>
-	 * <li>Certificates, signed by own CAs will also be accepted.</li>
-	 * </ol>
-	 * 
-	 * @param host
-	 *            The host, from which all certificates will be accepted.
-	 * @param client
-	 *            The http client, which should be configured.
-	 */
-	public static void configuredHttpClient(String host, HttpClient client) {
-		ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
-		Protocol easyhttps = new Protocol("https", easyfactory, 443);
-
-		client.getHostConfiguration().setHost(host, 443, easyhttps);
 	}
 
 	/**
