@@ -54,7 +54,6 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.net.ProxyUtilities;
-import org.kalypso.commons.net.SSLUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -97,9 +96,6 @@ public class WPSUtilities
 
     /* Create the client. */
     HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
-
-    /* All certificates should be accepted! */
-    SSLUtilities.acceptSelfSignedCertificatesSSL();
 
     /* Build the method. */
     PostMethod post = new PostMethod( url );

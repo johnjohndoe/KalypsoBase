@@ -40,18 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
 
 import junit.framework.JUnit4TestAdapter;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DescribeProcess;
 
-import org.apache.commons.httpclient.HttpException;
-import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -70,12 +65,25 @@ public class HttpsAcceptCertificate
    * This function will only send a connection to a https server and tries to accept the given untrusted certificate.
    */
   @Test
-  public void testHttpsAcceptCertificate( ) throws HttpException, CoreException, IOException, JAXBException
+  public void testHttpsAcceptCertificate( ) throws Exception
   {
     /* Configure proxy for testing. */
     System.setProperty( "http.proxySet", "true" );
     System.setProperty( "http.proxyHost", "proxy.bce01.de" );
     System.setProperty( "http.proxyPort", "8080" );
+
+    /* Either like this ... */
+    // File clientCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
+    // File serverCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
+    // SSLUtilities.configureWhole( clientCert.toURL(), "key4ssl", serverCert.toURL(), "key4ssl" );
+    
+    /* ... or like this. */
+    System.setProperty( "javax.net.ssl.keyStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.keyStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
+    System.setProperty( "javax.net.ssl.keyStorePassword", "key4ssl" );
+    System.setProperty( "javax.net.ssl.trustStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.trustStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
+    System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
     /* Build the describe process request. */
     List<CodeType> identifier = new LinkedList<CodeType>();
