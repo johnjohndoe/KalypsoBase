@@ -74,10 +74,10 @@ public class WebDavRead
     manager.addProvider( "file", new DefaultLocalFileProvider() );
     manager.init();
 
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/test.txt" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
-    File file = new File( FileUtilities.TMP_DIR, "dav.tmp" );
+    File file = new File( FileUtilities.TMP_DIR, "davRead.txt" );
     FileObject tmpFile = manager.toFileObject( file );
     Assert.assertNotNull( tmpFile );
 

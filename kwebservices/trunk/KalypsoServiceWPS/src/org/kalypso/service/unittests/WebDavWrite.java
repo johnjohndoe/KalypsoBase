@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests;
 
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
@@ -55,6 +56,7 @@ import org.apache.commons.vfs.provider.temp.TemporaryFileProvider;
 import org.apache.commons.vfs.provider.url.UrlFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 
 /**
  * Testcase for writing file to a webdav using vfs.
@@ -79,10 +81,10 @@ public class WebDavWrite
     manager.setTemporaryFileStore( new DefaultFileReplicator() );
     manager.init();
 
-    FileObject testFile = manager.resolveFile( "C:/Albert/Work/runtime-informdss.product/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
-    Assert.assertNotNull( testFile );
+    File file = new File( FileUtilities.TMP_DIR, "davWrite.txt" );
+    FileObject testFile = manager.toFileObject( file );
 
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/.meta/Hydraulik/KWert/kwert-project.properties" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
     FileUtil.copyContent( testFile, davFile );

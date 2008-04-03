@@ -47,7 +47,6 @@ import java.io.InputStream;
 import junit.framework.Assert;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.contrib.SSLUtilities;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
@@ -74,11 +73,14 @@ public class VFSAcceptCertificate
     System.setProperty( "http.proxyPort", "8080" );
 
     /* All certificates should be accepted! */
-    SSLUtilities.acceptSelfSignedCertificatesSSL();
+    System.setProperty( "javax.net.ssl.keyStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.keyStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
+    System.setProperty( "javax.net.ssl.keyStorePassword", "key4ssl" );
+    System.setProperty( "javax.net.ssl.trustStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.trustStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
+    System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
-    // FileObject remoteFile = VFSUtilities.checkProxyFor(
-    // "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1179749298830/executeResponse.xml" );
-    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://informdss.bafg.de/test.txt" );
+    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1196856981382/simulation.log" );
 
     Debug.println( "Sending request ..." );
 

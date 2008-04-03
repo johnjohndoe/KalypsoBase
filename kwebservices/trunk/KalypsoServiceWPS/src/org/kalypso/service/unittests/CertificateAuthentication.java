@@ -40,26 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DescribeProcess;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.kalypso.commons.net.ProxyUtilities;
-import org.kalypso.commons.net.SSLUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -88,7 +81,7 @@ public class CertificateAuthentication
    * This function sends a request to a server and authenticates itself with a client-certificate.
    */
   @Test
-  public void testCertificateAuthentication( ) throws HttpException, CoreException, IOException, JAXBException
+  public void testCertificateAuthentication( ) throws Exception
   {
     /* Configure proxy for testing. */
     System.setProperty( "http.proxySet", "true" );
@@ -98,25 +91,29 @@ public class CertificateAuthentication
     /* Create the client. */
     HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( SERVICE_URL ), 0 );
 
-    /* All certificates should be accepted! */
-    SSLUtilities.acceptSelfSignedCertificatesSSL();
+    /* Either like this ... */
+    // File clientCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
+    // File serverCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
+    // SSLUtilities.configureWhole( clientCert.toURL(), "key4ssl", serverCert.toURL(), "key4ssl" );
+    
+    /* ... or like this. */
+    System.setProperty( "javax.net.ssl.keyStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.keyStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
+    System.setProperty( "javax.net.ssl.keyStorePassword", "key4ssl" );
+    System.setProperty( "javax.net.ssl.trustStoreType", "JKS" );
+    System.setProperty( "javax.net.ssl.trustStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
+    System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
     /* Build the method. */
-    PostMethod post = new PostMethod( "https://informdss.bafg.de/svn/repos/projects/" );
-    InputStream inputStream = new FileInputStream( "C:/Albert/Temp/Projekte/InformDSS/InformDSS - Sonstiges/client.p12" );
-    post.setRequestEntity( new InputStreamRequestEntity( inputStream, "application/x-x509-email-cert" ) );
+    GetMethod get = new GetMethod( "https://informdss.bafg.de/svn/repos/projects/Tutorial/.settings/org.eclipse.core.resources.prefs" );
 
     /* Let the method handle the authentication, if any. */
-    post.setDoAuthentication( true );
+    get.setDoAuthentication( true );
 
     /* Execute the method. */
-    Debug.println( "Sending certificate for verification ..." );
     Debug.println( "Asking for a directory listing ..." );
 
-    int status = client.executeMethod( post );
-
-    /* Close the input stream. */
-    inputStream.close();
+    int status = client.executeMethod( get );
 
     /* Handle the response. */
     Debug.println( "Status code: " + String.valueOf( status ) );
@@ -124,7 +121,7 @@ public class CertificateAuthentication
     if( status != 200 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
 
-    InputStream is = post.getResponseBodyAsStream();
+    InputStream is = get.getResponseBodyAsStream();
     if( is != null )
     {
       /* Print the response. */
