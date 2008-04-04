@@ -161,8 +161,8 @@ public class SimulationDelegate implements IWPSDelegate
     Debug.println( "Checking for server URL, where the input data can be copied ..." );
     if( m_input == null )
     {
-      Debug.println( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
-      throw new WPSException( "No URL to the server of the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.server property." );
+      Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
+      throw new WPSException( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
     }
   }
 

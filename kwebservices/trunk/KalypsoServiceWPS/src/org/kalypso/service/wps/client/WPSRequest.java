@@ -182,12 +182,12 @@ public class WPSRequest
       /* Build the describe process request. */
       List<CodeType> identifier = new LinkedList<CodeType>();
       identifier.add( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ) );
-      DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcess( identifier );
+      DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
       /* Send the request. */
       monitor.setTaskName( "Frage nach der Prozess-Beschreibung ..." );
       Debug.println( "Asking for a process describtion ..." );
-      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), m_delegate.getServiceURL() );
+      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), m_delegate.getServiceURL() );
 
       /* Handle the response. */
       Debug.println( "Response:\n" + describeProcessResponse );
