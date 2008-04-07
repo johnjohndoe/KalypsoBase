@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.openali.odysseus.chart.factory.LayerProvider">
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.GridLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.Grid"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.CSVBarLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVBar"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.CSVLineLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVLine"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.UVFLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.UVF"/>
+   </extension>
+      <extension
+         point="de.openali.odysseus.chart.factory.AxisProvider">
+      <provider
+            class="org.kalypso.chart.ext.base.axis.provider.GenericLinearAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.GenericLinear">
+      </provider>
+   </extension>
+      <extension
+         point="de.openali.odysseus.chart.factory.AxisRendererProvider">
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider"
+            id="org.kalypso.chart.ext.test.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+      </provider>
+   </extension>
+</plugin>
