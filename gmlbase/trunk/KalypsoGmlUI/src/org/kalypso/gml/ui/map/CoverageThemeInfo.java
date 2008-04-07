@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -147,7 +148,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
       final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
       final Coordinate crd = JTSAdapter.export( pos );
-      final double value = grid.getValue( crd );
+      final double value = grid.getValue( GeoGridUtilities.transformCoordinate( grid, crd, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
       if( !Double.isNaN( value ) )
         return value;
       return null;
