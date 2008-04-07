@@ -5,10 +5,26 @@ Bundle-SymbolicName: de.openali.odysseus.chart.framework
 Bundle-Version: 0.2.0
 Bundle-ClassPath: bin/
 Require-Bundle: org.eclipse.swt;visibility:=reexport,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.kalypso.commons
 Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.controll,
  de.openali.odysseus.chart.framework.exception,
+ de.openali.odysseus.chart.framework.impl,
+ de.openali.odysseus.chart.framework.impl.logging,
+ de.openali.odysseus.chart.framework.impl.model,
+ de.openali.odysseus.chart.framework.impl.model.data,
+ de.openali.odysseus.chart.framework.impl.model.event,
+ de.openali.odysseus.chart.framework.impl.model.figure,
+ de.openali.odysseus.chart.framework.impl.model.layer,
+ de.openali.odysseus.chart.framework.impl.model.mapper,
+ de.openali.odysseus.chart.framework.impl.model.mapper.registry,
+ de.openali.odysseus.chart.framework.impl.model.style,
+ de.openali.odysseus.chart.framework.impl.test,
+ de.openali.odysseus.chart.framework.impl.util,
+ de.openali.odysseus.chart.framework.impl.util.img,
+ de.openali.odysseus.chart.framework.impl.util.math,
+ de.openali.odysseus.chart.framework.impl.view,
  de.openali.odysseus.chart.framework.logging,
  de.openali.odysseus.chart.framework.model,
  de.openali.odysseus.chart.framework.model.data,
