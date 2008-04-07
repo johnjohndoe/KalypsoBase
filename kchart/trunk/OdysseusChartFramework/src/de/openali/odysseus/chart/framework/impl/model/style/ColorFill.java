@@ -11,9 +11,11 @@ public class ColorFill implements IFill
 {
 
 	private Color m_color;
+	private final RGB m_rgb;
 
-	public ColorFill( RGB rgb )
+	public ColorFill(RGB rgb)
 	{
+		m_rgb = rgb;
 		setFillColor(rgb);
 	}
 
@@ -41,7 +43,16 @@ public class ColorFill implements IFill
 		{
 			m_color.dispose();
 		}
+	}
 
+	public ColorFill copy()
+	{
+		return new ColorFill(getFillColor());
+	}
+
+	private RGB getFillColor()
+	{
+		return m_rgb;
 	}
 
 }

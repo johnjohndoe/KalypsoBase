@@ -14,12 +14,26 @@ public interface ILineStyle extends IStyle
 
   public void setColor( RGB rgb );
 
-  public void setDash( int dashOffset, int[] dashArray );
+  public void setDash( float dashOffset, float[] dashArray );
 
   public void setWidth( int width );
 
   public int getWidth( );
 
   public void setMiterLimit( int miterLimit );
+
+  public RGB getColor( );
+
+  public float[] getDashArray( );
+
+  public float getDashOffset( );
+
+  public LINEJOIN getLineJoin( );
+
+  public LINECAP getLineCap( );
+
+  public int getMiterLimit( );
+
+  public ILineStyle copy( );
 
 }

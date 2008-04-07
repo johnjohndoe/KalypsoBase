@@ -12,4 +12,9 @@ public class OvalMarker extends AbstractMarker
 		gc.drawOval(p.x, p.y, width, height);
 	}
 
+	public OvalMarker copy()
+	{
+		return new OvalMarker();
+	}
+
 }

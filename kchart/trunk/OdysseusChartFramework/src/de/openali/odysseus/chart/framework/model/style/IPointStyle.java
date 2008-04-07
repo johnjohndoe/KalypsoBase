@@ -21,4 +21,10 @@ public interface IPointStyle extends IStyle
 
   public IMarker getMarker( );
 
+  public ILineStyle getStroke( );
+
+  public RGB getInlineColor( );
+
+  public IPointStyle copy( );
+
 }

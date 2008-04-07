@@ -51,4 +51,6 @@ public interface IFill
   public void apply( GC gc );
 
   public void dispose( );
+
+  public IFill copy( );
 }

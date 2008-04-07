@@ -45,7 +45,7 @@ public interface IDefaultStyles
 
 	public int DEFAULT_DASHOFFSET = 0;
 
-	public int[] DEFAULT_DASHARRAY = new int[0];
+	public float[] DEFAULT_DASHARRAY = new float[0];
 
 	public LINECAP DEFAULT_LINECAP = LINECAP.ROUND;
 

@@ -141,37 +141,40 @@ public class ChartConfigurationSaver
     for( IStylable stylable : stylables )
     {
       IStyleSet styleSet = stylable.getStyles();
-      Map<String, IStyle> styleMap = styleSet.getStyles();
-      for( Entry<String, IStyle> mapEntry : styleMap.entrySet() )
+      if( styleSet != null )
       {
-        Object styleType = mapEntry.getValue().getData( ChartFactory.STYLE_KEY );
-        if( styleType != null )
+        Map<String, IStyle> styleMap = styleSet.getStyles();
+        for( Entry<String, IStyle> mapEntry : styleMap.entrySet() )
         {
-          if( styleType instanceof LineStyleType )
+          Object styleType = mapEntry.getValue().getData( ChartFactory.STYLE_KEY );
+          if( styleType != null )
           {
-            LineStyleType lst = (LineStyleType) styleType;
-            lineStyleMap.put( lst.getId(), lst );
+            if( styleType instanceof LineStyleType )
+            {
+              LineStyleType lst = (LineStyleType) styleType;
+              lineStyleMap.put( lst.getId(), lst );
+            }
+            else if( styleType instanceof AreaStyleType )
+            {
+              AreaStyleType ast = (AreaStyleType) styleType;
+              areaStyleMap.put( ast.getId(), ast );
+            }
+            else if( styleType instanceof PointStyleType )
+            {
+              PointStyleType pst = (PointStyleType) styleType;
+              pointStyleMap.put( pst.getId(), pst );
+            }
+            else if( styleType instanceof TextStyleType )
+            {
+              TextStyleType tst = (TextStyleType) styleType;
+              textStyleMap.put( tst.getId(), tst );
+            }
           }
-          else if( styleType instanceof AreaStyleType )
+          else
           {
-            AreaStyleType ast = (AreaStyleType) styleType;
-            areaStyleMap.put( ast.getId(), ast );
+            Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Style with role'" + mapEntry.getKey() + "' for chart component '" + stylable.getId()
+                + "' was not initially set in the chartfile, so it won't be saved" );
           }
-          else if( styleType instanceof PointStyleType )
-          {
-            PointStyleType pst = (PointStyleType) styleType;
-            pointStyleMap.put( pst.getId(), pst );
-          }
-          else if( styleType instanceof TextStyleType )
-          {
-            TextStyleType tst = (TextStyleType) styleType;
-            textStyleMap.put( tst.getId(), tst );
-          }
-        }
-        else
-        {
-          Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Style with role'" + mapEntry.getKey() + "' for chart component '" + stylable.getId()
-              + "' was not initially set in the chartfile, so it won't be saved" );
         }
       }
     }

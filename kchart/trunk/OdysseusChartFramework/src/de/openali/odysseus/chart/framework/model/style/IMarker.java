@@ -12,4 +12,6 @@ public interface IMarker
   public void paint( GC gc, Point p, int width, int height );
 
   public void dispose( );
+
+  public IMarker copy( );
 }

@@ -9,7 +9,7 @@ public class PolygonMarker extends AbstractMarker
 {
 	private final Point[] m_points;
 
-	public PolygonMarker( Point[] points )
+	public PolygonMarker(Point[] points)
 	{
 		m_points = points;
 	}
@@ -23,4 +23,10 @@ public class PolygonMarker extends AbstractMarker
 		gc.fillPolygon(intArray);
 		gc.drawPolygon(intArray);
 	}
+
+	public PolygonMarker copy()
+	{
+		return new PolygonMarker(m_points);
+	}
+
 }

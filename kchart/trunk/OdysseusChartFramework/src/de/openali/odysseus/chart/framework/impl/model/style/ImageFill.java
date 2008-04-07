@@ -57,12 +57,14 @@ public class ImageFill implements IFill
 
 	private final Image m_img;
 	private final Pattern m_pattern;
+	private final ImageData m_id;
 
 	/**
 	 * @param url
 	 */
 	public ImageFill(ImageData id)
 	{
+		m_id = id;
 		m_img = new Image(Display.getDefault(), id);
 		m_pattern = new Pattern(Display.getDefault(), m_img);
 	}
@@ -92,5 +94,10 @@ public class ImageFill implements IFill
 		{
 			m_pattern.dispose();
 		}
+	}
+
+	public ImageFill copy()
+	{
+		return new ImageFill((ImageData) m_id.clone());
 	}
 }

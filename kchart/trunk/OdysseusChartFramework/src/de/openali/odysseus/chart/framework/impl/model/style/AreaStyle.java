@@ -20,6 +20,17 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 		setStroke(stroke);
 	}
 
+	/**
+	 * copy constructor
+	 * 
+	 * @param style
+	 *            template style
+	 */
+	public IAreaStyle copy()
+	{
+		return new AreaStyle(getStroke(), getFill().copy(), getAlpha(), getStroke().copy(), isVisible());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,6 +72,16 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 	public void setFill(IFill fill)
 	{
 		m_fill = fill;
+	}
+
+	public IFill getFill()
+	{
+		return m_fill;
+	}
+
+	public ILineStyle getStroke()
+	{
+		return m_stroke;
 	}
 
 }

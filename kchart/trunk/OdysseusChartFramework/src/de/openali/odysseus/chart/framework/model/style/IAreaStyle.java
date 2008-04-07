@@ -7,4 +7,10 @@ public interface IAreaStyle extends IStyle
 
   public void setFill( IFill fill );
 
+  public IFill getFill( );
+
+  public ILineStyle getStroke( );
+
+  public IAreaStyle copy( );
+
 }

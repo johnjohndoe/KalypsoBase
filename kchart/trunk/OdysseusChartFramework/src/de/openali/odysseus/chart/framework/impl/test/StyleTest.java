@@ -108,7 +108,7 @@ public class StyleTest implements PaintListener
 
 		// Polyline
 		PolylineFigure lf = new PolylineFigure();
-		ILineStyle ls = new LineStyle(3, new RGB(0, 255, 0), 100, 0, new int[] {}, LINEJOIN.MITER, LINECAP.ROUND, 5, true);
+		ILineStyle ls = new LineStyle(3, new RGB(0, 255, 0), 100, 0, null, LINEJOIN.MITER, LINECAP.ROUND, 5, true);
 		lf.setStyle(ls);
 		lf.setPoints(points1);
 
@@ -165,7 +165,7 @@ public class StyleTest implements PaintListener
 		Point[] points2 = createPoints(pointSize);
 		lf.setPoints(points2);
 		ls.dispose();
-		ls = new LineStyle(1, new RGB(0, 0, 255), 100, 5, new int[] { 10, 2, 3, 4, 2 }, LINEJOIN.BEVEL, LINECAP.FLAT, 5, true);
+		ls = new LineStyle(1, new RGB(0, 0, 255), 100, 5, new float[] { 10, 2, 3, 4, 2 }, LINEJOIN.BEVEL, LINECAP.FLAT, 5, true);
 		lf.setStyle(ls);
 		lf.paint(gc);
 

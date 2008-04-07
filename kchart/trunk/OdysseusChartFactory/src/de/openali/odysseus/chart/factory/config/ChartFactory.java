@@ -263,10 +263,10 @@ public class ChartFactory
     // Layer erzeugen
     final ProviderType provider2 = layerType.getProvider();
     final String providerId = provider2.getEpid();
-
+    ILayerProvider provider = null;
     try
     {
-      ILayerProvider provider = extLoader.getExtension( ILayerProvider.class, providerId );
+      provider = extLoader.getExtension( ILayerProvider.class, providerId );
       if( provider != null )
       {
         Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
@@ -308,12 +308,15 @@ public class ChartFactory
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMappers().getDomainAxisRef().getRef() );
       IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMappers().getTargetAxisRef().getRef() );
       ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
       IChartLayer icl = new DummyLayer();
       icl.setTitle( layerType.getTitle() );
       icl.setCoordinateMapper( cm );
+      // saving the provider into the layer so it can be reused to save changed charts
+      icl.setData( LAYER_PROVIDER_KEY, provider );
       model.getLayerManager().addLayer( icl );
     }
   }

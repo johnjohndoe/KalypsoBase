@@ -183,18 +183,18 @@ public class StyleFactory
 
     // dashArray
     int dashOffset = 0;
-    int[] dashArray = null;
+    float[] dashArray = null;
 
     if( lst.isSetDashArray1() )
     {
       List dashArray1 = lst.getDashArray1();
-      dashArray = new int[dashArray1.size()];
+      dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
         {
-          dashArray[i] = ((Integer) elt).intValue();
+          dashArray[i] = ((Float) elt).floatValue();
         }
       }
     }
@@ -242,19 +242,19 @@ public class StyleFactory
     }
 
     // dashArray
-    int dashOffset = 0;
-    int[] dashArray = null;
+    float dashOffset = 0;
+    float[] dashArray = null;
 
     if( st.isSetDashArray1() )
     {
       List dashArray1 = st.getDashArray1();
-      dashArray = new int[dashArray1.size()];
+      dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
         {
-          dashArray[i] = ((Integer) elt).intValue();
+          dashArray[i] = ((Float) elt).floatValue();
         }
       }
     }

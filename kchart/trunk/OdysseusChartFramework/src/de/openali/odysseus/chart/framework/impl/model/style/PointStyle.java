@@ -138,4 +138,19 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 			m_marker.dispose();
 		}
 	}
+
+	public RGB getInlineColor()
+	{
+		return m_inlineRGB;
+	}
+
+	public ILineStyle getStroke()
+	{
+		return m_stroke;
+	}
+
+	public IPointStyle copy()
+	{
+		return new PointStyle(getStroke().copy(), getWidth(), getHeight(), getAlpha(), getInlineColor(), getMarker().copy(), isVisible());
+	}
 }

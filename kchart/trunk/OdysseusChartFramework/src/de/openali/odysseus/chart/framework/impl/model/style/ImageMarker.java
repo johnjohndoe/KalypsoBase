@@ -24,4 +24,9 @@ public class ImageMarker extends AbstractMarker
 		img.dispose();
 	}
 
+	public ImageMarker copy()
+	{
+		return new ImageMarker((ImageData) m_id.clone());
+	}
+
 }

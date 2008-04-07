@@ -29,4 +29,5 @@ public interface IStyle
    * get stored data objects
    */
   public Object getData( String identifier );
+
 }

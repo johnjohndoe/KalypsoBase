@@ -17,11 +17,11 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	private RGB m_rgb;
 	private int m_width;
 	private Color m_color;
-	private int m_dashOffset;
+	private float m_dashOffset;
 	private float[] m_dashArray;
 	private int m_miterLimit;
 
-	public LineStyle(int width, RGB rgb, int alpha, int dashOffset, int[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible)
+	public LineStyle(int width, RGB rgb, int alpha, float dashOffset, float[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible)
 	{
 		setWidth(width);
 		setColor(rgb);
@@ -31,6 +31,14 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 		setLineCap(lineCap);
 		setMiterLimit(miterLimit);
 		setVisible(isVisible);
+	}
+
+	/**
+	 * returns a deep copy of the object
+	 */
+	public LineStyle copy()
+	{
+		return new LineStyle(getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible());
 	}
 
 	/*
@@ -69,28 +77,17 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int,
 	 *      int[])
 	 */
-	public void setDash(int dashOffset, int[] dashArray)
+	public void setDash(float dashOffset, float[] dashArray)
 	{
 		m_dashOffset = dashOffset;
-		// in float-Array umwandeln
-		if (dashArray != null && dashArray.length > 0)
-		{
-			m_dashArray = new float[dashArray.length];
-			for (int i = 0; i < dashArray.length; i++)
-			{
-				m_dashArray[i] = dashArray[i];
-			}
-		}
-		else
-		{
-			/**
-			 * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if
-			 * LineAttributes' dashArray is empty array
-			 */
-			// m_dashArray = new float[] {};
+		/**
+		 * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if
+		 * LineAttributes' dashArray is empty array
+		 */
+		if (dashArray != null && dashArray.length == 0)
 			m_dashArray = null;
-
-		}
+		else
+			m_dashArray = dashArray;
 	}
 
 	/*
@@ -155,4 +152,35 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 	{
 		return m_width;
 	}
+
+	public RGB getColor()
+	{
+		return m_rgb;
+	}
+
+	public float[] getDashArray()
+	{
+		return m_dashArray;
+	}
+
+	public float getDashOffset()
+	{
+		return m_dashOffset;
+	}
+
+	public LINECAP getLineCap()
+	{
+		return m_lineCap;
+	}
+
+	public LINEJOIN getLineJoin()
+	{
+		return m_lineJoin;
+	}
+
+	public int getMiterLimit()
+	{
+		return m_miterLimit;
+	}
+
 }
