@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
 
-import de.openali.odysseus.chart.framework.impl.model.event.MapperEventHandler;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.MapperEventHandler;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 

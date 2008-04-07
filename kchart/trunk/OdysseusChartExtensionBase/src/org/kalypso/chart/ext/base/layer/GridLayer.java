@@ -7,14 +7,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
-import de.openali.odysseus.chart.framework.impl.model.layer.LegendEntry;
-import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for

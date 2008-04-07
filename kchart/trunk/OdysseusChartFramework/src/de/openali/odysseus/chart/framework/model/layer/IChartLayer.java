@@ -3,8 +3,6 @@ package de.openali.odysseus.chart.framework.model.layer;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -50,20 +48,6 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>, IStyla
    * @return the layers description
    */
   public String getDescription( );
-
-  /**
-   * draws a picture of a given size into the given Image; the icon will be used for the legend to describe the layers
-   * visual representation
-   * 
-   * @deprecated use getSymbolMap() instead
-   */
-  @Deprecated
-  public void drawIcon( final Image img );
-
-  /**
-   * 
-   */
-  public Map<String, ImageData> getSymbolMap( );
 
   /**
    * @return true if the layer is set active, false otherwise

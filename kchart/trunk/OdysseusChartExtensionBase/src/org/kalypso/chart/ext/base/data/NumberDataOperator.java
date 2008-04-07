@@ -6,9 +6,9 @@ import java.text.NumberFormat;
 import java.util.Comparator;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
-import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
-import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.AbstractDataOperator;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
 {

@@ -6,10 +6,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.base.data.AbstractDomainIntervalValueData;
 
-import de.openali.odysseus.chart.framework.impl.model.data.DataRange;
-import de.openali.odysseus.chart.framework.impl.model.figure.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**

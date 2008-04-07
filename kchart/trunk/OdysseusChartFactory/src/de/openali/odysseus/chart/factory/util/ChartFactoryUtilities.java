@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.XmlbeansParameterContainer;
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chartconfig.x010.ParametersType;
 import de.openali.odysseus.chartconfig.x010.ProviderType;
 

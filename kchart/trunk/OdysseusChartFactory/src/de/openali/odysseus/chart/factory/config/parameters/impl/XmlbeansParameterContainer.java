@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
 import de.openali.odysseus.chartconfig.x010.ParameterListType;
 import de.openali.odysseus.chartconfig.x010.ParameterMapType;

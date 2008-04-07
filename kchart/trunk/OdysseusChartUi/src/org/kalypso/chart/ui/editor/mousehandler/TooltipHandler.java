@@ -5,9 +5,9 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * handler to manage tooltips; registers on creation, deregisters on disposation

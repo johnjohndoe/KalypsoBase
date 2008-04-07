@@ -42,9 +42,9 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
 
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
-import de.openali.odysseus.chart.framework.impl.view.PlotCanvas;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 
 /**
  * 

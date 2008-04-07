@@ -47,9 +47,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
-import de.openali.odysseus.chart.framework.impl.view.PlotCanvas;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 
 /**
  * @author Gernot Belger

@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.ImageData;
 
-import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
-import de.openali.odysseus.chart.framework.impl.model.event.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;

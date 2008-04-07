@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -45,16 +44,16 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.impl.model.ChartModel;
-import de.openali.odysseus.chart.framework.impl.model.event.AbstractChartModelEventListener;
-import de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
-import de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener;
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractChartModelEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
+import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chartconfig.x010.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x010.AxisDurationRangeType;
 import de.openali.odysseus.chartconfig.x010.AxisNumberRangeType;
@@ -511,20 +510,6 @@ public class ChartEditor extends EditorPart implements IChartPart
     }
 
     return super.getAdapter( adapter );
-  }
-
-  @SuppressWarnings("deprecation")
-  public void drawLegendIcon( final String id, final Image img )
-  {
-    final IChartLayer[] layers = m_chartModel.getLayerManager().getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      if( layer.getId().equals( id ) )
-      {
-        layer.drawIcon( img );
-        break;
-      }
-    }
   }
 
   public ChartConfigurationDocument getConfiguration( )

@@ -45,12 +45,12 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 
-import de.openali.odysseus.chart.framework.impl.view.AxisCanvas;
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * 

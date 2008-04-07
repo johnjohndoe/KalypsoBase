@@ -17,10 +17,10 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
-import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {

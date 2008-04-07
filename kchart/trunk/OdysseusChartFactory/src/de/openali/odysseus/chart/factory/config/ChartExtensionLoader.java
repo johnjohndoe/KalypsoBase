@@ -12,7 +12,7 @@ import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 
 /**
  * @author burtscher

@@ -7,9 +7,9 @@ import java.util.Comparator;
 
 import de.openali.odysseus.chart.factory.config.parameters.impl.CalendarParser;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
-import de.openali.odysseus.chart.framework.impl.model.data.AbstractDataOperator;
-import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.AbstractDataOperator;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 {

@@ -7,11 +7,11 @@ import org.kalypso.chart.ext.base.data.CalendarDataOperator;
 import org.kalypso.chart.ext.base.data.NumberDataOperator;
 import org.kalypso.chart.ext.base.data.StringDataOperator;
 
-import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * 

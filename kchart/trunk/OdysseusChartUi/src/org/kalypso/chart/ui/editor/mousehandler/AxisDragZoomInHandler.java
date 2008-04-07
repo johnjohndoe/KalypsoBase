@@ -48,12 +48,12 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
-import de.openali.odysseus.chart.framework.impl.model.data.ComparableDataRange;
-import de.openali.odysseus.chart.framework.impl.view.AxisCanvas;
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1

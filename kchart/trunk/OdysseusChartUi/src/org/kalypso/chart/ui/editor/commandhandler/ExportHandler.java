@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.chart.ui.IChartPart;
 
-import de.openali.odysseus.chart.framework.impl.util.img.AlternateChartImageFactory;
-import de.openali.odysseus.chart.framework.impl.view.ChartComposite;
+import de.openali.odysseus.chart.framework.util.img.AlternateChartImageFactory;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 public class ExportHandler extends AbstractHandler implements PaintListener
 {

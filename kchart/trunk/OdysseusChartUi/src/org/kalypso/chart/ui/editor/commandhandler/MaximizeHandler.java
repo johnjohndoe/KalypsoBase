@@ -5,7 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.kalypso.chart.ui.IChartPart;
 
-import de.openali.odysseus.chart.framework.impl.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 public class MaximizeHandler extends AbstractHandler
 {

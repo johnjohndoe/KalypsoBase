@@ -8,14 +8,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.impl.model.figure.PointFigure;
-import de.openali.odysseus.chart.framework.impl.model.figure.PolylineFigure;
-import de.openali.odysseus.chart.framework.impl.model.layer.LegendEntry;
-import de.openali.odysseus.chart.framework.impl.model.style.LineStyle;
-import de.openali.odysseus.chart.framework.impl.model.style.PointStyle;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 
 /**
  * @author alibu

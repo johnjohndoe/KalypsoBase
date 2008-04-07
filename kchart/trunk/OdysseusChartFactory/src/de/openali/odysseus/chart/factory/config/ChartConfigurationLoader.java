@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
-import de.openali.odysseus.chart.framework.impl.logging.Logger;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chartconfig.x010.AreaStyleDocument;
 import de.openali.odysseus.chartconfig.x010.AxisDocument;
 import de.openali.odysseus.chartconfig.x010.AxisRendererDocument;
