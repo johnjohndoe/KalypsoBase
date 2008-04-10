@@ -60,11 +60,10 @@ public class JavaApiContributionsExtension
 
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    for( int i = 0; i < configurationElements.length; i++ )
+    for( final IConfigurationElement element : configurationElements )
     {
       try
       {
-        final IConfigurationElement element = configurationElements[i];
         final String id = element.getAttribute( "id" );
         final IUrlCatalog catalog = (IUrlCatalog) element.createExecutableExtension( "class" );
         m_catalogs.put( id, catalog );
@@ -78,12 +77,12 @@ public class JavaApiContributionsExtension
     }
   }
 
-  public static IUrlCatalog getAllRegisteredCatalogs( ) 
+  public static IUrlCatalog getAllRegisteredCatalogs( )
   {
     return new MultiUrlCatalog( getRegistredCatalogs() );
   }
 
-  private static synchronized IUrlCatalog[] getRegistredCatalogs( ) 
+  private static synchronized IUrlCatalog[] getRegistredCatalogs( )
   {
     if( m_catalogs == null )
       initRegistry();
