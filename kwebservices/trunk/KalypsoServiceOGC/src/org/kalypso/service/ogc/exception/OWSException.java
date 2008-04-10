@@ -1,6 +1,7 @@
 package org.kalypso.service.ogc.exception;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
@@ -31,11 +32,18 @@ public class OWSException extends Exception
 
   private static final long serialVersionUID = 1L;
 
-  private ExceptionCode m_exceptionCode;
+  private final ExceptionCode m_exceptionCode;
 
-  private String m_locator;
+  private final String m_locator;
 
-  public OWSException( ExceptionCode exceptionCode, String exceptionText, String locator )
+  public OWSException( final ExceptionCode exceptionCode, final Exception cause, final String locator )
+  {
+    super( cause );
+    m_exceptionCode = exceptionCode;
+    m_locator = locator;
+  }
+
+  public OWSException( final ExceptionCode exceptionCode, final String exceptionText, final String locator )
   {
     super( exceptionText );
     m_exceptionCode = exceptionCode;
@@ -62,11 +70,14 @@ public class OWSException extends Exception
    */
   public String toXMLString( )
   {
-    ExceptionReport report = OF.createExceptionReport();
-    ExceptionType extype = OF.createExceptionType();
+    final ExceptionReport report = OF.createExceptionReport();
+    final ExceptionType extype = OF.createExceptionType();
     extype.setExceptionCode( m_exceptionCode.toString() );
     extype.setLocator( m_locator );
-    extype.getExceptionText().add( getMessage() );
+    final StringWriter ew = new StringWriter();
+    final PrintWriter pw = new PrintWriter( ew, true );
+    printStackTrace( pw );
+    extype.getExceptionText().add( ew.toString() );
     report.getException().add( extype );
     Marshaller m;
     String excString = "";
@@ -79,7 +90,7 @@ public class OWSException extends Exception
       m.marshal( report, sw );
       excString = sw.toString();
     }
-    catch( JAXBException e1 )
+    catch( final JAXBException e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
@@ -88,14 +99,14 @@ public class OWSException extends Exception
     {
       if( sw != null )
         try
-        {
+      {
           sw.close();
-        }
-        catch( IOException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+      }
+      catch( final IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
     return excString;
   }
