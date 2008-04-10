@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,
  org.junit4
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.service.wps,
+Export-Package: net.opengeospatial.wps,
+ org.kalypso.service.wps,
  org.kalypso.service.wps.client,
  org.kalypso.service.wps.client.exceptions,
  org.kalypso.service.wps.client.simulation,
