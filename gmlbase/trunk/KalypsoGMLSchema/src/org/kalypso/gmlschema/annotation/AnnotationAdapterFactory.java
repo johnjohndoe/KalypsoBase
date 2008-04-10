@@ -24,7 +24,7 @@ public class AnnotationAdapterFactory implements IAdapterFactory
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     final String platformLang = getPlatformLang();
-
+    
     if( adapterType == IAnnotation.class )
     {
       /* First, we try to get an annotation from an external annotation provider */
