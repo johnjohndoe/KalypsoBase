@@ -41,7 +41,9 @@
 package de.openali.odysseus.chart.factory.config;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -51,6 +53,7 @@ import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
@@ -72,12 +75,49 @@ import de.openali.odysseus.chartconfig.x010.PolygonMarkerType;
 import de.openali.odysseus.chartconfig.x010.StrokeType;
 import de.openali.odysseus.chartconfig.x010.TextStyleType;
 import de.openali.odysseus.chartconfig.x010.FontStyleType.Enum;
+import de.openali.odysseus.chartconfig.x010.StylesDocument.Styles;
 
 /**
  * @author alibu
  */
 public class StyleFactory
 {
+  public static String STYLE_KEY = "de.openali.odysseus.chart.factory.style";
+
+  public static Map<String, IStyle> createStyleMap( Styles styles, URL context )
+  {
+    Map<String, IStyle> styleMap = new HashMap<String, IStyle>();
+
+    // Styles erzeugen
+    if( styles != null )
+    {
+      for( AreaStyleType ast : styles.getAreaStyleArray() )
+      {
+        IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
+        as.setData( STYLE_KEY, ast );
+        styleMap.put( ast.getRole(), as );
+      }
+      for( LineStyleType lst : styles.getLineStyleArray() )
+      {
+        ILineStyle as = StyleFactory.createLineStyle( lst );
+        as.setData( STYLE_KEY, lst );
+        styleMap.put( lst.getRole(), as );
+      }
+      for( PointStyleType pst : styles.getPointStyleArray() )
+      {
+        IPointStyle ps = StyleFactory.createPointStyle( pst, context );
+        ps.setData( STYLE_KEY, pst );
+        styleMap.put( pst.getRole(), ps );
+      }
+      for( TextStyleType tst : styles.getTextStyleArray() )
+      {
+        ITextStyle ps = StyleFactory.createTextStyle( tst );
+        ps.setData( STYLE_KEY, tst );
+        styleMap.put( tst.getRole(), ps );
+      }
+    }
+    return styleMap;
+  }
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
   {
@@ -194,7 +234,7 @@ public class StyleFactory
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
         {
-          dashArray[i] = ((Float) elt).floatValue();
+          dashArray[i] = ((Number) elt).floatValue();
         }
       }
     }
@@ -254,7 +294,7 @@ public class StyleFactory
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
         {
-          dashArray[i] = ((Float) elt).floatValue();
+          dashArray[i] = ((Number) elt).floatValue();
         }
       }
     }

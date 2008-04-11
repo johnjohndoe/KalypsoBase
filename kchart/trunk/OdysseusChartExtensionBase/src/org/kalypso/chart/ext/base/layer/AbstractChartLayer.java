@@ -5,10 +5,6 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.ImageData;
 
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -16,7 +12,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -25,8 +20,6 @@ public abstract class AbstractChartLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
 
-  private IStyleSet m_style = null;
-
   private String m_title = "";
 
   private String m_id = "";
@@ -34,12 +27,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   private String m_description = "";
 
   private boolean m_isActive = false;
-
-  private IAxis m_targetAxis;
-
-  private IAxis m_domainAxis;
-
-  private IDataContainer m_dataContainer = null;
 
   private final LayerEventHandler m_handler = new LayerEventHandler();
 
@@ -84,14 +71,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getId( )
   {
     return m_id;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyles()
-   */
-  public IStyleSet getStyles( )
-  {
-    return m_style;
   }
 
   /**
@@ -151,14 +130,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
-   */
-  public void setStyles( final IStyleSet styles )
-  {
-    m_style = styles;
-  }
-
-  /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
    */
   public void setVisible( final boolean isVisible )
@@ -167,10 +138,10 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_handler.fireLayerVisibilityChanged( this );
   }
 
-  public void setDataContainer( final IDataContainer data )
-  {
-    m_dataContainer = data;
-  }
+  // public void setDataContainer( final IDataContainer data )
+  // {
+  // m_dataContainer = data;
+  // }
 
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
@@ -203,37 +174,39 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_handler;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
-  public IDataRange<Number> getDomainRange( )
-  {
+  // /**
+  // * @see org.kalypso.chart.framework.model.layer.IChartLayer#getDomainRange()
+  // */
+  // public IDataRange<Number> getDomainRange( )
+  // {
+  //
+  // IDataRange logRange = getDataContainer().getDomainRange();
+  // Object min = logRange.getMin();
+  // if( min != null )
+  // {
+  // IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+  // return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric(
+  // logRange.getMax() ) } );
+  // }
+  // return null;
+  // }
 
-    IDataRange logRange = getDataContainer().getDomainRange();
-    Object min = logRange.getMin();
-    if( min != null )
-    {
-      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-      return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric( logRange.getMax() ) } );
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  public IDataRange<Number> getTargetRange( )
-  {
-
-    IDataRange logRange = getDataContainer().getTargetRange();
-    Object min = logRange.getMin();
-    if( min != null )
-    {
-      IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-      return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric( logRange.getMax() ) } );
-    }
-    return null;
-  }
+  // /**
+  // * @see org.kalypso.chart.framework.model.layer.IChartLayer#getTargetRange()
+  // */
+  // public IDataRange<Number> getTargetRange( )
+  // {
+  //
+  // IDataRange logRange = getDataContainer().getTargetRange();
+  // Object min = logRange.getMin();
+  // if( min != null )
+  // {
+  // IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+  // return new ComparableDataRange<Number>( new Number[] { dop.logicalToNumeric( min ), dop.logicalToNumeric(
+  // logRange.getMax() ) } );
+  // }
+  // return null;
+  // }
 
   public final void setCoordinateMapper( ICoordinateMapper coordinateMapper )
   {
@@ -255,20 +228,11 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   }
 
-  @SuppressWarnings("unchecked")
-  protected IDataContainer getDataContainer( )
-  {
-    return m_dataContainer;
-  }
-
-  public void dispose( )
-  {
-    IStyleSet styles = getStyles();
-    if( styles != null )
-    {
-      styles.dispose();
-    }
-  }
+  // @SuppressWarnings("unchecked")
+  // protected IDataContainer getDataContainer( )
+  // {
+  // return m_dataContainer;
+  // }
 
   protected abstract ILegendEntry[] createLegendEntries( );
 

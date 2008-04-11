@@ -164,14 +164,12 @@
 	<complexType name="ChartConfigurationType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element ref="ods:Chart"></element>
+			<!--
 			<element ref="ods:Layer"></element>
 			<element ref="ods:Axis"></element>
 			<element ref="ods:Mapper"></element>
 			<element ref="ods:AxisRenderer"></element>
-			<element ref="ods:LineStyle"></element>
-			<element ref="ods:PointStyle"></element>
-			<element ref="ods:AreaStyle"></element>
-			<element ref="ods:TextStyle"></element> 
+			-->
 		</choice>
 
 
@@ -220,8 +218,24 @@
 					<element name="Layers">
 						<complexType>
 							<sequence>
-								<element name="LayerRef" maxOccurs="unbounded"
-									type="ods:ReferencingType"> </element>
+								<element ref="ods:Layer" maxOccurs="unbounded"/> 
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Mappers">
+						<complexType>
+							<sequence>
+								<choice maxOccurs="unbounded">
+									<element ref="ods:Mapper" />
+									<element ref="ods:Axis" />
+								</choice>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Renderers">
+						<complexType>
+							<sequence>
+								<element ref="ods:AxisRenderer" maxOccurs="unbounded"/> 
 							</sequence>
 						</complexType>
 					</element>
@@ -247,7 +261,7 @@
 							</sequence>
 						</complexType>
 					</element>
-					<element name="Styles" type="ods:StylesType" minOccurs="0"/>
+					<element ref ="ods:Styles" minOccurs="0" />
 				</sequence>
 				<attribute name="visible" type="boolean" default="true">
 					<annotation>
@@ -410,7 +424,7 @@
 		<complexContent>
 			<extension base="ods:AbstractConfigurationType"> 
 			<sequence>
-				<element name="Styles" type="ods:StylesType" minOccurs="0"/>
+				<element ref="ods:Styles" minOccurs="0"/>
 			</sequence>
 			</extension>
 		</complexContent>
@@ -456,6 +470,19 @@
 		<attribute name="name" type="string" use="required"/>
 	</complexType>
 
+
+	<element name="Styles">
+		<complexType>
+			<choice minOccurs="1" maxOccurs="unbounded">
+				<element ref="ods:LineStyle"></element>
+				<element ref="ods:PointStyle"></element>
+				<element ref="ods:AreaStyle"></element>
+				<element ref="ods:TextStyle"></element> 
+			</choice>
+		</complexType>
+	</element>
+
+<!-- 
 	<complexType name="StylesType">
 		<choice maxOccurs="unbounded">
 			<element name="LineStyleRef" type="ods:RoleReferencingType"/>
@@ -464,8 +491,7 @@
 			<element name="TextStyleRef" type="ods:RoleReferencingType"/>
 		</choice>
 	</complexType>
+-->	
+	</schema>
+	
 
-
-
-
-</schema>

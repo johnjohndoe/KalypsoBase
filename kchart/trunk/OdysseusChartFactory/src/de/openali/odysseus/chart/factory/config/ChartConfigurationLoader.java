@@ -22,7 +22,6 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chartconfig.x010.AreaStyleDocument;
 import de.openali.odysseus.chartconfig.x010.AxisDocument;
 import de.openali.odysseus.chartconfig.x010.AxisRendererDocument;
-import de.openali.odysseus.chartconfig.x010.AxisType;
 import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x010.ChartDocument;
@@ -136,11 +135,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
       chartIds[i] = charts[i].getId();
     }
     return chartIds;
-  }
-
-  public AxisType[] getAxes( )
-  {
-    return m_document.getChartConfiguration().getAxisArray();
   }
 
   /**

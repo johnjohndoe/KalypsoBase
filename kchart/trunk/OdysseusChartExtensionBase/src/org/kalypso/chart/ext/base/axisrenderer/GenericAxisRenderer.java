@@ -56,9 +56,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @param fixedWidth
    *            if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
-  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth )
+  public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
   {
-    super( id, tickLength, tickLabelInsets, labelInsets, gap );
+    super( id, tickLength, tickLabelInsets, labelInsets, gap, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle );
     m_tickCalculator = tickCalculator;
     m_labelCreator = labelCreator;
     m_minTickInterval = minTickInterval;
@@ -72,8 +72,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final String logicalfrom = m_labelCreator.getLabel( range.getMin(), range );
     final String logicalto = m_labelCreator.getLabel( range.getMax(), range );
-    final Point fromTextExtent = getTextExtent( gc, logicalfrom, getStyles().getStyle( "tickLabel", ITextStyle.class ) );
-    final Point toTextExtent = getTextExtent( gc, logicalto, getStyles().getStyle( "tickLabel", ITextStyle.class ) );
+    final Point fromTextExtent = getTextExtent( gc, logicalfrom, getTickLabelStyle() );
+    final Point toTextExtent = getTextExtent( gc, logicalto, getTickLabelStyle() );
     final Point tickLabelSize = new Point( Math.max( fromTextExtent.x, toTextExtent.x ), Math.max( fromTextExtent.y, toTextExtent.y ) );
 
     final Insets ihelper = getConvertedInsets( axis, getTickLabelInsets() );
@@ -92,9 +92,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   {
 
     if( (gc == null) || (axis == null) || (ticks == null) )
-    {
       return;
-    }
 
     int textX = 0;
     int textY = 0;

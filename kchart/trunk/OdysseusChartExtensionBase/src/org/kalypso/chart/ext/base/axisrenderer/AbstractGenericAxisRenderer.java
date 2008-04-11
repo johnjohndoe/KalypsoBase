@@ -11,8 +11,8 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu
@@ -30,8 +30,6 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   private final String m_id;
 
-  private IStyleSet m_styles;
-
   /**
    * Hashmap to store arbitrary key value pairs
    */
@@ -39,26 +37,28 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   private final HashMap<IAxis, Number[]> m_tickMap = new HashMap<IAxis, Number[]>();
 
-  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap )
+  private ILineStyle m_axisLineStyle;
+
+  private ITextStyle m_labelStyle;
+
+  private ITextStyle m_tickLabelStyle;
+
+  private ILineStyle m_tickLineStyle;
+
+  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
   {
     m_id = id;
     m_tickLength = tickLength;
     m_tickLabelInsets = tickLabelInsets;
     m_labelInsets = labelInsets;
     m_gap = gap;
+    m_axisLineStyle = axisLineStyle;
+    m_labelStyle = labelStyle;
+    m_tickLabelStyle = tickLabelStyle;
+    m_tickLineStyle = tickLineStyle;
   }
 
   protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
-
-  public void setStyles( IStyleSet styles )
-  {
-    m_styles = styles;
-  }
-
-  public IStyleSet getStyles( )
-  {
-    return m_styles;
-  }
 
   protected Point getTextExtent( GC gc, final String value, ITextStyle style )
   {
@@ -139,30 +139,35 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public void dispose( )
   {
-    if( m_styles != null )
-    {
-      m_styles.dispose();
-    }
+
   }
 
   public ILineStyle getTickLineStyle( )
   {
-    return getStyles().getStyle( "tickLine", ILineStyle.class );
+    if( m_tickLineStyle == null )
+      m_tickLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_tickLineStyle;
   }
 
   public ILineStyle getLineStyle( )
   {
-    return getStyles().getStyle( "line", ILineStyle.class );
+    if( m_axisLineStyle == null )
+      m_axisLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_axisLineStyle;
   }
 
   public ITextStyle getLabelStyle( )
   {
-    return getStyles().getStyle( "label", ITextStyle.class );
+    if( m_labelStyle == null )
+      m_labelStyle = StyleUtils.getDefaultTextStyle();
+    return m_labelStyle;
   }
 
   public ITextStyle getTickLabelStyle( )
   {
-    return getStyles().getStyle( "tickLabel", ITextStyle.class );
+    if( m_tickLabelStyle == null )
+      m_tickLabelStyle = StyleUtils.getDefaultTextStyle();
+    return m_labelStyle;
   }
 
 }

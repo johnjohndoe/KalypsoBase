@@ -395,7 +395,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
-            final AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
+            final AxisType[] axisArray = m_chartType.getMappers().getAxisArray();
             final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
             final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
             for( final AxisType axisType : axisArray )

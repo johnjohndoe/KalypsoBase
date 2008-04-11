@@ -12,13 +12,22 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu
  */
 public abstract class AbstractBarLayer extends AbstractChartLayer
 {
+
+  private final IAreaStyle m_areaStyle;
+
+  private PolygonFigure m_polygonFigure;
+
+  public AbstractBarLayer( IAreaStyle areaStyle )
+  {
+    m_areaStyle = areaStyle;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
@@ -55,10 +64,20 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
 
   protected PolygonFigure getPolygonFigure( )
   {
-    IAreaStyle as = getStyles().getStyle( "area", AreaStyle.class );
-    PolygonFigure pf = new PolygonFigure();
-    pf.setStyle( as );
-    return pf;
+    if( m_polygonFigure == null )
+    {
+      IAreaStyle as = getAreaStyle();
+      m_polygonFigure = new PolygonFigure();
+      m_polygonFigure.setStyle( as );
+    }
+    return m_polygonFigure;
+  }
+
+  private IAreaStyle getAreaStyle( )
+  {
+    if( m_areaStyle == null )
+      return StyleUtils.getDefaultAreaStyle();
+    return m_areaStyle;
   }
 
   @Override
@@ -97,5 +116,11 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
       entries.add( entry );
     }
     return entries.toArray( new ILegendEntry[] {} );
+  }
+
+  public void dispose( )
+  {
+    if( m_areaStyle != null )
+      m_areaStyle.dispose();
   }
 }

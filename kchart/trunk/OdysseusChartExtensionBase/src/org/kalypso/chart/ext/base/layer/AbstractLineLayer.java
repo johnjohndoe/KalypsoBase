@@ -14,14 +14,27 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu
  */
 public abstract class AbstractLineLayer extends AbstractChartLayer
 {
+
+  private final ILineStyle m_lineStyle;
+
+  private final IPointStyle m_pointStyle;
+
+  private PointFigure m_pointFigure;
+
+  private PolylineFigure m_polylineFigure;
+
+  public AbstractLineLayer( ILineStyle lineStyle, IPointStyle pointStyle )
+  {
+    m_lineStyle = lineStyle;
+    m_pointStyle = pointStyle;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
@@ -63,18 +76,38 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   protected PolylineFigure getPolylineFigure( )
   {
-    ILineStyle ls = getStyles().getStyle( "line", LineStyle.class );
-    PolylineFigure lf = new PolylineFigure();
-    lf.setStyle( ls );
-    return lf;
+    if( m_polylineFigure == null )
+    {
+      ILineStyle ls = getLineStyle();
+      m_polylineFigure = new PolylineFigure();
+      m_polylineFigure.setStyle( ls );
+    }
+    return m_polylineFigure;
+  }
+
+  private ILineStyle getLineStyle( )
+  {
+    if( m_lineStyle == null )
+      return StyleUtils.getDefaultLineStyle();
+    return m_lineStyle;
   }
 
   protected PointFigure getPointFigure( )
   {
-    PointStyle ps = getStyles().getStyle( "point", PointStyle.class );
-    PointFigure pf = new PointFigure();
-    pf.setStyle( ps );
-    return pf;
+    if( m_pointFigure == null )
+    {
+      IPointStyle ps = getPointStyle();
+      m_pointFigure = new PointFigure();
+      m_pointFigure.setStyle( ps );
+    }
+    return m_pointFigure;
+  }
+
+  private IPointStyle getPointStyle( )
+  {
+    if( m_pointStyle == null )
+      return StyleUtils.getDefaultPointStyle();
+    return m_pointStyle;
   }
 
   /**
@@ -132,8 +165,14 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       };
       entries.add( le );
     }
-
     return entries.toArray( new ILegendEntry[] {} );
+  }
 
+  public void dispose( )
+  {
+    if( m_lineStyle != null )
+      m_lineStyle.dispose();
+    if( m_pointStyle != null )
+      m_pointStyle.dispose();
   }
 }

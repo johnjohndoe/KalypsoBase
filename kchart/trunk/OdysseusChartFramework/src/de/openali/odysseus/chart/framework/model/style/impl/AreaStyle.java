@@ -9,79 +9,80 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 public class AreaStyle extends AbstractStyle implements IAreaStyle
 {
 
-	private ILineStyle m_stroke;
-	private IFill m_fill;
+  private ILineStyle m_stroke;
 
-	public AreaStyle(ILineStyle outline, IFill fill, int alpha, ILineStyle stroke, boolean isVisible)
-	{
-		setFill(fill);
-		setAlpha(alpha);
-		setVisible(isVisible);
-		setStroke(stroke);
-	}
+  private IFill m_fill;
 
-	/**
-	 * copy constructor
-	 * 
-	 * @param style
-	 *            template style
-	 */
-	public IAreaStyle copy()
-	{
-		return new AreaStyle(getStroke(), getFill().copy(), getAlpha(), getStroke().copy(), isVisible());
-	}
+  public AreaStyle( IFill fill, int alpha, ILineStyle stroke, boolean isVisible )
+  {
+    setFill( fill );
+    setAlpha( alpha );
+    setVisible( isVisible );
+    setStroke( stroke );
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setOutline(de.openali.odysseus.chart.framework.impl.model.style.ILineStyle)
-	 */
-	public void setStroke(ILineStyle stroke)
-	{
-		m_stroke = stroke;
-	}
+  /**
+   * copy constructor
+   * 
+   * @param style
+   *            template style
+   */
+  public IAreaStyle copy( )
+  {
+    return new AreaStyle( getFill().copy(), getAlpha(), getStroke().copy(), isVisible() );
+  }
 
-	public void apply(GC gc)
-	{
-		if (m_stroke != null)
-		{
-			m_stroke.apply(gc);
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setOutline(de.openali.odysseus.chart.framework.impl.model.style.ILineStyle)
+   */
+  public void setStroke( ILineStyle stroke )
+  {
+    m_stroke = stroke;
+  }
 
-		int alpha = getAlpha();
-		gc.setAlpha(alpha);
+  public void apply( GC gc )
+  {
+    if( m_stroke != null )
+    {
+      m_stroke.apply( gc );
+    }
 
-		if (m_fill != null)
-		{
-			m_fill.apply(gc);
-		}
-	}
+    int alpha = getAlpha();
+    gc.setAlpha( alpha );
 
-	public void dispose()
-	{
-		if (m_stroke != null)
-		{
-			m_stroke.dispose();
-		}
-		if (m_fill != null)
-		{
-			m_fill.dispose();
-		}
-	}
+    if( m_fill != null )
+    {
+      m_fill.apply( gc );
+    }
+  }
 
-	public void setFill(IFill fill)
-	{
-		m_fill = fill;
-	}
+  public void dispose( )
+  {
+    if( m_stroke != null )
+    {
+      m_stroke.dispose();
+    }
+    if( m_fill != null )
+    {
+      m_fill.dispose();
+    }
+  }
 
-	public IFill getFill()
-	{
-		return m_fill;
-	}
+  public void setFill( IFill fill )
+  {
+    m_fill = fill;
+  }
 
-	public ILineStyle getStroke()
-	{
-		return m_stroke;
-	}
+  public IFill getFill( )
+  {
+    return m_fill;
+  }
+
+  public ILineStyle getStroke( )
+  {
+    return m_stroke;
+  }
 
 }

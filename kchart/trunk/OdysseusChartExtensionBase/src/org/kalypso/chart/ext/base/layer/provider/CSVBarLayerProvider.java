@@ -18,10 +18,10 @@ import org.kalypso.chart.ext.base.layer.DefaultBarLayer;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
  * @author alibu
@@ -29,13 +29,15 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 public class CSVBarLayerProvider extends AbstractLayerProvider
 {
 
+  private final String ROLE_BAR_STYLE = "bar";
+
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @SuppressWarnings( { "unused", "unchecked" })
   public IChartLayer getLayer( URL context ) throws ConfigurationException
   {
-    return new DefaultBarLayer();
+    return new DefaultBarLayer( getDataContainer(), getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
   }
 
   private Calendar createDate( String s )
@@ -69,7 +71,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws ConfigurationException
+  protected AbstractDomainIntervalValueFileData getDataContainer( ) throws ConfigurationException
   {
     final AbstractDomainIntervalValueFileData data = new AbstractDomainIntervalValueFileData()
     {

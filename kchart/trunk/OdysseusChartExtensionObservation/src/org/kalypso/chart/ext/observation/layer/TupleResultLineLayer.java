@@ -12,10 +12,22 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
+
+  private final TupleResultDomainValueData m_data;
+
+  public TupleResultLineLayer( TupleResultDomainValueData data, ILineStyle lineStyle, IPointStyle pointStyle )
+  {
+    super( lineStyle, pointStyle );
+    m_data = data;
+
+  }
 
   @Override
   public void drawIcon( final Image img )
@@ -43,14 +55,13 @@ public class TupleResultLineLayer extends AbstractLineLayer
   public void paint( final GC gc )
   {
     final List<Point> path = new ArrayList<Point>();
-    final TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
 
-    data.open();
+    m_data.open();
 
-    final TupleResult result = data.getTupleResult();
+    final TupleResult result = m_data.getTupleResult();
 
-    Object[] domainValues = data.getDomainValues();
-    Object[] targetValues = data.getTargetValues();
+    Object[] domainValues = m_data.getDomainValues();
+    Object[] targetValues = m_data.getTargetValues();
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {
@@ -77,4 +88,21 @@ public class TupleResultLineLayer extends AbstractLineLayer
     drawLine( gc, path );
     drawPoints( gc, path );
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  public IDataRange<Number> getDomainRange( )
+  {
+    return m_data.getDomainRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  public IDataRange<Number> getTargetRange( )
+  {
+    return m_data.getDomainRange();
+  }
+
 }

@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.factory.provider;
 
+import java.net.URL;
+
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;
@@ -17,7 +19,7 @@ public interface IAxisRendererProvider
    */
   public IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
 
-  public void init( final AxisRendererType at );
+  public void init( final AxisRendererType at, URL context );
 
   /**
    * returns XML configuration element for the given chart element

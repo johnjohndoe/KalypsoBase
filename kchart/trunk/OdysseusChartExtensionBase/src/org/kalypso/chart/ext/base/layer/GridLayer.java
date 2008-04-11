@@ -14,7 +14,7 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -36,9 +36,12 @@ public class GridLayer extends AbstractChartLayer
 
   private final GridOrientation m_orientation;
 
-  public GridLayer( GridOrientation orientation )
+  private final ILineStyle m_gridStyle;
+
+  public GridLayer( GridOrientation orientation, ILineStyle gridStyle )
   {
     m_orientation = orientation;
+    m_gridStyle = gridStyle;
   }
 
   /**
@@ -113,7 +116,6 @@ public class GridLayer extends AbstractChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
-  @Override
   public IDataRange<Number> getDomainRange( )
   {
     return null;
@@ -122,7 +124,6 @@ public class GridLayer extends AbstractChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
-  @Override
   public IDataRange<Number> getTargetRange( )
   {
     return null;
@@ -171,11 +172,18 @@ public class GridLayer extends AbstractChartLayer
 
   private PolylineFigure getPolylineFigure( )
   {
-    ILineStyle style = getStyles().getStyle( "line", LineStyle.class );
+    ILineStyle style = getGridStyle();
     PolylineFigure figure = new PolylineFigure();
     figure.setStyle( style );
     return figure;
 
+  }
+
+  private ILineStyle getGridStyle( )
+  {
+    if( m_gridStyle == null )
+      return StyleUtils.getDefaultLineStyle();
+    return m_gridStyle;
   }
 
   /**
@@ -229,5 +237,15 @@ public class GridLayer extends AbstractChartLayer
     }
 
     return entries.toArray( new ILegendEntry[] {} );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  public void dispose( )
+  {
+    if( m_gridStyle != null )
+      m_gridStyle.dispose();
+
   }
 }

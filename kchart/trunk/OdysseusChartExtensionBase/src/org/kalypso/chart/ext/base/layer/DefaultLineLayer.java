@@ -9,13 +9,24 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
  */
 public class DefaultLineLayer extends AbstractLineLayer
 {
+
+  private final ITabularDataContainer m_dataContainer;
+
+  public DefaultLineLayer( ITabularDataContainer data, ILineStyle lineStyle, IPointStyle pointStyle )
+  {
+    super( lineStyle, pointStyle );
+    m_dataContainer = data;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
@@ -96,10 +107,33 @@ public class DefaultLineLayer extends AbstractLineLayer
     }
   }
 
-  @Override
   protected ITabularDataContainer getDataContainer( )
   {
-    return (ITabularDataContainer) super.getDataContainer();
+    return m_dataContainer;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  @SuppressWarnings("unchecked")
+  public IDataRange<Number> getDomainRange( )
+  {
+    IDataRange domainRange = m_dataContainer.getDomainRange();
+    Object max = domainRange.getMax();
+    IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
+    return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  @SuppressWarnings("unchecked")
+  public IDataRange<Number> getTargetRange( )
+  {
+    IDataRange targetRange = m_dataContainer.getTargetRange();
+    Object max = targetRange.getMax();
+    IDataOperator top = getTargetAxis().getDataOperator( max.getClass() );
+    return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
 
 }

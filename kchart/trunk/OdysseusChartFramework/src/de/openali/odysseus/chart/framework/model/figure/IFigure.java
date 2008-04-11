@@ -9,6 +9,4 @@ public interface IFigure<T_style extends IStyle> extends IPaintable
 
   public T_style getStyle( );
 
-  public void dispose( );
-
 }

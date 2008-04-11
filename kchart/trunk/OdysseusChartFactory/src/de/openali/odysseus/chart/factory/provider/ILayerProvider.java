@@ -4,7 +4,6 @@ import java.net.URL;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chartconfig.x010.LayerType;
 
@@ -30,11 +29,6 @@ public interface ILayerProvider
    */
   public LayerType getXMLType( IChartLayer layer );
 
-  /**
-   * returns the IChartModel which the layer belongs to
-   */
-  public IChartModel getChartModel( );
-
-  @SuppressWarnings("unchecked")
-  public IDataContainer getDataContainer( ) throws ConfigurationException;
+// @SuppressWarnings("unchecked")
+// public IDataContainer getDataContainer( ) throws ConfigurationException;
 }

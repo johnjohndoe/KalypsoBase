@@ -11,12 +11,21 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
  * @author alibu
  */
 public class DefaultBarLayer extends AbstractBarLayer
 {
+
+  private final AbstractDomainIntervalValueData m_data;
+
+  public DefaultBarLayer( AbstractDomainIntervalValueData data, IAreaStyle areaStyle )
+  {
+    super( areaStyle );
+    m_data = data;
+  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
@@ -69,20 +78,29 @@ public class DefaultBarLayer extends AbstractBarLayer
     }
   }
 
-  @Override
-  public AbstractDomainIntervalValueData getDataContainer( )
+  protected AbstractDomainIntervalValueData getDataContainer( )
   {
-    return (AbstractDomainIntervalValueData) super.getDataContainer();
+    return m_data;
   }
 
-  @Override
   public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     IDataRange targetRange = getDataContainer().getTargetRange();
     IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
-
     return new DataRange<Number>( 0, dop.logicalToNumeric( targetRange.getMax() ) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  @SuppressWarnings("unchecked")
+  public IDataRange<Number> getDomainRange( )
+  {
+    IDataRange domainRange = getDataContainer().getDomainRange();
+    Object max = domainRange.getMax();
+    IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
+    return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
 }

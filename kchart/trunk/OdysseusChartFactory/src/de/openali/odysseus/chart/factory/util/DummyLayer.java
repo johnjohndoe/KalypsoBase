@@ -57,7 +57,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
@@ -65,8 +64,6 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 public class DummyLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
-
-  private IStyleSet m_style = null;
 
   private String m_title = "";
 
@@ -122,14 +119,6 @@ public class DummyLayer implements IChartLayer
   public String getId( )
   {
     return m_id;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
-   */
-  public IStyleSet getStyles( )
-  {
-    return m_style;
   }
 
   /**
@@ -189,14 +178,6 @@ public class DummyLayer implements IChartLayer
   public void setId( final String id )
   {
     m_id = id;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
-   */
-  public void setStyles( final IStyleSet style )
-  {
-    m_style = style;
   }
 
   /**

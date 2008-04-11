@@ -1,15 +1,9 @@
 package org.kalypso.chart.ext.base.axisrenderer.provider;
 
-import java.awt.Insets;
-
 import org.kalypso.chart.ext.base.axisrenderer.DateLabelCreator;
-import org.kalypso.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import org.kalypso.chart.ext.base.axisrenderer.GenericDateTickCalculator;
-
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
-import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import org.kalypso.chart.ext.base.axisrenderer.ILabelCreator;
+import org.kalypso.chart.ext.base.axisrenderer.ITickCalculator;
 
 /**
  * 
@@ -52,31 +46,27 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author alibu
  * 
  */
-public class GenericCalendarAxisRendererProvider extends AbstractAxisRendererProvider
+public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRendererProvider
 {
 
-  @SuppressWarnings("unused")
-  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException
+  /**
+   * @see org.kalypso.chart.ext.base.axisrenderer.provider.AbstractGenericAxisRendererProvider#getLabelCreator()
+   */
+  @Override
+  public ILabelCreator getLabelCreator( )
   {
-
     String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
     dateFormat = dateFormat.replace( "\\n", "\n" );
+    return new DateLabelCreator( dateFormat );
+  }
 
-    final int insetTick = Integer.parseInt( getParameterContainer().getParameterValue( "inset_tick", "1" ) );
-    final Insets insetsTick = new Insets( insetTick, insetTick, insetTick, insetTick );
-    final int insetLabel = Integer.parseInt( getParameterContainer().getParameterValue( "inset_label", "1" ) );
-    final Insets insetsLabel = new Insets( insetLabel, insetLabel, insetLabel, insetLabel );
-
-    final int tickLength = Integer.parseInt( getParameterContainer().getParameterValue( "tick_length", "5" ) );
-
-    BooleanParser bp = new BooleanParser();
-    final boolean hideCut = getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp );
-
-    final int fixedWidth = Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) );
-    final int gap = Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) );
-
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, new DateLabelCreator( dateFormat ), new GenericDateTickCalculator(), null, hideCut, fixedWidth );
-    return calendarAxisRenderer;
+  /**
+   * @see org.kalypso.chart.ext.base.axisrenderer.provider.AbstractGenericAxisRendererProvider#getTickCalculator()
+   */
+  @Override
+  public ITickCalculator getTickCalculator( )
+  {
+    return new GenericDateTickCalculator();
   }
 
 }

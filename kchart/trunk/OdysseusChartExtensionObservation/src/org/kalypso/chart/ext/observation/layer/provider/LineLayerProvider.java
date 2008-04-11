@@ -7,20 +7,21 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class LineLayerProvider extends AbstractLayerProvider
 {
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer();
+    return new TupleResultLineLayer( getDataContainer(), getStyle( "line", ILineStyle.class ), getStyle( "point", IPointStyle.class ) );
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( )
+  protected TupleResultDomainValueData<Calendar, Double> getDataContainer( )
   {
     final String href = getParameterContainer().getParameterValue( "href", null );
 

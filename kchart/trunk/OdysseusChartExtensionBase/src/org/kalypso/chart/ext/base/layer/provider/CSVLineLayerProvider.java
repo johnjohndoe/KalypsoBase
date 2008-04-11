@@ -16,10 +16,11 @@ import org.kalypso.chart.ext.base.layer.DefaultLineLayer;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
@@ -32,13 +33,13 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( URL context ) throws ConfigurationException
   {
-    return new DefaultLineLayer();
+    return new DefaultLineLayer( getDataContainer(), getStyle( "line", ILineStyle.class ), getStyle( "point", IPointStyle.class ) );
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public IDataContainer getDataContainer( ) throws ConfigurationException
+  public AbstractDomainValueFileData getDataContainer( ) throws ConfigurationException
   {
     final AbstractDomainValueFileData data = new AbstractDomainValueFileData()
     {

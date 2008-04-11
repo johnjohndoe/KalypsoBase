@@ -56,9 +56,9 @@ import de.openali.odysseus.chart.factory.config.exception.ConfigurationException
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author Gernot Belger
@@ -69,18 +69,17 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer getLayer( final URL context )
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new TupleResultLineLayer();
+    return new TupleResultLineLayer( getDataContainer(), getStyle( "line", ILineStyle.class ), getStyle( "point", IPointStyle.class ) );
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
   @SuppressWarnings("unchecked")
-  public IDataContainer getDataContainer( ) throws ConfigurationException
+  public TupleResultDomainValueData< ? , ? > getDataContainer( ) throws ConfigurationException
   {
-    final IChartModel chartModel = getChartModel();
 
     final IParameterContainer pc = getParameterContainer();
 

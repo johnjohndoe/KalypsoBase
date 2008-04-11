@@ -20,25 +20,14 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
-import de.openali.odysseus.chartconfig.x010.AreaStyleType;
 import de.openali.odysseus.chartconfig.x010.AxisRendererType;
 import de.openali.odysseus.chartconfig.x010.AxisType;
 import de.openali.odysseus.chartconfig.x010.ChartType;
 import de.openali.odysseus.chartconfig.x010.LayerType;
-import de.openali.odysseus.chartconfig.x010.LineStyleType;
 import de.openali.odysseus.chartconfig.x010.MapperType;
-import de.openali.odysseus.chartconfig.x010.PointStyleType;
 import de.openali.odysseus.chartconfig.x010.ProviderType;
 import de.openali.odysseus.chartconfig.x010.ReferencingType;
 import de.openali.odysseus.chartconfig.x010.RoleReferencingType;
-import de.openali.odysseus.chartconfig.x010.StylesType;
-import de.openali.odysseus.chartconfig.x010.TextStyleType;
 import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x010.LayerType.Mappers;
 
@@ -52,15 +41,13 @@ public class ChartFactory
   /**
    * Keys for saving providers in chart elements
    */
-  public static String LAYER_PROVIDER_KEY = "org.kalypso.chart.factory.layerprovider";
+  public static String LAYER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.layerprovider";
 
-  public static String AXIS_PROVIDER_KEY = "org.kalypso.chart.factory.axisprovider";
+  public static String AXIS_PROVIDER_KEY = "de.openali.odysseus.factory.axisprovider";
 
-  public static String AXISRENDERER_PROVIDER_KEY = "org.kalypso.chart.factory.axisrendererprovider";
+  public static String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
 
-  public static String MAPPER_PROVIDER_KEY = "org.kalypso.chart.factory.mapperprovider";
-
-  public static String STYLE_KEY = "org.kalypso.chart.factory.style";
+  public static String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
 
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
@@ -95,21 +82,11 @@ public class ChartFactory
     model.setDescription( chartType.getDescription() );
 
     final Layers layers = chartType.getLayers();
-    final ReferencingType[] layerRefArray = layers.getLayerRefArray();
-    for( final ReferencingType layerRef : layerRefArray )
+    LayerType[] layerArray = layers.getLayerArray();
+    for( LayerType layerType : layerArray )
     {
-      final String ref = layerRef.getRef();
-      final LayerType layerType = (LayerType) rr.resolveReference( ref );
-      if( layerType != null )
-      {
-        addLayer( model, rr, context, layerType, extLoader );
-      }
-      else
-      {
-        Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved: " + layerRef.getRef() );
-      }
+      addLayer( model, rr, context, layerType, extLoader );
     }
-
   }
 
   /**
@@ -127,7 +104,7 @@ public class ChartFactory
           final IMapperProvider mp = extLoader.getExtension( IMapperProvider.class, mpId );
           mp.init( mapperType );
           final IMapper mapper = mp.getMapper();
-          // Provider in Element setzen - fï¿½rs speichern benï¿½tigt
+          // Provider in Element setzen - fürs speichern benötigt
           mapper.setData( ChartFactory.AXIS_PROVIDER_KEY, mp );
           ar.addMapper( mapper );
         }
@@ -198,11 +175,10 @@ public class ChartFactory
                 {
                   final String arpId = rendererType.getProvider().getEpid();
                   final IAxisRendererProvider arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
-                  arp.init( rendererType );
+                  arp.init( rendererType, context );
                   try
                   {
                     axisRenderer = arp.getAxisRenderer();
-                    axisRenderer.setStyles( createStyleSet( rendererType.getStyles(), rr, context ) );
                     ar.setRenderer( axis.getIdentifier(), axisRenderer );
                     axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
                   }
@@ -291,10 +267,6 @@ public class ChartFactory
         icl.setVisible( layerType.getVisible() );
         // saving the provider into the layer so it can be reused to save changed charts
         icl.setData( LAYER_PROVIDER_KEY, provider );
-        // setting the data container
-        icl.setDataContainer( provider.getDataContainer() );
-        // setting styles
-        icl.setStyles( createStyleSet( layerType.getStyles(), rr, context ) );
         // initialize layer
         icl.init();
 
@@ -321,45 +293,4 @@ public class ChartFactory
     }
   }
 
-  private static IStyleSet createStyleSet( StylesType styles, IReferenceResolver rr, URL context )
-  {
-    // Styles erzeugen
-    IStyleSet styleSet = new StyleSet();
-    if( styles != null )
-    {
-      RoleReferencingType[] asArray = styles.getAreaStyleRefArray();
-      for( RoleReferencingType rrt : asArray )
-      {
-        AreaStyleType ast = (AreaStyleType) rr.resolveReference( rrt.getRef() );
-        IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
-        as.setData( STYLE_KEY, ast );
-        styleSet.addStyle( rrt.getRole(), as );
-      }
-      RoleReferencingType[] psArray = styles.getPointStyleRefArray();
-      for( RoleReferencingType rrt : psArray )
-      {
-        PointStyleType pst = (PointStyleType) rr.resolveReference( rrt.getRef() );
-        IPointStyle ps = StyleFactory.createPointStyle( pst, context );
-        ps.setData( STYLE_KEY, pst );
-        styleSet.addStyle( rrt.getRole(), ps );
-      }
-      RoleReferencingType[] lsArray = styles.getLineStyleRefArray();
-      for( RoleReferencingType rrt : lsArray )
-      {
-        LineStyleType lst = (LineStyleType) rr.resolveReference( rrt.getRef() );
-        ILineStyle ls = StyleFactory.createLineStyle( lst );
-        ls.setData( STYLE_KEY, lst );
-        styleSet.addStyle( rrt.getRole(), ls );
-      }
-      RoleReferencingType[] tsArray = styles.getTextStyleRefArray();
-      for( RoleReferencingType rrt : tsArray )
-      {
-        TextStyleType tst = (TextStyleType) rr.resolveReference( rrt.getRef() );
-        ITextStyle ts = StyleFactory.createTextStyle( tst );
-        ts.setData( STYLE_KEY, tst );
-        styleSet.addStyle( rrt.getRole(), ts );
-      }
-    }
-    return styleSet;
-  }
 }

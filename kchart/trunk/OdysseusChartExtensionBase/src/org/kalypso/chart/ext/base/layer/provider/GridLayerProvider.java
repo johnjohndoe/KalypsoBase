@@ -5,11 +5,10 @@ import java.net.URL;
 import org.kalypso.chart.ext.base.layer.GridLayer;
 import org.kalypso.chart.ext.base.layer.GridLayer.GridOrientation;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Provider for gauge data from O&M data; it's looking for a feature named "wasserstandsmessung", then tries to
@@ -29,6 +28,8 @@ public class GridLayerProvider extends AbstractLayerProvider
   public IChartLayer getLayer( URL context )
   {
     IChartLayer icl = null;
+
+    ILineStyle gridStyle = getStyle( "grid", ILineStyle.class );
 
     try
     {
@@ -54,7 +55,7 @@ public class GridLayerProvider extends AbstractLayerProvider
         go = GridOrientation.BOTH;
       }
 
-      icl = new GridLayer( go );
+      icl = new GridLayer( go, gridStyle );
     }
 
     catch( final Exception e )
@@ -63,14 +64,6 @@ public class GridLayerProvider extends AbstractLayerProvider
       e.printStackTrace();
     }
     return icl;
-  }
-
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
-  public IDataContainer getDataContainer( ) throws ConfigurationException
-  {
-    return null;
   }
 
 }
