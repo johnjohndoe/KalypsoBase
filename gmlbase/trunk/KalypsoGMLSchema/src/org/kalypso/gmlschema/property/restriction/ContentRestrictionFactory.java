@@ -108,7 +108,6 @@ public class ContentRestrictionFactory
       result.add( new MinExclusiveRestriction( getMaxAsDouble( restriction.getMinExclusiveArray() ) ) );
 
     // fraction digits
-
     if( restriction.getFractionDigitsArray().length > 0 )
       result.add( new FractionDigitRestriction( getMaxAsInt( restriction.getFractionDigitsArray() ) ) );
 

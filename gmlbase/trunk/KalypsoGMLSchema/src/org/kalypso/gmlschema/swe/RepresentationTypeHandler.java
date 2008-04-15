@@ -54,6 +54,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
+import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
@@ -204,7 +205,6 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
             }
             else if( "enumeration".equals( myNode.getLocalName() ) )
             {
-
               // key
               final NamedNodeMap attributes = myNode.getAttributes();
               final Node itmKey = attributes.getNamedItem( "value" );
@@ -246,6 +246,20 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
                 }
               }
             }// end if-else-if
+            else if( "fractionDigits".equals(myNode.getLocalName()) )
+            {
+              final NamedNodeMap attributes = myNode.getAttributes();
+              for( int a = 0; a < attributes.getLength(); a++ )
+              {
+                final Node n = attributes.item( a );
+                if( n instanceof AttrNSImpl )
+                {
+                  final AttrNSImpl attribute = (AttrNSImpl) n;
+                  final String value = attribute.getValue();
+                  myRestrictions.add( new FractionDigitRestriction( new Integer( value ) ) );
+                }
+              }
+            }
           } // endFor j
         } // endFor i
 
