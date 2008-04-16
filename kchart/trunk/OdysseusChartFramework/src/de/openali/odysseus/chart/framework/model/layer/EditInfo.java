@@ -6,6 +6,7 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 
 /**
  * @author Gernot Belger
+ * @author burtscher1
  */
 public class EditInfo
 {

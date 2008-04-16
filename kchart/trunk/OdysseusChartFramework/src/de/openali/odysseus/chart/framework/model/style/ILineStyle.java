@@ -7,7 +7,6 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
 public interface ILineStyle extends IStyle
 {
-
   public void setLineJoin( LINEJOIN join );
 
   public void setLineCap( LINECAP cap );
