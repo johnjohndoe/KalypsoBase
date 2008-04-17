@@ -128,13 +128,13 @@ public class ArrayChooserPage extends WizardPage
    * The constructor.
    * 
    * @param chooseables
-   *          Used as input for {@link ArrayContentProvider}
+   *            Used as input for {@link ArrayContentProvider}
    * @param pageName
-   *          The name of this page (internal use).
+   *            The name of this page (internal use).
    * @param title
-   *          The title is displayed in the title bar of the wizard window.
+   *            The title is displayed in the title bar of the wizard window.
    * @param titleImage
-   *          This image is displayed in the page.
+   *            This image is displayed in the page.
    */
   public ArrayChooserPage( final Object chooseables, final String pageName, final String title, final ImageDescriptor titleImage )
   {
@@ -145,20 +145,20 @@ public class ArrayChooserPage extends WizardPage
    * The constructor.
    * 
    * @param chooseables
-   *          Used as input for {@link ArrayContentProvider}
+   *            Used as input for {@link ArrayContentProvider}
    * @param selected
-   *          A list of objects from the chooseables-list, which should be preselected.
+   *            A list of objects from the chooseables-list, which should be preselected.
    * @param checked
-   *          A list of objects from the chooseables-list, which should be prechecked.
+   *            A list of objects from the chooseables-list, which should be prechecked.
    * @param numToSelect
-   *          This number specifies, how much of the objects are to be selected, before the page can continue. If 0, the
-   *          page will continue without having an object selected.
+   *            This number specifies, how much of the objects are to be selected, before the page can continue. If 0,
+   *            the page will continue without having an object selected.
    * @param pageName
-   *          The name of this page (internal use).
+   *            The name of this page (internal use).
    * @param title
-   *          The title is displayed in the title bar of the wizard window.
+   *            The title is displayed in the title bar of the wizard window.
    * @param titleImage
-   *          This image is displayed in the page.
+   *            This image is displayed in the page.
    */
   public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final String pageName, final String title, final ImageDescriptor titleImage )
   {
@@ -174,7 +174,7 @@ public class ArrayChooserPage extends WizardPage
    * This function sets a LabelProvider, that will be used generate the list names of the objects.
    * 
    * @param labelProvider
-   *          The new LabelProvider.
+   *            The new LabelProvider.
    */
   public void setLabelProvider( final IBaseLabelProvider labelProvider )
   {
@@ -262,13 +262,13 @@ public class ArrayChooserPage extends WizardPage
    * of all chooseables.
    * 
    * @param parent
-   *          The parent composite.
+   *            The parent composite.
    * @param viewer
-   *          The viewer, which will be manipulated from this button.
+   *            The viewer, which will be manipulated from this button.
    * @param select
-   *          The type of the created button.<br>
-   *          If true, a button which will select all chooseables, will be created.<br>
-   *          If false, a button which will unselect all chooseables, will be created.
+   *            The type of the created button.<br>
+   *            If true, a button which will select all chooseables, will be created.<br>
+   *            If false, a button which will unselect all chooseables, will be created.
    */
   private void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
   {
@@ -301,7 +301,7 @@ public class ArrayChooserPage extends WizardPage
    * list.
    * 
    * @param input
-   *          The new list of chooseables.
+   *            The new list of chooseables.
    */
   public void setInput( final Object input )
   {
@@ -316,8 +316,8 @@ public class ArrayChooserPage extends WizardPage
    * This function will check, if all requirements of this page are met.
    * 
    * @param firstTime
-   *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
-   *          will be checked, but no error-message will be displayed.
+   *            This parameter should be true, if the page calls the function the first time. If true, the finish-state
+   *            will be checked, but no error-message will be displayed.
    */
   protected void chkPageComplete( boolean firstTime )
   {
@@ -367,7 +367,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page. */
-    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage"+getName() );
+    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage" + getName() );
     if( section == null )
       return;
 
@@ -415,7 +415,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page in creating a new emtpy one, so that no old values will remain. */
-    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage"+getName() );
+    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage" + getName() );
 
     for( int i = 0; i < m_checked.length; i++ )
     {
