@@ -1,6 +1,8 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * 
@@ -20,15 +22,19 @@ public interface IAxis extends IMapper<Number, Integer>
    */
   public String getLabel( );
 
+  public void setLabel( String label );
+
   /**
    * @return axis position - left, right, top, bottom
    */
-  public IAxisConstants.POSITION getPosition( );
+  public POSITION getPosition( );
 
   /**
    * @return axis direction - positive or negative
    */
-  public IAxisConstants.DIRECTION getDirection( );
+  public DIRECTION getDirection( );
+
+  public void setDirection( DIRECTION dir );
 
   /** Same as getDirection() == NEGATIVE */
   public boolean isInverted( );

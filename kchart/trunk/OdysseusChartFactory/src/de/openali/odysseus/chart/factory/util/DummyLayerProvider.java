@@ -41,10 +41,13 @@
 package de.openali.odysseus.chart.factory.util;
 
 import java.net.URL;
+import java.util.Map;
 
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
@@ -61,11 +64,12 @@ public class DummyLayerProvider extends AbstractLayerProvider
   }
 
   /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#init(de.openali.odysseus.chart.framework.model.IChartModel,
+   *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet,
+   *      de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL)
    */
-  @SuppressWarnings("unchecked")
-  public IDataContainer getDataContainer( )
+  public void init( IChartModel model, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet, IParameterContainer parameters, URL context )
   {
-    return null;
+    // nothing to do
   }
 }

@@ -63,19 +63,18 @@ import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.OvalMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.PolygonMarker;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chartconfig.x010.AreaStyleType;
-import de.openali.odysseus.chartconfig.x010.ColorFillType;
-import de.openali.odysseus.chartconfig.x010.FillType;
-import de.openali.odysseus.chartconfig.x010.ImageFillType;
-import de.openali.odysseus.chartconfig.x010.ImageMarkerType;
-import de.openali.odysseus.chartconfig.x010.LineStyleType;
-import de.openali.odysseus.chartconfig.x010.PointStyleType;
-import de.openali.odysseus.chartconfig.x010.PointType;
-import de.openali.odysseus.chartconfig.x010.PolygonMarkerType;
-import de.openali.odysseus.chartconfig.x010.StrokeType;
-import de.openali.odysseus.chartconfig.x010.TextStyleType;
-import de.openali.odysseus.chartconfig.x010.FontStyleType.Enum;
-import de.openali.odysseus.chartconfig.x010.StylesDocument.Styles;
+import de.openali.odysseus.chartconfig.x020.AreaStyleType;
+import de.openali.odysseus.chartconfig.x020.ColorFillType;
+import de.openali.odysseus.chartconfig.x020.FillType;
+import de.openali.odysseus.chartconfig.x020.ImageFillType;
+import de.openali.odysseus.chartconfig.x020.ImageMarkerType;
+import de.openali.odysseus.chartconfig.x020.LineStyleType;
+import de.openali.odysseus.chartconfig.x020.PointStyleType;
+import de.openali.odysseus.chartconfig.x020.PointType;
+import de.openali.odysseus.chartconfig.x020.PolygonMarkerType;
+import de.openali.odysseus.chartconfig.x020.StrokeType;
+import de.openali.odysseus.chartconfig.x020.TextStyleType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author alibu
@@ -419,7 +418,7 @@ public class StyleFactory
     // font style
     if( tst.isSetFontStyle() )
     {
-      Enum configfontStyle = tst.getFontStyle();
+      de.openali.odysseus.chartconfig.x020.FontStyleType.Enum configfontStyle = tst.getFontStyle();
       if( configfontStyle.toString().equals( FONTSTYLE.ITALIC.toString() ) )
       {
         style.setFontStyle( FONTSTYLE.ITALIC );
@@ -437,7 +436,7 @@ public class StyleFactory
     // font weight
     if( tst.isSetFontWeight() )
     {
-      de.openali.odysseus.chartconfig.x010.FontWeightType.Enum fontWeight = tst.getFontWeight();
+      de.openali.odysseus.chartconfig.x020.FontWeightType.Enum fontWeight = tst.getFontWeight();
       if( fontWeight.toString().equals( FONTWEIGHT.BOLD.toString() ) )
       {
         style.setWeight( FONTWEIGHT.BOLD );

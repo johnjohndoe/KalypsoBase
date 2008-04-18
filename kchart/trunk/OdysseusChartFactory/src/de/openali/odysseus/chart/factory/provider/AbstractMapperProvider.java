@@ -1,42 +1,29 @@
 package de.openali.odysseus.chart.factory.provider;
 
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
-import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chartconfig.x010.MapperType;
+import java.net.URL;
 
-public abstract class AbstractMapperProvider implements IMapperProvider
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+
+public abstract class AbstractMapperProvider extends AbstractChartComponentProvider implements IMapperProvider
 {
 
-  private MapperType m_mt;
-
-  private IParameterContainer m_pc;
-
-  public void init( MapperType mt )
+  @Override
+  public void init( IChartModel model, String id, IParameterContainer parameters, URL context )
   {
-    m_mt = mt;
-    m_pc = ChartFactoryUtilities.createXmlbeansParameterContainer( m_mt.getId(), m_mt.getProvider() );
+    super.init( model, id, parameters, context );
   }
 
-  public IParameterContainer getParameterContainer( )
-  {
-    return m_pc;
-  }
-
-  public MapperType getMapperType( )
-  {
-    return m_mt;
-  }
-
-  /**
-   * * default behaviour: return original xml type; implement, if changes shall be saved
-   * 
-   * @see org.kalypso.chart.factory.provider.IMapperProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IMapper)
-   */
-  @SuppressWarnings("unchecked")
-  public MapperType getXMLType( IMapper mapper )
-  {
-    return m_mt;
-  }
+// /**
+// * * default behaviour: return original xml type; implement, if changes shall be saved
+// *
+// * @see
+// org.kalypso.chart.factory.provider.IMapperProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IMapper)
+// */
+// @SuppressWarnings("unchecked")
+// public MapperType getXMLType( IMapper mapper )
+// {
+// return m_mt;
+// }
 
 }

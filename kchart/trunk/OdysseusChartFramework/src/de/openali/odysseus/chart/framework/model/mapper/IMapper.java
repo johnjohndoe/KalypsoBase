@@ -10,13 +10,14 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
  */
 public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEventListener>
 {
+
   /**
    * @return the unique identifier
    */
-  public String getIdentifier( );
+  public String getId( );
 
   /**
-   * @return DataClass which is understood by this axis
+   * @return DataClass which is understood by this mapper
    */
   public Class< ? > getDataClass( );
 

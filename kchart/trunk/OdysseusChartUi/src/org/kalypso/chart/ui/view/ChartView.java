@@ -76,7 +76,7 @@ import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chartconfig.x010.ChartType;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
  * @author Thomas Jung

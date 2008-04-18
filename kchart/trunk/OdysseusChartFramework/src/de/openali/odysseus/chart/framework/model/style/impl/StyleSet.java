@@ -26,23 +26,27 @@ public class StyleSet implements IStyleSet
     IStyle style = m_styleMap.get( id );
     if( style == null )
     {
-      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for id '" + id + "'. Needed " + styleClass + ". Returning default style" );
+      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for id '" + id + "'. Need " + styleClass + ". Returning default style and saving it to style set." );
       T myStyle = StyleUtils.getDefaultStyle( styleClass );
       m_styleMap.put( id, myStyle );
       return myStyle;
     }
 
-    T castedStyle = null;
-    try
+    // check if this is the correct style type
+
+    Class< ? extends IStyle> myStyleClass = style.getClass();
+
+    if( styleClass.isAssignableFrom( myStyleClass ) )
     {
-      castedStyle = (T) style;
+      return (T) style;
     }
-    catch( ClassCastException e )
+    else
     {
-      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "Wrong style type for id '" + id + "'. Expected " + styleClass + ", got " + style.getClass() + ". Using default style" );
+      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "Wrong style type for id '" + id + "'. Expected " + styleClass + ", got " + style.getClass()
+          + ". Returning default style but NOT SAVING it to style set." );
       return StyleUtils.getDefaultStyle( styleClass );
     }
-    return castedStyle;
+
   }
 
   public void dispose( )

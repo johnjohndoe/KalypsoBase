@@ -1,152 +1,67 @@
 package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-import de.openali.odysseus.chart.factory.config.StyleFactory;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
-import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
-import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chartconfig.x010.LayerType;
-import de.openali.odysseus.chartconfig.x010.RoleReferencingType;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
-public abstract class AbstractLayerProvider implements ILayerProvider
+public abstract class AbstractLayerProvider extends AbstractChartComponentProvider implements ILayerProvider
 {
-  private LayerType m_lt;
 
-  private IChartModel m_model;
+  private Map<String, String> m_mapperMap;
 
-  private IParameterContainer m_pc;
+  private String m_domainAxisId;
 
-  private URL m_context;
+  private String m_targetAxisId;
 
-  private Map<String, IStyle> m_styleMap;
-
-  private HashMap<String, IMapper> m_mapperMap;
+  private IStyleSet m_styleSet;
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#init(org.kalypso.swtchart.chart.ChartView,
-   *      org.ksp.chart.configuration.LayerType)
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#init(de.openali.odysseus.chart.framework.model.IChartModel,
+   *      java.lang.String, de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL,
+   *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet)
    */
-  public void init( final IChartModel model, final LayerType lt, final URL context )
+  public void init( IChartModel model, String id, IParameterContainer parameters, URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet )
   {
-    m_lt = lt;
-    m_model = model;
-    m_pc = ChartFactoryUtilities.createXmlbeansParameterContainer( m_lt.getId(), m_lt.getProvider() );
-    m_context = context;
-
-    prepareStyles();
-    prepareMappers();
-
+    super.init( model, id, parameters, context );
+    m_domainAxisId = domainAxisId;
+    m_targetAxisId = targetAxisId;
+    m_mapperMap = mapperMap;
+    m_styleSet = styleSet;
   }
 
-  /**
-   * saves all referenced Mappers in a map; if the mapper is not found, null is saved
-   */
-  private void prepareMappers( )
-  {
-    m_mapperMap = new HashMap<String, IMapper>();
-    RoleReferencingType[] mapperRefArray = getLayerType().getMappers().getMapperRefArray();
-    for( RoleReferencingType rrt : mapperRefArray )
-    {
-      String id = rrt.getRef();
-      String role = rrt.getRole();
-      IMapper< ? , ? > mapper = getChartModel().getMapperRegistry().getMapper( id );
-      m_mapperMap.put( role, mapper );
-    }
-  }
-
-  /**
-   * saves all referenced styles in a map; if the mapper is not found, null is saved
-   */
-  private void prepareStyles( )
-  {
-    m_styleMap = StyleFactory.createStyleMap( getLayerType().getStyles(), getContext() );
-  }
-
-  /**
-   * default behaviour: return original xml type; implement, if changes shall be saved
-   * 
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayerType()
-   */
-  public LayerType getXMLType( IChartLayer layer )
-  {
-    LayerType lt = (LayerType) m_lt.copy();
-    lt.setVisible( layer.isVisible() );
-    return lt;
-  }
-
-  public IChartModel getChartModel( )
-  {
-    return m_model;
-  }
-
-  public IParameterContainer getParameterContainer( )
-  {
-    return m_pc;
-  }
-
-  private LayerType getLayerType( )
-  {
-    return m_lt;
-  }
-
-  protected URL getContext( )
-  {
-    return m_context;
-  }
-
-  protected String getId( )
-  {
-    return m_lt.getId();
-  }
+// /**
+// * default behaviour: return original xml type; implement, if changes shall be saved
+// *
+// * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayerType()
+// */
+// public LayerType getXMLType( IChartLayer layer )
+// {
+// LayerType lt = (LayerType) m_lt.copy();
+// lt.setVisible( layer.isVisible() );
+// return lt;
+// }
 
   protected String getDomainAxisId( )
   {
-    return getLayerType().getMappers().getDomainAxisRef().getRef();
+    return m_domainAxisId;
   }
 
   protected String getTargetAxisId( )
   {
-    return getLayerType().getMappers().getTargetAxisRef().getRef();
+    return m_targetAxisId;
   }
 
-  /**
-   * Helper method to get styles referenced by a role in xml config; if no style is defined for a role, a default style
-   * is returned
-   * 
-   * @param role
-   *            role with which the concrete style is identifiable in the xml layer element (e.g. "line")
-   * @param clazz
-   *            class of style (e.g. ILineStyle.class)
-   */
-  protected <T extends IStyle> T getStyle( String role, Class<T> clazz )
+  protected IStyleSet getStyleSet( )
   {
-    IStyle style = m_styleMap.get( role );
-    if( style != null && clazz.isAssignableFrom( style.getClass() ) )
-      return (T) style;
-    else
-    {
-      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for role '" + role + "'. Needed " + clazz + ". Returning default style" );
-      return StyleUtils.getDefaultStyle( clazz );
-    }
+    return m_styleSet;
   }
 
-  /**
-   * Helper method to get mappers referenced by a role in xml config; if the mapper can not be found, null is returned
-   * 
-   * @param role
-   *            role with which the concrete mapper is identifiable in the xml layer element (e.g. "line")
-   */
-  protected IMapper getMapper( String role )
+  protected Map<String, String> getMapperMap( )
   {
-    return m_mapperMap.get( role );
+    return m_mapperMap;
   }
 
 }

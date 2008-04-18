@@ -19,18 +19,18 @@ import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chartconfig.x010.AreaStyleDocument;
-import de.openali.odysseus.chartconfig.x010.AxisDocument;
-import de.openali.odysseus.chartconfig.x010.AxisRendererDocument;
-import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
-import de.openali.odysseus.chartconfig.x010.ChartDocument;
-import de.openali.odysseus.chartconfig.x010.ChartType;
-import de.openali.odysseus.chartconfig.x010.LayerDocument;
-import de.openali.odysseus.chartconfig.x010.LineStyleDocument;
-import de.openali.odysseus.chartconfig.x010.MapperDocument;
-import de.openali.odysseus.chartconfig.x010.PointStyleDocument;
-import de.openali.odysseus.chartconfig.x010.TextStyleDocument;
+import de.openali.odysseus.chartconfig.x020.AreaStyleDocument;
+import de.openali.odysseus.chartconfig.x020.AxisDocument;
+import de.openali.odysseus.chartconfig.x020.AxisRendererDocument;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
+import de.openali.odysseus.chartconfig.x020.ChartDocument;
+import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.LayerDocument;
+import de.openali.odysseus.chartconfig.x020.LineStyleDocument;
+import de.openali.odysseus.chartconfig.x020.MapperDocument;
+import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
+import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
 
 /**
  * @author alibu
@@ -217,54 +217,56 @@ public class ChartConfigurationLoader implements IReferenceResolver
      */
 
     XmlObject obj = null;
-    if( node.getNodeName().equals( "Chart" ) )
+    String nodeName = node.getLocalName();
+
+    if( nodeName.equals( "Chart" ) )
     {
       final ChartDocument doc = ChartDocument.Factory.parse( node );
       obj = doc.getChart();
     }
-    else if( node.getNodeName().equals( "Layer" ) )
+    else if( nodeName.equals( "Layer" ) )
     {
       final LayerDocument doc = LayerDocument.Factory.parse( node );
       obj = doc.getLayer();
     }
-    else if( node.getNodeName().equals( "Axis" ) )
+    else if( nodeName.equals( "Axis" ) )
     {
       final AxisDocument doc = AxisDocument.Factory.parse( node );
       obj = doc.getAxis();
     }
-    else if( node.getNodeName().equals( "Mapper" ) )
+    else if( nodeName.equals( "Mapper" ) )
     {
       final MapperDocument doc = MapperDocument.Factory.parse( node );
       obj = doc.getMapper();
     }
-    else if( node.getNodeName().equals( "LineStyle" ) )
+    else if( nodeName.equals( "LineStyle" ) )
     {
       final LineStyleDocument doc = LineStyleDocument.Factory.parse( node );
       obj = doc.getLineStyle();
     }
-    else if( node.getNodeName().equals( "PointStyle" ) )
+    else if( nodeName.equals( "PointStyle" ) )
     {
       final PointStyleDocument doc = PointStyleDocument.Factory.parse( node );
       obj = doc.getPointStyle();
     }
-    else if( node.getNodeName().equals( "AreaStyle" ) )
+    else if( nodeName.equals( "AreaStyle" ) )
     {
       final AreaStyleDocument doc = AreaStyleDocument.Factory.parse( node );
       obj = doc.getAreaStyle();
     }
-    else if( node.getNodeName().equals( "TextStyle" ) )
+    else if( nodeName.equals( "TextStyle" ) )
     {
       final TextStyleDocument doc = TextStyleDocument.Factory.parse( node );
       obj = doc.getTextStyle();
     }
-    else if( node.getNodeName().equals( "AxisRenderer" ) )
+    else if( nodeName.equals( "AxisRenderer" ) )
     {
       final AxisRendererDocument doc = AxisRendererDocument.Factory.parse( node );
       obj = doc.getAxisRenderer();
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + node.getNodeName() );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName );
     }
     return obj;
   }
@@ -273,7 +275,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   {
     final XmlOptions options = new XmlOptions();
     final Map<String, String> prefixes = new HashMap<String, String>();
-    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.1.0/", "" );
+    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.2.0/", "" );
     options.setSaveSuggestedPrefixes( prefixes );
     options.setSavePrettyPrint();
     options.setCharacterEncoding( charset );

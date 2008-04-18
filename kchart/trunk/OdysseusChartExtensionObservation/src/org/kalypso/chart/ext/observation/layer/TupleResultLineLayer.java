@@ -7,12 +7,13 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.base.layer.AbstractLineLayer;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -94,7 +95,10 @@ public class TupleResultLineLayer extends AbstractLineLayer
    */
   public IDataRange<Number> getDomainRange( )
   {
-    return m_data.getDomainRange();
+    IDataRange dataRange = m_data.getDomainRange();
+    IDataOperator dop = getDomainAxis().getDataOperator( dataRange.getMin().getClass() );
+    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
+    return numRange;
   }
 
   /**
@@ -102,7 +106,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
    */
   public IDataRange<Number> getTargetRange( )
   {
-    return m_data.getDomainRange();
+    IDataRange dataRange = m_data.getTargetRange();
+    IDataOperator dop = getTargetAxis().getDataOperator( dataRange.getMin().getClass() );
+    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
+    return numRange;
   }
-
 }

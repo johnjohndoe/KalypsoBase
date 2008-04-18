@@ -40,30 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
-import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
-import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chartconfig.x010.AxisRendererType;
-import de.openali.odysseus.chartconfig.x010.AxisType;
-import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
-import de.openali.odysseus.chartconfig.x010.ChartType;
-import de.openali.odysseus.chartconfig.x010.LayerType;
-import de.openali.odysseus.chartconfig.x010.MapperType;
-import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
-import de.openali.odysseus.chartconfig.x010.ChartType.Mappers;
-import de.openali.odysseus.chartconfig.x010.ChartType.Renderers;
+import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
+import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
+import de.openali.odysseus.chartconfig.x020.AxisRendererType;
+import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
+import de.openali.odysseus.chartconfig.x020.AxisType;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
+import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.MapperType;
+import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
+import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
+import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 
 /**
  * saves a chart to an XML document
@@ -96,18 +99,57 @@ public class ChartConfigurationSaver
     return ccd;
   }
 
+  /**
+   * saves axes with current range
+   */
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
     final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
-      axisTypes.put( axis.getIdentifier(), provider.getXMLType( axis ) );
+      AxisType at = (AxisType) axis.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      if( at != null )
+      {
+
+        final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+        // only set new range
+        if( at.isSetDateRange() )
+        {
+          IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
+          AxisDateRangeType configRange = at.getDateRange();
+          IDataRange<Number> numericRange = axis.getNumericRange();
+          configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
+          configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+        }
+        else if( at.isSetDurationRange() )
+        {
+          // TODO: what to do now? either change to date range or leave range as it was
+        }
+        else if( at.isSetNumberRange() )
+        {
+          AxisNumberRangeType configRange = at.getNumberRange();
+          IDataRange<Number> numericRange = axis.getNumericRange();
+          configRange.setMinValue( numericRange.getMin().doubleValue() );
+          configRange.setMaxValue( numericRange.getMax().doubleValue() );
+        }
+        else if( at.isSetStringRange() )
+        {
+          AxisStringRangeType configRange = at.getStringRange();
+          IDataRange<Number> numericRange = axis.getNumericRange();
+          configRange.setMinValue( numericRange.getMin().doubleValue() );
+          configRange.setMaxValue( numericRange.getMax().doubleValue() );
+        }
+
+        axisTypes.put( axis.getId(), at );
+      }
     }
     return axisTypes;
   }
 
+  /**
+   * saves renderers without applying any changes
+   */
   private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
   {
     final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
@@ -117,13 +159,20 @@ public class ChartConfigurationSaver
       final IAxisRenderer renderer = registry.getRenderer( axis );
       if( renderer != null )
       {
-        final IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer.getData( ChartFactory.AXISRENDERER_PROVIDER_KEY );
-        axisRendererTypes.put( renderer.getId(), axisRendererProvider.getXMLType( renderer ) );
+        AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+        if( art != null )
+        {
+          // everything stays as it was
+          axisRendererTypes.put( renderer.getId(), art );
+        }
       }
     }
     return axisRendererTypes;
   }
 
+  /**
+   * saves mappers without applying any changes
+   */
   @SuppressWarnings("unchecked")
   private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
@@ -131,21 +180,34 @@ public class ChartConfigurationSaver
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
-      final IMapperProvider provider = (IMapperProvider) mapper.getData( ChartFactory.MAPPER_PROVIDER_KEY );
-      mapperTypes.put( mapper.getIdentifier(), provider.getXMLType( mapper ) );
+      MapperType mt = (MapperType) mapper.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      if( mt != null )
+      {
+        // everything stays as it was
+        mapperTypes.put( mapper.getId(), mt );
+      }
     }
     return mapperTypes;
   }
 
+  /**
+   * saves layers according to current order and sets current visibilty
+   */
   private static Map<String, LayerType> extractLayers( final ILayerManager manager )
   {
     final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
     for( final IChartLayer layer : manager.getLayers() )
     {
-      final ILayerProvider provider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
-      layerTypes.put( layer.getId(), provider.getXMLType( layer ) );
+      LayerType lt = (LayerType) layer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      if( lt != null )
+      {
+        // set layer visibility
+        lt.setVisible( layer.isVisible() );
+        // everything else stays as it was
+        layerTypes.put( layer.getId(), lt );
+      }
+
     }
     return layerTypes;
   }
-
 }
