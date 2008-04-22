@@ -97,7 +97,6 @@ import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.dialogs.OrganisePrognosesDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.xml.sax.InputSource;
 
 /**
  * @author belger
@@ -126,15 +125,13 @@ public class PrognosePanel
 
   private Model m_model;
 
-
   public PrognosePanel( final URL modellistLocation )
   {
     m_location = modellistLocation;
 
     try
     {
-      final InputSource inputSource = new InputSource( modellistLocation.openStream() );
-      m_modellist = (Modellist)JC.createUnmarshaller().unmarshal( inputSource );
+      m_modellist = (Modellist) JC.createUnmarshaller().unmarshal( m_location );
     }
     catch( final Exception e )
     {
@@ -144,7 +141,7 @@ public class PrognosePanel
     }
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_labelProvider.dispose();
     m_fontUtils.dispose();
@@ -159,10 +156,10 @@ public class PrognosePanel
     m_control = new Composite( parent, SWT.NONE );
 
     final GridLayout gridLayout = new GridLayout( 2, false );
-    //    gridLayout.horizontalSpacing = 20;
-    //    gridLayout.verticalSpacing = 20;
-    //    gridLayout.marginHeight = 20;
-    //    gridLayout.marginWidth = 20;
+    // gridLayout.horizontalSpacing = 20;
+    // gridLayout.verticalSpacing = 20;
+    // gridLayout.marginHeight = 20;
+    // gridLayout.marginWidth = 20;
     m_control.setLayout( gridLayout );
 
     if( m_modellist == null )
@@ -184,15 +181,14 @@ public class PrognosePanel
     final Label headingLabel = new Label( m_control, SWT.SINGLE );
     final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false, 2, 2 );
     headingLabel.setLayoutData( headingGridData );
-    final Font headingFont = m_fontUtils.createChangedFontData( headingLabel.getFont().getFontData(), 10, SWT.BOLD,
-        headingLabel.getDisplay() );
+    final Font headingFont = m_fontUtils.createChangedFontData( headingLabel.getFont().getFontData(), 10, SWT.BOLD, headingLabel.getDisplay() );
     headingLabel.setFont( headingFont );
     headingLabel.setBackground( background );
     headingLabel.setText( "Einzugsgebiet:" );
 
-    ////////////////
+    // //////////////
     // LEFT PANEL //
-    ////////////////
+    // //////////////
     final Composite leftPanel = new Composite( m_control, SWT.NO_MERGE_PAINTS );
     leftPanel.setLayout( new GridLayout() );
     leftPanel.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
@@ -246,17 +242,17 @@ public class PrognosePanel
       }
     } );
 
-    ////////////////
+    // //////////////
     // RIGHT SIDE //
-    ///////////////
+    // /////////////
     m_imageLabel = new Label( m_control, SWT.NONE );
     final GridData imageGridData = new GridData( GridData.HORIZONTAL_ALIGN_CENTER );
     imageGridData.verticalSpan = 2;
     m_imageLabel.setLayoutData( imageGridData );
 
-    //////////////
+    // ////////////
     // BCE-LOGO //
-    //////////////
+    // ////////////
     final GridData fillGridData = new GridData( GridData.FILL_BOTH );
     fillGridData.horizontalSpan = 2;
     fillGridData.grabExcessVerticalSpace = true;
@@ -264,21 +260,20 @@ public class PrognosePanel
     final Label fillLabel = new Label( m_control, SWT.NONE );
     fillLabel.setLayoutData( fillGridData );
     fillLabel.setBackground( background );
-    
+
     final GridData logoGridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
     logoGridData.horizontalSpan = 2;
     logoGridData.grabExcessVerticalSpace = true;
     createImageLabel( m_modellist.getLogoImage(), m_control, SWT.NONE, logoGridData, display );
 
-    //////////////////////////
+    // ////////////////////////
     // Liste initialisieren //
-    //////////////////////////
+    // ////////////////////////
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Modellist.Model model = (Model)( (IStructuredSelection)event.getSelection() )
-            .getFirstElement();
+        final Modellist.Model model = (Model) ((IStructuredSelection) event.getSelection()).getFirstElement();
 
         setModel( model );
       }
@@ -291,8 +286,7 @@ public class PrognosePanel
     return m_control;
   }
 
-  private Label createImageLabel( final ImageLabelType imageType, final Composite parent, final int style,
-      final Object layoutData, final Display display )
+  private Label createImageLabel( final ImageLabelType imageType, final Composite parent, final int style, final Object layoutData, final Display display )
   {
     final Label label = new Label( parent, style );
     label.setLayoutData( layoutData );
@@ -364,11 +358,11 @@ public class PrognosePanel
           m_imageHash.put( model, imageData );
         }
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -399,13 +393,11 @@ public class PrognosePanel
         final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
 
         if( serverRoot == null )
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-              "Kein serverseitiges Modellverzeichnis definiert. Prognose kann nicht gestartet werden.", null ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Kein serverseitiges Modellverzeichnis definiert. Prognose kann nicht gestartet werden.", null ) );
 
         final File serverProject = new File( serverRoot, modelName );
         if( !serverProject.exists() )
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-              "Servermodell existiert nicht! Prognose kann nicht gestartet werden.", null ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Servermodell existiert nicht! Prognose kann nicht gestartet werden.", null ) );
 
         final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
         synchronizer.updateLocal( monitor );
@@ -415,8 +407,7 @@ public class PrognosePanel
     final IStatus status = RunnableContextHelper.execute( window, false, true, operation );
     if( !status.isOK() )
     {
-      ErrorDialog
-          .openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
+      ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
       return null;
     }
 
