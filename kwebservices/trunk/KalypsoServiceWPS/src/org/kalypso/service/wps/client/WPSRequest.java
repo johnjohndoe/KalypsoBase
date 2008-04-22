@@ -118,12 +118,12 @@ public class WPSRequest
   /**
    * The worker, which provides this client with the required data.
    */
-  private IWPSDelegate m_delegate;
+  private final IWPSDelegate m_delegate;
 
   /**
    * After this period of time, the job gives up, waiting for a result of the service.
    */
-  private long m_timeout;
+  private final long m_timeout;
 
   /**
    * Necessary for the monitor update functinality. Stores the last updated value, to prevent, that the monitor is
@@ -139,7 +139,7 @@ public class WPSRequest
    * @param timeout
    *            After this period of time, the job gives up, waiting for a result of the service.
    */
-  public WPSRequest( IWPSDelegate delegate, long timeout )
+  public WPSRequest( final IWPSDelegate delegate, final long timeout )
   {
     /* No results so far. */
     m_references = null;
@@ -180,34 +180,39 @@ public class WPSRequest
         return canceled();
 
       /* Build the describe process request. */
-      List<CodeType> identifier = new LinkedList<CodeType>();
+      final List<CodeType> identifier = new LinkedList<CodeType>();
       identifier.add( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ) );
-      DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifier );
+      final DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
       /* Send the request. */
       monitor.setTaskName( "Frage nach der Prozess-Beschreibung ..." );
       Debug.println( "Asking for a process describtion ..." );
-      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), m_delegate.getServiceURL() );
+      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), m_delegate.getServiceURL() );
+
+      // TODO: error handling: our WPS service throws other types of exceptions
+      // (http://www.opengis.net/ows}ExceptionReport) than excpected
+      // here {http://www.opengeospatial.net/ows}ExceptionReport. We need to fix that... find out what is correct in
+      // respect to WPS specification
 
       /* Handle the response. */
       Debug.println( "Response:\n" + describeProcessResponse );
 
       /* Try to unmarshall. */
-      Object describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
+      final Object describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
       if( describeProcessObject instanceof ExceptionReport )
       {
-        ExceptionReport report = (ExceptionReport) describeProcessObject;
+        final ExceptionReport report = (ExceptionReport) describeProcessObject;
         return StatusUtilities.createErrorStatus( createErrorString( report ) );
       }
 
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
-      ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
+      final ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
 
       /* The descriptions of all processes from the process descriptions response. */
-      List<ProcessDescriptionType> processDescription = processDescriptions.getProcessDescription();
+      final List<ProcessDescriptionType> processDescription = processDescriptions.getProcessDescription();
 
       /* There could be only one description, because we have asked for a special one. */
-      ProcessDescriptionType description = processDescription.get( 0 );
+      final ProcessDescriptionType description = processDescription.get( 0 );
 
       /* Copy the data to the server. */
       monitor.setTaskName( "Kopiere auf den Server ..." );
@@ -222,13 +227,13 @@ public class WPSRequest
         return canceled();
 
       /* Get the input data. */
-      DataInputsType dataInputs = m_delegate.getDataInputs( description );
+      final DataInputsType dataInputs = m_delegate.getDataInputs( description );
 
       /* Get the output data. */
-      OutputDefinitionsType outputDefinitions = m_delegate.getOutputDefinitions( description );
+      final OutputDefinitionsType outputDefinitions = m_delegate.getOutputDefinitions( description );
 
       /* Build the execute request. */
-      Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ), dataInputs, outputDefinitions, true, true );
+      final Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ), dataInputs, outputDefinitions, true, true );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
@@ -238,7 +243,7 @@ public class WPSRequest
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
       Debug.println( "Start the simulation ..." );
-      String executeResponse = WPSUtilities.send( MarshallUtilities.marshall( execute ), m_delegate.getServiceURL() );
+      final String executeResponse = WPSUtilities.send( MarshallUtilities.marshall( execute ), m_delegate.getServiceURL() );
 
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponse );
@@ -246,15 +251,15 @@ public class WPSRequest
       if( executeResponse == null || executeResponse.length() == 0 )
         return StatusUtilities.createErrorStatus( "Got an empty response ..." );
 
-      Object response = MarshallUtilities.unmarshall( executeResponse );
+      final Object response = MarshallUtilities.unmarshall( executeResponse );
       if( response instanceof ExceptionReport )
         return StatusUtilities.createErrorStatus( createErrorString( (ExceptionReport) response ) );
 
-      JAXBElement<ExecuteResponseType> exResponse = (JAXBElement<ExecuteResponseType>) response;
-      ExecuteResponseType value = exResponse.getValue();
-      StatusType status = value.getStatus();
+      final JAXBElement<ExecuteResponseType> exResponse = (JAXBElement<ExecuteResponseType>) response;
+      final ExecuteResponseType value = exResponse.getValue();
+      final StatusType status = value.getStatus();
 
-      ProcessFailedType processFailed = status.getProcessFailed();
+      final ProcessFailedType processFailed = status.getProcessFailed();
       if( processFailed != null )
         return StatusUtilities.createErrorStatus( createErrorString( processFailed.getExceptionReport() ) );
 
@@ -264,12 +269,12 @@ public class WPSRequest
         return canceled();
 
       /* Retrieve the path to the status file of the process. */
-      String statusLocation = value.getStatusLocation();
+      final String statusLocation = value.getStatusLocation();
       if( statusLocation == null || statusLocation.length() == 0 )
         return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
 
       /* Poll all few seconds to update the status. */
-      boolean run = true;
+      final boolean run = true;
       long executed = 0;
       ExecuteResponseType exState = null;
 
@@ -292,7 +297,7 @@ public class WPSRequest
           return canceled();
 
         Debug.println( "Checking state file of the server ..." );
-        FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
+        final FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
 
         if( statusFile.exists() )
         {
@@ -306,13 +311,13 @@ public class WPSRequest
           {
             try
             {
-              String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
-              Object object = MarshallUtilities.unmarshall( xml );
+              final String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
+              final Object object = MarshallUtilities.unmarshall( xml );
               executeState = (JAXBElement<ExecuteResponseType>) object;
 
               success = true;
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               /* An error has occured while copying the file. */
               Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
@@ -336,7 +341,7 @@ public class WPSRequest
 
           /* Satus was read successfull. */
           exState = executeState.getValue();
-          StatusType state = exState.getStatus();
+          final StatusType state = exState.getStatus();
 
           if( state.getProcessAccepted() != null )
           {
@@ -345,14 +350,14 @@ public class WPSRequest
           }
           else if( state.getProcessFailed() != null )
           {
-            String messages = createErrorString( state.getProcessFailed().getExceptionReport() );
+            final String messages = createErrorString( state.getProcessFailed().getExceptionReport() );
             return StatusUtilities.createErrorStatus( messages );
           }
           else if( state.getProcessStarted() != null )
           {
-            ProcessStartedType processStarted = state.getProcessStarted();
-            String descriptionValue = processStarted.getValue();
-            BigInteger percent = processStarted.getPercentCompleted();
+            final ProcessStartedType processStarted = state.getProcessStarted();
+            final String descriptionValue = processStarted.getValue();
+            final BigInteger percent = processStarted.getPercentCompleted();
             int percentCompleted = 0;
             if( percent != null )
               percentCompleted = percent.intValue();
@@ -377,7 +382,7 @@ public class WPSRequest
       Debug.println( "Check the results ..." );
 
       /* Get the process outputs. */
-      net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+      final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
       if( processOutputs == null )
         return StatusUtilities.createErrorStatus( "The server responded without any outputs ..." );
 
@@ -390,7 +395,7 @@ public class WPSRequest
       monitor.worked( 100 );
       finish();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.println( "Error occured with the message: " + e.getLocalizedMessage() );
       return StatusUtilities.statusFromThrowable( e );
@@ -419,11 +424,11 @@ public class WPSRequest
    *            The exception report.
    * @return The error messages as one string.
    */
-  private String createErrorString( ExceptionReport exceptionReport )
+  private String createErrorString( final ExceptionReport exceptionReport )
   {
-    List<ExceptionType> exceptions = exceptionReport.getException();
+    final List<ExceptionType> exceptions = exceptionReport.getException();
     String messages = "";
-    for( ExceptionType exception : exceptions )
+    for( final ExceptionType exception : exceptions )
       messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exception.getExceptionText() + "\nLocator: " + exception.getLocator();
 
     return messages;
@@ -439,16 +444,16 @@ public class WPSRequest
    * @param monitor
    *            The progressmonitor to be updated.
    */
-  private void updateMonitor( Integer percentCompleted, String description, IProgressMonitor monitor )
+  private void updateMonitor( final Integer percentCompleted, final String description, final IProgressMonitor monitor )
   {
     /* If the already updated value is not equal to the new value. Update the monitor values. */
     if( !percentCompleted.equals( m_alreadyWorked ) )
     {
       /* Check, what is already updated here, and update the rest. */
-      Integer percentWorked = percentCompleted - m_alreadyWorked;
+      final Integer percentWorked = percentCompleted - m_alreadyWorked;
 
       /* Project percentWorked to the left monitor value. */
-      Integer realValue = MONITOR_SERVER_VALUE * percentWorked / 100;
+      final Integer realValue = MONITOR_SERVER_VALUE * percentWorked / 100;
       monitor.worked( realValue );
 
       m_alreadyWorked = percentCompleted;
@@ -471,14 +476,14 @@ public class WPSRequest
    * @param processOutputs
    *            The process outputs contains the info of the results, which are to be collected.
    */
-  private void collectOutput( ExecuteResponseType.ProcessOutputs processOutputs )
+  private void collectOutput( final ExecuteResponseType.ProcessOutputs processOutputs )
   {
     /* Collect all data for the client. */
-    List<IOValueType> ioValues = processOutputs.getOutput();
-    for( IOValueType ioValue : ioValues )
+    final List<IOValueType> ioValues = processOutputs.getOutput();
+    for( final IOValueType ioValue : ioValues )
     {
       /* Complex value reference. */
-      ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
+      final ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
       if( complexValueReference != null )
       {
         if( m_references == null )
@@ -490,11 +495,11 @@ public class WPSRequest
       }
 
       /* Literal value type. */
-      LiteralValueType literalValue = ioValue.getLiteralValue();
+      final LiteralValueType literalValue = ioValue.getLiteralValue();
       if( literalValue != null )
       {
-        String value = literalValue.getValue();
-        String dataType = literalValue.getDataType();
+        final String value = literalValue.getValue();
+        final String dataType = literalValue.getDataType();
 
         Object result = null;
         if( "string".equals( dataType ) )
@@ -518,7 +523,7 @@ public class WPSRequest
       }
 
       /* Bounding box type. */
-      BoundingBoxType boundingBox = ioValue.getBoundingBoxValue();
+      final BoundingBoxType boundingBox = ioValue.getBoundingBoxValue();
       if( boundingBox != null )
       {
         if( m_boundingBoxes == null )
@@ -530,7 +535,7 @@ public class WPSRequest
       }
 
       /* Complex value type. */
-      ComplexValueType complexValue = ioValue.getComplexValue();
+      final ComplexValueType complexValue = ioValue.getComplexValue();
       if( complexValue != null )
       {
         if( m_complexValues == null )

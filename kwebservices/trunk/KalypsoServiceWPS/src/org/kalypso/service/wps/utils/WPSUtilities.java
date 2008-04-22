@@ -89,23 +89,23 @@ public class WPSUtilities
    *            The address of the server.
    * @return The response as String.
    */
-  public static String send( String xml, String url ) throws CoreException, HttpException, IOException
+  public static String send( final String xml, final String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
 
     /* Build the method. */
-    PostMethod post = new PostMethod( url );
+    final PostMethod post = new PostMethod( url );
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
 
     /* Let the method handle the authentication, if any. */
     post.setDoAuthentication( true );
 
     /* Execute the method. */
-    int status = client.executeMethod( post );
+    final int status = client.executeMethod( post );
 
     /* Handle the response. */
     Debug.println( "Status code: " + String.valueOf( status ) );
@@ -113,7 +113,7 @@ public class WPSUtilities
     if( status != 200 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
 
-    InputStream is = post.getResponseBodyAsStream();
+    final InputStream is = post.getResponseBodyAsStream();
     if( is == null )
       return null;
 
@@ -127,7 +127,7 @@ public class WPSUtilities
    *            The simulations type id.
    * @return The simulation.
    */
-  public static ISimulation getSimulation( String simulationType ) throws OWSException
+  public static ISimulation getSimulation( final String simulationType ) throws OWSException
   {
     ISimulation simulation = null;
     try
@@ -142,10 +142,10 @@ public class WPSUtilities
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "The simulation \"" + simulationType + "\" is not available.", "" );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
     }
 
     Debug.println( "Found simulation \"" + simulationType + "\"." );
@@ -163,10 +163,10 @@ public class WPSUtilities
     {
       return KalypsoSimulationCoreExtensions.createSimulations();
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       Debug.println( "Error retrieving the simulations!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
     }
   }
 
@@ -183,15 +183,15 @@ public class WPSUtilities
    *            ----------------------------------------------------------------------------------<br>
    *            Result: http://informdss.bafg.de/webdav/results/xxx
    */
-  public static String convertInternalToClient( String serverUrl )
+  public static String convertInternalToClient( final String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
-    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
+    final String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
     if( clientProperty == null )
       return serverUrl;
 
-    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
-    String clientUrl = serverUrl.replace( serverProperty, clientProperty );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    final String clientUrl = serverUrl.replace( serverProperty, clientProperty );
     Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
 
     return clientUrl;
@@ -213,14 +213,14 @@ public class WPSUtilities
    * @param clientProperty
    *            The client URL.
    */
-  public static String convertInternalToServer( String clientUrl, String clientProperty )
+  public static String convertInternalToServer( final String clientUrl, final String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */
-    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
     if( serverProperty == null )
       return clientUrl;
 
-    String serverUrl = clientUrl.replace( clientProperty, serverProperty );
+    final String serverUrl = clientUrl.replace( clientProperty, serverProperty );
     Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
 
     return serverUrl;

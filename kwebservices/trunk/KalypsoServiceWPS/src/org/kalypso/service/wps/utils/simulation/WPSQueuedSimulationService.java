@@ -139,7 +139,7 @@ public class WPSQueuedSimulationService
   /**
    * URL to space, where the jobs can put their results, so that the client can read them.
    */
-  private String m_resultSpace;
+  private final String m_resultSpace;
 
   /**
    * The constructor.
@@ -254,7 +254,7 @@ public class WPSQueuedSimulationService
   {
     synchronized( m_threads )
     {
-      WPSSimulationThread thread = m_threads.get( jobID );
+      final WPSSimulationThread thread = m_threads.get( jobID );
       if( thread == null )
         throw new SimulationException( "Job not found: " + jobID, null );
 
@@ -288,19 +288,19 @@ public class WPSQueuedSimulationService
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
       tmpdir.deleteOnExit();
 
-      String resultDirectoryName = tmpdir.getName();
+      final String resultDirectoryName = tmpdir.getName();
 
       FileObject resultDir = null;
       try
       {
-        if( m_resultSpace == null )
-          throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
-
-        FileSystemManager manager = VFSUtilities.getManager();
-        resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
-        resultDir.createFolder();
+        if( m_resultSpace != null )
+        {
+          final FileSystemManager manager = VFSUtilities.getManager();
+          resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
+          resultDir.createFolder();
+        }
       }
-      catch( FileSystemException e )
+      catch( final FileSystemException e )
       {
         throw new SimulationException( "Error resolving the result directory for this job: " + e.getLocalizedMessage() + " ...", null );
       }
@@ -326,9 +326,8 @@ public class WPSQueuedSimulationService
       // count running thread
       int runningCount = 0;
       int waitingCount = 0;
-      for( final Iterator<WPSSimulationThread> jIt = m_threads.values().iterator(); jIt.hasNext(); )
+      for( final WPSSimulationThread cjt : m_threads.values() )
       {
-        final WPSSimulationThread cjt = jIt.next();
         if( cjt.isAlive() )
           runningCount++;
 
@@ -354,10 +353,8 @@ public class WPSQueuedSimulationService
       }
 
       // start one waiting job, if maximum is not reached
-      for( final Iterator<WPSSimulationThread> jIt = m_threads.values().iterator(); jIt.hasNext(); )
+      for( final WPSSimulationThread cjt : m_threads.values() )
       {
-        final WPSSimulationThread cjt = jIt.next();
-
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
         {
@@ -380,9 +377,8 @@ public class WPSQueuedSimulationService
   {
     synchronized( m_threads )
     {
-      for( final Iterator<WPSSimulationThread> iter = m_threads.values().iterator(); iter.hasNext(); )
+      for( final WPSSimulationThread cjt : m_threads.values() )
       {
-        final WPSSimulationThread cjt = iter.next();
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         disposeJob( jobInfo.getId() );
       }
@@ -397,7 +393,7 @@ public class WPSQueuedSimulationService
     return thread.copyCurrentResults();
   }
 
-  public String[] getCurrentResults( String jobID ) throws SimulationException
+  public String[] getCurrentResults( final String jobID ) throws SimulationException
   {
     final WPSSimulationThread thread = findJobThread( jobID );
     return thread.getCurrentResults();
@@ -405,7 +401,7 @@ public class WPSQueuedSimulationService
 
   private ProcessDescriptionType getProcessDescription( final String typeID )
   {
-    ProcessDescriptionType processDescription = m_descriptions.get( typeID );
+    final ProcessDescriptionType processDescription = m_descriptions.get( typeID );
     return processDescription;
   }
 
@@ -458,7 +454,7 @@ public class WPSQueuedSimulationService
     return namespaces;
   }
 
-  public FileObject getResultDir( String jobID ) throws SimulationException
+  public FileObject getResultDir( final String jobID ) throws SimulationException
   {
     return findJobThread( jobID ).getResultDir();
   }

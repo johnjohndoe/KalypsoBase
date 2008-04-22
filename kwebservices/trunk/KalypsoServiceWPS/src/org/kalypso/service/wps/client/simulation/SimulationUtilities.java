@@ -65,7 +65,6 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -107,33 +106,32 @@ public class SimulationUtilities
    *            The decription of the process.
    * @return The data input from the model spec in wps format.
    */
-  public static DataInputsType getDataInputs( IContainer calcCaseFolder, FileObject tmpServer, String inputClient, Modeldata data, ProcessDescriptionType description ) throws CoreException, FileSystemException
+  public static DataInputsType getDataInputs( final IContainer calcCaseFolder, final FileObject tmpServer, final String inputClient, final Modeldata data, final ProcessDescriptionType description ) throws CoreException, FileSystemException
   {
     // TODO At the moment only literals and references are supported from our model data.
     // The model data must be changed, in order to enable bounding boxes and complex values.
     // If this is done, the two new cases must be covered here as well.
 
     /* Need the filesystem manager. */
-    FileSystemManager fsManager = VFSUtilities.getManager();
+    final FileSystemManager fsManager = VFSUtilities.getManager();
 
     /* Get the list with the input. */
-    List<Input> inputList = data.getInput();
+    final List<Input> inputList = data.getInput();
 
     /* The storage for the input values. */
-    List<IOValueType> inputValues = new LinkedList<IOValueType>();
+    final List<IOValueType> inputValues = new LinkedList<IOValueType>();
 
     /* Get the input list. */
-    DataInputs dataInputs = description.getDataInputs();
-    List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+    final DataInputs dataInputs = description.getDataInputs();
+    final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
 
     /* Iterate over all inputs and build the data inputs for the execute request. */
-    IProject project = calcCaseFolder.getProject();
-    for( InputDescriptionType inputDescription : inputDescriptions )
+    for( final InputDescriptionType inputDescription : inputDescriptions )
     {
-      CodeType identifier = inputDescription.getIdentifier();
+      final CodeType identifier = inputDescription.getIdentifier();
 
       /* Check if the input is in our model data, too. */
-      Input input = findInput( identifier.getValue(), inputList );
+      final Input input = findInput( identifier.getValue(), inputList );
       if( input == null )
       {
         /* Check, if it is an optional one. */
@@ -147,10 +145,10 @@ public class SimulationUtilities
       }
 
       /* Input is here. */
-      String inputPath = input.getPath();
+      final String inputPath = input.getPath();
 
       /* Supported complex data type. */
-      SupportedComplexDataType complexData = inputDescription.getComplexData();
+      final SupportedComplexDataType complexData = inputDescription.getComplexData();
       if( complexData != null )
       {
         // TODO Add the complex value type here, how to decide when to use the reference and when the value?
@@ -162,10 +160,13 @@ public class SimulationUtilities
         if( url == null )
         {
           /* It is a local file resource. */
+          if( calcCaseFolder == null )
+            throw new CoreException( StatusUtilities.createErrorStatus( "Complext Data specified but no base folder given" ) );
 
           /* Alles relativ zum Projekt auflösen! */
-          IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-          IResource inputResource = baseresource.findMember( inputPath );
+          final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : calcCaseFolder.getProject();
+
+          final IResource inputResource = baseresource.findMember( inputPath );
           if( inputResource == null )
           {
             if( inputDescription.getMinimumOccurs().intValue() == 0 )
@@ -175,15 +176,22 @@ public class SimulationUtilities
           }
 
           /* Build the URL for this input. */
-          String relativePathTo = inputResource.getProjectRelativePath().toString();
-          FileObject destination = fsManager.resolveFile( tmpServer, relativePathTo );
+          final String relativePathTo = inputResource.getProjectRelativePath().toString();
+          final FileObject destination = fsManager.resolveFile( tmpServer, relativePathTo );
           url = destination.getURL();
         }
 
+        Debug.println( "Checking for server URL, where the input data can be copied ..." );
+        if( inputClient == null )
+        {
+          Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
+          throw new CoreException( StatusUtilities.createErrorStatus( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." ) );
+        }
+
         /* Build the complex value reference. */
-        CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-        ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm(), inputClient ), null, null, null );
-        IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
+        final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
+        final ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm(), inputClient ), null, null, null );
+        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
         /* Add the input. */
         inputValues.add( ioValue );
@@ -192,13 +200,13 @@ public class SimulationUtilities
       }
 
       /* Literal input type */
-      LiteralInputType literalInput = inputDescription.getLiteralData();
+      final LiteralInputType literalInput = inputDescription.getLiteralData();
       if( literalInput != null )
       {
         /* Build the literal value type. */
-        CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-        LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( inputPath, literalInput.getDataType().getValue(), null );
-        IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
+        final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
+        final LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( inputPath, literalInput.getDataType().getValue(), null );
+        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
 
         /* Add the input. */
         inputValues.add( ioValue );
@@ -207,7 +215,7 @@ public class SimulationUtilities
       }
 
       /* Supported CRSs type. */
-      SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
+      final SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
       if( supportedCRSsType != null )
       {
         // TODO Add supported CRSs type (bounding boxes).
@@ -227,25 +235,25 @@ public class SimulationUtilities
    *            The modeldata.
    * @return The output of the model spec in wps format.
    */
-  public static OutputDefinitionsType getOutputDefinitions( Modeldata data, ProcessDescriptionType description ) throws CoreException
+  public static OutputDefinitionsType getOutputDefinitions( final Modeldata data, final ProcessDescriptionType description ) throws CoreException
   {
     /* Get the list with the output. */
-    List<Output> outputList = data.getOutput();
+    final List<Output> outputList = data.getOutput();
 
     /* The storage for the output values. */
-    List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
+    final List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
 
     /* Get the output list. */
-    ProcessOutputs processOutputs = description.getProcessOutputs();
-    List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
+    final ProcessOutputs processOutputs = description.getProcessOutputs();
+    final List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
 
     /* Iterate over all outputs and build the data inputs for the execute request. */
-    for( OutputDescriptionType outputDescription : outputDescriptions )
+    for( final OutputDescriptionType outputDescription : outputDescriptions )
     {
-      CodeType identifier = outputDescription.getIdentifier();
+      final CodeType identifier = outputDescription.getIdentifier();
 
       /* Check if the output is in our model data, too. */
-      Output output = findOutput( identifier.getValue(), outputList );
+      final Output output = findOutput( identifier.getValue(), outputList );
 
       if( output == null )
       {
@@ -253,8 +261,8 @@ public class SimulationUtilities
         throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
       }
 
-      CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
-      OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
+      final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
+      final OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
 
       /* Add the output. */
       outputValues.add( outputDefinition );
@@ -268,12 +276,12 @@ public class SimulationUtilities
    * 
    * @return An URL, if the path is an URL (and additionally no file URL), otherwise null.
    */
-  public static URL isURL( String path )
+  public static URL isURL( final String path )
   {
     try
     {
       /* Check if it is an real URL. */
-      URL url = new URL( path );
+      final URL url = new URL( path );
 
       /* If it is a file URL, it is no remote URL. */
       if( url.getProtocol().equals( "file" ) )
@@ -287,7 +295,7 @@ public class SimulationUtilities
 
       return url;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       /* No need to give feedback on this error, because it was expected, if the path was no real URL. */
     }
@@ -307,11 +315,11 @@ public class SimulationUtilities
    *            The input of the model data.
    * @return The found input or null, if none is found for that ID.
    */
-  public static Input findInput( String ID, List<Input> inputList )
+  public static Input findInput( final String ID, final List<Input> inputList )
   {
     for( int i = 0; i < inputList.size(); i++ )
     {
-      Input input = inputList.get( i );
+      final Input input = inputList.get( i );
       if( input.getId().equals( ID ) )
         return input;
     }
@@ -328,11 +336,11 @@ public class SimulationUtilities
    *            The output of the model data.
    * @return The found output or null, if none is found for that ID.
    */
-  public static Output findOutput( String ID, List<Output> outputList )
+  public static Output findOutput( final String ID, final List<Output> outputList )
   {
     for( int i = 0; i < outputList.size(); i++ )
     {
-      Output output = outputList.get( i );
+      final Output output = outputList.get( i );
       if( output.getId().equals( ID ) )
         return output;
     }

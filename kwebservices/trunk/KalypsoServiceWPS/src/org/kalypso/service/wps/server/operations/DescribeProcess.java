@@ -91,7 +91,7 @@ public class DescribeProcess implements IOperation
   /**
    * @see org.kalypso.service.wps.operations.IOperation#executeOperation(org.kalypso.service.ogc.RequestBean)
    */
-  public StringBuffer executeOperation( RequestBean request ) throws OWSException
+  public StringBuffer executeOperation( final RequestBean request ) throws OWSException
   {
     try
     {
@@ -99,10 +99,10 @@ public class DescribeProcess implements IOperation
       Debug.println( "Operation \"DescribeProcess\" started." );
 
       /* Get the simulation. */
-      List<ISimulation> simulations = new LinkedList<ISimulation>();
+      final List<ISimulation> simulations = new LinkedList<ISimulation>();
 
       /* Get the identifiers out of the request. */
-      List<String> identifier = getIdentifier( request );
+      final List<String> identifier = getIdentifier( request );
 
       /* Collect all simulations asked for. */
       Debug.println( "Collect the simulations ..." );
@@ -111,34 +111,34 @@ public class DescribeProcess implements IOperation
 
       /* Build the process description for all simulations. */
       /* It is vital, that the two lists have the same order and length. */
-      List<ProcessDescriptionType> processDescriptions = new LinkedList<ProcessDescriptionType>();
+      final List<ProcessDescriptionType> processDescriptions = new LinkedList<ProcessDescriptionType>();
       for( int i = 0; i < simulations.size(); i++ )
       {
         /* This is the simulation. */
-        ISimulation simulation = simulations.get( i );
+        final ISimulation simulation = simulations.get( i );
 
         /* Build the process description. */
-        ProcessDescriptionType processDescription = buildProcessDescriptionType( simulation, identifier.get( i ) );
+        final ProcessDescriptionType processDescription = buildProcessDescriptionType( simulation, identifier.get( i ) );
 
         /* Save the process description. */
         processDescriptions.add( processDescription );
       }
 
       /* Build the process descriptions response. */
-      ProcessDescriptions processDescriptionsResponse = OGCUtilities.buildProcessDescriptions( processDescriptions );
+      final ProcessDescriptions processDescriptionsResponse = OGCUtilities.buildProcessDescriptions( processDescriptions );
 
       /* Marshall it into one XML string. */
-      String xml = MarshallUtilities.marshall( processDescriptionsResponse );
+      final String xml = MarshallUtilities.marshall( processDescriptionsResponse );
 
       /* Build the response. */
-      StringBuffer response = new StringBuffer();
+      final StringBuffer response = new StringBuffer();
       response.append( xml );
 
       return response;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
     }
   }
 
@@ -149,33 +149,33 @@ public class DescribeProcess implements IOperation
    *            The request.
    * @return A list with Identifier parameter or null if not present.
    */
-  private List<String> getIdentifier( RequestBean request ) throws OWSException
+  private List<String> getIdentifier( final RequestBean request ) throws OWSException
   {
-    List<String> simulationTypes = new LinkedList<String>();
+    final List<String> simulationTypes = new LinkedList<String>();
     if( request.isPost() )
     {
       try
       {
         /* POST with XML. */
-        String xml = request.getBody();
+        final String xml = request.getBody();
 
         /* Check if ALL parameter are available. */
         m_describeProcessRequest = (net.opengeospatial.wps.DescribeProcess) MarshallUtilities.unmarshall( xml );
 
         /* Need the XML attribute service. */
-        List<CodeType> identifier = m_describeProcessRequest.getIdentifier();
+        final List<CodeType> identifier = m_describeProcessRequest.getIdentifier();
 
         if( identifier != null )
         {
           for( int i = 0; i < identifier.size(); i++ )
           {
-            String value = identifier.get( i ).getValue();
+            final String value = identifier.get( i ).getValue();
             if( value != null )
               simulationTypes.add( value );
           }
         }
       }
-      catch( JAXBException e )
+      catch( final JAXBException e )
       {
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
       }
@@ -185,7 +185,7 @@ public class DescribeProcess implements IOperation
       /* GET or simple POST. */
 
       /* Search for the parameter Identifier. */
-      String parameterValue = request.getParameterValue( "Identifier" );
+      final String parameterValue = request.getParameterValue( "Identifier" );
       if( parameterValue != null )
         simulationTypes.add( parameterValue );
     }
@@ -208,37 +208,37 @@ public class DescribeProcess implements IOperation
    *            The identifier of the simulation.
    * @return The process description.
    */
-  public static ProcessDescriptionType buildProcessDescriptionType( ISimulation simulation, String identifier ) throws JAXBException
+  public static ProcessDescriptionType buildProcessDescriptionType( final ISimulation simulation, final String identifier ) throws JAXBException
   {
     // TODO At the moment only literals and references are supported from our model spec.
     // The spec must be changed, in order to enable bounding boxes and complex values.
     // If this is done, the two new cases must be covered here as well.
 
     /* Build all content for the process description. */
-    CodeType code = OGCUtilities.buildCodeType( "", identifier );
-    String title = identifier;
+    final CodeType code = OGCUtilities.buildCodeType( "", identifier );
+    final String title = identifier;
 
     /* Get the specification for that simulation. */
-    URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
+    final URL spezifikation = simulation.getSpezifikation();
+    final Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
 
     /* Get the input from the model spec. */
-    List<DataType> input = modelData.getInput();
+    final List<DataType> input = modelData.getInput();
 
     /* Build the data inputs. */
-    List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
+    final List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
     for( int j = 0; j < input.size(); j++ )
     {
-      DataType data = input.get( j );
-      CodeType inputCode = OGCUtilities.buildCodeType( "", data.getId() );
-      String inputTitle = data.getId();
-      String inputAbstrakt = data.getDescription();
+      final DataType data = input.get( j );
+      final CodeType inputCode = OGCUtilities.buildCodeType( "", data.getId() );
+      final String inputTitle = data.getId();
+      final String inputAbstrakt = data.getDescription();
 
       InputDescriptionType inputDescription = null;
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
       {
         /* Literal. */
-        LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null, OGCUtilities.buildAnyValue(), null );
+        final LiteralInputType inputFormChoice = OGCUtilities.buildLiteralInputType( OGCUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null, OGCUtilities.buildAnyValue(), null );
         if( data.isOptional() )
           inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
         else
@@ -247,11 +247,11 @@ public class DescribeProcess implements IOperation
       else
       {
         /* Reference. */
-        ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
-        List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
+        final ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
+        final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
         complexDatas.add( complexData );
 
-        SupportedComplexDataType inputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
+        final SupportedComplexDataType inputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         if( data.isOptional() )
           inputDescription = OGCUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
         else
@@ -262,20 +262,20 @@ public class DescribeProcess implements IOperation
       inputDescriptions.add( inputDescription );
     }
 
-    DataInputs dataInputs = OGCUtilities.buildDataInputs( inputDescriptions );
+    final DataInputs dataInputs = OGCUtilities.buildDataInputs( inputDescriptions );
 
     /* Get the output from the model spec. */
-    List<DataType> output = modelData.getOutput();
+    final List<DataType> output = modelData.getOutput();
 
     /* Build the output descriptions. */
-    List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
+    final List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
     for( int j = 0; j < output.size(); j++ )
     {
-      DataType data = output.get( j );
+      final DataType data = output.get( j );
 
-      CodeType outputCode = OGCUtilities.buildCodeType( "", data.getId() );
-      String outputTitle = data.getId();
-      String outputAbstrakt = data.getDescription();
+      final CodeType outputCode = OGCUtilities.buildCodeType( "", data.getId() );
+      final String outputTitle = data.getId();
+      final String outputAbstrakt = data.getDescription();
 
       OutputDescriptionType outputDescription = null;
       if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
@@ -286,11 +286,11 @@ public class DescribeProcess implements IOperation
       else
       {
         /* Reference. */
-        ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
-        List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
+        final ComplexDataType complexData = OGCUtilities.buildComplexDataType( "", "", "" );
+        final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
         complexDatas.add( complexData );
 
-        SupportedComplexDataType outputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
+        final SupportedComplexDataType outputFormChoice = OGCUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         outputDescription = OGCUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
       }
 
@@ -298,7 +298,7 @@ public class DescribeProcess implements IOperation
       outputDescriptions.add( outputDescription );
     }
 
-    ProcessOutputs processOutputs = OGCUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
+    final ProcessOutputs processOutputs = OGCUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
 
     return OGCUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
   }
