@@ -40,7 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 
 /**
  * @author doemming
@@ -49,11 +61,11 @@ public class PropertiesUtilities
 {
   /**
    * @param query
-   *          string to collect properties from
+   *            string to collect properties from
    * @param propSeparator
-   *          example "&"
+   *            example "&"
    * @param allocationgString
-   *          example "="
+   *            example "="
    * @param collector
    */
   public static Properties collectProperties( final String query, final String propSeparator, final String allocationString, Properties collector )
@@ -64,14 +76,86 @@ public class PropertiesUtilities
       return collector;
 
     // now extract the key/value pairs from the query.
-    String[] params = query.split( propSeparator ); //$NON-NLS-1$
-    for( int i = 0; i < params.length; i++ )
+    final String[] params = query.split( propSeparator );
+    for( final String element : params )
     {
-      final String[] keyValuePair = params[i].split( allocationString ); //$NON-NLS-1$
+      final String[] keyValuePair = element.split( allocationString );
       if( keyValuePair.length != 2 )
         continue;
       collector.setProperty( keyValuePair[0], keyValuePair[1] );
     }
     return collector;
   }
+
+  public static void loadI18nProperties( final Properties properties, final URL baseUrl, final String path )
+  {
+    final String[] suffixes = getLocalSuffixes();
+    for( final String suffix : suffixes )
+    {
+      InputStream is = null;
+      try
+      {
+        final URL url = new URL( baseUrl, path + suffix );
+        is = new BufferedInputStream( url.openStream() );
+        properties.load( is );
+        is.close();
+        // On first success: stop loading
+        return;
+      }
+      catch( final FileNotFoundException e )
+      {
+        // ignore file not found exceptions, as we have several tries
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        if( is != null )
+        {
+          try
+          {
+            is.close();
+          }
+          catch( final IOException e )
+          {
+            // ignore, this time...
+          }
+        }
+      }
+    }
+
+    // If we reach this line, nothing was found...
+    final IStatus status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), "Message file not found: " + path + suffixes[0] );
+    JavaApiContributionsPlugin.getDefault().getLog().log( status );
+  }
+
+  private static final String EXTENSION = ".properties"; //$NON-NLS-1$
+
+  private static String[] NL_SUFFIXES;
+
+  private static String[] getLocalSuffixes( )
+  {
+    if( NL_SUFFIXES == null )
+    {
+      // build list of suffixes for loading resource bundles
+      String nl = Locale.getDefault().toString();
+      final List<String> result = new ArrayList<String>( 4 );
+      int lastSeparator;
+      while( true )
+      {
+        result.add( '_' + nl + EXTENSION );
+        lastSeparator = nl.lastIndexOf( '_' );
+        if( lastSeparator == -1 )
+          break;
+        nl = nl.substring( 0, lastSeparator );
+      }
+      // add the empty suffix last (most general)
+      result.add( EXTENSION );
+      NL_SUFFIXES = result.toArray( new String[result.size()] );
+    }
+    return NL_SUFFIXES;
+  }
+
 }
