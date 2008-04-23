@@ -44,6 +44,13 @@ import org.kalypso.gmlschema.IGMLSchema;
  */
 public class QualifiedElement implements IAdaptable
 {
+  public static QName createQName( final IGMLSchema gmlSchema, final Element element )
+  {
+    final String targetNamespace = gmlSchema.getTargetNamespace();
+    final String name = element.getName();
+    return new QName( targetNamespace, name );
+  }
+
   private final GMLSchema m_gmlSchema;
 
   private final Element m_element;
@@ -53,13 +60,6 @@ public class QualifiedElement implements IAdaptable
   public QualifiedElement( final GMLSchema gmlSchema, final Element element )
   {
     this( gmlSchema, element, createQName( gmlSchema, element ) );
-  }
-
-  private static QName createQName( final IGMLSchema gmlSchema, final Element element )
-  {
-    final String targetNamespace = gmlSchema.getTargetNamespace();
-    final String name = element.getName();
-    return new QName( targetNamespace, name );
   }
 
   public QualifiedElement( final GMLSchema gmlSchema, final Element element, final QName qName )

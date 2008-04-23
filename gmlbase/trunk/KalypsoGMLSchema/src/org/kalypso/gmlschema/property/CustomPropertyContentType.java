@@ -52,17 +52,19 @@ public class CustomPropertyContentType implements IPropertyContentType
 {
   private final IMarshallingTypeHandler m_typeHandler;
 
-  private final QName m_valueQName;
-
   private final IRestriction[] m_noRestruction = new IRestriction[0];
 
-  /**
-   * TODO: the valueQName is not needed, because we can get it from the typeHandler
-   */
-  public CustomPropertyContentType( final QName valueQName, final IMarshallingTypeHandler typeHandler )
+  private final QName m_qname;
+
+  public CustomPropertyContentType( final QName qname, final IMarshallingTypeHandler typeHandler )
   {
-    m_valueQName = valueQName;
+    m_qname = qname;
     m_typeHandler = typeHandler;
+  }
+
+  public CustomPropertyContentType( final IMarshallingTypeHandler typeHandler )
+  {
+    this( null, typeHandler );
   }
 
   /**
@@ -70,7 +72,10 @@ public class CustomPropertyContentType implements IPropertyContentType
    */
   public QName getValueQName( )
   {
-    return m_valueQName;
+    if( m_qname != null )
+      return m_qname;
+
+    return m_typeHandler.getTypeName();
   }
 
   /**

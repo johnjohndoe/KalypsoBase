@@ -39,6 +39,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.property.value.PropertyType;
@@ -72,17 +73,26 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, final Object parent ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
-    final Object result = innerBuild( gmlSchema, element );
+
+    final QName featureQName;
+    if( parent instanceof IFeatureContentType )
+      featureQName = ((IFeatureContentType) parent).getQName();
+    else if( parent instanceof GMLSchema )
+      featureQName = null;
+    else
+      throw new GMLSchemaException( "Unable to parse featureQName for property: " + elementObject );
+
+    final Object result = innerBuild( gmlSchema, element, featureQName );
 
     gmlSchema.register( element.getElement(), result );
 
     return new Object[] { result };
   }
 
-  public Object innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs element ) throws GMLSchemaException
+  private Object innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName ) throws GMLSchemaException
   {
     final QName ref = element.getElement().getRef();
     if( ref != null )
@@ -91,15 +101,15 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
       final QName referencedQName = referencedQName( gmlSchema, element );
 
       if( isFeature( referencedQName ) )
-        return new ReferencedRelationType( gmlSchema, element, reference );
-      return new ReferencedPropertyType( gmlSchema, element, reference );
+        return new ReferencedRelationType( gmlSchema, element, reference, featureQName );
+      return new ReferencedPropertyType( gmlSchema, element, reference, featureQName );
     }
 
     final QName referencedQName = referencedQName( gmlSchema, element );
     if( isFeature( referencedQName ) )
-      return new RelationType( gmlSchema, element );
+      return new RelationType( gmlSchema, element, featureQName );
 
-    return new PropertyType( gmlSchema, element );
+    return new PropertyType( gmlSchema, element, featureQName );
   }
 
   private boolean isFeature( final QName referencedQName )

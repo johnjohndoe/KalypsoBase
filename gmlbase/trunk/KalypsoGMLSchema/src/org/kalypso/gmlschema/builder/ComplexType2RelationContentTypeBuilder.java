@@ -66,7 +66,7 @@ public class ComplexType2RelationContentTypeBuilder extends AbstractBuilder
    * @param gmlSchema
    * @param complexTypeObject
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject, Object parent ) throws GMLSchemaException
   {
     RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;

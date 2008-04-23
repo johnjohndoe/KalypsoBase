@@ -29,6 +29,8 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import javax.xml.namespace.QName;
+
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -46,9 +48,9 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
 {
   private IRelationContentType m_relationContentType;
 
-  public RelationType( final GMLSchema gmlSchema, final ElementWithOccurs element )
+  public RelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
   {
-    super( gmlSchema, element );
+    super( gmlSchema, element, featureQName );
   }
 
   /**

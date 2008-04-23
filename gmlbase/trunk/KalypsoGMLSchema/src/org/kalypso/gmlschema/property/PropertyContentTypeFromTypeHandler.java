@@ -51,6 +51,8 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
 {
+  private static final IRestriction[] NO_RESTRICTION = new IRestriction[0];
+
   private final IGMLSchema m_gmlSchema;
 
   private final QName m_valueQName;
@@ -70,7 +72,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
     if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
       m_valueRestriction = ContentRestrictionFactory.createRestrictions( ((SimpleType) typeObject).getRestriction() );
     else
-      m_valueRestriction = new IRestriction[0];
+      m_valueRestriction = NO_RESTRICTION;
   }
 
   private static IMarshallingTypeHandler typeHandlerForQName( final ITypeRegistry<IMarshallingTypeHandler> registry, final QName qname )
@@ -82,8 +84,6 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
 
     if( qname instanceof MixedQName )
     {
-// final MixedQName mixedQName = (MixedQName) qname;
-// final QName[] mixedModel = mixedQName.getMixedModel();
       // TODO: use MixedSimpleTypeHandler for that
       return baseTypeHandler;
     }
@@ -99,10 +99,6 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-
-        // final String name = m_simpleType.getName();
-        // final String targetNamespace = m_gmlSchema.getTargetNamespace();
-        // m_valueQName = new QName( targetNamespace, name );
         break;
     }
   }

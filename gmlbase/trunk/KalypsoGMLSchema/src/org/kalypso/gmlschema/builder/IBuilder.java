@@ -46,7 +46,7 @@ public interface IBuilder
    * @param typeObject
    * @return array of objects that will be build in next turn if neccessary
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException;
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject, Object parent ) throws GMLSchemaException;
 
   /**
    * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in

@@ -58,7 +58,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, Object parent ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
     final Element theElement = element.getElement();

@@ -68,13 +68,24 @@ public class CustomValueProperType implements IValuePropertyType
 
   private final boolean m_isNillable;
 
-  public CustomValueProperType( final QName qName, final IPropertyContentType contentType, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  private final QName m_featureQName;
+
+  public CustomValueProperType( final QName qName, final QName featureQName, final IPropertyContentType contentType, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
+    m_featureQName = featureQName;
     m_contentType = contentType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
     m_isNillable = isNillable;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   /**

@@ -63,10 +63,10 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
 
   private final ElementReference m_reference;
 
-  public ReferencedPropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference )
+  public ReferencedPropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference, final QName featureQName )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, element.getElement().getRef() );
+    super( gmlSchema, element, element.getElement().getRef(), featureQName );
 
     m_reference = reference;
   }

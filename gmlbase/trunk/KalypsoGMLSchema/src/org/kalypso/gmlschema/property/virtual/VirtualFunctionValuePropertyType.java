@@ -78,6 +78,8 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
 
   private final boolean m_isNullable = false;
 
+  private final QName m_featureQName;
+
   /**
    * Creates a new {@link VirtualFunctionPropertyType} for the given value handler and the property q-name
    * 
@@ -86,15 +88,17 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    * @param propertyQName
    *            the q-name of the virtual property
    */
-  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName ) throws IllegalArgumentException
+  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName, final QName featureQName ) throws IllegalArgumentException
   {
     if( handler == null || propertyQName == null )
     {
       final String message = String.format( "%s %s", handler == null ? "null" : handler.toString(), propertyQName == null ? "null" : propertyQName.toString() );
       throw new IllegalArgumentException( message );
     }
-    this.m_handler = handler;
-    this.m_typeQName = propertyQName;
+
+    m_featureQName = featureQName;
+    m_handler = handler;
+    m_typeQName = propertyQName;
   }
 
   /**
@@ -129,6 +133,14 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   public String getName( )
   {
     return m_typeQName.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   /**

@@ -129,7 +129,7 @@ public abstract class FeatureContentType implements IFeatureContentType
               }
             }
           }
-          // why are alle buildedObjects of type IPropertyType ?
+          // why are all buildedObjects of type IPropertyType ?
           if( buildedObject != null && buildedObject instanceof IPropertyType )
             propertyTypes.add( (IPropertyType) buildedObject );
           // else

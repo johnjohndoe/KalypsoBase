@@ -50,7 +50,7 @@ public class GMLSchema2SchemaBasicsBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object schemaObject )
+  public Object[] build( final GMLSchema gmlSchema, final Object schemaObject, Object parent )
   {
     // process included schemas
     final List<Object> result = new ArrayList<Object>();

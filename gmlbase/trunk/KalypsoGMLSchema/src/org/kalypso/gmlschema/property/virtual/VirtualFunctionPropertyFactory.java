@@ -159,13 +159,13 @@ public class VirtualFunctionPropertyFactory
    */
   static public final IVirtualFunctionPropertyType createFromCursor( final IFeatureType featureType, final XmlCursor funcCursor ) throws GMLSchemaException
   {
-// final String property = funcCursor.getAttributeText( QNAME_PROPERTY );
     final boolean isVirtual = getBooleanKAppProperty( QNAME_IS_VIRTUAL, funcCursor );
     if( !isVirtual )
     {
       return null;
     }
 
+    final QName featureQName = featureType.getQName();
     final QName propertyQName = getPropertyAsQName( funcCursor, QNAME_PROPERTY );
 
     // this supposed that getProperty only returns non virtual property
@@ -190,7 +190,7 @@ public class VirtualFunctionPropertyFactory
 // System.out.println("VALUE_QANME="+typeHandler.getTypeName());
 // System.out.println("VALUE_IS_GEO="+typeHandler.isGeometry());
 // System.out.println();
-          final IVirtualFunctionValuePropertyType valProp = new VirtualFunctionValuePropertyType( typeHandler, propertyQName );
+          final IVirtualFunctionValuePropertyType valProp = new VirtualFunctionValuePropertyType( typeHandler, propertyQName, featureQName );
           return valProp;
         }
         else
@@ -201,9 +201,7 @@ public class VirtualFunctionPropertyFactory
       }
       else
       {
-// System.out.println("Type handler is null");
-        final IVirtualFunctionPropertyType vfpt = new VirtualFunctionPropertyType( propertyQName );
-        return vfpt;
+        return new VirtualFunctionPropertyType( featureQName, propertyQName );
       }
     }
     catch( final GMLSchemaException e )
@@ -213,7 +211,7 @@ public class VirtualFunctionPropertyFactory
     catch( final Throwable th )
     {
       th.printStackTrace();
-      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th );
+      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureQName, th );
     }
 
   }
@@ -355,7 +353,7 @@ public class VirtualFunctionPropertyFactory
       final String message = String.format( "Property[%s] must have the form \"[<prefix>:]<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts );
       throw new GMLSchemaException( message );
     }
-    
+
     final QName propertyValueQName = new QName( propertyNamespace, propertyLocalPart );
 
     return propertyValueQName;

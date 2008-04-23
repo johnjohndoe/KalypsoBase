@@ -50,11 +50,13 @@ import javax.xml.namespace.QName;
  */
 public class VirtualFunctionPropertyType implements IVirtualFunctionPropertyType
 {
-
   private final QName m_propertyQName;
 
-  public VirtualFunctionPropertyType( final QName propertyQName )
+  private final QName m_featureQName;
+
+  public VirtualFunctionPropertyType( final QName featureQName, final QName propertyQName )
   {
+    m_featureQName = featureQName;
     m_propertyQName = propertyQName;
   }
 
@@ -90,6 +92,14 @@ public class VirtualFunctionPropertyType implements IVirtualFunctionPropertyType
   public String getName( )
   {
     return m_propertyQName.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   /**

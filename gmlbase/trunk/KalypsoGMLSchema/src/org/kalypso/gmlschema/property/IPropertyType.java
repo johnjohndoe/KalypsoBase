@@ -49,6 +49,12 @@ public interface IPropertyType extends IInitialize, IAdaptable
 
   public boolean isList( );
 
+  /**
+   * Returns the qname of the feature(-type), this property is contained in. This information is necessary, as inside
+   * one gml schema, multiple (different) properties with the same qname may exists in different features.
+   */
+  public QName getFeatureQName( );
+
   public QName getQName( );
 
   public boolean isNillable( );

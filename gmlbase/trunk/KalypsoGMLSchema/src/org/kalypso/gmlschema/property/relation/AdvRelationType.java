@@ -52,16 +52,16 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
 
   private IFeatureType m_ftRelationTarget = null;
 
-  public AdvRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName advReferenziertesElement )
+  public AdvRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName advReferenziertesElement, final QName featureQName )
   {
-    super( gmlSchema, element );
+    super( gmlSchema, element, featureQName );
     m_advReferenziertesElement = advReferenziertesElement;
   }
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

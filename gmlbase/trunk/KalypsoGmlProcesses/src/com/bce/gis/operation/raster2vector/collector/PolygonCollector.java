@@ -36,23 +36,13 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
 {
-  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER.getTypeName(), DOUBLE_HANDLER, 0, 1, false );
-  // public static final FeatureTypeProperty FROM_PROP = FF.createFeatureTypeProperty( FEATURE_BASE_ID + ".von",
-  // Double.class.getName(), false );
+  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER, 0, 1, false );
 
-  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER.getTypeName(), DOUBLE_HANDLER, 0, 1, false );
-  // public static final FeatureTypeProperty TO_PROP = FF.createFeatureTypeProperty( FEATURE_BASE_ID + ".bis",
-  // Double.class.getName(), false );
+  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER, 0, 1, false );
 
-  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER.getTypeName(), DOUBLE_HANDLER, 0, 1, false );
-  // public static final FeatureTypeProperty VOLUME_PROP = FF.createFeatureTypeProperty( FEATURE_BASE_ID + ".vol_summe",
-  // Double.class.getName(), false );
+  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER, 0, 1, false );
 
-  private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( new QName( FEATURE_BASE_ID, "FeatureTypeID" ), new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, FROM_PROP, TO_PROP,
-      VOLUME_PROP } );
-// private static final FeatureType FT = FF.createFeatureType( null, null, FEATURE_BASE_ID + " - FeatureTypeID", new
-// FeatureTypeProperty[] { SHAPE_PROP, ID_PROP, BEZ_PROP, FROM_PROP, TO_PROP,
-// VOLUME_PROP } );
+  private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( QNAME_SHAPE_FEATURE, new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, FROM_PROP, TO_PROP, VOLUME_PROP } );
 
   private final GeometryFactory m_gf;
 
@@ -65,10 +55,8 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   private final RingTree m_tree = new RingTree();
 
   private final Feature m_fc = ShapeSerializer.createShapeRootFeature( FT );
-  // private final FeatureCollection m_fc = FF.createFeatureCollection( FEATURE_BASE_ID + " - ShapeFeatureCollection", 0
-  // );
 
-  private FeatureList m_list;
+  private final FeatureList m_list;
 
   public PolygonCollector( final GeometryFactory gf, final double[] grenzen, final boolean bSimple )
   {
@@ -82,7 +70,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       m_intervals[i + 1] = new Interval( grenzen[i], grenzen[i + 1] );
     m_intervals[grenzen.length] = new Interval( grenzen[grenzen.length - 1], Double.MAX_VALUE );
 
-    Object property = m_fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final Object property = m_fc.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     m_list = (FeatureList) property;
   }
 
@@ -130,7 +118,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       coe.printStackTrace();
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -152,9 +140,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     final Double bis = new Double( Math.min( 9999.99, m_intervals[index].max ) );
     final Double volumen = Double.NaN;
 
-    Feature feature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } );
-    // m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, von, bis, volumen
-    // } ) );
+    final Feature feature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } );
     m_list.add( feature );
   }
 
@@ -185,7 +171,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       try
       {
-        int intIndex = getIndexForElement( element );
+        final int intIndex = getIndexForElement( element );
 
         if( intIndex > 0 )
           appendFeature( intIndex, p );

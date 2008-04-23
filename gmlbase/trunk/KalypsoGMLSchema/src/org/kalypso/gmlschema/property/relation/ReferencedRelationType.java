@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.relation;
 
+import javax.xml.namespace.QName;
+
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -58,10 +60,10 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
 
   private final ElementReference m_reference;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference )
+  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference, final QName featureQName )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, element.getElement().getRef() );
+    super( gmlSchema, element, element.getElement().getRef(), featureQName );
 
     m_reference = reference;
   }
@@ -130,15 +132,15 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   {
     return super.getElement();
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.basics.QualifiedElement#getElement()
    */
   @Override
   public Element getElement( )
   {
-//    checkState();
-    
+// checkState();
+
     // HACK: while building, this is used by RelationType2ComplexTypeBuilder
     if( m_globalRT == null )
       return m_reference.getElement();

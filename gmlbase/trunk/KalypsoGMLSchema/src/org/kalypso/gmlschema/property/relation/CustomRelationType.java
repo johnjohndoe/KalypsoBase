@@ -66,9 +66,12 @@ public class CustomRelationType implements IRelationType
 
   private final boolean m_isNillable;
 
-  public CustomRelationType( final QName qName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  private final QName m_featureQName;
+
+  public CustomRelationType( final QName qName, final QName featureQName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
+    m_featureQName = featureQName;
     m_targetFT = targetFeatureType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
@@ -116,6 +119,14 @@ public class CustomRelationType implements IRelationType
   public int getMaxOccurs( )
   {
     return m_maxOccurs;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   /**

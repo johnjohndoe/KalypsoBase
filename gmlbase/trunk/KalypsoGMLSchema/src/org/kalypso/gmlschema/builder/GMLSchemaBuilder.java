@@ -84,7 +84,7 @@ public class GMLSchemaBuilder
 
     // I Step build the objects
     Debug.PARSING_VERBOSE.printf( "Building GML-Schema: Start: %s%n", namespace );
-    rBuild( gmlSchema, gmlSchema );
+    rBuild( gmlSchema, gmlSchema, null );
     Debug.PARSING_VERBOSE.printf( "Building GML-Schema: OK: %s%n", namespace );
 
     // II Step initialize the elements
@@ -97,14 +97,14 @@ public class GMLSchemaBuilder
     return gmlSchema;
   }
 
-  private void rBuild( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
+  private void rBuild( final GMLSchema gmlSchema, final Object object, final Object parent ) throws GMLSchemaException
   {
     final IBuilder builder = getBuilderFor( gmlSchema, object );
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {
-      final Object[] buildedObjects = builder.build( gmlSchema, object );
+      final Object[] buildedObjects = builder.build( gmlSchema, object, parent );
       for( final Object object1 : buildedObjects )
-        rBuild( gmlSchema, object1 );
+        rBuild( gmlSchema, object1, object );
     }
   }
 

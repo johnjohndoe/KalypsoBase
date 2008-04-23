@@ -45,16 +45,28 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
 {
   private final Occurs m_occurs;
 
-  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element, QName qName )
+  private final QName m_featureQName;
+
+  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName qName, final QName featureQName )
   {
     super( gmlSchema, element.getElement(), qName );
     m_occurs = element.getOccurs();
+    m_featureQName = featureQName;
   }
 
-  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element )
+  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
   {
     super( gmlSchema, element.getElement() );
     m_occurs = element.getOccurs();
+    m_featureQName = featureQName;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   public int getMinOccurs( )

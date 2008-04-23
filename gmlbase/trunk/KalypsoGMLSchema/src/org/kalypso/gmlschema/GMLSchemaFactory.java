@@ -206,23 +206,20 @@ public class GMLSchemaFactory
   {
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
-  
+
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema )
   {
     return new CustomFeatureType( schema, qName, properties );
   }
 
-  /**
-   * TODO: the valueQName is not needed, because we can get it from the typeHandler
-   */
-  public static IValuePropertyType createValuePropertyType( final QName name, final QName valueQName, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public static IValuePropertyType createValuePropertyType( final QName featureQName, final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
-    final IPropertyContentType pct = new CustomPropertyContentType( valueQName, typeHandler );
-    return new CustomValueProperType( name, pct, minOccurs, maxOccurs, isNillable );
+    final IPropertyContentType pct = new CustomPropertyContentType( typeHandler );
+    return new CustomValueProperType( name, featureQName, pct, minOccurs, maxOccurs, isNillable );
   }
 
-  public static IRelationType createRelationType( final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public static IRelationType createRelationType( final QName featureQName, final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
-    return new CustomRelationType( qName, targetFT, minOccurs, maxOccurs, isNillable );
+    return new CustomRelationType( qName, featureQName, targetFT, minOccurs, maxOccurs, isNillable );
   }
 }

@@ -62,9 +62,9 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   private IPropertyContentType m_propertyContentType = null;
 
-  public PropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element )
+  public PropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
   {
-    super( gmlSchema, element );
+    super( gmlSchema, element, featureQName );
   }
 
   /**
@@ -75,7 +75,6 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-
         final QName type = getElement().getType();
         final SimpleType simpleType = getElement().getSimpleType();
         if( type != null )
@@ -83,7 +82,9 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
           final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
           final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( type );
           if( typeHandler != null )
-            m_propertyContentType = new CustomPropertyContentType( type, typeHandler );
+          {
+            m_propertyContentType = new CustomPropertyContentType( typeHandler );
+          }
           else
           {
             final TypeReference reference = getGMLSchema().resolveTypeReference( type );

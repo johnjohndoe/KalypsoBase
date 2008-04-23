@@ -66,7 +66,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject, final Object parent ) throws GMLSchemaException
   {
     final QName valueQName;
     if( typeObject instanceof ComplexType )

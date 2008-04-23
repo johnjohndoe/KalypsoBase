@@ -35,6 +35,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.value.PropertyType;
 import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
@@ -61,19 +62,27 @@ public class Element2PropertyTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, final Object parent ) throws GMLSchemaException
   {
+    final QName featureQName;
+    if( parent instanceof IFeatureContentType )
+      featureQName = ((IFeatureContentType) parent).getQName();
+    else if( parent instanceof GMLSchema )
+      featureQName = null;
+    else
+      throw new GMLSchemaException( "Unable to parse featureQName for property: " + elementObject );
+
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
     final QName ref = element.getElement().getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, reference );
+      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, reference, featureQName );
       gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
 
-    final IPropertyType pt = new PropertyType( gmlSchema, element );
+    final IPropertyType pt = new PropertyType( gmlSchema, element, featureQName );
     gmlSchema.register( element.getElement(), pt );
     return new Object[] { pt };
   }
