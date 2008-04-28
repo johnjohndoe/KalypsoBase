@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -50,7 +49,7 @@ public interface IWriteableGeoGrid extends IGeoGrid
 {
   public void setValue( final int x, final int y, final double value ) throws GeoGridException;
 
-  void setStatistically( final BigDecimal min, final BigDecimal max ) throws IOException;
+  void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException;
 
-  public void saveStatistically( ) throws IOException;
+  public void saveStatistically( ) throws GeoGridException;
 }
