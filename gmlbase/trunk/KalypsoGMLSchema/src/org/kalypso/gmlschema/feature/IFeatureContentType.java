@@ -36,7 +36,7 @@ import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * Representation of a feature content definition from xml schema 
+ * Representation of a feature content definition from xml schema
  * 
  * @author doemming
  */
@@ -51,11 +51,14 @@ public interface IFeatureContentType extends IInitialize
   /**
    * @return all properties
    */
-  public IPropertyType[] getProperties();
+  public IPropertyType[] getProperties( );
 
-  public IFeatureContentType getBase();
+  public IFeatureContentType getBase( );
 
-  public int getDerivationType();
+  public int getDerivationType( );
+
+  /** The qname of the feature defined by this content. Only non-<code>null</code> for inline defined types. */
+  public QName getFeatureQName( );
 
   /**
    * @param name
@@ -63,9 +66,9 @@ public interface IFeatureContentType extends IInitialize
    */
   public IPropertyType getProperty( final QName name );
 
-  public IPropertyType[] getDirectProperties();
+  public IPropertyType[] getDirectProperties( );
 
-  public QName getQName();
-  
-  public XmlObject[] collectFunctionProperties();
+  public QName getQName( );
+
+  public XmlObject[] collectFunctionProperties( );
 }

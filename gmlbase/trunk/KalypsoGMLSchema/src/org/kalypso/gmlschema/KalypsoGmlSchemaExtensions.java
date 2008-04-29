@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotationProvider;
+import org.kalypso.gmlschema.annotation.NLSAnnotationProvider;
 
 /**
  * @author Gernot Belger
@@ -97,6 +98,9 @@ public class KalypsoGmlSchemaExtensions
         Debug.ANNOTATION_PROVIDERS.printStackTrace( t );
       }
     }
+
+    // TODO comment
+    providers.add( new NLSAnnotationProvider() );
 
     final IAnnotationProvider[] result = providers.toArray( new IAnnotationProvider[providers.size()] );
     THE_ANNOTATION_PROVIDERS = result;

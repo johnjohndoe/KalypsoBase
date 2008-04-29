@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public interface IGMLSchema
 {
@@ -63,6 +63,6 @@ public interface IGMLSchema
   public IFeatureType getFeatureType( final QName qName );
 
   public IFeatureType[] getAllFeatureTypes( );
-  
-  public IGMLSchema[] getAdditionalSchemas();
+
+  public IGMLSchema[] getAdditionalSchemas( );
 }

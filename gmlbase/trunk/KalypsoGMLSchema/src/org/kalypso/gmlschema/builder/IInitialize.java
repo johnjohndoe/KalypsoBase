@@ -38,27 +38,6 @@ import org.kalypso.gmlschema.GMLSchemaException;
  */
 public interface IInitialize
 {
-  // TODO: Hi Andreas: try an enum instead:
-//  public static enum INITIALIZE
-//  {
-//    RUN_FIRST, RUN_GEOMETRY, RUN_DEPRECATED
-//  };
-  
-  // an to iterate over it (i think the order of the constants is preserved)
-//  static
-//  {
-//    for( final INITIALIZE initialize : initializes )
-//    {
-//      switch( initialize )
-//      {
-//        case RUN_DEPRECATED:
-//          break;
-//          
-//          ... and so on
-//      }
-//    }
-//  }
-  
   /**
    * precondition:<br>
    * featuretypes, propertytypes and contenttypes are builded<br>
@@ -83,7 +62,7 @@ public interface IInitialize
    */
   public static final int INITIALIZE_RUN_DEPRECATED = 2;
 
-  public static final int[] INIT_ORDER = { INITIALIZE_RUN_FIRST, INITIALIZE_RUN_GEOMETRY ,INITIALIZE_RUN_DEPRECATED};
+  public static final int[] INIT_ORDER = { INITIALIZE_RUN_FIRST, INITIALIZE_RUN_GEOMETRY, INITIALIZE_RUN_DEPRECATED };
 
   /**
    * initialize builded object. <br>

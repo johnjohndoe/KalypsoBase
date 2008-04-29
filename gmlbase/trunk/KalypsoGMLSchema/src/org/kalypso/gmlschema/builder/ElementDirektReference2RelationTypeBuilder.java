@@ -79,7 +79,7 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
 
     final QName featureQName;
     if( parent instanceof IFeatureContentType )
-      featureQName = ((IFeatureContentType) parent).getQName();
+      featureQName = ((IFeatureContentType) parent).getFeatureQName();
     else if( parent instanceof GMLSchema )
       featureQName = null;
     else

@@ -57,9 +57,9 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
 
   private IPropertyType[] m_fullProps = null;
 
-  public FeatureContentTypeFromExtension( final GMLSchema schema, final ComplexType complexType, final ExtensionType extension )
+  public FeatureContentTypeFromExtension( final GMLSchema schema, final QName featureQName, final ComplexType complexType, final ExtensionType extension )
   {
-    super( schema, complexType );
+    super( schema, featureQName, complexType );
     m_extension = extension;
   }
 
@@ -76,7 +76,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -102,14 +102,14 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
       final IPropertyType[] props = new IPropertyType[m_pt.length + propsFromExtension.length];
       int n = 0;
 
-      for( int i = 0; i < propsFromExtension.length; i++ )
+      for( final IPropertyType element : propsFromExtension )
       {
-        props[n] = propsFromExtension[i];
+        props[n] = element;
         n++;
       }
-      for( int i = 0; i < m_pt.length; i++ )
+      for( final IPropertyType element : m_pt )
       {
-        props[n] = m_pt[i];
+        props[n] = element;
         n++;
       }
       m_fullProps = props;
@@ -149,15 +149,15 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   {
     final XmlObject[] myObjects = super.collectFunctionProperties();
     final XmlObject[] baseObjects = m_extensionBase.collectFunctionProperties();
-    
+
     final XmlObject[] allObjects = new XmlObject[myObjects.length + baseObjects.length];
-    
+
     System.arraycopy( myObjects, 0, allObjects, 0, myObjects.length );
     System.arraycopy( baseObjects, 0, allObjects, myObjects.length, baseObjects.length );
-    
+
     // TODO: consider the case when function-properties get overridden.
-    // At the moment we have 'myObject' before 'allObjects', so newdefinitions get found first. 
-    
+    // At the moment we have 'myObject' before 'allObjects', so newdefinitions get found first.
+
     return allObjects;
   }
 }

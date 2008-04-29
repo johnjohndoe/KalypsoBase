@@ -1,10 +1,12 @@
 package org.kalypso.gmlschema;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -26,16 +28,14 @@ public final class GMLSchemaCatalog
    * @throws NullPointerException
    *             If catalog or cacheDirectory is null.
    */
-  public GMLSchemaCatalog( final IUrlCatalog catalog, final File cacheDirectory )
+  public GMLSchemaCatalog( final IUrlCatalog catalog )
   {
     if( catalog == null )
       throw new NullPointerException();
 
     m_urlCatalog = catalog;
 
-    m_cache = new GMLSchemaCache( cacheDirectory );
-
-    Debug.CATALOG.printf( "Initialized schema catalog on directory %s%n", cacheDirectory );
+    m_cache = new GMLSchemaCache();
   }
 
   public IUrlCatalog getDefaultCatalog( )
@@ -57,7 +57,7 @@ public final class GMLSchemaCatalog
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      m_cache.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
+      m_cache.addSchema( schema.getTargetNamespace(), schema, validity );
 
       Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity );
 
@@ -123,20 +123,29 @@ public final class GMLSchemaCatalog
     if( schemaUrl == null )
       Debug.CATALOG.printf( "No location for namespace: %s - trying to load from cache.%n", namespace );
 
-    // auch versuchen aus dem Cache zu laden, wenn die url null ist;
-    // vielleicht ist der namespace ja noch im file-cache
-    return m_cache.getSchema( namespace, version, schemaUrl );
+    try
+    {
+      // else, try to get it from the external cache
+      final URIResolver uriResolver = URIResolverPlugin.createResolver();
+      final String resolvedUri = uriResolver.resolve( schemaUrl.toExternalForm(), null, schemaUrl.toExternalForm() );
+      final URL resolvedUrl = new URL( resolvedUri );
+
+      // auch versuchen aus dem Cache zu laden, wenn die url null ist;
+      // vielleicht ist der namespace ja noch im file-cache
+      return m_cache.getSchema( namespace, version, resolvedUrl );
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new InvocationTargetException( e );
+    }
   }
 
   /**
    * Clears the cache. Schematas are reloaded after this operation.
-   * 
-   * @param onlyMemoryCache
-   *            If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
-  public void clearCache( final boolean onlyMemoryCache )
+  public void clearCache( )
   {
-    m_cache.clearCache( onlyMemoryCache );
+    m_cache.clearCache();
     Debug.CATALOG.printf( "Cleared schema cache." );
   }
 }

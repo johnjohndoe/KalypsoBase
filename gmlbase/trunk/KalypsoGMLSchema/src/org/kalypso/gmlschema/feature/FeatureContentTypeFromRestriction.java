@@ -55,9 +55,9 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
 
   private FeatureContentType m_restrictionBase = null;
 
-  public FeatureContentTypeFromRestriction( GMLSchema schema, ComplexType complexType, ComplexRestrictionType restriction )
+  public FeatureContentTypeFromRestriction( final GMLSchema schema, final QName featureQName, final ComplexType complexType, final ComplexRestrictionType restriction )
   {
-    super( schema, complexType );
+    super( schema, featureQName, complexType );
     m_restriction = restriction;
   }
 
@@ -74,7 +74,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
-  public void init( int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {

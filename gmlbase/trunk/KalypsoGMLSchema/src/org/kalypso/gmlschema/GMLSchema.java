@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +94,8 @@ public class GMLSchema implements IGMLSchema
 
   private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<String, GMLSchema>();
 
-  private final Hashtable<Object, Object> m_buildedObjectHash = new Hashtable<Object, Object>();
+  // TODO comment
+  private final Map<Object, Object> m_buildedObjectHash = new IdentityHashMap<Object, Object>();
 
   private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
@@ -246,8 +248,8 @@ public class GMLSchema implements IGMLSchema
     {
       /* unpack exceptionif inside InvocationTargetException */
       if( e instanceof InvocationTargetException )
-        e = ((InvocationTargetException)e).getTargetException();
-      
+        e = ((InvocationTargetException) e).getTargetException();
+
       if( e instanceof GMLSchemaException )
         throw (GMLSchemaException) e;
       else
