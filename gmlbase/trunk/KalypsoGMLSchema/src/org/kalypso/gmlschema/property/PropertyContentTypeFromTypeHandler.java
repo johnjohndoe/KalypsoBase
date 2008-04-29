@@ -61,7 +61,7 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
 
   private final IRestriction[] m_valueRestriction;
 
-  public PropertyContentTypeFromTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final QName valueQName )
+  public PropertyContentTypeFromTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final QName valueQName, final IPropertyType parentProperty )
   {
     m_gmlSchema = gmlSchema;
     m_valueQName = valueQName;
@@ -70,7 +70,19 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
     m_typeHandler = typeHandlerForQName( registry, m_valueQName );
 
     if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
-      m_valueRestriction = ContentRestrictionFactory.createRestrictions( ((SimpleType) typeObject).getRestriction() );
+    {
+      final SimpleType simpleTypeObject = (SimpleType) typeObject;
+
+      // HACK: in order to correctly create annotations from properties, we have to supply a pseudo qualified element...
+      // Will probably break some time, but we have to redo the whole gml-parsing stuff anyway
+      final String namespace;
+      if( simpleTypeObject.isSetName() )
+        namespace = gmlSchema.getTargetNamespace();
+      else
+        namespace = parentProperty.getQName().getNamespaceURI();
+
+      m_valueRestriction = ContentRestrictionFactory.createRestrictions( simpleTypeObject.getRestriction(), gmlSchema, namespace );
+    }
     else
       m_valueRestriction = NO_RESTRICTION;
   }

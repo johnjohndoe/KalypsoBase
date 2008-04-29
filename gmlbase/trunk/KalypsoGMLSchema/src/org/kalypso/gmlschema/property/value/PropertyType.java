@@ -77,6 +77,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
       case IInitialize.INITIALIZE_RUN_FIRST:
         final QName type = getElement().getType();
         final SimpleType simpleType = getElement().getSimpleType();
+
         if( type != null )
         {
           final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();

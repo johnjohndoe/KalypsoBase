@@ -1,6 +1,7 @@
 package org.kalypso.gmlschema.annotation;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -173,6 +174,23 @@ public class AnnotationAdapterFactory implements IAdapterFactory
     }
 
     return sb.toString().trim();
+  }
+
+  public static IAnnotation annotationForFacet( final String platformLang, final Facet facet, final String defaultValue, final QualifiedElement qe )
+  {
+    // HACK: special case for restriction stuff
+    /* First, we try to get an annotation from an external annotation provider */
+    final IAnnotationProvider[] annotationProviders = KalypsoGmlSchemaExtensions.getAnnotationProviders();
+    for( final IAnnotationProvider provider : annotationProviders )
+    {
+      final IAnnotation annotation = provider.getAnnotation( platformLang, qe );
+      if( annotation != null )
+        return annotation;
+    }
+
+    final Annotation annotation = facet.getAnnotation();
+
+    return annotationForElement( platformLang, annotation, defaultValue );
   }
 
 }
