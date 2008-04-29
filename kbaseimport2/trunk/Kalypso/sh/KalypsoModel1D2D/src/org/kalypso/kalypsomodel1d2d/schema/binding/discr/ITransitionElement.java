@@ -49,4 +49,32 @@ public interface ITransitionElement extends IAbstractJunction
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
 
   public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
+
+  public static final QName PROP_TRANSITION_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "transitionType" ); //$NON-NLS-1$
+
+  public static enum TRANSITION_TYPE
+  {
+    TYPE1D2D
+    {
+      @Override
+      final String getValue( )
+      {
+        return "1D2D";
+      }
+    },
+    TYPE2D1D
+    {
+      @Override
+      final String getValue( )
+      {
+        return "2D1D";
+      }
+    };
+
+    abstract String getValue( );
+  }
+
+  public void setTransitionType( final TRANSITION_TYPE transitionType );
+
+  public TRANSITION_TYPE getTransitionType( );
 }
