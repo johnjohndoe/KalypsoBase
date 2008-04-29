@@ -49,17 +49,10 @@
          <action
                class="org.kalypso.debug.gml.cache.ClearMemCacheActionDelegate"
                id="org.kalypso.gml.cache.clearMemAction"
-               label="Speicher-Cache löschen"
+               label="Schema-Cache löschen"
                menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
                style="push"
                tooltip="Löscht alle Schemata aus dem Cache im Speicher"/>
-         <action
-               class="org.kalypso.debug.gml.cache.ClearFileCacheActionDelegate"
-               id="org.kalypso.gml.cache.clearFileAction"
-               label="Datei-Cache löschen"
-               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
-               style="push"
-               tooltip="Löscht alle Schemata aus dem Cache. Alle Schemata werden danach vollständig neu geladen."/>
          <action
                class="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryActionDelegate"
                id="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryAction"
@@ -98,7 +91,7 @@
                icon="icons/elcl16/show_schema.gif"
                id="org.kalypso.ui.editor.gistreeeditor.ShowSchemaAction"
                label="Schema anzeigen"
-               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
+               menubarPath="additions/edit"
                style="push"
                toolbarPath="edit"
                tooltip="Zeigt das Schema des geladenen GML im GML Schema Editor an."/>

@@ -40,13 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.debug.gml.cache;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+
 /**
  * @author belger
  */
-public class ClearMemCacheActionDelegate extends AbstractClearCacheActionDelegate
+public class ClearMemCacheActionDelegate implements IWorkbenchWindowActionDelegate
 {
-  public ClearMemCacheActionDelegate( )
+  /**
+   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+   */
+  public void dispose( )
   {
-    super( true );
   }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void init( final IWorkbenchWindow window )
+  {
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( final IAction action )
+  {
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    schemaCatalog.clearCache();
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+  }
+
 }
