@@ -28,10 +28,10 @@
 												<!-- Here, the list is a list of several properties [0..n], each containing one single feature. -->
 												<xs:element name="member" minOccurs="0" maxOccurs="unbounded">
 														<xs:complexType>
-																<xs:sequence minOccurs="1">
+																<xs:sequence>
 																		<!-- Reference to the sub-feature. Inlining here does not work -->
 																		<!-- TODO: better comment. Is it not allowed according to gml or does it just not work with kalypso? -->
-																		<xs:element ref="SimpleSubFeature" />
+																		<xs:element ref="SimpleSubFeature"/>
 																</xs:sequence>
 														</xs:complexType>
 												</xs:element>

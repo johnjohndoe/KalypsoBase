@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SimpleCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+<SimpleCollection gml:id="root" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="org.kalypso.gml.snippets.featureCollection_basic"
 		xs:schemaLocation="org.kalypso.gml.snippets.featureCollection_basic featureCollection_basic.xsd">
 		<gml:description>The collection contains only its subfeatures and has no other property.</gml:description>
