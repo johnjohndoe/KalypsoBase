@@ -285,4 +285,19 @@ public class CustomValueProperType implements IValuePropertyType
     // ideally different for each class
     return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    final StringBuffer sb = new StringBuffer();
+
+    sb.append( getQName() );
+    sb.append( " - " );
+    sb.append( getValueQName() );
+    
+    return sb.toString();
+  }
 }
