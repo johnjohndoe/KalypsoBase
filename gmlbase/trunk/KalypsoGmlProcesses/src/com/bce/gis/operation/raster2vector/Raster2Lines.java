@@ -1,6 +1,7 @@
 package com.bce.gis.operation.raster2vector;
 
 import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.IGeoGridWalker;
 
@@ -34,6 +35,8 @@ public class Raster2Lines implements IGeoGridWalker
 
   private int m_sizeY;
 
+  private IGeoGrid m_grid;
+
   public Raster2Lines( final SegmentCollector strategy, final double[] isolines )
   {
     m_strategy = strategy;
@@ -43,13 +46,14 @@ public class Raster2Lines implements IGeoGridWalker
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#start(org.kalypso.gis.doubleraster.DoubleRaster)
    */
-  public final void start( final IGeoGrid r ) throws GeoGridException
+  public final void start( final IGeoGrid grid ) throws GeoGridException
   {
-    m_lastRowCoord = new Coordinate[r.getSizeX() + 1];
+    m_grid = grid;
+    m_lastRowCoord = new Coordinate[grid.getSizeX() + 1];
     m_lastSE = null;
-    m_offsetX = r.getOffsetX();
-    m_offsetY = r.getOffsetY();
-    m_lastRow = new LinkedCoordinate[m_grenzen.length][r.getSizeX() + 1];
+    m_offsetX = grid.getOffsetX();
+    m_offsetY = grid.getOffsetY();
+    m_lastRow = new LinkedCoordinate[m_grenzen.length][grid.getSizeX() + 1];
     m_lastCell = new LinkedCoordinate[m_grenzen.length];
 
     m_cellArea = m_offsetX.x * m_offsetY.y - m_offsetX.y * m_offsetY.x;
@@ -57,7 +61,7 @@ public class Raster2Lines implements IGeoGridWalker
     // reset volume
     m_volume = 0.0;
 
-    m_sizeY = r.getSizeY();
+    m_sizeY = grid.getSizeY();
   }
 
   /**
@@ -81,6 +85,7 @@ public class Raster2Lines implements IGeoGridWalker
     {
       // cSW = new Coordinate( crd.x - m_rasterSize, crd.y, Double.NaN );
       cSW = new Coordinate( crd.x - m_offsetX.x, crd.y - m_offsetX.y, Double.NaN );
+      cSW = GeoGridUtilities.calcCoordinate( m_grid, x - 1, y - 1, null );
     }
     if( cNE == null )
     {
@@ -90,7 +95,7 @@ public class Raster2Lines implements IGeoGridWalker
     if( cNW == null )
     {
       // cNW = new Coordinate( crd.x - m_rasterSize, crd.y + m_rasterSize, Double.NaN );
-      cNW = new Coordinate( crd.x - m_offsetX.x + m_offsetY.y, crd.y + -m_offsetX.y + m_offsetY.y, Double.NaN );
+      cNW = new Coordinate( crd.x - m_offsetX.x + m_offsetY.x, crd.y + -m_offsetX.y + m_offsetY.y, Double.NaN );
     }
 
     m_lastSE = cSE;
@@ -158,6 +163,8 @@ public class Raster2Lines implements IGeoGridWalker
 
   private final void addAtIndex( final int index, final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws LinkedCoordinateException, GeoGridException
   {
+    // TODO: evtl normalisieren...
+
     // check, ob die Koordinaten den Wert genau Treffen
     final double value = m_grenzen[index];
 
