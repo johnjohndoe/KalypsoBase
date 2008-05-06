@@ -60,7 +60,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -85,7 +84,6 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.KalypsoDeegreeDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -232,8 +230,6 @@ public class TestGrid2Shp extends TestCase
   private IGeoGrid getTestGrid( final IFolder importDataFolder ) throws Exception, MalformedURLException, IOException
   {
     // load models
-    KalypsoDeegreeDebug.OPERATION.printf( "%s", "importiere Grid...\n" );
-
     final IFile covCollFile = importDataFolder.getFile( new Path( "covColl.gml" ) ); //$NON-NLS-1$
     final GMLWorkspace covCollWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( covCollFile ), null );
 
@@ -244,10 +240,6 @@ public class TestGrid2Shp extends TestCase
     final IFile dstRasterIFile = importDataFolder.getFile( dstFileName );
     final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
     final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() );
-    if( gridDomain != Status.OK_STATUS )
-      KalypsoDeegreeDebug.OPERATION.printf( "%s", "Import fehlgeschlagen...\n" );
-    else
-      KalypsoDeegreeDebug.OPERATION.printf( "%s", "Import erfolgreich...\n" );
 
     final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
@@ -270,10 +262,7 @@ public class TestGrid2Shp extends TestCase
     coverage.setName( binFileName );
     coverage.setDescription( "ASCII-Import" );
 
-    KalypsoDeegreeDebug.OPERATION.printf( "%s", "importiere Grid...\n" );
-
     return GeoGridUtilities.toGrid( coverage );
-
   }
 
   private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException
