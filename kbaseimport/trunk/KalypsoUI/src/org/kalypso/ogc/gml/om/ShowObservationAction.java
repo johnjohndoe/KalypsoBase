@@ -47,6 +47,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author schlienger
@@ -63,11 +64,11 @@ public class ShowObservationAction extends ActionDelegate
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     try
     {
-      activePage.showView( "org.kalypso.ogc.gml.om.table.ObservationTableView" );
+      activePage.showView( "org.kalypso.ogc.gml.om.table.ObservationTableView" ); //$NON-NLS-1$
     }
     catch( final PartInitException e )
     {
-      ErrorDialog.openError( event.display.getActiveShell(), "Observation/Tabelle anzeigen", "Tabelle konnte nicht angezeigt werden.", e.getStatus() );
+      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.1"), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }
