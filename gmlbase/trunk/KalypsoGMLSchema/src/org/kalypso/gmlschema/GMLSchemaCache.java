@@ -76,7 +76,7 @@ public class GMLSchemaCache
   /**
    * Schreibt ein schema in diesen Cache.
    */
-  public void addSchema( final String namespace, final GMLSchema schema, final Date validity )
+  public synchronized void addSchema( final String namespace, final GMLSchema schema, final Date validity )
   {
     final String version = schema.getGMLVersion();
     final String publicId = namespace + "#" + version;
@@ -92,7 +92,7 @@ public class GMLSchemaCache
    * @param namespace
    *            ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
-  public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
+  public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
   {
     Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL );
 
@@ -199,7 +199,7 @@ public class GMLSchemaCache
    * @param onlyMemoryCache
    *            If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
-  public void clearCache( )
+  public synchronized void clearCache( )
   {
     m_memCache.clear();
   }
