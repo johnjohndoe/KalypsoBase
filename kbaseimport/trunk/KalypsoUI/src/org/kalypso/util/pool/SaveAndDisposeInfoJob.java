@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 
 final class SaveAndDisposeInfoJob extends UIJob
@@ -64,8 +65,8 @@ final class SaveAndDisposeInfoJob extends UIJob
     try
     {
       final String location = m_info.getKey().getLocation();
-      final String message = "Die letzte Ansicht auf folgende Daten wurde geschlossen:\n" + location + "\n\nSollen die Daten jetzt gespeichert werden?";
-      final boolean doSave = MessageDialog.openQuestion( getDisplay().getActiveShell(), "Daten speichern", message );
+      final String message = Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.0") + location + Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.1"); //$NON-NLS-1$ //$NON-NLS-2$
+      final boolean doSave = MessageDialog.openQuestion( getDisplay().getActiveShell(), Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.2"), message ); //$NON-NLS-1$
       if( doSave )
         m_info.saveObject( monitor );
     }
