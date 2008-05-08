@@ -186,7 +186,7 @@ public class PageSelectGeodataFile extends WizardPage
     crsContainer.setLayoutData( crsGridData );
 
     m_crsPanel = new CRSSelectionPanel();
-    Control crsControl = m_crsPanel.createControl( crsContainer );
+    final Control crsControl = m_crsPanel.createControl( crsContainer );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     crsControl.setToolTipText( "Koordinatensystem der Raster-Datei" );
@@ -196,7 +196,7 @@ public class PageSelectGeodataFile extends WizardPage
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
         updatePageComplete();
@@ -487,17 +487,17 @@ public class PageSelectGeodataFile extends WizardPage
 
   public RectifiedGridDomain.OffsetVector getOffsetX( )
   {
-    return new RectifiedGridDomain.OffsetVector( new Double( tVectorXx.getText() ), new Double( tVectorXy.getText() ) );
+    return new RectifiedGridDomain.OffsetVector( Double.valueOf( tVectorXx.getText().replaceAll( ",", "." ) ), Double.valueOf( tVectorXy.getText().replaceAll( ",", "." ) ) );
   }
 
   public RectifiedGridDomain.OffsetVector getOffsetY( )
   {
-    return new RectifiedGridDomain.OffsetVector( new Double( tVectorYx.getText() ), new Double( tVectorYy.getText() ) );
+    return new RectifiedGridDomain.OffsetVector( Double.valueOf( tVectorYx.getText().replaceAll( ",", "." ) ), Double.valueOf( tVectorYy.getText().replaceAll( ",", "." ) ) );
   }
 
   public Double[] getUpperLeftCorner( )
   {
-    return new Double[] { new Double( tUlcX.getText() ), new Double( tUlcY.getText() ) };
+    return new Double[] { Double.valueOf( tUlcX.getText().replaceAll( ",", "." ) ), Double.valueOf( tUlcY.getText().replaceAll( ",", "." ) ) };
   }
 
   public IGridMetaReader getReader( )
