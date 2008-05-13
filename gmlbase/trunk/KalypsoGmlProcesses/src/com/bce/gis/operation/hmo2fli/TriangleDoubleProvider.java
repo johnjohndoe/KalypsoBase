@@ -45,10 +45,10 @@ public class TriangleDoubleProvider implements IGeoValueProvider
   public TriangleDoubleProvider( final FeatureList triangleList )
   {
     m_triangleList = triangleList;
-    QN_GEOM_TRIANGLE = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
+    QN_GEOM_TRIANGLE = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private final LinearRing[] getAllContaining( final Coordinate c ) throws GM_Exception
   {
     final Vector<LinearRing> results = new Vector<LinearRing>();

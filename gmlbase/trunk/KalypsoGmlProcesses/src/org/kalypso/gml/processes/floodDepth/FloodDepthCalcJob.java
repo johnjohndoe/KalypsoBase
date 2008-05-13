@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.grid.DoubleDiffDoubleRaster;
@@ -98,7 +99,7 @@ public class FloodDepthCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "FloodDepthCalcJob_spec.xml" );
+    return getClass().getResource( "FloodDepthCalcJob_spec.xml" ); //$NON-NLS-1$
   }
 
   /**
@@ -107,8 +108,8 @@ public class FloodDepthCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL triangleGmlURL = (URL) inputProvider.getInputForID( "TRIANGLES_GML" );
-    final URL dtmGmlURL = (URL) inputProvider.getInputForID( "DTM_GML" );
+    final URL triangleGmlURL = (URL) inputProvider.getInputForID( "TRIANGLES_GML" ); //$NON-NLS-1$
+    final URL dtmGmlURL = (URL) inputProvider.getInputForID( "DTM_GML" ); //$NON-NLS-1$
 
     // zwischenschicht...
 
@@ -117,14 +118,14 @@ public class FloodDepthCalcJob implements ISimulation
     //
     try
     {
-      final File file = new File( tmpdir, "outshape" );
+      final File file = new File( tmpdir, "outshape" ); //$NON-NLS-1$
       final String shapeBase = FileUtilities.nameWithoutExtension( file.getAbsolutePath() );
 
       doFloodDepthIntersection( shapeBase, new NullProgressMonitor(), triangleGmlURL, dtmGmlURL, TYPE.ISOPOLYGONES, 0 );
 
-      resultEater.addResult( "ResultShapeShp", new File( tmpdir, "outshape.shp" ) );
-      resultEater.addResult( "ResultShapeShx", new File( tmpdir, "outshape.shx" ) );
-      resultEater.addResult( "ResultShapeDbf", new File( tmpdir, "outshape.dbf" ) );
+      resultEater.addResult( "ResultShapeShp", new File( tmpdir, "outshape.shp" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      resultEater.addResult( "ResultShapeShx", new File( tmpdir, "outshape.shx" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      resultEater.addResult( "ResultShapeDbf", new File( tmpdir, "outshape.dbf" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // if( pable != null )
       // pable.cancel();
@@ -134,7 +135,7 @@ public class FloodDepthCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Fehler beim Ermitteln der Fliesstiefen", e );
+      throw new SimulationException( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.10"), e ); //$NON-NLS-1$
       // TODO: handle exception
     }
 
@@ -157,25 +158,25 @@ public class FloodDepthCalcJob implements ISimulation
    */
   public static void doFloodDepthIntersection( final String shapeBase, final IProgressMonitor monitor, final URL triangleGmlURL, final URL dtmGmlURL, final TYPE floodDepthType, final double floodDepthStep ) throws Exception, GeoGridException, IOException, SimulationException
   {
-    monitor.beginTask( "Fliesstiefen werden ermittelt - ", 12 );
+    monitor.beginTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.11"), 12 ); //$NON-NLS-1$
 
     // - dreiecke lesen und als DoubleProvider wrappen
     final GMLWorkspace triangleWorkspace = GmlSerializer.createGMLWorkspace( triangleGmlURL, null );
     final Feature rootFeature = triangleWorkspace.getRootFeature();
-    if( !GMLSchemaUtilities.substitutes( rootFeature.getFeatureType(), new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ) ) )
-      throw new IllegalArgumentException( "Root-Feature of triangle gml is no triangle collection: " + rootFeature );
+    if( !GMLSchemaUtilities.substitutes( rootFeature.getFeatureType(), new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ) ) ) //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.13") + rootFeature ); //$NON-NLS-1$
     // TODO: retrieve xpath to feature list from user
-    final FeatureList triangleList = (FeatureList) rootFeature.getProperty( new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" ) );
+    final FeatureList triangleList = (FeatureList) rootFeature.getProperty( new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" ) ); //$NON-NLS-1$
 
     final IGeoValueProvider triangleProvider = new TriangleDoubleProvider( triangleList );
 
-    monitor.subTask( "- lese Raster" );
+    monitor.subTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.15") ); //$NON-NLS-1$
     // - raster lesen und als DoubleRaster wrappen
     final GMLWorkspace dtmWorkspace = GmlSerializer.createGMLWorkspace( dtmGmlURL, null );
     final Feature rgcFeature = dtmWorkspace.getRootFeature();
     // TODO: retrieve xpath to rgc from user
-    if( !GMLSchemaUtilities.substitutes( rgcFeature.getFeatureType(), new QName( NS.GML3, "RectifiedGridCoverage" ) ) )
-      throw new IllegalArgumentException( "Root-Feature of dtm gml is no rectified grid coverage: " + rgcFeature );
+    if( !GMLSchemaUtilities.substitutes( rgcFeature.getFeatureType(), new QName( NS.GML3, Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.16") ) ) ) //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.17") + rgcFeature ); //$NON-NLS-1$
 
     final IGeoGrid raster = new RectifiedGridCoverageGeoGrid( rgcFeature );
 
@@ -197,7 +198,7 @@ public class FloodDepthCalcJob implements ISimulation
     }
     else
     {
-      monitor.subTask( "- ermittle Maximalwerte" );
+      monitor.subTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.18") ); //$NON-NLS-1$
       final MinMaxRasterWalker minMaxWalker = new MinMaxRasterWalker();
       diffRaster.getWalkingStrategy().walk( diffRaster, minMaxWalker, null, new SubProgressMonitor( monitor, 2 ) );
 
@@ -215,7 +216,7 @@ public class FloodDepthCalcJob implements ISimulation
       // System.out.println( "Grenzen: " + ArrayUtils.toString( grenzen ) );
     }
 
-    monitor.subTask( "- ermittle Flieﬂtiefen" );
+    monitor.subTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.19") ); //$NON-NLS-1$
     final GeometryFactory GF = new GeometryFactory();
 
     final SegmentCollector gc = floodDepthType == TYPE.ISOLINES ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
@@ -225,7 +226,7 @@ public class FloodDepthCalcJob implements ISimulation
     diffRaster.getWalkingStrategy().walk( diffRaster, r2l, null, new SubProgressMonitor( monitor, 5 ) );
     // LOG.info( "Finished creating flow depths" );
 
-    monitor.subTask( "- generalisiere Raster" );
+    monitor.subTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.20") ); //$NON-NLS-1$
     final NumberFormat numberInstance = NumberFormat.getNumberInstance();
     numberInstance.setGroupingUsed( true );
     numberInstance.setMinimumFractionDigits( 1 );
@@ -242,7 +243,7 @@ public class FloodDepthCalcJob implements ISimulation
     if( list.size() == 0 )
     {
       // LOG.log( Level.WARNING, "No features created" );
-      throw new SimulationException( "Intersection is empty", null );
+      throw new SimulationException( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.21"), null ); //$NON-NLS-1$
     }
     else
     {
@@ -260,7 +261,7 @@ public class FloodDepthCalcJob implements ISimulation
       // LOG.info( "Start writing shape: " + shapeBase );
       // transform geometries to shapes and write it
 
-      monitor.subTask( "- schreibe Shape" );
+      monitor.subTask( Messages.getString("org.kalypso.gml.processes.floodDepth.FloodDepthCalcJob.22") ); //$NON-NLS-1$
       ShapeSerializer.serialize( fc.getWorkspace(), shapeBase, null );
       // final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
       // sf.writeShape( fc );

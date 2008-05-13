@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -86,7 +87,7 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static String writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
@@ -115,12 +116,12 @@ public class ConstraintDelaunayHelper
         catch( final GM_Exception e )
         {
           e.printStackTrace();
-          simLog.println( "Bad geometry object:  " + geoObject + " - " + e.getLocalizedMessage() );
+          simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1") + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       else
       {
-        simLog.println( "Geometry object cannot be handled:  " + geoObject );
+        simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.3") + geoObject ); //$NON-NLS-1$
       }
     }
 
@@ -131,7 +132,7 @@ public class ConstraintDelaunayHelper
     /* write header */
     // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
     writer.print( totalPointCount );
-    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0
+    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0 //$NON-NLS-1$
 
     // Remaining lines: <vertex #> <x> <y> [attributes] [boundary marker]
     int pointIndex = 1;
@@ -139,7 +140,7 @@ public class ConstraintDelaunayHelper
 
     // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
     writer.print( totalSegmentCount );
-    writer.println( " 0" ); // Border Markers 0
+    writer.println( " 0" ); // Border Markers 0 //$NON-NLS-1$
 
     // Following lines: <vertex #> <x> <y> [attributes] [boundary marker]
     int segmentIndex = 1;
@@ -149,8 +150,8 @@ public class ConstraintDelaunayHelper
 
     // One line: <# of segments> <# of boundary markers (0 or 1)>
     // Following lines: <segment #> <endpoint> <endpoint> [boundary marker]
-    writer.println( "0" );
-    writer.println( "" );
+    writer.println( "0" ); //$NON-NLS-1$
+    writer.println( "" ); //$NON-NLS-1$
 
     // One line: <# of holes>
     // Following lines: <hole #> <x> <y>
@@ -220,7 +221,7 @@ public class ConstraintDelaunayHelper
     for( int i = 0; i < nodeList.size(); i++ )
     {
       TriangleVertex triangleVertex = nodeList.get( i );
-      writer.print( i + " " + triangleVertex.getLine() );
+      writer.print( i + " " + triangleVertex.getLine() ); //$NON-NLS-1$
       writer.println();
     }
 
@@ -233,7 +234,7 @@ public class ConstraintDelaunayHelper
     for( int i = 0; i < segmentList.size(); i++ )
     {
       TriangleSegment segment = segmentList.get( i );
-      writer.print( i + " " + segment.getLine() );
+      writer.print( i + " " + segment.getLine() ); //$NON-NLS-1$
       writer.println();
 
     }
@@ -250,13 +251,13 @@ public class ConstraintDelaunayHelper
       for( int i = 0; i < holeList.size(); i++ )
       {
         TriangleHole hole = holeList.get( i );
-        writer.print( i + " " + hole.getLine() );
+        writer.print( i + " " + hole.getLine() ); //$NON-NLS-1$
         writer.println();
       }
     }
     else
     {
-      writer.print( "0" );
+      writer.print( "0" ); //$NON-NLS-1$
       writer.println();
     }
 
@@ -268,12 +269,12 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a polyfile of polygons for the console program Triangle.exe
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static IStatus writePolyFileForPolygon( final OutputStream polyStream, final GM_Position[] posArray )
   {
     final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
     writer.print( posArray.length );
-    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0
+    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0 //$NON-NLS-1$
 
     // nodes
     int pointIndex = 1;
@@ -290,7 +291,7 @@ public class ConstraintDelaunayHelper
     }
 
     writer.print( 1 ); // totalSegmentCount, right now we have 1 polygon.
-    writer.println( " 0" ); // Border Markers 0
+    writer.println( " 0" ); // Border Markers 0 //$NON-NLS-1$
 
     // element
     int segmentIndex = 1;
@@ -305,15 +306,15 @@ public class ConstraintDelaunayHelper
       writer.println();
     }
 
-    writer.println( "0" );
-    writer.println( "" );
+    writer.println( "0" ); //$NON-NLS-1$
+    writer.println( "" ); //$NON-NLS-1$
 
     writer.flush();
 
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static final List<GM_Surface> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
     List<GM_Surface> surfaces = new ArrayList<GM_Surface>();
@@ -325,7 +326,7 @@ public class ConstraintDelaunayHelper
       if( string == null )
         break;
 
-      if( string.startsWith( "#" ) )
+      if( string.startsWith( "#" ) ) //$NON-NLS-1$
         continue;
 
       final StringTokenizer tokenizer = new StringTokenizer( string );
@@ -359,7 +360,7 @@ public class ConstraintDelaunayHelper
       if( string == null )
         break;
 
-      if( string.startsWith( "#" ) )
+      if( string.startsWith( "#" ) ) //$NON-NLS-1$
         continue;
 
       final StringTokenizer tokenizer = new StringTokenizer( string );
@@ -376,7 +377,7 @@ public class ConstraintDelaunayHelper
 
   public static StringBuffer createTriangleCommand( final File polyfile )
   {
-    final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
+    final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" ); //$NON-NLS-1$
 
     final Double qualityMinAngle = 5.00;
 
@@ -395,7 +396,7 @@ public class ConstraintDelaunayHelper
 
   public static void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
   {
-    pwSimuLog.append( "Triangle.exe wird ausgeführt..." );
+    pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.21") ); //$NON-NLS-1$
 
     final long lTimeout = PROCESS_TIMEOUT;
 
@@ -404,8 +405,8 @@ public class ConstraintDelaunayHelper
     final InputStream errorStream = exec.getErrorStream();
     final InputStream inputStream = exec.getInputStream();
 
-    final StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", false );
-    final StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", false );
+    final StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", false ); //$NON-NLS-1$
+    final StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", false ); //$NON-NLS-1$
 
     error.start();
     input.start();
@@ -428,7 +429,7 @@ public class ConstraintDelaunayHelper
       if( timeRunning >= lTimeout )
       {
         exec.destroy();
-        throw new CoreException( StatusUtilities.createErrorStatus( "Es wurde das Timeout erreicht." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.24") ) ); //$NON-NLS-1$
       }
 
       /* Wait a few millisec, before continuing. */
@@ -437,7 +438,7 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
@@ -488,7 +489,7 @@ public class ConstraintDelaunayHelper
 
     // first, check the exterior ring. If it is not closed or has less than 4 positions cancel operation.
     if( checkForPolygon( exterior ) == false )
-      throw new UnsupportedOperationException( "Geometry Utilities: could not convert a non-closed geometry object into a triangle." );
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26") ); //$NON-NLS-1$
 
     final GM_Position[][] interiorPolygons = getClosedPolygons( interior );
 
@@ -579,8 +580,8 @@ public class ConstraintDelaunayHelper
     {
       pwSimuLog = new PrintWriter( System.out );
 
-      final File tempDir = FileUtilities.createNewTempDir( "Triangle" );
-      final File polyfile = new File( tempDir, "input.poly" );
+      final File tempDir = FileUtilities.createNewTempDir( "Triangle" ); //$NON-NLS-1$
+      final File polyfile = new File( tempDir, "input.poly" ); //$NON-NLS-1$
 
       BufferedOutputStream strmPolyInput = null;
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
@@ -603,14 +604,14 @@ public class ConstraintDelaunayHelper
       // start triangulation
 
       // get the triangle list
-      final File nodeFile = new File( tempDir, "input.1.node" );
-      final File eleFile = new File( tempDir, "input.1.ele" );
+      final File nodeFile = new File( tempDir, "input.1.node" ); //$NON-NLS-1$
+      final File eleFile = new File( tempDir, "input.1.ele" ); //$NON-NLS-1$
 
       if( !nodeFile.exists() || !eleFile.exists() )
       {
-        pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
-        pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
-        pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.31") ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.32") ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.33") ); //$NON-NLS-1$
         return null;
       }
 

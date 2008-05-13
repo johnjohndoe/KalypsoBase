@@ -38,7 +38,7 @@ public class ProgressableInputStream extends FilterInputStream
 
   private void abort( ) throws IOException
   {
-    final InterruptedIOException exc = new InterruptedIOException( "progress" );
+    final InterruptedIOException exc = new InterruptedIOException( "progress" ); //$NON-NLS-1$
     exc.bytesTransferred = nread;
     throw exc;
   }

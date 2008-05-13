@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
+import org.kalypso.gml.processes.i18n.Messages;
+
 /**
  * Eine alternative zum javax.swing.ProgressMonitor
  * 
@@ -31,7 +33,7 @@ public class ProgressMonitor implements Progressable
 
   private JOptionPane m_optionPane;
 
-  private static final String CANCEL = "Abbrechen";
+  private static final String CANCEL = Messages.getString("com.bce.util.progressbar.ProgressMonitor.0"); //$NON-NLS-1$
 
   /**
    * -

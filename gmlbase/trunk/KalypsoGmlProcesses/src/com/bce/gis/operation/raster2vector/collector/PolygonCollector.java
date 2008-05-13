@@ -36,11 +36,11 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
 {
-  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER, 0, 1, false );
+  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER, 0, 1, false );
+  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER, 0, 1, false );
+  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
   private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( QNAME_SHAPE_FEATURE, new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, FROM_PROP, TO_PROP, VOLUME_PROP } );
 
@@ -105,7 +105,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
         else if( pir.isInside( nearC1 ) )
           innerCrd = nearC1;
         else
-          System.out.println( "Kann nicht sein" );
+          System.out.println( "Kann nicht sein" ); //$NON-NLS-1$
 
         CoordOrientation.orient( crds, CoordOrientation.TYPE.NEGATIV );
 
@@ -140,7 +140,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     final Double bis = new Double( Math.min( 9999.99, m_intervals[index].max ) );
     final Double volumen = Double.NaN;
 
-    final Feature feature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } );
+    final Feature feature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } ); //$NON-NLS-1$
     m_list.add( feature );
   }
 
@@ -257,14 +257,14 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       final StringBuffer str = new StringBuffer();
       if( min == Double.MIN_VALUE )
-        str.append( "-Inf" );
+        str.append( "-Inf" ); //$NON-NLS-1$
       else
         str.append( min );
 
-      str.append( " - " );
+      str.append( " - " ); //$NON-NLS-1$
 
       if( max == Double.MAX_VALUE )
-        str.append( "Inf" );
+        str.append( "Inf" ); //$NON-NLS-1$
       else
         str.append( max );
 

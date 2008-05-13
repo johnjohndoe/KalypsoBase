@@ -49,6 +49,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.kalypso.gml.processes.i18n.Messages;
+
 import com.bce.ext.jargs.FileOption;
 import com.bce.gis.operation.hmo2fli.Hmo2Fli;
 import com.bce.util.StaticFrame;
@@ -60,13 +62,13 @@ import com.bce.util.StaticFrame;
  */
 public class WspFli extends JPanel
 {
-  protected final static Icon SAVE_PREFS_ICON = new ImageIcon( WspFli.class.getResource( "resource/save.gif" ) );
+  protected final static Icon SAVE_PREFS_ICON = new ImageIcon( WspFli.class.getResource( "resource/save.gif" ) ); //$NON-NLS-1$
 
-  protected final static Icon DELETE_ICON = new ImageIcon( WspFli.class.getResource( "resource/delete.gif" ) );
+  protected final static Icon DELETE_ICON = new ImageIcon( WspFli.class.getResource( "resource/delete.gif" ) ); //$NON-NLS-1$
 
   private final static Logger LOG = Logger.getLogger( WspFli.class.getName() );
 
-  private final static ImageIcon ICON = new ImageIcon( WspFli.class.getResource( "resource/wspmap.gif" ) );
+  private final static ImageIcon ICON = new ImageIcon( WspFli.class.getResource( "resource/wspmap.gif" ) ); //$NON-NLS-1$
 
   private final static int CODE_NO_ERROR = 0;
 
@@ -88,17 +90,17 @@ public class WspFli extends JPanel
 
   private final static Preferences USER_PREFS = Preferences.userNodeForPackage( WspFli.class );
 
-  private final static String PREFS_RASTER = "Precision";
+  private final static String PREFS_RASTER = Messages.getString("com.bce.apps.wspfli.WspFli.3"); //$NON-NLS-1$
 
-  private final static String PREFS_ISO = "Isolinien";
+  private final static String PREFS_ISO = Messages.getString("com.bce.apps.wspfli.WspFli.4"); //$NON-NLS-1$
 
-  private final static String PREFS_OFFSET = "Offset";
+  private final static String PREFS_OFFSET = Messages.getString("com.bce.apps.wspfli.WspFli.5"); //$NON-NLS-1$
 
-  private final static String PREFS_COUNT = "Count";
+  private final static String PREFS_COUNT = Messages.getString("com.bce.apps.wspfli.WspFli.6"); //$NON-NLS-1$
 
-  private final static String PREFS_GRENZEN = "Grenzen";
+  private final static String PREFS_GRENZEN = Messages.getString("com.bce.apps.wspfli.WspFli.7"); //$NON-NLS-1$
 
-  private final static String PREFS_VOLUMEN = "Volumen";
+  private final static String PREFS_VOLUMEN = Messages.getString("com.bce.apps.wspfli.WspFli.8"); //$NON-NLS-1$
 
   private final boolean m_bFliTi;
 
@@ -110,9 +112,9 @@ public class WspFli extends JPanel
 
   private final JTextField m_rasterField = new JTextField();
 
-  protected final JRadioButton m_isoRadio = new JRadioButton( "Isolinien" );
+  protected final JRadioButton m_isoRadio = new JRadioButton( Messages.getString("com.bce.apps.wspfli.WspFli.9") ); //$NON-NLS-1$
 
-  private final JRadioButton m_polyRadio = new JRadioButton( "Isoflächen" );
+  private final JRadioButton m_polyRadio = new JRadioButton( Messages.getString("com.bce.apps.wspfli.WspFli.10") ); //$NON-NLS-1$
 
   private final ButtonGroup m_radioGroup = new ButtonGroup();
 
@@ -141,23 +143,23 @@ public class WspFli extends JPanel
 
     m_bFliTi = args.bFliTi;
 
-    HMO_FC.setDialogTitle( "Hmo auswählen" );
+    HMO_FC.setDialogTitle( Messages.getString("com.bce.apps.wspfli.WspFli.11") ); //$NON-NLS-1$
     HMO_FC.setAcceptAllFileFilterUsed( false );
-    HMO_FC.setFileFilter( new EndFileFilter( ".hmo", "HMO Datei (*.hmo)" ) );
+    HMO_FC.setFileFilter( new EndFileFilter( ".hmo", Messages.getString("com.bce.apps.wspfli.WspFli.13") ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    SHAPE_FC.setDialogTitle( "Shape auswählen" );
+    SHAPE_FC.setDialogTitle( Messages.getString("com.bce.apps.wspfli.WspFli.14") ); //$NON-NLS-1$
     SHAPE_FC.setAcceptAllFileFilterUsed( false );
-    SHAPE_FC.setFileFilter( new EndFileFilter( ".shp", "ESRI Shape Datei (*.shp)" ) );
+    SHAPE_FC.setFileFilter( new EndFileFilter( ".shp", Messages.getString("com.bce.apps.wspfli.WspFli.16") ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     createPanel( this, hideFiles );
 
-    final String dgmFile = args.dgmFile == null ? "" : args.dgmFile.getAbsolutePath();
-    final String wspFile = args.wspFile == null ? "" : args.wspFile.getAbsolutePath();
-    final String shapeBase = args.shapeBase == null ? "" : args.shapeBase;
-    final String rasterSize = args.rasterSize == null ? USER_PREFS.get( PREFS_RASTER, "2.0" ) : args.rasterSize.toString();
+    final String dgmFile = args.dgmFile == null ? "" : args.dgmFile.getAbsolutePath(); //$NON-NLS-1$
+    final String wspFile = args.wspFile == null ? "" : args.wspFile.getAbsolutePath(); //$NON-NLS-1$
+    final String shapeBase = args.shapeBase == null ? "" : args.shapeBase; //$NON-NLS-1$
+    final String rasterSize = args.rasterSize == null ? USER_PREFS.get( PREFS_RASTER, "2.0" ) : args.rasterSize.toString(); //$NON-NLS-1$
     final boolean bDoVolumen = args.bDoVolumeCalculation == null ? USER_PREFS.getBoolean( PREFS_VOLUMEN, false ) : args.bDoVolumeCalculation;
     final boolean bIso = args.bIso == null ? USER_PREFS.getBoolean( PREFS_ISO, false ) : args.bIso.booleanValue();
-    final String offset = USER_PREFS.get( PREFS_OFFSET, "0.5" );
+    final String offset = USER_PREFS.get( PREFS_OFFSET, "0.5" ); //$NON-NLS-1$
 
     setData( dgmFile, wspFile, shapeBase, rasterSize, bIso, bDoVolumen, args.grenzen, offset );
 
@@ -186,7 +188,7 @@ public class WspFli extends JPanel
         final int count = node.getInt( PREFS_COUNT, 0 );
         final double[] grenzen = new double[count];
         for( int c = 0; c < count; c++ )
-          grenzen[c] = node.getDouble( "" + c, 0.0 );
+          grenzen[c] = node.getDouble( "" + c, 0.0 ); //$NON-NLS-1$
 
         final GrenzenItem item = new GrenzenItem( name, grenzen );
         m_grenzenCombo.addItem( item );
@@ -220,9 +222,9 @@ public class WspFli extends JPanel
 
     final Preferences node = USER_PREFS.node( name );
 
-    node.putInt( "Count", grenzen.length );
+    node.putInt( Messages.getString("com.bce.apps.wspfli.WspFli.23"), grenzen.length ); //$NON-NLS-1$
     for( int i = 0; i < grenzen.length; i++ )
-      node.putDouble( "" + i, grenzen[i] );
+      node.putDouble( "" + i, grenzen[i] ); //$NON-NLS-1$
   }
 
   protected void removeGrenzen( )
@@ -270,7 +272,7 @@ public class WspFli extends JPanel
     USER_PREFS.putBoolean( PREFS_ISO, m_isoRadio.isSelected() );
     USER_PREFS.put( PREFS_OFFSET, m_grenzenInputField.getText() );
     final Object selectedItem = m_grenzenCombo.getSelectedItem();
-    USER_PREFS.put( PREFS_GRENZEN, selectedItem == null ? "" : selectedItem.toString() );
+    USER_PREFS.put( PREFS_GRENZEN, selectedItem == null ? "" : selectedItem.toString() ); //$NON-NLS-1$
     USER_PREFS.putBoolean( PREFS_VOLUMEN, m_volumenCheckBox.isSelected() );
 
     if( m_saveGrenzenCheckBox != null && m_saveGrenzenCheckBox.isSelected() )
@@ -309,33 +311,33 @@ public class WspFli extends JPanel
     final JPanel panel = new JPanel();
     final GridBagLayout gridBagLayout = new GridBagLayout();
     panel.setLayout( gridBagLayout );
-    panel.setBorder( BorderFactory.createTitledBorder( "Dateien" ) );
+    panel.setBorder( BorderFactory.createTitledBorder( Messages.getString("com.bce.apps.wspfli.WspFli.26") ) ); //$NON-NLS-1$
 
     m_dgmTextField.setEditable( false );
     // m_dgmTextField.setHorizontalAlignment( SwingConstants.TRAILING );
     m_dgmTextField.setPreferredSize( FILE_FIELD_SIZE );
     m_dgmTextField.setMinimumSize( FILE_FIELD_SIZE );
-    m_dgmTextField.setToolTipText( "Diese Datei wird als digitales Geländemodell im hmo Format gelesen" );
+    m_dgmTextField.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.27") ); //$NON-NLS-1$
 
     m_wspTextField.setEditable( false );
     m_wspTextField.setPreferredSize( FILE_FIELD_SIZE );
     m_wspTextField.setMinimumSize( FILE_FIELD_SIZE );
-    m_wspTextField.setToolTipText( "Diese Datei wird als digitales Höhenmodel im hmo Format gelesen." );
+    m_wspTextField.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.28") ); //$NON-NLS-1$
 
     m_shapeTextField.setEditable( false );
     m_shapeTextField.setPreferredSize( FILE_FIELD_SIZE );
     m_shapeTextField.setMinimumSize( FILE_FIELD_SIZE );
-    m_shapeTextField.setToolTipText( "Basisname der Ausgabedateien (ohne Endung). Es werden jeweils eine .shp, .shx und .dbf Datei erzeugt." );
+    m_shapeTextField.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.29") ); //$NON-NLS-1$
 
-    panel.add( new JLabel( "Geländemodell" ), new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.30") ), new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) ); //$NON-NLS-1$
     panel.add( m_dgmTextField, new GridBagConstraints( 1, 0, 2, 1, 1.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
-    panel.add( new JButton( new HmoAction( "Digitales Geländemodell wählen", m_dgmTextField ) ), new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0 ) );
+    panel.add( new JButton( new HmoAction( Messages.getString("com.bce.apps.wspfli.WspFli.31"), m_dgmTextField ) ), new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0 ) ); //$NON-NLS-1$
 
-    panel.add( new JLabel( "Wasserspiegel" ), new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.32") ), new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) ); //$NON-NLS-1$
     panel.add( m_wspTextField, new GridBagConstraints( 1, 1, 2, 1, 1.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
-    panel.add( new JButton( new HmoAction( "Wasserspiegel wählen", m_wspTextField ) ), new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0 ) );
+    panel.add( new JButton( new HmoAction( Messages.getString("com.bce.apps.wspfli.WspFli.33"), m_wspTextField ) ), new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0 ) ); //$NON-NLS-1$
 
-    panel.add( new JLabel( "Ausgabedatei" ), new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.34") ), new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) ); //$NON-NLS-1$
     panel.add( m_shapeTextField, new GridBagConstraints( 1, 2, 2, 1, 1.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
     panel.add( new JButton( new ShapeAction() ), new GridBagConstraints( 3, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, 0, insets, 0, 0 ) );
 
@@ -346,10 +348,10 @@ public class WspFli extends JPanel
   {
     final JPanel panel = new JPanel();
     panel.setLayout( new GridBagLayout() );
-    panel.setBorder( BorderFactory.createTitledBorder( "Parameter" ) );
+    panel.setBorder( BorderFactory.createTitledBorder( Messages.getString("com.bce.apps.wspfli.WspFli.35") ) ); //$NON-NLS-1$
 
-    final String rasterTooltip = "Rasterweite der Fliesstiefenermittlung. Werte unter 1,0 [m] sind im allgemeinen nicht sinnvoll.";
-    final JLabel rasterLabel = new JLabel( "Rasterweite [m]" );
+    final String rasterTooltip = Messages.getString("com.bce.apps.wspfli.WspFli.36"); //$NON-NLS-1$
+    final JLabel rasterLabel = new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.37") ); //$NON-NLS-1$
     rasterLabel.setToolTipText( rasterTooltip );
     m_rasterField.setPreferredSize( NUMBER_FIELD_SIZE );
     m_rasterField.setMinimumSize( NUMBER_FIELD_SIZE );
@@ -358,8 +360,8 @@ public class WspFli extends JPanel
 
     m_radioGroup.add( m_isoRadio );
     m_radioGroup.add( m_polyRadio );
-    m_isoRadio.setToolTipText( "Die Ergebnisse werden als Isolinien (Polylinien) ausgegeben." );
-    m_polyRadio.setToolTipText( "Die Ergebnisse werden als Isoflächen (Polygone) ausgegeben." );
+    m_isoRadio.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.38") ); //$NON-NLS-1$
+    m_polyRadio.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.39") ); //$NON-NLS-1$
     m_isoRadio.addChangeListener( new ChangeListener()
     {
       public void stateChanged( final ChangeEvent e )
@@ -368,13 +370,13 @@ public class WspFli extends JPanel
       }
     } );
 
-    m_volumenCheckBox = new JCheckBox( "Teilvolumina" );
-    m_volumenCheckBox.setToolTipText( "Die Volumina der Teilflächen werden ausgegeben." );
+    m_volumenCheckBox = new JCheckBox( Messages.getString("com.bce.apps.wspfli.WspFli.40") ); //$NON-NLS-1$
+    m_volumenCheckBox.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.41") ); //$NON-NLS-1$
 
     panel.add( rasterLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, 0, insets, 0, 0 ) );
     panel.add( m_rasterField, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
 
-    panel.add( new JLabel( "Ausgabe" ), new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.42") ), new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) ); //$NON-NLS-1$
 
     panel.add( m_isoRadio, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
     panel.add( m_polyRadio, new GridBagConstraints( 1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
@@ -390,11 +392,11 @@ public class WspFli extends JPanel
   {
     final JPanel panel = new JPanel();
     panel.setLayout( new GridBagLayout() );
-    panel.setBorder( BorderFactory.createTitledBorder( "Grenzen" ) );
+    panel.setBorder( BorderFactory.createTitledBorder( Messages.getString("com.bce.apps.wspfli.WspFli.43") ) ); //$NON-NLS-1$
 
     m_grenzenInputField.setPreferredSize( NUMBER_FIELD_SIZE );
     m_grenzenInputField.setMinimumSize( NUMBER_FIELD_SIZE );
-    m_grenzenInputField.setToolTipText( "dieser Wert wird zu jeder neuen Grenze addiert" );
+    m_grenzenInputField.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.44") ); //$NON-NLS-1$
     m_grenzenInputField.setHorizontalAlignment( SwingConstants.TRAILING );
 
     m_grenzenTable.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
@@ -403,7 +405,7 @@ public class WspFli extends JPanel
     m_grenzenTable.setTableHeader( null );
 
     m_grenzenCombo.setEditable( false );
-    m_grenzenCombo.setToolTipText( "Benutzerdefinierte Grenzen. Wählen Sie einen Eintrag, um früher definierte Grenzen wieder aufzurufen." );
+    m_grenzenCombo.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.45") ); //$NON-NLS-1$
 
     m_grenzenCombo.addItemListener( new ItemListener()
     {
@@ -419,12 +421,12 @@ public class WspFli extends JPanel
     // ) );
     tableScroller.setPreferredSize( new Dimension( 0, 150 ) );
 
-    final JTextField saveGrenzenTextField = new JTextField( "<Bezeichnung>" );
+    final JTextField saveGrenzenTextField = new JTextField( Messages.getString("com.bce.apps.wspfli.WspFli.46") ); //$NON-NLS-1$
     m_saveGrenzenTextField = saveGrenzenTextField;
     saveGrenzenTextField.setEnabled( false );
-    saveGrenzenTextField.setToolTipText( "Unter diesem Namen wird die eingegebene Grenzdefinition gespeichert" );
-    final JCheckBox saveGrenzenCheckBox = new JCheckBox( "Grenzen speichern: " );
-    saveGrenzenCheckBox.setToolTipText( "Speichert bei <OK> die eingegebene Grenzdefinition als Vorlage" );
+    saveGrenzenTextField.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.47") ); //$NON-NLS-1$
+    final JCheckBox saveGrenzenCheckBox = new JCheckBox( Messages.getString("com.bce.apps.wspfli.WspFli.48") ); //$NON-NLS-1$
+    saveGrenzenCheckBox.setToolTipText( Messages.getString("com.bce.apps.wspfli.WspFli.49") ); //$NON-NLS-1$
     m_saveGrenzenCheckBox = saveGrenzenCheckBox;
     saveGrenzenCheckBox.addChangeListener( new ChangeListener()
     {
@@ -440,13 +442,13 @@ public class WspFli extends JPanel
       }
     } );
 
-    panel.add( new JLabel( "vordefinierte Grenzen" ), new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.50") ), new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) ); //$NON-NLS-1$
     panel.add( m_grenzenCombo, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
     panel.add( new JButton( new RemoveGrenzenAction() ), new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, 0, insets, 0, 0 ) );
 
     panel.add( new JSeparator( SwingConstants.HORIZONTAL ), new GridBagConstraints( 0, 1, 3, 1, 0.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
 
-    panel.add( new JLabel( "Grenzeingabe" ), new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.BOTH, insets, 0, 0 ) );
+    panel.add( new JLabel( Messages.getString("com.bce.apps.wspfli.WspFli.51") ), new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.LINE_START, GridBagConstraints.BOTH, insets, 0, 0 ) ); //$NON-NLS-1$
     panel.add( tableScroller, new GridBagConstraints( 1, 2, 1, 5, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.BOTH, insets, 0, 0 ) );
 
     panel.add( new JButton( new AddBackwardAction( m_grenzenTable ) ), new GridBagConstraints( 2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0 ) );
@@ -482,7 +484,7 @@ public class WspFli extends JPanel
     {
       super( null, DELETE_ICON );
 
-      putValue( SHORT_DESCRIPTION, "Löscht die gewählte Grenzdefinition" );
+      putValue( SHORT_DESCRIPTION, Messages.getString("com.bce.apps.wspfli.WspFli.52") ); //$NON-NLS-1$
     }
 
     /**
@@ -498,8 +500,8 @@ public class WspFli extends JPanel
   {
     public ShapeAction( )
     {
-      putValue( NAME, "..." );
-      putValue( SHORT_DESCRIPTION, "Basisnamen für Ausgabedateien wählen" );
+      putValue( NAME, "..." ); //$NON-NLS-1$
+      putValue( SHORT_DESCRIPTION, Messages.getString("com.bce.apps.wspfli.WspFli.54") ); //$NON-NLS-1$
     }
 
     /**
@@ -526,7 +528,7 @@ public class WspFli extends JPanel
 
     public HmoAction( final String tooltip, final JTextField field )
     {
-      putValue( NAME, "..." );
+      putValue( NAME, "..." ); //$NON-NLS-1$
       putValue( SHORT_DESCRIPTION, tooltip );
 
       m_field = field;
@@ -591,8 +593,8 @@ public class WspFli extends JPanel
 
     public AddForwardAction( final JTable table )
     {
-      putValue( NAME, "+" );
-      putValue( SHORT_DESCRIPTION, "Grenze am Ende einfügen" );
+      putValue( NAME, "+" ); //$NON-NLS-1$
+      putValue( SHORT_DESCRIPTION, Messages.getString("com.bce.apps.wspfli.WspFli.57") ); //$NON-NLS-1$
 
       m_table = table;
     }
@@ -611,7 +613,7 @@ public class WspFli extends JPanel
       }
       catch( final NumberFormatException nfe )
       {
-        JOptionPane.showMessageDialog( null, "Keine gültige Zahl eingegeben", "Eingabefehler", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, Messages.getString("com.bce.apps.wspfli.WspFli.58"), Messages.getString("com.bce.apps.wspfli.WspFli.59"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -622,8 +624,8 @@ public class WspFli extends JPanel
 
     public AddBackwardAction( final JTable table )
     {
-      putValue( NAME, "-" );
-      putValue( SHORT_DESCRIPTION, "Grenze am Anfang einfügen" );
+      putValue( NAME, "-" ); //$NON-NLS-1$
+      putValue( SHORT_DESCRIPTION, Messages.getString("com.bce.apps.wspfli.WspFli.61") ); //$NON-NLS-1$
 
       m_table = table;
     }
@@ -642,7 +644,7 @@ public class WspFli extends JPanel
       }
       catch( final NumberFormatException nfe )
       {
-        JOptionPane.showMessageDialog( null, "Keine gültige Zahl eingegeben", "Eingabefehler", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, Messages.getString("com.bce.apps.wspfli.WspFli.62"), Messages.getString("com.bce.apps.wspfli.WspFli.63"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -655,7 +657,7 @@ public class WspFli extends JPanel
     {
       super( null, DELETE_ICON );
 
-      putValue( SHORT_DESCRIPTION, "markierte Grenze löschen" );
+      putValue( SHORT_DESCRIPTION, Messages.getString("com.bce.apps.wspfli.WspFli.64") ); //$NON-NLS-1$
 
       m_table = dtm;
     }
@@ -727,35 +729,35 @@ public class WspFli extends JPanel
     try
     {
       final CmdLineParser parser = new CmdLineParser();
-      final CmdLineParser.Option helpOption = parser.addBooleanOption( 'h', "help" );
-      final CmdLineParser.Option batchOption = parser.addBooleanOption( 'b', "batch" );
+      final CmdLineParser.Option helpOption = parser.addBooleanOption( 'h', "help" ); //$NON-NLS-1$
+      final CmdLineParser.Option batchOption = parser.addBooleanOption( 'b', "batch" ); //$NON-NLS-1$
 
-      final CmdLineParser.Option dgmFileOption = parser.addOption( new FileOption( 'd', "dgm", false ) );
-      final CmdLineParser.Option wspFileOption = parser.addOption( new FileOption( 'w', "wsp", false ) );
-      final CmdLineParser.Option shapeBaseOption = parser.addStringOption( 's', "shape" );
-      final CmdLineParser.Option rasterSizeOption = parser.addDoubleOption( 'p', "precision" );
-      final CmdLineParser.Option logFileOption = parser.addOption( new FileOption( 'l', "log", false ) );
-      final CmdLineParser.Option isoOption = parser.addBooleanOption( 'i', "isolines" );
-      final CmdLineParser.Option volumeOption = parser.addBooleanOption( 'v', "volume" );
+      final CmdLineParser.Option dgmFileOption = parser.addOption( new FileOption( 'd', "dgm", false ) ); //$NON-NLS-1$
+      final CmdLineParser.Option wspFileOption = parser.addOption( new FileOption( 'w', "wsp", false ) ); //$NON-NLS-1$
+      final CmdLineParser.Option shapeBaseOption = parser.addStringOption( 's', "shape" ); //$NON-NLS-1$
+      final CmdLineParser.Option rasterSizeOption = parser.addDoubleOption( 'p', "precision" ); //$NON-NLS-1$
+      final CmdLineParser.Option logFileOption = parser.addOption( new FileOption( 'l', "log", false ) ); //$NON-NLS-1$
+      final CmdLineParser.Option isoOption = parser.addBooleanOption( 'i', "isolines" ); //$NON-NLS-1$
+      final CmdLineParser.Option volumeOption = parser.addBooleanOption( 'v', "volume" ); //$NON-NLS-1$
       // final CmdLineParser.Option fliTiOption = parser.addBooleanOption( '\ufedc', "fliTi034" );
-      final CmdLineParser.Option hideFilesOption = parser.addBooleanOption( 'f', "hideFilePanel" );
+      final CmdLineParser.Option hideFilesOption = parser.addBooleanOption( 'f', "hideFilePanel" ); //$NON-NLS-1$
 
       parser.parse( args, Locale.ENGLISH );
 
       if( parser.getOptionValue( helpOption ) != null )
       {
-        LOG.info( "wspfli.exe: Copyright 2003 Björnsen Beratende Ingenieure GmbH, Maria Trost 3, Koblenz, Germany" );
-        LOG.info( "wspfli.exe -d <dmgFile> -w <wspFile> -s <shapeFile> -p <rasterSize> [-l <logFile>] [-i] [-b] [-v] [-f]" );
-        LOG.info( "--help,-h 						Print this information" );
-        LOG.info( "--batch,-b 					Run programm in batch modus (immediately start calculation)" );
-        LOG.info( "--dgm,-d 						DGM file (hmo format)" );
-        LOG.info( "--wsp,-w 						WSP file (hmo format)" );
-        LOG.info( "--shape,-s 					SHAPE output filename" );
-        LOG.info( "--precision,-p			  Precision" );
-        LOG.info( "--isolines,-i 				Create isolines (if not set, polygones are created)" );
-        LOG.info( "--volume,-v 					Calculate volume (only if polygones are created)" );
-        LOG.info( "--hideFilePanel,-f 	Hides the input controls for the files" );
-        LOG.info( "--log,-l 						log file" );
+        LOG.info( "wspfli.exe: Copyright 2003 Björnsen Beratende Ingenieure GmbH, Maria Trost 3, Koblenz, Germany" ); //$NON-NLS-1$
+        LOG.info( "wspfli.exe -d <dmgFile> -w <wspFile> -s <shapeFile> -p <rasterSize> [-l <logFile>] [-i] [-b] [-v] [-f]" ); //$NON-NLS-1$
+        LOG.info( "--help,-h 						Print this information" ); //$NON-NLS-1$
+        LOG.info( "--batch,-b 					Run programm in batch modus (immediately start calculation)" ); //$NON-NLS-1$
+        LOG.info( "--dgm,-d 						DGM file (hmo format)" ); //$NON-NLS-1$
+        LOG.info( "--wsp,-w 						WSP file (hmo format)" ); //$NON-NLS-1$
+        LOG.info( "--shape,-s 					SHAPE output filename" ); //$NON-NLS-1$
+        LOG.info( "--precision,-p			  Precision" ); //$NON-NLS-1$
+        LOG.info( "--isolines,-i 				Create isolines (if not set, polygones are created)" ); //$NON-NLS-1$
+        LOG.info( "--volume,-v 					Calculate volume (only if polygones are created)" ); //$NON-NLS-1$
+        LOG.info( "--hideFilePanel,-f 	Hides the input controls for the files" ); //$NON-NLS-1$
+        LOG.info( "--log,-l 						log file" ); //$NON-NLS-1$
         System.exit( CODE_CANCEL );
       }
 
@@ -766,7 +768,7 @@ public class WspFli extends JPanel
 
       final File logFile = (File) parser.getOptionValue( logFileOption );
       if( logFile != null )
-        Logger.getLogger( "" ).addHandler( new FileHandler( logFile.getAbsolutePath(), 10 * 1024 * 1024, 1, false ) );
+        Logger.getLogger( "" ).addHandler( new FileHandler( logFile.getAbsolutePath(), 10 * 1024 * 1024, 1, false ) ); //$NON-NLS-1$
 
       final File dgmFile = (File) parser.getOptionValue( dgmFileOption );
       final File wspFile = (File) parser.getOptionValue( wspFileOption );
@@ -787,7 +789,7 @@ public class WspFli extends JPanel
 
         while( true )
         {
-          if( JOptionPane.showConfirmDialog( rootFrame, panel, "Fliesstiefenermittlung", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE ) == JOptionPane.OK_OPTION )
+          if( JOptionPane.showConfirmDialog( rootFrame, panel, Messages.getString("com.bce.apps.wspfli.WspFli.88"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE ) == JOptionPane.OK_OPTION ) //$NON-NLS-1$
           {
             try
             {
@@ -797,9 +799,9 @@ public class WspFli extends JPanel
             }
             catch( final Exception ex )
             {
-              final String msg = "Eingabefehler:\n" + ex.getLocalizedMessage();
+              final String msg = Messages.getString("com.bce.apps.wspfli.WspFli.89") + ex.getLocalizedMessage(); //$NON-NLS-1$
               LOG.log( Level.INFO, msg, ex );
-              JOptionPane.showMessageDialog( rootFrame, msg, "Eingabefehler", JOptionPane.ERROR_MESSAGE );
+              JOptionPane.showMessageDialog( rootFrame, msg, Messages.getString("com.bce.apps.wspfli.WspFli.90"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
             }
           }
           else
@@ -809,41 +811,41 @@ public class WspFli extends JPanel
       else
       {
         if( dgmFile == null )
-          reportError( rootFrame, "Option --dgm muss angegeben werden", null, CODE_ERROR );
+          reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.91"), null, CODE_ERROR ); //$NON-NLS-1$
 
         if( wspFile == null )
-          reportError( rootFrame, "Option --wsp muss angegeben werden", null, CODE_ERROR );
+          reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.92"), null, CODE_ERROR ); //$NON-NLS-1$
 
         if( rasterSize == null )
-          reportError( rootFrame, "Option --precision muss angegeben werden", null, CODE_ERROR );
+          reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.93"), null, CODE_ERROR ); //$NON-NLS-1$
 
         if( bIso == null )
-          reportError( rootFrame, "Option --isolines muss angegeben werden", null, CODE_ERROR );
+          reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.94"), null, CODE_ERROR ); //$NON-NLS-1$
       }
 
       Hmo2Fli.transform( rootFrame, fliArgs.dgmFile, fliArgs.wspFile, fliArgs.rasterSize.doubleValue(), fliArgs.bIso.booleanValue(), fliArgs.shapeBase, fliArgs.grenzen, fliArgs.bDoVolumeCalculation );
     }
     catch( final CmdLineParser.IllegalOptionValueException iove )
     {
-      reportError( rootFrame, "Fehler beim Lesen der Programmargumente:\n" + iove.getLocalizedMessage(), iove, CODE_ERROR );
+      reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.95") + iove.getLocalizedMessage(), iove, CODE_ERROR ); //$NON-NLS-1$
     }
     catch( final CmdLineParser.UnknownOptionException uoe )
     {
-      reportError( rootFrame, "Unbekanntes Argument:\n" + uoe.getLocalizedMessage(), uoe, CODE_ARGUMENT_ERROR );
+      reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.96") + uoe.getLocalizedMessage(), uoe, CODE_ARGUMENT_ERROR ); //$NON-NLS-1$
     }
     catch( final IOException ioe )
     {
-      reportError( rootFrame, "Dateifehler:\n" + ioe.getLocalizedMessage(), ioe, CODE_ARGUMENT_ERROR );
+      reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.97") + ioe.getLocalizedMessage(), ioe, CODE_ARGUMENT_ERROR ); //$NON-NLS-1$
     }
     catch( final OutOfMemoryError oome )
     {
-      JOptionPane.showMessageDialog( rootFrame, "Nicht genügend Arbeitsspeicher für die Anwendung reserviert.", "Speicherüberlauf", JOptionPane.ERROR_MESSAGE );
+      JOptionPane.showMessageDialog( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.98"), Messages.getString("com.bce.apps.wspfli.WspFli.99"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$ //$NON-NLS-2$
       System.exit( CODE_MEMORY );
     }
     catch( final Throwable e )
     {
       final String msg = e.getLocalizedMessage();
-      reportError( rootFrame, "kritischer Anwendungsfehler:\n" + msg != null ? msg : "<unbekannter Fehler>", e, CODE_ARGUMENT_ERROR );
+      reportError( rootFrame, Messages.getString("com.bce.apps.wspfli.WspFli.100") + msg != null ? msg : Messages.getString("com.bce.apps.wspfli.WspFli.101"), e, CODE_ARGUMENT_ERROR ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     System.exit( CODE_NO_ERROR );
@@ -854,7 +856,7 @@ public class WspFli extends JPanel
     if( t != null )
       t.printStackTrace();
 
-    JOptionPane.showMessageDialog( parent, msg, "Fehler", JOptionPane.ERROR_MESSAGE );
+    JOptionPane.showMessageDialog( parent, msg, Messages.getString("com.bce.apps.wspfli.WspFli.102"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
     LOG.log( Level.SEVERE, msg, t );
     final StringWriter sw = new StringWriter();
     t.printStackTrace( new PrintWriter( sw ) );

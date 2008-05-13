@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.schemata.GmlProcessesUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -46,7 +47,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class ConstraintDelaunayCalcJob implements ISimulation
 {
-  private static final String CALCJOB_SPEC = "ConstraintDelaunayCalcJob_spec.xml";
+  private static final String CALCJOB_SPEC = "ConstraintDelaunayCalcJob_spec.xml"; //$NON-NLS-1$
 
   private static final long PROCESS_TIMEOUT = 50000;
 
@@ -62,17 +63,17 @@ public class ConstraintDelaunayCalcJob implements ISimulation
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" );
-    final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" );
-    final Double qualityMinAngle = inputProvider.hasID( "QUALITY_MIN_ANGLE" ) ? (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" ) : null;
+    final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" ); //$NON-NLS-1$
+    final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" ); //$NON-NLS-1$
+    final Double qualityMinAngle = inputProvider.hasID( "QUALITY_MIN_ANGLE" ) ? (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" ) : null; //$NON-NLS-1$ //$NON-NLS-2$
 
     final long lTimeout = PROCESS_TIMEOUT;
 
-    final File simulogFile = new File( tmpdir, "simulation.log" );
-    resultEater.addResult( "SimulationLog", simulogFile );
+    final File simulogFile = new File( tmpdir, "simulation.log" ); //$NON-NLS-1$
+    resultEater.addResult( "SimulationLog", simulogFile ); //$NON-NLS-1$
 
     PrintWriter pwSimuLog = null;
     FileOutputStream strmKernelLog = null;
@@ -86,23 +87,23 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
 
-      log.log( true, "Parsing GMLXPath: %s", geometryXPath );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8"), geometryXPath ); //$NON-NLS-1$
 
       final GMLXPath calcpath = new GMLXPath( geometryXPath );
 
       // load gml
-      log.log( true, "Loading GML: %s", gmlURL );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.9"), gmlURL ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
       // get calculation via path
-      log.log( true, "Loading geometries: %s", geometryXPath );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.10"), geometryXPath ); //$NON-NLS-1$
 
       /* Retrieve list of GM_Curves from workspace */
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof List) )
       {
-        monitor.setFinishInfo( IStatus.ERROR, "GMLXPath does not point to a list: " + calcObject );
+        monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.11") + calcObject ); //$NON-NLS-1$
         return;
       }
 
@@ -111,29 +112,29 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      log.log( true, "Schreibe .poly Datei für triangle.exe..." );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.12") ); //$NON-NLS-1$
 
       /* Write .poly file for triangle.exe */
-      final File polyfile = new File( tmpdir, "input.poly" );
+      final File polyfile = new File( tmpdir, "input.poly" ); //$NON-NLS-1$
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
       final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List) calcObject, pwSimuLog );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
-      final File fleKernelLog = new File( tmpdir, "kernel.log" );
-      resultEater.addResult( "KernelLog", fleKernelLog );
+      final File fleKernelLog = new File( tmpdir, "kernel.log" ); //$NON-NLS-1$
+      resultEater.addResult( "KernelLog", fleKernelLog ); //$NON-NLS-1$
       strmKernelLog = new FileOutputStream( fleKernelLog );
-      final File fleKernelErr = new File( tmpdir, "kernel.err" );
-      resultEater.addResult( "KernelErr", fleKernelErr );
+      final File fleKernelErr = new File( tmpdir, "kernel.err" ); //$NON-NLS-1$
+      resultEater.addResult( "KernelErr", fleKernelErr ); //$NON-NLS-1$
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
       // ATTENTION triangle.exe must be found via PATH
       // TODO: in case security manager is used, catalina.policy must be adapted to allow access to cmd.exe (or even
       // more...)
-      final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
+      final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" ); //$NON-NLS-1$
       if( qualityMinAngle != null )
       {
-        cmd.append( "-q" );
+        cmd.append( "-q" ); //$NON-NLS-1$
         cmd.append( qualityMinAngle.doubleValue() );
       }
 
@@ -145,7 +146,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
         return;
 
       // start calculation
-      log.log( true, "Triangle.exe wird ausgeführt..." );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.20") ); //$NON-NLS-1$
 
       try
       {
@@ -153,9 +154,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       }
       catch( final Throwable e )
       {
-        log.log( false, "Fehler beim Ausführen von triangle.exe: %s", e.getLocalizedMessage() );
-        log.log( e, "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
-        monitor.setFinishInfo( IStatus.ERROR, "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        log.log( false, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.21"), e.getLocalizedMessage() ); //$NON-NLS-1$
+        log.log( e, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.22") ); //$NON-NLS-1$
+        monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.23") ); //$NON-NLS-1$
         return;
       }
 
@@ -164,16 +165,16 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      log.log( true, "Netz wird als GML geschrieben..." );
+      log.log( true, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.24") ); //$NON-NLS-1$
 
-      final File nodeFile = new File( tmpdir, "input.1.node" );
-      final File eleFile = new File( tmpdir, "input.1.ele" );
+      final File nodeFile = new File( tmpdir, "input.1.node" ); //$NON-NLS-1$
+      final File eleFile = new File( tmpdir, "input.1.ele" ); //$NON-NLS-1$
 
       if( !nodeFile.exists() || !eleFile.exists() )
       {
-        log.log( false, "Fehler beim Ausführen von triangle.exe" );
-        log.log( false, "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
-        monitor.setFinishInfo( IStatus.ERROR, "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        log.log( false, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.27") ); //$NON-NLS-1$
+        log.log( false, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.28") ); //$NON-NLS-1$
+        monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.29") ); //$NON-NLS-1$
         return;
       }
 
@@ -186,14 +187,14 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       nodeReader.close();
       eleReader.close();
 
-      final File triangleFile = new File( tmpdir, "triangles.gml" );
-      GmlSerializer.serializeWorkspace( triangleFile, elementWorkspace, "UTF-8" );
-      resultEater.addResult( "ResultFileGML", triangleFile );
+      final File triangleFile = new File( tmpdir, "triangles.gml" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( triangleFile, elementWorkspace, "UTF-8" ); //$NON-NLS-1$
+      resultEater.addResult( "ResultFileGML", triangleFile ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler bei der Berechnung", e );
+      throw new SimulationException( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.33"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -204,16 +205,16 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws InvocationTargetException, IOException, GM_Exception, GMLSchemaException
   {
     final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null, null );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null, null ); //$NON-NLS-1$
     final Feature rootFeature = workspace.getRootFeature();
-    final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" );
-    final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" );
-    final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" );
+    final QName memberName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangleMember" ); //$NON-NLS-1$
+    final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ); //$NON-NLS-1$
+    final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
 
     final List<GM_Surface> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 

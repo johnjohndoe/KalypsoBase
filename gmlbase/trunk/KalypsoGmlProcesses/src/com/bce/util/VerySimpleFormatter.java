@@ -14,6 +14,6 @@ public class VerySimpleFormatter extends Formatter
   @Override
   public String format( final LogRecord record )
   {
-    return record.getMessage() + "\n";
+    return record.getMessage() + "\n"; //$NON-NLS-1$
   }
 }

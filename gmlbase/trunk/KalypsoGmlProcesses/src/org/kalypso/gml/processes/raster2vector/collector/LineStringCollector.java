@@ -74,7 +74,7 @@ public class LineStringCollector implements SegmentCollector
 
           final Double id = new Double( m_dataList.size() );
           final Double grenze = new Double( m_grenzen[index] );
-          final String name = "" + m_grenzen[index];
+          final String name = "" + m_grenzen[index]; //$NON-NLS-1$
 
           if( gmGeo instanceof GM_Curve )
           {

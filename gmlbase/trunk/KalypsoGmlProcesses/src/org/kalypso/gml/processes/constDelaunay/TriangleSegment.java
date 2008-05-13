@@ -84,7 +84,7 @@ public class TriangleSegment
 
   public String getLine( )
   {
-    return m_startId + " " + m_endId + " " + getboundaryId();
+    return m_startId + " " + m_endId + " " + getboundaryId(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public int getboundaryId( )

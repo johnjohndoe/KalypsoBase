@@ -1,5 +1,6 @@
 package org.kalypso.gml.processes.raster2vector;
 
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.raster2vector.collector.SegmentCollector;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -152,7 +153,7 @@ public class Raster2Lines implements IGeoGridWalker
       }
       catch( final LinkedCoordinateException lce )
       {
-        throw new GeoGridException( "Fehler beim linken der Segmente", lce );
+        throw new GeoGridException( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2Lines.0"), lce ); //$NON-NLS-1$
       }
     }
   }
@@ -238,7 +239,7 @@ public class Raster2Lines implements IGeoGridWalker
     }
     else
     {
-      final String msg = String.format( "Unmöglicher Fall bei x=%d, y=%d, index=%d", x, y, index );
+      final String msg = String.format( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2Lines.1"), x, y, index ); //$NON-NLS-1$
       throw new GeoGridException( msg, null );
     }
   }

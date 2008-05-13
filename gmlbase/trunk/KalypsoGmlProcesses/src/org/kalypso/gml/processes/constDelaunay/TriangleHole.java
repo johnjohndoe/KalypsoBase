@@ -71,6 +71,6 @@ public class TriangleHole
 
   public String getLine( )
   {
-    return m_position.getX() + " " + m_position.getY();
+    return m_position.getX() + " " + m_position.getY(); //$NON-NLS-1$
   }
 }

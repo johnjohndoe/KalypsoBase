@@ -54,7 +54,7 @@ public class GetRingsOperation implements IGeoValueProvider
     ((STRtree) m_index).build();
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public final LinearRing[] getAllContaining( final Coordinate c )
   {
     final Vector<LinearRing> results = new Vector<LinearRing>();

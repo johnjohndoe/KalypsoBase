@@ -56,7 +56,7 @@ public class RingTreeElement
   @Override
   public String toString( )
   {
-    return "[" + index + ", " + linearRing + "]";
+    return "[" + index + ", " + linearRing + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public Polygon getAsPolygon( final GeometryFactory gf )

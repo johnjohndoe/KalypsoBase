@@ -3,6 +3,7 @@ package org.kalypso.gml.processes.raster2vector.collector;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinate;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinateException;
 import org.kalypso.gml.processes.raster2vector.ringtree.RingTree;
@@ -86,7 +87,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
         else if( pir.isInside( nearC1 ) )
           innerCrd = nearC1;
         else
-          System.out.println( "Kann nicht sein" );
+          System.out.println( Messages.getString("org.kalypso.gml.processes.raster2vector.collector.PolygonCollector.0") ); //$NON-NLS-1$
 
         CoordOrientation.orient( crds, CoordOrientation.TYPE.NEGATIV );
 
@@ -235,14 +236,14 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       final StringBuffer str = new StringBuffer();
       if( m_min == Double.MIN_VALUE )
-        str.append( "-Inf" );
+        str.append( "-Inf" ); //$NON-NLS-1$
       else
         str.append( m_min );
 
-      str.append( " - " );
+      str.append( " - " ); //$NON-NLS-1$
 
       if( m_max == Double.MAX_VALUE )
-        str.append( "Inf" );
+        str.append( "Inf" ); //$NON-NLS-1$
       else
         str.append( m_max );
 

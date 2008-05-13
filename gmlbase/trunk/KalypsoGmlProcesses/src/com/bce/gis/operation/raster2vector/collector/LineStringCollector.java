@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class LineStringCollector implements SegmentCollector
 {
-  private static final IValuePropertyType GRENZEN_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "hoehe" ), DOUBLE_HANDLER, 0, 1, false );
+  private static final IValuePropertyType GRENZEN_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "hoehe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
   private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( QNAME_SHAPE_FEATURE, new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, GRENZEN_PROP } );
 
@@ -69,7 +69,7 @@ public class LineStringCollector implements SegmentCollector
         final String name = grenze.toString();
 
         final GM_Object gmGeo = JTSAdapter.wrap( m_gf.createLineString( new Coordinate[] { lc0.crd, lc1.crd } ) );
-        final Feature feature = FeatureFactory.createFeature( list.getParentFeature(), list.getParentFeatureTypeProperty(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } );
+        final Feature feature = FeatureFactory.createFeature( list.getParentFeature(), list.getParentFeatureTypeProperty(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } ); //$NON-NLS-1$
         // m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
         list.add( feature );
       }
@@ -89,9 +89,9 @@ public class LineStringCollector implements SegmentCollector
           final Double id = new Double( list.size() );
           // final Double id = new Double( m_fc.getSize() );
           final Double grenze = new Double( m_grenzen[index] );
-          final String name = "" + m_grenzen[index];
+          final String name = "" + m_grenzen[index]; //$NON-NLS-1$
 
-          final Feature feature = FeatureFactory.createFeature( m_fc, m_fc.getParentRelation(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } );
+          final Feature feature = FeatureFactory.createFeature( m_fc, m_fc.getParentRelation(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } ); //$NON-NLS-1$
           list.add( feature );
         }
       }

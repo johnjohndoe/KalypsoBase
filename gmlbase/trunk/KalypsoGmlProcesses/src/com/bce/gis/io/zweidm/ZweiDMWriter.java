@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.gml.processes.i18n.Messages;
 
 import com.vividsolutions.jts.algorithm.RobustCGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -36,10 +37,10 @@ public class ZweiDMWriter
     final PrintWriter pw = new PrintWriter( w );
 
     // write head
-    pw.println( "MESH2D" );
-    pw.println( "T1" );
-    pw.println( "T2" );
-    pw.println( "T3" );
+    pw.println( "MESH2D" ); //$NON-NLS-1$
+    pw.println( "T1" ); //$NON-NLS-1$
+    pw.println( "T2" ); //$NON-NLS-1$
+    pw.println( "T3" ); //$NON-NLS-1$
 
     // write triangles
     // IMPORTANT: use linked hashmap, so the orering of insertion stays the same
@@ -48,13 +49,13 @@ public class ZweiDMWriter
     {
       final LinearRing ring = m_rings[i];
 
-      pw.print( "E3T " );
+      pw.print( "E3T " ); //$NON-NLS-1$
       pw.print( i + 1 );
-      pw.print( " " );
+      pw.print( " " ); //$NON-NLS-1$
 
       final Coordinate[] coordinates = ring.getCoordinates();
       if( coordinates == null || coordinates.length != 4 )
-        throw new IllegalArgumentException( "Ring with wrong number of coordinates.\nMust be a closed ring with 4 coordinates.\n" + ring );
+        throw new IllegalArgumentException( Messages.getString("com.bce.gis.io.zweidm.ZweiDMWriter.6") + ring ); //$NON-NLS-1$
 
       if( !RobustCGAlgorithms.isCCW( coordinates ) )
         ArrayUtils.reverse( coordinates );
@@ -73,10 +74,10 @@ public class ZweiDMWriter
         }
 
         pw.print( nodeIndex );
-        pw.print( " " );
+        pw.print( " " ); //$NON-NLS-1$
       }
 
-      pw.println( "1" );
+      pw.println( Messages.getString("com.bce.gis.io.zweidm.ZweiDMWriter.8") ); //$NON-NLS-1$
     }
 
     // write nodes
@@ -85,14 +86,14 @@ public class ZweiDMWriter
       final Coordinate crd = entry.getKey();
       final int nodeIndex = entry.getValue();
 
-      pw.print( "ND " );
+      pw.print( "ND " ); //$NON-NLS-1$
       pw.print( nodeIndex );
-      pw.print( " " );
-      pw.printf( Locale.ENGLISH, "%.3f", crd.x );
-      pw.print( " " );
-      pw.printf( Locale.ENGLISH, "%.3f", crd.y );
-      pw.print( " " );
-      pw.printf( Locale.ENGLISH, "%.2f", crd.z );
+      pw.print( " " ); //$NON-NLS-1$
+      pw.printf( Locale.ENGLISH, "%.3f", crd.x ); //$NON-NLS-1$
+      pw.print( " " ); //$NON-NLS-1$
+      pw.printf( Locale.ENGLISH, "%.3f", crd.y ); //$NON-NLS-1$
+      pw.print( " " ); //$NON-NLS-1$
+      pw.printf( Locale.ENGLISH, "%.2f", crd.z ); //$NON-NLS-1$
       pw.println();
     }
   }

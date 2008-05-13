@@ -1,5 +1,7 @@
 package com.bce.gis.operation.hmo2fli;
 
+import org.kalypso.gml.processes.i18n.Messages;
+
 import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -19,7 +21,7 @@ public class HeightFromTriangle
   public HeightFromTriangle( final LinearRing triangle )
   {
     if( triangle.getNumPoints() != 4 )
-      throw new IllegalArgumentException( "Only triangles supported" );
+      throw new IllegalArgumentException( Messages.getString("com.bce.gis.operation.hmo2fli.HeightFromTriangle.0") ); //$NON-NLS-1$
 
     m_triangle = triangle;
     m_pir = new SimplePointInRing( triangle );
@@ -28,7 +30,7 @@ public class HeightFromTriangle
   public double getHeight( final Coordinate c )
   {
     if( m_triangle.getNumPoints() != 4 )
-      throw new IllegalArgumentException( "Only triangles supported" );
+      throw new IllegalArgumentException( Messages.getString("com.bce.gis.operation.hmo2fli.HeightFromTriangle.1") ); //$NON-NLS-1$
 
     // Check if point is inside Triangle, if not return immediuately
     // TODO: not always necessary?

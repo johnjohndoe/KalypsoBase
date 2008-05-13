@@ -113,11 +113,11 @@ public class TriangleVertex
 
   public String getLine( )
   {
-    String pos = m_position.getX() + " " + m_position.getY();
-    String att = "";
+    String pos = m_position.getX() + " " + m_position.getY(); //$NON-NLS-1$
+    String att = ""; //$NON-NLS-1$
     for( double attribute : m_attributes )
     {
-      att = att + " " + attribute;
+      att = att + " " + attribute; //$NON-NLS-1$
     }
     return pos + att;
 

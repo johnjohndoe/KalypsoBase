@@ -111,7 +111,7 @@ public class TrianglePolyFileData
   {
     // we take the data from the first element
     final TriangleVertex triangleVertex = m_nodeList.get( 0 );
-    return m_nodeList.size() + " " + triangleVertex.getDimension() + " " + triangleVertex.getAttributes().size() + " " + getBoundaryMarker();
+    return m_nodeList.size() + " " + triangleVertex.getDimension() + " " + triangleVertex.getAttributes().size() + " " + getBoundaryMarker(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public int getBoundaryMarker( )
@@ -134,7 +134,7 @@ public class TrianglePolyFileData
     // Following lines: segment #,endpoint1, endpoint2, [boundary marker]
 
     final TriangleSegment triangleSegment = m_segmentList.get( 0 );
-    return m_segmentList.size() + " " + triangleSegment.getboundaryId();
+    return m_segmentList.size() + " " + triangleSegment.getboundaryId(); //$NON-NLS-1$
   }
 
   public String getHoleHeader( )

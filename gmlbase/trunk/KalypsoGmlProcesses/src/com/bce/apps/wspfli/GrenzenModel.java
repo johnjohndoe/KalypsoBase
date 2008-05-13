@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.kalypso.gml.processes.i18n.Messages;
+
 /**
  * TableModel für die Grenzen
  * 
@@ -56,7 +58,7 @@ public class GrenzenModel extends AbstractTableModel
   {
     checkColumn( columnIndex );
 
-    return "Grenzen";
+    return Messages.getString("GrenzenModel.0"); //$NON-NLS-1$
   }
 
   /**
@@ -126,13 +128,13 @@ public class GrenzenModel extends AbstractTableModel
   private void checkColumn( final int index ) throws IllegalArgumentException
   {
     if( index != 0 )
-      throw new IllegalArgumentException( "Invalid column index: " + index );
+      throw new IllegalArgumentException( Messages.getString("GrenzenModel.1") + index ); //$NON-NLS-1$
   }
 
   private void checkRow( final int index ) throws IllegalArgumentException
   {
     if( index < 0 || index >= m_data.size() )
-      throw new IllegalArgumentException( "Invalid row index: " + index );
+      throw new IllegalArgumentException( Messages.getString("GrenzenModel.2") + index ); //$NON-NLS-1$
   }
 
   public double[] getData( )

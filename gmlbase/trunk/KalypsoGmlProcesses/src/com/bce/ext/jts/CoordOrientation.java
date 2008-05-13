@@ -2,6 +2,8 @@ package com.bce.ext.jts;
 
 import java.util.logging.Logger;
 
+import org.kalypso.gml.processes.i18n.Messages;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateArrays;
 
@@ -16,9 +18,9 @@ public class CoordOrientation
 
   public static class TYPE
   {
-    public static TYPE POSITIV = new TYPE( "positiv" );
+    public static TYPE POSITIV = new TYPE( "positiv" ); //$NON-NLS-1$
 
-    public static TYPE NEGATIV = new TYPE( "negativ" );
+    public static TYPE NEGATIV = new TYPE( "negativ" ); //$NON-NLS-1$
 
     private String m_name;
 
@@ -51,7 +53,7 @@ public class CoordOrientation
   public static TYPE orientation2D_Polygon( final Coordinate[] coords ) throws CoordOrientationException
   {
     if( coords == null || coords.length < 3 || coords[0] != coords[coords.length - 1] )
-      LOG.warning( "unable to filter coords: coord do not form a LinearRing" );
+      LOG.warning( Messages.getString("com.bce.ext.jts.CoordOrientation.2") ); //$NON-NLS-1$
 
     // first find rightmost lowest vertex of the polygon
     int rmin = 0;
@@ -86,7 +88,7 @@ public class CoordOrientation
     else if( o > 0 )
       return TYPE.POSITIV;
     else
-      throw new CoordOrientationException( "Anwendungsfehler: degeneriertes Polygon aufgetreten" );
+      throw new CoordOrientationException( Messages.getString("com.bce.ext.jts.CoordOrientation.3") ); //$NON-NLS-1$
   }
 
 }
