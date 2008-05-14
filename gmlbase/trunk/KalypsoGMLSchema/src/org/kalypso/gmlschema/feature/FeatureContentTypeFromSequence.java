@@ -60,14 +60,6 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
-   */
-  public IPropertyType[] getProperties( )
-  {
-    return m_pt;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.feature.IFeatureContentType#getBase()
    */
   public IFeatureContentType getBase( )
@@ -88,6 +80,6 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
    */
   public IPropertyType[] getDirectProperties( )
   {
-    return m_pt;
+    return getProperties();
   }
 }

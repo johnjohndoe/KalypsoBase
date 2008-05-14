@@ -36,7 +36,6 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 
 /**
  * @author doemming
@@ -112,25 +111,4 @@ public interface IFeatureType extends IInitialize, IAdaptable
    * @return the default geometry property
    */
   public IValuePropertyType getDefaultGeometryProperty( );
-
-  /**
-   * To get the virtual function property given its {@link QName}
-   * 
-   * @return the virtual property of the given {@link QName} or null if there is no such virtual property
-   */
-  public IPropertyType getVirtualProperty( QName propQName );
-
-  /**
-   * Checks if a property type is a virtual property
-   * 
-   * @return true if the given property type is virtual property
-   */
-  public boolean isVirtualProperty( IPropertyType pt );
-
-  /**
-   * To get all virtual function geometry property
-   * 
-   * @return all virtual function geometry property as array
-   */
-  public IVirtualFunctionPropertyType[] getVirtualGeometryProperties( );
 }

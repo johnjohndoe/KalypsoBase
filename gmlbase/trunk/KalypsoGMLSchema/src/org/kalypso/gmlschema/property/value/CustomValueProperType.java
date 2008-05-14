@@ -121,6 +121,14 @@ public class CustomValueProperType implements IValuePropertyType
   }
 
   /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
+   */
+  public boolean isVirtual( )
+  {
+    return false;
+  }
+
+  /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#isFixed()
    */
   public boolean isFixed( )

@@ -94,4 +94,14 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return getElement().getNillable();
   }
+
+  /**
+   * <This property is created from a real xml-element and so is not virtual.
+   * 
+   * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
+   */
+  public boolean isVirtual( )
+  {
+    return false;
+  }
 }

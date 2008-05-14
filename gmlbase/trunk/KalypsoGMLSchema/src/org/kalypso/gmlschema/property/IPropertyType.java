@@ -33,13 +33,14 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.xml.IQualifiedElement;
 
 /**
  * Instances of this interface represent the properties of a {@link org.kalypso.gmlschema.feature.IFeatureType}.
  * 
- * @author doemming
+ * @author Andreas von Dömming
  */
-public interface IPropertyType extends IInitialize, IAdaptable
+public interface IPropertyType extends IQualifiedElement, IInitialize, IAdaptable
 {
   public final static int UNBOUND_OCCURENCY = -1;
 
@@ -50,12 +51,20 @@ public interface IPropertyType extends IInitialize, IAdaptable
   public boolean isList( );
 
   /**
+   * A property type is virtual, if it is not defined as regular element inside a feature type of a gml
+   * application-schema.<br>
+   * Virtual properties are either defined inside an appinfo-element of the schema or registered via an eclipse
+   * extension.<br>
+   * Virtual properties are always backed-up by function-properties and are never serialized into the gml (else the
+   * resulting gml would not validate against its application-schema).
+   */
+  public boolean isVirtual( );
+
+  /**
    * Returns the qname of the feature(-type), this property is contained in. This information is necessary, as inside
    * one gml schema, multiple (different) properties with the same qname may exists in different features.
    */
   public QName getFeatureQName( );
-
-  public QName getQName( );
 
   public boolean isNillable( );
 

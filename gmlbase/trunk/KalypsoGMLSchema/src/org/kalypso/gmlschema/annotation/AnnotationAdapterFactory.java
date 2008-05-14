@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
+import org.kalypso.gmlschema.xml.IQualifiedElement;
 import org.kalypso.gmlschema.xml.QualifiedElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -56,9 +56,9 @@ public class AnnotationAdapterFactory implements IAdapterFactory
         return annotationForElement( platformLang, xsdElement.getAnnotation(), xsdElement.getName() );
       }
 
-      if( adaptableObject instanceof IPropertyType )
+      if( adaptableObject instanceof IQualifiedElement )
       {
-        final IPropertyType pt = (IPropertyType) adaptableObject;
+        final IQualifiedElement pt = (IQualifiedElement) adaptableObject;
         return createDefaultAnnotation( platformLang, pt.getQName().getLocalPart(), true );
       }
     }

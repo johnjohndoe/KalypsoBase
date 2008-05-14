@@ -42,7 +42,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 /**
  * @author doemming
  */
-public class QualifiedElement implements IAdaptable
+public class QualifiedElement implements IQualifiedElement, IAdaptable
 {
   public static QName createQName( final IGMLSchema gmlSchema, final Element element )
   {

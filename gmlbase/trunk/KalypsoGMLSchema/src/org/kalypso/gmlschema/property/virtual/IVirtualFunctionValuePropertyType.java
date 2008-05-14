@@ -40,22 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.virtual;
 
+import java.util.Map;
+
 import org.kalypso.gmlschema.property.IValuePropertyType;
 
 /**
- * Property type interface to be use for virtual property 
- * based on a funtion property.
- * 
- * Such a function property has 
+ * Property type interface to be use for virtual property based on a funtion property. Such a function property has
  * <ul>
- *  <li/> kapp:isVirtual =  "true" to signal that its virtual nature
- *  <li/> kapp:valueType = "a supported kalypso value type"
+ * <li> kapp:valueType = "a supported kalypso value</li>
+ * type"
  * </ul>
- *   
+ * 
  * @author Patrice Congo
+ * @author Gernot Belger
  * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction
  */
-public interface IVirtualFunctionValuePropertyType extends IVirtualFunctionPropertyType, IValuePropertyType
+public interface IVirtualFunctionValuePropertyType extends IValuePropertyType
 {
+  /**
+   * Returns the id of the function implementing this virtual property.
+   */
+  String getFunctionId( );
 
+  /**
+   * Returns the parameters for the function.
+   * 
+   * @see #getFunctionId()
+   */
+  Map<String, String> getFunctionProperties( );
 }

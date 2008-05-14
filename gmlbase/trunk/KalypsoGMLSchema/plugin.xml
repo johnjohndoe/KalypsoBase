@@ -3,17 +3,13 @@
 <plugin>
    <extension-point id="annotationProvider" name="annotationProvider" schema="schema/annotationProvider.exsd"/>
    <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
+   <extension-point id="virtualProperty" name="virtualProperty" schema="schema/virtualProperty.exsd"/>
    <extension
          id="KalypsoGMLSchema.adapters"
          name="KalypsoGMLSchemaadapters"
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.kalypso.gmlschema.xml.QualifiedElement"
-            class="org.kalypso.gmlschema.annotation.AnnotationAdapterFactory">
-         <adapter type="org.kalypso.gmlschema.annotation.IAnnotation"/>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.gmlschema.property.value.CustomValueProperType"
+            adaptableType="org.kalypso.gmlschema.xml.IQualifiedElement"
             class="org.kalypso.gmlschema.annotation.AnnotationAdapterFactory">
          <adapter type="org.kalypso.gmlschema.annotation.IAnnotation"/>
       </factory>

@@ -25,7 +25,7 @@ public class MarshallingTypeRegistrySingleton
   }
 
   @SuppressWarnings("unchecked")
-  public static ITypeRegistry<IMarshallingTypeHandler> getTypeRegistry( )
+  public synchronized static ITypeRegistry<IMarshallingTypeHandler> getTypeRegistry( )
   {
     if( m_typeRegistry == null )
     {
@@ -56,7 +56,7 @@ public class MarshallingTypeRegistrySingleton
     return m_typeRegistry;
   }
 
-  public static void reloadTypeRegistry( )
+  public synchronized static void reloadTypeRegistry( )
   {
     m_typeRegistry = null;
     getTypeRegistry();

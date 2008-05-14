@@ -79,6 +79,14 @@ public class CustomRelationType implements IRelationType
   }
 
   /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
+   */
+  public boolean isVirtual( )
+  {
+    return false;
+  }
+
+  /**
    * @return allways <code>true</code> as in shapefile
    * @see org.kalypso.gmlschema.property.relation.IRelationType#isInlineAble()
    */

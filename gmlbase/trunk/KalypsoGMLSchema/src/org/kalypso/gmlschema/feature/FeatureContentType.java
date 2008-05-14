@@ -29,8 +29,9 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -40,7 +41,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
@@ -56,7 +56,7 @@ public abstract class FeatureContentType implements IFeatureContentType
 
   private final ComplexType m_complexType;
 
-  protected IPropertyType[] m_pt = null;
+  private IPropertyType[] m_pt = null;
 
   private final QName m_qName;
 
@@ -96,78 +96,67 @@ public abstract class FeatureContentType implements IFeatureContentType
   public abstract List<ElementWithOccurs> getSequence( ) throws GMLSchemaException;
 
   /**
-   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
+   * @see org.kalypso.gmlschema.builder.IInitialize#init(int)
    */
-  public void init( final int initializeRun ) throws GMLSchemaException
+  public void init( final int initializeRun )
   {
-    switch( initializeRun )
-    {
-      case IInitialize.INITIALIZE_RUN_FIRST:
+// nothing to do
+  }
 
-        final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   */
+  public IPropertyType[] getProperties( )
+  {
+    if( m_pt == null )
+    {
+      try
+      {
+        final Map<QName, IPropertyType> propertyTypes = new LinkedHashMap<QName, IPropertyType>();
 
         final List<ElementWithOccurs> sequence = getSequence();
         for( final ElementWithOccurs elementWithOccurs : sequence )
         {
-          GMLSchema schema = getGMLSchema();
           final Element elementItem = elementWithOccurs.getElement();
-          Object buildedObject = schema.getBuildedObjectFor( elementItem );
+          Object buildedObject = getGMLSchema().getBuildedObjectFor( elementItem );
 
-          final Element element;
           if( buildedObject == null )
           {
             // everything should be registered for the local element, nothing for the referenced element
             final QName ref = elementItem.getRef();
-            if( ref == null )
-            {
-              // final String message = "no typeHandler for " + elementItem.getType();
-              // System.out.println( message );
-              // System.out.println();
-            }
-            else
+            if( ref != null )
             {
               final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
               if( reference != null )
               {
-                element = reference.getElement();
-                schema = reference.getGMLSchema();
+                final Element element = reference.getElement();
+                final GMLSchema schema = reference.getGMLSchema();
                 buildedObject = schema.getBuildedObjectFor( element );
-              }
-              else
-              {
-// if( Debug.traceSchemaParsing() )
-// System.out.println( "debug" );
               }
             }
           }
-          // why are all buildedObjects of type IPropertyType ?
-          if( buildedObject != null && buildedObject instanceof IPropertyType )
-            propertyTypes.add( (IPropertyType) buildedObject );
-          // else
-          // System.out.println( "no valid property found for " + elementItem );
+
+          if( buildedObject instanceof IPropertyType )
+          {
+            final IPropertyType pt = (IPropertyType) buildedObject;
+            propertyTypes.put( pt.getQName(), pt );
+          }
         }
-        m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
-        break;
+
+        m_pt = propertyTypes.values().toArray( new IPropertyType[propertyTypes.size()] );
+      }
+      catch( final GMLSchemaException e )
+      {
+        e.printStackTrace();
+      }
     }
+
+    return m_pt;
   }
 
   public ComplexType getComplexType( )
   {
     return m_complexType;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperty(javax.xml.namespace.QName)
-   */
-  public IPropertyType getProperty( final QName qName )
-  {
-    final IPropertyType[] properties = getProperties();
-    for( final IPropertyType pt : properties )
-    {
-      if( pt.getQName().equals( qName ) )
-        return pt;
-    }
-    return null;
   }
 
   /**

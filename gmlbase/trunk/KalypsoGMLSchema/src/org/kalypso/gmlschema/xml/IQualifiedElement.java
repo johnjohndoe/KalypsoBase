@@ -38,30 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gmlschema.property.virtual;
+package org.kalypso.gmlschema.xml;
 
-import org.kalypso.gmlschema.property.IPropertyType;
+import javax.xml.namespace.QName;
 
 /**
- * Property type interface to be use for virtual property 
- * based on a funtion property.
- * 
- * Such a function property has 
- * <ul>
- *  <li/> kapp:isVirtual =  "true" to signal that its virtual nature
- * </ul>
- * @author Patrice Congo
- * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction
- * @see IVirtualFunctionValuePropertyType
+ * @author Gernot Belger
  */
-public interface IVirtualFunctionPropertyType extends IPropertyType
+public interface IQualifiedElement
 {
-  /**
-   * Answer whether this function property is returning a 
-   * geometry or not.
-   * 
-   * @return true if the virtual function property ir returning a
-   *    geometry otherwise false
-   */
-  public boolean isGeometry();
+  QName getQName( );
 }

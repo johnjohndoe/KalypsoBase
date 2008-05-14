@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.virtual;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdapterManager;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -55,8 +60,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePropertyType
 {
   private final IMarshallingTypeHandler m_handler;
-
-  private final QName m_typeQName;
 
   private final IRestriction[] m_restrictions = {};
 
@@ -80,6 +83,12 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
 
   private final QName m_featureQName;
 
+  private final QName m_qName;
+
+  private final String m_functionId;
+
+  private final Map<String, String> m_properties;
+
   /**
    * Creates a new {@link VirtualFunctionPropertyType} for the given value handler and the property q-name
    * 
@@ -88,17 +97,23 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    * @param propertyQName
    *            the q-name of the virtual property
    */
-  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName, final QName featureQName ) throws IllegalArgumentException
+  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName, final QName featureQName, final String functionId, final Map<String, String> properties ) throws IllegalArgumentException
   {
-    if( handler == null || propertyQName == null )
-    {
-      final String message = String.format( "%s %s", handler == null ? "null" : handler.toString(), propertyQName == null ? "null" : propertyQName.toString() );
-      throw new IllegalArgumentException( message );
-    }
-
+    m_qName = propertyQName;
     m_featureQName = featureQName;
     m_handler = handler;
-    m_typeQName = propertyQName;
+    m_functionId = functionId;
+    m_properties = properties;
+
+    Assert.isNotNull( propertyQName );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.xml.IQualifiedElement#getQName()
+   */
+  public QName getQName( )
+  {
+    return m_qName;
   }
 
   /**
@@ -114,7 +129,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public int getMaxOccurs( )
   {
-    return this.m_maxOccurs;
+    return m_maxOccurs;
   }
 
   /**
@@ -122,17 +137,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public int getMinOccurs( )
   {
-    return this.m_minOccurs;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getName()
-   */
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public String getName( )
-  {
-    return m_typeQName.getLocalPart();
+    return m_minOccurs;
   }
 
   /**
@@ -144,19 +149,21 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   }
 
   /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getQName()
-   */
-  public QName getQName( )
-  {
-    return m_typeQName;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isList()
    */
   public boolean isList( )
   {
-    return this.m_isList;
+    return m_isList;
+  }
+
+  /**
+   * This IS a virtual property.
+   * 
+   * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
+   */
+  public boolean isVirtual( )
+  {
+    return true;
   }
 
   /**
@@ -164,7 +171,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public boolean isNillable( )
   {
-    return this.m_isNillable;
+    return m_isNillable;
   }
 
   /**
@@ -176,20 +183,11 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
   public String getDefault( )
   {
-    return this.m_defaultValue;
+    return m_defaultValue;
   }
 
   /**
@@ -197,7 +195,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public String getFixed( )
   {
-    return this.m_fixed;
+    return m_fixed;
   }
 
   /**
@@ -213,7 +211,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public IRestriction[] getRestriction( )
   {
-    return this.m_restrictions;
+    return m_restrictions;
   }
 
   /**
@@ -245,7 +243,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public boolean hasDefault( )
   {
-    return this.m_hasDefault;
+    return m_hasDefault;
   }
 
   /**
@@ -268,7 +266,7 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public boolean isFixed( )
   {
-    return this.m_isFixed;
+    return m_isFixed;
   }
 
   /**
@@ -276,7 +274,54 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    */
   public boolean isNullable( )
   {
-    return this.m_isNullable;
+    return m_isNullable;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return "" + m_qName;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class adapter )
+  {
+    if( !Platform.isRunning() )
+      return null;
+    final IAdapterManager adapterManager = Platform.getAdapterManager();
+    return adapterManager.loadAdapter( this, adapter.getName() );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getName()
+   */
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public String getName( )
+  {
+    return m_qName.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionId()
+   */
+  public String getFunctionId( )
+  {
+    return m_functionId;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType#getFunctionProperties()
+   */
+  public Map<String, String> getFunctionProperties( )
+  {
+    return m_properties;
   }
 
 }
