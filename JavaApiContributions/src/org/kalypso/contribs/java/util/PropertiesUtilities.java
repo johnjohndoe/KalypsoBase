@@ -50,10 +50,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.JavaApiContributionsPlugin;
-
 /**
  * @author doemming
  */
@@ -127,8 +123,11 @@ public class PropertiesUtilities
     }
 
     // If we reach this line, nothing was found...
-    final IStatus status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), "Message file not found: " + path + suffixes[0] );
-    JavaApiContributionsPlugin.getDefault().getLog().log( status );
+    // TODO: produces too much output, make a tracing option
+// final IStatus status = new Status( IStatus.ERROR,
+// JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), "Message file not found: " + path +
+// suffixes[0] );
+// JavaApiContributionsPlugin.getDefault().getLog().log( status );
   }
 
   private static final String EXTENSION = ".properties"; //$NON-NLS-1$
