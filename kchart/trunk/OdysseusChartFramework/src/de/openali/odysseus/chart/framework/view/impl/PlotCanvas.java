@@ -33,7 +33,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
- * @author burtscher widget in which the layers' content is painted
+ * @author burtscher widget in which the layers content is painted
  */
 public class PlotCanvas extends Canvas implements PaintListener, Listener
 {
@@ -162,7 +162,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   @Override
   public void dispose( )
   {
-    removePaintListener( this );
     if( m_bufferImg != null )
     {
       m_bufferImg.dispose();
@@ -179,6 +178,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         }
       }
     }
+
+    m_manager.dispose();
+
     super.dispose();
   }
 

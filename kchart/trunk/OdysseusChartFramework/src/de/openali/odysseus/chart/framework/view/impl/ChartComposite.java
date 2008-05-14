@@ -171,7 +171,7 @@ public class ChartComposite extends Canvas implements IChartView
 
     final int axisContainerStyle = SWT.DOUBLE_BUFFERED;
 
-    // 1.1 - wird ins erste Feld der ersten Zeile gef�llt
+    // 1.1 - first field of first row
     final Label lbl11 = new Label( parent, SWT.SHADOW_ETCHED_IN );
     lbl11.setSize( 0, 0 );
     lbl11.setVisible( false );
@@ -184,12 +184,12 @@ public class ChartComposite extends Canvas implements IChartView
     topAxes.setBackground( m_bgColor );
     m_axisPlaces.put( POSITION.TOP, topAxes );
 
-    // 1.3 - wird ins letzte Feld der ersten Zeile gef�llt
+    // 1.3 - last field of first row
     final Label lbl13 = new Label( parent, SWT.NONE );
     lbl13.setSize( 0, 0 );
     lbl13.setVisible( false );
 
-    // 2.1
+    // 2.1 - first field
     final Composite leftAxes = new SizedComposite( parent, axisContainerStyle );
     leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
@@ -241,6 +241,8 @@ public class ChartComposite extends Canvas implements IChartView
   @Override
   public void dispose( )
   {
+    super.dispose();
+
     m_plot.dispose();
 
     m_model.getMapperRegistry().removeListener( m_mapperListener );
@@ -250,8 +252,6 @@ public class ChartComposite extends Canvas implements IChartView
     m_bgColor.dispose();
 
     m_axisPlaces.clear();
-
-    super.dispose();
 
   }
 

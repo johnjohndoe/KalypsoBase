@@ -86,6 +86,10 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     {
       img.dispose();
     }
+    for( final Image img : m_legendEntryImages.values() )
+    {
+      img.dispose();
+    }
     m_layerImages.clear();
   }
 
