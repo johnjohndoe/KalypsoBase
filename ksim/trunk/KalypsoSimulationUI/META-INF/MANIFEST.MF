@@ -6,22 +6,15 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.simulation.ui.KalypsoSimulationUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.ui.forms,
- org.eclipse.debug.core,
- org.eclipse.ui.externaltools,
+Require-Bundle: org.eclipse.ui.externaltools,
  org.eclipse.core.variables,
- org.eclipse.debug.ui,
  org.eclipse.ui.externaltools,
- org.kalypso.contribs.eclipseplatform,
  org.kalypso.ui,
  org.kalypso.auth,
- org.kalypso.metadoc,
  org.kalypso.simulation.core;visibility:=reexport,
  org.eclipse.ant.ui,
- org.eclipse.ant.core,
- org.eclipse.ui.navigator
+ org.eclipse.ui.navigator,
+ org.eclipse.debug.ui
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.compare,
  org.kalypso.simulation.modellist,
