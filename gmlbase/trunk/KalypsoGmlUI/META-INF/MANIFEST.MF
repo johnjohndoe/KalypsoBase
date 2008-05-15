@@ -10,8 +10,7 @@ Require-Bundle: org.junit,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.processes,
  org.kalypso.ui.addlayer,
- org.eclipse.core.expressions,
- org.eclipse.ui.forms
+ org.eclipse.core.expressions
 Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.jface,
  org.kalypso.gml.ui.map,

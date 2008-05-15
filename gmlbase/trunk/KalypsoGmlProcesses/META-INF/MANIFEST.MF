@@ -8,8 +8,7 @@ Bundle-ClassPath: lib/jargs.jar,
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.simulation.core;visibility:=reexport,
+Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,
  org.junit,
