@@ -44,7 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author Thomas Jung
@@ -62,4 +65,7 @@ public interface IFloodPolygon extends IFeatureWrapper2
 
   public boolean contains( GM_Position pos );
 
+  public GM_Surface<GM_SurfacePatch> getArea( );
+
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( );
 }
