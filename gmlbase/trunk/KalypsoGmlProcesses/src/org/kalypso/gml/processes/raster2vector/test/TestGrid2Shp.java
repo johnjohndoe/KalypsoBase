@@ -108,7 +108,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class TestGrid2Shp extends TestCase
 {
-
   private static final GeometryFactory GF = new GeometryFactory();
 
   public void testRiskModel( ) throws Exception
@@ -243,7 +242,7 @@ public class TestGrid2Shp extends TestCase
 
     final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
-    ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
+    final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
     final IRelationType parentRelation = (IRelationType) covColl.getFeature().getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = covCollWorkspace.createFeature( covColl.getFeature(), parentRelation, ft );
@@ -251,7 +250,7 @@ public class TestGrid2Shp extends TestCase
     covColl.add( coverage );
 
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-    rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
+    rangeSetFile.setFileName( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
     final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
     rangeSet.setFile( rangeSetFile );

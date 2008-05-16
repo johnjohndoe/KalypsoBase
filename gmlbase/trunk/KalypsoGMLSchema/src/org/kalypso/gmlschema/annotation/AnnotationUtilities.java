@@ -50,6 +50,9 @@ public class AnnotationUtilities
 {
   public static IAnnotation getAnnotation( final Object object )
   {
+    // TODO: change annotationUtilities: provide featureType + property for access to annotation
+    // -> i18n works properly than (think of gml:name)
+
     if( object instanceof IAdaptable )
       return (IAnnotation) ((IAdaptable) object).getAdapter( IAnnotation.class );
     if( Platform.isRunning() )
