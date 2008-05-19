@@ -19,6 +19,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.InsetsHelper;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author burtscher
@@ -64,6 +65,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     m_minTickInterval = minTickInterval;
     m_hideCut = hideCut;
     m_fixedWidth = fixedWidth;
+  }
+
+  public GenericAxisRenderer( final String id, ILabelCreator labelCreator, ITickCalculator tickCalculator )
+  {
+    this( id, 5, new Insets( 1, 1, 1, 1 ), new Insets( 1, 1, 1, 1 ), 0, labelCreator, tickCalculator, 0, true, 0, StyleUtils.getDefaultLineStyle(), StyleUtils.getDefaultTextStyle(), StyleUtils.getDefaultLineStyle(), StyleUtils.getDefaultTextStyle() );
   }
 
   public Point calcTickLabelSize( GC gc, final IAxis axis )

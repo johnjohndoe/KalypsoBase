@@ -38,7 +38,6 @@ public class DefaultBarLayer extends AbstractBarLayer
 
     if( dataContainer != null )
     {
-
       PolygonFigure pf = getPolygonFigure();
 
       dataContainer.open();

@@ -85,7 +85,8 @@ public class MapperRegistry implements IMapperRegistry
           {
             IAxis axis = (IAxis) eventMapper;
             IAxisRenderer renderer = getRenderer( axis );
-            renderer.invalidateTicks( axis );
+            if (renderer!=null)
+              renderer.invalidateTicks( axis );
           }
         }
       };
