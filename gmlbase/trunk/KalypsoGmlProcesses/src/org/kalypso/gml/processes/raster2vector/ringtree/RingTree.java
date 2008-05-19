@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RingTree
 {
-  public final RingTreeElement root = new RingTreeElement( null, -1, null );
+  public final RingTreeElement root = new RingTreeElement( null, null, -1, null );
 
   public Object walk( final RingTreeWalker rtw )
   {

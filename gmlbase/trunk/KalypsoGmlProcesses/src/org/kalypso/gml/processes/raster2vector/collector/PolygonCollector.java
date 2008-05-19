@@ -13,7 +13,6 @@ import org.kalypso.jts.CoordOrientation;
 import org.kalypso.jts.CoordOrientationException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
@@ -36,8 +35,6 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
   private final Interval[] m_intervals;
 
-  private final double[] m_grenzen;
-
   private final boolean m_bSimple;
 
   private final RingTree m_tree = new RingTree();
@@ -46,7 +43,6 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   {
     m_gf = gf;
     m_bSimple = bSimple;
-    m_grenzen = grenzen;
 
     m_intervals = new Interval[grenzen.length + 1];
     m_intervals[0] = new Interval( Double.MIN_VALUE, grenzen[0] );
@@ -91,9 +87,16 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
         CoordOrientation.orient( crds, CoordOrientation.TYPE.NEGATIV );
 
-        final LinearRing lr = m_gf.createLinearRing( crds );
+        // REMARK: We remove z because a) it has no meaning for the polygons (they represent a range) and b) we get
+        // strange
+        // problems (ring not closed, as first and last coordinates has different z's)
+        final Coordinate[] crdsNoZ = new Coordinate[crds.length];
+        for( int i = 0; i < crdsNoZ.length; i++ )
+          crdsNoZ[i] = new Coordinate( crds[i].x, crds[i].y );
 
-        m_tree.insertElement( new RingTreeElement( lr, index, innerCrd ) );
+        final LinearRing lr = m_gf.createLinearRing( crdsNoZ );
+        final Polygon polygon = m_gf.createPolygon( lr, null );
+        m_tree.insertElement( new RingTreeElement( lr, polygon, index, innerCrd ) );
       }
     }
     catch( final CoordOrientationException coe )
@@ -122,11 +125,8 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     final Double bis = new Double( Math.min( 9999.99, m_intervals[index].getMax() ) );
     final Double volumen = Double.NaN;
 
-    if( gmGeo instanceof GM_Surface< ? > )
-    {
-      CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
-      m_dataList.add( dataProvider );
-    }
+    CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
+    m_dataList.add( dataProvider );
   }
 
   /**
@@ -134,69 +134,26 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    */
   public void operate( final RingTreeElement element )
   {
-    final Polygon p = element.getAsPolygon( m_gf );
+    final Polygon[] p = element.getAsPolygon();
 
     if( p != null )
     {
       try
       {
-        final int intIndex = getIndexForElement( element );
+        final int intIndex = element.index + 1;
 
-        if( intIndex > 0 )
-          appendFeature( intIndex, p );
+        final double value = element.innerCrd.z;
+        if( !Double.isNaN( value ) )
+        {
+          for( Polygon polygon : p )
+            appendFeature( intIndex, polygon );
+        }
       }
       catch( final GM_Exception gme )
       {
         gme.printStackTrace();
       }
     }
-  }
-
-  private int getIndexForElement( final RingTreeElement element )
-  {
-    final int index = element.index;
-    if( element.hasChildren() )
-    {
-      final RingTreeElement child = element.getFirstChild();
-
-      if( child.index == index - 1 || child.index == index + 1 )
-      {
-        final double grenze0 = m_grenzen[index];
-        final double grenze1 = m_grenzen[child.index];
-
-        for( int i = 0; i < m_intervals.length; i++ )
-        {
-          if( (m_intervals[i].getMin() == grenze0 && m_intervals[i].getMax() == grenze1) || (m_intervals[i].getMin() == grenze1 && m_intervals[i].getMax() == grenze0) )
-            return i;
-        }
-      }
-      else
-      {
-        final int childIndex = getIndexForElement( child );
-        if( childIndex == -1 )
-          return index + 1;
-
-        if( m_grenzen[index] == m_intervals[childIndex].getMax() )
-          return index + 1;
-
-        return index;
-      }
-    }
-    else
-    {
-      // anhand der inneren Coordinate rausfinden, zu welcher Klasse es gehört
-      final double value = element.innerCrd.z;
-      if( Double.isNaN( value ) )
-        return -1;
-
-      for( int i = 0; i < m_intervals.length; i++ )
-      {
-        if( m_intervals[i].contains( value ) )
-          return i;
-      }
-    }
-
-    return -1;
   }
 
   private static class Interval

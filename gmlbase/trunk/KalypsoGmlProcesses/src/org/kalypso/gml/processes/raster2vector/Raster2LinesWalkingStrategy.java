@@ -82,9 +82,9 @@ public class Raster2LinesWalkingStrategy implements IGeoWalkingStrategy
 
     final Coordinate tmpCrd = new Coordinate();
 
-    for( int y = yStart; y < yEnd + 1; y++ )
+    for( int y = yStart; y < yEnd + 2; y++ )
     {
-      for( int x = xStart; x < xEnd; x++ )
+      for( int x = xStart; x < xEnd + 1; x++ )
       {
         final Coordinate coordinate = GeoGridUtilities.calcCoordinate( grid, x, y, tmpCrd );
         pwo.operate( x, y, coordinate );

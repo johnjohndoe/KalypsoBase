@@ -256,28 +256,40 @@ public class Raster2Lines implements IGeoGridWalker
     double z1 = c1.z;
     if( Double.isNaN( z1 ) )
     {
-      z1 = -1000.0;
+// z1 = -1000.0;
       bBorder = true;
     }
 
     double z2 = c2.z;
     if( Double.isNaN( z2 ) )
     {
-      z2 = -1000.0;
+// z2 = -1000.0;
       bBorder = true;
     }
 
     final double value = m_grenzen[index];
 
-    if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
-      zFaktor = (value - z1) / (z2 - z1);
-
-    if( zFaktor < 0 || zFaktor >= 1 )
+// // HACK
+    if( Double.isNaN( c1.z ) && Double.isNaN( c2.z ) )
       return null;
+
+    if( (Double.isNaN( c1.z ) && value < c2.z) || (Double.isNaN( c2.z ) && value < c1.z) )
+    {
+      zFaktor = 0.5;
+      bBorder = true;
+    }
+    else
+    {
+      if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
+        zFaktor = (value - z1) / (z2 - z1);
+      if( zFaktor < 0 || zFaktor >= 1 )
+        return null;
+    }
 
     final double x = zFaktor * (c2.x - c1.x) + c1.x;
     final double y = zFaktor * (c2.y - c1.y) + c1.y;
-    return new LinkedCoordinate( new Coordinate( x, y, value ), bBorder );
+    return new LinkedCoordinate( new Coordinate( x, y, value ), false );
+// return new LinkedCoordinate( new Coordinate( x, y, value ), bBorder );
   }
 
   public double getSum( )

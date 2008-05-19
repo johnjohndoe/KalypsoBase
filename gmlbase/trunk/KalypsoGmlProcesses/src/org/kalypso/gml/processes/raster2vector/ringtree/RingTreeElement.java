@@ -7,19 +7,21 @@ import java.util.Collections;
 import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class RingTreeElement
 {
   public final int index;
 
   public final LinearRing linearRing;
+
+  public final Polygon polygon;
 
   public final PointInRing pir;
 
@@ -29,9 +31,10 @@ public class RingTreeElement
 
   private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
 
-  public RingTreeElement( final LinearRing lr, final int index, final Coordinate innerCrd )
+  public RingTreeElement( final LinearRing lr, final Polygon polygon, final int index, final Coordinate innerCrd )
   {
     this.linearRing = lr;
+    this.polygon = polygon;
     this.index = index;
     this.innerCrd = innerCrd;
 
@@ -59,21 +62,29 @@ public class RingTreeElement
     return "[" + index + ", " + linearRing + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  public Polygon getAsPolygon( final GeometryFactory gf )
+  public Polygon[] getAsPolygon( )
   {
-    // die Löcher finden
-    final ArrayList<LinearRing> holes = new ArrayList<LinearRing>();
+    Geometry result = (Geometry) polygon.clone();
     for( final RingTreeElement child : m_children )
-    {
-      final Coordinate[] holeCrd = child.linearRing.getCoordinates();
-      final Coordinate[] newHoleCrds = new Coordinate[holeCrd.length];
-      System.arraycopy( holeCrd, 0, newHoleCrds, 0, holeCrd.length );
-      CoordinateArrays.reverse( newHoleCrds );
+      result = result.difference( child.polygon );
 
-      holes.add( gf.createLinearRing( newHoleCrds ) );
+    if( result.isEmpty() )
+      return null;
+
+    if( result instanceof Polygon )
+      return new Polygon[] { (Polygon) result };
+
+    if( result instanceof MultiPolygon )
+    {
+      MultiPolygon mp = (MultiPolygon) result;
+      final Polygon[] mpArray = new Polygon[mp.getNumGeometries()];
+      for( int i = 0; i < mpArray.length; i++ )
+        mpArray[i] = (Polygon) mp.getGeometryN( i );
+      return mpArray;
     }
 
-    return gf.createPolygon( linearRing, holes.toArray( new LinearRing[holes.size()] ) );
+    System.out.println( "Strange result: " + result );
+    return null;
   }
 
   public boolean hasChildren( )
@@ -88,13 +99,7 @@ public class RingTreeElement
 
   public boolean contains( final RingTreeElement element )
   {
-    for( int i = 0; i < element.linearRing.getNumPoints(); i++ )
-    {
-      if( !pir.isInside( element.linearRing.getCoordinateN( i ) ) )
-        return false;
-    }
-
-    return true;
+    return polygon.contains( element.polygon );
   }
 
 }
