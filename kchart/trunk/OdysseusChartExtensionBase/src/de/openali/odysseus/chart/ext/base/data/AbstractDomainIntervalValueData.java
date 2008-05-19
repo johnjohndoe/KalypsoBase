@@ -72,12 +72,12 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 
   protected void setDomainIntervalEndValues( List<T_domain> domainIntervalEndValues )
   {
-    m_domainIntervalStartValues = domainIntervalEndValues;
+    m_domainIntervalEndValues = domainIntervalEndValues;
   }
 
   protected void setDomainIntervalStartValues( List<T_domain> domainIntervalStartValues )
   {
-    m_domainIntervalEndValues = domainIntervalStartValues;
+    m_domainIntervalStartValues = domainIntervalStartValues;
   }
 
   public void close( )
