@@ -44,6 +44,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
         }
       }
 
+      style.apply( gc );
       IMarker marker = style.getMarker();
       if( marker == null )
       {

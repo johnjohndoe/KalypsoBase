@@ -569,8 +569,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       return m_fixedWidth;
 
     // Else: Calculate
+    boolean labelEmpty = axis.getLabel().trim().equals( "" );
+
     int width = 0;
-    int label = 0;
     final int gap = getGap();
     final int lineWidth = getLineStyle().getWidth();
     final int tickLength = getTickLength();
@@ -587,27 +588,30 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      width += labelInsets.top + labelInsets.bottom;
-      label = tls.y;
+      width += tls.y;
+      if( !labelEmpty )
+        width += labelInsets.top + labelInsets.bottom;
     }
     else
     {
-      width += labelInsets.left + labelInsets.right;
-      label = tls.x;
+      width += tls.x;
+      if( !labelEmpty )
+        width += labelInsets.left + labelInsets.top;
     }
-    width += label;
+
     width += gap;
     width += lineWidth;
     width += tickLength;
 
-    // Jetzt noch den Text
-    final Point labelExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
-    width += labelExtent.y;
+    // Label: nur mit einrechnen, wenn nicht leer
+    if( !labelEmpty )
+    {
+      width += getTextExtent( gc, axis.getLabel(), getLabelStyle() ).y;
+    }
 
     gc.dispose();
     img.dispose();
 
     return width;
   }
-
 }

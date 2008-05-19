@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
-Bundle-SymbolicName: de.openali.chart.ext.base;singleton:=true
+Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-ClassPath: bin/
 Bundle-Localization: plugin

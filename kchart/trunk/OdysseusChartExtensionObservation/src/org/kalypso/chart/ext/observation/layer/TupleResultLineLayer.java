@@ -21,13 +21,12 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class TupleResultLineLayer extends AbstractLineLayer
 {
 
-  private final TupleResultDomainValueData m_data;
+  private TupleResultDomainValueData m_data;
 
   public TupleResultLineLayer( TupleResultDomainValueData data, ILineStyle lineStyle, IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = data;
-
   }
 
   @Override
@@ -110,5 +109,10 @@ public class TupleResultLineLayer extends AbstractLineLayer
     IDataOperator dop = getTargetAxis().getDataOperator( dataRange.getMin().getClass() );
     IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
     return numRange;
+  }
+
+  protected void setData( TupleResultDomainValueData data )
+  {
+    m_data = data;
   }
 }

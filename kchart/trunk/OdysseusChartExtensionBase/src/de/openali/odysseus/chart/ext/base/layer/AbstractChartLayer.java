@@ -228,12 +228,6 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   }
 
-  // @SuppressWarnings("unchecked")
-  // protected IDataContainer getDataContainer( )
-  // {
-  // return m_dataContainer;
-  // }
-
   protected abstract ILegendEntry[] createLegendEntries( );
 
   public synchronized ILegendEntry[] getLegendEntries( )

@@ -12,175 +12,180 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 
 public class LineStyle extends AbstractStyle implements ILineStyle
 {
-	private LINEJOIN m_lineJoin;
-	private LINECAP m_lineCap;
-	private RGB m_rgb;
-	private int m_width;
-	private Color m_color;
-	private float m_dashOffset;
-	private float[] m_dashArray;
-	private int m_miterLimit;
+  private LINEJOIN m_lineJoin;
 
-	public LineStyle(int width, RGB rgb, int alpha, float dashOffset, float[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible)
-	{
-		setWidth(width);
-		setColor(rgb);
-		setAlpha(alpha);
-		setDash(dashOffset, dashArray);
-		setLineJoin(lineJoin);
-		setLineCap(lineCap);
-		setMiterLimit(miterLimit);
-		setVisible(isVisible);
-	}
+  private LINECAP m_lineCap;
 
-	/**
-	 * returns a deep copy of the object
-	 */
-	public LineStyle copy()
-	{
-		return new LineStyle(getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible());
-	}
+  private RGB m_rgb;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN)
-	 */
-	public void setLineJoin(LINEJOIN join)
-	{
-		m_lineJoin = join;
-	}
+  private int m_width;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP)
-	 */
-	public void setLineCap(LINECAP cap)
-	{
-		m_lineCap = cap;
-	}
+  private Color m_color;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
-	 */
-	public void setColor(RGB rgb)
-	{
-		m_rgb = rgb;
-	}
+  private float m_dashOffset;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int,
-	 *      int[])
-	 */
-	public void setDash(float dashOffset, float[] dashArray)
-	{
-		m_dashOffset = dashOffset;
-		/**
-		 * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if
-		 * LineAttributes' dashArray is empty array
-		 */
-		if (dashArray != null && dashArray.length == 0)
-			m_dashArray = null;
-		else
-			m_dashArray = dashArray;
-	}
+  private float[] m_dashArray;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
-	 */
-	public void setWidth(int width)
-	{
-		m_width = width;
-	}
+  private int m_miterLimit;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
-	 */
-	public void setMiterLimit(int miterLimit)
-	{
-		m_miterLimit = miterLimit;
-	}
+  public LineStyle( int width, RGB rgb, int alpha, float dashOffset, float[] dashArray, LINEJOIN lineJoin, LINECAP lineCap, int miterLimit, boolean isVisible )
+  {
+    setWidth( width );
+    setColor( rgb );
+    setAlpha( alpha );
+    setDash( dashOffset, dashArray );
+    setLineJoin( lineJoin );
+    setLineCap( lineCap );
+    setMiterLimit( miterLimit );
+    setVisible( isVisible );
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
-	 */
-	public void apply(GC gc)
-	{
-		if (m_color != null && !m_color.isDisposed())
-		{
-			m_color.dispose();
-		}
-		m_color = new Color(gc.getDevice(), m_rgb);
+  /**
+   * returns a deep copy of the object
+   */
+  public LineStyle copy( )
+  {
+    return new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
+  }
 
-		gc.setForeground(m_color);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN)
+   */
+  public void setLineJoin( LINEJOIN join )
+  {
+    m_lineJoin = join;
+  }
 
-		gc.setAlpha(getAlpha());
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP)
+   */
+  public void setLineCap( LINECAP cap )
+  {
+    m_lineCap = cap;
+  }
 
-		int lineCap = m_lineCap.toSWT();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
+   */
+  public void setColor( RGB rgb )
+  {
+    m_rgb = rgb;
+  }
 
-		int lineJoin = m_lineJoin.toSWT();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int, int[])
+   */
+  public void setDash( float dashOffset, float[] dashArray )
+  {
+    m_dashOffset = dashOffset;
+    /**
+     * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if LineAttributes' dashArray is empty array
+     */
+    if( dashArray != null && dashArray.length == 0 )
+      m_dashArray = null;
+    else
+      m_dashArray = dashArray;
+  }
 
-		LineAttributes la = new LineAttributes(m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit);
-		gc.setLineAttributes(la);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
+   */
+  public void setWidth( int width )
+  {
+    m_width = width;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#dispose()
-	 */
-	public void dispose()
-	{
-		if (m_color != null && !m_color.isDisposed())
-		{
-			m_color.dispose();
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
+   */
+  public void setMiterLimit( int miterLimit )
+  {
+    m_miterLimit = miterLimit;
+  }
 
-	public int getWidth()
-	{
-		return m_width;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
+   */
+  public void apply( GC gc )
+  {
+    if( m_color != null && !m_color.isDisposed() )
+    {
+      m_color.dispose();
+    }
+    m_color = new Color( gc.getDevice(), m_rgb );
 
-	public RGB getColor()
-	{
-		return m_rgb;
-	}
+    gc.setForeground( m_color );
 
-	public float[] getDashArray()
-	{
-		return m_dashArray;
-	}
+    gc.setAlpha( getAlpha() );
 
-	public float getDashOffset()
-	{
-		return m_dashOffset;
-	}
+    int lineCap = m_lineCap.toSWT();
 
-	public LINECAP getLineCap()
-	{
-		return m_lineCap;
-	}
+    int lineJoin = m_lineJoin.toSWT();
 
-	public LINEJOIN getLineJoin()
-	{
-		return m_lineJoin;
-	}
+    LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
+    gc.setLineAttributes( la );
+  }
 
-	public int getMiterLimit()
-	{
-		return m_miterLimit;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#dispose()
+   */
+  public void dispose( )
+  {
+    if( m_color != null && !m_color.isDisposed() )
+    {
+      m_color.dispose();
+    }
+  }
+
+  public int getWidth( )
+  {
+    return m_width;
+  }
+
+  public RGB getColor( )
+  {
+    return m_rgb;
+  }
+
+  public float[] getDashArray( )
+  {
+    return m_dashArray;
+  }
+
+  public float getDashOffset( )
+  {
+    return m_dashOffset;
+  }
+
+  public LINECAP getLineCap( )
+  {
+    return m_lineCap;
+  }
+
+  public LINEJOIN getLineJoin( )
+  {
+    return m_lineJoin;
+  }
+
+  public int getMiterLimit( )
+  {
+    return m_miterLimit;
+  }
 
 }

@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.views,
  org.eclipse.core.expressions,
- de.openali.odysseus.chart.factory;bundle-version="[0.2.0,0.2.0]"
+ de.openali.odysseus.chart.factory;bundle-version="0.2.0";visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.chart.ui,
  org.kalypso.chart.ui.editor,

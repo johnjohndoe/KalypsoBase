@@ -138,6 +138,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       }
       else
       {
+        // TODO: create image file instead of painting per source code
         final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), m_defaultIconSize.x, m_defaultIconSize.y );
         GC gc = new GC( img );
         gc.setAntialias( SWT.ON );
