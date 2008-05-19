@@ -133,7 +133,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final IFolder importDataFolder = project.getFolder( "inundationDepthRaster" );
 
     // 
-    final ICoverageCollection[] collections = getTestGrid( importDataFolder );
+    ICoverageCollection[] collections = getTestGrid( importDataFolder );
 
     /* create some categories with some values ====================================================================== */
     final GridCategoryWrapper gridCategory1 = new GridCategoryWrapper( 1 );
@@ -170,7 +170,9 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Geometry globalEnv = GeoGridUtilities.getCommonGridEnvelopeForCollections( collections, intersection );
     final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
     writeEnvelopeShape( gmObject.getEnvelope(), importDataFolder );
-
+    
+    collections = null;
+    
     /* create the grid ====================================================================== */
     final FlattenToCategoryGrid grid = GeoGridUtilities.getFlattedGrid( gridCategories, intersection );
 
