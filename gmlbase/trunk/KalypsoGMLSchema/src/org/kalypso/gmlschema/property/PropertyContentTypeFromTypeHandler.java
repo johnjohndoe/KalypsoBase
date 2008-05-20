@@ -32,13 +32,12 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.builder.IInitialize;
-import org.kalypso.gmlschema.property.restriction.ContentRestrictionFactory;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.ListSimpleTypeHandler;
@@ -51,17 +50,15 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
 {
-  private static final IRestriction[] NO_RESTRICTION = new IRestriction[0];
-
   private final IGMLSchema m_gmlSchema;
 
   private final QName m_valueQName;
 
   private final IMarshallingTypeHandler m_typeHandler;
 
-  private final IRestriction[] m_valueRestriction;
+  private Restriction m_restriction;
 
-  public PropertyContentTypeFromTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final QName valueQName, final IPropertyType parentProperty )
+  public PropertyContentTypeFromTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final QName valueQName )
   {
     m_gmlSchema = gmlSchema;
     m_valueQName = valueQName;
@@ -72,19 +69,10 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
     if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
     {
       final SimpleType simpleTypeObject = (SimpleType) typeObject;
-
-      // HACK: in order to correctly create annotations from properties, we have to supply a pseudo qualified element...
-      // Will probably break some time, but we have to redo the whole gml-parsing stuff anyway
-      final String namespace;
-      if( simpleTypeObject.isSetName() )
-        namespace = gmlSchema.getTargetNamespace();
-      else
-        namespace = parentProperty.getQName().getNamespaceURI();
-
-      m_valueRestriction = ContentRestrictionFactory.createRestrictions( simpleTypeObject.getRestriction(), gmlSchema, namespace );
+      m_restriction = simpleTypeObject.getRestriction();
     }
     else
-      m_valueRestriction = NO_RESTRICTION;
+      m_restriction = null;
   }
 
   private static IMarshallingTypeHandler typeHandlerForQName( final ITypeRegistry<IMarshallingTypeHandler> registry, final QName qname )
@@ -128,19 +116,11 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.property.IPropertyContentType#hasRestriction()
-   */
-  public boolean hasRestriction( )
-  {
-    return m_valueRestriction.length > 0;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getRestriction()
    */
-  public IRestriction[] getRestriction( )
+  public Restriction getRestriction( )
   {
-    return m_valueRestriction;
+    return m_restriction;
   }
 
   /**

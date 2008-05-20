@@ -43,7 +43,7 @@ package org.kalypso.gmlschema.property.restriction;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 
 /**
  * @author Gernot Belger
@@ -69,9 +69,9 @@ public class RestrictionUtilities
     return null;
   }
 
-  public static Map<Object, ILanguageAnnontationProvider> getEnumerationItems( final IRestriction[] restrictions )
+  public static Map<Object, IAnnotation> getEnumerationItems( final IRestriction[] restrictions )
   {
-    final Map<Object, ILanguageAnnontationProvider> items = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+    final Map<Object, IAnnotation> items = new LinkedHashMap<Object, IAnnotation>();
 
     for( final IRestriction restriction : restrictions )
     {

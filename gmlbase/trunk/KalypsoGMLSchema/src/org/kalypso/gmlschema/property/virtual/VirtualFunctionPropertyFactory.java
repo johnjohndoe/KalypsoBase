@@ -49,6 +49,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -88,7 +89,7 @@ public class VirtualFunctionPropertyFactory
    *            the cursor containing the function property description
    * @return
    */
-  public static final IVirtualFunctionValuePropertyType createFromCursor( final QName featureQName, final XmlObject funcProp ) throws GMLSchemaException
+  public static final IVirtualFunctionValuePropertyType createFromCursor( final IFeatureType featureType, final QName featureQName, final XmlObject funcProp ) throws GMLSchemaException
   {
     try
     {
@@ -107,7 +108,7 @@ public class VirtualFunctionPropertyFactory
       final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       final IMarshallingTypeHandler typeHandler = valueTypeQName == null ? null : typeRegistry.getTypeHandlerForTypeName( valueTypeQName );
 
-      return new VirtualFunctionValuePropertyType( typeHandler, propertyQName, featureQName, functionId, properties );
+      return new VirtualFunctionValuePropertyType( featureType, typeHandler, propertyQName, functionId, properties );
     }
     catch( final Throwable th )
     {

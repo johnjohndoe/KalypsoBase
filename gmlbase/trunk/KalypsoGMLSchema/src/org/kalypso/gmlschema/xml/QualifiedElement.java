@@ -33,16 +33,13 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IAdapterManager;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 
 /**
  * @author doemming
  */
-public class QualifiedElement implements IQualifiedElement, IAdaptable
+public class QualifiedElement
 {
   public static QName createQName( final IGMLSchema gmlSchema, final Element element )
   {
@@ -56,11 +53,6 @@ public class QualifiedElement implements IQualifiedElement, IAdaptable
   private final Element m_element;
 
   private final QName m_qName;
-
-  public QualifiedElement( final GMLSchema gmlSchema, final Element element )
-  {
-    this( gmlSchema, element, createQName( gmlSchema, element ) );
-  }
 
   public QualifiedElement( final GMLSchema gmlSchema, final Element element, final QName qName )
   {
@@ -130,17 +122,5 @@ public class QualifiedElement implements IQualifiedElement, IAdaptable
   public int hashCode( )
   {
     return ObjectUtils.hashCode( m_qName );
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapterClass )
-  {
-    if( !Platform.isRunning() )
-      return null;
-    final IAdapterManager adapterManager = Platform.getAdapterManager();
-    return adapterManager.loadAdapter( this, adapterClass.getName() );
   }
 }

@@ -29,17 +29,17 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
-import javax.xml.namespace.QName;
-
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 
 /**
  * @author doemming
@@ -48,9 +48,9 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
 {
   private IRelationContentType m_relationContentType;
 
-  public RelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
+  public RelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
-    super( gmlSchema, element, featureQName );
+    super( gmlSchema, featureType, element, occurs, null );
   }
 
   /**
@@ -105,4 +105,11 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
     return m_relationContentType.getDocumentReferences();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new RelationType( getGMLSchema(), getElement(), getOccurs(), featureType );
+  }
 }

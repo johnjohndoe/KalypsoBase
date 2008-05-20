@@ -48,7 +48,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject, Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object relationTypeObject ) throws GMLSchemaException
   {
     final QualifiedElement qe = (QualifiedElement) relationTypeObject;
     final Element element = qe.getElement();

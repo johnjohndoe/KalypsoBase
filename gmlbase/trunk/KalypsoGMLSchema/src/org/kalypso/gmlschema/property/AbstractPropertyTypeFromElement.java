@@ -31,8 +31,12 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.QualifiedElement;
 
@@ -45,28 +49,25 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
 {
   private final Occurs m_occurs;
 
-  private final QName m_featureQName;
+  private final IAnnotation m_annotation;
 
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName qName, final QName featureQName )
+  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final QName qName, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
   {
-    super( gmlSchema, element.getElement(), qName );
-    m_occurs = element.getOccurs();
-    m_featureQName = featureQName;
+    super( gmlSchema, element, qName );
+    m_occurs = occurs;
+    m_annotation = AnnotationUtilities.createAnnotation( qName, featureType, element, reference );
   }
 
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
+  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
   {
-    super( gmlSchema, element.getElement() );
-    m_occurs = element.getOccurs();
-    m_featureQName = featureQName;
+    super( gmlSchema, element, createQName( gmlSchema, element ) );
+    m_occurs = occurs;
+    m_annotation = AnnotationUtilities.createAnnotation( getQName(), featureType, element, reference );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
+  public Occurs getOccurs( )
   {
-    return m_featureQName;
+    return m_occurs;
   }
 
   public int getMinOccurs( )
@@ -104,4 +105,13 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return false;
   }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
+  }
+
 }

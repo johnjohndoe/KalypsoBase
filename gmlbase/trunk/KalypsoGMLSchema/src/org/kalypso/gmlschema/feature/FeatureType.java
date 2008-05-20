@@ -45,6 +45,8 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -85,9 +87,18 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private IValuePropertyType[] m_geoPTs = null;
 
+  private final IAnnotation m_annotation;
+
   public FeatureType( final GMLSchema gmlSchema, final Element element )
   {
-    super( gmlSchema, element );
+    super( gmlSchema, element, QualifiedElement.createQName( gmlSchema, element ) );
+
+    final QName qname = getQName();
+    final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), new QName[] { qname }, qname.getLocalPart() );
+    if( annotation == null )
+      m_annotation = AnnotationUtilities.annotationForElement( element.getAnnotation(), element.getName(), true );
+    else
+      m_annotation = annotation;
   }
 
   /**
@@ -100,11 +111,11 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       case IInitialize.INITIALIZE_RUN_FIRST:
       {
         initFirst();
-        initSecond();
         break;
       }
       case IInitialize.INITIALIZE_RUN_GEOMETRY:
       {
+        initSecond();
         initGeometry();
         break;
       }
@@ -151,7 +162,16 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
     final Map<QName, IPropertyType> propertyTypes = new LinkedHashMap<QName, IPropertyType>();
     for( final IPropertyType propertyType : properties )
-      propertyTypes.put( propertyType.getQName(), propertyType );
+    {
+      // REMARK+HACK: somewhat of a hack, but necessary to have unique properties
+      // for each feature type.
+      final IPropertyType localClone = propertyType.cloneForFeatureType( this );
+      localClone.init( IInitialize.INITIALIZE_RUN_FIRST );
+      localClone.init( IInitialize.INITIALIZE_RUN_GEOMETRY );
+      localClone.init( IInitialize.INITIALIZE_RUN_DEPRECATED );
+
+      propertyTypes.put( propertyType.getQName(), localClone );
+    }
 
     addVirtualProperties( propertyTypes );
 
@@ -328,7 +348,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       final XmlObject[] funcProps = m_featureContentType.collectFunctionProperties();
       for( final XmlObject funcProp : funcProps )
       {
-        final IVirtualFunctionValuePropertyType pt = VirtualFunctionPropertyFactory.createFromCursor( getQName(), funcProp );
+        final IVirtualFunctionValuePropertyType pt = VirtualFunctionPropertyFactory.createFromCursor( this, getQName(), funcProp );
         addAndCheck( propertyTypes, pt );
       }
 
@@ -372,6 +392,14 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       final VirtualFunctionWrapperRelationType wrappedPt = new VirtualFunctionWrapperRelationType( (IRelationType) realPt, virtualPt.getFunctionId(), virtualPt.getFunctionProperties() );
       propertyTypes.put( name, wrappedPt );
     }
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
   }
 
 }

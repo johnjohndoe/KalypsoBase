@@ -43,19 +43,15 @@ package org.kalypso.gmlschema;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotationProvider;
-import org.kalypso.gmlschema.annotation.NLSAnnotationProvider;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
@@ -67,8 +63,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public class KalypsoGmlSchemaExtensions
 {
-  private static final String EXT_ANNOTATIONPROVIDER = "org.kalypso.gmlschema.annotationProvider";
-
   private static final String EXT_VIRTUALPROPERTY = "org.kalypso.gmlschema.virtualProperty";
 
   private static final String ATTR_VIRTUALPROPERTY_ALLOWSUBST = "allowSubstitution";
@@ -87,57 +81,7 @@ public class KalypsoGmlSchemaExtensions
 
   private static final String ATTR_VIRTUALPROPERTY_NAME = "name";
 
-  private static IAnnotationProvider[] THE_ANNOTATION_PROVIDERS = null;
-
   private static Map<QName, Collection<IConfigurationElement>> REGISTERED_VIRTUAL_PROPERTIES = null;
-
-  public static IAnnotationProvider[] getAnnotationProviders( )
-  {
-    if( THE_ANNOTATION_PROVIDERS != null )
-      return THE_ANNOTATION_PROVIDERS;
-
-    Debug.ANNOTATION_PROVIDERS.printf( "Reading annotation providers fomr registry .%n" );
-
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXT_ANNOTATIONPROVIDER );
-
-    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-
-    final List<IAnnotationProvider> providers = new ArrayList<IAnnotationProvider>( configurationElements.length );
-
-    for( final IConfigurationElement element : configurationElements )
-    {
-      Debug.ANNOTATION_PROVIDERS.printf( "Found provider element: %s", element );
-
-      try
-      {
-        final Object createExecutableExtension = element.createExecutableExtension( "class" );
-        final IAnnotationProvider provider = (IAnnotationProvider) createExecutableExtension;
-
-        Debug.ANNOTATION_PROVIDERS.printf( "Annotation provider successfully created: %s", provider );
-
-        providers.add( provider );
-      }
-      catch( final Throwable t )
-      {
-        // In order to prevent bad code from other plug-ins (see Eclipse-PDE-Rules)
-        // catch exception here and just log it
-        final IStatus status = StatusUtilities.statusFromThrowable( t );
-        KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
-
-        Debug.ANNOTATION_PROVIDERS.printf( "Failed to create annotation provider:" );
-        Debug.ANNOTATION_PROVIDERS.printStackTrace( t );
-      }
-    }
-
-    // We always add the NLSAnnotation as a default annotation provider
-    providers.add( new NLSAnnotationProvider() );
-
-    final IAnnotationProvider[] result = providers.toArray( new IAnnotationProvider[providers.size()] );
-    THE_ANNOTATION_PROVIDERS = result;
-    return result;
-  }
 
   public static IVirtualFunctionValuePropertyType[] createVirtualPropertyTypes( final IFeatureType featureType )
   {
@@ -158,7 +102,7 @@ public class KalypsoGmlSchemaExtensions
 
           if( ft == featureType || allowSubst )
           {
-            final IVirtualFunctionValuePropertyType vpt = createVirtualPropertType( element );
+            final IVirtualFunctionValuePropertyType vpt = createVirtualPropertType( featureType, element );
             foundTypes.add( vpt );
           }
         }
@@ -170,15 +114,13 @@ public class KalypsoGmlSchemaExtensions
     return foundTypes.toArray( new IVirtualFunctionValuePropertyType[foundTypes.size()] );
   }
 
-  private static IVirtualFunctionValuePropertyType createVirtualPropertType( final IConfigurationElement element )
+  private static IVirtualFunctionValuePropertyType createVirtualPropertType( final IFeatureType featureType, final IConfigurationElement element )
   {
     final String qnameString = element.getAttribute( ATTR_VIRTUALPROPERTY_QNAME );
-    final String featureQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
     final String valueQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
     final String isListString = element.getAttribute( ATTR_VIRTUALPROPERTY_ISLIST );
     final String functionId = element.getAttribute( ATTR_VIRTUALPROPERTY_FUNCTION );
 
-    final QName featureQName = QName.valueOf( featureQNameString );
     final QName valueQName = QName.valueOf( valueQNameString );
     final QName propertyQName = QName.valueOf( qnameString );
     final IMarshallingTypeHandler handler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
@@ -197,7 +139,7 @@ public class KalypsoGmlSchemaExtensions
       properties.put( propName, propValue );
     }
 
-    return new VirtualFunctionValuePropertyType( handler, propertyQName, featureQName, functionId, properties );
+    return new VirtualFunctionValuePropertyType( featureType, handler, propertyQName, functionId, properties );
   }
 
   private synchronized static Map<QName, Collection<IConfigurationElement>> getRegisteredVirtualProperties( )

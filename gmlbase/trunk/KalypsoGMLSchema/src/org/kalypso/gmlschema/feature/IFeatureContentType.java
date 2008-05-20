@@ -57,10 +57,7 @@ public interface IFeatureContentType extends IInitialize
 
   public int getDerivationType( );
 
-  /** The qname of the feature defined by this content. Only non-<code>null</code> for inline defined types. */
-  public QName getFeatureQName( );
-
-  /** The properties directly defined within this type, not inheritet from the base type. */
+  /** The properties directly defined within this type, not inherited from the base type. */
   public IPropertyType[] getDirectProperties( );
 
   public QName getQName( );

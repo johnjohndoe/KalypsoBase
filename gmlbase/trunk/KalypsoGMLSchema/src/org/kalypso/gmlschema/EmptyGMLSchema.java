@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
+import java.net.URL;
 import java.util.Collection;
 
 import javax.xml.namespace.QName;
@@ -68,6 +69,14 @@ public class EmptyGMLSchema implements IGMLSchema
   public String getTargetNamespace( )
   {
     return "empty";
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#getContext()
+   */
+  public URL getContext( )
+  {
+    return null;
   }
 
   /**

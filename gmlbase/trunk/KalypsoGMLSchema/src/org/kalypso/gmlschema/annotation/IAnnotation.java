@@ -83,9 +83,6 @@ public interface IAnnotation
    */
   public abstract String getTooltip( );
 
-  /** The language this annotation supports. */
-  public abstract String getLang( );
-
   /**
    * Returns the value for the given key.@param element Must be one of {@link #ANNO_NAME}, {@link #ANNO_NAME},
    * {@link #ANNO_LABEL}, {@link #ANNO_TOOLTIP}

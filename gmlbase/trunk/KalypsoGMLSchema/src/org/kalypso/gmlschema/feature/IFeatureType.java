@@ -31,8 +31,8 @@ package org.kalypso.gmlschema.feature;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -40,7 +40,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 /**
  * @author doemming
  */
-public interface IFeatureType extends IInitialize, IAdaptable
+public interface IFeatureType extends IInitialize
 {
   /**
    * @return the name of the FeatureType
@@ -111,4 +111,9 @@ public interface IFeatureType extends IInitialize, IAdaptable
    * @return the default geometry property
    */
   public IValuePropertyType getDefaultGeometryProperty( );
+
+  /**
+   * Returns the annotation (i.e. human readable strings) for this feature type.
+   */
+  IAnnotation getAnnotation( );
 }

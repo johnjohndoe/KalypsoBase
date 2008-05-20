@@ -40,11 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.xml.bind.JAXBContext;
 
 import ogc31.www.opengis.net.gml.ObjectFactory;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * Just contains the singleton for the JAXBContext of the binding stuff used in this plugin
@@ -55,36 +70,74 @@ public final class KalypsoOGC31JAXBcontext
 {
   public final static ObjectFactory GML3_FAC = new ObjectFactory();
 
-  private static JAXBContext m_context = null;
+  private static JAXBContext s_context = null;
 
-  private static Class< ? >[] m_contextClass = null;
-
-  /**
-   * methode is intended to be used by parts that generate JAXB-contexts with many classes and need to collect them
-   * 
-   * @return classes needed for binding context
-   */
-  public static Class< ? >[] getContextClasses( )
-  {
-    if( m_contextClass == null )
-    {
-      m_contextClass = new Class[] {//  
-      ogc31.www.opengis.net.gml.ObjectFactory.class// 
-          , ogc31.www.opengis.net.swe.ObjectFactory.class//
-          , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
-          , au.csiro.seegrid.xml.st.ObjectFactory.class };
-    }
-    return m_contextClass;
-  }
+  // create the context on all of these factories else the binding won't work
+  public static Class< ? >[] s_contextClasses = new Class[] {//  
+  ogc31.www.opengis.net.gml.ObjectFactory.class// 
+      , ogc31.www.opengis.net.swe.ObjectFactory.class//
+      , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
+      , au.csiro.seegrid.xml.st.ObjectFactory.class };
 
   public static synchronized JAXBContext getContext( )
   {
-    if( m_context == null )
+    if( s_context == null )
     {
-      // create the context on all of these factories else the binding won't work
-      m_context = JaxbUtilities.createQuiet( getContextClasses() );
+      final KalypsoOGC31Plugin plugin = KalypsoOGC31Plugin.getDefault();
+      final IPath stateLocation = plugin.getStateLocation();
+      final IPath contextLocation = stateLocation.append( "context.ser" );
+      final File contextFile = contextLocation.toFile();
+
+      final XStream xstream = new XStream( new DomDriver() );
+
+      if( contextFile.exists() )
+      {
+        // Context was already generated, read from file
+        InputStream ois = null;
+        try
+        {
+          ois = new BufferedInputStream( new FileInputStream( contextFile ) );
+          s_context = (JAXBContext) xstream.fromXML( ois );
+          ois.close();
+        }
+        catch( final Throwable e )
+        {
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to retrieve ogc31-context from binary file", e );
+          plugin.getLog().log( status );
+          contextFile.delete();
+        }
+        finally
+        {
+          IOUtils.closeQuietly( ois );
+        }
+      }
+
+      // Default and fall-back: generate really
+      if( s_context == null )
+        s_context = JaxbUtilities.createQuiet( s_contextClasses );
+
+      if( false && !contextFile.exists() )
+      {
+        // Write context into file; next time the platform starts, the context will be read from here
+        OutputStream oos = null;
+        try
+        {
+          oos = new BufferedOutputStream( new FileOutputStream( contextFile ) );
+          xstream.toXML( s_context, oos );
+          oos.close();
+        }
+        catch( final Throwable e )
+        {
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to store ogc31-context as binary file", e );
+          plugin.getLog().log( status );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( oos );
+        }
+      }
     }
 
-    return m_context;
+    return s_context;
   }
 }

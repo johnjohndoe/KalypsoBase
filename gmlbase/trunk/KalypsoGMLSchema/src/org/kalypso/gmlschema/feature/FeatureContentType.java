@@ -60,12 +60,9 @@ public abstract class FeatureContentType implements IFeatureContentType
 
   private final QName m_qName;
 
-  private final QName m_featureQName;
-
-  public FeatureContentType( final GMLSchema gmlSchema, final QName featureQName, final ComplexType complexType )
+  public FeatureContentType( final GMLSchema gmlSchema, final ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
-    m_featureQName = featureQName;
     m_complexType = complexType;
     final String targetNamespace = gmlSchema.getTargetNamespace();
     final String name = m_complexType.getName();
@@ -73,14 +70,6 @@ public abstract class FeatureContentType implements IFeatureContentType
       m_qName = new QName( targetNamespace, name );
     else
       m_qName = new QName( "anonymous" );
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_featureQName;
   }
 
   public QName getQName( )

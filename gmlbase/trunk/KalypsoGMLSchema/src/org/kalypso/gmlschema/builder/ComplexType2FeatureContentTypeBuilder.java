@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
@@ -64,15 +63,12 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
   }
 
   /**
-   * @param gmlSchema
-   * @param complexTypeObject
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject, final Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
     FeatureContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
-
-    final QName featureQName = parent instanceof IFeatureType ? ((IFeatureType) parent).getQName() : null;
 
     final ComplexContent complexContent = complexType.getComplexContent();
     if( complexContent != null )
@@ -80,16 +76,16 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
       final ExtensionType extension = complexContent.getExtension();
       final ComplexRestrictionType restriction = complexContent.getRestriction();
       if( extension != null )
-        result = new FeatureContentTypeFromExtension( gmlSchema, featureQName, complexType, extension );
+        result = new FeatureContentTypeFromExtension( gmlSchema, complexType, extension );
       else if( restriction != null )
-        result = new FeatureContentTypeFromRestriction( gmlSchema, featureQName, complexType, restriction );
+        result = new FeatureContentTypeFromRestriction( gmlSchema, complexType, restriction );
       else
         throw new UnsupportedOperationException();
     }
     else
     {
       final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
-      result = new FeatureContentTypeFromSequence( gmlSchema, featureQName, complexType, collector );
+      result = new FeatureContentTypeFromSequence( gmlSchema, complexType, collector );
     }
     if( result != null )
     {

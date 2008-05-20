@@ -35,7 +35,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.value.PropertyType;
 import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
@@ -44,6 +43,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 
 /**
  * another builder
@@ -62,28 +62,22 @@ public class Element2PropertyTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, final Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
-    final QName featureQName;
-    if( parent instanceof IFeatureContentType )
-      featureQName = ((IFeatureContentType) parent).getFeatureQName();
-    else if( parent instanceof GMLSchema )
-      featureQName = null;
-    else
-      throw new GMLSchemaException( "Unable to parse featureQName for property: " + elementObject );
-
-    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
-    final QName ref = element.getElement().getRef();
+    final ElementWithOccurs elementWithOccurs = (ElementWithOccurs) elementObject;
+    final Element element = elementWithOccurs.getElement();
+    final Occurs occurs = elementWithOccurs.getOccurs();
+    final QName ref = element.getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, reference, featureQName );
-      gmlSchema.register( element.getElement(), result );
+      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, occurs, reference, null );
+      gmlSchema.register( element, result );
       return new Object[] { result };
     }
 
-    final IPropertyType pt = new PropertyType( gmlSchema, element, featureQName );
-    gmlSchema.register( element.getElement(), pt );
+    final IPropertyType pt = new PropertyType( gmlSchema, element, occurs, null );
+    gmlSchema.register( element, pt );
     return new Object[] { pt };
   }
 

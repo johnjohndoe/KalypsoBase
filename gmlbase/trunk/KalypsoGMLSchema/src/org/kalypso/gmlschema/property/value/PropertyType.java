@@ -32,26 +32,31 @@ package org.kalypso.gmlschema.property.value;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.property.CustomPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.ContentRestrictionFactory;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
- * Representation a the property definition from xml schema.
+ * Representation a property definition from xml schema.
  * 
  * @author doemming
  */
@@ -62,9 +67,11 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   private IPropertyContentType m_propertyContentType = null;
 
-  public PropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName )
+  private IRestriction[] m_restrictions = new IRestriction[0];
+
+  public PropertyType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
-    super( gmlSchema, element, featureQName );
+    super( gmlSchema, featureType, element, occurs, null );
   }
 
   /**
@@ -72,6 +79,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public void init( final int initializeRun ) throws GMLSchemaException
   {
+    final GMLSchema gmlSchema = getGMLSchema();
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
@@ -83,12 +91,10 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
           final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
           final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( type );
           if( typeHandler != null )
-          {
             m_propertyContentType = new CustomPropertyContentType( typeHandler );
-          }
           else
           {
-            final TypeReference reference = getGMLSchema().resolveTypeReference( type );
+            final TypeReference reference = gmlSchema.resolveTypeReference( type );
             final GMLSchema schema = reference.getGMLSchema();
             if( reference instanceof SimpleTypeReference )
             {
@@ -99,19 +105,13 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
             {
               final ComplexType complexType = ((ComplexTypeReference) reference).getComplexType();
               final Object buildedObject = schema.getBuildedObjectFor( complexType );
-              // TODO:
-// if( buildedObject == null )
-// System.out.println( "Could not build PopertyContentType for: " + simpleType );
               m_propertyContentType = (IPropertyContentType) buildedObject;
             }
           }
         }
         else if( simpleType != null )
         {
-          final IPropertyContentType buildedObjectFor = (IPropertyContentType) getGMLSchema().getBuildedObjectFor( simpleType );
-          // TODO
-// if( buildedObjectFor == null )
-// System.out.println( "Could not build PopertyContentType for: " + simpleType );
+          final IPropertyContentType buildedObjectFor = (IPropertyContentType) gmlSchema.getBuildedObjectFor( simpleType );
           m_propertyContentType = buildedObjectFor;
         }
         else
@@ -120,16 +120,23 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
           final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
           final IMarshallingTypeHandler typeHandler = marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "anyType" ) );
           final String localName = getElement().getName();
-          final QName qName = new QName( getGMLSchema().getTargetNamespace(), localName );
+          final QName qName = new QName( gmlSchema.getTargetNamespace(), localName );
           m_propertyContentType = new CustomPropertyContentType( qName, typeHandler );
         }
+
+        if( m_propertyContentType == null )
+        {
+          // may happen for virtual properties
+        }
+        else
+        {
+          final Restriction restriction = m_propertyContentType.getRestriction();
+          if( restriction != null )
+            m_restrictions = ContentRestrictionFactory.createRestrictions( restriction, gmlSchema, getQName() );
+        }
+
         break;
     }
-  }
-
-  public IPropertyContentType getPropertyContentType( )
-  {
-    return m_propertyContentType;
   }
 
   public QName getValueQName( )
@@ -142,9 +149,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public boolean hasRestriction( )
   {
-    if( m_propertyContentType == null )
-      return false;
-    return m_propertyContentType.hasRestriction();
+    return m_restrictions.length > 0;
   }
 
   /**
@@ -152,7 +157,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public IRestriction[] getRestriction( )
   {
-    return m_propertyContentType.getRestriction();
+    return m_restrictions;
   }
 
   /**
@@ -209,10 +214,12 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   public boolean isGeometry( )
   {
     // HACK: this happens for not initialized property types....
-    // 
 
     if( m_propertyContentType != null )
       return m_propertyContentType.isGeometry();
+
+    // TODO: this happens, which is bad... maybe some geometries are not recognized
+    // wile the feature type searches for its default geometry
 
     return false;
   }
@@ -233,4 +240,11 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
     return m_propertyContentType.getTypeHandler();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new PropertyType( getGMLSchema(), getElement(), getOccurs(), featureType );
+  }
 }

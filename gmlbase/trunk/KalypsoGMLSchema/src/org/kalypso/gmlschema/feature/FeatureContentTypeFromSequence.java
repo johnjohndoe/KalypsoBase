@@ -31,8 +31,6 @@ package org.kalypso.gmlschema.feature;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -47,9 +45,10 @@ public class FeatureContentTypeFromSequence extends FeatureContentType
 {
   private final List<ElementWithOccurs> m_elementList;
 
-  public FeatureContentTypeFromSequence( final GMLSchema gmlSchema, final QName featureQName, final ComplexType complexType, final List<ElementWithOccurs> elementList )
+  public FeatureContentTypeFromSequence( final GMLSchema gmlSchema, final ComplexType complexType, final List<ElementWithOccurs> elementList )
   {
-    super( gmlSchema, featureQName, complexType );
+    super( gmlSchema, complexType );
+
     m_elementList = elementList;
   }
 

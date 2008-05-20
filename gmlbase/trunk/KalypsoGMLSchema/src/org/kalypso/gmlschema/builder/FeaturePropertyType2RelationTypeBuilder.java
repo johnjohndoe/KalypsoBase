@@ -37,13 +37,13 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.adv.ADVUtilities;
-import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.property.relation.AdvRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 
 /**
  * a builder for references based on restrictions of FeaturePropertyType and ADV rules
@@ -62,37 +62,31 @@ public class FeaturePropertyType2RelationTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, final Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
-    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
-    final QName ref = element.getElement().getRef();
-
-    final QName featureQName;
-    if( parent instanceof IFeatureContentType )
-      featureQName = ((IFeatureContentType) parent).getQName();
-    else if( parent instanceof GMLSchema )
-      featureQName = null;
-    else
-      throw new GMLSchemaException( "Unable to parse featureQName for property: " + elementObject );
+    final ElementWithOccurs elementWithOccurs = (ElementWithOccurs) elementObject;
+    final Element element = elementWithOccurs.getElement();
+    final Occurs occurs = elementWithOccurs.getOccurs();
+    final QName ref = element.getRef();
 
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, reference, featureQName );
-      gmlSchema.register( element.getElement(), result );
+      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, occurs, reference, null );
+      gmlSchema.register( element, result );
       return new Object[] { result };
     }
 
-    final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element.getElement() );
+    final QName advReferenziertesElement = ADVUtilities.getReferenziertesElement( element );
     if( advReferenziertesElement != null )
     {
-      final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, advReferenziertesElement, featureQName );
-      gmlSchema.register( element.getElement(), advRelation );
+      final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, occurs, advReferenziertesElement, null );
+      gmlSchema.register( element, advRelation );
       return new Object[0];
     }
 
-    final IRelationType result = new RelationType( gmlSchema, element, featureQName );
-    gmlSchema.register( element.getElement(), result );
+    final IRelationType result = new RelationType( gmlSchema, element, occurs, null );
+    gmlSchema.register( element, result );
     return new Object[] { result };
   }
 

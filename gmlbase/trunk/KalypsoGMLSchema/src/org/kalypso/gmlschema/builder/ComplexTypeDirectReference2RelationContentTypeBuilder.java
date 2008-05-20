@@ -62,10 +62,9 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
   }
 
   /**
-   * @param gmlSchema
-   * @param complexTypeObject
+   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject, Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
   {
     RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;

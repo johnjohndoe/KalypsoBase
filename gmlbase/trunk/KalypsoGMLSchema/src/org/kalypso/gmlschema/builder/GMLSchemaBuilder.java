@@ -31,9 +31,12 @@ package org.kalypso.gmlschema.builder;
 
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gmlschema.Debug;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -76,15 +79,28 @@ public class GMLSchemaBuilder
   public GMLSchema buildGMLSchema( final SchemaDocument schemaDocument, final URL context ) throws GMLSchemaException
   {
     final String namespace = schemaDocument.getSchema().getTargetNamespace();
+
+    // Read I18N Properties from the same location
+    // REMARK: this is somewhat special, however is the most effective way
+    // to do it. Maybe we should some day provide a general hook at this place to do such things?
+    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: Start: %s%n", namespace );
+    // REMARK: we assume here, the last part of the context url is the filename
+    // of the schema-file. So we try to load a file with the same name but extension .properties
+    final Properties i18nProperties = new Properties();
+    final String filename = FileUtilities.nameFromPath( context.getFile() );
+    final String path = FileUtilities.nameWithoutExtension( filename );
+    PropertiesUtilities.loadI18nProperties( i18nProperties, context, path );
+    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: OK: %s%n", namespace );
+
     Debug.PARSING.printf( "Building GML-Schema: %s%n", namespace );
 
     Debug.PARSING_VERBOSE.printf( "Preparing: Start: %s%n", namespace );
-    final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion );
+    final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion, i18nProperties );
     Debug.PARSING_VERBOSE.printf( "Preparing: OK: %s%n", namespace );
 
     // I Step build the objects
     Debug.PARSING_VERBOSE.printf( "Building GML-Schema: Start: %s%n", namespace );
-    rBuild( gmlSchema, gmlSchema, null );
+    rBuild( gmlSchema, gmlSchema );
     Debug.PARSING_VERBOSE.printf( "Building GML-Schema: OK: %s%n", namespace );
 
     // II Step initialize the elements
@@ -97,14 +113,14 @@ public class GMLSchemaBuilder
     return gmlSchema;
   }
 
-  private void rBuild( final GMLSchema gmlSchema, final Object object, final Object parent ) throws GMLSchemaException
+  private void rBuild( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
   {
     final IBuilder builder = getBuilderFor( gmlSchema, object );
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {
-      final Object[] buildedObjects = builder.build( gmlSchema, object, parent );
+      final Object[] buildedObjects = builder.build( gmlSchema, object );
       for( final Object object1 : buildedObjects )
-        rBuild( gmlSchema, object1, object );
+        rBuild( gmlSchema, object1 );
     }
   }
 

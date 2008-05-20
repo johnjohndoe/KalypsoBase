@@ -41,8 +41,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
  */
 public interface IValuePropertyType extends IPropertyType
 {
-  public IPropertyContentType getPropertyContentType( );
-
   public boolean hasRestriction( );
 
   public IRestriction[] getRestriction( );

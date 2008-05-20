@@ -43,6 +43,8 @@ package org.kalypso.gmlschema.property.relation;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 
@@ -66,12 +68,12 @@ public class CustomRelationType implements IRelationType
 
   private final boolean m_isNillable;
 
-  private final QName m_featureQName;
+  private final IAnnotation m_annotation;
 
-  public CustomRelationType( final QName qName, final QName featureQName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public CustomRelationType( final QName qName, final IFeatureType targetFeatureType, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
-    m_featureQName = featureQName;
+    m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     m_targetFT = targetFeatureType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
@@ -127,14 +129,6 @@ public class CustomRelationType implements IRelationType
   public int getMaxOccurs( )
   {
     return m_maxOccurs;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_featureQName;
   }
 
   /**
@@ -203,6 +197,22 @@ public class CustomRelationType implements IRelationType
   public String toString( )
   {
     return m_qName.toString();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new CustomRelationType( m_qName, m_targetFT, m_minOccurs, m_maxOccurs, m_isNillable );
   }
 
 }

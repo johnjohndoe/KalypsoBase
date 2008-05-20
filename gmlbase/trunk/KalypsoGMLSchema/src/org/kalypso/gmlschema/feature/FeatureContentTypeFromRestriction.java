@@ -54,9 +54,9 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
 
   private FeatureContentType m_restrictionBase = null;
 
-  public FeatureContentTypeFromRestriction( final GMLSchema schema, final QName featureQName, final ComplexType complexType, final ComplexRestrictionType restriction )
+  public FeatureContentTypeFromRestriction( final GMLSchema schema, final ComplexType complexType, final ComplexRestrictionType restriction )
   {
-    super( schema, featureQName, complexType );
+    super( schema, complexType );
     m_restriction = restriction;
   }
 

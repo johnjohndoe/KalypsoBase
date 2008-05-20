@@ -50,9 +50,11 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -176,7 +178,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
       if( restriction.getLength() > 0 )
       {
-        final Map<Object, ILanguageAnnontationProvider> hEnumerations = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+        final Map<Object, IAnnotation> hEnumerations = new LinkedHashMap<Object, IAnnotation>();
         final Set<String> sPatterns = new HashSet<String>(); // *< for pattern regex matching
 
         for( int i = 0; i < restriction.getLength(); i++ )
@@ -211,12 +213,10 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
               // values
               final NodeList childNodes = myNode.getChildNodes();
-              final IAnnotation[] annonatations = ObservationLanguageAnnontationProviderHelper.getAnnontations( itmKey.getTextContent(), childNodes );
-              final IAnnotation defaultAnnontation = ObservationLanguageAnnontationProviderHelper.getDefaultAnnontation( itmKey.getTextContent() );
+              final IAnnotation foundAnnotation = AnnotationUtilities.parseAnnontation( itmKey.getTextContent(), childNodes );
+              final IAnnotation annontation = foundAnnotation == null ? new DefaultAnnotation( Platform.getNL(), itmKey.getTextContent() ) : foundAnnotation;
 
-              final ObservationLanguageAnnontationProvider provider = new ObservationLanguageAnnontationProvider( annonatations, defaultAnnontation );
-
-              hEnumerations.put( itmKey.getTextContent(), provider );
+              hEnumerations.put( itmKey.getTextContent(), annontation );
             }
             else if( "minInclusive".equals( myNode.getLocalName() ) )
             {
@@ -246,7 +246,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
                 }
               }
             }// end if-else-if
-            else if( "fractionDigits".equals(myNode.getLocalName()) )
+            else if( "fractionDigits".equals( myNode.getLocalName() ) )
             {
               final NamedNodeMap attributes = myNode.getAttributes();
               for( int a = 0; a < attributes.getLength(); a++ )
@@ -269,13 +269,13 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           if( hEnumerations.size() != 2 )
             throw new TypeRegistryException( "Boolean representation type must have exactly two enumeration restrictions." );
 
-          final Set<Entry<Object, ILanguageAnnontationProvider>> entrySet = hEnumerations.entrySet();
-          final Iterator<Entry<Object, ILanguageAnnontationProvider>> entryIt = entrySet.iterator();
+          final Set<Entry<Object, IAnnotation>> entrySet = hEnumerations.entrySet();
+          final Iterator<Entry<Object, IAnnotation>> entryIt = entrySet.iterator();
 
-          final Entry<Object, ILanguageAnnontationProvider> falseEntry = entryIt.next();
-          final Entry<Object, ILanguageAnnontationProvider> trueEntry = entryIt.next();
+          final Entry<Object, IAnnotation> falseEntry = entryIt.next();
+          final Entry<Object, IAnnotation> trueEntry = entryIt.next();
 
-          final Map<Object, ILanguageAnnontationProvider> booleanEnum = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+          final Map<Object, IAnnotation> booleanEnum = new LinkedHashMap<Object, IAnnotation>();
           booleanEnum.put( Boolean.FALSE, falseEntry.getValue() );
           booleanEnum.put( Boolean.TRUE, trueEntry.getValue() );
 

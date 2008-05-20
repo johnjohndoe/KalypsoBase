@@ -45,22 +45,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 
 /**
  * @author doemming refactored kuch
  */
 public class EnumerationRestriction implements IRestriction
 {
-  private final String m_lang;
+  private final Map<Object, IAnnotation> m_map;
 
-  private final Map<Object, ILanguageAnnontationProvider> m_map;
-
-  public EnumerationRestriction( Map<Object, ILanguageAnnontationProvider> map )
+  public EnumerationRestriction( final Map<Object, IAnnotation> map )
   {
     m_map = map;
-    m_lang = AnnotationAdapterFactory.getPlatformLang();
   }
 
   public Object[] getEnumeration( )
@@ -68,23 +64,16 @@ public class EnumerationRestriction implements IRestriction
     return m_map.keySet().toArray();
   }
 
-  public String[] getLabels( String language )
+  public String[] getLabels( )
   {
-    List<String> list = new LinkedList<String>();
-    for( Entry<Object, ILanguageAnnontationProvider> map : m_map.entrySet() )
-    {
-      list.add( map.getValue().getAnnotation( language ).getLabel() );
-    }
+    final List<String> list = new LinkedList<String>();
+    for( final Entry<Object, IAnnotation> map : m_map.entrySet() )
+      list.add( map.getValue().getLabel() );
 
     return list.toArray( new String[] {} );
   }
 
-  public String[] getLabels( )
-  {
-    return getLabels( m_lang );
-  }
-
-  public Map<Object, ILanguageAnnontationProvider> getMapping( )
+  public Map<Object, IAnnotation> getMapping( )
   {
     return m_map;
   }

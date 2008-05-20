@@ -41,7 +41,6 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.PropertyContentTypeFromTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -66,7 +65,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject, final Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException
   {
     final QName valueQName;
     if( typeObject instanceof ComplexType )
@@ -76,9 +75,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
     else
       throw new GMLSchemaException( "Could not find valueQName for: " + typeObject );
 
-    final IPropertyType parentProperty = parent instanceof IPropertyType ? (IPropertyType) parent : null;
-
-    final IPropertyContentType pct = new PropertyContentTypeFromTypeHandler( gmlSchema, typeObject, valueQName, parentProperty );
+    final IPropertyContentType pct = new PropertyContentTypeFromTypeHandler( gmlSchema, typeObject, valueQName );
     gmlSchema.register( typeObject, pct );
     return new Object[] { pct };
   }

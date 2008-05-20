@@ -48,6 +48,8 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 
@@ -72,10 +74,13 @@ public class CustomFeatureType implements IFeatureType
 
   private final IGMLSchema m_schema;
 
+  private final DefaultAnnotation m_annotation;
+
   public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
     m_schema = schema;
     m_qName = qName;
+    m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     int geoPos = -1;
     final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
     for( int i = 0; i < pts.length; i++ )
@@ -234,15 +239,6 @@ public class CustomFeatureType implements IFeatureType
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
-  {
-    return Platform.getAdapterManager().getAdapter( this, adapter );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getGMLSchema()
    */
   public IGMLSchema getGMLSchema( )
@@ -257,5 +253,13 @@ public class CustomFeatureType implements IFeatureType
   public String toString( )
   {
     return m_qName.toString();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
   }
 }

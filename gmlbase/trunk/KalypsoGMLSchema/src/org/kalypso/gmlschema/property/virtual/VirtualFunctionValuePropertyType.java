@@ -47,7 +47,10 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
@@ -81,13 +84,13 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
 
   private final boolean m_isNullable = false;
 
-  private final QName m_featureQName;
-
   private final QName m_qName;
 
   private final String m_functionId;
 
   private final Map<String, String> m_properties;
+
+  private final IAnnotation m_annotation;
 
   /**
    * Creates a new {@link VirtualFunctionPropertyType} for the given value handler and the property q-name
@@ -97,15 +100,15 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
    * @param propertyQName
    *            the q-name of the virtual property
    */
-  public VirtualFunctionValuePropertyType( final IMarshallingTypeHandler handler, final QName propertyQName, final QName featureQName, final String functionId, final Map<String, String> properties ) throws IllegalArgumentException
+  public VirtualFunctionValuePropertyType( final IFeatureType featureType, final IMarshallingTypeHandler handler, final QName propertyQName, final String functionId, final Map<String, String> properties ) throws IllegalArgumentException
   {
+    Assert.isNotNull( propertyQName );
+
     m_qName = propertyQName;
-    m_featureQName = featureQName;
     m_handler = handler;
     m_functionId = functionId;
     m_properties = properties;
-
-    Assert.isNotNull( propertyQName );
+    m_annotation = AnnotationUtilities.createAnnotation( propertyQName, featureType, null, null );
   }
 
   /**
@@ -138,14 +141,6 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   public int getMinOccurs( )
   {
     return m_minOccurs;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_featureQName;
   }
 
   /**
@@ -196,14 +191,6 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   public String getFixed( )
   {
     return m_fixed;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IValuePropertyType#getPropertyContentType()
-   */
-  public IPropertyContentType getPropertyContentType( )
-  {
-    return null;
   }
 
   /**
@@ -322,6 +309,22 @@ public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePr
   public Map<String, String> getFunctionProperties( )
   {
     return m_properties;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new VirtualFunctionValuePropertyType( featureType, m_handler, m_qName, m_functionId, m_properties );
   }
 
 }

@@ -40,15 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.relation;
 
-import javax.xml.namespace.QName;
-
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
@@ -60,10 +59,10 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
 
   private final ElementReference m_reference;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference, final QName featureQName )
+  public ReferencedRelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final ElementReference reference, final IFeatureType featureType )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, element.getElement().getRef(), featureQName );
+    super( gmlSchema, element.getRef(), featureType, element, occurs, reference );
 
     m_reference = reference;
   }
@@ -139,14 +138,10 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
   @Override
   public Element getElement( )
   {
-// checkState();
-
     // HACK: while building, this is used by RelationType2ComplexTypeBuilder
     if( m_globalRT == null )
       return m_reference.getElement();
 
-    // allways return the one that known content
-    // TODO for other usage implement AppinfoProvider
     return ((QualifiedElement) m_globalRT).getElement();
   }
 
@@ -158,5 +153,13 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
     checkState();
 
     return m_globalRT.getDocumentReferences();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new ReferencedRelationType( getGMLSchema(), super.getElement(), getOccurs(), m_reference, featureType );
   }
 }

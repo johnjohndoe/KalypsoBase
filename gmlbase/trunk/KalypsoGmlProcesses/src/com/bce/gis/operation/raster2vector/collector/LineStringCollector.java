@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class LineStringCollector implements SegmentCollector
 {
-  private static final IValuePropertyType GRENZEN_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "hoehe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
+  private static final IValuePropertyType GRENZEN_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "hoehe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
   private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( QNAME_SHAPE_FEATURE, new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, GRENZEN_PROP } );
 

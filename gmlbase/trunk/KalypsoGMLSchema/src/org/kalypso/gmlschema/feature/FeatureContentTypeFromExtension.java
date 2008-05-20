@@ -56,9 +56,9 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
 
   private IPropertyType[] m_fullProps = null;
 
-  public FeatureContentTypeFromExtension( final GMLSchema schema, final QName featureQName, final ComplexType complexType, final ExtensionType extension )
+  public FeatureContentTypeFromExtension( final GMLSchema schema, final ComplexType complexType, final ExtensionType extension )
   {
-    super( schema, featureQName, complexType );
+    super( schema, complexType );
     m_extension = extension;
   }
 

@@ -108,7 +108,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class TestGrid2Shp extends TestCase
 {
-
   private static final GeometryFactory GF = new GeometryFactory();
 
   public void testRiskModel( ) throws Exception
@@ -157,9 +156,9 @@ public class TestGrid2Shp extends TestCase
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { lineType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -195,11 +194,11 @@ public class TestGrid2Shp extends TestCase
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -243,7 +242,7 @@ public class TestGrid2Shp extends TestCase
 
     final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
-    ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
+    final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
     final IRelationType parentRelation = (IRelationType) covColl.getFeature().getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = covCollWorkspace.createFeature( covColl.getFeature(), parentRelation, ft );
@@ -251,7 +250,7 @@ public class TestGrid2Shp extends TestCase
     covColl.add( coverage );
 
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-    rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
+    rangeSetFile.setFileName( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
     final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
     rangeSet.setFile( rangeSetFile );

@@ -45,7 +45,9 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -89,28 +91,11 @@ public class VirtualFunctionValueWrapperPropertyType implements IVirtualFunction
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
-  {
-    return m_realPropertyType.getAdapter( adapter );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getDefault()
    */
   public String getDefault( )
   {
     return m_realPropertyType.getDefault();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_realPropertyType.getFeatureQName();
   }
 
   /**
@@ -145,14 +130,6 @@ public class VirtualFunctionValueWrapperPropertyType implements IVirtualFunction
   public String getName( )
   {
     return m_realPropertyType.getName();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IValuePropertyType#getPropertyContentType()
-   */
-  public IPropertyContentType getPropertyContentType( )
-  {
-    return m_realPropertyType.getPropertyContentType();
   }
 
   /**
@@ -274,6 +251,22 @@ public class VirtualFunctionValueWrapperPropertyType implements IVirtualFunction
   public String toString( )
   {
     return m_realPropertyType.toString();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_realPropertyType.getAnnotation();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new VirtualFunctionValueWrapperPropertyType( (IValuePropertyType) m_realPropertyType.cloneForFeatureType( featureType ), m_functionId, m_functionProperties );
   }
 
 }

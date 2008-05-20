@@ -46,6 +46,9 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -56,7 +59,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 /**
  * @author doemming
  */
-public class CustomValueProperType implements IValuePropertyType
+public class CustomValuePropertyType implements IValuePropertyType
 {
   private final QName m_qName;
 
@@ -68,24 +71,19 @@ public class CustomValueProperType implements IValuePropertyType
 
   private final boolean m_isNillable;
 
-  private final QName m_featureQName;
+  private final IAnnotation m_annotation;
 
-  public CustomValueProperType( final QName qName, final QName featureQName, final IPropertyContentType contentType, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  private final IRestriction[] m_restrictions;
+
+  public CustomValuePropertyType( final QName qName, final IPropertyContentType contentType, final IRestriction[] restrictions, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     m_qName = qName;
-    m_featureQName = featureQName;
+    m_restrictions = restrictions;
+    m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     m_contentType = contentType;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
     m_isNillable = isNillable;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_featureQName;
   }
 
   /**
@@ -97,11 +95,11 @@ public class CustomValueProperType implements IValuePropertyType
   }
 
   /**
-   * @see org.kalypso.gmlschema.property.IValuePropertyType#getPropertyContentType()
+   * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
    */
-  public IPropertyContentType getPropertyContentType( )
+  public IRestriction[] getRestriction( )
   {
-    return m_contentType;
+    return m_restrictions;
   }
 
   /**
@@ -109,15 +107,7 @@ public class CustomValueProperType implements IValuePropertyType
    */
   public boolean hasRestriction( )
   {
-    return m_contentType.hasRestriction();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IValuePropertyType#getRestriction()
-   */
-  public IRestriction[] getRestriction( )
-  {
-    return m_contentType.getRestriction();
+    return m_restrictions.length > 0;
   }
 
   /**
@@ -274,9 +264,9 @@ public class CustomValueProperType implements IValuePropertyType
       final QualifiedElement rhs = (QualifiedElement) obj;
       return new EqualsBuilder().append( m_qName, rhs.getQName() ).isEquals();
     }
-    else if( obj instanceof CustomValueProperType )
+    else if( obj instanceof CustomValuePropertyType )
     {
-      final CustomValueProperType cpt = (CustomValueProperType) obj;
+      final CustomValuePropertyType cpt = (CustomValuePropertyType) obj;
       return new EqualsBuilder().append( m_qName, cpt.m_qName ).isEquals();
     }
 
@@ -293,7 +283,7 @@ public class CustomValueProperType implements IValuePropertyType
     // ideally different for each class
     return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -305,7 +295,23 @@ public class CustomValueProperType implements IValuePropertyType
     sb.append( getQName() );
     sb.append( " - " );
     sb.append( getValueQName() );
-    
+
     return sb.toString();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_annotation;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new CustomValuePropertyType( m_qName, m_contentType, m_restrictions, m_minOccurs, m_maxOccurs, m_isNillable );
   }
 }

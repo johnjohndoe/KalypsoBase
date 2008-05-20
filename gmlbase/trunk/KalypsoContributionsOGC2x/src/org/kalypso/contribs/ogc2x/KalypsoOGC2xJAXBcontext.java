@@ -51,33 +51,15 @@ import org.kalypso.jwsdp.JaxbUtilities;
  */
 public final class KalypsoOGC2xJAXBcontext
 {
-  private static JAXBContext m_context = null;
+  private static JAXBContext s_context = null;
 
-  private static Class[] m_contextClass = null;
+  private static Class< ? >[] s_contextClasses = { ogc2.www.opengis.net.gml.ObjectFactory.class };
 
-  /**
-   * methode is intended to be used by parts that generate JAXB-contexts with many classes and need to collect them
-   * 
-   * @return classes needed for binding context
-   */
-  public static Class[] getContextClasses( )
+  public static synchronized JAXBContext getContext( )
   {
-    if( m_contextClass == null )
-    {
-      m_contextClass = new Class[] {//  
-      ogc2.www.opengis.net.gml.ObjectFactory.class };
-    }
-    return m_contextClass;
-  }
+    if( s_context == null )
+      s_context = JaxbUtilities.createQuiet( s_contextClasses );
 
-  public static JAXBContext getContext( )
-  {
-    if( m_context == null )
-    {
-      // create the context on all of these factories else the binding won't work
-      m_context = JaxbUtilities.createQuiet( getContextClasses() );
-    }
-
-    return m_context;
+    return s_context;
   }
 }

@@ -45,16 +45,19 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
-import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
+ * TODO: change name to 'referencing-property type'
+ * 
  * @author doemming
  */
 public class ReferencedPropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
@@ -63,10 +66,10 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
 
   private final ElementReference m_reference;
 
-  public ReferencedPropertyType( final GMLSchema gmlSchema, final ElementWithOccurs element, final ElementReference reference, final QName featureQName )
+  public ReferencedPropertyType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final ElementReference reference, final IFeatureType featureType )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
-    super( gmlSchema, element, element.getElement().getRef(), featureQName );
+    super( gmlSchema, element.getRef(), featureType, element, occurs, reference );
 
     m_reference = reference;
   }
@@ -105,24 +108,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   {
     checkState();
 
-    // witch one to return, please list here the use cases and hints for discussion/implementation
-    // 1. provide appinfo -> local element
-    // we need a appinfoprovider, that can collect them !
-
-    // allways return the one that known content
-    // TODO for other usage implement AppinfoProvider
     return ((QualifiedElement) m_globalPT).getElement();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IValuePropertyType#getPropertyContentType()
-   */
-  public IPropertyContentType getPropertyContentType( )
-  {
-    checkState();
-
-    // gloab knows content
-    return m_globalPT.getPropertyContentType();
   }
 
   /**
@@ -250,5 +236,13 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
 
     // global element knows content...
     return m_globalPT.getValueQName();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new ReferencedPropertyType( getGMLSchema(), super.getElement(), getOccurs(), m_reference, featureType );
   }
 }

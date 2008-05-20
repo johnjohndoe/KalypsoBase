@@ -31,18 +31,20 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.IInitialize;
-import org.kalypso.gmlschema.xml.IQualifiedElement;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * Instances of this interface represent the properties of a {@link org.kalypso.gmlschema.feature.IFeatureType}.
  * 
  * @author Andreas von Dömming
  */
-public interface IPropertyType extends IQualifiedElement, IInitialize, IAdaptable
+public interface IPropertyType extends IInitialize
 {
   public final static int UNBOUND_OCCURENCY = -1;
+
+  QName getQName( );
 
   public int getMinOccurs( );
 
@@ -60,12 +62,6 @@ public interface IPropertyType extends IQualifiedElement, IInitialize, IAdaptabl
    */
   public boolean isVirtual( );
 
-  /**
-   * Returns the qname of the feature(-type), this property is contained in. This information is necessary, as inside
-   * one gml schema, multiple (different) properties with the same qname may exists in different features.
-   */
-  public QName getFeatureQName( );
-
   public boolean isNillable( );
 
   /**
@@ -75,4 +71,11 @@ public interface IPropertyType extends IQualifiedElement, IInitialize, IAdaptabl
   @Deprecated
   public String getName( );
 
+  /**
+   * Returns the annotation (i.e. human readable strings) for this property type.<br>
+   */
+  IAnnotation getAnnotation( );
+
+  /** Not intended to be used outside the gml schema parser. */
+  IPropertyType cloneForFeatureType( IFeatureType featureType );
 }

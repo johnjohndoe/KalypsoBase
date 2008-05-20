@@ -39,7 +39,6 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.gmlschema.property.value.PropertyType;
@@ -47,6 +46,7 @@ import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
 import org.kalypso.gmlschema.xml.ElementWithOccurs;
+import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
@@ -73,43 +73,37 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject, final Object parent ) throws GMLSchemaException
+  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
 
-    final QName featureQName;
-    if( parent instanceof IFeatureContentType )
-      featureQName = ((IFeatureContentType) parent).getFeatureQName();
-    else if( parent instanceof GMLSchema )
-      featureQName = null;
-    else
-      throw new GMLSchemaException( "Unable to parse featureQName for property: " + elementObject );
-
-    final Object result = innerBuild( gmlSchema, element, featureQName );
+    final Object result = innerBuild( gmlSchema, element );
 
     gmlSchema.register( element.getElement(), result );
 
     return new Object[] { result };
   }
 
-  private Object innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName featureQName ) throws GMLSchemaException
+  private Object innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs elementWithOccurs ) throws GMLSchemaException
   {
-    final QName ref = element.getElement().getRef();
+    final Element element = elementWithOccurs.getElement();
+    final Occurs occurs = elementWithOccurs.getOccurs();
+    final QName ref = element.getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final QName referencedQName = referencedQName( gmlSchema, element );
+      final QName referencedQName = referencedQName( gmlSchema, elementWithOccurs );
 
       if( isFeature( referencedQName ) )
-        return new ReferencedRelationType( gmlSchema, element, reference, featureQName );
-      return new ReferencedPropertyType( gmlSchema, element, reference, featureQName );
+        return new ReferencedRelationType( gmlSchema, element, occurs, reference, null );
+      return new ReferencedPropertyType( gmlSchema, element, occurs, reference, null );
     }
 
-    final QName referencedQName = referencedQName( gmlSchema, element );
+    final QName referencedQName = referencedQName( gmlSchema, elementWithOccurs );
     if( isFeature( referencedQName ) )
-      return new RelationType( gmlSchema, element, featureQName );
+      return new RelationType( gmlSchema, element, occurs, null );
 
-    return new PropertyType( gmlSchema, element, featureQName );
+    return new PropertyType( gmlSchema, element, occurs, null );
   }
 
   private boolean isFeature( final QName referencedQName )

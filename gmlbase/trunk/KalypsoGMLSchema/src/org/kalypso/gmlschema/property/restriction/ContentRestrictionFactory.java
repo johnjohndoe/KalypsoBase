@@ -42,11 +42,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.NumFacet;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
-import org.kalypso.gmlschema.swe.ObservationLanguageAnnontationProvider;
-import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * represents restriction on a simple content
@@ -55,7 +52,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
  */
 public class ContentRestrictionFactory
 {
-  public static IRestriction[] createRestrictions( final Restriction restriction, final GMLSchema schema, final String namespace )
+  public static IRestriction[] createRestrictions( final Restriction restriction, final GMLSchema schema, final QName propertyQName )
   {
     final List<IRestriction> result = new ArrayList<IRestriction>();
 
@@ -63,18 +60,16 @@ public class ContentRestrictionFactory
     final Facet[] enumerationArray = restriction.getEnumerationArray();
     if( enumerationArray.length > 0 )
     {
-      final Map<Object, ILanguageAnnontationProvider> map = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
+      final Map<Object, IAnnotation> map = new LinkedHashMap<Object, IAnnotation>();
 
       for( final Facet facet : enumerationArray )
       {
         final String stringValue = facet.getValue().getStringValue();
 
-        final String platformLang = AnnotationAdapterFactory.getPlatformLang();
+        final QName enumQName = new QName( null, stringValue );
+        final IAnnotation annotation = AnnotationUtilities.annotationForFacet( schema, facet, propertyQName, enumQName );
 
-        final QualifiedElement qe = new QualifiedElement( schema, null, new QName( namespace, stringValue ) );
-        final IAnnotation annotation = AnnotationAdapterFactory.annotationForFacet( platformLang, facet, stringValue, qe );
-
-        map.put( stringValue, new ObservationLanguageAnnontationProvider( new IAnnotation[] { annotation }, annotation ) );
+        map.put( stringValue, annotation );
       }
 
       result.add( new EnumerationRestriction( map ) );

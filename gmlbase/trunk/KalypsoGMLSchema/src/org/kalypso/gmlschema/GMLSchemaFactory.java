@@ -61,7 +61,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.CustomRelationType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.value.CustomValueProperType;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.value.CustomValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
@@ -212,14 +213,14 @@ public class GMLSchemaFactory
     return new CustomFeatureType( schema, qName, properties );
   }
 
-  public static IValuePropertyType createValuePropertyType( final QName featureQName, final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public static IValuePropertyType createValuePropertyType( final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
     final IPropertyContentType pct = new CustomPropertyContentType( typeHandler );
-    return new CustomValueProperType( name, featureQName, pct, minOccurs, maxOccurs, isNillable );
+    return new CustomValuePropertyType( name, pct, new IRestriction[] {}, minOccurs, maxOccurs, isNillable );
   }
 
-  public static IRelationType createRelationType( final QName featureQName, final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs, final boolean isNillable )
+  public static IRelationType createRelationType( final QName qName, final IFeatureType targetFT, final int minOccurs, final int maxOccurs, final boolean isNillable )
   {
-    return new CustomRelationType( qName, featureQName, targetFT, minOccurs, maxOccurs, isNillable );
+    return new CustomRelationType( qName, targetFT, minOccurs, maxOccurs, isNillable );
   }
 }

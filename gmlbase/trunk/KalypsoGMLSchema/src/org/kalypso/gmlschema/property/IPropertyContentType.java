@@ -31,8 +31,8 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.builder.IInitialize;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
@@ -44,14 +44,11 @@ public interface IPropertyContentType extends IInitialize
 {
   public QName getValueQName( );
 
-  public boolean hasRestriction( );
-
-  public IRestriction[] getRestriction( );
-
   public boolean isGeometry( );
 
   public Class< ? > getValueClass( );
 
   public IMarshallingTypeHandler getTypeHandler( );
 
+  Restriction getRestriction( );
 }

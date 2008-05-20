@@ -36,11 +36,11 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
 {
-  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
+  public static final IValuePropertyType FROM_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "von" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
+  public static final IValuePropertyType TO_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "bis" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( QNAME_SHAPE_FEATURE, new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
+  public static final IValuePropertyType VOLUME_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "vol_summe" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
   private static final IFeatureType FT = GMLSchemaFactory.createFeatureType( QNAME_SHAPE_FEATURE, new IPropertyType[] { SHAPE_PROP, ID_PROP, BEZ_PROP, FROM_PROP, TO_PROP, VOLUME_PROP } );
 

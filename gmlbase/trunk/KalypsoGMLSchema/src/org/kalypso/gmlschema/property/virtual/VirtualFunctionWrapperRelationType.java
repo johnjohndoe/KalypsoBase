@@ -45,7 +45,9 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -80,28 +82,11 @@ public class VirtualFunctionWrapperRelationType implements IRelationType
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
-  {
-    return m_realPt.getAdapter( adapter );
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.relation.IRelationType#getDocumentReferences()
    */
   public IDocumentReference[] getDocumentReferences( )
   {
     return m_realPt.getDocumentReferences();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
-   */
-  public QName getFeatureQName( )
-  {
-    return m_realPt.getFeatureQName();
   }
 
   /**
@@ -194,6 +179,22 @@ public class VirtualFunctionWrapperRelationType implements IRelationType
   public boolean isVirtual( )
   {
     return m_realPt.isVirtual();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
+   */
+  public IAnnotation getAnnotation( )
+  {
+    return m_realPt.getAnnotation();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
+  {
+    return new VirtualFunctionWrapperRelationType( (IRelationType) m_realPt.cloneForFeatureType( featureType ), m_functionId, m_functionProperties );
   }
 
 }

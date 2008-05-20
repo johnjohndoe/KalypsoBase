@@ -38,6 +38,7 @@ import java.util.Hashtable;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -138,11 +139,14 @@ public class GMLSchema implements IGMLSchema
   /* list of schemas that are referenced by include and have allready been processed */
   private final List<URL> m_processedIncludeUrls = new ArrayList<URL>();
 
-  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
+  private final Properties m_i18nProperties;
+
+  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion, final Properties i18nProperties ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
     m_schemaDocument = schemaDocument;
     m_context = context;
+    m_i18nProperties = i18nProperties;
     m_urlResolver = new UrlResolver();
     init( schemaDocument );
   }
@@ -158,7 +162,7 @@ public class GMLSchema implements IGMLSchema
   }
 
   /**
-   * initialize gmlschema, create all featuretypes, featurepropertytypes, parse all included and imported schemas
+   * initializes this schema, loads all included and imported schemas
    * 
    * @throws GMLSchemaException
    */
@@ -246,14 +250,14 @@ public class GMLSchema implements IGMLSchema
     }
     catch( Throwable e )
     {
-      /* unpack exceptionif inside InvocationTargetException */
+      /* unpack exception if inside InvocationTargetException */
       if( e instanceof InvocationTargetException )
         e = ((InvocationTargetException) e).getTargetException();
 
       if( e instanceof GMLSchemaException )
         throw (GMLSchemaException) e;
-      else
-        throw new GMLSchemaException( e );
+
+      throw new GMLSchemaException( e );
     }
   }
 
@@ -392,6 +396,9 @@ public class GMLSchema implements IGMLSchema
     return m_schemaDocument;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#getContext()
+   */
   public URL getContext( )
   {
     return m_context;
@@ -440,12 +447,6 @@ public class GMLSchema implements IGMLSchema
       final ComplexType complexType = rct.getComplexType();
       m_relationContentTypes.put( complexType, rct );
     }
-    // else if( buildedObject instanceof IPropertyContentType )
-    // {
-    // final IPropertyContentType pct = (IPropertyContentType) buildedObject;
-    // final SimpleType simpleType = pct.getSimpleType();
-    // m_propertyContentTypes.put( simpleType, pct );
-    // }
   }
 
   /**
@@ -642,7 +643,15 @@ public class GMLSchema implements IGMLSchema
   public void addAdditionalSchema( final GMLSchema schema )
   {
     m_additionalSchemas.put( schema.getTargetNamespace(), schema );
-    // TODO Auto-generated method stub
+  }
 
+  /**
+   * Returns the properties that serve to provide language specific labels/tooltips for this schema.<br>
+   * Not in interface, as this is only used during the creation of feature/property-types.<br>
+   * Not intended to be used outside this framework.
+   */
+  public Properties getI18nProperties( )
+  {
+    return m_i18nProperties;
   }
 }

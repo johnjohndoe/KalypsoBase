@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
+import java.net.URL;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -56,6 +58,12 @@ public interface IGMLSchema
   public String getGMLVersion( );
 
   public String getTargetNamespace( );
+
+  /**
+   * The context of this schema, usually the location from which is was originally loaded.<br>
+   * This context will be used to resolve any relative reference within this schema.
+   */
+  public URL getContext( );
 
   /** Visits this, all imported and all additionally loaded schema. */
   public void accept( final IGMLSchemaVisitor visitor );

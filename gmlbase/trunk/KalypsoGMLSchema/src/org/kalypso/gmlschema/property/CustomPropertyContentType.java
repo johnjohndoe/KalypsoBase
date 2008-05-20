@@ -42,7 +42,7 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
@@ -51,8 +51,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 public class CustomPropertyContentType implements IPropertyContentType
 {
   private final IMarshallingTypeHandler m_typeHandler;
-
-  private final IRestriction[] m_noRestruction = new IRestriction[0];
 
   private final QName m_qname;
 
@@ -79,19 +77,11 @@ public class CustomPropertyContentType implements IPropertyContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.property.IPropertyContentType#hasRestriction()
-   */
-  public boolean hasRestriction( )
-  {
-    return false;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.property.IPropertyContentType#getRestriction()
    */
-  public IRestriction[] getRestriction( )
+  public Restriction getRestriction( )
   {
-    return m_noRestruction;
+    return null;
   }
 
   /**

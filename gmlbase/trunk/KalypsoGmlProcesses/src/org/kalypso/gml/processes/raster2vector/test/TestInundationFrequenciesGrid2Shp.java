@@ -144,7 +144,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final GridCategoryWrapper gridCategory6 = new GridCategoryWrapper( 6 );
 
     // add grids to categories
-    GridCategoryWrapper[] gridCategories = new GridCategoryWrapper[6];
+    final GridCategoryWrapper[] gridCategories = new GridCategoryWrapper[6];
     gridCategories[0] = gridCategory1;
     gridCategories[1] = gridCategory2;
     gridCategories[2] = gridCategory3;
@@ -170,9 +170,9 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Geometry globalEnv = GeoGridUtilities.getCommonGridEnvelopeForCollections( collections, intersection );
     final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
     writeEnvelopeShape( gmObject.getEnvelope(), importDataFolder );
-    
+
     collections = null;
-    
+
     /* create the grid ====================================================================== */
     final FlattenToCategoryGrid grid = GeoGridUtilities.getFlattedGrid( gridCategories, intersection );
 
@@ -217,9 +217,9 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { lineType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -250,13 +250,12 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POLYGON_PROPERTY );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -289,11 +288,11 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -325,7 +324,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
   {
     final ICoverageCollection[] collections = new ICoverageCollection[6];
 
-    URL gmlContext = ResourceUtilities.createURL( importDataFolder );
+    final URL gmlContext = ResourceUtilities.createURL( importDataFolder );
 
 // final GMLWorkspace covCollWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( covCollFile ),
 // null );
