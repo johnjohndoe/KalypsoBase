@@ -38,7 +38,7 @@ public class CalendarParser implements IStringParser<Calendar>
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
-  public Calendar stringToLogical( String value ) throws MalformedValueException
+  public Calendar stringToLogical( final String value ) throws MalformedValueException
   {
     // erst mal versuchen, ein korrektes Datum zu parsen
     final Calendar cal = Calendar.getInstance();
@@ -92,7 +92,6 @@ public class CalendarParser implements IStringParser<Calendar>
           if( (value.startsWith( "NOW" ) && value.length() > 3) || (value.startsWith( "TODAY" ) && value.length() > 5)
 
           )
-            ;
           {
 
             final Pattern pattern = Pattern.compile( m_regexDuration );
