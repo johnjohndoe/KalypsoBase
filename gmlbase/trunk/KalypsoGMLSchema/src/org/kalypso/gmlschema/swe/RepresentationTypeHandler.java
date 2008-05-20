@@ -104,6 +104,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           base = restrictionElt.getAttribute( "base" );
 
           // TODO: recurse into simple-type and collect all restrictions
+
+          if( base == null || base.length() == 0 )
+            throw new TypeRegistryException( "No base defined for st:restriction." );
         }
         else
         {
@@ -355,7 +358,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
         final Element eltSimpleType = doc.createElementNS( NS.SWE, "SimpleType" );
 
         final Element eltRestriction = doc.createElementNS( NS.XST, "restriction" );
-        eltRestriction.setAttributeNS( NS.XST, "base", type.getValueTypeName().getLocalPart() );
+        eltRestriction.setAttribute( "base", type.getValueTypeName().getLocalPart() );
         eltSimpleType.appendChild( eltRestriction );
 
         RepresentationTypeHandler.handleUnit( type, doc, eltSimpleType );
@@ -381,7 +384,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     if( type.getUnit().length() > 0 )
     {
       final Element eltUom = doc.createElementNS( NS.GML3, "unitOfMeasure" );
-      eltUom.setAttributeNS( NS.GML3, "uom", type.getUnit() );
+      eltUom.setAttribute( "uom", type.getUnit() );
 
       elt.appendChild( eltUom );
     }
@@ -393,7 +396,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     if( (frame != null) && (frame.length() > 0) )
     {
       final Element eltFrame = doc.createElementNS( NS.SWE, "frame" );
-      eltFrame.setAttributeNS( NS.SWE, "frame", frame );
+      eltFrame.setAttribute( "frame", frame );
 
       elt.appendChild( eltFrame );
     }
