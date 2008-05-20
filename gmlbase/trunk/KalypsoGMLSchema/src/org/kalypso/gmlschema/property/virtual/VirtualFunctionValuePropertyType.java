@@ -47,20 +47,21 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.gmlschema.property.IPropertyContentType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-
 /**
  * Default implementation of {@link IVirtualFunctionValuePropertyType} bases on the {@link ITypeHandler} associated with
  * the property q-name
  * 
  * @author Congo Patrice
  */
-public class VirtualFunctionValuePropertyType implements IVirtualFunctionValuePropertyType
+public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, IValuePropertyType
 {
   private final IMarshallingTypeHandler m_handler;
 

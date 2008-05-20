@@ -42,7 +42,7 @@ package org.kalypso.gmlschema.property.virtual;
 
 import java.util.Map;
 
-import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
  * Property type interface to be use for virtual property based on a funtion property. Such a function property has
@@ -55,7 +55,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
  * @author Gernot Belger
  * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction
  */
-public interface IVirtualFunctionValuePropertyType extends IValuePropertyType
+public interface IFunctionPropertyType extends IPropertyType
 {
   /**
    * Returns the id of the function implementing this virtual property.

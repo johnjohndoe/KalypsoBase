@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValueWrapperPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionWrapperRelationType;
@@ -348,13 +348,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       final XmlObject[] funcProps = m_featureContentType.collectFunctionProperties();
       for( final XmlObject funcProp : funcProps )
       {
-        final IVirtualFunctionValuePropertyType pt = VirtualFunctionPropertyFactory.createFromCursor( this, getQName(), funcProp );
+        final IFunctionPropertyType pt = VirtualFunctionPropertyFactory.createFromCursor( this, funcProp );
         addAndCheck( propertyTypes, pt );
       }
 
       // Second, add all properties defined via extension-points
-      final IVirtualFunctionValuePropertyType[] extensionVpts = KalypsoGmlSchemaExtensions.createVirtualPropertyTypes( this );
-      for( final IVirtualFunctionValuePropertyType pt : extensionVpts )
+      final IFunctionPropertyType[] extensionVpts = KalypsoGmlSchemaExtensions.createVirtualPropertyTypes( this );
+      for( final IFunctionPropertyType pt : extensionVpts )
         addAndCheck( propertyTypes, pt );
     }
     catch( final GMLSchemaException e )
@@ -367,7 +367,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * Puts the property type into the map; If a real property with the same name exists it is checked if they correspond,
    * else an exception is thrown.
    */
-  private void addAndCheck( final Map<QName, IPropertyType> propertyTypes, final IVirtualFunctionValuePropertyType virtualPt )
+  private void addAndCheck( final Map<QName, IPropertyType> propertyTypes, final IFunctionPropertyType virtualPt )
   {
     final QName name = virtualPt.getQName();
     if( !propertyTypes.containsKey( name ) )

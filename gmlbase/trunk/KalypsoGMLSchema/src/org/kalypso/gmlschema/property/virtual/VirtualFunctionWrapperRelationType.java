@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  * 
  * @author Gernot Belger
  */
-public class VirtualFunctionWrapperRelationType implements IRelationType
+public class VirtualFunctionWrapperRelationType implements IFunctionPropertyType, IRelationType
 {
   private final IRelationType m_realPt;
 
@@ -179,6 +179,15 @@ public class VirtualFunctionWrapperRelationType implements IRelationType
   public boolean isVirtual( )
   {
     return m_realPt.isVirtual();
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_realPt.toString();
   }
 
   /**

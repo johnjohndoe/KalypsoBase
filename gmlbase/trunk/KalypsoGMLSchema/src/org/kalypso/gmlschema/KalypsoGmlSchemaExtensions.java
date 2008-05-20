@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -83,11 +83,11 @@ public class KalypsoGmlSchemaExtensions
 
   private static Map<QName, Collection<IConfigurationElement>> REGISTERED_VIRTUAL_PROPERTIES = null;
 
-  public static IVirtualFunctionValuePropertyType[] createVirtualPropertyTypes( final IFeatureType featureType )
+  public static IFunctionPropertyType[] createVirtualPropertyTypes( final IFeatureType featureType )
   {
     final Map<QName, Collection<IConfigurationElement>> vptMap = getRegisteredVirtualProperties();
 
-    final Collection<IVirtualFunctionValuePropertyType> foundTypes = new ArrayList<IVirtualFunctionValuePropertyType>();
+    final Collection<IFunctionPropertyType> foundTypes = new ArrayList<IFunctionPropertyType>();
 
     IFeatureType ft = featureType;
     while( ft != null )
@@ -102,7 +102,7 @@ public class KalypsoGmlSchemaExtensions
 
           if( ft == featureType || allowSubst )
           {
-            final IVirtualFunctionValuePropertyType vpt = createVirtualPropertType( featureType, element );
+            final IFunctionPropertyType vpt = createVirtualPropertType( featureType, element );
             foundTypes.add( vpt );
           }
         }
@@ -111,10 +111,10 @@ public class KalypsoGmlSchemaExtensions
       ft = ft.getSubstitutionGroupFT();
     }
 
-    return foundTypes.toArray( new IVirtualFunctionValuePropertyType[foundTypes.size()] );
+    return foundTypes.toArray( new IFunctionPropertyType[foundTypes.size()] );
   }
 
-  private static IVirtualFunctionValuePropertyType createVirtualPropertType( final IFeatureType featureType, final IConfigurationElement element )
+  private static IFunctionPropertyType createVirtualPropertType( final IFeatureType featureType, final IConfigurationElement element )
   {
     final String qnameString = element.getAttribute( ATTR_VIRTUALPROPERTY_QNAME );
     final String valueQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );

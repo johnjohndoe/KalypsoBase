@@ -59,7 +59,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
  * 
  * @author Gernot Belger
  */
-public class VirtualFunctionValueWrapperPropertyType implements IVirtualFunctionValuePropertyType
+public class VirtualFunctionValueWrapperPropertyType implements IFunctionPropertyType, IValuePropertyType
 {
   private final IValuePropertyType m_realPropertyType;
 

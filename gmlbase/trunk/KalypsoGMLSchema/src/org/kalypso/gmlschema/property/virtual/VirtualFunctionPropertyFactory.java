@@ -89,7 +89,7 @@ public class VirtualFunctionPropertyFactory
    *            the cursor containing the function property description
    * @return
    */
-  public static final IVirtualFunctionValuePropertyType createFromCursor( final IFeatureType featureType, final QName featureQName, final XmlObject funcProp ) throws GMLSchemaException
+  public static final IFunctionPropertyType createFromCursor( final IFeatureType featureType, final XmlObject funcProp ) throws GMLSchemaException
   {
     try
     {
@@ -113,7 +113,7 @@ public class VirtualFunctionPropertyFactory
     catch( final Throwable th )
     {
       th.printStackTrace();
-      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureQName, th );
+      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th );
     }
   }
 
