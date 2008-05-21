@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.service.ogc,
  org.kalypso.simulation.core,
  org.kalypso.jwsdp,
- org.junit4
+ org.junit4;resolution:=optional
 Eclipse-LazyStart: true
 Export-Package: net.opengeospatial.wps,
  org.kalypso.service.wps,
