@@ -11,7 +11,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,
- org.junit,
+ org.junit;resolution:=optional,
  org.kalypso.contribs.ogc31
 Eclipse-LazyStart: true
 Export-Package: com.bce.apps.wspfli,

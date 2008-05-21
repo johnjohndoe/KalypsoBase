@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp,
- org.junit
+ org.junit;resolution:=optional
 Eclipse-LazyStart: true
 Export-Package: au.csiro.seegrid.xml.st,
  ogc31.org.w3.smil20,
