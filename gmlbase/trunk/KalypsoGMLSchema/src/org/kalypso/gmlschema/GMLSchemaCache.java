@@ -159,15 +159,13 @@ public class GMLSchemaCache
     // do not return lastModified correctly. If we have such a case, we try some more...
     if( lastModified != 0 )
       return lastModified;
-    else
-    {
-      final IPath path = ResourceUtilities.findPathFromURL( schemaURL );
-      if( path == null )
-        return 0;
 
-      final File file = ResourceUtilities.makeFileFromPath( path );
-      return file.lastModified();
-    }
+    final IPath path = ResourceUtilities.findPathFromURL( schemaURL );
+    if( path == null )
+      return 0;
+
+    final File file = ResourceUtilities.makeFileFromPath( path );
+    return file.lastModified();
   }
 
   private static class GMLSchemaWrapper
