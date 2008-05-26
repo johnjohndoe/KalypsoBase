@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.annotation;
 
@@ -127,7 +127,7 @@ public class AnnotationUtilities
    * <p>
    * All inner elements from the dcoument element are regarded as annotations.
    * </p>
-   * 
+   *
    * @param createDefaultAnnotation
    *            If true, even if no annotation data is found, return a default annotation based on the defaultName; if
    *            false it returns null in this case.
@@ -196,13 +196,17 @@ public class AnnotationUtilities
     return annotation;
   }
 
-  public static IAnnotation annotationForFacet( final GMLSchema gmlSchema, final Facet facet, final QName qname, final QName enumQName )
+  public static IAnnotation annotationForFacet( final GMLSchema gmlSchema, final Facet facet, final QName[] qnames, final String enumString )
   {
-    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), new QName[] { qname, enumQName }, enumQName.getLocalPart() );
+    final QName[] qnamesWithEnum = new QName[qnames.length + 1];
+    System.arraycopy( qnames, 0, qnamesWithEnum, 0, qnames.length );
+    qnamesWithEnum[qnames.length] = new QName( null, enumString );
+
+    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), qnames, enumString );
     if( annotationFromProperties != null )
       return annotationFromProperties;
 
-    return AnnotationUtilities.annotationForElement( facet.getAnnotation(), enumQName.getLocalPart(), true );
+    return AnnotationUtilities.annotationForElement( facet.getAnnotation(), enumString, true );
   }
 
   /**
@@ -267,7 +271,7 @@ public class AnnotationUtilities
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   * 
+   *
    * @param node
    *            current element
    * @return the textual contents of the element or null, if it is missing

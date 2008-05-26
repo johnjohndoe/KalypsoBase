@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.gmlschema.property.value;
@@ -34,10 +34,12 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
+import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -57,7 +59,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
  * Representation a property definition from xml schema.
- * 
+ *
  * @author doemming
  */
 public class PropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
@@ -69,9 +71,13 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
 
   private IRestriction[] m_restrictions = new IRestriction[0];
 
+  private QName m_featureQName;
+
   public PropertyType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
+
+    m_featureQName = featureType == null ? null : featureType.getQName();
   }
 
   /**
@@ -130,9 +136,28 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         }
         else
         {
-          final Restriction restriction = m_propertyContentType.getRestriction();
-          if( restriction != null )
-            m_restrictions = ContentRestrictionFactory.createRestrictions( restriction, gmlSchema, getQName() );
+          Object typeObject = m_propertyContentType.getTypeObject();
+          if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
+          {
+            final SimpleType contentSimpleType = (SimpleType) typeObject;
+
+            final QName[] qnames;
+            if( typeObject instanceof TopLevelSimpleType )
+            {
+              final IGMLSchema contentGmlSchema = m_propertyContentType.getGmlSchema();
+              final String namespaceURI = contentGmlSchema == null ? null : contentGmlSchema.getTargetNamespace();
+              final String localPart = contentSimpleType.getName();
+              final QName typeQName = new QName( namespaceURI, localPart );
+
+              qnames = new QName[] { typeQName };
+            }
+            else
+              qnames = new QName[] { m_featureQName, getQName() };
+
+            final Restriction restriction = (contentSimpleType).getRestriction();
+            if( restriction != null )
+              m_restrictions = ContentRestrictionFactory.createRestrictions( restriction, gmlSchema, qnames );
+          }
         }
 
         break;
