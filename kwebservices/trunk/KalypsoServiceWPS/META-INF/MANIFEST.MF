@@ -30,3 +30,4 @@ Bundle-ClassPath: .,
  libs/javamail/lib/mailapi.jar,
  libs/javamail/lib/pop3.jar,
  libs/javamail/lib/smtp.jar
+Bundle-Vendor: kalypso.sourceforge.net

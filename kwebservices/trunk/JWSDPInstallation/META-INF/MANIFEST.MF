@@ -42,7 +42,7 @@ Bundle-ClassPath: jwsdp/jaxb/lib/jaxb-api.jar,
  jwsdp/xws-security/lib/xws-security.jar,
  .
 Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.kalypso.commons;visibility:=reexport

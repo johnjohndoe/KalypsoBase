@@ -13,3 +13,4 @@ Export-Package: org.kalypso.service.ogc,
  org.kalypso.service.ogc.exception
 Import-Package: javax.servlet,
  javax.servlet.http
+Bundle-Vendor: kalypso.sourceforge.net
