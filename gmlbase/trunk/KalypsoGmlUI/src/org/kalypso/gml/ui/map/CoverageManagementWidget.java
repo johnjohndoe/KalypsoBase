@@ -110,6 +110,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.loader.LoaderException;
@@ -135,6 +136,7 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapLabelProvider;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -147,6 +149,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -918,9 +921,23 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_selectedCoverage == null )
       return;
 
-    final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.05 );
-    getMapPanel().setBoundingBox( scaledBox );
+    try
+    {
+// final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+      final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( surface.getEnvelope(), 1.05 );
+      getMapPanel().setBoundingBox( scaledBox );
+    }
+    catch( GeoGridException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
   }
 
@@ -1107,20 +1124,35 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( m_selectedCoverage != null )
     {
-      /* Paint bbox of selected coverage */
-      final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+      try
+      {
+        /* Paint bbox of selected coverage */
+// final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Envelope envelope = surface.getEnvelope();
 
-      final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( envelope.getMin() );
-      final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( envelope.getMax() );
+        final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( envelope.getMin() );
+        final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( envelope.getMax() );
 
-      final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
-      final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
+        final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
+        final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
 
-      final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
-      final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
+        final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
+        final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
 
-      g.setColor( Color.RED );
-      g.drawRect( x, y, width, height );
+        g.setColor( Color.RED );
+        g.drawRect( x, y, width, height );
+      }
+      catch( GeoGridException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
 
     m_infoWidget.paint( g );
