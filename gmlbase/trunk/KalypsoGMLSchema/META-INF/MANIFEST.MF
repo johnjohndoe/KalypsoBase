@@ -8,7 +8,7 @@ Require-Bundle: org.kalypso.jwsdp;visibility:=reexport,
  org.eclipse.wst.common.uriresolver
 Bundle-ClassPath: lib/schiftone/shiftone-cache.jar,
  .
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Export-Package: org.kalypso.gmlschema,
  org.kalypso.gmlschema.adv,
  org.kalypso.gmlschema.annotation,

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions 2x Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc2x
 Bundle-Version: 1.0.0
-Bundle-Vendor: org.kalypso
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp
 Eclipse-LazyStart: true
