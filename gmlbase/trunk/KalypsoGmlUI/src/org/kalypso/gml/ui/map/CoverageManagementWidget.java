@@ -107,7 +107,9 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.loader.LoaderException;
@@ -173,7 +175,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( coveragesFeature == null )
         return false;
 
-      return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
+      IRelationType targetPropertyType = featureList.getParentFeatureTypeProperty();
+      IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
+
+      return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
+      // return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
     }
   };
 
