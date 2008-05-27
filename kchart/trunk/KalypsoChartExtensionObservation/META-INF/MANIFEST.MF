@@ -10,3 +10,4 @@ Require-Bundle: org.kalypso.chart.factory,
 Export-Package: org.kalypso.chart.ext.observation.data,
  org.kalypso.chart.ext.observation.layer,
  org.kalypso.chart.ext.observation.layer.provider
+Bundle-Vendor: kalypso.sourceforge.net

@@ -17,3 +17,4 @@ Export-Package: org.kalypso.chart.factory,
  org.kalypso.chart.factory.util,
  org.ksp.chart.factory,
  org.ksp.chart.factory.impl
+Bundle-Vendor: kalypso.sourceforge.net

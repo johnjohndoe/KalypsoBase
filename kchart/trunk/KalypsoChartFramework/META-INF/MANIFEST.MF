@@ -33,3 +33,4 @@ Export-Package: org.kalypso.chart.framework,
  org.kalypso.chart.framework.view
 Bundle-Activator: org.kalypso.chart.framework.ChartPlugin
 Eclipse-LazyStart: true
+Bundle-Vendor: kalypso.sourceforge.net

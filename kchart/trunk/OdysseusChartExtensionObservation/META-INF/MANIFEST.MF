@@ -10,3 +10,4 @@ Export-Package: org.kalypso.chart.ext.observation.data,
  org.kalypso.chart.ext.observation.layer,
  org.kalypso.chart.ext.observation.layer.provider
 Bundle-ClassPath: bin/
+Bundle-Vendor: kalypso.sourceforge.net

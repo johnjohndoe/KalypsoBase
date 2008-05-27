@@ -4,7 +4,7 @@ Bundle-Name: KalypsoChartUi Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ui;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide,

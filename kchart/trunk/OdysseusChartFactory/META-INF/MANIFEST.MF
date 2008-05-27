@@ -16,3 +16,4 @@ Export-Package: de.openali.odysseus.chart.factory.config,
  de.openali.odysseus.chart.factory.util,
  de.openali.odysseus.chartconfig.x020,
  de.openali.odysseus.chartconfig.x020.impl
+Bundle-Vendor: kalypso.sourceforge.net
