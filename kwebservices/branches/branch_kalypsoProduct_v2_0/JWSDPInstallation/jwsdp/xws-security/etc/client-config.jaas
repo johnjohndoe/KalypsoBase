@@ -1,0 +1,14 @@
+/** JAAS Login Configuration for XWS-Security Client **/
+
+XwsSecurityClientKey {
+  com.sun.security.auth.module.KeyStoreLoginModule required debug="false"
+    keyStoreURL="file:${jwsdp.home}/xws-security/etc/client-keystore.jks"
+    keyStoreAlias="xws-security-client";
+};
+
+XwsSecurityServerCertificate {
+  com.sun.xml.rpc.security.auth.module.CertKeyStoreLoginModule required
+    debug="false"
+    keyStoreURL="file:${jwsdp.home}/xws-security/etc/client-keystore.jks"
+    keyStoreAlias="xws-security-server";
+};
