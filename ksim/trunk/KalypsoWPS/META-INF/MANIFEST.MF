@@ -12,3 +12,4 @@ Require-Bundle: org.kalypso.jwsdp,
  org.kalypso.ui
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.services.processing.KalypsoWPSPlugin
+Bundle-Vendor: kalypso.sourceforge.net

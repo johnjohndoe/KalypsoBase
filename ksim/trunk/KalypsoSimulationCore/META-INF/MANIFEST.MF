@@ -4,7 +4,7 @@ Bundle-Name: KalypsoSimulationCore Plug-in
 Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.jwsdp
 Eclipse-LazyStart: true

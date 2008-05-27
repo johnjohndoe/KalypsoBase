@@ -4,7 +4,7 @@ Bundle-Name: KalypsoSimulationUIPlugin
 Bundle-SymbolicName: org.kalypso.simulation.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.simulation.ui.KalypsoSimulationUIPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui.externaltools,
  org.eclipse.core.variables,
