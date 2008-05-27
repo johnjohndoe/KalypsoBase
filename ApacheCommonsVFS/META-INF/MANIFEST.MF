@@ -48,3 +48,4 @@ Export-Package: org.apache.commons.vfs,
  org.apache.commons.vfs.provider.zip,
  org.apache.commons.vfs.tasks,
  org.apache.commons.vfs.util
+Bundle-Vendor: kalypso.sourceforge.net
