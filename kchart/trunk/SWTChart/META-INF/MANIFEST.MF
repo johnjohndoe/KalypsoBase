@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: SWTChart Core Plugin
 Bundle-SymbolicName: de.belger.swtchart.core
 Bundle-Version: 1.0.0
-Bundle-Vendor: belger.de
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: de.belger.swtchart,
  de.belger.swtchart.action,
