@@ -236,7 +236,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
    * @param files2delete
    *            This list get filled with the newly generated temp files.
    */
-  private File convertToBinary( final File gridFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
+  private File convertToBinary( final File gridFile, final IProgressMonitor monitor ) throws IOException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1 );
 
