@@ -48,7 +48,10 @@ public class TextComposite extends Composite
     m_toolkit = toolkit;
     m_style = style;
 
-    setLayout( new GridLayout( 2, false ) );
+    final GridLayout layout = new GridLayout( 2, false );
+    layout.marginWidth = 0;
+    setLayout( layout );
+
     paint( widthHint );
 
     toolkit.adapt( this );
