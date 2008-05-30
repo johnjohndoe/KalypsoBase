@@ -77,7 +77,7 @@ public class AxisRendererConfig
   /**
    * smallest intervall for tick label values
    */
-  Number minTickInterval = 0;
+  public Number minTickInterval = 0;
 
   /**
    * if set to true, a tick label which would not diplayed in full because it's cut off by the border of the axis
