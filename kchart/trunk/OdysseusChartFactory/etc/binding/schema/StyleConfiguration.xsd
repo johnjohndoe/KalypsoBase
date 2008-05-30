@@ -13,7 +13,7 @@
             <element ref="ods:Alpha" minOccurs="0" />
         </sequence>
         <attribute name="role" type="string" use="required" ></attribute>
-        <attribute name="isVisible" type="boolean" />
+        <attribute name="isVisible" type="boolean" /> 
     </complexType>
   
   <element name="Alpha"> 

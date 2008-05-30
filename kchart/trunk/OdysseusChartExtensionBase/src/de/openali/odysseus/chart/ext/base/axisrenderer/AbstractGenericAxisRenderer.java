@@ -174,7 +174,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   {
     if( m_tickLabelStyle == null )
       m_tickLabelStyle = StyleUtils.getDefaultTextStyle();
-    return m_labelStyle;
+    return m_tickLabelStyle;
   }
 
 }

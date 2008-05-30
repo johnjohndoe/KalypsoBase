@@ -7,6 +7,13 @@ import org.kalypso.chart.ui.IChartPart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
+/**
+ * This handler sets the axis ranges of all axes to the union range of all visible layers' ranges
+ * 
+ * 
+ * @author burtscher1
+ * 
+ */
 public class MaximizeHandler extends AbstractHandler
 {
   /**
@@ -19,7 +26,6 @@ public class MaximizeHandler extends AbstractHandler
     final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
     if( chartPart == null )
       return null;
-
     ChartUtilities.maximize( chartPart.getChartComposite().getChartModel() );
 
     return null;

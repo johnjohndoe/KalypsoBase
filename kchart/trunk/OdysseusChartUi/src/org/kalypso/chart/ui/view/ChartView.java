@@ -220,7 +220,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void setFocus( )
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -259,6 +258,10 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     {
       m_tooltipHandler.dispose();
     }
+    if( m_outlinePage != null )
+    {
+      m_outlinePage.dispose();
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -267,7 +270,10 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   {
     if( ChartComposite.class.equals( adapter ) )
     {
-      return m_chartComposite;
+      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+        return m_chartComposite;
+      else
+        return null;
     }
 
     if( IChartPart.class.equals( adapter ) )

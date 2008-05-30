@@ -82,7 +82,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   CheckboxTreeViewer m_treeViewer;
 
-  final IChartPart m_chartPart;
+  IChartPart m_chartPart;
 
   ChartEditorTreeContentProvider m_contentProvider;
 
@@ -113,6 +113,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     } );
 
     m_treeViewer = new CheckboxTreeViewer( tree );
+
     m_contentProvider = new ChartEditorTreeContentProvider( m_chartPart.getChartComposite().getChartModel() );
     m_treeViewer.setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( new ChartTreeLabelProvider( m_chartPart ) );
@@ -162,8 +163,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.setSelection( selection );
   }
 
-  /* default-visible */
-  void updateControl( )
+  public void updateControl( )
   {
     IChartModel model = m_chartPart.getChartComposite().getChartModel();
     m_treeViewer.setInput( model );
@@ -328,4 +328,5 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   {
     return m_treeViewer;
   }
+
 }

@@ -83,21 +83,6 @@ public class GenericLinearAxis extends AbstractAxis
    */
   public Integer numericToScreen( Number value )
   {
-    // if( value == null )
-    // {
-    // return 0;
-    // }
-    // if( getRegistry() == null )
-    // {
-    // return 0;
-    // }
-    //
-    // final IAxisComponent comp = getRegistry().getComponent( this );
-    // if( comp == null )
-    // {
-    // return 0;
-    // }
-
     return normalizedToScreen( numericToNormalized( value ) );
   }
 
@@ -106,18 +91,6 @@ public class GenericLinearAxis extends AbstractAxis
    */
   public Number screenToNumeric( int value )
   {
-    // if( getRegistry() == null )
-    // {
-    // return Double.NaN;
-    // }
-    //
-    // final IAxisComponent comp = getRegistry().getComponent( this );
-    // if( comp == null )
-    // {
-    // return Double.NaN;
-    // }
-
-    // return normalizedToNumeric( comp.screenToNormalized( value ) );
     return normalizedToNumeric( screenToNormalized( value ) );
   }
 
