@@ -38,6 +38,5 @@ Require-Bundle: org.eclipse.ui,
  org.junit;resolution:=optional,
  org.kalypso.contribs.java;visibility:=reexport,
  org.eclipse.core.net;visibility:=reexport,
- org.eclipse.core.expressions,
- org.eclipse.ui.forms
+ org.eclipse.core.expressions
 Eclipse-LazyStart: true
