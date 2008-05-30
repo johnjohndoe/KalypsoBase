@@ -127,7 +127,7 @@ public class AnnotationUtilities
    * <p>
    * All inner elements from the dcoument element are regarded as annotations.
    * </p>
-   *
+   * 
    * @param createDefaultAnnotation
    *            If true, even if no annotation data is found, return a default annotation based on the defaultName; if
    *            false it returns null in this case.
@@ -271,7 +271,7 @@ public class AnnotationUtilities
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   *
+   * 
    * @param node
    *            current element
    * @return the textual contents of the element or null, if it is missing
