@@ -445,7 +445,8 @@ public class PageSelectGeodataFile extends WizardPage
   protected void browseForFile( )
   {
     final IPath path = browse();
-    m_tFile.setText( path.toString() );
+    if( path != null )
+      m_tFile.setText( path.toString() );
   }
 
   private IPath browse( )
