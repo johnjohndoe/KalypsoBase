@@ -201,6 +201,26 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       refreshThemeCombo();
     }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    {
+      refreshThemeCombo();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
+    {
+      refreshThemeCombo();
+    }
   };
 
   private final Runnable m_refreshCoverageViewerRunnable = new Runnable()
@@ -242,19 +262,42 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   };
 
+  private Action[] m_customActions;
+
+  /**
+   * The constructor.
+   */
   public CoverageManagementWidget( )
   {
     this( "Höhenmodelle verwalten", "Höhenmodelle verwalten" );
   }
 
-  protected void refreshControl( )
-  {
-    ViewerUtilities.refresh( m_coverageViewer, true );
-  }
-
+  /**
+   * The constructor.
+   * 
+   * @param name
+   *            The name of the widget.
+   * @param tooltip
+   *            The tooltip of the widget.
+   */
   public CoverageManagementWidget( final String name, final String tooltip )
   {
+    this( name, tooltip, null );
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param name
+   *            The name of the widget.
+   * @param tooltip
+   *            The tooltip of the widget.
+   */
+  public CoverageManagementWidget( final String name, final String tooltip, Action[] customActions )
+  {
     super( name, tooltip );
+
+    m_customActions = customActions;
   }
 
   /**
@@ -266,7 +309,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     super.activate( commandPoster, mapPanel );
 
-    /* Search for a coverage collectino */
+    /* Search for a coverage collection. */
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     mapModell.addMapModelListener( m_mapModelListener );
 
@@ -456,7 +499,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     // Fill contents
     initalizeCoverageViewer( m_coverageViewer );
-    initalizeCoverageActions( toolkit, coverageButtonPanel );
+    initalizeCoverageActions( toolkit, coverageButtonPanel, m_customActions );
 
     initializeColorMapTableViewer( m_colorMapTableViewer );
     initalizeColorMapActions( toolkit, colormapPanelButtonPanel );
@@ -491,6 +534,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return panel;
   }
 
+  protected void refreshControl( )
+  {
+    ViewerUtilities.refresh( m_coverageViewer, true );
+  }
+
   protected void updateGridProperties( )
   {
     if( m_theme == null )
@@ -508,7 +556,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     refreshThemeCombo();
   }
 
-  protected void refreshThemeCombo( )
+  public void refreshThemeCombo( )
   {
     if( m_themeCombo == null || m_themeCombo.getControl().isDisposed() )
       return;
@@ -785,7 +833,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateStylePanel();
   }
 
-  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent )
+  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent, final Action[] customActions )
   {
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
@@ -883,14 +931,40 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     createButton( toolkit, parent, moveUpAction );
     createButton( toolkit, parent, moveDownAction );
     createButton( toolkit, parent, jumpToAction );
+
+    /* Should some custom action be added. */
+    if( customActions == null || customActions.length == 0 )
+      return;
+
+    /* Add custom actions. */
+    for( int i = 0; i < customActions.length; i++ )
+      createButton( toolkit, parent, customActions[i] );
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
   {
+    /* Create the button. */
     final Button button = toolkit.createButton( parent, null, SWT.PUSH );
-    final Image image = action.getImageDescriptor().createImage( true );
-    button.setImage( image );
+
+    /* If an image is set in the action, use it for the button. */
+    ImageDescriptor imageDescriptor = action.getImageDescriptor();
+    if( imageDescriptor != null )
+    {
+      final Image image = imageDescriptor.createImage( true );
+      button.setImage( image );
+      button.addDisposeListener( new DisposeListener()
+      {
+        public void widgetDisposed( final DisposeEvent e )
+        {
+          image.dispose();
+        }
+      } );
+    }
+
+    /* Set a tooltip. */
     button.setToolTipText( action.getDescription() );
+
+    /* What happens, if the button is pressed? */
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -906,14 +980,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         action.runWithEvent( event );
       }
     } );
-
-    button.addDisposeListener( new DisposeListener()
-    {
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        image.dispose();
-      }
-    } );
   }
 
   protected void handleCoverageJumpTo( )
@@ -923,19 +989,17 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     try
     {
-// final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
+      // final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
       final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( surface.getEnvelope(), 1.05 );
       getMapPanel().setBoundingBox( scaledBox );
     }
     catch( GeoGridException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -1145,12 +1209,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       }
       catch( GeoGridException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       catch( Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -1182,5 +1244,27 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public void setGridFolder( final IFolder gridFolder )
   {
     m_gridFolder = gridFolder;
+  }
+
+  /**
+   * This function returns the selected feature theme.
+   * 
+   * @return The selected feature theme.
+   */
+  public IKalypsoFeatureTheme getSelectedTheme( )
+  {
+    return m_theme;
+  }
+
+  /**
+   * This function clears the theme selection.
+   */
+  public void clearThemeSelection( )
+  {
+    if( m_themeCombo == null || m_themeCombo.getCombo().isDisposed() )
+      return;
+
+    /* Empty the selection. */
+    m_themeCombo.setSelection( new StructuredSelection() );
   }
 }
