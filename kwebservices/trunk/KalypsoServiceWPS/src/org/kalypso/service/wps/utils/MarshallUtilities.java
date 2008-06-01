@@ -81,13 +81,13 @@ public class MarshallUtilities
    * 
    * @return The XML representation as string.
    */
-  public static String marshall( Object object ) throws JAXBException, IOException
+  public static String marshall( final Object object ) throws JAXBException, IOException
   {
     /* Will be marshalled into a StringWriter. */
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
 
     /* Create the marshaller. */
-    Marshaller m = CONTEXT.createMarshaller();
+    final Marshaller m = CONTEXT.createMarshaller();
 
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -105,25 +105,22 @@ public class MarshallUtilities
    * 
    * @return The binded object.
    */
-  public static Object unmarshall( String xml ) throws JAXBException
+  public static Object unmarshall( final String xml ) throws JAXBException
   {
     /* Create the unmarshaller. */
-    Unmarshaller um = CONTEXT.createUnmarshaller();
+    final Unmarshaller um = CONTEXT.createUnmarshaller();
 
-    /* Unmarshall ... */
-    Object object = um.unmarshal( new StringReader( xml ) );
-
-    return object;
+    return um.unmarshal( new StringReader( xml ) );
   }
 
   /**
    * This function returns an input stream from one string.
    * 
    * @param text
-   *          The string.
+   *            The string.
    * @return The inputstream.
    */
-  public static InputStream getInputStream( String text )
+  public static InputStream getInputStream( final String text )
   {
     return new ByteArrayInputStream( text.getBytes() );
   }
@@ -132,18 +129,18 @@ public class MarshallUtilities
    * This function reads from an input stream and returns a string representation.
    * 
    * @param is
-   *          The input stream.
+   *            The input stream.
    * @return The string.
    */
-  public static String fromInputStream( InputStream is ) throws IOException
+  public static String fromInputStream( final InputStream is ) throws IOException
   {
     String value = null;
-    BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
+    final BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
 
     try
     {
       String line = null;
-      StringBuffer buffer = new StringBuffer();
+      final StringBuffer buffer = new StringBuffer();
 
       while( (line = reader.readLine()) != null )
         buffer.append( line + "\n" );
