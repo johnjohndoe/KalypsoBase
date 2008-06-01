@@ -138,8 +138,11 @@ public class KalypsoSimulationCoreExtensions
         }
       }
       else
-        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined. Cannot load corresponding UrlCatalog: "
-            + element.getValue() );
+      {
+        // TODO: this is probably no error as catalogClass is optional
+        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined for definition with typeID: "
+            + element.getAttribute( EXT_ATTRIB_SIMULATIONID ) );
+      }
     }
 
     return status;
@@ -163,14 +166,14 @@ public class KalypsoSimulationCoreExtensions
    */
   public static List<ISimulation> createSimulations( ) throws CoreException
   {
-    List<ISimulation> simulations = new LinkedList<ISimulation>();
+    final List<ISimulation> simulations = new LinkedList<ISimulation>();
 
     final Map<String, IConfigurationElement> elements = readSimulations();
-    Iterator<String> keys = elements.keySet().iterator();
+    final Iterator<String> keys = elements.keySet().iterator();
     while( keys.hasNext() )
     {
-      String key = keys.next();
-      IConfigurationElement element = elements.get( key );
+      final String key = keys.next();
+      final IConfigurationElement element = elements.get( key );
 
       /* Add the simulation. */
       simulations.add( (ISimulation) element.createExecutableExtension( EXT_ATTRIB_SIMULATIONCLASS ) );
