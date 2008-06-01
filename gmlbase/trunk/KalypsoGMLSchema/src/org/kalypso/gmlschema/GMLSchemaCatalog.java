@@ -127,7 +127,8 @@ public final class GMLSchemaCatalog
     {
       // else, try to get it from the external cache
       final URIResolver uriResolver = URIResolverPlugin.createResolver();
-      final String resolvedUri = uriResolver.resolve( schemaUrl.toExternalForm(), null, schemaUrl.toExternalForm() );
+      final String externalForm = schemaUrl == null ? null : schemaUrl.toExternalForm();
+      final String resolvedUri = uriResolver.resolve( externalForm, null, externalForm );
       final URL resolvedUrl = new URL( resolvedUri );
 
       // auch versuchen aus dem Cache zu laden, wenn die url null ist;
