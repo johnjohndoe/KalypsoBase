@@ -1,0 +1,179 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.service.unittests.sendmail;
+
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import junit.framework.Assert;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.junit.Test;
+import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.service.calcjobs.sendmail.utils.MailUtilities;
+import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypso.service.wps.client.simulation.SimulationDelegate;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
+
+/**
+ * Small test case for testing the literals simulation.
+ * 
+ * @author Holger Albert
+ */
+public class SendMailJobTest
+{
+  /**
+   * The model data.
+   */
+  private static final String SIMULATION_DATA = "mail_data.xml";
+
+  private static final String INPUT_SENDER = "SENDER";
+
+  private static final String INPUT_RECEIVER = "RECEIVER";
+
+  private static final String INPUT_TYPE = "TYPE";
+
+  private static final String INPUT_TITLE = "TITLE";
+
+  private static final String INPUT_TEXT = "TEXT";
+
+  private static final String OUTPUT_RESULT = "RESULT";
+
+  /**
+   * This function starts the simulation client, which will contact the wps to activate the literals simulation.
+   */
+  @Test
+  public void testJob( ) throws JAXBException, CoreException
+  {
+    /* Location of the Server, where the simulations will run: No default. */
+    System.setProperty( "org.kalypso.service.wps.service", "http://localhost/ogc" );
+
+    /* Location, where the client can put its input data: No default. */
+    System.setProperty( "org.kalypso.service.wps.input", "" );
+
+    /* Replacement for providing the URL to the server: No default. */
+    System.setProperty( "org.kalypso.service.wps.server.replacement", "" );
+
+    /* Your calc case folder. */
+    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( "SendMailV1.0" );
+    if( !project.exists() )
+      project.create( null );
+
+    /* Assert. */
+    Assert.assertEquals( true, project.exists() );
+
+    if( !project.isOpen() )
+      project.open( null );
+
+    /* Assert. */
+    Assert.assertEquals( true, project.isOpen() );
+
+    IFolder calcCaseFolder = project.getFolder( new Path( "simulation" ) );
+    if( !calcCaseFolder.exists() )
+      calcCaseFolder.create( true, true, null );
+
+    /* Assert. */
+    Assert.assertEquals( true, calcCaseFolder.exists() );
+
+    /* Get the modeldata. */
+    URL resource = getClass().getResource( SIMULATION_DATA );
+
+    /* Assert. */
+    Assert.assertNotNull( resource );
+
+    /* Unmarshall. */
+    Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
+    Modeldata modelData = (Modeldata) unmarshaller.unmarshal( resource );
+
+    /* Modify the model data to your needs. */
+    List<Input> inputs = modelData.getInput();
+    for( Input input : inputs )
+    {
+      if( input.getId().equals( INPUT_SENDER ) )
+        input.setPath( "h.albert@bjoernsen.de" );
+
+      if( input.getId().equals( INPUT_RECEIVER ) )
+        input.setPath( "h.albert@bjoernsen.de" );
+
+      if( input.getId().equals( INPUT_TYPE ) )
+        input.setPath( MailUtilities.TEXT_PLAIN );
+
+      if( input.getId().equals( INPUT_TITLE ) )
+        input.setPath( "Eine Test-JavaMail" );
+
+      if( input.getId().equals( INPUT_TEXT ) )
+        input.setPath( "Wenn du diese Mail bekommen hast, hat das Senden funktioniert." );
+    }
+
+    /* The name of the simulation. */
+    String simulationName = "SendMailV1.0";
+
+    /* Create the delegate which can handle ISimulations. */
+    SimulationDelegate delegate = new SimulationDelegate( simulationName, calcCaseFolder, modelData );
+
+    /* Start the simulation with a timeout of 300000 ms. */
+    WPSRequest simulationJob = new WPSRequest( delegate, 300000 );
+    IStatus status = simulationJob.run( new NullProgressMonitor() );
+
+    /* The end report. */
+    System.out.println( status.getMessage() );
+
+    /* Get the result. */
+    Map<String, Object> literals = simulationJob.getLiterals();
+
+    /* Assert. */
+    Assert.assertNotNull( literals );
+
+    /* The result. */
+    System.out.println( literals.get( OUTPUT_RESULT ) );
+  }
+}
