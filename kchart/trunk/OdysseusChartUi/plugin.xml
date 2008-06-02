@@ -50,6 +50,11 @@
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.maximize"
+            name="Reset view">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.maximizeView"
             name="Maximize">
       </command>
       <command
@@ -115,6 +120,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler"
             commandId="org.kalypso.chart.ui.commands.maximize">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.MaximizeViewHandler"
+            commandId="org.kalypso.chart.ui.commands.maximizeView">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"

@@ -66,7 +66,6 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   public AxisDragPanHandler( ChartComposite chartComposite )
   {
     super( chartComposite );
-    // TODO Auto-generated constructor stub
   }
 
   /**
@@ -75,7 +74,6 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   public void setUseCurrentAxis( @SuppressWarnings("unused")
   boolean useCurrentAxis )
   {
-    // TODO Auto-generated method stub
 
   }
 

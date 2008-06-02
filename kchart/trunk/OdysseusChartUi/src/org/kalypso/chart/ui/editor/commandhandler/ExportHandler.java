@@ -21,7 +21,7 @@ public class ExportHandler extends AbstractHandler
 {
   private String m_filename;
 
-  private int count = 0;
+  private final int count = 0;
 
   /**
    * saves an image of the current chart part to a file; if no filename has been set by setFilename(), a file dialog
@@ -33,7 +33,6 @@ public class ExportHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    count++;
 
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -43,41 +42,53 @@ public class ExportHandler extends AbstractHandler
     {
       return null;
     }
+    final ChartComposite chart = chartPart.getChartComposite();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    // Damit der Dateiname auch von aussen gesetzt werden kann:
-    if( m_filename == null )
+
+
+    if( chart != null )
     {
-      final SafeSaveDialog dia = new SafeSaveDialog( shell );
-
-      dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } );
-
-      m_filename = dia.open();
-    }
-    if( m_filename != null )
-    {
-      final ChartComposite chart = chartPart.getChartComposite();
-
-      final Rectangle bounds = chart.getBounds();
-      final ImageLoader il = new ImageLoader();
-      final ImageData id = ChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
-      il.data = new ImageData[] { id };
-      int format = -1;
-      final String formatString = m_filename.substring( m_filename.lastIndexOf( "." ) + 1 ).toLowerCase();
-
-      if( formatString.equals( "png" ) )
-        format = SWT.IMAGE_PNG;
-      else if( formatString.equals( "bmp" ) )
-        format = SWT.IMAGE_BMP;
-      else if( formatString.equals( "jpg" ) )
-        format = SWT.IMAGE_JPEG;
-
-      if( format != -1 )
-        il.save( m_filename, format );
-      else
+      // Damit der Dateiname auch von aussen gesetzt werden kann:
+      if( m_filename == null )
       {
-        final MessageDialog ed = new MessageDialog( shell, "Datei konnte nicht gespeichert werden.", null, "Das angegebene Format wird nicht unterstützt", MessageDialog.NONE, new String[] { "OK" }, 1 );
-        ed.open();
+        final SafeSaveDialog dia = new SafeSaveDialog( shell );
+
+        dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } );
+
+        m_filename = dia.open();
       }
+      if( m_filename != null )
+      {
+
+        final Rectangle bounds = chart.getBounds();
+        final ImageLoader il = new ImageLoader();
+        final ImageData id = ChartImageFactory.createChartImage( chart, Display.getCurrent(), bounds.width, bounds.height );
+        il.data = new ImageData[] { id };
+
+        int format = -1;
+        final String formatString = m_filename.substring( m_filename.lastIndexOf( "." ) + 1 ).toLowerCase();
+
+        if( formatString.equals( "png" ) )
+          format = SWT.IMAGE_PNG;
+        else if( formatString.equals( "bmp" ) )
+          format = SWT.IMAGE_BMP;
+        else if( formatString.equals( "jpg" ) )
+          format = SWT.IMAGE_JPEG;
+
+        if( format != -1 )
+          il.save( m_filename, format );
+        else
+        {
+          final MessageDialog ed = new MessageDialog( shell, "Datei konnte nicht gespeichert werden.", null, "Das angegebene Format wird nicht unterstützt", MessageDialog.NONE, new String[] { "OK" }, 1 );
+          ed.open();
+        }
+      }
+
+    }
+    else
+    {
+      final MessageDialog ed = new MessageDialog( shell, "Kein Chart vorhangen", null, "Das Chart kann nicht gespeichert werden.", MessageDialog.NONE, new String[] { "OK" }, 1 );
+      ed.open();
     }
     m_filename = null;
     return null;
