@@ -71,7 +71,7 @@ public class Raster2LinesWalkingStrategy implements IGeoWalkingStrategy
     final int sizeX = grid.getSizeX();
     final int sizeY = grid.getSizeY();
     if( monitor != null )
-      monitor.beginTask( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy.0"), sizeY ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy.0" ), sizeY ); //$NON-NLS-1$
 
     final int yStart = 0;
     final int yEnd = sizeY;
@@ -94,7 +94,7 @@ public class Raster2LinesWalkingStrategy implements IGeoWalkingStrategy
         monitor.worked( 1 );
 
       if( monitor != null && monitor.isCanceled() )
-        throw new OperationCanceledException( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy.1") ); //$NON-NLS-1$
+        throw new OperationCanceledException( Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy.1" ) ); //$NON-NLS-1$
     }
 
     return pwo.finish();

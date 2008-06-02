@@ -39,9 +39,12 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
   private final RingTree m_tree = new RingTree();
 
+  private final double[] m_grenzen;
+
   public PolygonCollector( final GeometryFactory gf, final double[] grenzen, final boolean bSimple )
   {
     m_gf = gf;
+    m_grenzen = grenzen;
     m_bSimple = bSimple;
 
     m_intervals = new Interval[grenzen.length + 1];
@@ -83,7 +86,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
         else if( pir.isInside( nearC1 ) )
           innerCrd = nearC1;
         else
-          System.out.println( Messages.getString("org.kalypso.gml.processes.raster2vector.collector.PolygonCollector.0") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.gml.processes.raster2vector.collector.PolygonCollector.0" ) ); //$NON-NLS-1$
 
         CoordOrientation.orient( crds, CoordOrientation.TYPE.NEGATIV );
 
@@ -96,6 +99,10 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
         final LinearRing lr = m_gf.createLinearRing( crdsNoZ );
         final Polygon polygon = m_gf.createPolygon( lr, null );
+
+// if( innerCrd.z < m_intervals[index + 1].m_min || innerCrd.z > m_intervals[index + 1].m_max )
+// System.out.println( "Achtung: Klasse passt nicht zu Wert!" );
+
         m_tree.insertElement( new RingTreeElement( lr, polygon, index, innerCrd ) );
       }
     }
@@ -140,9 +147,13 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       try
       {
-        final int intIndex = element.index + 1;
+        final int intIndex = getIndexForElement( element );
+// final int intIndex = element.index + 1;
 
+        if( intIndex == 0 || intIndex == m_grenzen.length )
+          return;
         final double value = element.innerCrd.z;
+
         if( !Double.isNaN( value ) )
         {
           for( Polygon polygon : p )
@@ -154,6 +165,55 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
         gme.printStackTrace();
       }
     }
+  }
+
+  private int getIndexForElement( final RingTreeElement element )
+  {
+    final int index = element.index;
+    if( element.hasChildren() )
+    {
+      final RingTreeElement child = element.getFirstChild();
+
+      // check if the first child has a neighboring index
+      if( child.index == index - 1 || child.index == index + 1 )
+      {
+        final double grenze0 = m_grenzen[index];
+        final double grenze1 = m_grenzen[child.index];
+
+        for( int i = 0; i < m_intervals.length; i++ )
+        {
+          if( (m_intervals[i].getMin() == grenze0 && m_intervals[i].getMax() == grenze1) || (m_intervals[i].getMin() == grenze1 && m_intervals[i].getMax() == grenze0) )
+            return i;
+        }
+      }
+      else
+      {
+        final int childIndex = getIndexForElement( child );
+        if( childIndex == -1 )
+          return index + 1;
+
+        if( m_grenzen[index] == m_intervals[childIndex].getMax() )
+          return index + 1;
+
+// return index;
+        return index + 1;
+      }
+    }
+    else
+    {
+      // anhand der inneren Coordinate rausfinden, zu welcher Klasse es gehört
+      final double value = element.innerCrd.z;
+      if( Double.isNaN( value ) )
+        return -1;
+
+      for( int i = 0; i < m_intervals.length; i++ )
+      {
+        if( m_intervals[i].contains( value ) )
+          return i;
+      }
+    }
+
+    return -1;
   }
 
   private static class Interval

@@ -83,7 +83,7 @@ public class Raster2Lines implements IGeoGridWalker
     Coordinate cNE = m_lastRowCoord[x];
     Coordinate cNW = m_lastNE;
 
-    if( cSW == null )
+    if( cSW == null || x == 0 )
     {
       // cSW = new Coordinate( crd.x - m_rasterSize, crd.y, Double.NaN );
       cSW = GeoGridUtilities.calcCoordinate( m_grid, x - 1, y, null );
@@ -93,7 +93,7 @@ public class Raster2Lines implements IGeoGridWalker
       // cNE = new Coordinate( crd.x, crd.y + m_rasterSize, Double.NaN );
       cNE = GeoGridUtilities.calcCoordinate( m_grid, x, y - 1, null );
     }
-    if( cNW == null )
+    if( cNW == null || x == 0 )
     {
       // cNW = new Coordinate( crd.x - m_rasterSize, crd.y + m_rasterSize, Double.NaN );
       cNW = GeoGridUtilities.calcCoordinate( m_grid, x - 1, y - 1, null );
@@ -145,6 +145,7 @@ public class Raster2Lines implements IGeoGridWalker
 
   private final void addSegment( final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws GeoGridException
   {
+    
     for( int i = 0; i < m_grenzen.length; i++ )
     {
       try
@@ -153,7 +154,7 @@ public class Raster2Lines implements IGeoGridWalker
       }
       catch( final LinkedCoordinateException lce )
       {
-        throw new GeoGridException( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2Lines.0"), lce ); //$NON-NLS-1$
+        throw new GeoGridException( Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.0" ), lce ); //$NON-NLS-1$
       }
     }
   }
@@ -239,7 +240,7 @@ public class Raster2Lines implements IGeoGridWalker
     }
     else
     {
-      final String msg = String.format( Messages.getString("org.kalypso.gml.processes.raster2vector.Raster2Lines.1"), x, y, index ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.1" ), x, y, index ); //$NON-NLS-1$
       throw new GeoGridException( msg, null );
     }
   }
