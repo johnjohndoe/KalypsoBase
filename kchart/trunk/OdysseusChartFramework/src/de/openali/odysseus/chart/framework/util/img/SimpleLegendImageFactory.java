@@ -158,6 +158,7 @@ public class SimpleLegendImageFactory
         int iconYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - symbol.height ) / 2 ));
         Image iconImage = new Image( dev, symbol );
         gc.drawImage( iconImage, xOffset, iconYOffset );
+        iconImage.dispose();
 
         int textYOffset = yOffset + (int) (Math.ceil( Math.abs( lineHeight - legendTextExt.y ) / 2 ));
 
