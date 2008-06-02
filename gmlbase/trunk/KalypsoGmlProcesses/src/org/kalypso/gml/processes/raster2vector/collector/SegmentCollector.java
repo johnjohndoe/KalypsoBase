@@ -45,4 +45,8 @@ public interface SegmentCollector
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException;
 
   public CollectorDataProvider[] getData( );
+
+  public void finish( );
+
+  public LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index );
 }

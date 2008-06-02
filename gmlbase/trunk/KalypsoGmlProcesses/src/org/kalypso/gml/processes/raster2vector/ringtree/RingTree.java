@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RingTree
 {
-  public final RingTreeElement root = new RingTreeElement( null, null, -1, null );
+  public final RingTreeElement root = new RingTreeElement( null, null, Double.NaN, null );
 
   public Object walk( final RingTreeWalker rtw )
   {
@@ -44,7 +44,33 @@ public class RingTree
     {
       if( child.pir.isInside( c ) && child.contains( element ) )
       {
-        insertInternal( child, element );
+        if( element.contains( child ) )
+        {
+          // child and element have the same geometry
+
+          double elementValue = element.lineValue;
+          double childValue = child.lineValue;
+          // Keep the one with the bigger value: this makes sense, as segments are generated
+          // for all borders with values smaller then the actual cell value for edges with Double.NaN
+          if( elementValue > childValue )
+          {
+            // keep element: get children from child and replace child with element
+            for( RingTreeElement childChild : child.children() )
+              element.addChild( childChild );
+
+            target.addChild( element );
+            target.removeChild( child );
+          }
+          else
+          {
+            // keep child: nothing to do, just ignore element
+          }
+        }
+        else
+        {
+          insertInternal( child, element );
+        }
+
         return;
       }
     }

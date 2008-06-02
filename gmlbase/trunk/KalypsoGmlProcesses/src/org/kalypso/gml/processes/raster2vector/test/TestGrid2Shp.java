@@ -128,7 +128,7 @@ public class TestGrid2Shp extends TestCase
     final boolean bSimple = false;
     final boolean bIsolines = false;
 
-    final double[] grenzen = new double[] { 0, 0.5, 1, 1.5, 2.0, 2.5, 4.5, 5.5, 6.5, 7.5, 8.50 };
+    final double[] grenzen = new double[] { 0.0, 0.5, 1, 1.5, 2, 2.5, 20 };
 
     final SegmentCollector collector = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
     final Raster2Lines r2l = new Raster2Lines( collector, grenzen );

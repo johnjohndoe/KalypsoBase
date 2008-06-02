@@ -140,12 +140,14 @@ public class Raster2Lines implements IGeoGridWalker
    */
   public Object finish( )
   {
+    m_strategy.finish();
+
     return m_strategy;
   }
 
   private final void addSegment( final int x, final int y, final Coordinate cNW, final Coordinate cNE, final Coordinate cSW, final Coordinate cSE ) throws GeoGridException
   {
-    
+
     for( int i = 0; i < m_grenzen.length; i++ )
     {
       try
@@ -251,46 +253,10 @@ public class Raster2Lines implements IGeoGridWalker
    */
   private final LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
   {
-    double zFaktor = -1.0;
-    boolean bBorder = false;
-
-    double z1 = c1.z;
-    if( Double.isNaN( z1 ) )
-    {
-// z1 = -1000.0;
-      bBorder = true;
-    }
-
-    double z2 = c2.z;
-    if( Double.isNaN( z2 ) )
-    {
-// z2 = -1000.0;
-      bBorder = true;
-    }
-
-    final double value = m_grenzen[index];
-
-// // HACK
-    if( Double.isNaN( c1.z ) && Double.isNaN( c2.z ) )
+    if( m_strategy == null )
       return null;
 
-    if( (Double.isNaN( c1.z ) && value < c2.z) || (Double.isNaN( c2.z ) && value < c1.z) )
-    {
-      zFaktor = 0.5;
-      bBorder = true;
-    }
-    else
-    {
-      if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
-        zFaktor = (value - z1) / (z2 - z1);
-      if( zFaktor < 0 || zFaktor >= 1 )
-        return null;
-    }
-
-    final double x = zFaktor * (c2.x - c1.x) + c1.x;
-    final double y = zFaktor * (c2.y - c1.y) + c1.y;
-    return new LinkedCoordinate( new Coordinate( x, y, value ), false );
-// return new LinkedCoordinate( new Coordinate( x, y, value ), bBorder );
+    return m_strategy.interpolate( c1, c2, index );
   }
 
   public double getSum( )

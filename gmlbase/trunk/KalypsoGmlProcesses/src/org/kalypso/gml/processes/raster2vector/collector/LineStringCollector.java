@@ -97,4 +97,49 @@ public class LineStringCollector implements SegmentCollector
   {
     return m_dataList.toArray( new CollectorDataProvider[m_dataList.size()] );
   }
+
+  /**
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#finish()
+   */
+  public void finish( )
+  {
+// nothing to do
+  }
+
+  /**
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#interpolate(com.vividsolutions.jts.geom.Coordinate,
+   *      com.vividsolutions.jts.geom.Coordinate, int)
+   */
+  public LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
+  {
+    double zFaktor = -1.0;
+    boolean bBorder = false;
+
+    double z1 = c1.z;
+    if( Double.isNaN( z1 ) )
+    {
+      z1 = -1000.0;
+      bBorder = true;
+    }
+
+    double z2 = c2.z;
+    if( Double.isNaN( z2 ) )
+    {
+      z2 = -1000.0;
+      bBorder = true;
+    }
+
+    final double value = m_grenzen[index];
+
+    if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
+      zFaktor = (value - z1) / (z2 - z1);
+
+    if( zFaktor < 0 || zFaktor >= 1 )
+      return null;
+
+    final double x = zFaktor * (c2.x - c1.x) + c1.x;
+    final double y = zFaktor * (c2.y - c1.y) + c1.y;
+    return new LinkedCoordinate( new Coordinate( x, y, value ), bBorder );
+
+  }
 }

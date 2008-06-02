@@ -3,6 +3,7 @@ package org.kalypso.gml.processes.raster2vector.collector;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinate;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinateException;
@@ -75,7 +76,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       {
         final LinearRing lr = m_gf.createLinearRing( crds );
         final Polygon poly = m_gf.createPolygon( lr, new LinearRing[] {} );
-        appendFeature( index, poly );
+        appendFeature( m_intervals[index], poly );
       }
       else
       {
@@ -103,7 +104,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 // if( innerCrd.z < m_intervals[index + 1].m_min || innerCrd.z > m_intervals[index + 1].m_max )
 // System.out.println( "Achtung: Klasse passt nicht zu Wert!" );
 
-        m_tree.insertElement( new RingTreeElement( lr, polygon, index, innerCrd ) );
+        m_tree.insertElement( new RingTreeElement( lr, polygon, m_grenzen[index], innerCrd ) );
       }
     }
     catch( final CoordOrientationException coe )
@@ -121,15 +122,19 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    * @param poly
    * @throws GM_Exception
    */
-  private void appendFeature( final int index, final Polygon poly ) throws GM_Exception
+  private void appendFeature( final Interval interval, final Polygon poly ) throws GM_Exception
   {
+    // first and last intervals will not added
+    if( ArrayUtils.indexOf( m_intervals, interval ) == 0 || ArrayUtils.indexOf( m_intervals, interval ) == m_intervals.length - 1 )
+      return;
+
     final GM_Object gmGeo = JTSAdapter.wrap( poly );
 
     final Double id = new Double( m_dataList.size() );
-    final String name = m_intervals[index].toString();
+    final String name = interval.toString();
 
-    final Double von = new Double( Math.max( -9999.99, m_intervals[index].getMin() ) );
-    final Double bis = new Double( Math.min( 9999.99, m_intervals[index].getMax() ) );
+    final Double von = new Double( Math.max( -9999.99, interval.getMin() ) );
+    final Double bis = new Double( Math.min( 9999.99, interval.getMax() ) );
     final Double volumen = Double.NaN;
 
     CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
@@ -147,18 +152,12 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     {
       try
       {
-        final int intIndex = getIndexForElement( element );
-// final int intIndex = element.index + 1;
-
-        if( intIndex == 0 || intIndex == m_grenzen.length )
+        final Interval interval = element.getPolygonIntervall();
+        if( interval == null )
           return;
-        final double value = element.innerCrd.z;
 
-        if( !Double.isNaN( value ) )
-        {
-          for( Polygon polygon : p )
-            appendFeature( intIndex, polygon );
-        }
+        for( Polygon polygon : p )
+          appendFeature( interval, polygon );
       }
       catch( final GM_Exception gme )
       {
@@ -167,56 +166,58 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     }
   }
 
-  private int getIndexForElement( final RingTreeElement element )
-  {
-    final int index = element.index;
-    if( element.hasChildren() )
-    {
-      final RingTreeElement child = element.getFirstChild();
+// private int getIndexForElement( final RingTreeElement element )
+// {
+// final int index = element.index;
+// if( element.hasChildren() )
+// {
+// final RingTreeElement child = element.getFirstChild();
+//
+// // check if the first child has a neighboring index
+// if( child.index == index - 1 || child.index == index + 1 )
+// {
+// final double grenze0 = m_grenzen[index];
+// final double grenze1 = m_grenzen[child.index];
+//
+// for( int i = 0; i < m_intervals.length; i++ )
+// {
+// if( (m_intervals[i].getMin() == grenze0 && m_intervals[i].getMax() == grenze1) || (m_intervals[i].getMin() == grenze1
+// && m_intervals[i].getMax() == grenze0) )
+// return i;
+// }
+// }
+// else
+// {
+// final int childIndex = getIndexForElement( child );
+// if( childIndex == -1 )
+// return index + 1;
+//
+// if( m_grenzen[index] == m_intervals[childIndex].getMax() )
+// return index + 1;
+//
+// // return index;
+// return index + 1;
+// }
+// }
+// else
+// {
+// // anhand der inneren Coordinate rausfinden, zu welcher Klasse es gehört
+// // geht das überhaupt?? ja, wenn es keine Kinder hat
+// final double value = element.innerCrd.z;
+// if( Double.isNaN( value ) )
+// return -1;
+//
+// for( int i = 0; i < m_intervals.length; i++ )
+// {
+// if( m_intervals[i].contains( value ) )
+// return i;
+// }
+// }
+//
+// return -1;
+// }
 
-      // check if the first child has a neighboring index
-      if( child.index == index - 1 || child.index == index + 1 )
-      {
-        final double grenze0 = m_grenzen[index];
-        final double grenze1 = m_grenzen[child.index];
-
-        for( int i = 0; i < m_intervals.length; i++ )
-        {
-          if( (m_intervals[i].getMin() == grenze0 && m_intervals[i].getMax() == grenze1) || (m_intervals[i].getMin() == grenze1 && m_intervals[i].getMax() == grenze0) )
-            return i;
-        }
-      }
-      else
-      {
-        final int childIndex = getIndexForElement( child );
-        if( childIndex == -1 )
-          return index + 1;
-
-        if( m_grenzen[index] == m_intervals[childIndex].getMax() )
-          return index + 1;
-
-// return index;
-        return index + 1;
-      }
-    }
-    else
-    {
-      // anhand der inneren Coordinate rausfinden, zu welcher Klasse es gehört
-      final double value = element.innerCrd.z;
-      if( Double.isNaN( value ) )
-        return -1;
-
-      for( int i = 0; i < m_intervals.length; i++ )
-      {
-        if( m_intervals[i].contains( value ) )
-          return i;
-      }
-    }
-
-    return -1;
-  }
-
-  private static class Interval
+  public static class Interval
   {
     private final double m_min;
 
@@ -286,5 +287,47 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  /**
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#finish()
+   */
+  public void finish( )
+  {
+    m_tree.root.initIntervals( m_intervals );
+
+  }
+
+  /**
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#interpolate(com.vividsolutions.jts.geom.Coordinate,
+   *      com.vividsolutions.jts.geom.Coordinate, int)
+   */
+  public LinkedCoordinate interpolate( Coordinate c1, Coordinate c2, int index )
+  {
+    double zFaktor = -1.0;
+    double z1 = c1.z;
+    double z2 = c2.z;
+
+    final double value = m_grenzen[index];
+
+// HACK
+    if( Double.isNaN( c1.z ) && Double.isNaN( c2.z ) )
+      return null;
+
+    if( (Double.isNaN( c1.z ) && value < c2.z) || (Double.isNaN( c2.z ) && value < c1.z) )
+    {
+      zFaktor = 0.5;
+    }
+    else
+    {
+      if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
+        zFaktor = (value - z1) / (z2 - z1);
+      if( zFaktor < 0 || zFaktor >= 1 )
+        return null;
+    }
+
+    final double x = zFaktor * (c2.x - c1.x) + c1.x;
+    final double y = zFaktor * (c2.y - c1.y) + c1.y;
+    return new LinkedCoordinate( new Coordinate( x, y, value ), false );
   }
 }
