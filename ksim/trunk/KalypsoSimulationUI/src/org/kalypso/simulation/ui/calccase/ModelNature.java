@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.calccase;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,6 +107,7 @@ import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.calccase.CalcJobHandler;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -199,7 +198,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure( ) 
+  public void configure( )
   {
     // REMARK: creating this file is now work for the configure method!
     // Normally, this file already should exist in any empty project template

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.ui.calccase;
+package org.kalypso.simulation.core.calccase;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -72,6 +72,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
@@ -80,7 +81,6 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
@@ -89,7 +89,7 @@ public class CalcJobHandler
 {
   private final Modeldata m_modelspec;
 
-  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoSimulationCorePlugin.getID(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
   private String m_jobID = null;
 
@@ -192,21 +192,21 @@ public class CalcJobHandler
           project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
           final String finishText = jobBean.getFinishText();
           final String message = finishText == null ? "" : finishText;
-          return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, System.getProperty( "line.separator" ), null );
+          return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null );
 
         case CANCELED:
           throw m_cancelException;
 
         case ERROR:
         {
-          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
           throw new CoreException( status );
         }
 
         default:
         {
           // darf eigentlich nie vorkommen
-          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
           throw new CoreException( status );
         }
       }
