@@ -136,7 +136,8 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         }
         else
         {
-          Object typeObject = m_propertyContentType.getTypeObject();
+          final Object typeObject = m_propertyContentType.getTypeObject();
+          final GMLSchema restrictionSchema;
           if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
           {
             final SimpleType contentSimpleType = (SimpleType) typeObject;
@@ -150,13 +151,17 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
               final QName typeQName = new QName( namespaceURI, localPart );
 
               qnames = new QName[] { typeQName };
+              restrictionSchema = gmlSchema.getGMLSchemaForNamespaceURI( namespaceURI );
             }
             else
+            {
               qnames = new QName[] { m_featureQName, getQName() };
+              restrictionSchema = m_featureQName == null ? gmlSchema : gmlSchema.getGMLSchemaForNamespaceURI( m_featureQName.getNamespaceURI() );
+            }
 
             final Restriction restriction = (contentSimpleType).getRestriction();
             if( restriction != null )
-              m_restrictions = ContentRestrictionFactory.createRestrictions( restriction, gmlSchema, qnames );
+              m_restrictions = ContentRestrictionFactory.createRestrictions( restriction, restrictionSchema, qnames );
           }
         }
 

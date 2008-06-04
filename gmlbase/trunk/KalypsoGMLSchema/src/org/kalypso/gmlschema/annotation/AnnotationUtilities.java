@@ -127,7 +127,7 @@ public class AnnotationUtilities
    * <p>
    * All inner elements from the dcoument element are regarded as annotations.
    * </p>
-   * 
+   *
    * @param createDefaultAnnotation
    *            If true, even if no annotation data is found, return a default annotation based on the defaultName; if
    *            false it returns null in this case.
@@ -202,7 +202,7 @@ public class AnnotationUtilities
     System.arraycopy( qnames, 0, qnamesWithEnum, 0, qnames.length );
     qnamesWithEnum[qnames.length] = new QName( null, enumString );
 
-    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), qnames, enumString );
+    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), qnamesWithEnum, enumString );
     if( annotationFromProperties != null )
       return annotationFromProperties;
 
@@ -271,7 +271,7 @@ public class AnnotationUtilities
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   * 
+   *
    * @param node
    *            current element
    * @return the textual contents of the element or null, if it is missing
