@@ -203,14 +203,21 @@ public class GMLSchemaFactory
     return builder.buildGMLSchema( schemaDocument, context );
   }
 
+  /**
+   * @deprecated
+   * @see CustomFeatureType#CustomFeatureType(IGMLSchema, QName, IPropertyType[])
+   */
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
   {
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
   }
 
-  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema )
+  /**
+   * @see CustomFeatureType#CustomFeatureType(GMLSchema, QName, IPropertyType[], QName)
+   */
+  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final GMLSchema schema, final QName subsFTQname )
   {
-    return new CustomFeatureType( schema, qName, properties );
+    return new CustomFeatureType( schema, qName, properties, subsFTQname );
   }
 
   public static IValuePropertyType createValuePropertyType( final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )

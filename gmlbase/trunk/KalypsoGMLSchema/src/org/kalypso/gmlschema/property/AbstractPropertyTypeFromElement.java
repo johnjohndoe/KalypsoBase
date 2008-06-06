@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -113,5 +114,16 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return m_annotation;
   }
+  
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IPropertyType )
+      return ObjectUtils.equals( getQName(), ((IPropertyType) obj).getQName() );
 
+    return false;
+  }
 }

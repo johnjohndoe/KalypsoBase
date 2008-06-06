@@ -46,15 +46,25 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * @author doemming
+ * This is a FeatureType created programatically.
+ * 
+ * @author doemming, kurzbach
  */
 public class CustomFeatureType implements IFeatureType
 {
@@ -76,6 +86,45 @@ public class CustomFeatureType implements IFeatureType
 
   private final DefaultAnnotation m_annotation;
 
+  private IFeatureType m_substitutionGroupFT = null;
+
+  /**
+   * The {@link CustomFeatureType} may be backed by a real schema if that is needed. However in some cases it is ok to
+   * provide an {@link org.kalypso.gmlschema.EmptyGMLSchema} in the constructor. Note/TODO: for substitution types it is
+   * necessary at the time to use GMLSchema instead of the IGMLSchema interface.
+   */
+  public CustomFeatureType( final GMLSchema schema, final QName qName, final IPropertyType[] pts, final QName substitutionGroup )
+  {
+    this( schema, qName, pts );
+    if( substitutionGroup != null )
+    {
+      try
+      {
+        final ElementReference substitutesReference = schema.resolveElementReference( substitutionGroup );
+        if( substitutesReference == null )
+          return;
+        final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
+        final Element substitutesElement = substitutesReference.getElement();
+        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
+          return;
+        final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
+        m_substitutionGroupFT = ft;
+      }
+      catch( final GMLSchemaException e )
+      {
+        KalypsoGMLSchemaPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        throw new IllegalStateException( e );
+      }
+
+    }
+  }
+
+  /**
+   * Use this constructor if no substitution type is given. This might result in some serious errors so it is suggested
+   * to use the other constructor.
+   * 
+   * @deprecated
+   */
   public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
     m_schema = schema;
@@ -172,7 +221,7 @@ public class CustomFeatureType implements IFeatureType
    */
   public IFeatureType getSubstitutionGroupFT( )
   {
-    return null;
+    return m_substitutionGroupFT;
   }
 
   /**
@@ -261,5 +310,26 @@ public class CustomFeatureType implements IFeatureType
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IFeatureType )
+      return ObjectUtils.equals( m_qName, ((IFeatureType) obj).getQName() );
+
+    return false;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return ObjectUtils.hashCode( m_qName );
   }
 }
