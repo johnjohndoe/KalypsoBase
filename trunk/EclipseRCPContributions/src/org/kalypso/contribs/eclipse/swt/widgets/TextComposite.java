@@ -28,7 +28,7 @@ public class TextComposite extends Composite
 
   protected String m_string;
 
-  private Text m_text;
+  protected Text m_text;
 
   protected boolean m_runSelectionChangeListener = true;
 
@@ -50,11 +50,18 @@ public class TextComposite extends Composite
 
     final GridLayout layout = new GridLayout( 2, false );
     layout.marginWidth = 0;
+    layout.horizontalSpacing = layout.verticalSpacing = 0;
     setLayout( layout );
 
     paint( widthHint );
 
-    toolkit.adapt( this );
+    if( toolkit != null )
+      toolkit.adapt( this );
+  }
+
+  public TextComposite( final Composite parent, final int style, final int widthHint )
+  {
+    this( null, parent, style, widthHint );
   }
 
   public void setValidator( final ITextBoxValidator validator )
@@ -66,12 +73,25 @@ public class TextComposite extends Composite
 
   private void paint( final int widthHint )
   {
-    m_text = m_toolkit.createText( this, "", m_style );
+    if( m_toolkit == null )
+      m_text = new Text( this, m_style );
+    else
+      m_text = m_toolkit.createText( this, "", m_style );
+
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, false );
-    data.widthHint = widthHint;
+    if( widthHint != -1 )
+      data.widthHint = widthHint;
+
     m_text.setLayoutData( data );
 
-    m_image = m_toolkit.createImageHyperlink( this, SWT.NONE );
+    if( m_toolkit == null )
+      m_image = new ImageHyperlink( this, SWT.NONE );
+    else
+      m_image = m_toolkit.createImageHyperlink( this, SWT.NONE );
+
+// GridData imgData = new GridData( GridData.FILL, GridData.FILL, false, false );
+// imgData.heightHint = imgData.widthHint = 16;
+// m_image.setLayoutData( imgData );
 
     m_text.addModifyListener( new ModifyListener()
     {
