@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.property.value;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.IAdapterManager;
@@ -272,16 +273,14 @@ public class CustomValuePropertyType implements IValuePropertyType
 
     return super.equals( obj );
   }
-
+  
   /**
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode( )
   {
-    // you pick a hard-coded, randomly chosen, non-zero, odd number
-    // ideally different for each class
-    return new HashCodeBuilder( 177, 337 ).append( m_qName ).toHashCode();
+    return ObjectUtils.hashCode( m_qName );
   }
 
   /**
