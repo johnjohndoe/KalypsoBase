@@ -114,7 +114,7 @@ public class TextComposite extends Composite
 
   }
 
-  protected void update( final EVENT_TYPE type )
+  public void update( final EVENT_TYPE type )
   {
 
     if( m_validator != null )
