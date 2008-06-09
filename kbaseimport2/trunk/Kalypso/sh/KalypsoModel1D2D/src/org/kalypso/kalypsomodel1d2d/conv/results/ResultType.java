@@ -54,6 +54,8 @@ public class ResultType
     WATERLEVEL,
     SHEARSTRESS,
     VELOCITY,
+    VELOCITY_X,
+    VELOCITY_Y,
     DIFFERENCE,
     TERRAIN;
   }
