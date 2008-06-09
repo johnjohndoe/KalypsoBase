@@ -36,7 +36,7 @@ public class TextComposite extends Composite
 
   Set<ITextCompositeEventListener> m_listeners = new LinkedHashSet<ITextCompositeEventListener>();
 
-  private static final Image m_icon = new Image( null, TextComposite.class.getResourceAsStream( "icons/error.gif" ) );;
+  private static final Image m_icon = new Image( null, TextComposite.class.getResourceAsStream( "icons/error.gif" ) );
 
   static public final Color COLOR_WHITE = new Color( null, 255, 255, 255 );
 
@@ -62,6 +62,18 @@ public class TextComposite extends Composite
   public TextComposite( final Composite parent, final int style, final int widthHint )
   {
     this( null, parent, style, widthHint );
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#setEnabled(boolean)
+   */
+  @Override
+  public void setEnabled( final boolean enabled )
+  {
+    m_text.setEditable( enabled );
+    super.setEnabled( enabled );
+
+    this.layout();
   }
 
   public void setValidator( final ITextCompositeValidator validator )
