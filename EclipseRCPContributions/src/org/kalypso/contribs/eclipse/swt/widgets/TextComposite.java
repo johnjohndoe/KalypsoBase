@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.swt.widgets.ITextBoxValidator.EVENT_TYPE;
+import org.kalypso.contribs.eclipse.swt.widgets.ITextCompositeEventListener.MODIFY_EVENT;
 
 public class TextComposite extends Composite
 {
@@ -32,9 +32,9 @@ public class TextComposite extends Composite
 
   protected boolean m_runSelectionChangeListener = true;
 
-  protected ITextBoxValidator m_validator;
+  protected ITextCompositeValidator m_validator;
 
-  Set<Runnable> m_listeners = new LinkedHashSet<Runnable>();
+  Set<ITextCompositeEventListener> m_listeners = new LinkedHashSet<ITextCompositeEventListener>();
 
   private static final Image m_icon = new Image( null, TextComposite.class.getResourceAsStream( "icons/error.gif" ) );;
 
@@ -64,11 +64,11 @@ public class TextComposite extends Composite
     this( null, parent, style, widthHint );
   }
 
-  public void setValidator( final ITextBoxValidator validator )
+  public void setValidator( final ITextCompositeValidator validator )
   {
     m_validator = validator;
 
-    m_validator.check( m_string, EVENT_TYPE.eModify );
+    m_validator.check( m_string, MODIFY_EVENT.eModify );
   }
 
   private void paint( final int widthHint )
@@ -99,7 +99,7 @@ public class TextComposite extends Composite
       {
         m_string = m_text.getText();
 
-        update( EVENT_TYPE.eModify );
+        update( MODIFY_EVENT.eModify );
       }
     } );
 
@@ -108,13 +108,13 @@ public class TextComposite extends Composite
       @Override
       public void focusLost( final FocusEvent e )
       {
-        update( EVENT_TYPE.eFocusLost );
+        update( MODIFY_EVENT.eFocusLost );
       }
     } );
 
   }
 
-  public void update( final EVENT_TYPE type )
+  public void update( final MODIFY_EVENT type )
   {
 
     if( m_validator != null )
@@ -144,9 +144,9 @@ public class TextComposite extends Composite
 
     if( m_runSelectionChangeListener )
     {
-      for( final Runnable runnable : m_listeners )
+      for( final ITextCompositeEventListener runnable : m_listeners )
       {
-        runnable.run();
+        runnable.run( type );
       }
     }
   }
@@ -155,7 +155,7 @@ public class TextComposite extends Composite
   {
     m_text.setText( text );
 
-    update( EVENT_TYPE.eFocusLost );
+    update( MODIFY_EVENT.eFocusLost );
   }
 
   public String getText( )
@@ -163,7 +163,7 @@ public class TextComposite extends Composite
     return m_string;
   }
 
-  public void addModifyListener( final Runnable runnable )
+  public void addModifyListener( final ITextCompositeEventListener runnable )
   {
     m_listeners.add( runnable );
   }
