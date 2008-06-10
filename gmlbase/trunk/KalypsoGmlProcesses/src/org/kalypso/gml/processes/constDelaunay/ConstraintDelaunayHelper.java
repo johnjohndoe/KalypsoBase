@@ -63,6 +63,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.gml.processes.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -118,6 +119,28 @@ public class ConstraintDelaunayHelper
           e.printStackTrace();
           simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1") + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
         }
+      }
+      else if(geoObject instanceof Feature) {
+        try
+        {
+          final Feature feature = (Feature)geoObject;
+          final GM_Curve curve = (GM_Curve) feature.getDefaultGeometryProperty();
+
+          if( crs == null )
+            crs = curve.getCoordinateSystem();
+
+          final GM_LineString lineString;
+          lineString = curve.getAsLineString();
+          breaklines.add( lineString );
+          totalPointCount += lineString.getNumberOfPoints();
+          totalSegmentCount += lineString.getNumberOfPoints() - 1;
+        }
+        catch( final GM_Exception e )
+        {
+          e.printStackTrace();
+          simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1") + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
       }
       else
       {
