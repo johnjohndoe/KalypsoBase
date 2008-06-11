@@ -127,9 +127,11 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     project.create( new NullProgressMonitor() );
 
     final URL zipLocation = getClass().getResource( "resources/inundationDepthRaster.zip" );
+// final URL zipLocation = getClass().getResource( "resources/flattentestgrids.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run test model
+// final IFolder importDataFolder = project.getFolder( "flattentestgrids" );
     final IFolder importDataFolder = project.getFolder( "inundationDepthRaster" );
 
     // 
@@ -169,7 +171,9 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final boolean intersection = true;
     final Geometry globalEnv = GeoGridUtilities.getCommonGridEnvelopeForCollections( collections, intersection );
     final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
-    writeEnvelopeShape( gmObject.getEnvelope(), importDataFolder );
+
+    final String shapeBase1 = importDataFolder.getLocation() + "grid_envelope";
+    writeEnvelopeShape( gmObject.getEnvelope(), shapeBase1 );
 
     collections = null;
 
@@ -201,12 +205,18 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     // Shape schreiben
     if( collector instanceof PolygonCollector )
-      writePolygonShape( data, importDataFolder );
+    {
+      final String shapeBase = importDataFolder.getLocation() + "grid_polygons";
+      writePolygonShape( data, shapeBase );
+    }
     else
-      writeLineShape( data, importDataFolder );
+    {
+      final String shapeBase = importDataFolder.getLocation() + "grid_lines";
+      writeLineShape( data, shapeBase );
+    }
   }
 
-  private void writeLineShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
+  private void writeLineShape( final CollectorDataProvider[] data, final String shapeBase ) throws Exception, GmlSerializeException
   {
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -240,11 +250,10 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final String shapeBase = importDataFolder.getLocation() + "export_isoline";
     ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
-  private void writeEnvelopeShape( final GM_Envelope env, final IFolder importDataFolder ) throws Exception, GmlSerializeException
+  private void writeEnvelopeShape( final GM_Envelope env, String shapeBase ) throws Exception, GmlSerializeException
   {
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -273,11 +282,10 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID", shapeFT, shapeData );
     shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
 
-    final String shapeBase = importDataFolder.getLocation() + "grid_envelope";
     ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
-  private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
+  private void writePolygonShape( final CollectorDataProvider[] data, final String shapeBase ) throws Exception, GmlSerializeException
   {
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -316,7 +324,6 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final String shapeBase = importDataFolder.getLocation() + "export_polygon_";
     ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
@@ -330,6 +337,12 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 // null );
 
     final IFile[] files = new IFile[collections.length];
+// files[0] = importDataFolder.getFile( "test1.asc" );
+// files[1] = importDataFolder.getFile( "test2.asc" );
+// files[2] = importDataFolder.getFile( "test3.asc" );
+// files[3] = importDataFolder.getFile( "test4.asc" );
+// files[4] = importDataFolder.getFile( "test5.asc" );
+// files[5] = importDataFolder.getFile( "test6.asc" );
     files[0] = importDataFolder.getFile( "wt_hq100.asc" );
     files[1] = importDataFolder.getFile( "wt_hq50.asc" );
     files[2] = importDataFolder.getFile( "wt_hq18.asc" );
