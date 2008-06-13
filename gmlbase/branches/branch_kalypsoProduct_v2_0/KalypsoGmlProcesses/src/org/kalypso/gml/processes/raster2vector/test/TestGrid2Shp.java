@@ -232,7 +232,7 @@ public class TestGrid2Shp extends TestCase
     final IFile covCollFile = importDataFolder.getFile( new Path( "covColl.gml" ) ); //$NON-NLS-1$
     final GMLWorkspace covCollWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( covCollFile ), null );
 
-    final IFile file = importDataFolder.getFile( "wsp_hq100.asc" );
+    final IFile file = importDataFolder.getFile( "flatten.asc" );
 
     final String binFileName = file.getName() + ".bin";
     final String dstFileName = binFileName;
