@@ -1043,7 +1043,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           final CommandableWorkspace workspace = theme.getWorkspace();
 
           /* Delete underlying grid grid file */
-          final IStatus status = CoverageManagmentHelper.deleteGridFile( selectedCoverage );
+          final IStatus status = CoverageManagementHelper.deleteGridFile( selectedCoverage );
           if( !status.isOK() )
             return status;
 

@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 /**
  * @author Thomas Jung
  */
-public class CoverageManagmentHelper
+public class CoverageManagementHelper
 {
   /**
    * Returns an existing grid file.<br>
