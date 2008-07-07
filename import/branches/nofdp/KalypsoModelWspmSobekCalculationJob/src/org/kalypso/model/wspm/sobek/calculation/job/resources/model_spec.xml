@@ -11,6 +11,7 @@
 
 	<!-- Dateien relativ zur Rechenvariante  -->
 	<input id="CALC_CASE_PATH" description="The path to the CalcCase." />
+	<input id="FLOW_NETWORK_PATH" description="The path to the CalcCase." />
 
 	<!-- Literal -->
 	<!--

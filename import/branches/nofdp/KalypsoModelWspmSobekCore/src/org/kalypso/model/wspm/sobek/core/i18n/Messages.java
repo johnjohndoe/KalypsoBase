@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core;
+package org.kalypso.model.wspm.sobek.core.i18n;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -47,7 +47,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS
 {
-  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.sobek.core.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.sobek.core.i18n.messages"; //$NON-NLS-1$
 
   public static String Branch_0;
 
@@ -78,15 +78,21 @@ public class Messages extends NLS
   public static String SobekModelMember_2;
 
   public static String SobekModelMember_3;
+
   public static String SobekModelMember_4;
+
   public static String SobekModelMember_5;
 
-
   public static String PiSobekModelUtils_0;
+
   public static String PiSobekModelUtils_1;
+
   public static String PiSobekModelUtils_2;
+
   public static String PiSobekModelUtils_3;
+
   public static String PiSobekModelUtils_4;
+
   public static String PiSobekModelUtils_5;
 
   static
