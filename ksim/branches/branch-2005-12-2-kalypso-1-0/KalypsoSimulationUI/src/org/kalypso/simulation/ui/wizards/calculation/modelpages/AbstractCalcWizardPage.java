@@ -52,10 +52,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
@@ -68,8 +70,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -90,9 +95,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.commands.ExecutionException;
+import org.eclipse.ui.commands.ICommandManager;
+import org.eclipse.ui.commands.IWorkbenchCommandSupport;
+import org.eclipse.ui.commands.NotDefinedException;
+import org.eclipse.ui.commands.NotHandledException;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -152,6 +165,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Gernot Belger
@@ -312,6 +326,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * valid values are "true" or "false"
    */
   private static final String PROP_SELECT_FIRST_FEATURE_BY_DEFAULT = "selectFirstFeatureByDefault";
+
+  /**
+   * Argument: if present, a toolbar will be shown above the map <br>
+   */
+  private static final String PROP_MAP_TOOLBAR = "mapToolbar";
+
+  /**
+   * Sub-Argument in mapToolbar: id of a command that will be added to the map-toolbar <br>
+   */
+  private static final String PROP_MAP_TOOLBAR_CMD = "command";
 
   public static final int SELECT_FROM_MAPVIEW = 0;
 
@@ -535,7 +559,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
       m_wishBoundingBox = null;
 
-    final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+    final Composite mapAndToolbar = new Composite( parent, SWT.NONE );
+    final GridLayout mapAndToolbarLayout = new GridLayout();
+    mapAndToolbarLayout.marginHeight = 0;
+    mapAndToolbarLayout.marginWidth = 0;
+    mapAndToolbarLayout.horizontalSpacing = 0;
+    mapAndToolbarLayout.verticalSpacing = 0;
+    mapAndToolbar.setLayout( mapAndToolbarLayout );
+
+    final ToolBarManager manager = createToolbar( mapAndToolbar );
+    if( manager != null )
+      manager.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Composite mapComposite = new Composite( mapAndToolbar, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+    mapComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
@@ -550,8 +587,58 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     // only do this, when map has loaded
     // m_mapPanel.setBoundingBox( m_wishBoundingBox );
+    if( manager != null )
+      fillMapToolbar( manager );
 
-    return mapComposite;
+    return mapAndToolbar;
+  }
+
+  /**
+   * Creates the toolbar if the mapToolbar argument is present. Else <code>null</code> is returned.
+   */
+  private ToolBarManager createToolbar( Composite mapAndToolbar )
+  {
+    final Arguments arguments = getArguments().getArguments( PROP_MAP_TOOLBAR );
+    if( arguments == null )
+      return null;
+
+    final ToolBar toolbar = new ToolBar( mapAndToolbar, SWT.HORIZONTAL | SWT.SHADOW_OUT | SWT.FLAT );
+    return new ToolBarManager( toolbar );
+  }
+
+  /**
+   * Fills the toolbar according to the configuration.
+   */
+  private void fillMapToolbar( final ToolBarManager manager )
+  {
+    final Arguments arguments = getArguments().getArguments( PROP_MAP_TOOLBAR );
+
+    for( final Iterator it = arguments.entrySet().iterator(); it.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)it.next();
+      final String key = (String)entry.getKey();
+      final String value = (String)entry.getValue();
+
+      if( key.startsWith( PROP_MAP_TOOLBAR_CMD ) )
+      {
+        final IWorkbenchCommandSupport commandSupport = PlatformUI.getWorkbench().getCommandSupport();
+        final ICommandManager commandManager = commandSupport.getCommandManager();
+        final org.eclipse.ui.commands.ICommand command = commandManager.getCommand( value );
+        if( command == null )
+        {
+          final IStatus warning = StatusUtilities.createStatus( IStatus.WARNING, "Unknown commandId for map-toolbar: "
+              + value, null );
+          KalypsoGisPlugin.getDefault().getLog().log( warning );
+        }
+        else
+        {
+          final CommandAction action = new CommandAction( command, m_mapPanel );
+          manager.add( action );
+        }
+      }
+    }
+
+    manager.update( true );
   }
 
   protected IMapModell getMapModell()
@@ -643,7 +730,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_controlAdapter;
   }
 
-  public void refreshDiagram( )
+  public void refreshDiagram()
   {
     final TSLinkWithName[] obs = getObservations( true );
     refreshDiagramForContext( obs, getContext() );
@@ -1398,9 +1485,82 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     m_selectSource = selectSource;
   }
-  
+
   public DiagView getDiagView()
   {
     return m_diagView;
   }
+
+  /**
+   * An action based on a command. <br>
+   * Used instead of CommandContributionItem, as this class works not yet in 3.0. <br>
+   * 
+   * @author Gernot Belger
+   */
+  public static class CommandAction extends Action
+  {
+    private final org.eclipse.ui.commands.ICommand m_command;
+    private final MapPanel m_mapPanel;
+
+    public CommandAction( final org.eclipse.ui.commands.ICommand command, final MapPanel mapPanel )
+    {
+      super( "", AS_PUSH_BUTTON );
+
+      m_command = command;
+      m_mapPanel = mapPanel;
+
+      try
+      {
+        final Map attributeValuesByName = m_command.getAttributeValuesByName();
+        final String imgPath = (String)attributeValuesByName.get( "image" );
+        final String pluginId = (String)attributeValuesByName.get( "plugin" );
+
+        setId( command.getId() );
+        setText( command.getName() );
+        setToolTipText( command.getDescription() );
+        setEnabled( command.isHandled() && command.isDefined() );
+        if( imgPath != null && pluginId != null )
+        {
+          final Bundle bundle = Platform.getBundle( pluginId );
+          final URL imgUrl = Platform.find( bundle, new Path( imgPath ) );
+          final ImageDescriptor imgDescriptor = ImageDescriptor.createFromURL( imgUrl );
+          setImageDescriptor( imgDescriptor );
+        }
+      }
+      catch( final NotDefinedException e )
+      {
+        e.printStackTrace();
+      }
+      catch( final NotHandledException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    /**
+     * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+     */
+    public void runWithEvent( final Event event )
+    {
+      try
+      {
+        final Map executeArguments = new HashMap();
+
+        executeArguments.put( "event", event );
+        executeArguments.put( "mapPanel", m_mapPanel );
+
+        m_command.execute( executeArguments );
+      }
+      catch( final ExecutionException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( final NotHandledException e )
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
 }

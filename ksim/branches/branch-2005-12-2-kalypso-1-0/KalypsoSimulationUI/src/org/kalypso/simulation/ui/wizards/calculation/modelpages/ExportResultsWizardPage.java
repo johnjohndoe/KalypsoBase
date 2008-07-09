@@ -562,7 +562,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     final Composite mapPanel = new Composite( parent, SWT.NONE );
-    mapPanel.setLayout( new GridLayout() );
+    final GridLayout mapLayout = new GridLayout();
+    mapLayout.marginHeight = 0;
+    mapLayout.marginWidth = 0;
+    mapLayout.horizontalSpacing = 0;
+    mapLayout.verticalSpacing = 0;
+    mapPanel.setLayout( mapLayout );
 
     final Control mapControl = initMap( mapPanel );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
