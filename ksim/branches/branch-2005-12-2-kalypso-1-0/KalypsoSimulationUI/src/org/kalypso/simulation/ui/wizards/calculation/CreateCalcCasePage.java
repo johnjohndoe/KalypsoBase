@@ -107,7 +107,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
- 
+
     final Composite radioPanel = new Composite( panel, SWT.NONE );
     radioPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     radioPanel.setLayout( new GridLayout() );
@@ -147,7 +147,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     }
 
     setControl( panel );
-    
+
     // while creation of the coices, an invisible choice may validate itself,
     // causing the errorMessgage and so on to be set wrongly
     if( m_choice != null )
@@ -224,7 +224,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
       choiceGroup.setText( choice.toString() );
 
       choiceGroup.layout( true );
-      
+
       choice.setFocus();
     }
   }
@@ -233,7 +233,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     return m_choice;
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.ICalcWizardPage#getHelpId()
    */

@@ -189,7 +189,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
         m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen", m_project,
+    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante öffnen", m_project,
         m_createCalcCasePage ) );
     m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project,
         m_createCalcCasePage ) );
@@ -382,16 +382,20 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           // passieren?
           m_createCalcCasePage.doNext( monitor );
 
+          // REMARK: do not move the declaration away, as the currentCalcCase is initialized inside 'doNext'
+          final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
+          
           m_controlPage.setUpdate( m_createCalcCasePage.shouldUpdate() );
-          m_controlPage.setFolder( m_createCalcCasePage.getCurrentCalcCase() );
+          m_controlPage.setFolder( currentCalcCase );
         }
         else if( page == m_controlPage )
         {
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
 
+          final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
+          
           try
           {
-            final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
             final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
@@ -412,7 +416,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
               monitor.worked( 1000 );
               result = Status.OK_STATUS;
             }
-
+            
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );

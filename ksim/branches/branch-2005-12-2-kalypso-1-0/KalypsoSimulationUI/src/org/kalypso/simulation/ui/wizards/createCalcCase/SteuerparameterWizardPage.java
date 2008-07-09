@@ -86,8 +86,9 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
-  
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(),
+      new URL[] {} );
+
   private final Collection m_changes = new ArrayList();
 
   private boolean m_update;
@@ -108,7 +109,8 @@ public class SteuerparameterWizardPage extends WizardPage
     m_canGoBack = canGoBack;
 
     final Collection changes = m_changes;
-    m_featureComposite.addChangeListener( new IFeatureChangeListener() {
+    m_featureComposite.addChangeListener( new IFeatureChangeListener()
+    {
 
       public void featureChanged( final FeatureChange change )
       {
@@ -117,12 +119,13 @@ public class SteuerparameterWizardPage extends WizardPage
 
       public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
-        // TODO:
-      }});
-    
+      // TODO:
+      }
+    } );
+
     m_projectProvider = pp;
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
@@ -161,8 +164,7 @@ public class SteuerparameterWizardPage extends WizardPage
       {
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( m_workspace, featureChanges )
-            .process();
+        new ChangeFeaturesCommand( m_workspace, featureChanges ).process();
       }
     } );
 
@@ -316,7 +318,7 @@ public class SteuerparameterWizardPage extends WizardPage
       featureComposite.updateControl();
     }
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
    */

@@ -42,6 +42,7 @@ package org.kalypso.simulation.ui.wizards.createCalcCase;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -64,6 +65,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.wizards.calculation.createchoices.AddNewCalcCaseChoice;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -75,6 +77,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   private NewCalculationCaseCreateFolderPage m_createFolderPage;
 
   private SteuerparameterWizardPage m_createControlPage;
+
+  protected IFolder m_newFolderHandle;
 
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
@@ -94,7 +98,18 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenvariante", getSelection() );
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, true );
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
+    {
+      /**
+       * @see org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage#createControl(org.eclipse.swt.widgets.Composite)
+       */
+      public void createControl( Composite parent )
+      {
+        m_newFolderHandle = createCalculationCase();
+
+        super.createControl( parent );
+      }
+    };
 
     m_createControlPage.setUpdate( true );
 
@@ -108,50 +123,59 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public boolean performFinish()
   {
     // zuerst die Grunddaten erzeugen erzeugen
-    final IFolder folder = createCalculationCase();
-    if( folder == null )
-      return false;
+    final IFolder newFolderHandle = m_createFolderPage.getFolder();
+    final SteuerparameterWizardPage controlPage = m_createControlPage;
+
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    {
+      public void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        controlPage.saveChanges( newFolderHandle, monitor );
+        
+        if( controlPage.isUpdate() )
+        {
+          final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature( ModelNature.ID );
+          final IStatus updateStatus = nature
+              .updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          if( !updateStatus.isOK() )
+            throw new CoreException( updateStatus );
+        }
+        else
+        {
+          monitor.worked( 1000 );
+        }
+      }
+    };
+
+    executeOp( op, newFolderHandle );
 
     // im Navigator zeigen
-    selectAndReveal( folder );
+    selectAndReveal( newFolderHandle );
 
     return true;
   }
 
-  private IFolder createCalculationCase()
+  protected IFolder createCalculationCase()
   {
     final IFolder newFolderHandle = m_createFolderPage.getFolder();
 
-    final SteuerparameterWizardPage controlPage = m_createControlPage;
-
-    WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    final Map antProperties = AddNewCalcCaseChoice.configureAntProperties( null );
+    
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         try
         {
-          monitor.beginTask( IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
+          monitor.beginTask( IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.progress" ), 4000 ); //$NON-NLS-1$
           final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent().getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature( ModelNature.ID );
-          final IStatus createStatus = nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
-              monitor, 1000 ) );
+          final IStatus createStatus = nature.createCalculationCaseInFolder( newFolderHandle, antProperties,
+              new SubProgressMonitor( monitor, 1000 ) );
           if( createStatus.matches( IStatus.ERROR ) )
             throw new CoreException( createStatus );
-          if( controlPage.isUpdate() )
-          {
-            final IStatus updateStatus = nature
-                .updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-            if( !updateStatus.isOK() )
-              throw new CoreException( updateStatus );
-          }
-          else
-          {
-            monitor.worked( 1000 );
-            throw new CoreException( createStatus );
-          }
         }
         finally
         {
@@ -160,6 +184,14 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       }
     };
 
+    if( executeOp( op, newFolderHandle ) )
+      return newFolderHandle;
+
+    return null;
+  }
+
+  private boolean executeOp( WorkspaceModifyOperation op, IFolder newFolderHandle )
+  {
     try
     {
       getContainer().run( true, true, op );
@@ -168,7 +200,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     {
       cleanup( newFolderHandle );
 
-      return null;
+      return false;
     }
     catch( final InvocationTargetException e )
     {
@@ -179,12 +211,13 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
             .getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
             null, status, true );
 
-        if( status.matches( IStatus.ERROR ) )
-        {
-          e.printStackTrace();
-          cleanup( newFolderHandle );
-          return null;
-        }
+        // TODO: even ignore error, else we get a problem if no raster data is available
+//        if( status.matches( IStatus.ERROR ) )
+//        {
+//          e.printStackTrace();
+//          cleanup( newFolderHandle );
+//          return false;
+//        }
       }
       else
       {
@@ -200,11 +233,22 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
                 IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.internalErrorTitle" ), IDEWorkbenchMessages.format( "WizardNewFolder.internalError", new Object[] { e.getTargetException().getMessage() } ) ); //$NON-NLS-2$ //$NON-NLS-1$
 
         cleanup( newFolderHandle );
-        return null; // ie.- one of the steps resulted in a core exception
+        return false; // ie.- one of the steps resulted in a core exception
       }
     }
 
-    return newFolderHandle;
+    return true;
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#performCancel()
+   */
+  public boolean performCancel()
+  {
+    if( m_newFolderHandle != null )
+      cleanup( m_newFolderHandle );
+
+    return true;
   }
 
   private void cleanup( final IFolder folder )
@@ -269,5 +313,13 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   // nichts tun, die Seiten sollen lazy initialisiert werden
   // weil die Steuerparameter Seite erst aufgebaut werden kann,
   // wenn das Projekt festliegt
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#canFinish()
+   */
+  public boolean canFinish()
+  {
+    return getContainer().getCurrentPage() == m_createControlPage;
   }
 }
