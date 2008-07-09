@@ -32,7 +32,7 @@ public class SimulationPi2SobekWorker implements ISimulation
     final String[] command = new String[3];
     command[0] = "cmd.exe";
     command[1] = "/C";
-    command[2] = "PI2Sobek.bat";
+    command[2] = "3_sobek2PI.bat";
 
     /* Execute the process. */
 
