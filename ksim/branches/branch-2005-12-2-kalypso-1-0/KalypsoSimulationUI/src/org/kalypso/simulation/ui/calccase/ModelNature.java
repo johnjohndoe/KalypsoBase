@@ -442,12 +442,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       try
       {
-        // add each variable separatedly, because it may have allready been registered
-        svm.addVariables( new IValueVariable[]
-        { valueVariable } );
+        final IValueVariable existingVariable = svm.getValueVariable( name );
+        if( existingVariable == null )
+        {
+          // add each variable separatedly, because it may have allready been registered
+          svm.addVariables( new IValueVariable[]
+          { valueVariable } );
+        }
+        else
+        {
+          existingVariable.setValue( value );
+        }
       }
       catch( final CoreException e )
       {
+        System.out.println( "Variable already exists: " + name );
         e.printStackTrace();
         // ignore it, its already there -> ?
       }
