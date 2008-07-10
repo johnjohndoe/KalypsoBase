@@ -55,7 +55,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,7 +71,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
@@ -97,7 +98,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private Text m_edit;
 
-  private IFolder m_folder = null;
+  protected IFolder m_folder = null;
 
   public AddNewCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page )
   {
@@ -184,8 +185,19 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
 
-    continueLabel.setVisible( false );
-    viewer.getControl().setVisible( false );
+    final boolean showMerge = true;
+
+    continueLabel.setVisible( showMerge );
+    viewer.getControl().setVisible( showMerge );
+    continueCheckbox.setSelection( showMerge );
+
+    if( showMerge )
+    {
+      // Select topmost element ()
+      final TableTreeItem[] items = viewer.getTableTree().getItems();
+      if( items.length > 0 )
+        viewer.setSelection( new StructuredSelection( items[0].getData() ) );
+    }
 
     continueCheckbox.addSelectionListener( new SelectionAdapter()
     {
@@ -200,9 +212,13 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
         if( checked && viewer.getSelection().isEmpty() )
         {
-          // TODO selected youngest element instead
-          ViewerUtilities.selectFirstElement( viewer );
+          // Select topmost element ()
+          final TableTreeItem[] items = viewer.getTableTree().getItems();
+          if( items.length > 0 )
+            viewer.setSelection( new StructuredSelection( items[0].getData() ) );
         }
+        else if( !checked )
+          m_folder = null;
       }
     } );
 

@@ -51,7 +51,9 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -141,7 +143,10 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
 
-    ViewerUtilities.selectFirstElement( viewer );
+    // Select topmost element ()
+    final TableTreeItem[] items = viewer.getTableTree().getItems();
+    if( items.length > 0 )
+      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
     m_viewer = viewer;
 
     m_control = panel;
