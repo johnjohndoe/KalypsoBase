@@ -185,8 +185,10 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
 
-    final boolean showMerge = true;
-
+    /* If odl calc cases are available, alsways select the youngest. If none available, hide table. */
+    final TableTreeItem[] items = viewer.getTableTree().getItems();
+    final boolean showMerge = items.length > 0;
+    
     continueLabel.setVisible( showMerge );
     viewer.getControl().setVisible( showMerge );
     continueCheckbox.setSelection( showMerge );
@@ -194,9 +196,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     if( showMerge )
     {
       // Select topmost element ()
-      final TableTreeItem[] items = viewer.getTableTree().getItems();
-      if( items.length > 0 )
-        viewer.setSelection( new StructuredSelection( items[0].getData() ) );
+      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
     }
 
     continueCheckbox.addSelectionListener( new SelectionAdapter()
@@ -213,7 +213,6 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
         if( checked && viewer.getSelection().isEmpty() )
         {
           // Select topmost element ()
-          final TableTreeItem[] items = viewer.getTableTree().getItems();
           if( items.length > 0 )
             viewer.setSelection( new StructuredSelection( items[0].getData() ) );
         }
