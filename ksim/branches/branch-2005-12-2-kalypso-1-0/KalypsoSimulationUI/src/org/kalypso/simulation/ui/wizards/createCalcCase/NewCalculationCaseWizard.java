@@ -107,6 +107,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       {
         m_newFolderHandle = createCalculationCase();
 
+        setFolder( m_newFolderHandle );
+        
         super.createControl( parent );
       }
     };
