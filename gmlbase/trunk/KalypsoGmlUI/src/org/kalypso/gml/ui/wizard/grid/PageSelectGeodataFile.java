@@ -59,17 +59,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
@@ -114,7 +113,7 @@ public class PageSelectGeodataFile extends WizardPage
 
   private CRSSelectionPanel m_crsPanel;
 
-  private String m_crs;
+  protected String m_crs;
 
   public PageSelectGeodataFile( final WizardNewFileCreationPage creationPage )
   {
@@ -185,13 +184,12 @@ public class PageSelectGeodataFile extends WizardPage
     crsGridData.horizontalSpan = 3;
     crsContainer.setLayoutData( crsGridData );
 
-    m_crsPanel = new CRSSelectionPanel();
-    final Control crsControl = m_crsPanel.createControl( crsContainer );
-    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    crsControl.setToolTipText( "Koordinatensystem der Raster-Datei" );
+    m_crsPanel.setToolTipText( "Koordinatensystem der Raster-Datei" );
 
-    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
