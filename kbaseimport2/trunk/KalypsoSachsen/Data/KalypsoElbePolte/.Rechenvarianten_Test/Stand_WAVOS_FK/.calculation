@@ -5,6 +5,7 @@
   <startforecast>2008-03-04T13:00:00</startforecast>
   <editor>sm9</editor>
   <description>- bitte ausfüllen -</description>
-  <comment>- Daten bei Usti-W fehlen, da zuerst falsche ID konfiguriert war (vor Ort repariert)</comment>
+  <comment>Daten bei Usti-W fehlen, da zuerst falsche ID konfiguriert war (vor Ort repariert)</comment>
   <calctime>2008-03-04T14:58:19</calctime>
+  <mergeCasePath/>
 </ElbePolteControl>
