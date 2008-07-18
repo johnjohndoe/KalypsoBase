@@ -204,7 +204,7 @@ public class GMLSchemaFactory
   }
 
   /**
-   * @deprecated
+   * @deprecated TODO: PLEASE SEPCIFY WHAT TO USE INSTEAD!
    * @see CustomFeatureType#CustomFeatureType(IGMLSchema, QName, IPropertyType[])
    */
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
@@ -215,7 +215,7 @@ public class GMLSchemaFactory
   /**
    * @see CustomFeatureType#CustomFeatureType(GMLSchema, QName, IPropertyType[], QName)
    */
-  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final GMLSchema schema, final QName subsFTQname )
+  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema, final QName subsFTQname )
   {
     return new CustomFeatureType( schema, qName, properties, subsFTQname );
   }

@@ -93,14 +93,17 @@ public class CustomFeatureType implements IFeatureType
    * provide an {@link org.kalypso.gmlschema.EmptyGMLSchema} in the constructor. Note/TODO: for substitution types it is
    * necessary at the time to use GMLSchema instead of the IGMLSchema interface.
    */
-  public CustomFeatureType( final GMLSchema schema, final QName qName, final IPropertyType[] pts, final QName substitutionGroup )
+  public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts, final QName substitutionGroup )
   {
     this( schema, qName, pts );
     if( substitutionGroup != null )
     {
       try
       {
-        final ElementReference substitutesReference = schema.resolveElementReference( substitutionGroup );
+        if( !(schema instanceof GMLSchema) )
+          return;
+        
+        final ElementReference substitutesReference = ((GMLSchema)schema).resolveElementReference( substitutionGroup );
         if( substitutesReference == null )
           return;
         final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
