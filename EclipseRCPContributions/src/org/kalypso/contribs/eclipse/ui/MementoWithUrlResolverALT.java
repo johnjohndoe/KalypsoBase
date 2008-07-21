@@ -75,7 +75,7 @@ public class MementoWithUrlResolverALT implements IMemento
   public IMemento createChild( String type, String id )
   {
     final IMemento child = m_memento.createChild( type, id );
-    if(child==null)
+    if( child == null )
       return null;
     return new MementoWithUrlResolverALT( child, this );
   }
@@ -85,8 +85,8 @@ public class MementoWithUrlResolverALT implements IMemento
    */
   public IMemento createChild( String type )
   {
-    final IMemento child = m_memento.createChild( type);
-    if(child==null)
+    final IMemento child = m_memento.createChild( type );
+    if( child == null )
       return null;
     return new MementoWithUrlResolverALT( child, this );
   }
@@ -96,8 +96,8 @@ public class MementoWithUrlResolverALT implements IMemento
    */
   public IMemento getChild( String type )
   {
-    final IMemento child = m_memento.getChild( type);
-    if(child==null)
+    final IMemento child = m_memento.getChild( type );
+    if( child == null )
       return null;
     return new MementoWithUrlResolverALT( child, this );
   }
@@ -107,8 +107,8 @@ public class MementoWithUrlResolverALT implements IMemento
    */
   public IMemento[] getChildren( String type )
   {
-    final IMemento[] children = m_memento.getChildren( type);
-    if(children==null)
+    final IMemento[] children = m_memento.getChildren( type );
+    if( children == null )
       return null;
 
     final IMemento[] result = new IMemento[children.length];
@@ -196,4 +196,43 @@ public class MementoWithUrlResolverALT implements IMemento
   {
     m_memento.putTextData( data );
   }
+
+  /**
+   * @return
+   * @see org.eclipse.ui.IMemento#getAttributeKeys()
+   */
+  public String[] getAttributeKeys( )
+  {
+    return m_memento.getAttributeKeys();
+  }
+
+  /**
+   * @param key
+   * @return
+   * @see org.eclipse.ui.IMemento#getBoolean(java.lang.String)
+   */
+  public Boolean getBoolean( String key )
+  {
+    return m_memento.getBoolean( key );
+  }
+
+  /**
+   * @return
+   * @see org.eclipse.ui.IMemento#getType()
+   */
+  public String getType( )
+  {
+    return m_memento.getType();
+  }
+
+  /**
+   * @param key
+   * @param value
+   * @see org.eclipse.ui.IMemento#putBoolean(java.lang.String, boolean)
+   */
+  public void putBoolean( String key, boolean value )
+  {
+    m_memento.putBoolean( key, value );
+  }
+
 }
