@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.jwsdp
+Require-Bundle: org.kalypso.commons;bundle-version="0.0.1";visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.calccase,

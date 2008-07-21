@@ -42,7 +42,7 @@ package org.kalypso.simulation.core;
 
 import javax.xml.bind.JAXBContext;
 
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.commons.bind.JaxbUtilities;
 
 /**
  * @author Belger
