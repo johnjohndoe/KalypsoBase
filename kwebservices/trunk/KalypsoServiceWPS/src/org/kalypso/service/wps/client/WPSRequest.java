@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
-import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -357,7 +356,7 @@ public class WPSRequest
           {
             ProcessStartedType processStarted = state.getProcessStarted();
             String descriptionValue = processStarted.getValue();
-            BigInteger percent = processStarted.getPercentCompleted();
+            Integer percent = processStarted.getPercentCompleted();
             int percentCompleted = 0;
             if( percent != null )
               percentCompleted = percent.intValue();

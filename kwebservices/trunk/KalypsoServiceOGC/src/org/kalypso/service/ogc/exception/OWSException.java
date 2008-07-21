@@ -12,7 +12,7 @@ import net.opengis.ows.ExceptionReport;
 import net.opengis.ows.ExceptionType;
 import net.opengis.ows.ObjectFactory;
 
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.commons.bind.JaxbUtilities;
 
 public class OWSException extends Exception
 {

@@ -1248,7 +1248,7 @@ public class OGCUtilities
 
     /* Attributes. */
     if( percentCompleted >= 0 && percentCompleted <= 100 )
-      processStarted.setPercentCompleted( BigInteger.valueOf( percentCompleted ) );
+      processStarted.setPercentCompleted( Integer.valueOf( percentCompleted ) );
 
     return processStarted;
   }

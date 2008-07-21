@@ -57,7 +57,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
