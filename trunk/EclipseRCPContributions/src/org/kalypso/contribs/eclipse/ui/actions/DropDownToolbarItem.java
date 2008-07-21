@@ -85,10 +85,10 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
+import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.internal.commands.ICommandImageService;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter;
@@ -309,7 +309,6 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   /**
    * @see org.eclipse.jface.action.ContributionItem#update(java.lang.String)
    */
-  @SuppressWarnings("restriction")
   @Override
   public void update( final String id )
   {
@@ -551,7 +550,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
    * the same id as this item...
    * 
    * @param event
-   *            The <code>SWT.Selection</code> event to be tested
+   *          The <code>SWT.Selection</code> event to be tested
    * @return <code>true</code> iff a drop down menu was opened
    */
   private boolean openDropDownMenu( final Event event )

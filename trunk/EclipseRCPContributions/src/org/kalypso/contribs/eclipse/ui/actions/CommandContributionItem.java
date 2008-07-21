@@ -32,11 +32,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.commands.ICommandImageService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.menus.UIElement;
@@ -118,30 +118,30 @@ public final class CommandContributionItem extends ContributionItem
    * Create a CommandContributionItem to place in a ContributionManager.
    * 
    * @param serviceLocator
-   *            a service locator that is most appropriate for this contribution. Typically the local
-   *            {@link IWorkbenchWindow} or {@link IWorkbenchPartSite} will be sufficient.
+   *          a service locator that is most appropriate for this contribution. Typically the local
+   *          {@link IWorkbenchWindow} or {@link IWorkbenchPartSite} will be sufficient.
    * @param id
-   *            The id for this item. May be <code>null</code>. Items without an id cannot be referenced later.
+   *          The id for this item. May be <code>null</code>. Items without an id cannot be referenced later.
    * @param commandId
-   *            A command id for a defined command. Must not be <code>null</code>.
+   *          A command id for a defined command. Must not be <code>null</code>.
    * @param parameters
-   *            A map of strings to strings which represent parameter names to values. The parameter names must match
-   *            those in the command definition.
+   *          A map of strings to strings which represent parameter names to values. The parameter names must match
+   *          those in the command definition.
    * @param icon
-   *            An icon for this item. May be <code>null</code>.
+   *          An icon for this item. May be <code>null</code>.
    * @param disabledIcon
-   *            A disabled icon for this item. May be <code>null</code>.
+   *          A disabled icon for this item. May be <code>null</code>.
    * @param hoverIcon
-   *            A hover icon for this item. May be <code>null</code>.
+   *          A hover icon for this item. May be <code>null</code>.
    * @param label
-   *            A label for this item. May be <code>null</code>.
+   *          A label for this item. May be <code>null</code>.
    * @param mnemonic
-   *            A mnemonic for this item to be applied to the label. May be <code>null</code>.
+   *          A mnemonic for this item to be applied to the label. May be <code>null</code>.
    * @param tooltip
-   *            A tooltip for this item. May be <code>null</code>. Tooltips are currently only valid for toolbar
-   *            contributions.
+   *          A tooltip for this item. May be <code>null</code>. Tooltips are currently only valid for toolbar
+   *          contributions.
    * @param style
-   *            The style of this menu contribution. See the STYLE_* contants.
+   *          The style of this menu contribution. See the STYLE_* contants.
    */
   public CommandContributionItem( IServiceLocator serviceLocator, String id, String commandId, Map parameters, ImageDescriptor icon, ImageDescriptor disabledIcon, ImageDescriptor hoverIcon, String label, String mnemonic, String tooltip, int style )
   {
@@ -165,7 +165,7 @@ public final class CommandContributionItem extends ContributionItem
       {
         UIElement callback = new UIElement( serviceLocator )
         {
-
+          @Override
           public void setChecked( boolean checked )
           {
             CommandContributionItem.this.setChecked( checked );
@@ -311,7 +311,6 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
    */
   public void fill( Menu parent, int index )
@@ -350,9 +349,9 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
    */
+  @Override
   public void fill( ToolBar parent, int index )
   {
     if( command == null )
@@ -385,9 +384,9 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#update()
    */
+  @Override
   public void update( )
   {
     update( null );
@@ -395,9 +394,9 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#update(java.lang.String)
    */
+  @Override
   public void update( String id )
   {
     if( widget != null )
@@ -538,9 +537,9 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( elementRef != null )
@@ -643,7 +642,7 @@ public final class CommandContributionItem extends ContributionItem
    * the same id as this item...
    * 
    * @param event
-   *            The <code>SWT.Selection</code> event to be tested
+   *          The <code>SWT.Selection</code> event to be tested
    * @return <code>true</code> iff a drop down menu was opened
    */
   private boolean openDropDownMenu( Event event )
@@ -761,7 +760,6 @@ public final class CommandContributionItem extends ContributionItem
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.ContributionItem#isEnabled()
    */
   public boolean isEnabled( )
