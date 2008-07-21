@@ -270,7 +270,12 @@
 		<complexContent>
 			<restriction base="gml:GeometryCollectionType">
 				<sequence>
+					<!-- BUGFIX: replace the next line in order to validate schema 				
 					<element ref="gml:pointMember" maxOccurs="unbounded"/>
+					-->
+					<choice minOccurs="1" maxOccurs="unbounded">
+              			<element ref="gml:pointMember" minOccurs="1" maxOccurs="1"/>
+        			</choice>
 				</sequence>
 				<attribute name="gid" type="ID" use="optional"/>
 				<attribute name="srsName" type="anyURI" use="required"/>
@@ -287,7 +292,12 @@
 		<complexContent>
 			<restriction base="gml:GeometryCollectionType">
 				<sequence>
+					<!-- BUGFIX: replace the next line in order to validate schema 				
 					<element ref="gml:lineStringMember" maxOccurs="unbounded"/>
+					-->
+					<choice minOccurs="1" maxOccurs="unbounded">
+              			<element ref="gml:lineStringMember" minOccurs="1" maxOccurs="1"/>
+        			</choice>
 				</sequence>
 				<attribute name="gid" type="ID" use="optional"/>
 				<attribute name="srsName" type="anyURI" use="required"/>
@@ -304,7 +314,12 @@
 		<complexContent>
 			<restriction base="gml:GeometryCollectionType">
 				<sequence>
+					<!-- BUGFIX: replace the next line in order to validate schema 				
 					<element ref="gml:polygonMember" maxOccurs="unbounded"/>
+					-->
+					<choice minOccurs="1" maxOccurs="unbounded">
+              			<element ref="gml:polygonMember" minOccurs="1" maxOccurs="1"/>
+        			</choice>
 				</sequence>
 				<attribute name="gid" type="ID" use="optional"/>
 				<attribute name="srsName" type="anyURI" use="required"/>

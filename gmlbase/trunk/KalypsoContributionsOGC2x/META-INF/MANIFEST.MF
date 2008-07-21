@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions 2x Plug-in
-Bundle-SymbolicName: org.kalypso.contribs.ogc2x
+Bundle-SymbolicName: org.kalypso.contribs.ogc2x;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.jwsdp
+Require-Bundle: org.kalypso.commons;bundle-version="0.0.1"
 Eclipse-LazyStart: true
 Export-Package: ogc2.www.opengis.net.gml,
  ogc2.www.opengis.net.ogc,

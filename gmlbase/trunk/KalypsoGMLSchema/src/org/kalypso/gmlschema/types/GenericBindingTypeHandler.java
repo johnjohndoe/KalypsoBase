@@ -50,8 +50,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

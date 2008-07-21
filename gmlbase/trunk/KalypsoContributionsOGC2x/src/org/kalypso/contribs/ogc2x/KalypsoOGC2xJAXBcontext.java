@@ -42,7 +42,7 @@ package org.kalypso.contribs.ogc2x;
 
 import javax.xml.bind.JAXBContext;
 
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.commons.bind.JaxbUtilities;
 
 /**
  * Just contains the singleton for the JAXBContext of the binding stuff used in this plugin
