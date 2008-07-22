@@ -40,38 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.progress;
 
-import java.io.IOException;
 import java.io.PrintStream;
-
-import org.eclipse.ui.console.IOConsoleOutputStream;
 
 /**
  * @author kuch
  */
 public class ConsoleHelper
 {
-
-  public static void writeLine( IOConsoleOutputStream outputStream, String message )
-  {
-    if( outputStream == null || message == null )
-      return;
-
-    try
-    {
-      if( message.endsWith( "\n" ) )
-      {
-        outputStream.write( message );
-      }
-      else
-      {
-        outputStream.write( message + "\n" );
-      }
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-  }
 
   public static void writeLine( PrintStream outputStream, String message )
   {
