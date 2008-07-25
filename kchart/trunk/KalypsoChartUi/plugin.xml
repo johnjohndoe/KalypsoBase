@@ -78,8 +78,6 @@
       </image>
       <image
             commandId="org.kalypso.chart.ui.commands.zoomIn"
-            disabledIcon="icons/elcl16/chart_zoom_out.gif"
-            hoverIcon="icons/elcl16/chart_pan.gif"
             icon="icons/elcl16/chart_zoom_in.gif">
       </image>
       <image
