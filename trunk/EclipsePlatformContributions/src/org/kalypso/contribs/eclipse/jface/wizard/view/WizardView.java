@@ -114,6 +114,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  */
 public class WizardView extends ViewPart implements IWizardContainer3
 {
+  public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
+
   private RGB m_defaultTitleBackground;
 
   private RGB m_defaultTitleForeground;
@@ -333,7 +335,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
     } );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
-    m_pageAndButtonArea.setLayout( new GridLayout() );
+    final GridLayout pageAndButtonLayout = new GridLayout();
+    pageAndButtonLayout.marginHeight = 0;
+    pageAndButtonLayout.marginWidth = 0;
+    pageAndButtonLayout.horizontalSpacing = 0;
+    pageAndButtonLayout.verticalSpacing = 0;
+    m_pageAndButtonArea.setLayout( pageAndButtonLayout );
     m_pageAndButtonArea.setFont( m_mainSash.getFont() );
 
     setWizard( m_wizard );
@@ -401,6 +408,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
+    if( m_wizard instanceof IWizard2 && ((IWizard2)m_wizard).isSaveAvailable() )
+      createButton( parent, SAVE_ID, "Speichern", "doSave", false );
+
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false );
 
@@ -503,8 +513,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
   {
     try
     {
-      final Method method = getClass().getMethod( handlerMethod );
-      method.invoke( this );
+      final Method method = getClass().getMethod( handlerMethod, null );
+      method.invoke( this, null );
     }
     catch( final Exception e )
     {
@@ -1014,6 +1024,29 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
     // the help button never changes the page, so always return false
     return false;
+  }
+
+  public boolean doSave()
+  {
+    final IWizard wizard = getWizard();
+
+    if( wizard instanceof IWizard2 )
+    {
+      final IWizard2 wizard2 = (IWizard2)wizard;
+
+      final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
+      {
+        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+            InterruptedException
+        {
+          return wizard2.saveAllPages( monitor );
+        }
+      };
+      final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
+      ErrorDialog.openError( getShell(), "Speichern", "Fehler beim Speichern", status );
+    }
+
+    return true;
   }
 
   ///////////////////////
