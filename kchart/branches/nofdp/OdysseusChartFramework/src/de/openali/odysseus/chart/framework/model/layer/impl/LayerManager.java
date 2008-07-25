@@ -10,6 +10,7 @@ import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHan
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 public class LayerManager implements ILayerManager
 {
@@ -95,9 +96,7 @@ public class LayerManager implements ILayerManager
     for( final IChartLayer layer : m_layers )
     {
       if( layer.getId().equals( id ) )
-      {
         return layer;
-      }
     }
     return null;
   }
@@ -120,9 +119,7 @@ public class LayerManager implements ILayerManager
     for( IChartLayer l : m_layers )
     {
       if( layer == l )
-      {
         return count;
-      }
       count++;
     }
     return -1;
@@ -164,5 +161,21 @@ public class LayerManager implements ILayerManager
       layer.dispose();
     }
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
+   */
+  public ITooltipChartLayer[] getTooltipLayers( )
+  {
+    List<ITooltipChartLayer> tooltipLayers = new ArrayList<ITooltipChartLayer>();
+    for( IChartLayer layer : getLayers() )
+    {
+      if( layer instanceof ITooltipChartLayer )
+      {
+        tooltipLayers.add( (ITooltipChartLayer) layer );
+      }
+    }
+    return tooltipLayers.toArray( new ITooltipChartLayer[] {} );
   }
 }

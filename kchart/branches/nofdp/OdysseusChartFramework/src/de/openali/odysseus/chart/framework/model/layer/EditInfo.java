@@ -14,7 +14,7 @@ public class EditInfo
 
   public final IPaintable m_editFigure;
 
-  public final IEditableChartLayer m_layer;
+  public final ITooltipChartLayer m_layer;
 
   public final Object m_data;
 
@@ -22,7 +22,7 @@ public class EditInfo
 
   public String m_text;
 
-  public EditInfo( final IEditableChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
+  public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
   {
     m_layer = editLayer;
     m_hoverFigure = hoverFigure;

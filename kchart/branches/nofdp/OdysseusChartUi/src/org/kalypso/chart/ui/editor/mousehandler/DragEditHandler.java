@@ -45,7 +45,7 @@ public class DragEditHandler implements IChartDragHandler
     m_editInfo = m_chart.getPlot().getTooltipInfo();
     if( m_editInfo == null )
       return;
-    if( m_editInfo != null )
+    if( m_editInfo != null && m_editInfo.m_layer instanceof IEditableChartLayer )
     {
       m_isEditing = true;
       plot.setIsEditing( true );
@@ -57,10 +57,10 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( m_isEditing && m_editInfo != null )
+    if( m_isEditing && m_editInfo != null && m_editInfo.m_layer instanceof IEditableChartLayer )
     {
       final Point editPoint = new Point( e.x, e.y );
-      final EditInfo editMoveInfo = m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
+      final EditInfo editMoveInfo = ((IEditableChartLayer) m_editInfo.m_layer).commitDrag( editPoint, m_editInfo );
       m_editInfo = null;
       m_isEditing = false;
       final PlotCanvas plot = m_chart.getPlot();
@@ -74,9 +74,9 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-    if( m_isEditing && m_editInfo != null )
+    if( m_isEditing && m_editInfo != null && m_editInfo.m_layer instanceof IEditableChartLayer )
     {
-      final IEditableChartLayer layer = m_editInfo.m_layer;
+      final IEditableChartLayer layer = (IEditableChartLayer) m_editInfo.m_layer;
       final Point editPoint = new Point( e.x, e.y );
       final EditInfo editMoveInfo = layer.drag( editPoint, m_editInfo );
       m_chart.getPlot().setTooltipInfo( editMoveInfo );
