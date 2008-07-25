@@ -74,7 +74,11 @@ public class TempFileUtilities
     if( !dir.exists() )
       dir.mkdir();
 
-    final File file = File.createTempFile( prefix, suffix, dir );
+    // TODO as org.kalypso.commons.java.io.FileUtilities.validateName() should be moved to JavaApiContribs and could be
+    // used here
+    final String cleanPrefix = prefix.replaceAll( "[\\\\/:\\*\\?\"<>|]", "_" );
+
+    final File file = File.createTempFile( cleanPrefix, suffix, dir );
     return file;
   }
 

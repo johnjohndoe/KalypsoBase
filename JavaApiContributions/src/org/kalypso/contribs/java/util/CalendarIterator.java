@@ -43,6 +43,10 @@ package org.kalypso.contribs.java.util;
 import java.util.Calendar;
 import java.util.Iterator;
 
+/**
+ * 
+ * @author doemming
+ */
 public class CalendarIterator implements Iterator<Calendar>
 {
   private final Calendar m_end;
@@ -55,10 +59,6 @@ public class CalendarIterator implements Iterator<Calendar>
 
   private Calendar m_start;
 
-  /*
-   * 
-   * @author doemming
-   */
   public CalendarIterator( final Calendar start, final Calendar end, final int calendarField, final int amount )
   {
     m_start = (Calendar)start.clone();
