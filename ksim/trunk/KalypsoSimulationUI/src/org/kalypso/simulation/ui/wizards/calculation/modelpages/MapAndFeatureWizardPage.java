@@ -230,7 +230,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        InputStream contents = null;
         try
         {
           final IFile templateFile = (IFile) getProject().findMember( templateFileName );
@@ -244,7 +243,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
             m_templateviewer.setTemplate( template, getContext(), featurePath, href, linktype );
 
-            contents.close();
             parent.getDisplay().asyncExec( new Runnable()
             {
               public void run( )
@@ -262,7 +260,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
         }
         finally
         {
-          IOUtils.closeQuietly( contents );
         }
       }
     };
