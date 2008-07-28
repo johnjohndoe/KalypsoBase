@@ -55,16 +55,11 @@ import java.util.Map;
 public class HighlightGraphics extends Graphics2D
 {
   private final Graphics2D m_graphics;
-  private final IHighlightColors m_colors;
+  private final DefaultHighlightColors m_colors = new DefaultHighlightColors();
 
-  public HighlightGraphics( final Graphics2D graphics, final IHighlightColors colors )
+  public HighlightGraphics( final Graphics2D graphics )
   {
-    m_colors = colors;
-
     m_graphics = graphics;
-    //    m_graphics.setColor( Color.YELLOW );
-    //    m_graphics.setBackground( m_colors.getBackgroundColor() );
-    //    m_graphics.setStroke( STROKE_DASHED );
   }
 
   @Override
@@ -150,7 +145,7 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public Graphics create()
   {
-    return new HighlightGraphics( (Graphics2D)m_graphics.create(), m_colors );
+    return new HighlightGraphics( (Graphics2D)m_graphics.create() );
   }
 
   /**
@@ -159,7 +154,7 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public Graphics create( int x, int y, int width, int height )
   {
-    return new HighlightGraphics( (Graphics2D)m_graphics.create( x, y, width, height ), m_colors );
+    return new HighlightGraphics( (Graphics2D)m_graphics.create( x, y, width, height ) );
   }
 
   @Override

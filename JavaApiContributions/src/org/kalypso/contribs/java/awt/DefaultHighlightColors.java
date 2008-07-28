@@ -25,7 +25,7 @@ import java.awt.Color;
  * 
  * @author belger
  */
-public class DefaultHighlightColors implements IHighlightColors
+public class DefaultHighlightColors
 {
   private static final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 255 );
   private static final Color COLOR_TEXT = ColorUtilities.createTransparent( Color.RED, 255 );

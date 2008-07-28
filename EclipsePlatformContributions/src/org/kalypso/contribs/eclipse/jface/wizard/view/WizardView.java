@@ -50,10 +50,14 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -98,6 +102,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -513,8 +519,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
   {
     try
     {
-      final Method method = getClass().getMethod( handlerMethod, null );
-      method.invoke( this, null );
+      final Method method = getClass().getMethod( handlerMethod, (Class<?>[])null );
+      method.invoke( this, (Object[])null );
     }
     catch( final Exception e )
     {
@@ -870,6 +876,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainer3#addWizardContainerListener(org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener)
    */
+  @SuppressWarnings("deprecation")
   public void addWizardContainerListener( final IWizardContainerListener l )
   {
     m_listeners.add( l );
@@ -878,6 +885,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainer3#removeWizardContainerListener(org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener)
    */
+  @SuppressWarnings("deprecation")
   public void removeWizardContainerListener( final IWizardContainerListener l )
   {
     m_listeners.remove( l );
@@ -1036,8 +1044,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
       final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
       {
-        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-            InterruptedException
+        public IStatus execute( IProgressMonitor monitor ) throws CoreException
         {
           return wizard2.saveAllPages( monitor );
         }
