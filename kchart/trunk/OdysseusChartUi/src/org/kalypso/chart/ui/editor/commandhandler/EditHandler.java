@@ -13,7 +13,6 @@ import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 
 public class EditHandler extends AbstractHandler implements IElementUpdater
 {
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

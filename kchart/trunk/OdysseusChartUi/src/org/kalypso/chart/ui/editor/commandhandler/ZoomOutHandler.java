@@ -14,7 +14,6 @@ import org.kalypso.chart.ui.editor.mousehandler.DragZoomOutHandler;
 
 public class ZoomOutHandler extends AbstractHandler implements IElementUpdater
 {
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
