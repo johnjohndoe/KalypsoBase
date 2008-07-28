@@ -123,11 +123,14 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     column.setText( "" );
     column.setWidth( 0 );
     m_tableSorter.createSortedColumn( table, "Vorhersage", this );
-    m_tableSorter.createSortedColumn( table, "zuletzt geändert", this );
+    final TableColumn timeColumn = m_tableSorter.createSortedColumn( table, "zuletzt geändert", this );
 
     final Color markedColor = tableTree.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
     setLabelProvider( new CalcCaseTableLabelProvider( markedCalcCase, markedColor ) );
     setContentProvider( new CalcCaseTreeContentProvider() );
+    
+    // Always sort by time initially
+    m_tableSorter.sortColumn( this, timeColumn, Boolean.TRUE );
   }
 
   private static final class CalcCaseViewerSorter extends ViewerSorter

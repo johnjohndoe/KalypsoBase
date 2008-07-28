@@ -208,6 +208,12 @@
             name="%featureWithTemplateExporter.name"
             id="featureWithTemplateExporter"/>
       <exporter
+            icon="icons/elcl16/export-gis-feature.gif"
+            class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporterTree"
+            description="%featureWithTemplateExporter.description"
+            name="%featureWithTemplateExporter.name"
+            id="featureWithTemplateExporterTree"/>            
+      <exporter
             icon="icons/elcl16/export-simple-template.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.SimpleTemplateExporter"
             description="%simpleTemplateExporter.description"

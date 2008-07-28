@@ -119,8 +119,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
   /**
    * Must be implemented by subclasses in order to insert their own pages
    */
-  protected abstract void contributeWizardPages( List<IWizardPage> pages, IPublishingConfiguration configuration )
-      throws CoreException;
+  protected abstract void contributeWizardPages( List<IWizardPage> pages, IPublishingConfiguration configuration ) throws CoreException;
 
   /**
    * @return selected features
@@ -143,7 +142,7 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
    * 
    * @author schlienger
    */
-  private final static class FeatureItem
+  private final static class FeatureItem implements Comparable<FeatureItem>
   {
     private final Feature m_feature;
 
@@ -169,9 +168,17 @@ public abstract class AbstractFeatureExporter extends AbstractExporter
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
+    public String toString( )
     {
       return getName();
+    }
+
+    public int compareTo( final FeatureItem fi )
+    {
+      if( fi == this )
+        return 0;
+
+      return m_name.compareTo( fi.m_name );
     }
   }
 }

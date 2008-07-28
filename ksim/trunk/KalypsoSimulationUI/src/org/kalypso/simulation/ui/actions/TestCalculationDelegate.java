@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
@@ -84,6 +85,7 @@ import org.xml.sax.InputSource;
 /**
  * @author belger
  */
+@SuppressWarnings("restriction")
 public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
 {
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -223,19 +225,19 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
       final Compare compare = (Compare)unmarshaller.unmarshal( new InputSource( reader ) );
       reader.close();
 
-      final List diffList = compare.getDiff();
+      final List<JAXBElement<?>> diffList = compare.getDiff();
 
       final ISelection[] selections = new ISelection[diffList.size()];
       int count = 0;
-      for( final Iterator diffIt = diffList.iterator(); diffIt.hasNext(); )
+      for( final Iterator<JAXBElement<?>> diffIt = diffList.iterator(); diffIt.hasNext(); )
       {
         final Object diff = diffIt.next();
         if( diff instanceof Resource )
         {
           final Resource resource = (Resource)diff;
-          final List pathList = resource.getPath();
-          final Resource.Path first = (Path)pathList.get( 0 );
-          final Resource.Path second = (Path)pathList.get( 1 );
+          final List<Path> pathList = resource.getPath();
+          final Resource.Path first = pathList.get( 0 );
+          final Resource.Path second = pathList.get( 1 );
 
           final IResource firstRes = getResource( first, calcCaseFolder );
           final IResource secondRes = getResource( second, calcCaseFolder );

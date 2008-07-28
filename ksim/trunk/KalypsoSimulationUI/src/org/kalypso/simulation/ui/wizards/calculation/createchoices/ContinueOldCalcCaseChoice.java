@@ -46,17 +46,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
@@ -87,7 +90,6 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     m_page = page;
   }
 
-
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -108,9 +110,10 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       return;
     }
 
-    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE
+        | SWT.FULL_SELECTION );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     viewer.setInput( prognoseFolder );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -130,8 +133,19 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         }
       }
     } );
-    
-    ViewerUtilities.selectFirstElement( viewer );
+
+    viewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      public void doubleClick( DoubleClickEvent event )
+      {
+        // TODO go to next page
+      }
+    } );
+
+    // Select topmost element ()
+    final TableTreeItem[] items = viewer.getTableTree().getItems();
+    if( items.length > 0 )
+      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
     m_viewer = viewer;
 
     m_control = panel;
@@ -146,7 +160,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   {
     m_viewer.getControl().setFocus();
   }
-  
+
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
@@ -154,7 +168,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     validateChoice();
   }
 
-  public void refresh( final IProgressMonitor monitor )
+  public void refresh( final IProgressMonitor monitor ) 
   {
     m_viewer.refresh();
   }
@@ -166,8 +180,8 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_folder == null )
-      throw new CoreException( StatusUtilities.createErrorStatus(
-          "Es muss eine vorhandene Berechnung ausgewählt werden" ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden" ) );
 
     return m_folder;
   }

@@ -40,10 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
-import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -93,6 +91,20 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
 
   /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
+
+  /**
+   * Argument: Boolean, wenn <code>true</code>, wird bei jeder selection die Feature-View für das selektierte Feature
+   * neu aufgebaut. Falls <code>false</code>, zeigt die FeatureView immer das zuerst selektierte Feature an. Default:
+   * <code>true</code>.
+   */
+  private final static String PROP_RESELECT_FEATUREVIEW = "reselectFeatureview";
+
+  /**
+   * Argument: Boolean, wenn <code>true</code>, wird die Selektion von der Featureview bezogen (d.h. das Diagramm zeigt
+   * Observations aus dem Feature,. welches in der FeatureView angezeigt ist). Falls <code>false</code>, wird diese
+   * Selektion von der Karte bezogen. Default: <code>true</code>.
+   */
+  private final static String PROP_SELECTION_FROM_FEATUREVIEW = "selectionFromFeatureview";
 
   /** Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} */
   private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle";
@@ -184,7 +196,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     rightSash.addControlListener( new ControlAdapter()
     {
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         maximizeMap();
       }
@@ -232,34 +244,41 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       {
         try
         {
+          if( templateFileName == null || "".equals( templateFileName ) )
+            return Status.OK_STATUS;
+
           final IFile templateFile = (IFile) getProject().findMember( templateFileName );
-          if( templateFile != null && templateFile.exists() )
+          if( templateFile == null || !templateFile.exists() )
+            return Status.OK_STATUS;
+
+// if( templateFile == null )
+// return StatusUtilities.createErrorStatus( "FeatureTemplateFile does not exist: "
+// + templateFile.getFullPath() );
+//
+// final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
+// m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
+
+          final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( templateFile );
+
+          final String featurePath = featureTemplateProps.getProperty( "featurepath", "" );
+          final String href = featureTemplateProps.getProperty( "href", null );
+          final String linktype = featureTemplateProps.getProperty( "linktype", "gml" );
+
+          m_templateviewer.setTemplate( template, getContext(), featurePath, href, linktype );
+
+          parent.getDisplay().asyncExec( new Runnable()
           {
-            final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( templateFile );
-
-            final String featurePath = featureTemplateProps.getProperty( "featurepath", "" );
-            final String href = featureTemplateProps.getProperty( "href", null );
-            final String linktype = featureTemplateProps.getProperty( "linktype", "gml" );
-
-            m_templateviewer.setTemplate( template, getContext(), featurePath, href, linktype );
-
-            parent.getDisplay().asyncExec( new Runnable()
+            public void run( )
             {
-              public void run( )
-              {
-                m_templateviewer.createControls( parent, viewStyle );
-              }
-            } );
-          }
+              m_templateviewer.createControls( parent, viewStyle );
+            }
+          } );
 
           return Status.OK_STATUS;
         }
         catch( final Throwable e )
         {
           throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "", e ) );
-        }
-        finally
-        {
         }
       }
     };
@@ -289,18 +308,14 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     // if the featureToSelect property is set, we use the map!
     final String[] fid = getFeaturesToSelect();
-    if( fid.length > 0 )
-    {
-      selectFeaturesInMap( fid );
-      return;
-    }
+    final boolean forceSelectionInMap = !m_templateviewer.hasAdditionalDataObject();
+    final boolean getDefaultSelection = !getSelectionFromFeatureview(); // if we dont get the selection from the
+    // featureview, we should try to default-select
+    selectFeaturesInMap( fid, !getDefaultSelection, forceSelectionInMap );
 
     // else we show the feature defined in the feature-template
     final Thread waitForFeature = new Thread()
     {
-      /**
-       * @see java.lang.Thread#run()
-       */
       @Override
       public void run( )
       {
@@ -330,7 +345,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
       }
     };
     waitForFeature.start();
-
   }
 
   /**
@@ -339,11 +353,30 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   @Override
   protected FeatureList getSelectedFeatures( )
   {
+    final boolean selectionFromFeatureview = getSelectionFromFeatureview();
+
+    if( !selectionFromFeatureview )
+    {
+      setSelectSource( SELECT_FROM_MAPVIEW );
+      return super.getSelectedFeatures();
+    }
+
+    // Wenn 'selectionFromFeatureview' gesetzt ist, als selection das in der Featureview gezeigte Feature anzeigen.
     final FeatureList list = FeatureFactory.createFeatureList( null, null );
     final Feature feature = m_templateviewer.getFeature();
     if( feature != null )
       list.add( feature );
     return list;
+  }
+
+  /**
+   * @return
+   */
+  private boolean getSelectionFromFeatureview( )
+  {
+    final String selectionFromFeatureviewString = getArguments().getProperty( PROP_SELECTION_FROM_FEATUREVIEW, "true" );
+    final boolean selectionFromFeatureview = Boolean.valueOf( selectionFromFeatureviewString ).booleanValue();
+    return selectionFromFeatureview;
   }
 
   /**
@@ -367,6 +400,9 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     super.selectionChanged( event );
 
+    final String reselectFeatureview = getArguments().getProperty( PROP_RESELECT_FEATUREVIEW, "true" );
+    final boolean reselect = Boolean.valueOf( reselectFeatureview ).booleanValue();
+
     // refresh featureview
     final ISelection selection = event.getSelection();
     if( selection instanceof IFeatureSelection )
@@ -383,11 +419,11 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
           {
             public void run( )
             {
-              m_templateviewer.setFeature( workspace, feature );
+              if( reselect )
+                m_templateviewer.setFeature( workspace, feature );
             }
           } );
       }
     }
   }
-
 }

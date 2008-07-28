@@ -85,6 +85,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
@@ -92,6 +93,7 @@ import org.kalypso.simulation.modellist.ImageLabelType;
 import org.kalypso.simulation.modellist.Modellist;
 import org.kalypso.simulation.modellist.ObjectFactory;
 import org.kalypso.simulation.modellist.Modellist.Model;
+import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
@@ -404,9 +406,26 @@ public class PrognosePanel
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( window, false, true, operation );
+    /* Do not synchronize, if 'kalypso.prognose.synchronize-models' is set to false. */
+    final String doSyncProperty = System.getProperty( IKalypsoSimulationUIConstants.CONFIG_DO_SYNCHRONIZE_MODELS,
+        "true" );
+    final boolean doSync = Boolean.valueOf( doSyncProperty ).booleanValue();
+
+    final IStatus status;
+    if( doSync )
+    {
+      status = RunnableContextHelper.execute( window, false, true, operation );
+    }
+    else
+    {
+      final IStatus infoStatus = StatusUtilities.createInfoStatus( "Modellsynchronization deaktivated. Value of 'kalypso.prognose.synchronize-models' is: " + doSyncProperty );
+      KalypsoSimulationUIPlugin.getDefault().getLog().log( infoStatus );
+      status = Status.OK_STATUS;
+    }
+
     if( !status.isOK() )
     {
+      KalypsoSimulationUIPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
       return null;
     }

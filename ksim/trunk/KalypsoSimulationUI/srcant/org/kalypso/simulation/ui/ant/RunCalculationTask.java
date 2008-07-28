@@ -41,23 +41,29 @@
 
 package org.kalypso.simulation.ui.ant;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Hashtable;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
-import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -76,14 +82,14 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
   private Modeldata m_modeldata;
 
-  private IContainer m_calcCaseFolder;
+  private IFolder m_calcCaseFolder;
 
-  public RunCalculationTask( )
+  public RunCalculationTask()
   {
     m_modeldata = OF.createModeldata();
   }
 
-  public String getCalcCaseFolder( )
+  public String getCalcCaseFolder()
   {
     return m_calcCasePath;
   }
@@ -113,19 +119,13 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     m_modeldata.getClearAfterCalc().add( clearAfterCalc );
   }
 
-  private void validateInput( )
+  private void validateInput()
   {
     if( m_calcCasePath == null )
       throw new BuildException( "calcCaseFolder is not set" );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-
-    final IPath calcCasePath = new Path( m_calcCasePath );
-    if( calcCasePath.segmentCount() == 1 )
-      m_calcCaseFolder = root.getProject( calcCasePath.segment( 0 ) );
-    else
-      m_calcCaseFolder = root.getFolder( calcCasePath );
-
+    m_calcCaseFolder = root.getFolder( new Path( m_calcCasePath ) );
     if( m_calcCaseFolder == null )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
   }
@@ -134,41 +134,58 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) throws BuildException
+  public void execute() throws BuildException
   {
-    // give the implementing class a chance to validate its input
+    // give implementing class a chance to validate its input
     validateInput();
 
-    final IProgressMonitor monitor = (IProgressMonitor) getProject().getReferences().get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
+    final Project antProject = getProject();
+    final Hashtable references = antProject == null ? null : antProject.getReferences();
+    final IProgressMonitor monitor = references == null ? null : (IProgressMonitor)references
+        .get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
+
+    IStatus status = null;;
     try
     {
-      if( monitor == null )
-        execute( new NullProgressMonitor() );
-      else
-        execute( monitor );
+      status = execute( new SubProgressMonitor( monitor, 1 ) );
     }
-    catch( final CoreException e )
+    catch( final Throwable t )
     {
-      throw new BuildException( e );
+      status = StatusUtilities.statusFromThrowable( t );
+    }
+    
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      // REMARK: getActiveWorkbenchWindow return null here, because we are not in the display thread
+      // so we just take the shell from the first window, this is ok in most cases
+      final IWorkbenchWindow window = workbench.getWorkbenchWindows()[0];
+      final Shell shell = window == null ? null : window.getShell();
+      if( !status.isOK() )
+        handleError( shell, status );
+    }
+    else
+    {
+      final Throwable t = status.getException();
+      if( t != null )
+        t.printStackTrace();
     }
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Berechnung wird durchgefÃ¼hrt", 3000 );
+    monitor.beginTask( "Berechnung wird durchgeführt", 2500 );
 
     try
     {
-      monitor.worked( 500 );
-
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
       final IProject calcProject = m_calcCaseFolder.getProject();
-      final ModelNature nature = (ModelNature) calcProject.getNature( ModelNature.ID );
+      final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
       return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
     }
     finally
@@ -181,9 +198,10 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
   {
     shell.getDisplay().syncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
-        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgefï¿½hrt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
+        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR
+            | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
       }
     } );
   }

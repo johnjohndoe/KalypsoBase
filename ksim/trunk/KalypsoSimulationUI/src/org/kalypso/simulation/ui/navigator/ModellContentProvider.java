@@ -55,6 +55,7 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonContentProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
@@ -149,7 +150,7 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
     if( m_contentProviderMap.containsKey( workspace ) )
       return m_contentProviderMap.get( workspace );
 
-    final GMLContentProvider cp = new GMLContentProvider();
+    final GMLContentProvider cp = new GMLContentProvider( true );
     cp.inputChanged( null, null, workspace );
 
     m_contentProviderMap.put( workspace, cp );
@@ -205,7 +206,7 @@ public class ModellContentProvider implements ICommonContentProvider, IPoolListe
 
     final URL gmlUrl = ResourceUtilities.createURL( file );
 
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final PoolableObjectType key = new PoolableObjectType( "gml", gmlUrl.toString(), gmlUrl );
     pool.addPoolListener( this, key );
     final KeyWrapper keyWrapper = new KeyWrapper( key, null, new Status( IStatus.INFO, KalypsoGisPlugin.getId(), "wird geladen..." ) );

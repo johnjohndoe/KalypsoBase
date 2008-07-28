@@ -47,9 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
@@ -87,9 +85,9 @@ public final class ExporterHelper
 {
   public static final String MSG_TOKEN_NOT_FOUND = "Token not found";
 
-  private ExporterHelper()
+  private ExporterHelper( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
@@ -103,16 +101,15 @@ public final class ExporterHelper
   public static Properties createReplaceTokens( final Feature feature, final Arguments tokens )
   {
     final Properties replacetokens = new Properties();
-    for( final Iterator tokIt = tokens.entrySet().iterator(); tokIt.hasNext(); )
+    for( final Entry<String, Object> entry : tokens.entrySet() )
     {
-      final Map.Entry entry = (Entry)tokIt.next();
-      final String tokenname = (String)entry.getKey();
-      final String featureProperty = (String)entry.getValue();
+      final String tokenname = entry.getKey();
+      final String featureProperty = (String) entry.getValue();
 
       final Object property = feature.getProperty( featureProperty );
       String replace = null;
       if( property instanceof TimeseriesLinkType )
-        replace = ( (TimeseriesLinkType)property ).getHref();
+        replace = ((TimeseriesLinkType) property).getHref();
       else if( property != null )
         replace = property.toString();
       else if( property == null )
@@ -132,14 +129,13 @@ public final class ExporterHelper
   {
     final List<String> values = new ArrayList<String>();
 
-    for( final Iterator it = args.entrySet().iterator(); it.hasNext(); )
+    for( final Entry<String, Object> entry : args.entrySet() )
     {
-      final Map.Entry entry = (Map.Entry)it.next();
-      final String argName = (String)entry.getKey();
+      final String argName = entry.getKey();
 
       if( argName.startsWith( prefix ) )
       {
-        final String argValue = (String)entry.getValue();
+        final String argValue = (String) entry.getValue();
         values.add( argValue );
       }
     }
@@ -160,24 +156,21 @@ public final class ExporterHelper
    * 
    * @return list of Url items found in the arguments that we got from the supplier (ex: ExportResultsWizardPage)
    */
-  public static UrlArgument[] createUrlItems( final String argumentPrefix, final Arguments arguments, final URL context )
-      throws CoreException
+  public static UrlArgument[] createUrlItems( final String argumentPrefix, final Arguments arguments, final URL context ) throws CoreException
   {
     final Collection<UrlArgument> items = new ArrayList<UrlArgument>();
     final Collection<IStatus> stati = new ArrayList<IStatus>();
 
-    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
+    for( final Entry<String, Object> entry : arguments.entrySet() )
     {
-      final Map.Entry entry = (Entry)aIt.next();
-      final String key = (String)entry.getKey();
+      final String key = entry.getKey();
       if( key.startsWith( argumentPrefix ) )
       {
-        final Arguments args = (Arguments)entry.getValue();
+        final Arguments args = (Arguments) entry.getValue();
         final String label = args.getProperty( "label", "<unbekannt>" );
         final String strFile = args.getProperty( "href" );
         if( strFile == null )
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: "
-              + key, null ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: " + key, null ) );
 
         try
         {
@@ -185,15 +178,13 @@ public final class ExporterHelper
         }
         catch( final MalformedURLException e )
         {
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile,
-              e ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile, e ) );
         }
       }
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati
-          .toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
+      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
 
     return items.toArray( new UrlArgument[items.size()] );
   }
@@ -220,9 +211,7 @@ public final class ExporterHelper
    * @param category
    *          the category of the exportable object
    */
-  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
-      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final Configuration metadataExtensions, final String identifierPrefix, final String category )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -237,8 +226,7 @@ public final class ExporterHelper
       IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + category
-            + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        return StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + category + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
@@ -247,11 +235,9 @@ public final class ExporterHelper
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category )
-          .exportObject( output, monitor, metadataExtensions );
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category ).exportObject( output, monitor, metadataExtensions );
 
-      return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export der Diagrammvorlage: " + templateUrl.getFile() );
+      return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Diagrammvorlage: " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
@@ -287,9 +273,7 @@ public final class ExporterHelper
    * @param category
    *          the category of the exportable object
    */
-  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
-      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final Configuration metadataExtensions, final String identifierPrefix, final String category )
   {
     if( arguments == null )
     {
@@ -307,17 +291,14 @@ public final class ExporterHelper
       IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
 
       if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Tabelle (" + category
-            + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        return StatusUtilities.createWarningStatus( "Tabelle (" + category + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
 
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output,
-          monitor, metadataExtensions );
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output, monitor, metadataExtensions );
 
-      return StatusUtilities.createStatus( new IStatus[]
-      { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );
+      return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Tabellenvorlage: " + templateUrl.getFile() );
     }
     catch( final Exception e )
     {
@@ -339,7 +320,9 @@ public final class ExporterHelper
   public static class UrlArgument
   {
     private String m_label;
+
     private final URL m_templateUrl;
+
     private final Arguments m_args;
 
     public UrlArgument( final String label, final URL templateUrl, final Arguments args )
@@ -349,12 +332,12 @@ public final class ExporterHelper
       m_args = args;
     }
 
-    public String getLabel()
+    public String getLabel( )
     {
       return m_label;
     }
 
-    public URL getUrl()
+    public URL getUrl( )
     {
       return m_templateUrl;
     }
@@ -370,12 +353,12 @@ public final class ExporterHelper
     }
 
     @Override
-    public String toString()
+    public String toString( )
     {
       return m_label;
     }
 
-    public Arguments getArguments()
+    public Arguments getArguments( )
     {
       return m_args;
     }

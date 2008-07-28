@@ -58,6 +58,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
@@ -93,7 +94,7 @@ public final class ExportableSumUpTable implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    return m_args.getProperty( "documentName", "übersicht.csv" );
+    return FileUtilities.validateName( m_args.getProperty( "documentName", "übersicht.csv" ), "_" );
   }
 
   /**

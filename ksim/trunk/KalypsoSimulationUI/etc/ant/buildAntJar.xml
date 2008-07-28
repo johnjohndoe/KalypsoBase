@@ -49,6 +49,7 @@
 					<include name="plugins/org.eclipse.core.resources*.jar" />
 					<include name="plugins/org.eclipse.swt*.jar" />
 					<include name="plugins/org.eclipse.jface*.jar" />
+					<include name="plugins/org.eclipse.ui.workbench*.jar" />
 				</fileset>
 			</classpath>
 		</javac>

@@ -127,7 +127,7 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
       };
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false ) );
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false, true ) );
       job.setUser( true );
       job.setRule( calcCase.getProject() );
       job.schedule();

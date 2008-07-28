@@ -79,6 +79,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -96,11 +97,9 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.runtime.LogStatusWrapper;
+import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypso.model.xml.CalcCaseConfig;
 import org.kalypso.model.xml.TransformationList;
@@ -121,6 +120,7 @@ import org.xml.sax.InputSource;
 /**
  * @author belger
  */
+@SuppressWarnings("restriction")
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
@@ -423,7 +423,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
             {
               final String logfile = arguments[j + 1];
-              return new LogStatusWrapper( new File( logfile ), Charset.defaultCharset().name() ).toStatus();
+              final File logFileFile = new File( logfile );
+              final IStatus[] logStati = LogAnalyzer
+                  .logfileToStatus( logFileFile, Charset.defaultCharset().name() );
+              final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
+              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: "
+                  + logfile, null );
             }
           }
           return Status.OK_STATUS;
@@ -480,11 +485,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       try
       {
-        // add each variable separatedly, because it may have allready been registered
-        svm.addVariables( new IValueVariable[] { valueVariable } );
+        final IValueVariable existingVariable = svm.getValueVariable( name );
+        if( existingVariable == null )
+        {
+          // add each variable separatedly, because it may have allready been registered
+          svm.addVariables( new IValueVariable[]
+          { valueVariable } );
+        }
+        else
+        {
+          existingVariable.setValue( value );
+        }
       }
       catch( final CoreException e )
       {
+        System.out.println( "Variable already exists: " + name );
         e.printStackTrace();
         // ignore it, its already there -> ?
       }
@@ -497,9 +512,49 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final Properties attributes = new Properties();
     final IProject project = folder.getProject();
-    final IScenario scenario = getScenario( folder );
 
-    attributes.setProperty( "kalypso.scenario", scenario.getId() );
+    final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
+    final IKalypsoUser currentUser = authPlugin.getCurrentUser();
+    final String currentScenarioId = currentUser.getScenario();
+    final IScenario currentScenario = authPlugin.getScenario( currentScenarioId );
+    final Date now = new Date();
+
+    // auf x stunden vorher runden! hängt von der Modellspec ab
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime( now );
+    // erstmal auf die letzte Stunde runden
+    cal.set( Calendar.MINUTE, 0 );
+    cal.set( Calendar.SECOND, 0 );
+    cal.set( Calendar.MILLISECOND, 0 );
+
+    // jetzt solange ganze stunden abziehen, bis der Wert ins
+    // Zeitvalidierungsschema passt
+    int count = 0;
+    while( !validateTime( cal ) )
+    {
+      cal.add( Calendar.HOUR_OF_DAY, -1 );
+
+      // nach 24h spätestens abbrechen!
+      count++;
+      if( count == 24 )
+        throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
+    }
+
+    final Date forecastTime = cal.getTime();
+
+    // standardzeit abziehen
+    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
+    cal.add( Calendar.HOUR_OF_DAY, -simDiff );
+    final Date simTime = cal.getTime();
+
+    attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() );
+    attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() );
+    attributes.setProperty( "kalypso.currentScenarioName", currentScenario.getName() );
+    attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() );
+
+    attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() );
+
+    attributes.setProperty( "kalypso.currentTime", Mapper.mapJavaValueToXml( now ) );
 
     attributes.setProperty( "simulation_project_loc", project.getLocation().toOSString() );
 
@@ -519,6 +574,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // should never happen
       e.printStackTrace();
     }
+
+    attributes.setProperty( "kalypso.startforecast", Mapper.mapJavaValueToXml( forecastTime ) );
+    attributes.setProperty( "kalypso.startsim", Mapper.mapJavaValueToXml( simTime ) );
 
     return attributes;
   }
@@ -541,14 +599,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * Erzeugt eine neue Rechenvariante im angegebenen Ordner
    */
-  public IStatus createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus createCalculationCaseInFolder( final IFolder folder, final Map antProperties,
+      final IProgressMonitor monitor ) throws CoreException
   {
     final String message = "Rechenvariante wird erzeugt";
 
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
-    return launchAnt( message, "createCalcCase", null, folder, monitor );
+    return launchAnt( message, "createCalcCase", antProperties, folder, monitor );
   }
 
   /**
@@ -792,116 +851,26 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public GMLWorkspace loadDefaultControl( ) throws CoreException
-  {
-    return loadOrCreateControl( null );
-  }
-
   public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException
   {
     try
     {
-      // gibts das file schon, dann laden
-      String gmlPath = getProject().getName() + "/" + CONTROL_TEMPLATE_GML_PATH;
-
-      if( folder != null )
-      {
-        final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
-        if( controlFile.exists() )
-          gmlPath = controlFile.getFullPath().toString();
-      }
-
-      final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
-
-      final IUrlResolver urlResolver = configureTokensForcontrol();
-
-      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
-    }
-  }
-
-  /** Loads the .claculation from the given folder, returns null if not existent.*/
-  public GMLWorkspace loadControl( final IContainer folder ) throws CoreException
-  {
-    try
-    {
       if( folder == null )
-        return null;
+        throw new IllegalArgumentException();
 
-        final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
-        if( !controlFile.exists() )
-          return null;
-
-          final String gmlPath = controlFile.getFullPath().toString();
-
+      final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
+      final String gmlPath = controlFile.getFullPath().toString();
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
 
-      final IUrlResolver urlResolver = configureTokensForcontrol();
-
-      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
+      return GmlSerializer.createGMLWorkspace( gmlURL, null );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
-  }
-
-
-  public IUrlResolver configureTokensForcontrol( ) throws CoreException
-  {
-    final IUrlResolver urlResolver = new UrlResolver();
-
-    final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
-    final IKalypsoUser currentUser = authPlugin.getCurrentUser();
-    final String scenarioId = currentUser.getScenario();
-    final IScenario scenario = authPlugin.getScenario( scenarioId );
-
-    urlResolver.addReplaceToken( "scenarioId", scenario.getId() );
-    urlResolver.addReplaceToken( "scenarioName", scenario.getName() );
-    urlResolver.addReplaceToken( "scenarioDescription", scenario.getDescription() );
-    urlResolver.addReplaceToken( "user", currentUser.getUserName() );
-
-    final Date now = new Date();
-    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now ) );
-
-    // auf x stunden vorher runden! hängt von der Modellspec ab
-    final Calendar cal = Calendar.getInstance();
-    cal.setTime( now );
-    // erstmal auf die letzte Stunde runden
-    cal.set( Calendar.MINUTE, 0 );
-    cal.set( Calendar.SECOND, 0 );
-    cal.set( Calendar.MILLISECOND, 0 );
-
-    // jetzt solange ganze stunden abziehen, bis der Wert ins
-    // Zeitvalidierungsschema passt
-    int count = 0;
-    while( !validateTime( cal ) )
-    {
-      cal.add( Calendar.HOUR_OF_DAY, -1 );
-
-      // nach 24h spätestens abbrechen!
-      count++;
-      if( count == 24 )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
-    }
-
-    final Date forecastTime = cal.getTime();
-    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml( forecastTime ) );
-
-    // standardzeit abziehen
-    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
-    cal.add( Calendar.HOUR_OF_DAY, -simDiff );
-    final Date simTime = cal.getTime();
-    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime ) );
-
-    return urlResolver;
   }
 
   /**
@@ -989,7 +958,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public Object loadCalculationAndReadProperty( final IContainer calcCase, final String propertyName ) throws CoreException
   {
     // load .calculation, dont create one if not existent
-    final GMLWorkspace workspace = loadControl( calcCase );
+    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
     if( workspace == null )
       return null;
 

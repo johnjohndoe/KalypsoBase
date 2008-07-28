@@ -42,6 +42,8 @@ package org.kalypso.simulation.ui.wizards.calculation.createchoices;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -50,11 +52,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -62,6 +72,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
 
 /**
@@ -86,6 +97,8 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   protected String m_name;
 
   private Text m_edit;
+
+  protected IFolder m_folder = null;
 
   public AddNewCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page )
   {
@@ -124,6 +137,91 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     } );
     m_edit = edit;
 
+    // Find existing prognoses
+    final IFolder prognoseFolder = m_project.getFolder( ModelNature.PROGNOSE_FOLDER );
+    if( prognoseFolder == null )
+    {
+      final Label errorLabel = new Label( panel, SWT.NONE );
+      errorLabel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      errorLabel
+          .setText( "Übernahme von Handeingaben nicht möglich: Das Verzeichnis der Vorhersagevarianten existiert nicht: "
+              + ModelNature.PROGNOSE_FOLDER );
+      return;
+    }
+
+    final Button continueCheckbox = new Button( panel, SWT.CHECK );
+    continueCheckbox.setText( "bestehende Rechenvariante fortsetzen" );
+    continueCheckbox
+        .setToolTipText( "Übernimmt die Handeingaben einer bestehenden Rechenvariante.\nJe nach Modell besteht auch die Möglichkeit, Berechnungsergebnisse als Anfangswerte zu übernehmen." );
+    continueCheckbox.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false, 2, 1 ) );
+
+    // Table of existing prognoses
+
+    final Label continueLabel = new Label( panel, SWT.NONE );
+    continueLabel.setText( "Bitte wählen Sie die Rechenvariante:" );
+    continueLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 2, 1 ) );
+
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE
+        | SWT.FULL_SELECTION );
+    viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+
+    viewer.setInput( prognoseFolder );
+
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
+        if( selection.isEmpty() )
+          setContinueFolder( null );
+        else
+        {
+          final IFolder folder = (IFolder)selection.getFirstElement();
+          if( ModelNature.isCalcCalseFolder( folder ) )
+            setContinueFolder( folder );
+          else
+            setContinueFolder( null );
+        }
+      }
+    } );
+
+    /* If odl calc cases are available, alsways select the youngest. If none available, hide table. */
+    final TableTreeItem[] items = viewer.getTableTree().getItems();
+    final boolean showMerge = items.length > 0;
+    
+    continueLabel.setVisible( showMerge );
+    viewer.getControl().setVisible( showMerge );
+    continueCheckbox.setSelection( showMerge );
+
+    if( showMerge )
+    {
+      // Select topmost element ()
+      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
+    }
+
+    continueCheckbox.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final boolean checked = continueCheckbox.getSelection();
+        continueLabel.setVisible( checked );
+        viewer.getControl().setVisible( checked );
+
+        if( checked && viewer.getSelection().isEmpty() )
+        {
+          // Select topmost element ()
+          if( items.length > 0 )
+            viewer.setSelection( new StructuredSelection( items[0].getData() ) );
+        }
+        else if( !checked )
+          m_folder = null;
+      }
+    } );
+
     m_control = panel;
 
     try
@@ -135,7 +233,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       e1.printStackTrace();
     }
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
    */
@@ -143,7 +241,14 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   {
     m_edit.setFocus();
   }
-  
+
+  protected void setContinueFolder( final IFolder folder )
+  {
+    m_folder = folder;
+
+    validateChoice();
+  }
+
   protected void setName( final String text )
   {
     m_name = text;
@@ -177,18 +282,34 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     final IFolder prognoseFolder = nature.getPrognoseFolder();
     if( m_name.length() == 0 )
-      throw new CoreException( StatusUtilities
-          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein" ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein" ) );
+
     final IFolder calcCaseFolder = prognoseFolder.getFolder( m_name );
     if( calcCaseFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus(
-          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name ) );
+      throw new CoreException( StatusUtilities
+          .createErrorStatus( "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name ) );
 
     FolderUtilities.mkdirs( calcCaseFolder );
 
-    nature.createCalculationCaseInFolder( calcCaseFolder, monitor );
+    final Map antProperties = configureAntProperties( m_folder );
+    nature.createCalculationCaseInFolder( calcCaseFolder, antProperties, monitor );
 
     return calcCaseFolder;
+  }
+
+  public static Map<String, String> configureAntProperties( final IFolder mergeCaseFolder )
+  {
+    final Map<String, String> map = new HashMap<String, String>();
+
+    final String mergeRelPath;
+    if( mergeCaseFolder == null )
+      mergeRelPath = "";
+    else
+      mergeRelPath = mergeCaseFolder.getProjectRelativePath().toOSString();
+
+    map.put( "calc.merge.relpath", mergeRelPath );
+
+    return map;
   }
 
   /**

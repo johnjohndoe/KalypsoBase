@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -136,11 +137,11 @@ public class ExportableTemplateObject implements IExportableObject
     {
       case EXPORT_TYPE_DIAGRAM:
         final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-        return m_documentName + "." + format;
-      case EXPORT_TYPE_TABLE:
-        return m_documentName + ".csv";
-      default:
-        return "<default>";
+      return FileUtilities.validateName( m_documentName + "." + format, "_" );
+    case EXPORT_TYPE_TABLE:
+      return FileUtilities.validateName( m_documentName + ".csv", "_" );
+    default:
+      return FileUtilities.validateName( "<default>", "_" );
     }
   }
 

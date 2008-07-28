@@ -78,12 +78,13 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  */
 public class SumUpForecastTable
 {
+  private static final String cNoAlarm = "-";
   private final String m_axisType;
   private final double m_delta;
   private final int m_timeUnit;
   private final int m_timeStep;
   private final ColumnsHeader m_colHeader = new ColumnsHeader();
-  private final Map m_map = new HashMap();
+  private final Map<UrlArgument, Row> m_map = new HashMap<UrlArgument, Row>();
   private Date m_firstDate;
 
   public SumUpForecastTable( final String axisType, final int timeUnit, final int timeStep, final double delta )
@@ -145,7 +146,7 @@ public class SumUpForecastTable
         TimeserieConstants.MD_ALARM_2, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double
         .valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
 
-    String strAlarm = "-";
+    String strAlarm = cNoAlarm;
     double alarm = 0;
     for( int i = 1; i <= alarms.length; i++ )
     {
@@ -157,7 +158,8 @@ public class SumUpForecastTable
           // the alarm-level default axis
           final Double alarmValue = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
           
-          if( maxValue.doubleValue() >= alarmValue.doubleValue() )
+          // if a alarmValue is zero (mostly because of unsufficient W/Q) then it won't be considered valid       
+          if( maxValue.doubleValue() >= alarmValue.doubleValue() && alarmValue.doubleValue() > 0.0 )
           {
             strAlarm = "AS " + i;
             alarm = alarmValue.doubleValue();
@@ -243,7 +245,7 @@ public class SumUpForecastTable
   public void writeRow( final Object key, final Writer writer, final String sep, final DateFormat df,
       final NumberFormat nf, final Date[] dates ) throws IOException
   {
-    final Row row = (Row)m_map.get( key );
+    final Row row = m_map.get( key );
 
     writer.write( sep );
 
@@ -270,7 +272,7 @@ public class SumUpForecastTable
     private final Date m_maxTime;
     private final String m_strAlarm;
     private final double m_alarm;
-    private final Map m_values = new HashMap();
+    private final Map<Date, Number> m_values = new HashMap<Date, Number>();
 
     public Row( final Number maxValue, final Date maxTime, final String strAlarm, final double alarm )
     {
@@ -291,14 +293,17 @@ public class SumUpForecastTable
       bf.append( nf.format( m_maxValue ) ).append( separator ).append( df.format( m_maxTime ) ).append( separator )
           .append( m_strAlarm ).append( separator );
 
-      if( m_strAlarm.length() > 0 )
+      // if no Alarmstufe has been set (m_strAlarm == cNoAlarm) then cNoAlarm should be set as alarmValue
+      if( m_strAlarm.length() > 0 && !cNoAlarm.equals(m_strAlarm))
         bf.append( nf.format( m_alarm ) );
+      else
+        bf.append (cNoAlarm);
 
       bf.append( separator );
 
       for( int i = 0; i < dates.length; i++ )
       {
-        final Number value = (Number)m_values.get( dates[i] );
+        final Number value = m_values.get( dates[i] );
 
         if( value != null )
           bf.append( nf.format( value ) );
@@ -313,8 +318,8 @@ public class SumUpForecastTable
 
   public class ColumnsHeader
   {
-    private final Set m_dates = new TreeSet();
-    private final List m_hints = new ArrayList();
+    private final Set<Date> m_dates = new TreeSet<Date>();
+    private final List<String> m_hints = new ArrayList<String>();
 
     public void checkAndAddColumn( final Date d, final int timeStep, final int timeUnit )
     {
@@ -341,12 +346,12 @@ public class SumUpForecastTable
 
     public String[] getDistances()
     {
-      return (String[])m_hints.toArray( new String[m_hints.size()] );
+      return m_hints.toArray( new String[m_hints.size()] );
     }
 
     public Date[] getDates()
     {
-      return (Date[])m_dates.toArray( new Date[m_dates.size()] );
+      return m_dates.toArray( new Date[m_dates.size()] );
     }
   }
 }

@@ -43,24 +43,24 @@ package org.kalypso.simulation.ui.wizards.exporter.sumuptable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 
-public final class ColumnSpec implements Comparable
+public final class ColumnSpec implements Comparable<ColumnSpec>
 {
   private final String m_label;
+
   private final String m_content;
+
   private final int m_position;
 
   public ColumnSpec( final Arguments args )
   {
-    this( Integer.valueOf( args.getProperty( "position" ) ).intValue(), args.getProperty( "label" ), args
-        .getProperty( "content" ) );
+    this( Integer.valueOf( args.getProperty( "position" ) ).intValue(), args.getProperty( "label" ), args.getProperty( "content" ) );
   }
 
   public ColumnSpec( final int position, final String label, final String content )
@@ -70,12 +70,12 @@ public final class ColumnSpec implements Comparable
     m_content = content;
   }
 
-  public String getLabel()
+  public String getLabel( )
   {
     return m_label;
   }
 
-  public String getContent()
+  public String getContent( )
   {
     return m_content;
   }
@@ -85,18 +85,23 @@ public final class ColumnSpec implements Comparable
    * <p>
    * If the content begins with:
    * <ul>
-   * <li>'arg:', this method will try to translate what follows as an argument-name (within the arguments of the exporter) and will return its value found in the given arguments
-   * <li>'metadata:', this method will try to translate what follows as a metadata-name and will return the value found in the metadata of the given observation
+   * <li>'arg:', this method will try to translate what follows as an argument-name (within the arguments of the
+   * exporter) and will return its value found in the given arguments
+   * <li>'metadata:', this method will try to translate what follows as a metadata-name and will return the value found
+   * in the metadata of the given observation
    * </ul>
    * in all other cases the content is simply returned.
    * 
-   * @param args used in the case the content of the column specification begins with 'arg:'
-   * @param obs used in the case the content of the column specification begins with 'metadata:' or when token-replacement should take place (ex. %obsname% is given)
+   * @param args
+   *          used in the case the content of the column specification begins with 'arg:'
+   * @param obs
+   *          used in the case the content of the column specification begins with 'metadata:' or when token-replacement
+   *          should take place (ex. %obsname% is given)
    */
   public String resolveContent( final Arguments args, final IObservation obs )
   {
     String content = m_content;
-    
+
     if( content.startsWith( "arg:" ) && args != null )
     {
       final String key = content.replaceAll( "arg:", "" );
@@ -113,7 +118,7 @@ public final class ColumnSpec implements Comparable
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return getLabel();
   }
@@ -122,13 +127,12 @@ public final class ColumnSpec implements Comparable
   {
     final List<ColumnSpec> cols = new ArrayList<ColumnSpec>();
 
-    for( final Iterator it = args.entrySet().iterator(); it.hasNext(); )
+    for( final Entry<String, Object> entry : args.entrySet() )
     {
-      final Map.Entry entry = (Map.Entry)it.next();
-      final String argName = (String)entry.getKey();
+      final String argName = entry.getKey();
 
       if( argName.startsWith( "column" ) )
-        cols.add( new ColumnSpec( (Arguments)entry.getValue() ) );
+        cols.add( new ColumnSpec( (Arguments) entry.getValue() ) );
     }
 
     final ColumnSpec[] columns = cols.toArray( new ColumnSpec[cols.size()] );
@@ -140,10 +144,8 @@ public final class ColumnSpec implements Comparable
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
-  public int compareTo( final Object o )
+  public int compareTo( final ColumnSpec other )
   {
-    final ColumnSpec other = (ColumnSpec)o;
-
     return m_position - other.m_position;
   }
 }

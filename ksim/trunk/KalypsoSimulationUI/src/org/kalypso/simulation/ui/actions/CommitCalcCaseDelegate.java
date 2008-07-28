@@ -68,7 +68,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 {
-  public static final String RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_ = "Rechenvarianten koennen nicht archiviert werden.";
+  public static final String RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_ = "Rechenvarianten können nicht archiviert werden.";
 
   private static final String RECHENVARIANTEN_ARCHIVIEREN = "Rechenvarianten archivieren";
 
@@ -168,7 +168,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
       job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
-          RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
+          RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false, true ) );
 
       job.setUser( true );
       job.schedule();

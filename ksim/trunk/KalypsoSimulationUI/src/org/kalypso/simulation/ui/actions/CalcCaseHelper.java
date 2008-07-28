@@ -91,7 +91,7 @@ public class CalcCaseHelper
     try
     {
       final IStructuredSelection structsel = (IStructuredSelection)selection;
-      for( final Iterator sIt = structsel.iterator(); sIt.hasNext(); )
+      for( final Iterator<?> sIt = structsel.iterator(); sIt.hasNext(); )
       {
         final Object sel = sIt.next();
         if( sel instanceof IContainer )

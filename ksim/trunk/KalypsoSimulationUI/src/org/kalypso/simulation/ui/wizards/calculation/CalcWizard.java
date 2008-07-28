@@ -43,7 +43,6 @@ package org.kalypso.simulation.ui.wizards.calculation;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -55,18 +54,20 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
@@ -96,6 +97,18 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
+/**
+ * The calc wiazrd.
+ * <p>
+ * Supported arguments in the CalcWizard xml-definition:
+ * <ul>
+ * <li>askForSaveOnFinish: [Boolean] If <code>true</code>, the user is asked if the wizard shall be saved when the
+ * wizard is finished. Defaults to <code>false</code>.</li>
+ * <li></li>
+ * </ul>
+ * 
+ * @author Gernot Belger
+ */
 public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 {
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -114,7 +127,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   private IDialogSettings m_dialogSettings;
 
-  private ModelSynchronizer m_synchronizer;
+  private final ModelSynchronizer m_synchronizer;
 
   private boolean m_buttonsLocked;
 
@@ -123,6 +136,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /** Scenario of current calcCase */
   protected IScenario m_scenario = Scenario.DEFAULT_SCENARIO;
 
+  private Arguments m_arguments;
 
   /** Must call {@link #initWizard(IProgressMonitor)}afterwards. */
   public CalcWizard( final IProject project )
@@ -137,7 +151,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   public void initWizard( final IProgressMonitor monitor ) throws CoreException
   {
-    final IFile wizardConfigFile = (IFile)m_project.findMember( ModelNature.MODELLTYP_CALCWIZARD_XML );
+    final IFile wizardConfigFile = (IFile) m_project.findMember( ModelNature.MODELLTYP_CALCWIZARD_XML );
 
     monitor.beginTask( "Lade " + wizardConfigFile.getName(), 1000 );
 
@@ -146,14 +160,15 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
       inputSource.setEncoding( wizardConfigFile.getCharset() );
 
-      m_calcwizard = (Calcwizard)JC.createUnmarshaller().unmarshal( inputSource );
+      m_calcwizard = (Calcwizard) JC.createUnmarshaller().unmarshal( inputSource );
+
+      m_arguments = buildArguments( m_calcwizard );
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -164,22 +179,17 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
-  public void addPages()
+  public void addPages( )
   {
-    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage starten",
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage starten", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     m_createCalcCasePage.addChoiceListener( this );
 
     m_controlPage = new SteuerparameterWizardPage( this, ImageProvider.IMAGE_KALYPSO_ICON_BIG, true );
 
-    m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren",
-        m_project, m_createCalcCasePage, m_synchronizer ) );
+    m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante öffnen", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren", m_project, m_createCalcCasePage, m_synchronizer ) );
     addPage( m_createCalcCasePage );
     addPage( m_controlPage );
   }
@@ -196,10 +206,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       monitor.beginTask( "Seiten zur Modellbearbeitung werden geladen", 1000 );
 
-      final java.util.List pages = m_calcwizard.getPage();
-      for( final Iterator pIt = pages.iterator(); pIt.hasNext(); )
+      final List<Calcwizard.Page> pages = m_calcwizard.getPage();
+      for( final Object element : pages )
       {
-        final Calcwizard.Page page = (Calcwizard.Page)pIt.next();
+        final Calcwizard.Page page = (Calcwizard.Page) element;
 
         final Arguments arguments = buildArguments( page );
 
@@ -208,8 +218,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         final String imageLocation = page.getImageLocation();
         final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
 
-        final IModelWizardPage wizardPage = (IModelWizardPage)ClassUtilities.newInstance( className,
-            IModelWizardPage.class, ModelNature.class.getClassLoader(), null, null );
+        final IModelWizardPage wizardPage = (IModelWizardPage) ClassUtilities.newInstance( className, IModelWizardPage.class, ModelNature.class.getClassLoader(), null, null );
         wizardPage.init( m_project, pageTitle, imageDesc, arguments, calcCaseFolder );
 
         addPage( wizardPage );
@@ -219,8 +228,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -232,10 +240,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     final Arguments map = new Arguments();
 
-    final List arglist = alt.getArg();
-    for( Iterator aIt = arglist.iterator(); aIt.hasNext(); )
+    final List<ArgType> arglist = alt.getArg();
+    for( final Object element : arglist )
     {
-      final ArgType arg = (ArgType)aIt.next();
+      final ArgType arg = (ArgType) element;
       Object value = arg.getValue();
       if( value == null )
         value = buildArguments( arg );
@@ -249,8 +257,30 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
-  public boolean performFinish()
+  public boolean performFinish( )
   {
+    final IWizardContainer container = getContainer();
+    final Shell shell = container.getShell();
+
+    final String askForSaveStr = m_arguments.getProperty( "askForSaveOnFinish", "false" );
+    final boolean askForSave = Boolean.valueOf( askForSaveStr ).booleanValue();
+
+    if( askForSave )
+    {
+      final MessageDialog msgDialog = new MessageDialog( shell, "Vorhersageassistent beenden", null, "Vorhersageassistent wird beendet, zuletzt geänderte Daten speichern?", MessageDialog.QUESTION, new String[] {
+          IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
+      switch( msgDialog.open() )
+      {
+        case 0: // YES
+          break; // just continue to save
+        case 1: // NO
+          return true;
+
+        case 2: // Cancel
+          return false;
+      }
+    }
+
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
       @Override
@@ -271,15 +301,15 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
-    ErrorDialog.openError( getContainer().getShell(), "Daten speichern", "Fehler beim Speichern der Daten", status );
+    final IStatus status = RunnableContextHelper.execute( container, false, false, operation );
+    ErrorDialog.openError( shell, "Daten speichern", "Fehler beim Speichern der Daten", status );
     return status.isOK();
   }
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performCancel()
    */
-  public boolean performCancel()
+  public boolean performCancel( )
   {
     return true;
   }
@@ -287,19 +317,19 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#canFinish()
    */
-  public boolean canFinish()
+  public boolean canFinish( )
   {
     // can allways finish
     // this is important, as we do not show the cancel button
     return true;
-    //    final IWizardPage currentPage = getContainer().getCurrentPage();
-    //    return ( currentPage instanceof IModelWizardPage );
+    // final IWizardPage currentPage = getContainer().getCurrentPage();
+    // return ( currentPage instanceof IModelWizardPage );
   }
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     // notify pages
     for( int i = 0; i < m_pages.size(); i++ )
@@ -309,7 +339,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getPageCount()
    */
-  public int getPageCount()
+  public int getPageCount( )
   {
     return m_pages.size();
   }
@@ -317,7 +347,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getStartingPage()
    */
-  public IWizardPage getStartingPage()
+  public IWizardPage getStartingPage( )
   {
     if( m_pages.size() == 0 )
       return null;
@@ -326,7 +356,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
   /**
    * @return true if can go to next page
-   * 
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
   public boolean finishPage( final IWizardPage page )
@@ -342,26 +371,35 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           // passieren?
           m_createCalcCasePage.doNext( monitor );
 
+          // REMARK: do not move the declaration away, as the currentCalcCase is initialized inside 'doNext'
+          final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
+
           m_controlPage.setUpdate( m_createCalcCasePage.shouldUpdate() );
-          m_controlPage.setFolder( m_createCalcCasePage.getCurrentCalcCase() );
+          m_controlPage.setFolder( currentCalcCase );
         }
         else if( page == m_controlPage )
         {
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
 
+          final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
+
           try
           {
-            final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
-            final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+            final ModelNature nature = (ModelNature) currentCalcCase.getProject().getNature( ModelNature.ID );
 
             // szenario für currentCalcCase holen
             m_scenario = nature.getScenario( currentCalcCase );
 
             final IStatus result;
             if( m_controlPage.isUpdate() )
+            {
               result = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+
+              // only update once, user has to check it again, to reload timeseries
+              m_controlPage.setUpdate( false );
+            }
             else
             {
               monitor.worked( 1000 );
@@ -369,8 +407,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             }
 
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
-            // TODO: test: verändern sich denn die Daten?
-            // vermutlich die alten seiten wegschmeissen und neu erzeugen!
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
@@ -402,9 +438,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       String title = "Fehler";
 
       final Throwable te = e.getTargetException();
+      final Shell shell = getContainer().getShell();
       if( te instanceof CoreException )
       {
-        final IStatus status = ( (CoreException)te ).getStatus();
+        final IStatus status = ((CoreException) te).getStatus();
 
         // in that case we still allow to go to the next page
         // since the status has a severity of WARNING
@@ -415,14 +452,13 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           title = "Warnung";
         }
 
-        ErrorDialog.openError( getContainer().getShell(), title, "Aktualisierung des Berechnungsfalls", status );
+        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, true );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
-        MessageDialog.openError( getContainer().getShell(), title, "Fehler beim Aufruf der nächsten Wizard-Seite: "
-            + te.getLocalizedMessage() );
+        MessageDialog.openError( shell, title, "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
 
       return ret;
@@ -469,7 +505,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.kalypso.contribs.eclipse.core.resources.IProjectProvider#getProject()
    */
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_project;
   }
@@ -479,13 +515,13 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public void createPageControls( final Composite pageContainer )
   {
-  // nichts tun, no demand!
+    // nichts tun, no demand!
   }
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#getContainer()
    */
-  public IWizardContainer getContainer()
+  public IWizardContainer getContainer( )
   {
     return m_container;
   }
@@ -493,7 +529,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getDefaultPageImage()
    */
-  public Image getDefaultPageImage()
+  public Image getDefaultPageImage( )
   {
     return null;
   }
@@ -501,7 +537,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getDialogSettings()
    */
-  public IDialogSettings getDialogSettings()
+  public IDialogSettings getDialogSettings( )
   {
     return m_dialogSettings;
   }
@@ -511,9 +547,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public IWizardPage getPage( final String pageName )
   {
-    for( final Iterator pageIt = m_pages.iterator(); pageIt.hasNext(); )
+    for( final Object element : m_pages )
     {
-      final IWizardPage page = (IWizardPage)pageIt.next();
+      final IWizardPage page = (IWizardPage) element;
       if( pageName.equals( page.getName() ) )
         return page;
     }
@@ -524,7 +560,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getPages()
    */
-  public IWizardPage[] getPages()
+  public IWizardPage[] getPages( )
   {
     return m_pages.toArray( new IWizardPage[m_pages.size()] );
   }
@@ -532,7 +568,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getTitleBarColor()
    */
-  public RGB getTitleBarColor()
+  public RGB getTitleBarColor( )
   {
     if( m_container.getCurrentPage() == m_createCalcCasePage )
       return DEFAULT_TITLE_RGB;
@@ -554,7 +590,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#getWindowTitle()
    */
-  public String getWindowTitle()
+  public String getWindowTitle( )
   {
     return "Hochwasser Vorhersage für " + m_project.getName();
   }
@@ -562,7 +598,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#isHelpAvailable()
    */
-  public boolean isHelpAvailable()
+  public boolean isHelpAvailable( )
   {
     return getHelpId() != null;
   }
@@ -570,7 +606,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#needsPreviousAndNextButtons()
    */
-  public boolean needsPreviousAndNextButtons()
+  public boolean needsPreviousAndNextButtons( )
   {
     return true;
   }
@@ -578,7 +614,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
    */
-  public boolean needsProgressMonitor()
+  public boolean needsProgressMonitor( )
   {
     return true;
   }
@@ -591,7 +627,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     m_container = wizardContainer;
   }
 
-  public boolean isButtonsLocked()
+  public boolean isButtonsLocked( )
   {
     return m_buttonsLocked;
   }
@@ -607,13 +643,13 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public void onChoiceChanged( final IAddCalcCaseChoice newChoice )
   {
-  // kann weg?
+    // kann weg?
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#hasCancelButton()
    */
-  public boolean hasCancelButton()
+  public boolean hasCancelButton( )
   {
     return false;
   }
@@ -621,15 +657,28 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   /**
    * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#getInitialBrowserSize()
    */
-  public int getInitialBrowserSize()
+  public int getInitialBrowserSize( )
   {
     return m_calcwizard.getBrowserInitialSize();
   }
 
   /**
-   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#isSaveAvailable()
    */
-  public IStatus saveAllPages( final IProgressMonitor monitor )
+  public boolean isSaveAvailable( )
+  {
+    final String showSaveStr = m_arguments.getProperty( "showSaveButton", "false" );
+    final boolean showSave = Boolean.valueOf( showSaveStr ).booleanValue();
+
+    return showSave;
+  }
+
+  /**
+   * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
+   * 
+   * @throws CoreException
+   */
+  public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException
   {
     final IWizardPage[] pages = getPages();
     final int pageCount = pages.length;
@@ -646,12 +695,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         {
           final StoreExceptionSafeRunnable runnable = new StoreExceptionSafeRunnable()
           {
-            public void run() throws Exception
+            public void run( ) throws Exception
             {
-              ( (IModelWizardPage)page ).saveState( new SubProgressMonitor( monitor, 1 ) );
+              ((IModelWizardPage) page).saveState( new SubProgressMonitor( monitor, 1 ) );
             }
           };
-          Platform.run( runnable );
+          SafeRunnable.run( runnable );
 
           final Throwable exception = runnable.getException();
           if( exception != null )
@@ -660,6 +709,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         else
           monitor.worked( 1 );
       }
+
+      final IWizardPage currentPage = getContainer().getCurrentPage();
+      if( currentPage instanceof IModelWizardPage )
+        ((IModelWizardPage) currentPage).restoreState();
     }
     finally
     {
@@ -689,12 +742,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       {
         final StoreExceptionSafeRunnable runnable = new StoreExceptionSafeRunnable()
         {
-          public void run() throws Exception
+          public void run( ) throws Exception
           {
-            ( (IModelWizardPage)page ).restoreState();
+            ((IModelWizardPage) page).restoreState();
           }
         };
-        Platform.run( runnable );
+        SafeRunnable.run( runnable );
 
         final Throwable exception = runnable.getException();
         if( exception != null )
@@ -705,7 +758,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     return StatusUtilities.createStatus( statusList, "Wiederherstellen der Wizard-Seiten" );
   }
 
-  public ModelSynchronizer getModelSynchronizer()
+  public ModelSynchronizer getModelSynchronizer( )
   {
     return m_synchronizer;
   }
@@ -719,13 +772,13 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    * Else, return the one of the calcWizard.xml
    * </p>
    */
-  public String getHelpId()
+  public String getHelpId( )
   {
     final IWizardPage currentPage = getContainer().getCurrentPage();
 
     final String pageHelpId;
     if( currentPage instanceof ICalcWizardPage )
-      pageHelpId = ( (ICalcWizardPage)currentPage ).getHelpId();
+      pageHelpId = ((ICalcWizardPage) currentPage).getHelpId();
     else
       pageHelpId = null;
 
@@ -733,5 +786,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
       return pageHelpId;
 
     return m_calcwizard == null ? null : m_calcwizard.getHelpId();
+  }
+
+  public Arguments getArgument( )
+  {
+    return m_arguments;
   }
 }
