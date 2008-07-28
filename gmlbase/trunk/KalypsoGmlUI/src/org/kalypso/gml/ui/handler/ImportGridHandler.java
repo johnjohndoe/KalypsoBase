@@ -18,7 +18,6 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final EvaluationContext context = (EvaluationContext) event.getApplicationContext();
