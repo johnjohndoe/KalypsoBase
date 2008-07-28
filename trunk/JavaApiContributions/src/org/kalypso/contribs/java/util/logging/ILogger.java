@@ -38,5 +38,5 @@ import java.util.logging.Level;
  */
 public interface ILogger
 {
-  public void log( final Level level, final boolean mainMsg, final String message );
+  public void log( final Level level, final int code, final String message );
 }

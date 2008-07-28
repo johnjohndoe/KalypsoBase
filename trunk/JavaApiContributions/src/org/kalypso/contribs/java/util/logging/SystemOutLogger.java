@@ -53,21 +53,21 @@ public class SystemOutLogger implements ILogger
   /**
    * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
    */
-  public void log( final Level level, final boolean mainMsg, final String message )
+  public void log( final Level level, final int code, final String message )
   {
-    final String outString = formatLogStylish( level, mainMsg, message );
+    final String outString = formatLogStylish( level, code, message );
     System.out.print( outString );
   }
 
   /**
    * Formats the log-message like java.util.logging.Logger's do it normally.
    */
-  public static String formatLogStylish( final Level level, final boolean mainMsg, final String message )
+  public static String formatLogStylish( final Level level, final int code, final String message )
   {
     final StringBuffer sb = new StringBuffer( level.toString() );
     sb.append( ": " );
     // TODO: change this to a real number?
-    if( mainMsg )
+    if( code == LoggerUtilities.CODE_NEW_MSGBOX  )
       sb.append( '*' );
     sb.append( message );
 
