@@ -119,7 +119,6 @@ public class TupleResultTooltipLineLayer extends TupleResultLineLayer implements
     }
 
     // Labeltext zusammenstellen
-
     return new EditInfo( this, null, null, null, tooltip, pos );
   }
 }
