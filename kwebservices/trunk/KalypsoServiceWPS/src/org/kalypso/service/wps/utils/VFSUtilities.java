@@ -119,9 +119,9 @@ public class VFSUtilities
    * All other exceptions are thrown normally.
    * 
    * @param source
-   *            The source file.
+   *          The source file.
    * @param destination
-   *            The destination file or path.
+   *          The destination file or path.
    */
   public static void copy( FileObject source, FileObject destination ) throws IOException
   {
@@ -186,9 +186,9 @@ public class VFSUtilities
    * created.
    * 
    * @param source
-   *            The source directory.
+   *          The source directory.
    * @param destination
-   *            The destination directory.
+   *          The destination directory.
    */
   public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws Exception
   {
@@ -231,9 +231,9 @@ public class VFSUtilities
    * This function copies a string to a vfs file object.
    * 
    * @param value
-   *            This string will be copied to the file.
+   *          This string will be copied to the file.
    * @param destination
-   *            The destination. It must be a file.
+   *          The destination. It must be a file.
    */
   public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
   {
@@ -263,9 +263,9 @@ public class VFSUtilities
    * This function creates a temporary directory, which has a unique file name.
    * 
    * @param prefix
-   *            This prefix will be used for the temporary directory.
+   *          This prefix will be used for the temporary directory.
    * @param parentDir
-   *            The parent directory. In it the new directory will be created.
+   *          The parent directory. In it the new directory will be created.
    * @return The new unique directory.
    */
   public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
@@ -291,11 +291,10 @@ public class VFSUtilities
    * This function will check the string for protocol, and if neccessary applys an proxy object to it.
    * 
    * @param absoluteFile
-   *            The absolute file path to the file. It should be absolute, because this function was not testet against
-   *            relative files.
+   *          The absolute file path to the file. It should be absolute, because this function was not testet against
+   *          relative files.
    * @return The file object.
    */
-  @SuppressWarnings("restriction")
   public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException, MalformedURLException
   {
     FileSystemManager fsManager = getManager();
@@ -374,7 +373,7 @@ public class VFSUtilities
    * be deleted.
    * 
    * @param toDel
-   *            The file or directory to be deleted.
+   *          The file or directory to be deleted.
    * @return The number of deleted files. 0, if none has been deleted.
    */
   public static int deleteFiles( FileObject toDel ) throws FileSystemException
