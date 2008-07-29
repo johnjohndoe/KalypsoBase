@@ -10,6 +10,7 @@ import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHan
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 public class LayerManager implements ILayerManager
 {
@@ -17,7 +18,7 @@ public class LayerManager implements ILayerManager
   /** my layers */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
-  private final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
+  final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
@@ -31,18 +32,18 @@ public class LayerManager implements ILayerManager
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerContentChanged( IChartLayer layer )
+      public void onLayerContentChanged( IChartLayer layer1 )
       {
-        m_handler.fireLayerContentChanged( layer );
+        m_handler.fireLayerContentChanged( layer1 );
       }
 
       /**
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
+      public void onLayerVisibilityChanged( IChartLayer layer1 )
       {
-        m_handler.fireLayerVisibilityChanged( layer );
+        m_handler.fireLayerVisibilityChanged( layer1 );
       }
     };
     layer.addListener( lel );
@@ -139,7 +140,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getEditableLayers()
    */
-  @SuppressWarnings( { "unchecked", "cast" })
+  @SuppressWarnings( { "cast" })
   public IEditableChartLayer[] getEditableLayers( )
   {
     List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();
@@ -164,5 +165,22 @@ public class LayerManager implements ILayerManager
       layer.dispose();
     }
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
+   */
+  @Override
+  public ITooltipChartLayer[] getTooltipLayers( )
+  {
+    List<ITooltipChartLayer> tooltipLayers = new ArrayList<ITooltipChartLayer>();
+    for( IChartLayer layer : getLayers() )
+    {
+      if( layer instanceof ITooltipChartLayer )
+      {
+        tooltipLayers.add( (ITooltipChartLayer) layer );
+      }
+    }
+    return tooltipLayers.toArray( new ITooltipChartLayer[] {} );
   }
 }

@@ -91,12 +91,5 @@ public class CoordinateMapper implements ICoordinateMapper
     return m_targetAxis;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Number, java.lang.Number)
-   */
-  public Point logicalToScreen( Number domainValue, Number targetValue )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+
 }

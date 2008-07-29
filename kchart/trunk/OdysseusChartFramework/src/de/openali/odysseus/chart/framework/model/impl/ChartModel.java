@@ -306,7 +306,6 @@ public class ChartModel implements IChartModel
 	 * @return DataRange of all domain or target data available in the given
 	 *         layer
 	 */
-	@SuppressWarnings("unchecked")
 	private IDataRange<Number> getRangeFor(final IChartLayer layer, final IAxis axis)
 	{
 		IDataRange<Number> numRange = null;

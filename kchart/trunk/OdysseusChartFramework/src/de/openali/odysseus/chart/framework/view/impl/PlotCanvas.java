@@ -59,17 +59,33 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    */
   private HashSet<IChartLayer> m_panLayers = new HashSet<IChartLayer>();
 
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
+  private final boolean m_bufferLayers;
+
+  
+  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style)
+  {
+    this(manager, parent, style, true);
+  }
+  
+  /**
+   * @param bufferLayers if set to true, each layer is buffered on an individual image; set this to true
+   *    if you plan to offer panning of single layers in the chart front end 
+   */
+  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style, final boolean bufferLayers )
   {
     super( parent, style );
     m_manager = manager;
+    m_bufferLayers = bufferLayers;
 
     addPaintListener( this );
     addListener( SWT.Resize, this );
 
-    for( IChartLayer layer : manager.getLayers() )
+    if (m_bufferLayers)
     {
-      m_layerImageMap.put( layer, null );
+      for( IChartLayer layer : manager.getLayers() )
+      {
+        m_layerImageMap.put( layer, null );
+      }
     }
 
     final AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
@@ -136,7 +152,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    */
   public void invalidate( IChartLayer[] layers )
   {
-    if( layers != null )
+    if( layers != null && m_bufferLayers )
     {
       for( IChartLayer layer : layers )
       {
@@ -287,15 +303,22 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
             ChartUtilities.resetGC( buffGc );
             try
             {
-              m_layerImageMap.put( layer, paintBufferedLayer( gcw, screen, layer, m_layerImageMap.get( layer ) ) );
-
-              if( m_panLayers != null && m_panLayers.contains( layer ) )
+              if (m_bufferLayers)
               {
-                buffGc.drawImage( m_layerImageMap.get( layer ), screen.x - m_panOffset.x, screen.y - m_panOffset.y );
+                m_layerImageMap.put( layer, paintBufferedLayer( gcw, screen, layer, m_layerImageMap.get( layer ) ) );
+  
+                if( m_panLayers != null && m_panLayers.contains( layer ) )
+                {
+                  buffGc.drawImage( m_layerImageMap.get( layer ), screen.x - m_panOffset.x, screen.y - m_panOffset.y );
+                }
+                else
+                {
+                  buffGc.drawImage( m_layerImageMap.get( layer ), 0, 0 );
+                }
               }
               else
               {
-                buffGc.drawImage( m_layerImageMap.get( layer ), 0, 0 );
+                layer.paint( buffGc);
               }
 
             }

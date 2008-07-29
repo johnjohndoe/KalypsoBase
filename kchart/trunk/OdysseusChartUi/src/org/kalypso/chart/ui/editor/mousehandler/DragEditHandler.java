@@ -60,7 +60,7 @@ public class DragEditHandler implements IChartDragHandler
     if( m_isEditing && m_editInfo != null )
     {
       final Point editPoint = new Point( e.x, e.y );
-      final EditInfo editMoveInfo = m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
+      m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
       m_editInfo = null;
       m_isEditing = false;
       final PlotCanvas plot = m_chart.getPlot();

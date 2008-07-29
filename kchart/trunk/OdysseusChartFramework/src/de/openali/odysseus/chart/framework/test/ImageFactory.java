@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Control;
 public class ImageFactory
 {
 
-  public static void createChartImage( Composite c, Image img, int width, int height )
+  public static void createChartImage( Composite c, Image img )
   {
     paint( img, c, img.getBounds() );
 

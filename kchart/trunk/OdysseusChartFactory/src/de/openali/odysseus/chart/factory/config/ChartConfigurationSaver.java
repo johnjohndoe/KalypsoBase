@@ -44,7 +44,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -79,7 +78,6 @@ public class ChartConfigurationSaver
   {
     final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();
     final ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
-    final ILayerManager lm = model.getLayerManager();
 
     // Chart
     final ChartType chartType = chartconf.addNewChart();
@@ -112,7 +110,6 @@ public class ChartConfigurationSaver
       if( at != null )
       {
 
-        final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
         // only set new range
         if( at.isSetDateRange() )
         {

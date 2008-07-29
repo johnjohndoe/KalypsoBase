@@ -42,4 +42,6 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    * returns only layers which are editable (
    */
   public IEditableChartLayer[] getEditableLayers( );
+
+  public ITooltipChartLayer[] getTooltipLayers( );
 }

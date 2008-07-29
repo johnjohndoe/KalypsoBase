@@ -33,16 +33,15 @@ public class ChartComposite extends Canvas implements IChartView
 {
 
   /** axis pos --> axis placeholder */
-  private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
+  final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
-  /** drawing space for the plot itself */
-  private PlotCanvas m_plot;
+  PlotCanvas m_plot;
 
-  private final Color m_bgColor;
+  final Color m_bgColor;
 
   // private final Color m_black;
 
-  private final IChartModel m_model;
+  final IChartModel m_model;
 
   private AbstractMapperRegistryEventListener m_mapperListener;
 

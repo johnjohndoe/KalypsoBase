@@ -17,7 +17,8 @@ public class MultiFigure implements IPaintable
 		m_figures = figures;
 	}
 
-	public void paint(GC gc)
+	@SuppressWarnings("unchecked")
+  public void paint(GC gc)
 	{
 		for (IFigure figure : m_figures)
 		{
