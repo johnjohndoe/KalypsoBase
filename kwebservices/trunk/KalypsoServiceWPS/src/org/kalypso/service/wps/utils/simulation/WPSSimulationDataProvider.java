@@ -120,6 +120,9 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         final ComplexValueType complexValue = (ComplexValueType) input;
         
         final List<Object> content = complexValue.getContent();
+        if( content.size() == 0 )
+          return null;
+        
         final String hexString = (String)content.get( 0 );
         final byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
         
