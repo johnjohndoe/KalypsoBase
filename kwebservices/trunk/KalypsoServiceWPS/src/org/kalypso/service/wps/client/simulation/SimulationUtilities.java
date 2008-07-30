@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client.simulation;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.DatatypeConverter;
+
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
@@ -62,11 +67,11 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.VFSUtilities;
@@ -94,19 +99,19 @@ public class SimulationUtilities
    * This function creates the data inputs which the client provides for the wps.
    * 
    * @param calcCaseFolder
-   *            The folder of the calc case.
+   *          The folder of the calc case.
    * @param tmpServer
-   *            The temp directory of the server.
+   *          The temp directory of the server.
    * @param inputClient
-   *            The path to the place on the server, where the client can put his files, as configured in the config.ini
-   *            from Kalypso.
+   *          The path to the place on the server, where the client can put his files, as configured in the config.ini
+   *          from Kalypso.
    * @param data
-   *            The modeldata.
+   *          The modeldata.
    * @param description
-   *            The decription of the process.
+   *          The decription of the process.
    * @return The data input from the model spec in wps format.
    */
-  public static DataInputsType getDataInputs( final IContainer calcCaseFolder, final FileObject tmpServer, final String inputClient, final Modeldata data, final ProcessDescriptionType description ) throws CoreException, FileSystemException
+  public static DataInputsType getDataInputs( final IContainer calcCaseFolder, final FileObject tmpServer, final String inputClient, final Modeldata data, final ProcessDescriptionType description ) throws CoreException, IOException
   {
     // TODO At the moment only literals and references are supported from our model data.
     // The model data must be changed, in order to enable bounding boxes and complex values.
@@ -151,15 +156,37 @@ public class SimulationUtilities
       final SupportedComplexDataType complexData = inputDescription.getComplexData();
       if( complexData != null )
       {
-        // TODO Add the complex value type here, how to decide when to use the reference and when the value?
+        final String protocol = getProtocol( inputPath );
+        final URL url;
 
-        /* Get the URL if it is one. */
-        URL url = isURL( inputPath );
-
-        /* If the URL is null, it is a local file resource, otherwise it is a remote resource. */
-        if( url == null )
+        if( "file".equals( protocol ) )
         {
-          /* It is a local file resource. */
+          final URL localFileUrl = new URL( inputPath );
+
+          final byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
+          final String hexString = DatatypeConverter.printHexBinary( bytes );
+
+          // Local file resource: will be passed to service as (inline-) ComplexType
+          // in this case we produce a ComplexType (no reference)
+          final List<Object> value = new ArrayList<Object>( 1 );
+          value.add( hexString );
+
+          /* Build the complex value reference. */
+          final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
+          final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
+          final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
+
+          /* Add the input. */
+          inputValues.add( ioValue );
+
+          continue;
+        }
+        else if( protocol == null )
+        {
+          /*
+           * It is a relative path (either to calcCaseFolder or to its project), was copied to the tmpServer-Dir, and
+           * its URL will be passed to the service as reference.
+           */
           if( calcCaseFolder == null )
             throw new CoreException( StatusUtilities.createErrorStatus( "Complext Data specified but no base folder given" ) );
 
@@ -176,9 +203,16 @@ public class SimulationUtilities
           }
 
           /* Build the URL for this input. */
+          // Resource was already copied to server (for example see SimulationDelegate.copyInputFiles)
           final String relativePathTo = inputResource.getProjectRelativePath().toString();
           final FileObject destination = fsManager.resolveFile( tmpServer, relativePathTo );
           url = destination.getURL();
+        }
+        else
+        // maybe check the protocols?
+        {
+          // Remote resource, will be passed to the service as reference
+          url = new URL( inputPath );
         }
 
         Debug.println( "Checking for server URL, where the input data can be copied ..." );
@@ -230,9 +264,9 @@ public class SimulationUtilities
    * This function creates the data outputs the clients expects for the wps.
    * 
    * @param description
-   *            The description of the process.
+   *          The description of the process.
    * @param data
-   *            The modeldata.
+   *          The modeldata.
    * @return The output of the model spec in wps format.
    */
   public static OutputDefinitionsType getOutputDefinitions( final Modeldata data, final ProcessDescriptionType description ) throws CoreException
@@ -310,9 +344,9 @@ public class SimulationUtilities
    * This function searches an input in the model data.
    * 
    * @param ID
-   *            The ID of the input to search for.
+   *          The ID of the input to search for.
    * @param inputList
-   *            The input of the model data.
+   *          The input of the model data.
    * @return The found input or null, if none is found for that ID.
    */
   public static Input findInput( final String ID, final List<Input> inputList )
@@ -331,9 +365,9 @@ public class SimulationUtilities
    * This function searches an output out in the model data.
    * 
    * @param ID
-   *            The ID of the output to search for.
+   *          The ID of the output to search for.
    * @param outputList
-   *            The output of the model data.
+   *          The output of the model data.
    * @return The found output or null, if none is found for that ID.
    */
   public static Output findOutput( final String ID, final List<Output> outputList )
@@ -346,5 +380,14 @@ public class SimulationUtilities
     }
 
     return null;
+  }
+
+  public static String getProtocol( final String path )
+  {
+    final int index = path.indexOf( ':' );
+    if( index == -1 )
+      return null;
+
+    return path.substring( 0, index );
   }
 }

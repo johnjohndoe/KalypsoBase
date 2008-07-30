@@ -41,7 +41,6 @@
 package org.kalypso.service.wps.client.simulation;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -225,10 +224,10 @@ public class SimulationDelegate implements IWPSDelegate
           // The complex value type should be skipped, as literals and bounding boxes.
 
           /* Get the URL if it is one. */
-          final URL url = SimulationUtilities.isURL( inputPath );
+          final String protocol = SimulationUtilities.getProtocol( inputPath );
 
           /* If the URL is null, it is a local file resource, otherwise it is a remote resource. */
-          if( url == null )
+          if( protocol == null )
           {
             /* It is a local file resource. */
             if( m_calcCaseFolder == null )

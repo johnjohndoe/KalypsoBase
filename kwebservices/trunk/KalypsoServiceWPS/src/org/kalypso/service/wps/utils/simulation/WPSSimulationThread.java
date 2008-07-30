@@ -134,7 +134,7 @@ public class WPSSimulationThread extends Thread
     m_tmpDir = tmpDir;
 
     m_jobInfo = new WPSSimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
-    m_inputData = new WPSSimulationDataProvider( execute );
+    m_inputData = new WPSSimulationDataProvider( execute, m_tmpDir );
     m_resultEater = new WPSSimulationResultEater( processDescription, execute, tmpDir, resultDir );
 
     /* Check, if the required input is available. */

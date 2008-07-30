@@ -94,6 +94,12 @@ public class GetCapabilities implements IOperation
 
         /* Get the specification for that simulation. */
         URL spezifikation = simulation.getSpezifikation();
+        if( spezifikation == null )
+        {
+          Debug.println( "Simulation has no specification and will be ignored: " + simulation.getClass().getName() );
+          continue;
+        }
+        
         Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
 
         /* Save the specification. */

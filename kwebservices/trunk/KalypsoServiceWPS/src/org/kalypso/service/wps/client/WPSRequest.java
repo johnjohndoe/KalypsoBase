@@ -197,13 +197,23 @@ public class WPSRequest
       Debug.println( "Response:\n" + describeProcessResponse );
 
       /* Try to unmarshall. */
-      Object describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
-      if( describeProcessObject instanceof ExceptionReport )
+      Object describeProcessObject = null;
+      try
       {
-        ExceptionReport report = (ExceptionReport) describeProcessObject;
-        return StatusUtilities.createErrorStatus( createErrorString( report ) );
+        describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
+        if( describeProcessObject instanceof ExceptionReport )
+        {
+          ExceptionReport report = (ExceptionReport) describeProcessObject;
+          return StatusUtilities.createErrorStatus( createErrorString( report ) );
+        }
       }
-
+      catch( Exception e )
+      {
+        // We always will reach this point in cae of an exception, as the kalypso
+        // WPS implementation return the wrong kind of exception (opengeo in contrast to opengeospatial) 
+        return StatusUtilities.createErrorStatus( describeProcessResponse );
+      }
+      
       /* Use the process description for building the DataInputs and the OutputDefinitions. */
       ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
 
@@ -242,7 +252,8 @@ public class WPSRequest
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
       Debug.println( "Start the simulation ..." );
-      String executeResponse = WPSUtilities.send( MarshallUtilities.marshall( execute ), m_delegate.getServiceURL() );
+      final String executeXML = MarshallUtilities.marshall( execute );
+      final String executeResponse = WPSUtilities.send( executeXML, m_delegate.getServiceURL() );
 
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponse );

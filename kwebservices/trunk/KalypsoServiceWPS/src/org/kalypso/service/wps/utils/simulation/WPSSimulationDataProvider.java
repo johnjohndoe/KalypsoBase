@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
+import java.io.File;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,6 +56,8 @@ import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
+import org.apache.commons.io.FileUtils;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -75,15 +78,18 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    */
   private Map<String, Object> m_inputList = null;
 
+  private final File m_tmpDir;
+
   /**
    * The constructor.
    * 
    * @param execute
    *            The execute request.
    */
-  public WPSSimulationDataProvider( Execute execute ) throws SimulationException
+  public WPSSimulationDataProvider( Execute execute, File tmpDir ) throws SimulationException
   {
     m_execute = execute;
+    m_tmpDir = tmpDir;
     m_inputList = index( m_execute );
   }
 
@@ -111,8 +117,16 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     {
       if( input instanceof ComplexValueType )
       {
-        ComplexValueType complexValue = (ComplexValueType) input;
-        return complexValue;
+        final ComplexValueType complexValue = (ComplexValueType) input;
+        
+        final List<Object> content = complexValue.getContent();
+        final String hexString = (String)content.get( 0 );
+        final byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
+        
+        final File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
+        FileUtils.writeByteArrayToFile( file, bytes );
+        
+        return file.toURI().toURL();
       }
       else if( input instanceof LiteralValueType )
       {
