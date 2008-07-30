@@ -323,7 +323,10 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
     // Browser: to the left
     // Register a context menu on it, so we suppress the ugly explorer menu
-    m_browser = new Browser( m_mainSash, SWT.NONE );
+    final Composite browserPanel = new Composite( m_mainSash, SWT.BORDER);
+    browserPanel.setLayout( new GridLayout() );
+    m_browser = new Browser( browserPanel, SWT.BORDER );
+    m_browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     menuManager.setRemoveAllWhenShown( true );
     // menuManager.addMenuListener( this );
@@ -1467,8 +1470,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
     String title = newTitle;
     if( title == null )
       title = "";//$NON-NLS-1$
-//    if( titleLabel.isDisposed() )
-      titleLabel.setText( title );
+// if( titleLabel.isDisposed() )
+    titleLabel.setText( title );
   }
 
   /**
