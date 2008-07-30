@@ -42,29 +42,19 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExporter;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
-import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.ExportableTreeItem;
-import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.ExportableTreePage;
-import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.TreeSelectionPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
@@ -121,38 +111,12 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class FeatureWithTemplateExporterTree extends AbstractExporter
 {
-  private TreeSelectionPage m_page = null;
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
-   */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException
-  {
-    if( m_page == null )
-    {
-      final ExportableTreeItem[] treeItems = createTreeItems();
-
-      final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
-
-      m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imgDesc );
-      m_page.setViewerSorter( new ViewerSorter() );
-      m_page.setInput( treeItems );
-
-      final List<ExportableTreeItem> checkedItems = new ArrayList<ExportableTreeItem>();
-      final List<ExportableTreeItem> grayedItems = new ArrayList<ExportableTreeItem>();
-      filterChecked( treeItems, checkedItems, grayedItems );
-      m_page.setChecked( checkedItems.toArray( new Object[checkedItems.size()] ) );
-      m_page.setGrayed( grayedItems.toArray( new Object[grayedItems.size()] ) );
-    }
-
-    return new IWizardPage[] { m_page };
-  }
 
   /**
    * @throws CoreException
    */
-  private ExportableTreeItem[] createTreeItems( ) throws CoreException
+  @Override
+  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent  ) throws CoreException
   {
     // create the possible template items
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
@@ -163,7 +127,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     {
       final UrlArgument urlArg = templateItems[i];
 
-      rootItems[i] = new ExportableTreeItem( urlArg.getLabel(), null, null, false, false );
+      rootItems[i] = new ExportableTreeItem( urlArg.getLabel(), null, parent, null, false, false );
       final ExportableTreeItem[] children = createExportableObjectsWith( urlArg, rootItems[i] );
       rootItems[i].setChildren( children );
     }
@@ -203,7 +167,8 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
 
       // the name of the document to export is built using a property of the feature
       final String featurename = arguments.getProperty( "nameproperty", "Name" );
-      final Object nameProp = feature.getProperty( featurename );
+      final IPropertyType namePt = feature.getFeatureType().getProperty( featurename );
+      final Object nameProp = namePt == null ? null : feature.getProperty( featurename );
       final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
 
       final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
@@ -216,7 +181,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
       final boolean checked = selectedFeatures.contains( feature );
       final boolean grayed = excludeList.contains( feature );
 
-      items[i] = new ExportableTreeItem( label, parentItem, exportable, checked, grayed );
+      items[i] = new ExportableTreeItem( label, null, parentItem, exportable, checked, grayed );
     }
 
     return items;
@@ -237,7 +202,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
       final String value = (String) entry.getValue();
 
       // hm, heavy iterations... maybe performance problem for big lists....
-      for( final Iterator<?> iter = features.iterator(); iter.hasNext(); )
+      for( final Iterator< ? > iter = features.iterator(); iter.hasNext(); )
       {
         final Feature feature = (Feature) iter.next();
 
@@ -253,43 +218,5 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     }
 
     return result;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) 
-  {
-    final List<IExportableObject> result = new ArrayList<IExportableObject>();
-
-    final Object[] checkedElements = m_page.getCheckedElements();
-    final Object[] grayedElements = m_page.getGrayedElements();
-    final List<IExportableObject> grayedList = new ArrayList<IExportableObject>( grayedElements.length );
-    for( final Object exportableObject : grayedElements )
-      grayedList.add( (IExportableObject) exportableObject );
-
-    for( final Object checkedElement : checkedElements )
-    {
-      final ExportableTreeItem item = (ExportableTreeItem) checkedElement;
-      final IExportableObject exportableObject = item.getExportableObject();
-      if( exportableObject != null && !grayedList.contains( item ) )
-        result.add( exportableObject );
-    }
-
-    return result.toArray( new IExportableObject[result.size()] );
-  }
-
-  private void filterChecked( final ExportableTreeItem[] items, final List<ExportableTreeItem> checkedItems, final List<ExportableTreeItem> grayedItems )
-  {
-    for( final ExportableTreeItem item : items )
-    {
-      if( item.isChecked() )
-        checkedItems.add( item );
-
-      if( item.isGrayed() )
-        grayedItems.add( item );
-
-      filterChecked( item.getChildren(), checkedItems, grayedItems );
-    }
   }
 }

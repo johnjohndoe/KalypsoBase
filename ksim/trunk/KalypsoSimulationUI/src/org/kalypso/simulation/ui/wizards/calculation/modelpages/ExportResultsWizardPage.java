@@ -95,7 +95,8 @@ import org.kalypso.metadoc.IExporter;
 import org.kalypso.metadoc.impl.MetadocExtensions;
 import org.kalypso.metadoc.impl.MultiExporter;
 import org.kalypso.metadoc.impl.MultiExporter.ISupplierCreator;
-import org.kalypso.metadoc.ui.ExportDocumentsWizard;
+import org.kalypso.metadoc.ui.ExportDocumentsObjectFactory;
+import org.kalypso.metadoc.ui.ExportWizard;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
@@ -266,6 +267,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     exportPrognosesButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     exportPrognosesButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         exportPrognoseTimeseries();
@@ -280,6 +282,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     berichtsablageButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
     berichtsablageButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         exportSelectedDocuments();
@@ -297,6 +300,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
     archiveButton.setToolTipText( "Archiviert die aktuelle Rechenvariante auf dem Server." );
     archiveButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         archiveCalcCase();
@@ -314,6 +318,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
+      @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Rechenvariante wird archiviert", 1000 );
@@ -358,7 +363,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
-      final ExportDocumentsWizard wizard = new ExportDocumentsWizard( shell, exporters, target, "Berichtsablage" );
+      final ExportDocumentsObjectFactory documentsObjectFactory = new ExportDocumentsObjectFactory( exporters );
+      ExportWizard wizard = new ExportWizard( target, documentsObjectFactory, shell, null, "Berichtsablage" );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
 
       // just open the dialog, business is done in the dialog
@@ -519,7 +525,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     // put feature-ids in feature-path'es
     final StringBuffer sb = new StringBuffer();
-    for( final Iterator<?> iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator< ? > iter = featureList.iterator(); iter.hasNext(); )
     {
       final Feature f = (Feature) iter.next();
       final String featurePath = new FeaturePath( f ).toString();

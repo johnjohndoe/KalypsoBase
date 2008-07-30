@@ -42,19 +42,13 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExporter;
+import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 
 /**
@@ -77,7 +71,6 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  *   &lt;/arg&gt;
  *   &lt;/arg&gt;
  * </pre>
- * 
  * <p>
  * This wizard has one wizard page: the selection of a template.
  * 
@@ -85,26 +78,10 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  */
 public class SimpleTemplateExporter extends AbstractExporter
 {
-  private ArrayChooserPage m_page;
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
-  {
-    final List objects = new ArrayList();
-
-    final Object[] templates = m_page.getChoosen();
-    for( int i = 0; i < templates.length; i++ )
-      createExportableObjectsWith( (UrlArgument) templates[i], objects );
-
-    return (IExportableObject[]) objects.toArray( new IExportableObject[objects.size()] );
-  }
-
   /**
    * Loads the corresponding template and makes an exportable object out of it.
    */
-  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
+  private IExportableObject createExportableObjectsWith( final UrlArgument item ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
@@ -126,7 +103,7 @@ public class SimpleTemplateExporter extends AbstractExporter
 
       final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl, idPrefix, category );
 
-      objects.add( exportable );
+      return exportable;
     }
     catch( final Exception e )
     {
@@ -139,21 +116,23 @@ public class SimpleTemplateExporter extends AbstractExporter
     }
   }
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
-   */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
+  @Override
+  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
   {
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
     final URL context = (URL) getFromSupplier( "context" );
 
     // create the possible template items
     final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
+    final ExportableTreeItem[] items = new ExportableTreeItem[templateItems.length];
+    for( int i = 0; i < templateItems.length; i++ )
+    {
+      final UrlArgument templateItem = templateItems[i];
+      final IExportableObject expObj = createExportableObjectsWith( templateItem );
+      items[i] = new ExportableTreeItem( templateItem.getLabel(), null, parent, expObj, true, false );
+    }
 
-    // create wizard page for selecting the templates
-    m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, 0, "templateSelection", "Wählen Sie die Exportarten", defaultImage );
-
-    return new IWizardPage[] { m_page };
+    return items;
   }
+
 }
