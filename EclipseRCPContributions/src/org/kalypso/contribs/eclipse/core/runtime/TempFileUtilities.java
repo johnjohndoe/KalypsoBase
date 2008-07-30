@@ -63,6 +63,8 @@ public class TempFileUtilities
    * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
    * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
    * instance to make it a real 'temp' file.
+   * 
+   * @deprecated Do not use this. Temp file will be saved in plugin state location, this is rubbish.
    */
   public static File createTempFile( final Plugin plugin, final String subDirName, String prefix, final String suffix ) throws IOException
   {
