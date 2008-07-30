@@ -41,7 +41,6 @@
 package org.kalypso.simulation.ui.wizards.calculation;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
 
   private IAddCalcCaseChoice m_choice;
 
-  private Collection<IChoiceListener> m_choiceListener = new LinkedList<IChoiceListener>();
+  private final Collection<IChoiceListener> m_choiceListener = new LinkedList<IChoiceListener>();
 
   public CreateCalcCasePage( final String pagename, final String title, final ImageDescriptor image )
   {
@@ -89,7 +88,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     m_choiceListener.clear();
 
@@ -108,7 +107,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
- 
+
     final Composite radioPanel = new Composite( panel, SWT.NONE );
     radioPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     radioPanel.setLayout( new GridLayout() );
@@ -119,9 +118,9 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     choiceGroup.setLayout( choiceLayout );
 
     Button choiceToSelect = null;
-    for( final Iterator cIt = m_choices.iterator(); cIt.hasNext(); )
+    for( final IAddCalcCaseChoice addCalcCaseChoice : m_choices )
     {
-      final IAddCalcCaseChoice choice = (IAddCalcCaseChoice)cIt.next();
+      final IAddCalcCaseChoice choice = addCalcCaseChoice;
 
       choice.createControl( choiceGroup );
 
@@ -149,7 +148,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     }
 
     setControl( panel );
-    
+
     // while creation of the coices, an invisible choice may validate itself,
     // causing the errorMessgage and so on to be set wrongly
     if( m_choice != null )
@@ -168,14 +167,14 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     }
   }
 
-  public IFolder getCurrentCalcCase()
+  public IFolder getCurrentCalcCase( )
   {
     return m_currentCalcCase;
   }
 
   protected IAddCalcCaseChoice getChoosen( final ISelection selection )
   {
-    return (IAddCalcCaseChoice)( (IStructuredSelection)selection ).getFirstElement();
+    return (IAddCalcCaseChoice) ((IStructuredSelection) selection).getFirstElement();
   }
 
   public void doNext( final IProgressMonitor monitor ) throws CoreException
@@ -186,16 +185,16 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   public void update( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Seite wird aktualisiert", m_choices.size() );
-    for( final Iterator iter = m_choices.iterator(); iter.hasNext(); )
+    for( final IAddCalcCaseChoice addCalcCaseChoice : m_choices )
     {
-      ( (IAddCalcCaseChoice)iter.next() ).refresh( new NullProgressMonitor() );
+      (addCalcCaseChoice).refresh( new NullProgressMonitor() );
       monitor.worked( 1 );
     }
 
     monitor.done();
   }
 
-  public boolean shouldUpdate()
+  public boolean shouldUpdate( )
   {
     return m_choice == null ? false : m_choice.shouldUpdate();
   }
@@ -212,12 +211,11 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
 
   public void fireChoiceChanged( final IAddCalcCaseChoice newChoice )
   {
-    for( final Iterator iter = m_choiceListener.iterator(); iter.hasNext(); )
-      ( (IChoiceListener)iter.next() ).onChoiceChanged( newChoice );
+    for( final IChoiceListener choiceListener : m_choiceListener )
+      (choiceListener).onChoiceChanged( newChoice );
   }
 
-  protected void choiceSelected( final Group choiceGroup, final StackLayout choiceLayout,
-      final IAddCalcCaseChoice choice, final Button choiceRadio )
+  protected void choiceSelected( final Group choiceGroup, final StackLayout choiceLayout, final IAddCalcCaseChoice choice, final Button choiceRadio )
   {
     if( choiceRadio.getSelection() )
     {
@@ -226,20 +224,20 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
       choiceGroup.setText( choice.toString() );
 
       choiceGroup.layout( true );
-      
+
       choice.setFocus();
     }
   }
 
-  public IAddCalcCaseChoice getCurrentChoice()
+  public IAddCalcCaseChoice getCurrentChoice( )
   {
     return m_choice;
   }
-  
+
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.ICalcWizardPage#getHelpId()
    */
-  public String getHelpId()
+  public String getHelpId( )
   {
     // use default from main wizard
     return null;

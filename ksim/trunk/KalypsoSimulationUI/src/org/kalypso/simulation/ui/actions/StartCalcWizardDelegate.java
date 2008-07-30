@@ -65,6 +65,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -206,6 +207,9 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
           @Override
           public void partClosed( final IWorkbenchPartReference partRef )
           {
+            if( PlatformUI.getWorkbench().isClosing() )
+              return;
+            
             final IWorkbenchPart part = partRef.getPart( false );
             if( part == wizardView )
             {

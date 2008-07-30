@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -126,7 +125,6 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
@@ -869,13 +867,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public TSLinkWithName[] getObservations( final boolean onlySelected )
   {
-    final List selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
+    final List< ? > selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
 
-    final Collection foundObservations = new ArrayList( selectedFeatures.size() );
+    final Collection<TSLinkWithName> foundObservations = new ArrayList<TSLinkWithName>( selectedFeatures.size() );
 
-    for( final Iterator it = selectedFeatures.iterator(); it.hasNext(); )
+    for( final Object name2 : selectedFeatures )
     {
-      final Feature kf = (Feature) it.next();
+      final Feature kf = (Feature) name2;
 
       for( final TimeserieFeatureProps tsprop : m_tsProps )
       {
@@ -890,7 +888,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         else
           name = tsprop.getNameString();
 
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType) kf.getProperty( tsprop.getLinkColumn() );
+        final String linkColumn = tsprop.getLinkColumn();
+        final TimeseriesLinkType obsLink = getTimeseriesLink( kf, linkColumn );
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(), obsLink.getHref(), tsprop.getFilter(), tsprop.getColor(), tsprop.getLineWidth(), tsprop.getLineDash() );
@@ -899,7 +898,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     }
 
-    return (TSLinkWithName[]) foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
+    return foundObservations.toArray( new TSLinkWithName[foundObservations.size()] );
+  }
+
+  private TimeseriesLinkType getTimeseriesLink( final Feature feature, final String propertyName )
+  {
+    final IPropertyType pt = feature.getFeatureType().getProperty( propertyName );
+    if( pt == null )
+      return null;
+
+    return (TimeseriesLinkType) feature.getProperty( propertyName );
   }
 
   protected FeatureList getSelectedFeatures( )

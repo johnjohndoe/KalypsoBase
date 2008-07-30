@@ -145,9 +145,9 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     m_panel = new Composite( parent, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
-    m_panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     createFeatureControl( m_panel );
+    m_panel.layout();
 
     setControl( m_panel );
   }
@@ -298,10 +298,10 @@ public class SteuerparameterWizardPage extends WizardPage
     }
 
     final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
-    featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Button checkUpdate = new Button( m_panel, SWT.CHECK );
-    checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    checkUpdate.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
     checkUpdate.setText( "Zeitreihen aktualisieren" );
     checkUpdate.setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
     checkUpdate.setSelection( m_update );
@@ -324,6 +324,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       featureComposite.setFeature( m_workspace.getRootFeature() );
       featureComposite.updateControl();
+      featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     }
   }
 
