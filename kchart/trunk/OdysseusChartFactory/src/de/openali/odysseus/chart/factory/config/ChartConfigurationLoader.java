@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -19,18 +20,29 @@ import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleDocument;
+import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisDocument;
 import de.openali.odysseus.chartconfig.x020.AxisRendererDocument;
+import de.openali.odysseus.chartconfig.x020.AxisRendererType;
+import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.LayerDocument;
+import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LineStyleDocument;
+import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.MapperDocument;
+import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
+import de.openali.odysseus.chartconfig.x020.PointStyleType;
+import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
 import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
+import de.openali.odysseus.chartconfig.x020.TextStyleType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author alibu
@@ -43,7 +55,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   /**
    * @param path
-   *            file system path where the configuration file can be found
+   *          file system path where the configuration file can be found
    * @throws XmlException
    * @throws IOException
    */
@@ -56,7 +68,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
    * creates a ConfigurationLoader based on the given ChartConfigurationDocument
    * 
    * @param doc
-   *            ChartConfigurationDocument
+   *          ChartConfigurationDocument
    */
   public ChartConfigurationLoader( final ChartConfigurationDocument doc )
   {
@@ -100,6 +112,14 @@ public class ChartConfigurationLoader implements IReferenceResolver
     m_document = document;
   }
 
+  public ChartConfigurationLoader( final ChartType chartType )
+  {
+    final ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
+    ChartConfigurationType cct = document.addNewChartConfiguration();
+    cct.setChartArray( new ChartType[] { chartType } );
+    m_document = document;
+  }
+
   /**
    * @return marshalled configuration
    */
@@ -113,16 +133,62 @@ public class ChartConfigurationLoader implements IReferenceResolver
     return m_document.getChartConfiguration().getChartArray();
   }
 
+  public LayerType[] getLayers( ChartType chart )
+  {
+    return chart.getLayers().getLayerArray();
+  }
+
+  public AxisType getDomainAxis( LayerType layer )
+  {
+    return (AxisType) resolveReference( layer.getMapperRefs().getDomainAxisRef().getRef() );
+  }
+
+  public AxisType getTargetAxis( LayerType layer )
+  {
+    return (AxisType) resolveReference( layer.getMapperRefs().getTargetAxisRef().getRef() );
+  }
+
+  public Map<String, AbstractStyleType> getStyles( LayerType layer )
+  {
+    Styles styles = layer.getStyles();
+    AreaStyleType[] asa = styles.getAreaStyleArray();
+    PointStyleType[] psa = styles.getPointStyleArray();
+    LineStyleType[] lsa = styles.getLineStyleArray();
+    TextStyleType[] tsa = styles.getTextStyleArray();
+
+    Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
+    for( AreaStyleType element : asa )
+      styleMap.put( element.getRole(), element );
+    for( TextStyleType element : tsa )
+      styleMap.put( element.getRole(), element );
+    for( LineStyleType element : lsa )
+      styleMap.put( element.getRole(), element );
+    for( PointStyleType element : psa )
+      styleMap.put( element.getRole(), element );
+
+    return styleMap;
+  }
+
+  public Map<String, MapperType> getMappers( LayerType layer )
+  {
+    TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
+    RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
+    for( RoleReferencingType refType : mra )
+      map.put( refType.getRole(), (MapperType) resolveReference( refType.getRef() ) );
+    return map;
+  }
+
+  public AxisRendererType getAxisRenderer( AxisType axis )
+  {
+    return (AxisRendererType) resolveReference( axis.getRendererRef().getRef() );
+  }
+
   public ChartType getChartById( String id )
   {
     ChartType[] charts = getCharts();
-    for( int i = 0; i < charts.length; i++ )
-    {
-      if( charts[i].getId().equals( id ) )
-      {
-        return charts[i];
-      }
-    }
+    for( ChartType chart : charts )
+      if( chart.getId().equals( id ) )
+        return chart;
     return null;
   }
 
@@ -131,9 +197,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
     ChartType[] charts = getCharts();
     String[] chartIds = new String[charts.length];
     for( int i = 0; i < chartIds.length; i++ )
-    {
       chartIds[i] = charts[i].getId();
-    }
     return chartIds;
   }
 
@@ -154,10 +218,8 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   private synchronized Map<String, XmlObject> getIdMap( )
   {
-    if( m_idMap != null && false )
-    {
+    if( (m_idMap != null) && false )
       return m_idMap;
-    }
     else
     {
       m_idMap = new HashMap<String, XmlObject>();
@@ -173,7 +235,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
     {
       final Node idAtt = atts.getNamedItem( "id" );
       if( idAtt != null )
-      {
         try
         {
           m_idMap.put( idAtt.getNodeValue(), createXmlObjectFromNode( node ) );
@@ -188,7 +249,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      }
     }
     if( node.hasChildNodes() )
     {
@@ -265,9 +325,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
       obj = doc.getAxisRenderer();
     }
     else
-    {
       Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName );
-    }
     return obj;
   }
 

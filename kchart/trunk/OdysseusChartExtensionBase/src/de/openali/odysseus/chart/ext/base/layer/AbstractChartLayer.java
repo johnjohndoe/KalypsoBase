@@ -138,11 +138,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_handler.fireLayerVisibilityChanged( this );
   }
 
-  // public void setDataContainer( final IDataContainer data )
-  // {
-  // m_dataContainer = data;
-  // }
-
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
@@ -233,9 +228,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   public synchronized ILegendEntry[] getLegendEntries( )
   {
     if( m_legendEntries == null )
-    {
       m_legendEntries = createLegendEntries();
-    }
     return m_legendEntries;
   }
 
