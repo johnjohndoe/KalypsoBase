@@ -392,7 +392,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
    */
   private IExporter[] createExporters( )
   {
-    final Collection stati = new ArrayList();
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
 
     final Arguments arguments = getArguments();
     final ISupplierCreator creator = new ISupplierCreator()
@@ -403,15 +403,15 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       }
     };
 
-    final Collection exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
+    final Collection<IExporter> exporters = MultiExporter.createExporterFromArguments( stati, arguments, PROP_EXPORTER, creator );
 
     if( stati.size() > 0 )
     {
-      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[]) stati.toArray( new IStatus[stati.size()] ), "", null );
+      final MultiStatus status = new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "", null );
       ErrorDialog.openError( getContainer().getShell(), "", "", status );
     }
 
-    return (IExporter[]) exporters.toArray( new IExporter[exporters.size()] );
+    return exporters.toArray( new IExporter[exporters.size()] );
   }
 
   private FeatureList chooseSelectedFeatures( final IFolder calcCase )
@@ -519,7 +519,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     // put feature-ids in feature-path'es
     final StringBuffer sb = new StringBuffer();
-    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator<?> iter = featureList.iterator(); iter.hasNext(); )
     {
       final Feature f = (Feature) iter.next();
       final String featurePath = new FeaturePath( f ).toString();

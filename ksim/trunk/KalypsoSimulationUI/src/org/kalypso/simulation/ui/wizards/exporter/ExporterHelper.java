@@ -61,6 +61,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -106,7 +107,8 @@ public final class ExporterHelper
       final String tokenname = entry.getKey();
       final String featureProperty = (String) entry.getValue();
 
-      final Object property = feature.getProperty( featureProperty );
+      final IPropertyType pt = feature.getFeatureType().getProperty( featureProperty );
+      final Object property = pt == null ? null : feature.getProperty( pt );
       String replace = null;
       if( property instanceof TimeseriesLinkType )
         replace = ((TimeseriesLinkType) property).getHref();
