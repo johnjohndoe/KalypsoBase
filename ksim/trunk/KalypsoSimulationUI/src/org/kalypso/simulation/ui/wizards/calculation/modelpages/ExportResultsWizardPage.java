@@ -544,10 +544,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   {
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     final GridLayout mapLayout = new GridLayout();
-    mapLayout.marginHeight = 0;
-    mapLayout.marginWidth = 0;
-    mapLayout.horizontalSpacing = 0;
-    mapLayout.verticalSpacing = 0;
     mapPanel.setLayout( mapLayout );
 
     final Control mapControl = initMap( mapPanel );
