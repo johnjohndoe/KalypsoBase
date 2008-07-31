@@ -51,7 +51,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -206,14 +205,12 @@ public final class ExporterHelper
    *          handles user feedback
    * @param templateUrl
    *          url of the template being used
-   * @param metadataExtensions
-   *          can be update from this export with information from observations
    * @param identifierPrefix
    *          prefix of the identifier of the exportable object
    * @param category
    *          the category of the exportable object
    */
-  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final String identifierPrefix, final String category )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -237,7 +234,7 @@ public final class ExporterHelper
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category ).exportObject( output, monitor, metadataExtensions );
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Diagrammvorlage: " + templateUrl.getFile() );
     }
@@ -268,14 +265,12 @@ public final class ExporterHelper
    *          handles user feedback
    * @param templateUrl
    *          url of the template being used
-   * @param metadataExtensions
-   *          can be update from this export with information from observations
    * @param identifierPrefix
    *          prefix of the identifier of the exportable object
    * @param category
    *          the category of the exportable object
    */
-  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final String identifierPrefix, final String category )
   {
     if( arguments == null )
     {
@@ -298,7 +293,7 @@ public final class ExporterHelper
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output, monitor, metadataExtensions );
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output, monitor );
 
       return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Tabellenvorlage: " + templateUrl.getFile() );
     }

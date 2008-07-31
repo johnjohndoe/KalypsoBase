@@ -46,7 +46,6 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Properties;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -77,24 +76,30 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 public class ExportableTemplateObject implements IExportableObject
 {
   private final static int EXPORT_TYPE_DIAGRAM = 0;
+
   private final static int EXPORT_TYPE_TABLE = 1;
 
   private final Arguments m_arguments;
+
   private final URL m_context;
+
   private final String m_documentName;
+
   private final URL m_templateUrl;
+
   private final Properties m_replaceTokens;
 
   private final int m_exportType;
+
   private final String m_identifierPrefix;
+
   private final String m_category;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final String identifierPrefix, final String category )
   {
     this( arguments, context, documentName, templateUrl, null, identifierPrefix, category );
   }
@@ -108,10 +113,10 @@ public class ExportableTemplateObject implements IExportableObject
    * @param replaceTokens
    *          tokens used to replace elements of the template file that relate to values of specific gml-feature
    *          properties. This is for instance used with the {@link FeatureWithTemplateExporter}.
-   * @param category the category of the document resulting from the export of this object
+   * @param category
+   *          the category of the document resulting from the export of this object
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
   {
     m_arguments = arguments;
     m_context = context;
@@ -127,26 +132,28 @@ public class ExportableTemplateObject implements IExportableObject
     else if( strUrl.endsWith( "ott" ) )
       m_exportType = EXPORT_TYPE_TABLE;
     else
-      throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl
-          + ". Nur .odt und .ott Vorlagen werden unterstützt." );
+      throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl + ". Nur .odt und .ott Vorlagen werden unterstützt." );
   }
 
-  public String getPreferredDocumentName()
+  public String getPreferredDocumentName( )
   {
     switch( m_exportType )
     {
       case EXPORT_TYPE_DIAGRAM:
         final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-      return FileUtilities.validateName( m_documentName + "." + format, "_" );
-    case EXPORT_TYPE_TABLE:
-      return FileUtilities.validateName( m_documentName + ".csv", "_" );
-    default:
-      return FileUtilities.validateName( "<default>", "_" );
+        return FileUtilities.validateName( m_documentName + "." + format, "_" );
+      case EXPORT_TYPE_TABLE:
+        return FileUtilities.validateName( m_documentName + ".csv", "_" );
+      default:
+        return FileUtilities.validateName( "<default>", "_" );
     }
   }
 
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     Reader reader = null;
     try
@@ -160,12 +167,10 @@ public class ExportableTemplateObject implements IExportableObject
       switch( m_exportType )
       {
         case EXPORT_TYPE_DIAGRAM:
-          return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+          return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, getIdentifier(), getCategory() );
 
         case EXPORT_TYPE_TABLE:
-          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor(
-              monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, getIdentifier(), getCategory() );
       }
 
       // should never come here
@@ -186,7 +191,7 @@ public class ExportableTemplateObject implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifierPrefix + getPreferredDocumentName();
   }
@@ -198,8 +203,17 @@ public class ExportableTemplateObject implements IExportableObject
    * 
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory()
+  public String getCategory( )
   {
     return m_category;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
+   */
+  @Override
+  public String getStationIDs( )
+  {
+    return "";
   }
 }

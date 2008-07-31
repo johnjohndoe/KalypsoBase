@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -99,9 +98,9 @@ public final class ExportableSumUpTable implements IExportableObject
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
@@ -219,5 +218,14 @@ public final class ExportableSumUpTable implements IExportableObject
       category = m_args.getProperty( "name", "unbekannt" );
 
     return category;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
+   */
+  @Override
+  public String getStationIDs( )
+  {
+    return "";
   }
 }
