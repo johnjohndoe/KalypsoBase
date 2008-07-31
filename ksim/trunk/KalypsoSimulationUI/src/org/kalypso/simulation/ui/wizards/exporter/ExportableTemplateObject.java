@@ -41,6 +41,7 @@
 
 package org.kalypso.simulation.ui.wizards.exporter;
 
+import java.awt.Color;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
@@ -49,15 +50,24 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obstableview.Obstableview;
 
 /**
  * Handles the export of a template in the form of a table, diagram, map, etc. depending on the template used. This
@@ -75,25 +85,25 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
  */
 public class ExportableTemplateObject implements IExportableObject
 {
-  private final static int EXPORT_TYPE_DIAGRAM = 0;
-
-  private final static int EXPORT_TYPE_TABLE = 1;
-
   private final Arguments m_arguments;
 
   private final URL m_context;
-
-  private final String m_documentName;
 
   private final URL m_templateUrl;
 
   private final Properties m_replaceTokens;
 
-  private final int m_exportType;
-
   private final String m_identifierPrefix;
 
   private final String m_category;
+
+  private final String m_preferredFilename;
+
+  private final DisposeHelper m_disposeHelper;
+
+  private IStatus m_status;
+
+  private final IExportableObject m_exportableObject;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
@@ -121,32 +131,25 @@ public class ExportableTemplateObject implements IExportableObject
     m_arguments = arguments;
     m_context = context;
     m_templateUrl = templateUrl;
-    m_documentName = documentName;
     m_replaceTokens = replaceTokens;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_status = null;
+    m_disposeHelper = new DisposeHelper();
 
     final String strUrl = m_templateUrl.toExternalForm();
     if( strUrl.endsWith( "odt" ) )
-      m_exportType = EXPORT_TYPE_DIAGRAM;
+    {
+      m_preferredFilename = FileUtilities.validateName( documentName + "." + m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT ), "_" );
+      m_exportableObject = createObsDiagram();
+    }
     else if( strUrl.endsWith( "ott" ) )
-      m_exportType = EXPORT_TYPE_TABLE;
+    {
+      m_preferredFilename = FileUtilities.validateName( documentName + ".csv", "_" );
+      m_exportableObject = createObsTable();
+    }
     else
       throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl + ". Nur .odt und .ott Vorlagen werden unterstützt." );
-  }
-
-  public String getPreferredDocumentName( )
-  {
-    switch( m_exportType )
-    {
-      case EXPORT_TYPE_DIAGRAM:
-        final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-        return FileUtilities.validateName( m_documentName + "." + format, "_" );
-      case EXPORT_TYPE_TABLE:
-        return FileUtilities.validateName( m_documentName + ".csv", "_" );
-      default:
-        return FileUtilities.validateName( "<default>", "_" );
-    }
   }
 
   /**
@@ -155,37 +158,29 @@ public class ExportableTemplateObject implements IExportableObject
    */
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
-    Reader reader = null;
     try
     {
-      reader = UrlResolverSingleton.getDefault().createReader( m_templateUrl );
-
-      // replace-tokens are optional
-      if( m_replaceTokens != null )
-        reader = ReaderUtilities.createTokenReplaceReader( reader, m_replaceTokens, '%', '%' );
-
-      switch( m_exportType )
+      if( m_exportableObject != null )
       {
-        case EXPORT_TYPE_DIAGRAM:
-          return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, getIdentifier(), getCategory() );
+        /* Export it. */
+        IStatus status = m_exportableObject.exportObject( output, new SubProgressMonitor( monitor, 1 ) );
 
-        case EXPORT_TYPE_TABLE:
-          return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, getIdentifier(), getCategory() );
+        return StatusUtilities.createStatus( new IStatus[] { m_status, status }, "Fehler während des Exports der Vorlage: " + m_templateUrl.getFile() );
       }
 
-      // should never come here
-      return Status.CANCEL_STATUS;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return StatusUtilities.statusFromThrowable( e );
+      /* There was no exportable object created. */
+      return m_status;
     }
     finally
     {
-      IOUtils.closeQuietly( reader );
+      /* Dispose. */
+      m_disposeHelper.dispose();
     }
+  }
+
+  public String getPreferredDocumentName( )
+  {
+    return m_preferredFilename;
   }
 
   /**
@@ -214,6 +209,111 @@ public class ExportableTemplateObject implements IExportableObject
   @Override
   public String getStationIDs( )
   {
-    return "";
+    return m_exportableObject.getStationIDs();
+  }
+
+  /**
+   * This function creates a diagram based on the diagram-template (odt).
+   * 
+   * @return The exportable object.
+   */
+  private IExportableObject createObsDiagram( )
+  {
+    Reader reader = null;
+
+    try
+    {
+      reader = UrlResolverSingleton.getDefault().createReader( m_templateUrl );
+
+      // replace-tokens are optional
+      if( m_replaceTokens != null )
+        reader = ReaderUtilities.createTokenReplaceReader( reader, m_replaceTokens, '%', '%' );
+
+      DiagView tpl = new DiagView();
+      ObservationChart chart = new ObservationChart( tpl, true );
+      chart.setBackgroundPaint( Color.WHITE );
+
+      /* For later disposal. */
+      m_disposeHelper.addDisposeCandidate( tpl ).addDisposeCandidate( chart );
+
+      final Obsdiagview xml = DiagViewUtils.loadDiagramTemplateXML( reader );
+
+      IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+
+      if( tpl.getItems().length == 0 )
+      {
+        m_status = StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + getCategory() + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        return null;
+      }
+
+      /* Wrap as warning because even if an obs is missing we can still export diagram. */
+      m_status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
+
+      final int width = Integer.parseInt( m_arguments.getProperty( "width", "800" ) );
+      final int height = Integer.parseInt( m_arguments.getProperty( "height", "600" ) );
+      final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
+
+      return new ExportableChart( chart, format, width, height, getIdentifier(), getCategory() );
+    }
+    catch( Exception e )
+    {
+      m_disposeHelper.dispose();
+      m_status = StatusUtilities.statusFromThrowable( e );
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  /**
+   * This function creates an observation table based on the table-template (ott).
+   * 
+   * @return The exportable object.
+   */
+  private IExportableObject createObsTable( )
+  {
+    Reader reader = null;
+
+    try
+    {
+      reader = UrlResolverSingleton.getDefault().createReader( m_templateUrl );
+
+      // replace-tokens are optional
+      if( m_replaceTokens != null )
+        reader = ReaderUtilities.createTokenReplaceReader( reader, m_replaceTokens, '%', '%' );
+
+      TableView tpl = new TableView();
+      ObservationTable table = new ObservationTable( tpl, true, false );
+
+      /* For later disposal. */
+      m_disposeHelper.addDisposeCandidate( tpl ).addDisposeCandidate( table );
+
+      final Obstableview xml = TableViewUtils.loadTableTemplateXML( reader );
+
+      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+
+      if( tpl.getItems().length == 0 )
+      {
+        m_status = StatusUtilities.createWarningStatus( "Tabelle (" + getCategory() + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        return null;
+      }
+
+      /* Wrap as warning because even if an obs is missing we can still export diagram. */
+      m_status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
+
+      return new ExportableObservationTable( table, getIdentifier(), getCategory() );
+    }
+    catch( Exception e )
+    {
+      m_disposeHelper.dispose();
+      m_status = StatusUtilities.statusFromThrowable( e );
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
   }
 }

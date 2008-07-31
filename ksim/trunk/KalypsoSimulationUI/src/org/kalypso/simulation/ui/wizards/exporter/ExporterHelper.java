@@ -40,9 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.exporter;
 
-import java.awt.Color;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,26 +49,13 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.sensor.diagview.DiagView;
-import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.TableView;
-import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.template.obsdiagview.Obsdiagview;
-import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -188,125 +172,6 @@ public final class ExporterHelper
       throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
 
     return items.toArray( new UrlArgument[items.size()] );
-  }
-
-  /**
-   * Exports a diagram based on the diagram-template (odt).
-   * 
-   * @param context
-   *          context into which the template file is loaded
-   * @param arguments
-   *          export-arguments, used to retrieve: width, height and imageFormat
-   * @param reader
-   *          delivers the contents of the template file
-   * @param output
-   *          export will be written into it
-   * @param monitor
-   *          handles user feedback
-   * @param templateUrl
-   *          url of the template being used
-   * @param identifierPrefix
-   *          prefix of the identifier of the exportable object
-   * @param category
-   *          the category of the exportable object
-   */
-  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final String identifierPrefix, final String category )
-  {
-    DiagView tpl = null;
-    ObservationChart chart = null;
-    try
-    {
-      tpl = new DiagView();
-      chart = new ObservationChart( tpl, true );
-      chart.setBackgroundPaint( Color.WHITE );
-
-      final Obsdiagview xml = DiagViewUtils.loadDiagramTemplateXML( reader );
-
-      IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
-
-      if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + category + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
-
-      // wrap as warning because even if an obs is missing we can still export diagram
-      status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
-
-      final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
-      final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
-      final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
-
-      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category ).exportObject( output, monitor );
-
-      return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Diagrammvorlage: " + templateUrl.getFile() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    finally
-    {
-      new DisposeHelper().addDisposeCandidate( tpl ).addDisposeCandidate( chart ).dispose();
-    }
-  }
-
-  /**
-   * Exports an observation table based on the table-template (ott).
-   * 
-   * @param context
-   *          context into which the template file is loaded
-   * @param arguments
-   *          export-arguments [currently not used]
-   * @param reader
-   *          delivers the contents of the template file
-   * @param output
-   *          export will be written into it
-   * @param monitor
-   *          handles user feedback
-   * @param templateUrl
-   *          url of the template being used
-   * @param identifierPrefix
-   *          prefix of the identifier of the exportable object
-   * @param category
-   *          the category of the exportable object
-   */
-  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader, final OutputStream output, final IProgressMonitor monitor, final URL templateUrl, final String identifierPrefix, final String category )
-  {
-    if( arguments == null )
-    {
-      // avoid yellow thingies!
-    }
-
-    TableView tpl = null;
-    ObservationTable table = null;
-    try
-    {
-      tpl = new TableView();
-      table = new ObservationTable( tpl, true, false );
-      final Obstableview xml = TableViewUtils.loadTableTemplateXML( reader );
-
-      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
-
-      if( tpl.getItems().length == 0 )
-        return StatusUtilities.createWarningStatus( "Tabelle (" + category + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
-
-      // wrap as warning because even if an obs is missing we can still export diagram
-      status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
-
-      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output, monitor );
-
-      return StatusUtilities.createStatus( new IStatus[] { status, status2 }, "Fehler während des Exports der Tabellenvorlage: " + templateUrl.getFile() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    finally
-    {
-      new DisposeHelper().addDisposeCandidate( tpl ).addDisposeCandidate( table ).dispose();
-    }
   }
 
   /**
