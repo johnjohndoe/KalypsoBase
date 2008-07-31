@@ -41,7 +41,7 @@ public class GetCapabilities implements IOperation
   /**
    * All available simulations.
    */
-  List<Modelspec> m_simModelspecs = null;
+  private List<Modelspec> m_simModelspecs = null;
 
   /**
    * The Address under which this server is available.
@@ -99,7 +99,7 @@ public class GetCapabilities implements IOperation
           Debug.println( "Simulation has no specification and will be ignored: " + simulation.getClass().getName() );
           continue;
         }
-        
+
         Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
 
         /* Save the specification. */
@@ -143,7 +143,7 @@ public class GetCapabilities implements IOperation
    * Checks for the parameter AcceptVersions and returns it. No POST/XML allowed!
    * 
    * @param request
-   *            The request.
+   *          The request.
    * @return The AcceptVersions parameter or null if not present.
    */
   private String getAcceptVersions( RequestBean request )

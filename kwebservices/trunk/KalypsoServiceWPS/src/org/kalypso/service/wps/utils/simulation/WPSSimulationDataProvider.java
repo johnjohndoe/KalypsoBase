@@ -78,13 +78,16 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    */
   private Map<String, Object> m_inputList = null;
 
-  private final File m_tmpDir;
+  /**
+   * The temporary directory.
+   */
+  private File m_tmpDir;
 
   /**
    * The constructor.
    * 
    * @param execute
-   *            The execute request.
+   *          The execute request.
    */
   public WPSSimulationDataProvider( Execute execute, File tmpDir ) throws SimulationException
   {
@@ -117,18 +120,18 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     {
       if( input instanceof ComplexValueType )
       {
-        final ComplexValueType complexValue = (ComplexValueType) input;
-        
-        final List<Object> content = complexValue.getContent();
+        ComplexValueType complexValue = (ComplexValueType) input;
+
+        List<Object> content = complexValue.getContent();
         if( content.size() == 0 )
           return null;
-        
-        final String hexString = (String)content.get( 0 );
-        final byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
-        
-        final File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
+
+        String hexString = (String) content.get( 0 );
+        byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
+
+        File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
         FileUtils.writeByteArrayToFile( file, bytes );
-        
+
         return file.toURI().toURL();
       }
       else if( input instanceof LiteralValueType )
@@ -183,7 +186,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * Indexes the input values with their id.
    * 
    * @param execute
-   *            The execute request, containing the input data.
+   *          The execute request, containing the input data.
    * @return The indexed map.
    */
   private Map<String, Object> index( Execute execute ) throws SimulationException

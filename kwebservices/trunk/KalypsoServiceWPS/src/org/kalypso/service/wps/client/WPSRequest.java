@@ -252,8 +252,8 @@ public class WPSRequest
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
       Debug.println( "Start the simulation ..." );
-      final String executeXML = MarshallUtilities.marshall( execute );
-      final String executeResponse = WPSUtilities.send( executeXML, m_delegate.getServiceURL() );
+      String executeRequest = MarshallUtilities.marshall( execute );
+      String executeResponse = WPSUtilities.send( executeRequest, m_delegate.getServiceURL() );
 
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponse );

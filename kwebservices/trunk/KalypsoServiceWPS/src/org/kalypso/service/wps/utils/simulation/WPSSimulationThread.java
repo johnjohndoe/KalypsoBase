@@ -70,12 +70,12 @@ public class WPSSimulationThread extends Thread
   /**
    * Logger.
    */
-  private static final Logger LOGGER = Logger.getLogger( WPSSimulationThread.class.getName() );
+  private static Logger LOGGER = Logger.getLogger( WPSSimulationThread.class.getName() );
 
   /**
    * Debug on?
    */
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
 
   static
   {
@@ -86,49 +86,49 @@ public class WPSSimulationThread extends Thread
   /**
    * The simulation.
    */
-  private final ISimulation m_job;
+  private ISimulation m_job;
 
   /**
    * The info about the running simulation.
    */
-  private final WPSSimulationInfo m_jobInfo;
+  private WPSSimulationInfo m_jobInfo;
 
   /**
    * The input data provider.
    */
-  private final ISimulationDataProvider m_inputData;
+  private ISimulationDataProvider m_inputData;
 
   /**
    * The results will go in here.
    */
-  private final WPSSimulationResultEater m_resultEater;
+  private WPSSimulationResultEater m_resultEater;
 
   /**
    * The temporary directory.
    */
-  private final File m_tmpDir;
+  private File m_tmpDir;
 
   /**
    * The constructor.
    * 
    * @param id
-   *            The id of the thread.
+   *          The id of the thread.
    * @param description
-   *            A description.
+   *          A description.
    * @param typeID
-   *            The id of the simulation.
+   *          The id of the simulation.
    * @param job
-   *            The simulation.
+   *          The simulation.
    * @param execute
-   *            The execute request.
+   *          The execute request.
    * @param processDescription
-   *            The process description.
+   *          The process description.
    * @param tmpDir
-   *            The temporary directory.
+   *          The temporary directory.
    * @param resultDir
-   *            The job can put his results here.
+   *          The job can put his results here.
    */
-  public WPSSimulationThread( final String id, final String description, final String typeID, final ISimulation job, Execute execute, ProcessDescriptionType processDescription, final File tmpDir, final FileObject resultDir ) throws SimulationException
+  public WPSSimulationThread( String id, String description, String typeID, ISimulation job, Execute execute, ProcessDescriptionType processDescription, File tmpDir, FileObject resultDir ) throws SimulationException
   {
     m_job = job;
     m_tmpDir = tmpDir;
@@ -145,11 +145,11 @@ public class WPSSimulationThread extends Thread
    * This function checks the input, if every needed input is available.
    * 
    * @param execute
-   *            The execute request containing the input data.<br>
-   *            (Ok, it contains also info about the expected output data, but that is not needed now.)
+   *          The execute request containing the input data.<br>
+   *          (Ok, it contains also info about the expected output data, but that is not needed now.)
    * @param processDescription
-   *            The processDescription containing the output data.<br>
-   *            (Ok, it contains also info about the output data, but that is not needed now.)
+   *          The processDescription containing the output data.<br>
+   *          (Ok, it contains also info about the output data, but that is not needed now.)
    */
   private void checkInput( Execute execute, ProcessDescriptionType processDescription ) throws SimulationException
   {
@@ -185,9 +185,9 @@ public class WPSSimulationThread extends Thread
    * Tries to find a input in this list.
    * 
    * @param inputDescription
-   *            The description of one input.
+   *          The description of one input.
    * @param ioValues
-   *            The input list.
+   *          The input list.
    * @return The input in the input list of the execute request. If it is not available it returns null.
    */
   private IOValueType findInput( InputDescriptionType inputDescription, List<IOValueType> ioValues )
@@ -245,7 +245,7 @@ public class WPSSimulationThread extends Thread
   {
     m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
 
-    final String jobID = m_jobInfo.getId();
+    String jobID = m_jobInfo.getId();
     try
     {
       LOGGER.info( "Calling run for ID: " + jobID );
@@ -262,7 +262,7 @@ public class WPSSimulationThread extends Thread
         LOGGER.info( "JOB exited normally: " + jobID );
       }
     }
-    catch( final Throwable t )
+    catch( Throwable t )
     {
       LOGGER.warning( "JOB exited with exception: " + jobID );
       t.printStackTrace();
