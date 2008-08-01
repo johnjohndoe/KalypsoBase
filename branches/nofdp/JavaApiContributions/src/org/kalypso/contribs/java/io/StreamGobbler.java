@@ -37,7 +37,9 @@ public class StreamGobbler extends Thread
 
   private final boolean m_debug;
 
-  private final PrintStream m_output;
+  private PrintStream m_output;
+
+  private MyPrintStream m_output2;
 
   /**
    * The constructor.
@@ -51,7 +53,9 @@ public class StreamGobbler extends Thread
    */
   public StreamGobbler( final InputStream is, final String type, final boolean debug )
   {
-    this( is, type, debug, null );
+    m_is = is;
+    m_type = type;
+    m_debug = debug;
   }
 
   /**
@@ -64,6 +68,18 @@ public class StreamGobbler extends Thread
     m_type = type;
     m_debug = debug;
     m_output = output;
+  }
+
+  /**
+   * @param output
+   *            flush input stream to output stream...
+   */
+  public StreamGobbler( final InputStream is, final String type, final boolean debug, MyPrintStream output )
+  {
+    m_is = is;
+    m_type = type;
+    m_debug = debug;
+    m_output2 = output;
   }
 
   /**
@@ -86,6 +102,8 @@ public class StreamGobbler extends Thread
 
         if( m_output != null )
           m_output.println( line );
+        if( m_output2 != null )
+          m_output2.println( line );
       }
 
     }
