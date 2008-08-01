@@ -38,46 +38,85 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.ui.progress;
+package org.kalypso.contribs.java.io;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
-
-import org.kalypso.contribs.java.io.MyPrintStream;
 
 /**
  * @author kuch
  */
-public class ConsoleHelper
+public class MyPrintStream
 {
 
-  public static void writeLine( MyPrintStream stream, String message )
-  {
-    if( stream == null || message == null )
-      return;
+  private PrintStream m_stream;
 
-    if( message.endsWith( "\n" ) )
+  private java.io.DataOutputStream m_fileStream = null;
+
+  public MyPrintStream( File output, PrintStream stream )
+  {
+    m_stream = stream;
+    try
     {
-      stream.print( message );
+      m_fileStream = new java.io.DataOutputStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
     }
-    else
+    catch( FileNotFoundException e )
     {
-      stream.println( message );
+      e.printStackTrace();
     }
+
   }
 
-  public static void writeLine( PrintStream stream, String message )
+  public void print( String message )
   {
-    if( stream == null || message == null )
-      return;
+    if( m_stream != null )
+      m_stream.print( message );
 
-    if( message.endsWith( "\n" ) )
+    try
     {
-      stream.print( message );
+      if( m_fileStream != null )
+        m_fileStream.writeUTF( message );
     }
-    else
+    catch( IOException e )
     {
-      stream.println( message );
+      e.printStackTrace();
     }
+
   }
 
+  public void println( String message )
+  {
+    if( m_stream != null )
+      m_stream.println( message );
+
+    try
+    {
+      if( m_fileStream != null )
+        m_fileStream.writeUTF( message + "\n" );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+
+  }
+
+  public void dispose( )
+  {
+    try
+    {
+      m_fileStream.close();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+
+    m_fileStream = null;
+    m_stream = null;
+  }
 }
