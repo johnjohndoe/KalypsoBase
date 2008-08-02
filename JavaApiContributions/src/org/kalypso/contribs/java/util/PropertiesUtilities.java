@@ -57,11 +57,11 @@ public class PropertiesUtilities
 {
   /**
    * @param query
-   *            string to collect properties from
+   *          string to collect properties from
    * @param propSeparator
-   *            example "&"
+   *          example "&"
    * @param allocationgString
-   *            example "="
+   *          example "="
    * @param collector
    */
   public static Properties collectProperties( final String query, final String propSeparator, final String allocationString, Properties collector )
@@ -88,13 +88,10 @@ public class PropertiesUtilities
     final String[] suffixes = getLocalSuffixes();
     for( final String suffix : suffixes )
     {
-      InputStream is = null;
       try
       {
         final URL url = new URL( baseUrl, path + suffix );
-        is = new BufferedInputStream( url.openStream() );
-        properties.load( is );
-        is.close();
+        load( url, properties );
         // On first success: stop loading
         return;
       }
@@ -108,17 +105,6 @@ public class PropertiesUtilities
       }
       finally
       {
-        if( is != null )
-        {
-          try
-          {
-            is.close();
-          }
-          catch( final IOException e )
-          {
-            // ignore, this time...
-          }
-        }
       }
     }
 
@@ -155,6 +141,46 @@ public class PropertiesUtilities
       NL_SUFFIXES = result.toArray( new String[result.size()] );
     }
     return NL_SUFFIXES;
+  }
+
+  /**
+   * Creates a new {@link Properties} object and initialises it from the contents of the given {@link URL}.
+   */
+  public static Properties load( final URL location ) throws IOException
+  {
+    final Properties properties = new Properties();
+    load( location, properties );
+    return properties;
+  }
+
+  /**
+   * Loads the contents from the given {@link URL} into a {@link Properties} object.
+   * 
+   * @see Properties#load(InputStream)
+   */
+  public static void load( final URL location, final Properties properties ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( location.openStream() );
+      properties.load( is );
+      is.close();
+    }
+    finally
+    {
+      if( is != null )
+      {
+        try
+        {
+          is.close();
+        }
+        catch( final IOException e )
+        {
+          // ignore, this time, there must be another exception just about to been thrown
+        }
+      }
+    }
   }
 
 }
