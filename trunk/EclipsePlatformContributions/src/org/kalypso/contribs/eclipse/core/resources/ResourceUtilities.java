@@ -107,27 +107,25 @@ public class ResourceUtilities
   }
 
   /**
-   * Only works with relative paths. The location (absolute) of the workspace root is used as parent, the resources path
-   * (relative) is used as child. Warning: No files are found if the project root of the project in which the resource
-   * should exist lies outside the workspace root (i.e. if a project is imported without copying it into the workspace).
+   * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
    * 
    * @return A Java-File representing the resource.
    */
   public static File makeFileFromPath( final IPath resource )
   {
-
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IPath rootLocation = root.getLocation();
-    // note: this works for linked files
-    IFile[] files = root.findFilesForLocation( rootLocation.append( resource ) );
-    if( files.length == 1 )
-      return files[0].getLocation().toFile();
-    else if( files.length > 1 )
-      throw new IllegalStateException( "More than one matching resource found for path " + resource + "!" );
-    else
-      throw new IllegalStateException( "No matching resource found for path " + resource + "!" );
+    final IFile file = root.getFile( resource );
+    return file.getLocation().toFile();
   }
 
+  public static File makeFileFromPath2( final IPath resource )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IPath rootLocation = root.getLocation();
+    final File rootFile = rootLocation.toFile();
+    return new File( rootFile, resource.toString() );
+  }
+  
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
