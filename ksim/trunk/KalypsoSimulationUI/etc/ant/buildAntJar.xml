@@ -34,9 +34,9 @@
 			<classpath>
 				<dirset dir="${workspace}">
 					<include name="EclipseRCPContributions/build/bin" />
+					<include name="KalypsoServiceWPS/bin" />
 					<include name="KalypsoSimulationCore/build/bin" />
 					<include name="KalypsoSimulationUI/build/bin" />
-					<include name="JWSDPInstallation/build/bin" />
 				</dirset>
 				<fileset dir="${workspace}">
 					<include name="JWSDPInstallation/jwsdp/**/*.jar" />

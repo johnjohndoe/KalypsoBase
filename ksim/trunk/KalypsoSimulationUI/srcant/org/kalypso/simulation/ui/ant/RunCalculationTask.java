@@ -49,7 +49,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -66,8 +65,9 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
+import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
@@ -184,9 +184,15 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      final IProject calcProject = m_calcCaseFolder.getProject();
-      final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
-      return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
+      // TODO: we now always calculate via WPS...
+      // So local calculation (for NA) does not work any more? Probably we should add a switch for that 
+//      final IProject calcProject = m_calcCaseFolder.getProject();
+//      final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
+//      return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
+      
+      final SimulationDelegate delegate = new SimulationDelegate( m_modeldata.getTypeID(), m_calcCaseFolder, m_modeldata );
+      final WPSRequest simulationJob = new WPSRequest( delegate, 1000 * 60 * 60 ); // 1 hour
+      return simulationJob.run( monitor );
     }
     finally
     {
