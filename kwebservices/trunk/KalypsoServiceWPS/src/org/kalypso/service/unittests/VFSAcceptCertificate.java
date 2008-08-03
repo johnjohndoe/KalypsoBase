@@ -88,7 +88,7 @@ public class VFSAcceptCertificate
     FileObject localFile = VFSUtilities.getManager().toFileObject( file );
     Assert.assertNotNull( localFile );
 
-    VFSUtilities.copy( remoteFile, localFile );
+    VFSUtilities.copyFileTo( remoteFile, localFile );
 
     InputStream inputStream = localFile.getContent().getInputStream();
 

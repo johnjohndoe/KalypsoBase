@@ -126,6 +126,7 @@ public class SimulationDelegate implements IWPSDelegate
    * @param data
    *          The model data.
    */
+  // TODO: remove argument identifier: use data.getTypeID() instead
   public SimulationDelegate( String identifier, IContainer calcCaseFolder, Modeldata data )
   {
     /* Initializing the other variables. */
@@ -296,7 +297,7 @@ public class SimulationDelegate implements IWPSDelegate
       FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
 
       /* Copy file. */
-      VFSUtilities.copy( source, destination );
+      VFSUtilities.copyFileTo( source, destination );
     }
     catch( Exception ex )
     {
@@ -362,6 +363,11 @@ public class SimulationDelegate implements IWPSDelegate
         }
       }
     }
+    catch( WPSException e )
+    {
+      // Do not hide original WPSException
+      throw e;
+    }
     catch( Exception ex )
     {
       throw new WPSException( "Could not init the temp directory on the server, where the client can put his input files ...", ex );
@@ -413,11 +419,12 @@ public class SimulationDelegate implements IWPSDelegate
           /* Copy ... */
           VFSUtilities.copy( source, destination );
 
-          IResource destResource = baseresource.getFile( new Path( outputPath ) );
+          final IResource destResource = baseresource.findMember( new Path( outputPath ) );
           if( destResource != null && destResource.getType() == IResource.FILE )
           {
             IFile destFile = (IFile) destResource;
             destFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+            // TODO: NO!!!! We do not know that!
             destFile.setCharset( "UTF-8", new NullProgressMonitor() );
           }
         }

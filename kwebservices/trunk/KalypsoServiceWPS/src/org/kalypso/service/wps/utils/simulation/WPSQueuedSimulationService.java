@@ -285,6 +285,7 @@ public class WPSQueuedSimulationService
       }
 
       final ISimulation job = m_calcJobFactory.createJob( typeID );
+      // TODO: should this temp dir not be inside the general wps tmp-dir? 
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
       tmpdir.deleteOnExit();
 

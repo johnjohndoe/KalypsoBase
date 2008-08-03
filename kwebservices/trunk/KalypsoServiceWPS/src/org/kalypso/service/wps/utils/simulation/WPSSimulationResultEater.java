@@ -325,7 +325,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       /* File copy. */
       Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
-      VFSUtilities.copy( source, destination );
+      VFSUtilities.copyFileTo( source, destination );
 
       /* Build complex value reference. */
       return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );

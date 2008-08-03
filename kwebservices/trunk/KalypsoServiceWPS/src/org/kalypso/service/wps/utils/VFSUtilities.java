@@ -112,6 +112,26 @@ public class VFSUtilities
   }
 
   /**
+   * This function copies a source to a given destination. If no filename is given in the destination file handle, the
+   * filename of the source is used.<br>
+   * 
+   * @param source
+   *          The source file.
+   * @param destination
+   *          The destination file or path.
+   */
+  public static void copy( final FileObject source, final FileObject destination ) throws IOException
+  {
+    if( FileType.FOLDER.equals( source.getType() ) )
+    {
+      copyDirectoryToDirectory( source, destination );
+      return;
+    }
+
+    copyFileTo( source, destination );
+  }
+
+  /**
    * This function copies a source file to a given destination. If no filename is given in the destination file handle,
    * the filename of the source is used.<br>
    * <br>
@@ -123,7 +143,7 @@ public class VFSUtilities
    * @param destination
    *          The destination file or path.
    */
-  public static void copy( FileObject source, FileObject destination ) throws IOException
+  public static void copyFileTo( FileObject source, FileObject destination ) throws IOException
   {
     /* Some variables for handling the errors. */
     boolean success = false;
@@ -148,12 +168,12 @@ public class VFSUtilities
         /* End copying of this file, because it was a success. */
         success = true;
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
-        /* An error has occured while copying the file. */
+        /* An error has occurred while copying the file. */
         Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
 
-        /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
+        /* If a certain amount (here 2) of retries was reached before, re-throw the error. */
         if( cnt >= 2 )
         {
           Debug.println( "The second retry has failed, rethrowing the error ..." );
@@ -190,12 +210,17 @@ public class VFSUtilities
    * @param destination
    *          The destination directory.
    */
-  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws Exception
+  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws IOException
   {
-    if( !FileType.FOLDER.equals( source ) || !FileType.FOLDER.equals( destination ) )
-      throw new IllegalArgumentException( "Both source and destination must be directories ..." );
+    if( !FileType.FOLDER.equals( source.getType() ) )
+      throw new IllegalArgumentException( "Source must be directory...: " + source.getURL() );
 
-    if( !destination.exists() )
+    if( destination.exists() )
+    {
+      if( !FileType.FOLDER.equals( destination.getType() ) )
+        throw new IllegalArgumentException( "Destination must be a directory...: " + destination.getURL() );
+    }
+    else
     {
       Debug.println( "Creating directory " + destination.getName() + " ..." );
       destination.createFolder();
@@ -211,7 +236,7 @@ public class VFSUtilities
         FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        copy( child, destinationFile );
+        copyFileTo( child, destinationFile );
       }
       else if( FileType.FOLDER.equals( child.getType() ) )
       {
