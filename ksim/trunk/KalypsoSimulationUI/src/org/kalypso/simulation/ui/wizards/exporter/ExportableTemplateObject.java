@@ -109,9 +109,9 @@ public class ExportableTemplateObject implements IExportableObject
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final String identifierPrefix, final String category )
   {
-    this( arguments, context, documentName, templateUrl, null, identifierPrefix, category );
+    this( arguments, context, documentName, documentTitle, templateUrl, null, identifierPrefix, category );
   }
 
   /**
@@ -126,7 +126,7 @@ public class ExportableTemplateObject implements IExportableObject
    * @param category
    *          the category of the document resulting from the export of this object
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
   {
     m_arguments = arguments;
     m_context = context;
@@ -141,12 +141,12 @@ public class ExportableTemplateObject implements IExportableObject
     if( strUrl.endsWith( "odt" ) )
     {
       m_preferredFilename = FileUtilities.validateName( documentName + "." + m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT ), "_" );
-      m_exportableObject = createObsDiagram();
+      m_exportableObject = createObsDiagram( documentTitle );
     }
     else if( strUrl.endsWith( "ott" ) )
     {
       m_preferredFilename = FileUtilities.validateName( documentName + ".csv", "_" );
-      m_exportableObject = createObsTable();
+      m_exportableObject = createObsTable( documentTitle );
     }
     else
       throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl + ". Nur .odt und .ott Vorlagen werden unterstützt." );
@@ -217,7 +217,7 @@ public class ExportableTemplateObject implements IExportableObject
    * 
    * @return The exportable object.
    */
-  private IExportableObject createObsDiagram( )
+  private IExportableObject createObsDiagram( final String documentTitle )
   {
     Reader reader = null;
 
@@ -237,8 +237,9 @@ public class ExportableTemplateObject implements IExportableObject
       m_disposeHelper.addDisposeCandidate( tpl ).addDisposeCandidate( chart );
 
       final Obsdiagview xml = DiagViewUtils.loadDiagramTemplateXML( reader );
-
-      IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+      final IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+      if( documentTitle != null )
+        tpl.setTitle( documentTitle );
 
       if( tpl.getItems().length == 0 )
       {
@@ -272,7 +273,7 @@ public class ExportableTemplateObject implements IExportableObject
    * 
    * @return The exportable object.
    */
-  private IExportableObject createObsTable( )
+  private IExportableObject createObsTable( final String documentTitle )
   {
     Reader reader = null;
 
@@ -291,9 +292,7 @@ public class ExportableTemplateObject implements IExportableObject
       m_disposeHelper.addDisposeCandidate( tpl ).addDisposeCandidate( table );
 
       final Obstableview xml = TableViewUtils.loadTableTemplateXML( reader );
-
-      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
-
+      final IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
       if( tpl.getItems().length == 0 )
       {
         m_status = StatusUtilities.createWarningStatus( "Tabelle (" + getCategory() + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
@@ -303,7 +302,8 @@ public class ExportableTemplateObject implements IExportableObject
       /* Wrap as warning because even if an obs is missing we can still export diagram. */
       m_status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      return new ExportableObservationTable( table, getIdentifier(), getCategory() );
+      // We are using the documentTitle as preferredDocumentName here, it will be written as first line of the table
+      return new ExportableObservationTable( table, getIdentifier(), getCategory(), documentTitle );
     }
     catch( Exception e )
     {

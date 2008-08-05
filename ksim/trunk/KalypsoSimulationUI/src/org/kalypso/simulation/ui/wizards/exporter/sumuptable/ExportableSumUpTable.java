@@ -50,14 +50,12 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
@@ -81,11 +79,17 @@ public final class ExportableSumUpTable implements IExportableObject
 
   private final String m_identifierPrefix;
 
-  public ExportableSumUpTable( final Arguments args, final URL context, final String identifierPrefix )
+  private final String m_documentName;
+
+  private final String m_documentTitle;
+
+  public ExportableSumUpTable( final Arguments args, final URL context, final String identifierPrefix, final String documentName, final String documentTitle )
   {
     m_args = args;
     m_context = context;
     m_identifierPrefix = identifierPrefix;
+    m_documentName = documentName;
+    m_documentTitle = documentTitle;
   }
 
   /**
@@ -93,7 +97,7 @@ public final class ExportableSumUpTable implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    return FileUtilities.validateName( m_args.getProperty( "documentName", "übersicht.csv" ), "_" );
+    return m_documentName + ".csv";
   }
 
   /**
@@ -146,6 +150,17 @@ public final class ExportableSumUpTable implements IExportableObject
 
       writer = new BufferedWriter( new OutputStreamWriter( output, charset ) );
 
+      // output document Title
+      if( m_documentTitle != null )
+      {
+        writer.write( m_documentTitle );
+        for( int i = 0; i < cols.length; i++ )
+          writer.write( sep );
+        for( int i = 0; i < items.length; i++ )
+          table.writeEmptyRow( writer, sep );
+        writer.newLine();
+      }
+
       // output header (flexible columns)
       for( final ColumnSpec element : cols )
       {
@@ -154,7 +169,7 @@ public final class ExportableSumUpTable implements IExportableObject
       }
 
       // output header (fix columns)
-      final Date[] dates = table.writeHeader( writer, sep, df );
+      table.writeHeader( writer, sep, df );
 
       writer.newLine();
 
@@ -173,7 +188,7 @@ public final class ExportableSumUpTable implements IExportableObject
         }
 
         // for model
-        table.writeRow( items[i], writer, sep, df, nf, dates );
+        table.writeRow( items[i], writer, sep, df, nf );
 
         writer.newLine();
       }

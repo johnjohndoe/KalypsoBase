@@ -146,7 +146,11 @@ public class SumUpTableExporter extends AbstractExporter
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
     final URL context = (URL) getFromSupplier( "context" );
 
-    final IExportableObject expObj = new ExportableSumUpTable( arguments, context, getClass().getName() );
+    final String documentFormatString = arguments.getProperty( "documentName", "übersicht.csv" );
+    final String documentName = validateDocumentName( documentFormatString );
+    final String documentTitle = arguments.getProperty( "documentTitle" );
+    
+    final IExportableObject expObj = new ExportableSumUpTable( arguments, context, getClass().getName(), documentName, documentTitle );
 
     return new ExportableTreeItem( getName(), getImageDescriptor(), parent, expObj, true, false );
   }

@@ -79,12 +79,19 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 public class SumUpForecastTable
 {
   private static final String cNoAlarm = "-";
+
   private final String m_axisType;
+
   private final double m_delta;
+
   private final int m_timeUnit;
+
   private final int m_timeStep;
+
   private final ColumnsHeader m_colHeader = new ColumnsHeader();
+
   private final Map<UrlArgument, Row> m_map = new HashMap<UrlArgument, Row>();
+
   private Date m_firstDate;
 
   public SumUpForecastTable( final String axisType, final int timeUnit, final int timeStep, final double delta )
@@ -93,7 +100,7 @@ public class SumUpForecastTable
     m_timeUnit = timeUnit;
     m_timeStep = timeStep;
     m_delta = delta;
-    
+
     // initialise firstDate with null, used as a marker when adding observations
     m_firstDate = null;
   }
@@ -102,8 +109,7 @@ public class SumUpForecastTable
   {
     final DateRange range = TimeserieUtils.isForecast( obs );
     if( range == null )
-      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName()
-          + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + argument.getUrl().toString() );
+      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName() + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + argument.getUrl().toString() );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis valueAxis;
@@ -113,8 +119,7 @@ public class SumUpForecastTable
     }
     catch( final NoSuchElementException e )
     {
-      return StatusUtilities.createWarningStatus( "Zeitreihe kann nicht berücksichtigt werden: "
-          + e.getLocalizedMessage() + ". Siehe URL: " + argument.getUrl() );
+      return StatusUtilities.createWarningStatus( "Zeitreihe kann nicht berücksichtigt werden: " + e.getLocalizedMessage() + ". Siehe URL: " + argument.getUrl() );
     }
 
     final ITuppleModel values = obs.getValues( null );
@@ -129,7 +134,7 @@ public class SumUpForecastTable
     // seek for max value
     for( int i = 0; i < values.getCount(); i++ )
     {
-      final Number value = (Number)values.getElement( i, valueAxis );
+      final Number value = (Number) values.getElement( i, valueAxis );
       if( dc.compare( value, maxValue ) > 0 )
       {
         maxValue = value;
@@ -137,14 +142,12 @@ public class SumUpForecastTable
       }
     }
 
-    final Date maxTime = (Date)values.getElement( maxPos, dateAxis );
+    final Date maxTime = (Date) values.getElement( maxPos, dateAxis );
 
     // seek for alarm level
     final MetadataList md = obs.getMetadataList();
-    final Double[] alarms = new Double[]
-    { Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ), Double.valueOf( md.getProperty(
-        TimeserieConstants.MD_ALARM_2, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double
-        .valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
+    final Double[] alarms = new Double[] { Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) ),
+        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
 
     String strAlarm = cNoAlarm;
     double alarm = 0;
@@ -157,8 +160,8 @@ public class SumUpForecastTable
           // value is automatically converted if we use another axis than
           // the alarm-level default axis
           final Double alarmValue = TimeserieUtils.convertAlarmLevel( obs, m_axisType, alarms[i - 1], maxTime );
-          
-          // if a alarmValue is zero (mostly because of unsufficient W/Q) then it won't be considered valid       
+
+          // if a alarmValue is zero (mostly because of unsufficient W/Q) then it won't be considered valid
           if( maxValue.doubleValue() >= alarmValue.doubleValue() && alarmValue.doubleValue() > 0.0 )
           {
             strAlarm = "AS " + i;
@@ -174,7 +177,7 @@ public class SumUpForecastTable
 
     // fetch values at specific time-positions
     final Calendar cal = Calendar.getInstance();
-    
+
     // we use firstDate as a marker, as soon as an observation has been added,
     // its first date that was found is then used for all other subsequent
     // observations that are added
@@ -195,10 +198,10 @@ public class SumUpForecastTable
       {
         if( m_firstDate == null )
           m_firstDate = time;
-        
+
         m_colHeader.checkAndAddColumn( time, m_timeStep, m_timeUnit );
 
-        final Number value = (Number)values.getElement( pos, valueAxis );
+        final Number value = (Number) values.getElement( pos, valueAxis );
         row.addValue( time, value );
 
         notFoundYet = false;
@@ -242,10 +245,10 @@ public class SumUpForecastTable
     return dates;
   }
 
-  public void writeRow( final Object key, final Writer writer, final String sep, final DateFormat df,
-      final NumberFormat nf, final Date[] dates ) throws IOException
+  public void writeRow( final Object key, final Writer writer, final String sep, final DateFormat df, final NumberFormat nf ) throws IOException
   {
     final Row row = m_map.get( key );
+    final Date[] dates = m_colHeader.getDates();
 
     writer.write( sep );
 
@@ -255,7 +258,17 @@ public class SumUpForecastTable
       writer.write( "<keine Daten vorhanden, Zeitreihe möglicherweise ungültig>" );
   }
 
-  public void dispose()
+  public void writeEmptyRow( final Writer writer, final String sep ) throws IOException
+  {
+    for( int i = 0; i < 3; i++ )
+      writer.write( sep );
+    
+    final Date[] dates = m_colHeader.getDates();
+    for( int i = 0; i < dates.length; i++ )
+      writer.write( sep );
+  }
+
+  public void dispose( )
   {
     m_map.clear();
     m_colHeader.dispose();
@@ -269,9 +282,13 @@ public class SumUpForecastTable
   public static class Row
   {
     private final Number m_maxValue;
+
     private final Date m_maxTime;
+
     private final String m_strAlarm;
+
     private final double m_alarm;
+
     private final Map<Date, Number> m_values = new HashMap<Date, Number>();
 
     public Row( final Number maxValue, final Date maxTime, final String strAlarm, final double alarm )
@@ -290,14 +307,13 @@ public class SumUpForecastTable
     public String dumpRow( final String separator, final NumberFormat nf, final DateFormat df, final Date[] dates )
     {
       final StringBuffer bf = new StringBuffer();
-      bf.append( nf.format( m_maxValue ) ).append( separator ).append( df.format( m_maxTime ) ).append( separator )
-          .append( m_strAlarm ).append( separator );
+      bf.append( nf.format( m_maxValue ) ).append( separator ).append( df.format( m_maxTime ) ).append( separator ).append( m_strAlarm ).append( separator );
 
       // if no Alarmstufe has been set (m_strAlarm == cNoAlarm) then cNoAlarm should be set as alarmValue
-      if( m_strAlarm.length() > 0 && !cNoAlarm.equals(m_strAlarm))
+      if( m_strAlarm.length() > 0 && !cNoAlarm.equals( m_strAlarm ) )
         bf.append( nf.format( m_alarm ) );
       else
-        bf.append (cNoAlarm);
+        bf.append( cNoAlarm );
 
       bf.append( separator );
 
@@ -319,6 +335,7 @@ public class SumUpForecastTable
   public class ColumnsHeader
   {
     private final Set<Date> m_dates = new TreeSet<Date>();
+
     private final List<String> m_hints = new ArrayList<String>();
 
     public void checkAndAddColumn( final Date d, final int timeStep, final int timeUnit )
@@ -338,18 +355,18 @@ public class SumUpForecastTable
       m_dates.add( d );
     }
 
-    public void dispose()
+    public void dispose( )
     {
       m_dates.clear();
       m_hints.clear();
     }
 
-    public String[] getDistances()
+    public String[] getDistances( )
     {
       return m_hints.toArray( new String[m_hints.size()] );
     }
 
-    public Date[] getDates()
+    public Date[] getDates( )
     {
       return m_dates.toArray( new Date[m_dates.size()] );
     }

@@ -50,13 +50,13 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.impl.AbstractExporter;
 import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This explorer can handle the export of observations defined in the properties of features using templates. It uses
@@ -111,12 +111,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class FeatureWithTemplateExporterTree extends AbstractExporter
 {
-
   /**
    * @throws CoreException
    */
   @Override
-  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent  ) throws CoreException
+  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
   {
     // create the possible template items
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
@@ -144,9 +143,12 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
     final URL context = (URL) getFromSupplier( "context" );
 
+    final String documentNameFormat = item.getProperty( "documentName", "übersicht.csv" );
+    final String documentTitleFormat = item.getProperty( "documentTitle" );
+
     final FeatureList features = (FeatureList) getFromSupplier( "features" );
     final FeatureList selectedFeatures = (FeatureList) getFromSupplier( "selectedFeatures" );
-    final String nameProperty = (String) getFromSupplier( "propertyName" );
+    final String labelProperty = (String) getFromSupplier( "propertyName" );
 
     // from arguments
     final Arguments tokens = arguments.getArguments( "tokens" );
@@ -163,24 +165,22 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     {
       final Feature feature = (Feature) features.get( i );
 
-      final String label = (String) feature.getProperty( nameProperty );
-
-      // the name of the document to export is built using a property of the feature
-      final String featurename = arguments.getProperty( "nameproperty", "Name" );
-      final IPropertyType namePt = feature.getFeatureType().getProperty( featurename );
-      final Object nameProp = namePt == null ? null : feature.getProperty( featurename );
-      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
+      // the name of the document to export is built using the annotation token-replace mechanism
+      // OLD behaviour: use the property denoted by argument 'nameproperty'
+      final String documentName = validateDocumentName( FeatureHelper.tokenReplace( feature, documentNameFormat ) );
+      final String documentTitle = FeatureHelper.tokenReplace( feature, documentTitleFormat );
 
       final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
       final URL templateUrl = item.getUrl();
 
       final String id = getClass().getName() + templateUrl.getFile();
 
-      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl, replacetokens, id, category );
+      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, documentName, documentTitle, templateUrl, replacetokens, id, category );
 
       final boolean checked = selectedFeatures.contains( feature );
       final boolean grayed = excludeList.contains( feature );
 
+      final String label = (String) feature.getProperty( labelProperty );
       items[i] = new ExportableTreeItem( label, null, parentItem, exportable, checked, grayed );
     }
 

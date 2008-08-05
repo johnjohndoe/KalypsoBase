@@ -359,12 +359,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       target.setProperty( "calcCaseDescription", (String) nature.loadCalculationAndReadProperty( currentCalcCase, "description" ) );
       target.setProperty( "projectName", currentCalcCase.getProject().getName() );
       target.setProperty( "autor", KalypsoAuthPlugin.getDefault().getCurrentUser().getUserName() );
+      target.setProperty( "modelLabel", getArguments().getProperty( "modelLabel" ) );
 
       // create and initialise the exporters
       final IExporter[] exporters = createExporters();
 
       final ExportDocumentsObjectFactory documentsObjectFactory = new ExportDocumentsObjectFactory( exporters );
-      ExportWizard wizard = new ExportWizard( target, documentsObjectFactory, shell, null, "Berichtsablage" );
+      final ExportWizard wizard = new ExportWizard( target, documentsObjectFactory, shell, null, "Berichtsablage" );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
 
       // just open the dialog, business is done in the dialog

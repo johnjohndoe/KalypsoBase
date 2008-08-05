@@ -96,12 +96,13 @@ public class SimpleTemplateExporter extends AbstractExporter
     {
       final URL templateUrl = item.getUrl();
 
-      // the name of the document to create is specified in the arguments
-      final String name = item.getProperty( "documentName" );
+      final String documentFormatString = item.getProperty( "documentName" );
+      final String documentName = validateDocumentName( documentFormatString );
+      final String documentTitle = item.getProperty( "documentTitle" );
 
       final String idPrefix = getClass().getName() + templateUrl.getFile();
 
-      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl, idPrefix, category );
+      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, documentName, documentTitle, templateUrl, idPrefix, category );
 
       return exportable;
     }
