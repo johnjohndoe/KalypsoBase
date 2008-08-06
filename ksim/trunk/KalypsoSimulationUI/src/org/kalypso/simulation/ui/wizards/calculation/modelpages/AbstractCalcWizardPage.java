@@ -58,6 +58,11 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -66,10 +71,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -77,6 +80,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -91,17 +95,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.commands.ExecutionException;
-import org.eclipse.ui.commands.ICommandManager;
-import org.eclipse.ui.commands.IWorkbenchCommandSupport;
-import org.eclipse.ui.commands.NotDefinedException;
-import org.eclipse.ui.commands.NotHandledException;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -112,6 +112,8 @@ import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
+import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -159,7 +161,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Gernot Belger
@@ -395,6 +396,32 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private Obsdiagview m_obsdiagviewType;
 
+  private final IExecutionListener m_cmdExecutionListener = new IExecutionListener()
+  {
+    @Override
+    public void notHandled( final String commandId, final org.eclipse.core.commands.NotHandledException exception )
+    {
+      handleExecutionFailure( exception );
+    }
+
+    @Override
+    public void postExecuteFailure( final String commandId, final ExecutionException exception )
+    {
+      handleExecutionFailure( exception );
+    }
+
+    @Override
+    public void postExecuteSuccess( final String commandId, final Object returnValue )
+    {
+    }
+
+    @Override
+    public void preExecute( final String commandId, final ExecutionEvent event )
+    {
+      handlePreExecute( event );
+    }
+  };
+
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
     super( name );
@@ -403,11 +430,53 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
+   * @see org.eclipse.jface.wizard.WizardPage#setWizard(org.eclipse.jface.wizard.IWizard)
+   */
+  @Override
+  public void setWizard( final IWizard newWizard )
+  {
+    disposeWizard();
+
+    super.setWizard( newWizard );
+
+    if( newWizard != null )
+    {
+      final IWizardContainer container = newWizard.getContainer();
+      if( container instanceof WizardView )
+      {
+        final WizardView view = (WizardView) container;
+        final IWorkbenchPartSite site = view.getSite();
+        final ICommandService cmdService = (ICommandService) site.getService( ICommandService.class );
+        cmdService.addExecutionListener( m_cmdExecutionListener );
+      }
+    }
+
+  }
+
+  private void disposeWizard( )
+  {
+    final IWizard oldWizard = getWizard();
+    if( oldWizard != null )
+    {
+      final IWizardContainer container = oldWizard.getContainer();
+      if( container instanceof WizardView )
+      {
+        final WizardView view = (WizardView) container;
+        final IWorkbenchPartSite site = view.getSite();
+        final ICommandService cmdService = (ICommandService) site.getService( ICommandService.class );
+        cmdService.removeExecutionListener( m_cmdExecutionListener );
+      }
+    }
+  }
+
+  /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   @Override
   public void dispose( )
   {
+    disposeWizard();
+
     if( m_mapModell != null )
       m_mapModell.dispose();
 
@@ -496,7 +565,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final File htmlLocation = htmlFile.getLocation().toFile();
       try
       {
-        m_htmlURL = htmlLocation.toURL();
+        m_htmlURL = htmlLocation.toURI().toURL();
       }
       catch( final MalformedURLException e )
       {
@@ -607,28 +676,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private void fillMapToolbar( final ToolBarManager manager )
   {
     final Arguments arguments = getArguments().getArguments( PROP_MAP_TOOLBAR );
-
-    for( final Object element : arguments.entrySet() )
+    for( final Entry<String, Object> entry : arguments.entrySet() )
     {
-      final Map.Entry entry = (Entry) element;
-      final String key = (String) entry.getKey();
-      final String value = (String) entry.getValue();
+      final String key = entry.getKey();
+      final Object value = entry.getValue();
 
-      if( key.startsWith( PROP_MAP_TOOLBAR_CMD ) )
+      if( value != null && key.startsWith( PROP_MAP_TOOLBAR_CMD ) )
       {
-        final IWorkbenchCommandSupport commandSupport = PlatformUI.getWorkbench().getCommandSupport();
-        final ICommandManager commandManager = commandSupport.getCommandManager();
-        final org.eclipse.ui.commands.ICommand command = commandManager.getCommand( value );
-        if( command == null )
-        {
-          final IStatus warning = StatusUtilities.createStatus( IStatus.WARNING, "Unknown commandId for map-toolbar: " + value, null );
-          KalypsoGisPlugin.getDefault().getLog().log( warning );
-        }
-        else
-        {
-          final CommandAction action = new CommandAction( command, m_mapPanel );
-          manager.add( action );
-        }
+        final String commandId = value.toString();
+
+        final WizardView wizardView = (WizardView) getWizard().getContainer();
+        final IWorkbenchPartSite site = wizardView.getSite();
+
+        final CommandContributionItem item = new CommandContributionItem( site, ObjectUtils.identityToString( this ) + commandId, commandId, new HashMap<String, String>(), null, null, null, null, null, null, SWT.PUSH );
+
+        manager.add( item );
       }
     }
 
@@ -638,6 +700,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected IMapModell getMapModell( )
   {
     return m_mapModell;
+  }
+
+  protected Object getMapPanel( )
+  {
+    return m_mapPanel;
   }
 
   public final void maximizeMap( )
@@ -1025,6 +1092,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         if( radioQ.getSelection() )
@@ -1037,6 +1105,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         if( radioW.getSelection() )
@@ -1108,6 +1177,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @deprecated use ant-stuff instead
    */
+  @Deprecated
   protected void runCalculation( )
   {
     runSomething( new ICoreExceptionRunnable()
@@ -1142,6 +1212,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
+      @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( taskName, 3000 );
@@ -1169,6 +1240,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
+      @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         return calcWizard.refreshAllPages( monitor );
@@ -1199,6 +1271,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    *          Option is false: used in Sachsen: Weisse-Elster
    *          </p>
    */
+  @SuppressWarnings("deprecation")
   protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection, final boolean forceSelectFeatureFromMap )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
@@ -1251,7 +1324,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             final FeatureList featureList = kft.getFeatureListVisible( null );
             if( featureList != null && featureList.size() != 0 )
             {
-              final List easyFeatures = new ArrayList( fids.length );
+              final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( fids.length );
               for( final String fid : fids )
               {
                 if( fid != null )
@@ -1265,7 +1338,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
               if( easyFeatures.isEmpty() && selectFirstFeatureByDefault() )
                 easyArray = new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, (Feature) featureList.get( 0 ), null, null ) };
               else
-                easyArray = (EasyFeatureWrapper[]) easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
+                easyArray = easyFeatures.toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
               final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
               selectionManager.changeSelection( featuresToRemove, easyArray );
@@ -1365,7 +1438,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       panel.layout();
   }
 
-  protected void launchAnt( final String antLaunch, final String taskName, final String title, final String errorMessage, final Map antProps )
+  protected void launchAnt( final String antLaunch, final String taskName, final String title, final String errorMessage, final Map<String, Object> antProps )
   {
     runSomething( new ICoreExceptionRunnable()
     {
@@ -1394,6 +1467,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getNextPage()
    */
+  @Override
   public IWizardPage getNextPage( )
   {
     final IWizardPage page = getPageFromProperty( PROP_NEXTPAGE );
@@ -1408,6 +1482,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
    */
+  @Override
   public IWizardPage getPreviousPage( )
   {
     final IWizardPage page = getPageFromProperty( PROP_PREVPAGE );
@@ -1434,6 +1509,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#getName()
    */
+  @Override
   public String getName( )
   {
     return getArguments().getProperty( PROP_PAGE_ID, super.getName() );
@@ -1474,77 +1550,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_diagView;
   }
 
-  /**
-   * An action based on a command. <br>
-   * Used instead of CommandContributionItem, as this class works not yet in 3.0. <br>
-   * 
-   * @author Gernot Belger
-   */
-  public static class CommandAction extends Action
+  protected void handleExecutionFailure( final Exception exception )
   {
-    private final org.eclipse.ui.commands.ICommand m_command;
-
-    private final MapPanel m_mapPanel;
-
-    public CommandAction( final org.eclipse.ui.commands.ICommand command, final MapPanel mapPanel )
-    {
-      super( "", AS_PUSH_BUTTON );
-
-      m_command = command;
-      m_mapPanel = mapPanel;
-
-      try
-      {
-        final Map attributeValuesByName = m_command.getAttributeValuesByName();
-        final String imgPath = (String) attributeValuesByName.get( "image" );
-        final String pluginId = (String) attributeValuesByName.get( "plugin" );
-
-        setId( command.getId() );
-        setText( command.getName() );
-        setToolTipText( command.getDescription() );
-        setEnabled( command.isHandled() && command.isDefined() );
-        if( imgPath != null && pluginId != null )
-        {
-          final Bundle bundle = Platform.getBundle( pluginId );
-          final URL imgUrl = Platform.find( bundle, new Path( imgPath ) );
-          final ImageDescriptor imgDescriptor = ImageDescriptor.createFromURL( imgUrl );
-          setImageDescriptor( imgDescriptor );
-        }
-      }
-      catch( final NotDefinedException e )
-      {
-        e.printStackTrace();
-      }
-      catch( final NotHandledException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-     */
-    public void runWithEvent( final Event event )
-    {
-      try
-      {
-        final Map executeArguments = new HashMap();
-
-        executeArguments.put( "event", event );
-        executeArguments.put( "mapPanel", m_mapPanel );
-
-        m_command.execute( executeArguments );
-      }
-      catch( final ExecutionException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( final NotHandledException e )
-      {
-        e.printStackTrace();
-      }
-    }
+    if( AbstractCalcWizardPage.this.isCurrentPage() )
+      ErrorDialog.openError( getShell(), "", exception.getMessage(), null );
   }
 
+  protected void handlePreExecute( final ExecutionEvent event )
+  {
+    if( AbstractCalcWizardPage.this.isCurrentPage() )
+    {
+      // MAGIC: we add the 'mapPanel' variable to this context, so the command handler can access the MapPanel
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final Object mapPanel = getMapPanel();
+      if( mapPanel != null )
+        context.addVariable( "mapPanel", mapPanel );
+    }
+  }
 }

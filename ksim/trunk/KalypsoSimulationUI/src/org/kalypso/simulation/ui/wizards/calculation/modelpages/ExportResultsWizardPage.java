@@ -47,8 +47,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -534,8 +535,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       if( iter.hasNext() )
         sb.append( ';' );
     }
-    final Properties antProps = new Properties();
-    antProps.setProperty( "exportPrognosenFeaturePath", sb.toString() );
+    final Map<String,Object> antProps = new HashMap<String, Object>();
+    antProps.put( "exportPrognosenFeaturePath", sb.toString() );
 
     // call ant - with properties
     launchAnt( "exportVorhersagen", "Vorhersage-Zeitreihen werden auf den Server gespeichert", STR_EXPORT_PROGNOSEN, "Fehler bemi Speichern der Vorhersage-Zeitreihen", antProps );
