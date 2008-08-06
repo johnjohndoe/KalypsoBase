@@ -50,6 +50,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -254,7 +255,7 @@ public class PrognosePanel
 
     // ////////////
     // BCE-LOGO //
-    // ////////////
+    // ///////////
     final GridData fillGridData = new GridData( GridData.FILL_BOTH );
     fillGridData.horizontalSpan = 2;
     fillGridData.grabExcessVerticalSpace = true;
@@ -322,10 +323,13 @@ public class PrognosePanel
    */
   private Image imageFromUrl( final Display display, final String url )
   {
+    InputStream is = null;
     try
     {
       final URL mainImageURL = new URL( m_location, url );
-      final Image image = new Image( display, mainImageURL.openStream() );
+      is = mainImageURL.openStream();
+      final Image image = new Image( display, is );
+      is.close();
       m_disposeHelper.addDisposeCandidate( image );
       return image;
     }
@@ -336,6 +340,10 @@ public class PrognosePanel
     catch( final IOException e )
     {
       e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
     }
 
     return null;
