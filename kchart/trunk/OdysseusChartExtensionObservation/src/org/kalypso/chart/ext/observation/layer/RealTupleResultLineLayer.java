@@ -112,7 +112,6 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
-  @Override
   public IDataRange<Number> getDomainRange( )
   {
     if( m_isInited )
@@ -127,7 +126,6 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
-  @Override
   public IDataRange<Number> getTargetRange( )
   {
     if( m_isInited )
@@ -143,7 +141,6 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @SuppressWarnings("deprecation")
-  @Override
   public void paint( GC gc )
   {
     List<Point> path = new ArrayList<Point>();

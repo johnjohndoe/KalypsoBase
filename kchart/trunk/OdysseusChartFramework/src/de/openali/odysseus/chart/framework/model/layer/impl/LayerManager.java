@@ -170,7 +170,6 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
    */
-  @Override
   public ITooltipChartLayer[] getTooltipLayers( )
   {
     List<ITooltipChartLayer> tooltipLayers = new ArrayList<ITooltipChartLayer>();

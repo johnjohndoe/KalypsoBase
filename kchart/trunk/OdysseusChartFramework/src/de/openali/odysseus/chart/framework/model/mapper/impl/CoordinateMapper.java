@@ -96,7 +96,6 @@ public class CoordinateMapper implements ICoordinateMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Object,
    *      java.lang.Object)
    */
-  @Override
   public Point logicalToScreen( Object domainValue, Object targetValue )
   {
     IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
