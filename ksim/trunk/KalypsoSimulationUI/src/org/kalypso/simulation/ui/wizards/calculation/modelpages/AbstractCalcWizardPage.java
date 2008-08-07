@@ -398,24 +398,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private final IExecutionListener m_cmdExecutionListener = new IExecutionListener()
   {
-    @Override
     public void notHandled( final String commandId, final org.eclipse.core.commands.NotHandledException exception )
     {
       handleExecutionFailure( exception );
     }
 
-    @Override
     public void postExecuteFailure( final String commandId, final ExecutionException exception )
     {
       handleExecutionFailure( exception );
     }
 
-    @Override
     public void postExecuteSuccess( final String commandId, final Object returnValue )
     {
     }
 
-    @Override
     public void preExecute( final String commandId, final ExecutionEvent event )
     {
       handlePreExecute( event );

@@ -238,7 +238,6 @@ public final class ExportableSumUpTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
-  @Override
   public String getStationIDs( )
   {
     return "";
