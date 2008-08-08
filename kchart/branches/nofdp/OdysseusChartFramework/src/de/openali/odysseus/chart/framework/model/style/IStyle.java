@@ -20,6 +20,8 @@ public interface IStyle
 
   public int getAlpha( );
 
+  public IStyle copy( );
+
   /**
    * method to store arbitrary data objects;
    */

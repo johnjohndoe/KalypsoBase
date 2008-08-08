@@ -126,33 +126,29 @@ public class StyleFactory
 
     // visible
     if( pst.isSetIsVisible() )
-    {
       style.setVisible( pst.getIsVisible() );
-    }
 
     // alpha
     if( pst.isSetAlpha() )
-    {
       style.setAlpha( byteToInt( pst.getAlpha()[0] ) );
-    }
 
     // width
     if( pst.isSetWidth() )
-    {
       style.setWidth( pst.getWidth() );
-    }
 
     // height
     if( pst.isSetHeight() )
-    {
       style.setHeight( pst.getHeight() );
-    }
 
     // fill color
-    byte[] fillColor = pst.getFillColor();
+    ColorFillType fillColor = pst.getFillColor();
     if( fillColor != null )
     {
-      style.setInlineColor( colorByteToRGB( fillColor ) );
+      if( fillColor.isSetIsVisible() )
+        style.setFillVisible( fillColor.getIsVisible() );
+      byte[] color = fillColor.getColor();
+      if( color != null )
+        style.setInlineColor( colorByteToRGB( color ) );
     }
 
     // marker
@@ -178,10 +174,7 @@ public class StyleFactory
       style.setMarker( new ImageMarker( id ) );
     }
     else if( pst.isSetOvalMarker() )
-    {
       style.setMarker( new OvalMarker() );
-    }
-    // else: do nothing - use default
 
     StrokeType strokeStyle = pst.getStroke();
     if( strokeStyle != null )
@@ -210,15 +203,11 @@ public class StyleFactory
 
     // alpha
     if( lst.isSetAlpha() )
-    {
       style.setAlpha( byteToInt( lst.getAlpha()[0] ) );
-    }
 
     // width
     if( lst.isSetWidth() )
-    {
       style.setWidth( lst.getWidth() );
-    }
 
     // dashArray
     int dashOffset = 0;
@@ -232,22 +221,16 @@ public class StyleFactory
       {
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
-        {
           dashArray[i] = ((Number) elt).floatValue();
-        }
       }
     }
     if( lst.isSetDashOffset() )
-    {
       dashOffset = lst.getDashOffset();
-    }
     style.setDash( dashOffset, dashArray );
 
     // color
     if( lst.isSetLineColor() )
-    {
       style.setColor( colorByteToRGB( lst.getLineColor() ) );
-    }
 
     return style;
   }
@@ -270,15 +253,11 @@ public class StyleFactory
 
     // alpha
     if( st.isSetAlpha() )
-    {
       style.setAlpha( byteToInt( st.getAlpha()[0] ) );
-    }
 
     // width
     if( st.isSetWidth() )
-    {
       style.setWidth( st.getWidth() );
-    }
 
     // dashArray
     float dashOffset = 0;
@@ -292,22 +271,16 @@ public class StyleFactory
       {
         Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
-        {
           dashArray[i] = ((Number) elt).floatValue();
-        }
       }
     }
     if( st.isSetDashOffset() )
-    {
       dashOffset = st.getDashOffset();
-    }
     style.setDash( dashOffset, dashArray );
 
     // color
     if( st.isSetLineColor() )
-    {
       style.setColor( colorByteToRGB( st.getLineColor() ) );
-    }
   }
 
   public static IAreaStyle createAreaStyle( AreaStyleType ast, URL context )
@@ -346,13 +319,9 @@ public class StyleFactory
         int width = -1;
         int height = -1;
         if( ift.isSetWidth() )
-        {
           width = ift.getWidth();
-        }
         if( ift.isSetHeight() )
-        {
           height = ift.getHeight();
-        }
         ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, width, height );
         ImageFill imageFill = new ImageFill( id );
         style.setFill( imageFill );
@@ -392,41 +361,29 @@ public class StyleFactory
 
     // font family
     if( tst.isSetFontFamily() )
-    {
       // TODO: check if family exists
       style.setFamily( tst.getFontFamily() );
-    }
 
     // background color
     if( tst.isSetFillColor() )
-    {
       style.setFillColor( colorByteToRGB( tst.getFillColor() ) );
-    }
 
     // text color
     if( tst.isSetTextColor() )
-    {
       style.setTextColor( colorByteToRGB( tst.getTextColor() ) );
-    }
 
     // text size
     if( tst.isSetSize() )
-    {
       style.setHeight( tst.getSize() );
-    }
 
     // font style
     if( tst.isSetFontStyle() )
     {
       de.openali.odysseus.chartconfig.x020.FontStyleType.Enum configfontStyle = tst.getFontStyle();
       if( configfontStyle.toString().equals( FONTSTYLE.ITALIC.toString() ) )
-      {
         style.setFontStyle( FONTSTYLE.ITALIC );
-      }
       else if( configfontStyle.toString().equals( FONTSTYLE.NORMAL.toString() ) )
-      {
         style.setFontStyle( FONTSTYLE.NORMAL );
-      }
       else
       {
         // keep default
@@ -438,13 +395,9 @@ public class StyleFactory
     {
       de.openali.odysseus.chartconfig.x020.FontWeightType.Enum fontWeight = tst.getFontWeight();
       if( fontWeight.toString().equals( FONTWEIGHT.BOLD.toString() ) )
-      {
         style.setWeight( FONTWEIGHT.BOLD );
-      }
       if( fontWeight.toString().equals( FONTWEIGHT.NORMAL.toString() ) )
-      {
         style.setWeight( FONTWEIGHT.NORMAL );
-      }
       else
       {
         // keep default
@@ -456,7 +409,7 @@ public class StyleFactory
 
   /**
    * @param b
-   *            a byte value
+   *          a byte value
    */
   private static int byteToInt( byte b )
   {
@@ -465,7 +418,7 @@ public class StyleFactory
 
   /**
    * @param color
-   *            3 byte array
+   *          3 byte array
    */
   private static RGB colorByteToRGB( byte[] color )
   {

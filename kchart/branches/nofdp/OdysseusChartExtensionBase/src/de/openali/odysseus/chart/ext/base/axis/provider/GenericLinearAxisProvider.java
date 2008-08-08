@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axis.provider;
 
-
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
+import de.openali.odysseus.chart.framework.model.data.impl.StringDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
@@ -56,9 +55,14 @@ public class GenericLinearAxisProvider extends AbstractAxisProvider
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */
-  public IAxis getAxis( ) throws ConfigurationException
+  public IAxis getAxis( )
   {
-    return new GenericLinearAxis( getId(), getPosition(), getValueArray(), getDataClass() );
+    IAxis axis = new GenericLinearAxis( getId(), getPosition(), getDataClass() );
+    if( getValueArray() != null )
+    {
+      StringDataOperator sdo = new StringDataOperator( getValueArray() );
+      axis.addDataOperator( String.class, sdo );
+    }
+    return axis;
   }
-
 }

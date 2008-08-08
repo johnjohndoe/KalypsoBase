@@ -1,9 +1,5 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
-import java.util.Comparator;
-
-import org.apache.commons.collections.comparators.ComparableComparator;
-
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
@@ -16,7 +12,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractAxis extends AbstractMapper<Number, Integer> implements IAxis
+public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
   private final IMapperRegistry m_registry = null;
 
@@ -32,33 +28,24 @@ public abstract class AbstractAxis extends AbstractMapper<Number, Integer> imple
 
   private IAxisAdjustment m_preferredAdjustment = null;
 
-  /**
-   * Uses a ComparableComparator as dataComparator
-   */
-  @SuppressWarnings("unchecked")
+  private final Class< ? > m_dataClass;
+
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
-    this( id, pos, new ComparableComparator(), dataClass );
-  }
-
-  public AbstractAxis( final String id, final POSITION pos, final Comparator<Number> dataComparator, final Class< ? > dataClass )
-  {
-    super( id, dataComparator, dataClass );
+    super( id );
     m_id = id;
     m_pos = pos;
+    m_dataClass = dataClass;
   }
 
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getRenderer()
    */
-  @SuppressWarnings("unchecked")
   @Deprecated
   public IAxisRenderer getRenderer( )
   {
     if( m_registry == null )
-    {
       throw new IllegalStateException( "Registry is null" );
-    }
 
     return m_registry.getRenderer( this );
   }
@@ -133,5 +120,10 @@ public abstract class AbstractAxis extends AbstractMapper<Number, Integer> imple
   public void setPreferredAdjustment( IAxisAdjustment adj )
   {
     m_preferredAdjustment = adj;
+  }
+
+  public Class< ? > getDataClass( )
+  {
+    return m_dataClass;
   }
 }

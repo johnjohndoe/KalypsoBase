@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.framework.model.mapper.impl;
 
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -92,11 +93,15 @@ public class CoordinateMapper implements ICoordinateMapper
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Number, java.lang.Number)
+   * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Object,
+   *      java.lang.Object)
    */
-  public Point logicalToScreen( Number domainValue, Number targetValue )
+  public Point logicalToScreen( Object domainValue, Object targetValue )
   {
-    // TODO Auto-generated method stub
-    return null;
+    IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
+    IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
+
+    return numericToScreen( dop.logicalToNumeric( domainValue ), top.logicalToNumeric( targetValue ) );
   }
+
 }

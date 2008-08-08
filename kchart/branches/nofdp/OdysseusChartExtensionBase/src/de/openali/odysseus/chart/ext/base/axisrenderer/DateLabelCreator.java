@@ -43,8 +43,8 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 import java.util.Date;
 
 
-import de.openali.odysseus.chart.ext.base.data.CalendarFormat;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 
 /**
  * @author alibu

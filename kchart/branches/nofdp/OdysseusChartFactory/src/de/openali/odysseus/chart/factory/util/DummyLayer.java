@@ -196,7 +196,7 @@ public class DummyLayer implements IChartLayer
   }
 
   @SuppressWarnings("unchecked")
-  public void setDataContainer( final IDataContainer data )
+  public void setDataContainer( @SuppressWarnings("unused") final IDataContainer data )
   {
     // nothing to do;
   }
@@ -235,7 +235,6 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image)
    */
-  @SuppressWarnings("deprecation")
   @Deprecated
   public void drawIcon( final Image img )
   {
@@ -319,7 +318,7 @@ public class DummyLayer implements IChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setMappers(java.util.Map)
    */
   @SuppressWarnings("unchecked")
-  public void setMappers( Map<String, IMapper> mapperMap )
+  public void setMappers( @SuppressWarnings("unused") Map<String, IMapper> mapperMap )
   {
     // nothing to do
 

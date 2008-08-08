@@ -18,7 +18,7 @@ public class LayerManager implements ILayerManager
   /** my layers */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
-  private final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
+  final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
@@ -32,18 +32,18 @@ public class LayerManager implements ILayerManager
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerContentChanged( IChartLayer layer )
+      public void onLayerContentChanged( IChartLayer layer1 )
       {
-        m_handler.fireLayerContentChanged( layer );
+        m_handler.fireLayerContentChanged( layer1 );
       }
 
       /**
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
+      public void onLayerVisibilityChanged( IChartLayer layer1 )
       {
-        m_handler.fireLayerVisibilityChanged( layer );
+        m_handler.fireLayerVisibilityChanged( layer1 );
       }
     };
     layer.addListener( lel );
@@ -96,7 +96,9 @@ public class LayerManager implements ILayerManager
     for( final IChartLayer layer : m_layers )
     {
       if( layer.getId().equals( id ) )
+      {
         return layer;
+      }
     }
     return null;
   }
@@ -119,7 +121,9 @@ public class LayerManager implements ILayerManager
     for( IChartLayer l : m_layers )
     {
       if( layer == l )
+      {
         return count;
+      }
       count++;
     }
     return -1;
@@ -136,7 +140,7 @@ public class LayerManager implements ILayerManager
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getEditableLayers()
    */
-  @SuppressWarnings( { "unchecked", "cast" })
+  @SuppressWarnings( { "cast" })
   public IEditableChartLayer[] getEditableLayers( )
   {
     List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();

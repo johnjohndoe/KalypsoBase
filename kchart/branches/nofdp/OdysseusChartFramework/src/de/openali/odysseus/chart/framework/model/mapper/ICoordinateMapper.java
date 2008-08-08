@@ -55,4 +55,6 @@ public interface ICoordinateMapper
 
   public IAxis getTargetAxis( );
 
+  public Point logicalToScreen( Object domainValue, Object targetValue );
+
 }

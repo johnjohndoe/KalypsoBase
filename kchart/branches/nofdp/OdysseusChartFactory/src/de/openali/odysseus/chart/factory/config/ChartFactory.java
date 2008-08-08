@@ -125,7 +125,7 @@ public class ChartFactory
       }
       else
       {
-        Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved: " + layerType.getId() );
+        Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
       }
     }
 

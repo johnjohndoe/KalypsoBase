@@ -32,18 +32,6 @@ public abstract class AbstractLayerProvider extends AbstractChartComponentProvid
     m_styleSet = styleSet;
   }
 
-// /**
-// * default behaviour: return original xml type; implement, if changes shall be saved
-// *
-// * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayerType()
-// */
-// public LayerType getXMLType( IChartLayer layer )
-// {
-// LayerType lt = (LayerType) m_lt.copy();
-// lt.setVisible( layer.isVisible() );
-// return lt;
-// }
-
   protected String getDomainAxisId( )
   {
     return m_domainAxisId;

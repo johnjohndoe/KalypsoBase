@@ -56,7 +56,6 @@ public interface IStyleSet
    * if no style is found, a default style is created, saved for later use and
    * returned
    */
-  @SuppressWarnings("unchecked")
   public abstract <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
   public abstract void dispose( );

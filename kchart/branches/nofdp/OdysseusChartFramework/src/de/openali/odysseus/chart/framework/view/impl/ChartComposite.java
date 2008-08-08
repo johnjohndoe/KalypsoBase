@@ -33,16 +33,15 @@ public class ChartComposite extends Canvas implements IChartView
 {
 
   /** axis pos --> axis placeholder */
-  private final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
+  final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
-  /** drawing space for the plot itself */
-  private PlotCanvas m_plot;
+  PlotCanvas m_plot;
 
-  private final Color m_bgColor;
+  final Color m_bgColor;
 
   // private final Color m_black;
 
-  private final IChartModel m_model;
+  final IChartModel m_model;
 
   private AbstractMapperRegistryEventListener m_mapperListener;
 
@@ -76,7 +75,7 @@ public class ChartComposite extends Canvas implements IChartView
        *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
        */
       @Override
-      public void onMapperAdded( final IMapper< ? , ? > mapper )
+      public void onMapperAdded( final IMapper mapper )
       {
         if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
         {
@@ -99,9 +98,7 @@ public class ChartComposite extends Canvas implements IChartView
       public void onMapperRemoved( final IMapper mapper )
       {
         if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
-        {
           layout();
-        }
       }
 
       /**
@@ -151,9 +148,7 @@ public class ChartComposite extends Canvas implements IChartView
     // Falls das Model schon gef�llt ist, m�ssen den vorhandenen Achsen
     // noch Components hinzugef�gt werden
     for( final IAxis axis : axes )
-    {
       m_mapperListener.onMapperAdded( axis );
-    }
   }
 
   /**
@@ -319,22 +314,14 @@ public class ChartComposite extends Canvas implements IChartView
 
     // Vergr�ssern, falls zu klein
     while( m_plot.getBounds().width < width )
-    {
       setSize( getBounds().width + 1, getBounds().height );
-    }
     while( m_plot.getBounds().height < height )
-    {
       setSize( getBounds().width, getBounds().height + 1 );
-    }
     // Verkleinern, falls zu gross
     while( m_plot.getBounds().width > width )
-    {
       setSize( getBounds().width - 1, getBounds().height );
-    }
     while( m_plot.getBounds().height > height )
-    {
       setSize( getBounds().width, getBounds().height - 1 );
-    }
 
   }
 

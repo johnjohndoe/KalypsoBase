@@ -17,6 +17,10 @@ public interface IPointStyle extends IStyle
 
   public void setInlineColor( RGB rgb );
 
+  public void setFillVisible( boolean isFillVisible );
+
+  public boolean isFillVisible( );
+
   public void setMarker( IMarker marker );
 
   public IMarker getMarker( );

@@ -68,7 +68,8 @@ public class DummyLayerProvider extends AbstractLayerProvider
    *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet,
    *      de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL)
    */
-  public void init( IChartModel model, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet, IParameterContainer parameters, URL context )
+  @SuppressWarnings("unused")
+  public void init( IChartModel model, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet, IParameterContainer parameters,  URL context )
   {
     // nothing to do
   }
