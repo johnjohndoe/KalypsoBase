@@ -73,6 +73,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizard;
 
@@ -90,9 +91,9 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // nix passiert
+    // nix passiert
   }
 
   /**
@@ -113,8 +114,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
 
     if( projects == null || projects.length != 1 )
     {
-      MessageDialog.openInformation( m_window.getShell(), "Hochwasser-Vorhersage durchführen",
-          "Bitte wählen Sie genau ein Projekt im Navigator aus" );
+      MessageDialog.openInformation( m_window.getShell(), "Hochwasser-Vorhersage durchführen", "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }
 
@@ -136,8 +136,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
     final IStatus status = RunnableContextHelper.execute( workbenchWindow, false, true, runnable );
     if( !status.isOK() )
     {
-      ErrorDialog.openError( workbenchWindow.getShell(), "Vorhersage Assistent",
-          "Der Vorhersage Assistent konnte nicht initialisiert werden.", status );
+      ErrorDialog.openError( workbenchWindow.getShell(), "Vorhersage Assistent", "Der Vorhersage Assistent konnte nicht initialisiert werden.", status );
       return;
     }
 
@@ -146,8 +145,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
 
     // change to wizard perspective
     final IPerspectiveRegistry perspectiveRegistry = workbenchWindow.getWorkbench().getPerspectiveRegistry();
-    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
-        .findPerspectiveWithId( PrognosePerspective.class.getName() );
+    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry.findPerspectiveWithId( PrognosePerspective.class.getName() );
 
     final IPerspectiveDescriptor lastPerspective = activePage.getPerspective();
 
@@ -171,12 +169,12 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
       final IViewPart showView = activePage.showView( wizardViewId );
       if( showView instanceof WizardView )
       {
-        final WizardView wizardView = (WizardView)showView;
+        final WizardView wizardView = (WizardView) showView;
         wizardView.setBackJumpsToLastVisited( false );
         wizardView.setErrorBackgroundBehaviour( true );
         wizardView.setButtonLabel( IDialogConstants.FINISH_ID, "Be&enden" );
         wizardView.setWizard( wizard );
-        
+
         final ImageDescriptor imageDescriptor = wizardPerspective.getImageDescriptor();
         wizardView.setTitleImage( imageDescriptor );
 
@@ -190,8 +188,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
           @Override
           public void onWizardChanged( final IWizard newwizard, final int reason )
           {
-            if( reason == IWizardContainerListener.REASON_FINISHED
-                || reason == IWizardContainerListener.REASON_CANCELED )
+            if( reason == IWizardContainerListener.REASON_FINISHED || reason == IWizardContainerListener.REASON_CANCELED )
             {
               activePage.hideView( wizardView );
             }
@@ -199,6 +196,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
         };
 
         // reset perspective, if wizard-view closes
+        // TODO: often this listener does not get unregistered
         activePage.addPartListener( new PartAdapter2()
         {
           /**
@@ -209,27 +207,28 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
           {
             if( PlatformUI.getWorkbench().isClosing() )
               return;
-            
+
             final IWorkbenchPart part = partRef.getPart( false );
             if( part == wizardView )
             {
               activePage.removePartListener( this );
               wizardView.removeWizardContainerListener( wizardContainerAdapter );
 
-              // TODO: gives null-point exception, if workbench is closing
-              // in 3.1 there will be a method to check this 'isClosing'
+//              activePage.resetPerspective(); // to crass; open StartScreen and maximize instead
+              
               try
               {
-                activePage.resetPerspective();
-                activePage.setPerspective( lastPerspective );
+                activePage.showView( IKalypsoSimulationUIConstants.ID_PROGNOSE_VIEW );
               }
-              catch( final NullPointerException ignored )
+              catch( PartInitException e )
               {
-                // TODO: remove this exception once the problem with 'is closing' is solved
+                // TODO Auto-generated catch block
+                e.printStackTrace();
               }
+              
+              activePage.setPerspective( lastPerspective );
             }
           }
-
         } );
 
         wizardView.addWizardContainerListener( wizardContainerAdapter );
@@ -248,7 +247,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-  // mir wurscht
+    // mir wurscht
   }
 
 }
