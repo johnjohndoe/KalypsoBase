@@ -85,7 +85,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     return m_polylineFigure;
   }
 
-  private ILineStyle getLineStyle( )
+  protected ILineStyle getLineStyle( )
   {
     if( m_lineStyle == null )
       return StyleUtils.getDefaultLineStyle();
@@ -103,7 +103,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     return m_pointFigure;
   }
 
-  private IPointStyle getPointStyle( )
+  protected IPointStyle getPointStyle( )
   {
     if( m_pointStyle == null )
       return StyleUtils.getDefaultPointStyle();

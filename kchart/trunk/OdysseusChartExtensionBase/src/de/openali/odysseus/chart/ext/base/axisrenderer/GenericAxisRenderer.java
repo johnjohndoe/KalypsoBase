@@ -38,23 +38,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   /**
    * @param foreground
-   *            Color of axis, ticks and text
+   *          Color of axis, ticks and text
    * @param lineWidth
-   *            Width of ticks and axis line
+   *          Width of ticks and axis line
    * @param tickLength
    * @param tickLabelInsets
-   *            <ul>
-   *            <li>top: distance between ticklabel and axis</li>
-   *            <li>bottom: distance between ticklabel and outside</li>
-   *            <li>left: distance between ticklabel and previous ticklabel</li>
-   *            <li>right: distance between ticklabel and next ticklabel</li>
-   *            </ul>
+   *          <ul>
+   *          <li>top: distance between ticklabel and axis</li>
+   *          <li>bottom: distance between ticklabel and outside</li>
+   *          <li>left: distance between ticklabel and previous ticklabel</li>
+   *          <li>right: distance between ticklabel and next ticklabel</li>
+   *          </ul>
    * @param maxDigits
    * @param labelInsets
    * @param gap
-   *            space between axis and component border
+   *          space between axis and component border
    * @param fixedWidth
-   *            if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
+   *          if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
   public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
   {
@@ -144,10 +144,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           textY = y2 - tickLabelInsets.top - tickExtent.y;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax))) || (x1 < screenMin + offset || x1 > screenMax + offset) )
-        {
+        if( (m_hideCut && ((textX < screenMin) || ((textX + tickExtent.x) > screenMax))) || ((x1 < screenMin + offset) || (x1 > screenMax + offset)) )
           drawTick = false;
-        }
       }
       // VERTICAL
       else
@@ -169,10 +167,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           textX = x2 + tickLabelInsets.top;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax))) || (y1 < screenMin + offset || y1 > screenMax + offset) )
-        {
+        if( (m_hideCut && ((textY < screenMin) || ((textY + tickExtent.y) > screenMax))) || ((y1 < screenMin + offset) || (y1 > screenMax + offset)) )
           drawTick = false;
-        }
       }
 
       if( drawTick )
@@ -272,17 +268,11 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     InsetsHelper ihelper = new InsetsHelper( insets );
 
     if( axis.getPosition() == POSITION.TOP )
-    {
       ihelper = ihelper.mirrorTopBottom();
-    }
     if( axis.getPosition() == POSITION.LEFT )
-    {
       ihelper = ihelper.hor2vert();
-    }
     if( axis.getPosition() == POSITION.RIGHT )
-    {
       ihelper = ihelper.hor2vert().mirrorLeftRight();
-    }
 
     return ihelper;
   }
@@ -363,13 +353,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       endX = screen.x + screen.width;
 
       if( axis.getPosition() == POSITION.BOTTOM )
-      {
         startY = screen.y + gap + 1;
-      }
       else
-      {
         startY = screen.y + screen.height - 1 - gap;
-      }
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -385,13 +371,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       endY = screen.y + screen.height;
 
       if( axis.getPosition() == POSITION.RIGHT )
-      {
         startX = screen.x + gap + 1;
-      }
       else
-      {
         startX = screen.x + screen.width - 1 - gap;
-      }
       endX = startX;
 
       if( axis.getDirection() == DIRECTION.POSITIVE )
@@ -407,7 +389,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   public void paint( GC gc, final IAxis axis, final Rectangle screen )
   {
-    if( screen.width > 0 && screen.height > 0 )
+    if( (screen.width > 0) && (screen.height > 0) )
     {
 
       gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
@@ -415,32 +397,21 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
       // draw axis line
       final int[] coords = createAxisSegment( axis, screen );
-      assert coords != null && coords.length == 4;
+      assert (coords != null) && (coords.length == 4);
       drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
       int offset = 0;
       if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
       {
         if( axis.getDirection().equals( DIRECTION.POSITIVE ) )
-        {
           offset = coords[0];
-        }
         else
-        {
           offset = coords[2];
-        }
       }
+      else if( axis.getDirection().equals( DIRECTION.POSITIVE ) )
+        offset = coords[3];
       else
-      {
-        if( axis.getDirection().equals( DIRECTION.POSITIVE ) )
-        {
-          offset = coords[3];
-        }
-        else
-        {
-          offset = coords[1];
-        }
-      }
+        offset = coords[1];
 
       Number[] ticks = getTicks( axis, gc );
       drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
@@ -473,13 +444,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           y = startY;
 
           if( axis.getPosition() == POSITION.TOP )
-          {
             y -= tickLength + lineWidth + tickLabelExtent.y + labelInsets.top + textExtent.y;
-          }
           else
-          {
             y += tickLength + lineWidth + tickLabelExtent.y + labelInsets.bottom;
-          }
         }
         else
         {
@@ -506,17 +473,13 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
         }
         if( tr != null )
-        {
           gc.setTransform( tr );
-        }
         drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally
       {
         if( tr != null )
-        {
           tr.dispose();
-        }
       }
     }
 
@@ -610,9 +573,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     // Label: nur mit einrechnen, wenn nicht leer
     if( !labelEmpty )
-    {
       width += getTextExtent( gc, axis.getLabel(), getLabelStyle() ).y;
-    }
 
     gc.dispose();
     img.dispose();

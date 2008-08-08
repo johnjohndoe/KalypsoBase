@@ -99,7 +99,8 @@
                         <element name="ImageMarker" type="ods:ImageMarkerType" />
                         <element name="PolygonMarker" type="ods:PolygonMarkerType"/>
                     </choice>
-                    <element name="FillColor" type="ods:ColorType" minOccurs="0" />
+                    <element name="FillColor" type="ods:ColorFillType" minOccurs="0" >
+                    </element>
                 </sequence>
                 
             </extension>
@@ -141,7 +142,7 @@
         <sequence>
             <choice>
                 <element name="ImageFill" type="ods:ImageFillType" />
-                    <element name="ColorFill" type="ods:ColorFillType" />
+                <element name="ColorFill" type="ods:ColorFillType" />
                 </choice>
         </sequence>
     </complexType>
@@ -158,6 +159,7 @@
        <sequence>
                 <element name="Color" type="ods:ColorType" />
             </sequence>
+            <attribute name="isVisible" type="boolean" use="optional"/>
        </complexType>
     
                    

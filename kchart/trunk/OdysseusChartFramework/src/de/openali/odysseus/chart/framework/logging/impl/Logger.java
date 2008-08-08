@@ -20,6 +20,8 @@ public class Logger
 
   public static final String TOPIC_LOG_AXIS = getPluginID() + "/debug/axis";
 
+  public static final String TOPIC_LOG_MAPPER = getPluginID() + "/debug/mapper";
+
   public static final String TOPIC_LOG_LAYER = getPluginID() + "/debug/layer";
 
   public static final String TOPIC_LOG_PLOT = getPluginID() + "/debug/plot";
@@ -116,9 +118,7 @@ public class Logger
   private static boolean topicAllowed( String topic )
   {
     if( "true".equals( Platform.getDebugOption( topic ) ) )
-    {
       return true;
-    }
     return true;
   }
 
@@ -135,18 +135,14 @@ public class Logger
     {
       int allowed = LEVEL.values().length;
       for( LEVEL l : LEVEL.values() )
-      {
         if( l.toString().toLowerCase().equals( configLevelStr.trim().toLowerCase() ) )
         {
           allowed = l.toInt();
           break;
         }
-      }
 
       if( allowed <= msgLevel.toInt() )
-      {
         return true;
-      }
     }
     return false;
   }

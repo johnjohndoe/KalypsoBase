@@ -41,9 +41,7 @@ public class StyleUtils
       }
     }
     else
-    {
       newpath = new int[0];
-    }
     return newpath;
   }
 
@@ -51,25 +49,15 @@ public class StyleUtils
   public static <T_style extends IStyle> T_style getDefaultStyle( Class<T_style> clazz )
   {
     if( IPointStyle.class.isAssignableFrom( clazz ) )
-    {
       return (T_style) getDefaultPointStyle();
-    }
     else if( ILineStyle.class.isAssignableFrom( clazz ) )
-    {
       return (T_style) getDefaultLineStyle();
-    }
     else if( ITextStyle.class.isAssignableFrom( clazz ) )
-    {
       return (T_style) getDefaultTextStyle();
-    }
     else if( IAreaStyle.class.isAssignableFrom( clazz ) )
-    {
       return (T_style) getDefaultAreaStyle();
-    }
     else
-    {
       return null;
-    }
   }
 
   public static ILineStyle getDefaultLineStyle( )
@@ -79,7 +67,7 @@ public class StyleUtils
 
   public static IPointStyle getDefaultPointStyle( )
   {
-    return new PointStyle( getDefaultLineStyle(), IDefaultStyles.DEFAULT_WIDTH, IDefaultStyles.DEFAULT_HEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY );
+    return new PointStyle( getDefaultLineStyle(), IDefaultStyles.DEFAULT_WIDTH, IDefaultStyles.DEFAULT_HEIGHT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_RGB_BACKGROUND, IDefaultStyles.DEFAULT_FILL_VISIBILITY, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY );
   }
 
   public static IAreaStyle getDefaultAreaStyle( )

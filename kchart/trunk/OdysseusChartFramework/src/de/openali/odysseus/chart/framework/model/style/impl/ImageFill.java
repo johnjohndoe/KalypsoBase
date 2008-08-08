@@ -55,49 +55,46 @@ import de.openali.odysseus.chart.framework.model.style.IFill;
 public class ImageFill implements IFill
 {
 
-	private final Image m_img;
-	private final Pattern m_pattern;
-	private final ImageData m_id;
+  private final Image m_img;
 
-	/**
-	 * @param url
-	 */
-	public ImageFill(ImageData id)
-	{
-		m_id = id;
-		m_img = new Image(Display.getDefault(), id);
-		m_pattern = new Pattern(Display.getDefault(), m_img);
-	}
+  private final Pattern m_pattern;
 
-	/**
-	 * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
-	 */
-	public void apply(GC gc)
-	{
-		if (m_pattern != null && !m_pattern.isDisposed())
-		{
-			gc.setBackgroundPattern(m_pattern);
-		}
+  private final ImageData m_id;
 
-	}
+  /**
+   * @param url
+   */
+  public ImageFill( ImageData id )
+  {
+    m_id = id;
+    m_img = new Image( Display.getDefault(), id );
+    m_pattern = new Pattern( Display.getDefault(), m_img );
+  }
 
-	/**
-	 * @see de.openali.odysseus.chart.framework.model.style.IFill#dispose()
-	 */
-	public void dispose()
-	{
-		if (m_img != null && !m_img.isDisposed())
-		{
-			m_img.dispose();
-		}
-		if (m_pattern != null && !m_pattern.isDisposed())
-		{
-			m_pattern.dispose();
-		}
-	}
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
+   */
+  public void apply( GC gc )
+  {
+    if( (m_pattern != null) && !m_pattern.isDisposed() )
+      gc.setBackgroundPattern( m_pattern );
 
-	public ImageFill copy()
-	{
-		return new ImageFill((ImageData) m_id.clone());
-	}
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.IFill#dispose()
+   */
+  public void dispose( )
+  {
+    if( (m_img != null) && !m_img.isDisposed() )
+      m_img.dispose();
+    if( (m_pattern != null) && !m_pattern.isDisposed() )
+      m_pattern.dispose();
+  }
+
+  public ImageFill copy( )
+  {
+    return new ImageFill( (ImageData) m_id.clone() );
+  }
+
 }

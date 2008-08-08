@@ -8,25 +8,27 @@ import org.eclipse.swt.graphics.Point;
 public class ImageMarker extends AbstractMarker
 {
 
-	private final ImageData m_id;
+  private final ImageData m_id;
 
-	public ImageMarker(ImageData id)
-	{
-		m_id = id;
-	}
+  public ImageMarker( ImageData id )
+  {
+    m_id = id;
+  }
 
-	public void paint(GC gc, Point pos, int width, int height)
-	{
-		Image img = new Image(gc.getDevice(), m_id.scaledTo(width, height));
-		gc.fillRectangle(pos.x, pos.y, width, height);
-		gc.drawImage(img, pos.x, pos.y);
-		gc.drawRectangle(pos.x, pos.y, width, height);
-		img.dispose();
-	}
+  public void paint( GC gc, Point pos, int width, int height, boolean drawForeground, boolean drawBackground )
+  {
+    Image img = new Image( gc.getDevice(), m_id.scaledTo( width, height ) );
+    if( drawBackground )
+      gc.fillRectangle( pos.x, pos.y, width, height );
+    gc.drawImage( img, pos.x, pos.y );
+    if( drawForeground )
+      gc.drawRectangle( pos.x, pos.y, width, height );
+    img.dispose();
+  }
 
-	public ImageMarker copy()
-	{
-		return new ImageMarker((ImageData) m_id.clone());
-	}
+  public ImageMarker copy( )
+  {
+    return new ImageMarker( (ImageData) m_id.clone() );
+  }
 
 }

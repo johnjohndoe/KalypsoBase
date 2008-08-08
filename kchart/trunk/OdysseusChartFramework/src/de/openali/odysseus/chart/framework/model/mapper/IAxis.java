@@ -6,6 +6,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * 
+ * An axis is a mapper which maps a number to a position.
+ * 
  * Axes use a logical and a numerical data range; the numerical range is needed to express values between discrete
  * logical data values.
  * 
@@ -14,7 +16,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
  * 
  * @author burtscher
  */
-public interface IAxis extends IMapper<Number, Integer>
+public interface IAxis extends IMapper
 {
 
   /**
@@ -82,5 +84,15 @@ public interface IAxis extends IMapper<Number, Integer>
   public void setScreenHeight( int height );
 
   public int getScreenHeight( );
+
+  /**
+   * This is used for configuration purposes: the numeric range has to be mapped to a concrete range in the Chartfile
+   * (e.g. to data values). This field is set according to the configuration attribute type from the chartfile, so it
+   * can be used to get a dataoperator which handles the original configuration type. (getDataOperator(getDataType())
+   * 
+   * 
+   * @return class of data type which is intended by this axis
+   */
+  public Class< ? > getDataClass( );
 
 }

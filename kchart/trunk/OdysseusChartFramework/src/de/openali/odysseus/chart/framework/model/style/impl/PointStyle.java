@@ -22,7 +22,9 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   private Color m_inlineColor;
 
-  public PointStyle( ILineStyle outline, int width, int height, int alpha, RGB inlineColor, IMarker marker, boolean isVisible )
+  private boolean m_showFill;
+
+  public PointStyle( ILineStyle outline, int width, int height, int alpha, RGB inlineColor, boolean isFillVisible, IMarker marker, boolean isVisible )
   {
     setStroke( outline );
     setWidth( width );
@@ -31,12 +33,20 @@ public class PointStyle extends AbstractStyle implements IPointStyle
     setMarker( marker );
     setAlpha( alpha );
     setVisible( isVisible );
+    setFillVisible( isFillVisible );
+  }
+
+  public void setFillVisible( boolean isFillVisible )
+  {
+    m_showFill = isFillVisible;
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setOutline(de.openali.odysseus.chart.framework.impl.model.style.ILineStyle)
+   * @see
+   * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setOutline(de.openali.odysseus.chart.framework
+   * .impl.model.style.ILineStyle)
    */
   public void setStroke( ILineStyle stroke )
   {
@@ -96,7 +106,9 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   /*
    * (non-Javadoc)
    * 
-   * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setMarker(de.openali.odysseus.chart.framework.model.style.IMarker)
+   * @see
+   * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setMarker(de.openali.odysseus.chart.framework.
+   * model.style.IMarker)
    */
   public void setMarker( IMarker marker )
   {
@@ -119,10 +131,8 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
     gc.setAlpha( getAlpha() );
 
-    if( m_inlineColor != null && !m_inlineColor.isDisposed() )
-    {
+    if( (m_inlineColor != null) && !m_inlineColor.isDisposed() )
       m_inlineColor.dispose();
-    }
     m_inlineColor = new Color( gc.getDevice(), m_inlineRGB );
     gc.setBackground( m_inlineColor );
 
@@ -130,18 +140,12 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   public void dispose( )
   {
-    if( m_inlineColor != null && !m_inlineColor.isDisposed() )
-    {
+    if( (m_inlineColor != null) && !m_inlineColor.isDisposed() )
       m_inlineColor.dispose();
-    }
     if( m_stroke != null )
-    {
       m_stroke.dispose();
-    }
     if( m_marker != null )
-    {
       m_marker.dispose();
-    }
   }
 
   public RGB getInlineColor( )
@@ -156,6 +160,14 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   public IPointStyle copy( )
   {
-    return new PointStyle( getStroke().copy(), getWidth(), getHeight(), getAlpha(), getInlineColor(), getMarker().copy(), isVisible() );
+    return new PointStyle( getStroke().copy(), getWidth(), getHeight(), getAlpha(), getInlineColor(), isFillVisible(), getMarker().copy(), isVisible() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.style.IPointStyle#isFillVisible()
+   */
+  public boolean isFillVisible( )
+  {
+    return m_showFill;
   }
 }

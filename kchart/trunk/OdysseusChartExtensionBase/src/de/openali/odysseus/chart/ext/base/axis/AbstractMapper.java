@@ -1,10 +1,8 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
-import java.util.Comparator;
 import java.util.HashMap;
 
-import org.apache.commons.collections.comparators.ComparableComparator;
-
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.MapperEventHandler;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
@@ -14,15 +12,11 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_logical, T_visual>
+public abstract class AbstractMapper implements IMapper
 {
   private IMapperRegistry m_registry = null;
 
   private final String m_id;
-
-  private final Comparator<T_logical> m_dataComparator;
-
-  private final Class< ? > m_dataClass;
 
   private final MapperEventHandler m_handler = new MapperEventHandler();
 
@@ -31,28 +25,12 @@ public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_l
    */
   private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
-  /**
-   * Uses a ComparableComparator as dataComparator
-   */
   @SuppressWarnings("unchecked")
-  public AbstractMapper( final String id, final Class< ? > dataClass )
-  {
-    this( id, new ComparableComparator(), dataClass );
-  }
+  private final HashMap<Class, IDataOperator> m_dataOperators = new HashMap<Class, IDataOperator>();
 
-  public AbstractMapper( final String id, final Comparator<T_logical> dataComparator, final Class< ? > dataClass )
+  public AbstractMapper( final String id )
   {
     m_id = id;
-    m_dataComparator = dataComparator;
-    m_dataClass = dataClass;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getDataClass()
-   */
-  public Class< ? > getDataClass( )
-  {
-    return m_dataClass;
   }
 
   /**
@@ -92,11 +70,6 @@ public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_l
     return m_data.get( id );
   }
 
-  protected Comparator<T_logical> getComparator( )
-  {
-    return m_dataComparator;
-  }
-
   public void addListener( IMapperEventListener l )
   {
     m_handler.addListener( l );
@@ -111,4 +84,27 @@ public abstract class AbstractMapper<T_logical, T_visual> implements IMapper<T_l
   {
     return m_handler;
   }
+
+  /**
+   * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and
+   * vice versa)
+   */
+  @SuppressWarnings( { "cast", "unchecked" })
+  public <T> IDataOperator<T> getDataOperator( Class<T> clazz )
+  {
+    for( Class c : m_dataOperators.keySet() )
+      if( c.isAssignableFrom( clazz ) )
+        return (IDataOperator<T>) m_dataOperators.get( c );
+    return getRegistry().getDataOperator( clazz );
+  }
+
+  /**
+   * Setting a dataOperator overrides global data operators; that way, individual operators can be set for each mapper
+   * instance
+   */
+  public <T> void addDataOperator( Class<T> clazz, IDataOperator<T> dataOperator )
+  {
+    m_dataOperators.put( clazz, dataOperator );
+  }
+
 }
