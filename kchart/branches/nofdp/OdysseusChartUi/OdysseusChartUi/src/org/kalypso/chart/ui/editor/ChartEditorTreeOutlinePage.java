@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
@@ -71,10 +72,12 @@ import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author alibu
+ * @author kimwerner
  * 
  */
 public class ChartEditorTreeOutlinePage implements IContentOutlinePage
@@ -136,10 +139,34 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       }
     } );
 
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final ISelection selection = event.getSelection();
+        final IStructuredSelection struct = (IStructuredSelection) selection;
+        final Object element = struct.getFirstElement();
+        if( element instanceof IChartLayer )
+          handleSelectionChanged( (IChartLayer) element );
+
+      }
+    } );
+
     updateControl();
 
     AbstractLayerManagerEventListener cmel = new AbstractLayerManagerEventListener()
     {
+      
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerVisibilityChanged( IChartLayer layer )
+      {
+        updateControl();
+      }
+
       /**
        * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
@@ -196,7 +223,24 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     {
       m_treeViewer.setChecked( object, checked );
     }
+    IChartModel model = m_chartPart.getChartComposite().getChartModel();
+    if( model.getLayerManager().getLayerPosition( layer ) < 0 )
+    {
+      final Object obj = m_contentProvider.getParent( layer );
+      if( obj instanceof IExpandableChartLayer )
+        ((IExpandableChartLayer) obj).fireLayerVisibilityChanged();
+    }
+  }
 
+  protected void handleSelectionChanged( final IChartLayer layer )
+  {
+    IChartModel model = m_chartPart.getChartComposite().getChartModel();
+    if( model == null )
+      return;
+    final Object effectedLayer = model.getLayerManager().getLayerPosition( layer ) < 0 ? m_contentProvider.getParent( layer ) : layer;
+    final IChartLayer[] layers =  model.getLayerManager().getLayers();
+    for( IChartLayer l :layers )
+      l.setActive( l.equals( effectedLayer ) );
   }
 
   public void dispose( )
@@ -293,12 +337,23 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
           String id = (String) data;
           ILayerManager lm = m_chartPart.getChartComposite().getChartModel().getLayerManager();
           IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
+
           // either the dragged layer is dropped on another layer, then it will be
           // moved to its position
           if( selectedObject != null )
           {
             IChartLayer draggedLayer = lm.getLayerById( id );
-            lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
+            if( lm.getLayerById( selectedObject.getId() ) == null )
+            {
+              final Object obj = m_contentProvider.getParent( selectedObject );
+              if( obj instanceof IExpandableChartLayer )
+              {
+                ((IExpandableChartLayer) obj).moveLayerToPosition( id, selectedObject );
+                updateControl();
+              }
+            }
+            else
+              lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
             return true;
           }
           // or it was dropped at the end of the list, then it will be moved to the lowest position
@@ -315,9 +370,18 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public boolean validateDrop( Object target, int operation, TransferData transferType )
       {
-        return ChartLayerTransfer.getInstance().isSupportedType( transferType );
-      }
+        if( ChartLayerTransfer.getInstance().isSupportedType( transferType ) )
+        {
+          final Object o = getSelectedObject();
+          if( getCurrentTarget() == null )
+            return false;
 
+          final Object parent1 = m_contentProvider.getParent( getCurrentTarget() );
+          final Object parent2 = m_contentProvider.getParent( o );
+          return parent1 == parent2;
+        }
+        return false;
+      }
     };
 
     m_treeViewer.addDragSupport( ops, new Transfer[] { ChartLayerTransfer.getInstance() }, dragSL );

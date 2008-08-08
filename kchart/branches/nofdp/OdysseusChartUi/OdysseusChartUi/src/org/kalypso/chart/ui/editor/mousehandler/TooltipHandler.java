@@ -6,7 +6,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -73,7 +73,7 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
     {
       final Point point = new Point( e.x, e.y );
 
-      for( final IEditableChartLayer layer : m_chart.getChartModel().getLayerManager().getEditableLayers() )
+      for( final ITooltipChartLayer layer : m_chart.getChartModel().getLayerManager().getTooltipLayers() )
       {
         if( layer.isVisible() )
         {

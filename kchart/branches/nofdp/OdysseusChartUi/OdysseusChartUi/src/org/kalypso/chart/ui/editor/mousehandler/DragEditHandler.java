@@ -15,6 +15,7 @@ import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
  * Registers itself upon creation and deregisters at disposal.
  * 
  * @author alibu
+ * @author kimwerner
  */
 public class DragEditHandler implements IChartDragHandler
 {
@@ -22,11 +23,19 @@ public class DragEditHandler implements IChartDragHandler
 
   private EditInfo m_editInfo = null;
 
-  private boolean m_isEditing = false;
+  private final int m_trashHold;
+
+  private EditInfo m_clickInfo = null;
 
   public DragEditHandler( final ChartComposite chart )
   {
+    this( chart, 0 );
+  }
+
+  public DragEditHandler( final ChartComposite chart, final int trashHold )
+  {
     m_chart = chart;
+    m_trashHold = trashHold;
   }
 
   /**
@@ -41,15 +50,7 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
-    final PlotCanvas plot = m_chart.getPlot();
-    m_editInfo = m_chart.getPlot().getTooltipInfo();
-    if( m_editInfo == null )
-      return;
-    if( m_editInfo != null )
-    {
-      m_isEditing = true;
-      plot.setIsEditing( true );
-    }
+    m_clickInfo = m_chart.getPlot().getTooltipInfo();
   }
 
   /**
@@ -57,15 +58,20 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( m_isEditing && m_editInfo != null )
+    if( m_editInfo != null )
     {
       final Point editPoint = new Point( e.x, e.y );
-      final EditInfo editMoveInfo = m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
+      m_editInfo.m_layer.commitDrag( editPoint, m_editInfo );
+      m_clickInfo = null;
       m_editInfo = null;
-      m_isEditing = false;
       final PlotCanvas plot = m_chart.getPlot();
       plot.setIsEditing( false );
       plot.setTooltipInfo( null );
+    }
+    else if( m_clickInfo != null )
+    {
+      m_clickInfo.m_layer.commitDrag( m_clickInfo.m_pos, m_clickInfo );
+      m_clickInfo = null;
     }
   }
 
@@ -74,13 +80,22 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-    if( m_isEditing && m_editInfo != null )
+    if( m_clickInfo == null )
+      return;
+    
+    final boolean allowEditing = Math.abs( e.x - m_clickInfo.m_pos.x ) > m_trashHold || Math.abs( e.y - m_clickInfo.m_pos.y ) > m_trashHold;
+    if( m_editInfo == null && allowEditing )
+      m_editInfo = new EditInfo( m_clickInfo );
+
+    if( m_editInfo != null )
     {
+      final PlotCanvas plot = m_chart.getPlot();
       final IEditableChartLayer layer = m_editInfo.m_layer;
       final Point editPoint = new Point( e.x, e.y );
       final EditInfo editMoveInfo = layer.drag( editPoint, m_editInfo );
-      m_chart.getPlot().setTooltipInfo( editMoveInfo );
-      m_chart.getPlot().invalidate( new IChartLayer[] { layer } );
+      plot.setIsEditing( true );
+      plot.setTooltipInfo( editMoveInfo );
+      plot.invalidate( new IChartLayer[] { layer } );
     }
   }
 
@@ -91,4 +106,5 @@ public class DragEditHandler implements IChartDragHandler
   {
     return null;
   }
+
 }

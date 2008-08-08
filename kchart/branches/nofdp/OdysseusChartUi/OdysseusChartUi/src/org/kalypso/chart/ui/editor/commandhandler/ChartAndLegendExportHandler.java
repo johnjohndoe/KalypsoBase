@@ -30,7 +30,6 @@ public class ChartAndLegendExportHandler extends AbstractHandler
 {
   private String m_filename;
 
-  private final int count = 0;
 
   /**
    * saves an image of the current chart part and the corresponding legend to a file; if no filename has been set by
@@ -39,7 +38,6 @@ public class ChartAndLegendExportHandler extends AbstractHandler
    * 
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public Object execute( final ExecutionEvent event )
   {
 

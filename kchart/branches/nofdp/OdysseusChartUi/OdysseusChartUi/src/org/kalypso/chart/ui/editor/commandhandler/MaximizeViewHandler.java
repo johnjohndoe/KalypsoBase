@@ -34,7 +34,6 @@ public class MaximizeViewHandler extends AbstractHandler
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @SuppressWarnings("unchecked")
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
