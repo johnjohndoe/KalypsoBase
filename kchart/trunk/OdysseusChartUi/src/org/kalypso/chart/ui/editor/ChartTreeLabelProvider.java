@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ui.IChartPart;
@@ -108,6 +109,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     {
       return ((IChartLayer) element).getTitle();
     }
+
     else if( element instanceof ILegendEntry )
     {
       return ((ILegendEntry) element).getDescription();
@@ -126,13 +128,16 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       // Wenn nur ein Kind-Icon vorhanden ist, dann wird das verwendet
       IChartLayer layer = (IChartLayer) element;
       ILegendEntry[] entries = layer.getLegendEntries();
-      if( entries.length == 0 )
+      if( entries == null || entries.length == 0 )
       {
         return null;
       }
       if( entries.length == 1 )
       {
-        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), entries[0].getSymbol( m_defaultIconSize ) );
+        final ImageData data =  entries[0].getSymbol( m_defaultIconSize );
+        if (data ==null)
+          return null;
+        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(),data );
         m_layerImages.put( layer, img );
         return img;
       }
