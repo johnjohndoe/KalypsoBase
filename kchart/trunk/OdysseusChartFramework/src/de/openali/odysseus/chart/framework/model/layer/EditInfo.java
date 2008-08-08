@@ -31,4 +31,13 @@ public class EditInfo
     m_text = editText;
     m_pos = mousePos;
   }
+  public EditInfo( final EditInfo copyInfo)
+  {
+    m_layer = copyInfo.m_layer;
+    m_hoverFigure = copyInfo.m_hoverFigure;
+    m_editFigure = copyInfo.m_editFigure;
+    m_data = copyInfo.m_data;
+    m_text = copyInfo.m_text;
+    m_pos = copyInfo.m_pos;
+  }
 }

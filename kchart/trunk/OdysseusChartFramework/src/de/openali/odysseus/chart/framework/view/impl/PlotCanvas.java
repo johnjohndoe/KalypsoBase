@@ -263,12 +263,18 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
         gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
         final Point toolsize = gcw.textExtent( tooltiptext );
-        int toolx = mousePos.x + 20 + TOOLINSET;
+        int toolx = mousePos.x +3 + TOOLINSET;
         if( toolx + toolsize.x > screen.width )
         {
-          toolx = toolx - toolsize.x;
+          toolx = mousePos.x-3 - toolsize.x;
         }
-        final int tooly = mousePos.y - 5 - TOOLINSET - toolsize.y;
+        int tooly = mousePos.y - 3 - TOOLINSET - toolsize.y;
+        if(  tooly - toolsize.y < 0 )
+        {
+          tooly = mousePos.y + 3 - TOOLINSET + toolsize.y;
+        }
+        
+        
 
         gcw.setLineWidth( 1 );
         final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
