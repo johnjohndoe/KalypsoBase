@@ -129,7 +129,7 @@ public final class GMLSchemaCatalog
       final URIResolver uriResolver = URIResolverPlugin.createResolver();
       final String externalForm = schemaUrl == null ? null : schemaUrl.toExternalForm();
       final String resolvedUri = uriResolver.resolve( externalForm, null, externalForm );
-      final URL resolvedUrl = new URL( resolvedUri );
+      final URL resolvedUrl = resolvedUri == null ? null : new URL( resolvedUri );
 
       // auch versuchen aus dem Cache zu laden, wenn die url null ist;
       // vielleicht ist der namespace ja noch im file-cache
