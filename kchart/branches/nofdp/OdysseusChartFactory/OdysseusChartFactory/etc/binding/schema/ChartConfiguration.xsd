@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:ods="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+	targetNamespace="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+	elementFormDefault="qualified" version="0.2.0">
+	<include schemaLocation="./StyleConfiguration.xsd"/>
+
+	<element name="ChartConfiguration" type="ods:ChartConfigurationType">
+
+		<!-- Achsen Keys -->
+		<key name="axisKey" id="axisKey.key">
+			<selector xpath="ods:Axis"> </selector>
+			<field xpath="@id"/>  
+		</key>
+		<keyref refer="ods:axisKey" name="domainAxisKey.ref">
+			<selector xpath="ods:Layer/ods:Mappers/ods:DomainAxisRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+		<keyref refer="ods:axisKey" name="targetAxisKey.ref">
+			<selector xpath="ods:Layer/ods:Mappers/ods:TargetAxisRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- Mapper Keys -->
+		<key name="mapperKey" id="mapperKey.key">
+			<selector xpath="ods:Mapper"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:mapperKey" name="mapperKey.ref">
+			<selector xpath="ods:Layer/ods:Mappers/ods:MapperRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- Layer Keys -->
+		<key name="layerKey" id="layerKey.key">
+			<selector xpath="ods:Layer"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:layerKey" name="layerKey.ref">
+			<selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- AxisRenderer Keys -->
+		<key name="axisRendererKey" id="axisRendererKey.key">
+			<selector xpath="ods:AxisRenderer"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:axisRendererKey" name="axisRendererKey.ref">
+			<selector xpath="ods:Axis/ods:RendererRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- LineStyleKeys -->
+		<key name="lineStyleKey" id="lineStyleKey.key">
+			<selector xpath="ods:LineStyle"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:lineStyleKey" name="lineStyleKey.ref">
+			<selector xpath="ods:Layer/ods:Styles/ods:LineStyleRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- PointStyleKeys -->
+		<key name="pointStyleKey" id="pointStyleKey.key">
+			<selector xpath="ods:PointStyle"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:pointStyleKey" name="pointStyleKey.ref">
+			<selector xpath="ods:Layer/ods:Styles/ods:PointStyleRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- AreaStyleKeys -->
+		<key name="areaStyleKey" id="areaStyleKey.key">
+			<selector xpath="ods:AreaStyle"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:areaStyleKey" name="areaStyleKey.ref">
+			<selector xpath="ods:Layer/ods:Styles/ods:AreaStyleRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+		
+		<!-- TextStyleKeys -->
+		<key name="textStyleKey" id="textStyleKey.key">
+			<selector xpath="ods:TextStyle"> </selector>
+			<field xpath="@id"/>
+		</key>
+		<keyref refer="ods:textStyleKey" name="textStyleKey.ref">
+			<selector xpath="ods:Layer/ods:Styles/ods:TextStyleRef"/>
+			<field xpath="@ref"/>
+		</keyref>
+
+		<!-- identische Mapper nur einmal pro layer -->
+		<!-- 
+		<unique name="mapperPerLayer">
+			<selector xpath="ods:Layer/ods:Mappers/*"/>
+			<field xpath="@ref"/>
+		</unique>
+		-->
+
+		<!-- identische MapperRoles nur einmal pro layer -->
+		<!-- 
+		<unique name="mapperRolePerLayer">
+			<selector xpath="ods:Layer/ods:Mappers/*"/>
+			<field xpath="@role"/>
+		</unique>
+		-->
+
+		<!-- identische Styles nur einmal pro layer -->
+		<!-- 
+		<unique name="stylePerLayer">
+			<selector xpath="ods:Layer/ods:Styles/*"/>
+			<field xpath="@ref"/>
+		</unique>
+		-->
+
+		<!-- identische StyleRoles nur einmal pro layer -->
+		<!-- 
+		<unique name="styleRolePerLayer">
+			<selector xpath="ods:Layer/ods:Styles/*"/>
+			<field xpath="@role"/>
+		</unique>
+		-->
+
+		<!-- identische Layer nur einmal pro chart -->
+		<!-- 
+		<unique name="layerPerChart">
+			<selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/>
+			<field xpath="@ref"/>
+		</unique>
+		-->
+
+		<!-- identischer Parametername nur einmal pro Provider; muss dummerweise für jedes Element 
+		individuell aufgeführt werden, da * auf alle Elemente wirkt und ein Parametername global nur einmal
+		auftauchen dürfte
+		
+		Funktioniert leider nicht - müsste auch noch individuell für Parameter, ParameterList und ParameterMap 
+		aufgeführt werden.
+		
+		ISt aber nicht schlimm, weil dadurch keine essntiellen Fehler entstehen - bei mehrfach aufgerführten 
+		ParameterNamen werden halt vorherige von nachfolgenden überschrieben
+		
+		<unique name="parameterNamePerLayerProvider">
+			<selector xpath="ods:Layer/ods:Provider/ods:Parameters/*"/>
+			<field xpath="@name"/>
+		</unique>
+		<unique name="parameterNamePerAxisProvider">
+			<selector xpath="ods:Axis/ods:Provider/ods:Parameters/*"/>
+			<field xpath="@name"/>
+		</unique>
+		<unique name="parameterNamePerMapperProvider">
+			<selector xpath="ods:Mapper/ods:Provider/ods:Parameters/*"/>
+			<field xpath="@name"/>
+		</unique>
+		<unique name="parameterNamePerAxisRendererProvider">
+			<selector xpath="ods:AxisRenderer/ods:Provider/ods:Parameters/*"/>
+			<field xpath="@name"/>
+		</unique>
+		-->
+
+	</element>
+
+	<complexType name="ChartConfigurationType">
+		<sequence >
+			<element ref="ods:Chart" maxOccurs="unbounded" />
+		</sequence>
+
+
+
+	</complexType>
+
+	<element name="Chart" type="ods:ChartType"/>
+	<element name="Layer" type="ods:LayerType"/>
+	<element name="Axis" type="ods:AxisType"/>
+	<element name="Mapper" type="ods:MapperType"/>
+	<element name="AxisRenderer" type="ods:AxisRendererType"/>
+
+
+	<complexType name="AbstractConfigurationType" abstract="true">
+		<complexContent>
+			<extension base="ods:ReferencableType">
+				<sequence>
+					<element name="Provider" type="ods:ProviderType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ReferencableType">
+		<attribute name="id" type="ID" use="required"/>
+	</complexType>
+
+	<complexType name="ReferencingType">
+		<attribute name="ref" type="IDREF" use="required"/>
+	</complexType>
+
+	<complexType name="RoleReferencingType">
+		<complexContent>
+			<extension base="ods:ReferencingType">
+				<attribute name="role" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ChartType">
+		<complexContent>
+			<extension base="ods:ReferencableType">
+				<sequence>
+					<element name="Title" type="string"/>
+					<element name="Description" type="string"/>
+					<element name="Layers">
+						<complexType>
+							<sequence>
+								<element ref="ods:Layer" maxOccurs="unbounded"/> 
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Mappers">
+						<complexType>
+							<sequence>
+								<choice maxOccurs="unbounded">
+									<element ref="ods:Mapper" />
+									<element ref="ods:Axis" />
+								</choice>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Renderers">
+						<complexType>
+							<sequence>
+								<element ref="ods:AxisRenderer" maxOccurs="unbounded"/> 
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+			</complexContent>
+	</complexType>
+
+
+	<complexType name="LayerType">
+		<complexContent>
+			<extension base="ods:AbstractConfigurationType">
+				<sequence>
+					<element name="Title" type="string"/>
+					<element name="Description" type="string"/>
+					<element name="MapperRefs">
+						<complexType>
+							<sequence>
+								<element name="DomainAxisRef" type="ods:ReferencingType"/>
+								<element name="TargetAxisRef" type="ods:ReferencingType"/>
+								<element name="MapperRef" type="ods:RoleReferencingType"
+									minOccurs="0" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element ref ="ods:Styles" minOccurs="0" />
+				</sequence>
+				<attribute name="visible" type="boolean" default="true">
+					<annotation>
+						<documentation> legt die Sichtbarkeit des Layers fest </documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="ProviderType">
+		<sequence>
+			<element name="Parameters" type="ods:ParametersType" minOccurs="0"/>
+		</sequence>
+		<attribute name="epid" type="string" use="required">
+			<annotation>
+				<documentation> ID der Extension, die den jeweiligen Erweiterungspunkt implementiert
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+
+
+	<complexType name="MapperRefType">
+		<complexContent>
+			<extension base="ods:ReferencingType">
+				<attribute name="role" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="MapperType">
+		<complexContent>
+			<extension base="ods:AbstractConfigurationType"/>
+		</complexContent>
+	</complexType>
+
+
+
+	<complexType name="AxisType">
+		<complexContent>
+			<extension base="ods:MapperType">
+				<sequence>
+					<element name="Label" type="string"/>
+					<element name="Direction">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="POSITIVE"/>
+								<enumeration value="NEGATIVE"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="Position">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="LEFT"/>
+								<enumeration value="RIGHT"/>
+								<enumeration value="BOTTOM"/>
+								<enumeration value="TOP"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<choice>
+						<element ref="ods:DateRange" />
+						<element ref="ods:DurationRange" />
+						<element ref="ods:StringRange" />
+						<element ref="ods:NumberRange" />
+					</choice>
+					<element name="PreferredAdjustment" minOccurs="0">
+						<annotation>
+							<documentation> sets the preferred relation for auto adjustement
+							</documentation>
+						</annotation>
+						<complexType>
+							<attribute name="before" use="required">
+								<simpleType>
+									<restriction base="int">
+										<minInclusive value="0"/>
+										<maxInclusive value="100"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+							<attribute name="range" use="required">
+								<simpleType>
+									<restriction base="int">
+										<minInclusive value="1"/>
+										<maxInclusive value="100"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+							<attribute name="after" use="required">
+								<simpleType>
+									<restriction base="int">
+										<minInclusive value="0"/>
+										<maxInclusive value="100"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+						</complexType>
+					</element>
+					<element name="RendererRef" type="ods:ReferencingType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+
+	
+
+	<complexType name="AxisNumberRangeType">
+		<sequence>
+					<element name="MinValue" type="double"></element>
+					<element name="MaxValue" type="double"></element>
+				</sequence>
+	</complexType>
+	
+	<element name="NumberRange" type="ods:AxisNumberRangeType"></element>
+	
+	<complexType name="AxisDateRangeType">
+		<sequence>
+					<element name="MinValue" type="dateTime"></element>
+					<element name="MaxValue" type="dateTime"></element>
+				</sequence>
+	</complexType>
+	
+	<element name="DateRange"  type="ods:AxisDateRangeType"></element>
+	
+	<complexType name="AxisDurationRangeType">
+				<sequence>
+					<element name="MinValue" type="duration"></element>
+					<element name="MaxValue" type="duration"></element>
+				</sequence>
+			</complexType>
+	
+	<element name="DurationRange"  type="ods:AxisDurationRangeType"></element>
+	
+
+	
+	<complexType name="AxisStringRangeType">
+		<sequence>
+			<element name="MinValue" type="double"></element>
+			<element name="MaxValue" type="double"></element>
+			<element name="ValueSet">
+				<complexType>
+					<sequence>
+					<element name="Value" type="string" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<element name="StringRange"  type="ods:AxisStringRangeType"></element>
+
+	<complexType name="AxisRendererType">
+		<complexContent>
+			<extension base="ods:AbstractConfigurationType"> 
+			<sequence>
+				<element ref="ods:Styles" minOccurs="0"/>
+			</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+
+
+
+	<complexType name="ParametersType">
+		<sequence>
+			<choice minOccurs="0" maxOccurs="unbounded">
+				<element name="Parameter" type="ods:ParameterType"/>
+				<element name="ParameterList" type="ods:ParameterListType"/>
+				<element name="ParameterMap" type="ods:ParameterMapType"/>
+			</choice>
+		</sequence>
+	</complexType>
+
+
+	<complexType name="ParameterType">
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="value" type="string" use="required"/>
+	</complexType>
+
+
+	<complexType name="ParameterListType">
+		<sequence>
+			<element name="value" type="string" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+	</complexType>
+
+	<complexType name="ParameterMapType">
+		<sequence>
+			<element name="element" maxOccurs="unbounded">
+				<complexType>
+					<attribute name="key" type="string" use="required"/>
+					<attribute name="value" type="string" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+	</complexType>
+
+
+	<element name="Styles">
+		<complexType>
+			<choice minOccurs="1" maxOccurs="unbounded">
+				<element ref="ods:LineStyle"></element>
+				<element ref="ods:PointStyle"></element>
+				<element ref="ods:AreaStyle"></element>
+				<element ref="ods:TextStyle"></element> 
+			</choice>
+		</complexType>
+	</element>
+
+<!-- 
+	<complexType name="StylesType">
+		<choice maxOccurs="unbounded">
+			<element name="LineStyleRef" type="ods:RoleReferencingType"/>
+			<element name="PointStyleRef" type="ods:RoleReferencingType"/>
+			<element name="AreaStyleRef" type="ods:RoleReferencingType"/>
+			<element name="TextStyleRef" type="ods:RoleReferencingType"/>
+		</choice>
+	</complexType>
+-->	
+	</schema>
+	
+
