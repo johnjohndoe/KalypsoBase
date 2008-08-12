@@ -46,26 +46,31 @@ import java.util.regex.Pattern;
 /**
  * Ein FileFilter was mit Regex definiert werden kann.
  * 
- * @author belger;schlienger
+ * @author belger
+ * @author schlienger
  */
 public class MultipleRegexFileFilter implements java.io.FileFilter
 {
-  /** Die Regex Pattern, eines davon muss die gesuchte Datei erfüllen */
+  /**
+   * Die Regex Pattern, eines davon muss die gesuchte Datei erfüllen.
+   */
   private Pattern[] m_patterns;
 
-  /** Pattern auch auf Verzeichnisse anwenden */
+  /**
+   * Pattern auch auf Verzeichnisse anwenden.
+   */
   private final boolean m_bFilterDirs;
 
   /**
-   * falls false, wird für accept( File f ) immer false zurückgegeben, falls f ein Verzeichnis ist
+   * Falls false, wird für accept( File f ) immer false zurückgegeben, falls f ein Verzeichnis ist.
    */
   private final boolean m_bShowDir;
 
   /**
-   * Constructor
+   * The constructor.
    * 
    * @param patterns
-   *          string regex pattern unqualified filename must match to be included.
+   *          String regex pattern unqualified filename must match to be included.
    */
   public MultipleRegexFileFilter( final String[] patterns, boolean bFilterDirs, boolean bShowDirs, boolean bIgnoreCase )
   {
@@ -86,7 +91,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
 
     m_patterns = new Pattern[patterns.length];
 
-    int flags = bIgnoreCase ? ( Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE ) : 0;
+    int flags = bIgnoreCase ? (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE) : 0;
 
     for( int patternID = 0; patternID < patterns.length; patternID++ )
       m_patterns[patternID] = Pattern.compile( patterns[patternID], flags );
@@ -96,9 +101,8 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    * Select only files that match the pattern.
    * 
    * @param file
-   *          the name of the file
-   * 
-   * @return true if and only if the name should be included in the file list; false otherwise.
+   *          The name of the file.
+   * @return True if and only if the name should be included in the file list; false otherwise.
    */
   public boolean accept( File file )
   {
@@ -109,8 +113,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     if( file.isDirectory() && !m_bShowDir )
       return false;
 
-    // falls Pattern nicht auf Verzeichnis engewendet wereden soll, gleich
-    // zurück
+    // falls Pattern nicht auf Verzeichnis engewendet werden soll, gleich zurück
     if( file.isDirectory() && !m_bFilterDirs )
       return true;
 
