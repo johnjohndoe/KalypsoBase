@@ -96,7 +96,7 @@ public class MyPrintStream
     try
     {
       if( m_fileStream != null )
-        m_fileStream.writeUTF( message + "\n" );
+        m_fileStream.writeUTF( message + "\r\n" );
     }
     catch( IOException e )
     {
