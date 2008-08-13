@@ -42,12 +42,15 @@ package de.openali.odysseus.chart.framework.model.mapper;
 
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.util.resource.IPair;
+
 /**
  * @author alibu
- * 
  */
 public interface ICoordinateMapper
 {
+
+  public IPair<Number, Number> screenToNumeric( Point screenValue );
 
   public Point numericToScreen( Number domainValue, Number targetValue );
 

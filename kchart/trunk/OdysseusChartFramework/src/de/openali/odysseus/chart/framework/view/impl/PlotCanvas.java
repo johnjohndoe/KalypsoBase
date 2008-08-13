@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -61,15 +62,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private final boolean m_bufferLayers;
 
-  
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style)
+  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
-    this(manager, parent, style, true);
+    this( manager, parent, style, true );
   }
-  
+
   /**
-   * @param bufferLayers if set to true, each layer is buffered on an individual image; set this to true
-   *    if you plan to offer panning of single layers in the chart front end 
+   * @param bufferLayers
+   *          if set to true, each layer is buffered on an individual image; set this to true if you plan to offer
+   *          panning of single layers in the chart front end
    */
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style, final boolean bufferLayers )
   {
@@ -80,13 +81,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     addPaintListener( this );
     addListener( SWT.Resize, this );
 
-    if (m_bufferLayers)
-    {
+    if( m_bufferLayers )
       for( IChartLayer layer : manager.getLayers() )
-      {
         m_layerImageMap.put( layer, null );
-      }
-    }
 
     final AbstractLayerManagerEventListener m_almel = new AbstractLayerManagerEventListener()
     {
@@ -106,10 +103,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       public void onLayerRemoved( IChartLayer layer )
       {
         Image image = m_layerImageMap.get( layer );
-        if( image != null && !image.isDisposed() )
-        {
+        if( (image != null) && !image.isDisposed() )
           image.dispose();
-        }
         m_layerImageMap.remove( layer );
         invalidate( null );
       }
@@ -148,23 +143,19 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    * invalidate is called when a redraw is needed
    * 
    * @param layers
-   *            Array of layers which should be redrawn; if null, only the bufferImage is redrawn
+   *          Array of layers which should be redrawn; if null, only the bufferImage is redrawn
    */
   public void invalidate( IChartLayer[] layers )
   {
-    if( layers != null && m_bufferLayers )
-    {
+    if( (layers != null) && m_bufferLayers )
       for( IChartLayer layer : layers )
       {
         Image image = m_layerImageMap.get( layer );
-        if( image != null && !image.isDisposed() )
-        {
+        if( (image != null) && !image.isDisposed() )
           image.dispose();
-        }
         m_layerImageMap.put( layer, null );
       }
-    }
-    if( m_bufferImg != null && !m_bufferImg.isDisposed() )
+    if( (m_bufferImg != null) && !m_bufferImg.isDisposed() )
     {
       m_bufferImg.dispose();
       m_bufferImg = null;
@@ -185,15 +176,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     }
 
     if( m_layerImageMap != null )
-    {
       for( Image img : m_layerImageMap.values() )
-      {
         if( img != null )
-        {
           img.dispose();
-        }
-      }
-    }
 
     m_manager.dispose();
 
@@ -251,7 +236,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
       final String tooltiptext = m_editInfo.m_text;
       final Point mousePos = m_editInfo.m_pos;
-      if( tooltiptext != null && mousePos != null )
+      if( (tooltiptext != null) && (mousePos != null) )
       {
         final int TOOLINSET = 3;
 
@@ -263,18 +248,12 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
         gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
         final Point toolsize = gcw.textExtent( tooltiptext );
-        int toolx = mousePos.x +3 + TOOLINSET;
+        int toolx = mousePos.x + 3 + TOOLINSET;
         if( toolx + toolsize.x > screen.width )
-        {
-          toolx = mousePos.x-3 - toolsize.x;
-        }
+          toolx = mousePos.x - 3 - toolsize.x;
         int tooly = mousePos.y - 3 - TOOLINSET - toolsize.y;
-        if(  tooly - toolsize.y < 0 )
-        {
+        if( tooly - toolsize.y < 0 )
           tooly = mousePos.y + 3 - TOOLINSET + toolsize.y;
-        }
-        
-        
 
         gcw.setLineWidth( 1 );
         final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
@@ -303,29 +282,22 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       {
         final IChartLayer[] layers = m_manager.getLayers();
         for( final IChartLayer layer : layers )
-        {
           if( layer.isVisible() )
           {
             ChartUtilities.resetGC( buffGc );
             try
             {
-              if (m_bufferLayers)
+              if( m_bufferLayers )
               {
                 m_layerImageMap.put( layer, paintBufferedLayer( gcw, screen, layer, m_layerImageMap.get( layer ) ) );
-  
-                if( m_panLayers != null && m_panLayers.contains( layer ) )
-                {
+
+                if( (m_panLayers != null) && m_panLayers.contains( layer ) )
                   buffGc.drawImage( m_layerImageMap.get( layer ), screen.x - m_panOffset.x, screen.y - m_panOffset.y );
-                }
                 else
-                {
                   buffGc.drawImage( m_layerImageMap.get( layer ), 0, 0 );
-                }
               }
               else
-              {
-                layer.paint( buffGc);
-              }
+                layer.paint( buffGc );
 
             }
             catch( final SWTException e )
@@ -333,7 +305,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
               e.printStackTrace();
             }
           }
-        }
       }
       catch( final Exception e )
       {
@@ -345,21 +316,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       }
     }
     else
-    {
       usedBufferImage = bufferImage;
-    }
 
     // muss so sein, wenn mann den layerClip immer setzt, kommts beim
     // dragRect zeichnen zu
     // selstsamen effekten
     if( m_panLayers == null )
-    {
       gcw.drawImage( usedBufferImage, screen.x - m_panOffset.x, screen.y - m_panOffset.y );
-    }
     else
-    {
       gcw.drawImage( usedBufferImage, 0, 0 );
-    }
 
     return usedBufferImage;
   }
@@ -370,7 +335,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     if( layerImage == null )
     {
       ImageData id = new ImageData( screen.width, screen.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
-      Color transparentColor = new Color( gcw.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
+      Color transparentColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gcw.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
 
       id.transparentPixel = 0xfffffe;
 
@@ -404,15 +369,11 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       }
       finally
       {
-
-        transparentColor.dispose();
         buffGc.dispose();
       }
     }
     else
-    {
       usedBufferImage = layerImage;
-    }
     return usedBufferImage;
   }
 
@@ -422,9 +383,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   public void handleEvent( final Event event )
   {
     if( event.type == SWT.Resize )
-    {
       invalidate( m_manager.getLayers() );
-    }
   }
 
   public void setTooltipInfo( final EditInfo hoverInfo )
@@ -463,10 +422,9 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
    * sets an offset to which the paint buffer is moved in case of a pan action;
    * 
    * @param layers
-   *            if null, all layers are moved; else, only mentioned layers are moved
-   * 
+   *          if null, all layers are moved; else, only mentioned layers are moved
    * @param offset
-   *            positive value moves buffer to right / down, negative value to left / up
+   *          positive value moves buffer to right / down, negative value to left / up
    */
   public void setPanOffset( IChartLayer[] layers, final Point offset )
   {
@@ -475,15 +433,11 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     {
       m_panLayers = new HashSet<IChartLayer>();
       for( IChartLayer layer : layers )
-      {
         m_panLayers.add( layer );
-      }
       invalidate( null );
     }
     else
-    {
       m_panLayers = null;
-    }
     redraw();
   }
 

@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
-import de.openali.odysseus.chart.framework.Activator;
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 
 /**
  * helper class for logging and tracing purposes
@@ -149,12 +149,12 @@ public class Logger
 
   protected static Bundle getBundle( )
   {
-    return Activator.getDefault().getBundle();
+    return OdysseusChartFrameworkPlugin.getDefault().getBundle();
   }
 
   private static String getPluginID( )
   {
-    return Activator.PLUGIN_ID;
+    return OdysseusChartFrameworkPlugin.PLUGIN_ID;
   }
 
 }

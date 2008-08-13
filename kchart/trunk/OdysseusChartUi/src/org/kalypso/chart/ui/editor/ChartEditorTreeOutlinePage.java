@@ -78,7 +78,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 /**
  * @author alibu
  * @author kimwerner
- * 
  */
 public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 {
@@ -127,9 +126,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       {
         Object elt = event.getElement();
         if( elt instanceof IChartLayer )
-        {
           handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
-        }
         else
         {
           // children of layers cannot be unchecked
@@ -156,7 +153,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
     AbstractLayerManagerEventListener cmel = new AbstractLayerManagerEventListener()
     {
-      
 
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -164,7 +160,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerVisibilityChanged( IChartLayer layer )
       {
-        updateControl();
+        // updateControl();
       }
 
       /**
@@ -200,9 +196,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       m_treeViewer.setChecked( layer, checked );
       Object[] children = m_contentProvider.getChildren( layer );
       for( Object object : children )
-      {
         m_treeViewer.setChecked( object, true );
-      }
     }
 
   }
@@ -220,9 +214,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     layer.setVisible( checked );
     Object[] children = m_contentProvider.getChildren( layer );
     for( Object object : children )
-    {
       m_treeViewer.setChecked( object, checked );
-    }
     IChartModel model = m_chartPart.getChartComposite().getChartModel();
     if( model.getLayerManager().getLayerPosition( layer ) < 0 )
     {
@@ -238,8 +230,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     if( model == null )
       return;
     final Object effectedLayer = model.getLayerManager().getLayerPosition( layer ) < 0 ? m_contentProvider.getParent( layer ) : layer;
-    final IChartLayer[] layers =  model.getLayerManager().getLayers();
-    for( IChartLayer l :layers )
+    final IChartLayer[] layers = model.getLayerManager().getLayers();
+    for( IChartLayer l : layers )
       l.setActive( l.equals( effectedLayer ) );
   }
 

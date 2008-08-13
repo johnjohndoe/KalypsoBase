@@ -1,5 +1,6 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -73,8 +74,11 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
     {
       final Point point = new Point( e.x, e.y );
 
-      for( final ITooltipChartLayer layer : m_chart.getChartModel().getLayerManager().getTooltipLayers() )
-      {
+      ITooltipChartLayer[] tooltipLayers = m_chart.getChartModel().getLayerManager().getTooltipLayers();
+      // Array umdrehen, damit die oberen Layer zuerst befragt werden
+      ArrayUtils.reverse( tooltipLayers );
+
+      for( final ITooltipChartLayer layer : tooltipLayers )
         if( layer.isVisible() )
         {
           final EditInfo info = layer.getHover( point );
@@ -86,7 +90,6 @@ public class TooltipHandler implements MouseListener, MouseMoveListener
             return;
           }
         }
-      }
 
       m_chart.getPlot().setTooltipInfo( null );
       m_chart.getPlot().redraw();

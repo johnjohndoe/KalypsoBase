@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.contribs.eclipse.swt.widgets.SizedComposite;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
@@ -37,24 +38,21 @@ public class ChartComposite extends Canvas implements IChartView
 
   PlotCanvas m_plot;
 
-  final Color m_bgColor;
-
-  // private final Color m_black;
-
   final IChartModel m_model;
 
   private AbstractMapperRegistryEventListener m_mapperListener;
 
   private AbstractChartModelEventListener m_chartModelListener;
 
+  private final RGB m_backgroundRGB;
+
   public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
     m_model = model;
+    m_backgroundRGB = backgroundRGB;
 
-    m_bgColor = new Color( parent.getDisplay(), backgroundRGB );
-
-    super.setBackground( m_bgColor );
+    super.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB ) );
 
     createControl( this );
     setChartModel( model );
@@ -82,7 +80,7 @@ public class ChartComposite extends Canvas implements IChartView
           final IAxis axis = (IAxis) mapper;
           final Composite parent = m_axisPlaces.get( axis.getPosition() );
           final AxisCanvas component = new AxisCanvas( axis, parent, SWT.DOUBLE_BUFFERED );
-          component.setBackground( m_bgColor );
+          component.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB ) );
           m_model.getMapperRegistry().setComponent( axis, component );
           layout();
         }
@@ -156,6 +154,8 @@ public class ChartComposite extends Canvas implements IChartView
    */
   private final void createControl( final Composite parent )
   {
+    Color bgColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB );
+
     final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.horizontalSpacing = 0;
     gridLayout.verticalSpacing = 0;
@@ -176,7 +176,7 @@ public class ChartComposite extends Canvas implements IChartView
     topAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
     final GridData tad = new GridData( SWT.FILL, SWT.NONE, true, false );
     topAxes.setLayoutData( tad );
-    topAxes.setBackground( m_bgColor );
+    topAxes.setBackground( bgColor );
     m_axisPlaces.put( POSITION.TOP, topAxes );
 
     // 1.3 - last field of first row
@@ -189,7 +189,7 @@ public class ChartComposite extends Canvas implements IChartView
     leftAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData lad = new GridData( SWT.NONE, SWT.FILL, false, true );
     leftAxes.setLayoutData( lad );
-    leftAxes.setBackground( m_bgColor );
+    leftAxes.setBackground( bgColor );
     m_axisPlaces.put( POSITION.LEFT, leftAxes );
 
     // 2.2
@@ -200,14 +200,14 @@ public class ChartComposite extends Canvas implements IChartView
     m_plot.setLayout( new FillLayout() );
     final GridData pad = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_plot.setLayoutData( pad );
-    m_plot.setBackground( m_bgColor );
+    m_plot.setBackground( bgColor );
 
     // 2.3
     final Composite rightAxes = new SizedComposite( parent, axisContainerStyle );
     rightAxes.setLayout( new FillLayout( SWT.HORIZONTAL ) );
     final GridData rad = new GridData( SWT.NONE, SWT.FILL, false, true );
     rightAxes.setLayoutData( rad );
-    rightAxes.setBackground( m_bgColor );
+    rightAxes.setBackground( bgColor );
     m_axisPlaces.put( POSITION.RIGHT, rightAxes );
 
     // 3.1 - wird ins erste Feld der letzten Zeile gef�llt
@@ -220,7 +220,7 @@ public class ChartComposite extends Canvas implements IChartView
     bottomAxes.setLayout( new FillLayout( SWT.VERTICAL ) );
     final GridData bad = new GridData( SWT.FILL, SWT.NONE, true, false );
     bottomAxes.setLayoutData( bad );
-    leftAxes.setBackground( m_bgColor );
+    leftAxes.setBackground( bgColor );
     m_axisPlaces.put( POSITION.BOTTOM, bottomAxes );
 
     // 3.3 - wird ins letzte Feld der lezten Zeile gef�llt
@@ -243,8 +243,6 @@ public class ChartComposite extends Canvas implements IChartView
     m_model.getMapperRegistry().removeListener( m_mapperListener );
 
     m_model.clear();
-
-    m_bgColor.dispose();
 
     m_axisPlaces.clear();
 

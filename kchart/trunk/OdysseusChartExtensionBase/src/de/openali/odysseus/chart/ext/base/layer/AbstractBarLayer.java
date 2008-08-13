@@ -120,7 +120,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
 
   public void dispose( )
   {
-    if( m_areaStyle != null )
-      m_areaStyle.dispose();
+
   }
 }

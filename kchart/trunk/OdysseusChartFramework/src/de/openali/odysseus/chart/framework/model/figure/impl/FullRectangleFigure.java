@@ -43,15 +43,14 @@ package de.openali.odysseus.chart.framework.model.figure.impl;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
  * Draws a rectangle without fill
  * 
  * @author burtscher1
- * 
  */
-public class FullRectangleFigure extends AbstractFigure<IPointStyle>
+public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
 {
 
   private Rectangle m_rect;
@@ -70,11 +69,9 @@ public class FullRectangleFigure extends AbstractFigure<IPointStyle>
   @Override
   public void paintFigure( GC gc )
   {
-    gc.drawRectangle(m_rect );
+    gc.drawRectangle( m_rect );
     gc.fillRectangle( m_rect );
-    
-  }
 
-  
+  }
 
 }

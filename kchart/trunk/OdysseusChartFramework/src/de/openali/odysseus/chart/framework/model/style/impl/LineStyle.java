@@ -1,11 +1,11 @@
 package de.openali.odysseus.chart.framework.model.style.impl;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
@@ -19,8 +19,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   private RGB m_rgb;
 
   private int m_width;
-
-  private Color m_color;
 
   private float m_dashOffset;
 
@@ -50,8 +48,9 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINEJOIN)
+   * @see
+   * de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework
+   * .impl.model.style.StyleConstants.LINEJOIN)
    */
   public void setLineJoin( LINEJOIN join )
   {
@@ -60,8 +59,9 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.impl.model.style.StyleConstants.LINECAP)
+   * @see
+   * de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.
+   * impl.model.style.StyleConstants.LINECAP)
    */
   public void setLineCap( LINECAP cap )
   {
@@ -70,7 +70,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
    */
   public void setColor( RGB rgb )
@@ -80,7 +79,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int, int[])
    */
   public void setDash( float dashOffset, float[] dashArray )
@@ -89,7 +87,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
     /**
      * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if LineAttributes' dashArray is empty array
      */
-    if( dashArray != null && dashArray.length == 0 )
+    if( (dashArray != null) && (dashArray.length == 0) )
       m_dashArray = null;
     else
       m_dashArray = dashArray;
@@ -97,7 +95,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
    */
   public void setWidth( int width )
@@ -107,7 +104,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
    */
   public void setMiterLimit( int miterLimit )
@@ -117,18 +113,12 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
    */
   public void apply( GC gc )
   {
-    if( m_color != null && !m_color.isDisposed() )
-    {
-      m_color.dispose();
-    }
-    m_color = new Color( gc.getDevice(), m_rgb );
 
-    gc.setForeground( m_color );
+    gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_rgb ) );
 
     gc.setAlpha( getAlpha() );
 
@@ -142,15 +132,11 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#dispose()
    */
   public void dispose( )
   {
-    if( m_color != null && !m_color.isDisposed() )
-    {
-      m_color.dispose();
-    }
+
   }
 
   public int getWidth( )

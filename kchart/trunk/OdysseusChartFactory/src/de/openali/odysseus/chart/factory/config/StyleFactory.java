@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -170,8 +171,18 @@ public class StyleFactory
     {
       ImageMarkerType imageMarker = pst.getImageMarker();
       String imgPath = imageMarker.getImageFile();
-      ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, -1, -1 );
-      style.setMarker( new ImageMarker( id ) );
+      // ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, -1, -1 );
+      ImageDescriptor id;
+      try
+      {
+        id = ImageDescriptor.createFromURL( new URL( context, imgPath ) );
+        style.setMarker( new ImageMarker( id ) );
+      }
+      catch( MalformedURLException e )
+      {
+        Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
+        style.setMarker( new OvalMarker() );
+      }
     }
     else if( pst.isSetOvalMarker() )
       style.setMarker( new OvalMarker() );
@@ -322,9 +333,22 @@ public class StyleFactory
           width = ift.getWidth();
         if( ift.isSetHeight() )
           height = ift.getHeight();
-        ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, width, height );
-        ImageFill imageFill = new ImageFill( id );
-        style.setFill( imageFill );
+        // ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, width, height );
+
+        ImageDescriptor id;
+        try
+        {
+          id = ImageDescriptor.createFromURL( new URL( context, imgPath ) );
+          // style.setMarker( new ImageMarker( id ) );
+          ImageFill imageFill = new ImageFill( id );
+          style.setFill( imageFill );
+        }
+        catch( MalformedURLException e )
+        {
+          Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
+          style.setFill( new ColorFill( new RGB( 255, 0, 0 ) ) );
+        }
+
       }
       // else: use default fill
     }

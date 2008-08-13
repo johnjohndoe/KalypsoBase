@@ -74,14 +74,13 @@ public class GridLayer extends AbstractChartLayer
     }
 
     // von links nach rechts zeichnen
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
     {
       final Number[] vTicks = vAxis.getRegistry().getRenderer( vAxis ).getTicks( vAxis );
       final IDataRange<Number> hRange = hAxis.getNumericRange();
       final int xfrom = hAxis.numericToScreen( hRange.getMin() );
       final int xto = hAxis.numericToScreen( hRange.getMax() );
       if( vTicks != null )
-      {
         for( final Number vTick : vTicks )
         {
           path.clear();
@@ -90,17 +89,15 @@ public class GridLayer extends AbstractChartLayer
           figure.setPoints( path.toArray( new Point[] {} ) );
           figure.paint( gc );
         }
-      }
     }
     // von unten nach oben zeichnen
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
     {
       final Number[] hTicks = hAxis.getRegistry().getRenderer( hAxis ).getTicks( hAxis );
       final IDataRange<Number> vRange = vAxis.getNumericRange();
       final int yfrom = vAxis.numericToScreen( vRange.getMin() );
       final int yto = vAxis.numericToScreen( vRange.getMax() );
       if( hTicks != null )
-      {
         for( final Number hTick : hTicks )
         {
           path.clear();
@@ -109,7 +106,6 @@ public class GridLayer extends AbstractChartLayer
           figure.setPoints( path.toArray( new Point[] {} ) );
           figure.paint( gc );
         }
-      }
     }
   }
 
@@ -140,7 +136,7 @@ public class GridLayer extends AbstractChartLayer
 
     final ArrayList<Point> points = new ArrayList<Point>();
     // Linie von links nach rechts
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
     {
       points.add( new Point( 0, (int) (height * 0.3) ) );
       points.add( new Point( width, (int) (height * 0.3) ) );
@@ -154,7 +150,7 @@ public class GridLayer extends AbstractChartLayer
       points.clear();
     }
     // Linie von oben nach unten
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
     {
       points.add( new Point( (int) (width * 0.3), 0 ) );
       points.add( new Point( (int) (width * 0.3), height ) );
@@ -244,8 +240,6 @@ public class GridLayer extends AbstractChartLayer
    */
   public void dispose( )
   {
-    if( m_gridStyle != null )
-      m_gridStyle.dispose();
 
   }
 }

@@ -37,9 +37,7 @@ public class StyleSet implements IStyleSet
     Class< ? extends IStyle> myStyleClass = style.getClass();
 
     if( styleClass.isAssignableFrom( myStyleClass ) )
-    {
       return (T) style;
-    }
     else
     {
       Logger.logWarning( Logger.TOPIC_LOG_STYLE, "Wrong style type for id '" + id + "'. Expected " + styleClass + ", got " + style.getClass()
@@ -51,10 +49,7 @@ public class StyleSet implements IStyleSet
 
   public void dispose( )
   {
-    for( IStyle style : m_styleMap.values() )
-    {
-      style.dispose();
-    }
+
   }
 
   public Map<String, IStyle> getStyles( )

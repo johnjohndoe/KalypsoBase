@@ -40,22 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ext.observation.mapper.provider;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.kalypso.chart.ext.observation.mapper.MarkerIconMapper;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractMapperProvider;
-import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 
 /**
  * @author burtscher1
- * 
  */
 public class MarkerIconMapperProvider extends AbstractMapperProvider
 {
@@ -66,14 +66,23 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
   @Override
   public IRetinalMapper getMapper( ) throws ConfigurationException
   {
-    LinkedHashMap<String, ImageData> string2Image = new LinkedHashMap<String, ImageData>();
+    LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();
 
     Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" );
     for( Entry<String, String> e : mapping.entrySet() )
     {
       ImageLoader il = new ImageLoader();
-      ImageData id = ChartFactoryUtilities.loadImageData( getContext(), e.getValue(), 0, 0 );
-      string2Image.put( e.getKey(), id );
+      // ImageData id = ChartFactoryUtilities.loadImageData( getContext(), e.getValue(), 0, 0 );
+      ImageDescriptor id = null;
+      try
+      {
+        id = ImageDescriptor.createFromURL( new URL( getContext(), e.getValue() ) );
+        string2Image.put( e.getKey(), id );
+      }
+      catch( MalformedURLException e1 )
+      {
+        throw new ConfigurationException( "Invalid URL: " + getContext().toString() + e.getValue(), e1 );
+      }
     }
 
     MarkerIconMapper mim = new MarkerIconMapper( getId(), string2Image );

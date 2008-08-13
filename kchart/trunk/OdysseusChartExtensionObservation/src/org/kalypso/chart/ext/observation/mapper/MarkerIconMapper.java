@@ -45,7 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import de.openali.odysseus.chart.ext.base.axis.AbstractRetinalMapper;
 import de.openali.odysseus.chart.framework.model.data.impl.StringDataOperator;
@@ -55,14 +55,13 @@ import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
 
 /**
  * @author burtscher1
- * 
  */
 public class MarkerIconMapper extends AbstractRetinalMapper
 {
 
-  private final Map<Number, ImageData> m_mapping = new HashMap<Number, ImageData>();
+  private final Map<Number, ImageDescriptor> m_mapping = new HashMap<Number, ImageDescriptor>();
 
-  public MarkerIconMapper( String id, LinkedHashMap<String, ImageData> mapping )
+  public MarkerIconMapper( String id, LinkedHashMap<String, ImageDescriptor> mapping )
   {
     super( id );
 
@@ -70,14 +69,13 @@ public class MarkerIconMapper extends AbstractRetinalMapper
     addDataOperator( String.class, sdop );
 
     // Umformen des Mappings, damit direkt über Zahlen zugegriffen werden kann
-    for( Entry<String, ImageData> e : mapping.entrySet() )
+    for( Entry<String, ImageDescriptor> e : mapping.entrySet() )
       m_mapping.put( sdop.logicalToNumeric( e.getKey() ), e.getValue() );
 
   }
 
   /**
    * @return if no mapping is possible or a non-IPointStyle is given, an invisible copy of the style is returned
-   * 
    * @see de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper#numericToScreen(java.lang.Number,
    *      de.openali.odysseus.chart.framework.model.style.IStyle)
    */

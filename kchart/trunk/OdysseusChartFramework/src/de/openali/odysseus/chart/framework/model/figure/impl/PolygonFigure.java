@@ -37,13 +37,9 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
   {
     IAreaStyle style = super.getStyle();
     if( style != null )
-    {
       return style;
-    }
     else
-    {
       return StyleUtils.getDefaultStyle( AreaStyle.class );
-    }
   }
 
 }

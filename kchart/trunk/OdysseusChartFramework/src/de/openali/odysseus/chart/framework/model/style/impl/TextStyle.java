@@ -1,19 +1,17 @@
 package de.openali.odysseus.chart.framework.model.style.impl;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
 
 public class TextStyle extends AbstractStyle implements ITextStyle
 {
-
-  private Font m_font;
 
   private FONTSTYLE m_style;
 
@@ -24,10 +22,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   private int m_size;
 
   private RGB m_fillRGB;
-
-  private Color m_fillColor;
-
-  private Color m_textColor;
 
   private FONTWEIGHT m_weight;
 
@@ -45,7 +39,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see
    * de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setWeight(de.openali.odysseus.chart.framework.model
    * .style.IStyleConstants.FONTWEIGHT)
@@ -57,7 +50,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setFillColor(org.eclipse.swt.graphics.RGB)
    */
   public void setFillColor( RGB rgbFill )
@@ -67,7 +59,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see
    * de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setStyle(de.openali.odysseus.chart.framework.model
    * .style.IStyleConstants.FONTSTYLE)
@@ -79,7 +70,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setTextColor(org.eclipse.swt.graphics.RGB)
    */
   public void setTextColor( RGB rgbText )
@@ -89,7 +79,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setFamily(java.lang.String)
    */
   public void setFamily( String family )
@@ -99,7 +88,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.ITextStyle#setHeight(int)
    */
   public void setHeight( int size )
@@ -111,32 +99,18 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   {
     FontData fd = new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
 
-    if( (m_font != null) && !m_font.isDisposed() )
-      m_font.dispose();
-    m_font = new Font( gc.getDevice(), fd );
-    gc.setFont( m_font );
+    Font font = OdysseusChartFrameworkPlugin.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
 
-    if( (m_fillColor != null) && !m_fillColor.isDisposed() )
-      m_fillColor.dispose();
-    m_fillColor = new Color( gc.getDevice(), m_fillRGB );
-    gc.setBackground( m_fillColor );
+    gc.setFont( font );
 
-    if( (m_textColor != null) && !m_textColor.isDisposed() )
-      m_textColor.dispose();
-    m_textColor = new Color( gc.getDevice(), m_textRGB );
-    gc.setForeground( m_textColor );
+    gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
+
+    gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
 
   }
 
   public void dispose( )
   {
-    if( (m_font != null) && !m_font.isDisposed() )
-      m_font.dispose();
-    if( (m_fillColor != null) && !m_fillColor.isDisposed() )
-      m_fillColor.dispose();
-    if( (m_textColor != null) && !m_textColor.isDisposed() )
-      m_textColor.dispose();
-
   }
 
   /**

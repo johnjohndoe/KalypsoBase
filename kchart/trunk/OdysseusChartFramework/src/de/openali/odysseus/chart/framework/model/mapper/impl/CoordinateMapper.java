@@ -46,10 +46,11 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
+import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
  * @author alibu
- * 
  */
 public class CoordinateMapper implements ICoordinateMapper
 {
@@ -96,12 +97,26 @@ public class CoordinateMapper implements ICoordinateMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#logicalToScreen(java.lang.Object,
    *      java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public Point logicalToScreen( Object domainValue, Object targetValue )
   {
     IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
     IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
 
     return numericToScreen( dop.logicalToNumeric( domainValue ), top.logicalToNumeric( targetValue ) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#screenToNumeric(int, int)
+   */
+  public IPair<Number, Number> screenToNumeric( Point screenValue )
+  {
+    int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+    int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+
+    Number domainNum = getDomainAxis().screenToNumeric( domainScreen );
+    Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
+    return new Pair<Number, Number>( domainNum, targetNum );
   }
 
 }

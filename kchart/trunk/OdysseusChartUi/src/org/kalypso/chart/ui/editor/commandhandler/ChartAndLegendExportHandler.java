@@ -30,7 +30,6 @@ public class ChartAndLegendExportHandler extends AbstractHandler
 {
   private String m_filename;
 
-
   /**
    * saves an image of the current chart part and the corresponding legend to a file; if no filename has been set by
    * setFilename(), a file dialog will open; otherwise no dialog will appear; at the end of the function, the member
@@ -46,9 +45,7 @@ public class ChartAndLegendExportHandler extends AbstractHandler
     final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
 
     if( chartPart == null )
-    {
       return null;
-    }
     final ChartComposite chart = chartPart.getChartComposite();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
@@ -78,9 +75,6 @@ public class ChartAndLegendExportHandler extends AbstractHandler
 
         final ImageData idLegend = SimpleLegendImageFactory.createLegendImage( chart.getChartModel(), Display.getCurrent(), layerStyle, legendStyle, new Insets( 2, 10, 2, 5 ), new Point( 15, 15 ) );
         Image imgLegend = new Image( Display.getCurrent(), idLegend );
-
-        layerStyle.dispose();
-        legendStyle.dispose();
 
         Image img = new Image( Display.getCurrent(), idChart.width + idLegend.width, Math.max( idChart.height, idLegend.height ) );
         GC gc = new GC( img );

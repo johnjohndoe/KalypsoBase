@@ -1,9 +1,9 @@
 package de.openali.odysseus.chart.framework.model.style.impl;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -19,8 +19,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   private int m_height;
 
   private ILineStyle m_stroke;
-
-  private Color m_inlineColor;
 
   private boolean m_showFill;
 
@@ -43,7 +41,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see
    * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setOutline(de.openali.odysseus.chart.framework
    * .impl.model.style.ILineStyle)
@@ -55,7 +52,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setWidth(int)
    */
   public void setWidth( int width )
@@ -65,7 +61,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setHeight(int)
    */
   public void setHeight( int height )
@@ -75,7 +70,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getWidth()
    */
   public int getWidth( )
@@ -85,7 +79,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getHeight()
    */
   public int getHeight( )
@@ -95,7 +88,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setInlineColor(org.eclipse.swt.graphics.RGB)
    */
   public void setInlineColor( RGB rgb )
@@ -105,7 +97,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see
    * de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#setMarker(de.openali.odysseus.chart.framework.
    * model.style.IMarker)
@@ -117,7 +108,6 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see de.openali.odysseus.chart.framework.impl.model.style.IPointStyle#getMarker()
    */
   public IMarker getMarker( )
@@ -131,21 +121,13 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
     gc.setAlpha( getAlpha() );
 
-    if( (m_inlineColor != null) && !m_inlineColor.isDisposed() )
-      m_inlineColor.dispose();
-    m_inlineColor = new Color( gc.getDevice(), m_inlineRGB );
-    gc.setBackground( m_inlineColor );
+    gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), getInlineColor() ) );
 
   }
 
   public void dispose( )
   {
-    if( (m_inlineColor != null) && !m_inlineColor.isDisposed() )
-      m_inlineColor.dispose();
-    if( m_stroke != null )
-      m_stroke.dispose();
-    if( m_marker != null )
-      m_marker.dispose();
+
   }
 
   public RGB getInlineColor( )

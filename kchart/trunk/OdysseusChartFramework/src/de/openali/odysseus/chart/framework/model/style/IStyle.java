@@ -14,6 +14,10 @@ public interface IStyle
 
   public void setTitle( String title );
 
+  /**
+   * @deprecated do not use this method any more; use Color-, Font-, Image- and PatternRegistry to accesss resources
+   */
+  @Deprecated
   public void dispose( );
 
   public void setAlpha( int alpha );

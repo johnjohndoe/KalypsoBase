@@ -78,10 +78,9 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
 
   public void setCoordinateMapper( ICoordinateMapper coordinateMapper );
 
-  // @SuppressWarnings("unchecked")
-  // public void setDataContainer( IDataContainer data );
-
-  // Initialization method; to be called after setAxes, setDataContainer
+  /**
+   * Initialization method; will be called after setCoordinateMapper
+   */
   public void init( );
 
   public void dispose( );

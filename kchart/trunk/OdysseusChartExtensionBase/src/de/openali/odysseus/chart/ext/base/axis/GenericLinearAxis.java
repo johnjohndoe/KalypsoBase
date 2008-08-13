@@ -1,11 +1,11 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
- * 
  * logical and numerical range are identical;
  * 
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
@@ -21,6 +21,8 @@ public class GenericLinearAxis extends AbstractAxis
   public GenericLinearAxis( final String id, final POSITION pos, Class< ? > clazz )
   {
     super( id, pos, clazz );
+    //setting initial (dummy) range
+    setNumericRange( new DataRange<Number>( 0, 1 ) );
 
   }
 

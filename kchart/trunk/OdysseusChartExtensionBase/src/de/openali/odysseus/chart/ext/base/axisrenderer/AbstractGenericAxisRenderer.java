@@ -139,14 +139,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public void dispose( )
   {
-    if( m_tickLabelStyle != null )
-      m_tickLabelStyle.dispose();
-    if( m_tickLineStyle != null )
-      m_tickLineStyle.dispose();
-    if( m_axisLineStyle != null )
-      m_axisLineStyle.dispose();
-    if( m_labelStyle != null )
-      m_labelStyle.dispose();
+
   }
 
   public ILineStyle getTickLineStyle( )

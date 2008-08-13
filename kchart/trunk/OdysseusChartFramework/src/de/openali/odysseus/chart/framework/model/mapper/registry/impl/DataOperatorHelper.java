@@ -68,7 +68,7 @@ public class DataOperatorHelper
 
   public DataOperatorHelper( )
   {
-    m_dataOperators.put( Number.class, new NumberDataOperator( new ComparableComparator() ) );
+    m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );
     m_dataOperators.put( Calendar.class, new CalendarDataOperator( new ComparableComparator(), "" ) );
   }
 

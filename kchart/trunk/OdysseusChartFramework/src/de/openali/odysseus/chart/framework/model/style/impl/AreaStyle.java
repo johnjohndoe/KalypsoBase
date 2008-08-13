@@ -34,7 +34,6 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
   /*
    * (non-Javadoc)
-   * 
    * @see
    * de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setOutline(de.openali.odysseus.chart.framework.
    * impl.model.style.ILineStyle)
@@ -58,10 +57,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
   public void dispose( )
   {
-    if( m_stroke != null )
-      m_stroke.dispose();
-    if( (m_fill != null) )
-      m_fill.dispose();
+
   }
 
   public void setFill( IFill fill )

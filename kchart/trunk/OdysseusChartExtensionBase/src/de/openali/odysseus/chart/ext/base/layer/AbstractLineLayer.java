@@ -170,9 +170,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   public void dispose( )
   {
-    if( m_lineStyle != null )
-      m_lineStyle.dispose();
-    if( m_pointStyle != null )
-      m_pointStyle.dispose();
+
   }
 }
