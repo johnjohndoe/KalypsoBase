@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
@@ -161,8 +161,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
     final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
 
     rightPanel.setLayout( gridLayout );
     rightPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );

@@ -1407,7 +1407,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        launchAnt( antLaunch, buttonTooltipOwn, buttonTextOwn, buttonTooltipOwn, buttonProperties );
+        launchAnt( antLaunch, buttonTextOwn, buttonTextOwn, buttonTooltipOwn, buttonProperties );
       }
     } );
 
