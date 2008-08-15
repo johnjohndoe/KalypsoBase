@@ -232,6 +232,8 @@ public class ChartComposite extends Composite
 
     super.dispose();
 
+    m_plot.dispose();
+
     m_bgColor.dispose();
   }
 

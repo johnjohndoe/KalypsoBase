@@ -139,6 +139,11 @@ public class MapperRegistry implements IMapperRegistry
       comp.dispose();
     }
 
+    for( IAxisRenderer< ? > rend : m_id2renderers.values() )
+    {
+      rend.dispose();
+    }
+
     m_id2renderers.clear();
     m_class2renderers.clear();
   }
