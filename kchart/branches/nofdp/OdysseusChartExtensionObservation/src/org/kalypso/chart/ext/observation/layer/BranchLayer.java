@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ext.observation.layer;
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -418,6 +417,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
   private <T_domain, T_target> EditInfo createTooltipInfo( Point mousePos, int pos )
   {
     final IRecord record = m_data.get( pos );
+
     final T_domain domainVal = (T_domain) record.getValue( m_domainComponent );
     final T_target targetVal = (T_target) record.getValue( m_targetComponent );
 
@@ -448,14 +448,18 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       IPaintable hoverPaintable = hoverFigure;
 
       // text für ToolTip
-      String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
-      String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
-      Format format = mapper.getDataOperator( iconVal.getClass() ).getFormat( null );
-      String iconValStr = format.format( iconVal );
 
-      String editText = getTitle() + "\n" + domainAxis.getLabel() + ": " + domainValStr + "\n" + targetAxis.getLabel() + ": " + targetValStr + "\n" + iconValStr;
+      String[] split = domainAxis.getLabel().split( " - " );
+      String variant = split[1];
+      String lastfall = getTitle();
+      String station = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
+      String waterlevel = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
+      String nodeName = (String) record.getValue( 3 );
+      String type = (String) record.getValue( 4 );
 
-      EditInfo info = new EditInfo( this, hoverPaintable, null, null, editText, mousePos );
+      String text = String.format( "%s - %s\n\nStation[m]\t\t%s\nWater level [m NHN]\t%s\nNode\t\t\t%s", variant, lastfall, station, waterlevel, nodeName );
+
+      EditInfo info = new EditInfo( this, hoverPaintable, null, null, text, mousePos );
 
       // falls der Punkt in den Daten vorhanden ist, dann eine Info zurückgeben
       return info;

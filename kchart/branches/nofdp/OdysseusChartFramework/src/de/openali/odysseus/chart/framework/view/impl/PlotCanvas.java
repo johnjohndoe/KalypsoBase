@@ -61,15 +61,15 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private final boolean m_bufferLayers;
 
-  
-  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style)
+  public PlotCanvas( final ILayerManager manager, final Composite parent, final int style )
   {
-    this(manager, parent, style, true);
+    this( manager, parent, style, true );
   }
-  
+
   /**
-   * @param bufferLayers if set to true, each layer is buffered on an individual image; set this to true
-   *    if you plan to offer panning of single layers in the chart front end 
+   * @param bufferLayers
+   *            if set to true, each layer is buffered on an individual image; set this to true if you plan to offer
+   *            panning of single layers in the chart front end
    */
   public PlotCanvas( final ILayerManager manager, final Composite parent, final int style, final boolean bufferLayers )
   {
@@ -80,7 +80,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
     addPaintListener( this );
     addListener( SWT.Resize, this );
 
-    if (m_bufferLayers)
+    if( m_bufferLayers )
     {
       for( IChartLayer layer : manager.getLayers() )
       {
@@ -236,56 +236,66 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private void paintEditInfo( final GC gcw )
   {
+    ChartUtilities.resetGC( gcw );
+
     if( m_editInfo != null )
     {
       // draw hover shape
       if( m_editInfo.m_hoverFigure != null )
         m_editInfo.m_hoverFigure.paint( gcw );
+
       // draw edit shape
       if( m_editInfo.m_editFigure != null )
         m_editInfo.m_editFigure.paint( gcw );
 
       // draw tooltip
-
       final Rectangle screen = gcw.getClipping();
-
       final String tooltiptext = m_editInfo.m_text;
       final Point mousePos = m_editInfo.m_pos;
-      if( tooltiptext != null && mousePos != null )
+
+      if( (tooltiptext != null) && (mousePos != null) )
       {
         final int TOOLINSET = 3;
 
         final Font oldFont = gcw.getFont();
-
         final Font bannerFont = JFaceResources.getTextFont();
         gcw.setFont( bannerFont );
-
         gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
         gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+
         final Point toolsize = gcw.textExtent( tooltiptext );
-        int toolx = mousePos.x +3 + TOOLINSET;
+        /*
+         * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genügend
+         * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
+         */
+
+        int toolx = mousePos.x + 3 + TOOLINSET;
         if( toolx + toolsize.x > screen.width )
         {
-          toolx = mousePos.x-3 - toolsize.x;
+          toolx = screen.width - 5 - toolsize.x;
+
+          if( toolx < 5 )
+            toolx = 5;
         }
-        int tooly = mousePos.y - 3 - TOOLINSET - toolsize.y;
-        if(  tooly - toolsize.y < 0 )
-        {
-          tooly = mousePos.y + 3 - TOOLINSET + toolsize.y;
-        }
-        
-        
+
+        int tooly = mousePos.y + 3 + TOOLINSET + 20;
+
+        if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
+          tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
 
         gcw.setLineWidth( 1 );
+
         final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
+
         gcw.fillRectangle( toolrect );
         gcw.drawRectangle( toolrect );
-
         gcw.drawText( tooltiptext, toolx, tooly, true );
-
         gcw.setFont( oldFont );
+
       }
+
     }
+
   }
 
   /**
@@ -309,10 +319,10 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
             ChartUtilities.resetGC( buffGc );
             try
             {
-              if (m_bufferLayers)
+              if( m_bufferLayers )
               {
                 m_layerImageMap.put( layer, paintBufferedLayer( gcw, screen, layer, m_layerImageMap.get( layer ) ) );
-  
+
                 if( m_panLayers != null && m_panLayers.contains( layer ) )
                 {
                   buffGc.drawImage( m_layerImageMap.get( layer ), screen.x - m_panOffset.x, screen.y - m_panOffset.y );
@@ -324,7 +334,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
               }
               else
               {
-                layer.paint( buffGc);
+                layer.paint( buffGc );
               }
 
             }
