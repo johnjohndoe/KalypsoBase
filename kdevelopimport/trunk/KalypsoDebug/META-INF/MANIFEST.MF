@@ -12,6 +12,5 @@ Export-Package: org.kalypso.debug,
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.ui,
- org.kalypso.jwsdp,
  org.kalypso.contribs.eclipseplatform
 Eclipse-LazyStart: true
