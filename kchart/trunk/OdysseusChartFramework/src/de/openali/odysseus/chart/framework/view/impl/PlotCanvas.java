@@ -221,6 +221,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   private void paintEditInfo( final GC gcw )
   {
+    ChartUtilities.resetGC( gcw );
+
     if( m_editInfo != null )
     {
       // draw hover shape
@@ -248,12 +250,23 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         gcw.setBackground( getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
         gcw.setForeground( getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
         final Point toolsize = gcw.textExtent( tooltiptext );
+
+        /*
+         * Positionieren der Tooltip-Box: der ideale Platz liegt rechts unter dem Mauszeiger. Wenn rechts nicht genügend
+         * Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich liegen.
+         */
+
         int toolx = mousePos.x + 3 + TOOLINSET;
         if( toolx + toolsize.x > screen.width )
-          toolx = mousePos.x - 3 - toolsize.x;
-        int tooly = mousePos.y - 3 - TOOLINSET - toolsize.y;
-        if( tooly - toolsize.y < 0 )
-          tooly = mousePos.y + 3 - TOOLINSET + toolsize.y;
+        {
+          toolx = screen.width - 5 - toolsize.x;
+          if( toolx < 5 )
+            toolx = 5;
+        }
+
+        int tooly = mousePos.y + 3 + TOOLINSET + 20;
+        if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
+          tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
 
         gcw.setLineWidth( 1 );
         final Rectangle toolrect = new Rectangle( toolx - TOOLINSET, tooly - TOOLINSET, toolsize.x + TOOLINSET * 2, toolsize.y + TOOLINSET * 2 );
