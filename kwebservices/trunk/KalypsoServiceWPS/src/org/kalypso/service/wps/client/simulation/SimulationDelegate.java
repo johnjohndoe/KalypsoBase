@@ -41,15 +41,20 @@
 package org.kalypso.service.wps.client.simulation;
 
 import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.DatatypeConverter;
+
 import net.opengeospatial.ows.CodeType;
-import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.InputDescriptionType;
-import net.opengeospatial.wps.OutputDefinitionsType;
+import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
@@ -61,14 +66,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.service.wps.client.IWPSDelegate;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.VFSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
@@ -78,33 +86,33 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  * 
  * @author Holger Albert
  */
-public class SimulationDelegate implements IWPSDelegate
+public class SimulationDelegate
 {
   /**
    * The id identifying the simulation.
    */
-  private String m_identifier;
+  private final String m_identifier;
 
   /**
    * The calc case folder.
    */
-  private IContainer m_calcCaseFolder;
+  private final IContainer m_calcCaseFolder;
 
   /**
    * The model data for this simulation.
    */
-  private Modeldata m_data;
+  private final Modeldata m_data;
 
   /**
    * The URL to the wps service.
    */
-  private String m_service;
+  private final String m_service;
 
   /**
    * The path to the place on the server, where the client can put his files, as configured in the config.ini from
    * Kalypso.
    */
-  private String m_input;
+  private final String m_input;
 
   /**
    * The filesystem manager.
@@ -127,7 +135,7 @@ public class SimulationDelegate implements IWPSDelegate
    *          The model data.
    */
   // TODO: remove argument identifier: use data.getTypeID() instead
-  public SimulationDelegate( String identifier, IContainer calcCaseFolder, Modeldata data )
+  public SimulationDelegate( final String identifier, final IContainer calcCaseFolder, final Modeldata data )
   {
     /* Initializing the other variables. */
     m_identifier = identifier;
@@ -146,7 +154,7 @@ public class SimulationDelegate implements IWPSDelegate
   /**
    * @see org.kalypso.service.wps.client.IWPSDelegate#init()
    */
-  public void init( ) throws WPSException
+  public void init( ) throws CoreException
   {
     /* The file system manager needs to be set. */
     initVFSManager();
@@ -155,14 +163,14 @@ public class SimulationDelegate implements IWPSDelegate
     if( m_service == null )
     {
       Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
-      throw new WPSException( "No URL to the the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No URL to the the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property.", null ) );
     }
   }
 
   /**
    * This function inits the VFS manager.
    */
-  private void initVFSManager( ) throws WPSException
+  private void initVFSManager( ) throws CoreException
   {
     try
     {
@@ -172,94 +180,10 @@ public class SimulationDelegate implements IWPSDelegate
         m_fsManager = VFSUtilities.getManager();
       }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
-      throw new WPSException( "Initializing the the VFS manager has failed ...", ex );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Initializing the the VFS manager has failed ...", ex ) );
     }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#copyInputFiles(net.opengeospatial.wps.ProcessDescriptionType)
-   */
-  public void copyInputFiles( ProcessDescriptionType description ) throws WPSException
-  {
-    /* Get the list with the input. */
-    List<Modeldata.Input> inputList = m_data.getInput();
-
-    /* Get the input list. */
-    DataInputs dataInputs = description.getDataInputs();
-    List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
-
-    /* Create a resource visitor. */
-    CollectFilesVisitor visitor = new CollectFilesVisitor();
-
-    try
-    {
-      /* Iterate over all inputs and build the data inputs for the execute request. */
-      for( InputDescriptionType inputDescription : inputDescriptions )
-      {
-        CodeType identifier = inputDescription.getIdentifier();
-
-        /* Check if the input is in our model data, too. */
-        Input input = SimulationUtilities.findInput( identifier.getValue(), inputList );
-        if( input == null )
-        {
-          /* Check, if it is an optional one. */
-          if( inputDescription.getMinimumOccurs().intValue() == 1 )
-          {
-            /* Ooops, it is a mandatory one, but it is missing in our model data. */
-            throw new Exception( "The data input " + identifier.getValue() + " is mandatory. Check your model data." );
-          }
-
-          continue;
-        }
-
-        /* Input is here. */
-        String inputPath = input.getPath();
-
-        /* Supported complex data type. */
-        SupportedComplexDataType complexData = inputDescription.getComplexData();
-        if( complexData != null )
-        {
-          /* The complex value type should be skipped, as literals and bounding boxes. */
-
-          /* Get the protocol if it is one. */
-          String protocol = SimulationUtilities.getProtocol( inputPath );
-
-          /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
-          /* which is not allowed to be copied or it is a complex value type (file-protocol). */
-          if( protocol == null )
-          {
-            /* It is a local file resource. */
-            if( m_calcCaseFolder == null )
-              throw new WPSException( "Complex data specified, but no base folder given." );
-
-            IContainer baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
-            IResource inputResource = baseresource.findMember( inputPath );
-            if( inputResource == null )
-            {
-              if( inputDescription.getMinimumOccurs().intValue() == 0 )
-                continue;
-
-              throw new CoreException( StatusUtilities.createErrorStatus( "Could not find input resource: " + inputPath + "\nPlease check your model data." ) );
-            }
-
-            inputResource.accept( visitor );
-          }
-        }
-
-        continue;
-      }
-    }
-    catch( Exception ex )
-    {
-      throw new WPSException( "Could not collect the input files ...", ex );
-    }
-
-    /* Copy all collected files. */
-    IFile[] files = visitor.getFiles();
-    if( files.length > 0 )
-      copyInputFiles( files );
   }
 
   /**
@@ -268,7 +192,7 @@ public class SimulationDelegate implements IWPSDelegate
    * @param files
    *          The files to copy.
    */
-  private void copyInputFiles( IFile[] files ) throws WPSException
+  private void copyInputFiles( final IFile[] files ) throws WPSException
   {
     if( files.length > 0 )
     {
@@ -276,7 +200,7 @@ public class SimulationDelegate implements IWPSDelegate
       initServerTmpDirectory();
 
       /* Copy the files. */
-      for( IFile element : files )
+      for( final IFile element : files )
         copyInputFile( element );
     }
   }
@@ -284,54 +208,24 @@ public class SimulationDelegate implements IWPSDelegate
   /**
    * This function copies one input file to the place, where the server can read it.
    */
-  private void copyInputFile( IFile ifile ) throws WPSException
+  private void copyInputFile( final IFile ifile ) throws WPSException
   {
     try
     {
       /* Get the relative path of the file. */
-      File file = ifile.getLocation().toFile();
-      String relativePathTo = ifile.getProjectRelativePath().toString();
+      final File file = ifile.getLocation().toFile();
+      final String relativePathTo = ifile.getProjectRelativePath().toString();
 
       /* Create the file objects. */
-      FileObject source = m_fsManager.toFileObject( file );
-      FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
+      final FileObject source = m_fsManager.toFileObject( file );
+      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
 
       /* Copy file. */
       VFSUtilities.copyFileTo( source, destination );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not copy file '" + ifile.getName() + "' to the server ...", ex );
-    }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#getDataInputs(net.opengeospatial.wps.ProcessDescriptionType)
-   */
-  public DataInputsType getDataInputs( ProcessDescriptionType description ) throws WPSException
-  {
-    try
-    {
-      return SimulationUtilities.getDataInputs( m_calcCaseFolder, m_serverTmpDirectory, m_input, m_data, description );
-    }
-    catch( Exception ex )
-    {
-      throw new WPSException( "Could not create the date inputs ...", ex );
-    }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#getOutputDefinitions(net.opengeospatial.wps.ProcessDescriptionType)
-   */
-  public OutputDefinitionsType getOutputDefinitions( ProcessDescriptionType description ) throws WPSException
-  {
-    try
-    {
-      return SimulationUtilities.getOutputDefinitions( m_data, description );
-    }
-    catch( Exception ex )
-    {
-      throw new WPSException( "Could not create the output definitions ...", ex );
     }
   }
 
@@ -353,7 +247,7 @@ public class SimulationDelegate implements IWPSDelegate
         }
 
         /* Get the directory for server access. */
-        FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
+        final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
         m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
 
         if( !m_serverTmpDirectory.exists() )
@@ -363,12 +257,12 @@ public class SimulationDelegate implements IWPSDelegate
         }
       }
     }
-    catch( WPSException e )
+    catch( final WPSException e )
     {
       // Do not hide original WPSException
       throw e;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not init the temp directory on the server, where the client can put his input files ...", ex );
     }
@@ -377,7 +271,7 @@ public class SimulationDelegate implements IWPSDelegate
   /**
    * @see org.kalypso.service.wps.client.IWPSDelegate#copyResults(java.util.Map)
    */
-  public void copyResults( Map<String, ComplexValueReference> references ) throws WPSException
+  public void copyResults( final Map<String, ComplexValueReference> references ) throws CoreException
   {
     /* If there are no references, do nothing. */
     if( references == null )
@@ -386,35 +280,35 @@ public class SimulationDelegate implements IWPSDelegate
     try
     {
       /* The project is needed. */
-      IProject project = m_calcCaseFolder.getProject();
+      final IProject project = m_calcCaseFolder.getProject();
 
       /* Get the model data outputs. */
-      List<Output> outputs = m_data.getOutput();
+      final List<Output> outputs = m_data.getOutput();
 
       /* All results, which are references. */
-      Iterator<String> keys = references.keySet().iterator();
+      final Iterator<String> keys = references.keySet().iterator();
       while( keys.hasNext() )
       {
         /* Get the next key. */
-        String key = keys.next();
+        final String key = keys.next();
 
         /* Get the complex value reference. */
-        ComplexValueReference complexValueReference = references.get( key );
+        final ComplexValueReference complexValueReference = references.get( key );
         if( complexValueReference != null )
         {
           /* Building the source object. */
-          String reference = complexValueReference.getReference();
-          FileObject source = VFSUtilities.checkProxyFor( reference );
+          final String reference = complexValueReference.getReference();
+          final FileObject source = VFSUtilities.checkProxyFor( reference );
 
           /* Building the destination object. */
-          Output output = SimulationUtilities.findOutput( key, outputs );
+          final Output output = SimulationUtilities.findOutput( key, outputs );
 
           /* Everything should be relative to the project! */
-          String outputPath = output.getPath();
-          IContainer baseresource = output.isRelativeToCalcCase() ? m_calcCaseFolder : project;
-          File baseFile = baseresource.getLocation().toFile();
-          File outputFile = new File( baseFile, outputPath );
-          FileObject destination = m_fsManager.toFileObject( outputFile );
+          final String outputPath = output.getPath();
+          final IContainer baseresource = output.isRelativeToCalcCase() ? m_calcCaseFolder : project;
+          final File baseFile = baseresource.getLocation().toFile();
+          final File outputFile = new File( baseFile, outputPath );
+          final FileObject destination = m_fsManager.toFileObject( outputFile );
 
           /* Copy ... */
           VFSUtilities.copy( source, destination );
@@ -422,7 +316,7 @@ public class SimulationDelegate implements IWPSDelegate
           final IResource destResource = baseresource.findMember( new Path( outputPath ) );
           if( destResource != null && destResource.getType() == IResource.FILE )
           {
-            IFile destFile = (IFile) destResource;
+            final IFile destFile = (IFile) destResource;
             destFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
             // TODO: NO!!!! We do not know that!
             destFile.setCharset( "UTF-8", new NullProgressMonitor() );
@@ -430,9 +324,13 @@ public class SimulationDelegate implements IWPSDelegate
         }
       }
     }
-    catch( Exception ex )
+    catch( final CoreException ex )
     {
-      throw new WPSException( "Could not copy the result data to the client ...", ex );
+      throw ex;
+    }
+    catch( final Exception ex )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not copy the result data to the client ...", ex ) );
     }
   }
 
@@ -446,23 +344,11 @@ public class SimulationDelegate implements IWPSDelegate
       /* Delete the input files. */
       deleteInputFiles();
     }
-    catch( WPSException e )
+    catch( final WPSException e )
     {
       /* If an error has occurred while deleting the files, finish the job without error. A warning should be ok. */
       // TODO Perhaps show a warning.
     }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.IWPSDelegate#canceled()
-   */
-  public void canceled( )
-  {
-    /* TODO Tell the server, that the job should be canceled. */
-
-    /* TODO Delete all input files with deleteInputFiles(). */
-    /* This is omitted now, because the server isn't told, to cancel its operation, so it is likely, */
-    /* he will run in an error then, if we delete the files now. */
   }
 
   /**
@@ -478,7 +364,7 @@ public class SimulationDelegate implements IWPSDelegate
       if( m_serverTmpDirectory.exists() )
         VFSUtilities.deleteFiles( m_serverTmpDirectory );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not finish the deinit operation ...", ex );
     }
@@ -499,4 +385,162 @@ public class SimulationDelegate implements IWPSDelegate
   {
     return m_service;
   }
+
+  public Map<String, Object> createInputs( final ProcessDescriptionType description, final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      /* Copy the data to the server. */
+      monitor.setTaskName( "Kopiere auf den Server ..." );
+      Debug.println( "Copy to the server ..." );
+
+      /* Need the filesystem manager. */
+      final FileSystemManager fsManager = VFSUtilities.getManager();
+
+      /* Get the list with the input. */
+      final Map<String, Object> wpsInputs = new HashMap<String, Object>();
+
+      /* Get the input list. */
+      final DataInputs dataInputs = description.getDataInputs();
+      final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+
+      /* Create a resource visitor. */
+      final CollectFilesVisitor visitor = new CollectFilesVisitor();
+
+      final List<Input> inputList = m_data.getInput();
+
+      /* Iterate over all inputs and build the data inputs for the execute request. */
+      for( final InputDescriptionType inputDescription : inputDescriptions )
+      {
+        final CodeType identifier = inputDescription.getIdentifier();
+
+        /* Check if the input is in our model data, too. */
+        final Input input = SimulationUtilities.findInput( identifier.getValue(), inputList );
+        if( input == null )
+        {
+          /* Check, if it is an optional one. */
+          if( inputDescription.getMinimumOccurs().intValue() == 1 )
+          {
+            /* Ooops, it is a mandatory one, but it is missing in our model data. */
+            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "The data input " + identifier.getValue() + " is mandatory. Check your model data.", null );
+            throw new CoreException( status );
+          }
+
+          continue;
+        }
+
+        /* Input is here. */
+        final String inputPath = input.getPath();
+
+        /* Supported complex data type. */
+        final SupportedComplexDataType complexData = inputDescription.getComplexData();
+        if( complexData != null )
+        {
+          /* The complex value type should be skipped, as literals and bounding boxes. */
+
+          /* Get the protocol if it is one. */
+          final String protocol = SimulationUtilities.getProtocol( inputPath );
+
+          if( "file".equals( protocol ) )
+          {
+            final URL localFileUrl = new URL( inputPath );
+            final byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
+            final String hexString = DatatypeConverter.printHexBinary( bytes );
+            wpsInputs.put( identifier.getValue(), hexString );
+
+            continue;
+          }
+
+          /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
+          /* which is not allowed to be copied or it is a complex value type (file-protocol). */
+          if( protocol == null )
+          {
+            /* It is a local file resource. */
+            if( m_calcCaseFolder == null )
+              throw new WPSException( "Complex data specified, but no base folder given." );
+
+            final IContainer baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
+            final IResource inputResource = baseresource.findMember( inputPath );
+            if( inputResource == null )
+            {
+              if( inputDescription.getMinimumOccurs().intValue() == 0 )
+                continue;
+
+              throw new CoreException( StatusUtilities.createErrorStatus( "Could not find input resource: " + inputPath + "\nPlease check your model data." ) );
+            }
+
+            inputResource.accept( visitor );
+
+            initServerTmpDirectory();
+
+            /* Build the URL for this input. */
+            // Resource was already copied to server (for example see SimulationDelegate.copyInputFiles)
+            final String relativePathTo = inputResource.getProjectRelativePath().toString();
+            final FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+            final String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
+            wpsInputs.put( identifier.getValue(), serverUrl );
+          }
+          else
+            // maybe check the protocols?
+          {
+            // Remote resource, will be passed to the service as reference
+            final URL clientUrl = new URL( inputPath );
+            final String serverUrl = WPSUtilities.convertInternalToServer( clientUrl.toExternalForm(), m_input );
+            wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
+          }
+        }
+
+        /* Literal input type */
+        final LiteralInputType literalInput = inputDescription.getLiteralData();
+        if( literalInput != null )
+        {
+          /* Add the input. */
+          // TODO: normally we should marshall the string to the requested type (the WPS-Client will unmarshall it
+          // again)
+          // For the moment this works, as the WPS-Client just forwards any strings
+          wpsInputs.put( identifier.getValue(), inputPath );
+
+          continue;
+        }
+
+        /* Supported CRSs type. */
+        final SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
+        if( supportedCRSsType != null )
+        {
+          // TODO Add supported CRSs type (bounding boxes).
+          continue;
+        }
+      }
+
+      /* Copy all collected files. */
+      final IFile[] files = visitor.getFiles();
+      if( files.length > 0 )
+        copyInputFiles( files );
+
+      return wpsInputs;
+    }
+    catch( final CoreException ex )
+    {
+      throw ex;
+    }
+    catch( final Exception ex )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not create the date inputs ...", ex ) );
+    }
+  }
+
+  public List<String> createOutputs( )
+  {
+    /* Get the list with the output. */
+    final List<Output> outputList = m_data.getOutput();
+
+    /* The storage for the output values. */
+    final List<String> outputs = new LinkedList<String>();
+
+    for( final Output output : outputList )
+      outputs.add( output.getId() );
+
+    return outputs;
+  }
+
 }

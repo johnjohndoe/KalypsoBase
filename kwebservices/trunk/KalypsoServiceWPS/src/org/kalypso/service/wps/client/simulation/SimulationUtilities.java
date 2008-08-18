@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,48 +36,22 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client.simulation;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
 
-import net.opengeospatial.ows.CodeType;
-import net.opengeospatial.wps.ComplexValueType;
-import net.opengeospatial.wps.DataInputsType;
-import net.opengeospatial.wps.IOValueType;
-import net.opengeospatial.wps.InputDescriptionType;
-import net.opengeospatial.wps.LiteralInputType;
-import net.opengeospatial.wps.LiteralValueType;
-import net.opengeospatial.wps.OutputDefinitionType;
-import net.opengeospatial.wps.OutputDefinitionsType;
-import net.opengeospatial.wps.OutputDescriptionType;
-import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.SupportedCRSsType;
-import net.opengeospatial.wps.SupportedComplexDataType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
-import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
-
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.VFSUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.ogc.OGCUtilities;
-import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
@@ -88,221 +62,13 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  */
 public class SimulationUtilities
 {
+  private static final String SYSPROP_DEFAULT_WPS_SERVICE = "org.kalypso.service.wps.service";
+
   /**
    * The constructor.
    */
   private SimulationUtilities( )
   {
-  }
-
-  /**
-   * This function creates the data inputs which the client provides for the wps.
-   * 
-   * @param calcCaseFolder
-   *          The folder of the calc case.
-   * @param tmpServer
-   *          The temp directory of the server.
-   * @param inputClient
-   *          The path to the place on the server, where the client can put his files, as configured in the config.ini
-   *          from Kalypso.
-   * @param data
-   *          The modeldata.
-   * @param description
-   *          The decription of the process.
-   * @return The data input from the model spec in wps format.
-   */
-  public static DataInputsType getDataInputs( final IContainer calcCaseFolder, final FileObject tmpServer, final String inputClient, final Modeldata data, final ProcessDescriptionType description ) throws CoreException, IOException
-  {
-    // TODO At the moment only literals and references are supported from our model data.
-    // The model data must be changed, in order to enable bounding boxes and complex values.
-    // If this is done, the two new cases must be covered here as well.
-
-    /* Need the filesystem manager. */
-    final FileSystemManager fsManager = VFSUtilities.getManager();
-
-    /* Get the list with the input. */
-    final List<Input> inputList = data.getInput();
-
-    /* The storage for the input values. */
-    final List<IOValueType> inputValues = new LinkedList<IOValueType>();
-
-    /* Get the input list. */
-    final DataInputs dataInputs = description.getDataInputs();
-    final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
-
-    /* Iterate over all inputs and build the data inputs for the execute request. */
-    for( final InputDescriptionType inputDescription : inputDescriptions )
-    {
-      final CodeType identifier = inputDescription.getIdentifier();
-
-      /* Check if the input is in our model data, too. */
-      final Input input = findInput( identifier.getValue(), inputList );
-      if( input == null )
-      {
-        /* Check, if it is an optional one. */
-        if( inputDescription.getMinimumOccurs().intValue() == 1 )
-        {
-          /* Ooops, it is a mandatory one, but it is missing in our model data. */
-          throw new CoreException( StatusUtilities.createErrorStatus( "The data input " + identifier.getValue() + " is mandatory. Check your model data." ) );
-        }
-
-        continue;
-      }
-
-      /* Input is here. */
-      final String inputPath = input.getPath();
-
-      /* Supported complex data type. */
-      final SupportedComplexDataType complexData = inputDescription.getComplexData();
-      if( complexData != null )
-      {
-        final String protocol = getProtocol( inputPath );
-        final URL url;
-
-        if( "file".equals( protocol ) )
-        {
-          final URL localFileUrl = new URL( inputPath );
-
-          final byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
-          final String hexString = DatatypeConverter.printHexBinary( bytes );
-
-          // Local file resource: will be passed to service as (inline-) ComplexType
-          // in this case we produce a ComplexType (no reference)
-          final List<Object> value = new ArrayList<Object>( 1 );
-          value.add( hexString );
-
-          /* Build the complex value reference. */
-          final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-          final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
-          final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
-
-          /* Add the input. */
-          inputValues.add( ioValue );
-
-          continue;
-        }
-        else if( protocol == null )
-        {
-          /*
-           * It is a relative path (either to calcCaseFolder or to its project), was copied to the tmpServer-Dir, and
-           * its URL will be passed to the service as reference.
-           */
-          if( calcCaseFolder == null )
-            throw new CoreException( StatusUtilities.createErrorStatus( "Complext Data specified but no base folder given" ) );
-
-          /* Alles relativ zum Projekt auflösen! */
-          final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : calcCaseFolder.getProject();
-
-          final IResource inputResource = baseresource.findMember( inputPath );
-          if( inputResource == null )
-          {
-            if( inputDescription.getMinimumOccurs().intValue() == 0 )
-              continue;
-
-            throw new CoreException( StatusUtilities.createErrorStatus( "Could not find input resource: " + inputPath + "\nPlease check your model data." ) );
-          }
-
-          /* Build the URL for this input. */
-          // Resource was already copied to server (for example see SimulationDelegate.copyInputFiles)
-          final String relativePathTo = inputResource.getProjectRelativePath().toString();
-          final FileObject destination = fsManager.resolveFile( tmpServer, relativePathTo );
-          url = destination.getURL();
-        }
-        else
-        // maybe check the protocols?
-        {
-          // Remote resource, will be passed to the service as reference
-          url = new URL( inputPath );
-        }
-
-        Debug.println( "Checking for server URL, where the input data can be copied ..." );
-        if( inputClient == null )
-        {
-          Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
-          throw new CoreException( StatusUtilities.createErrorStatus( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." ) );
-        }
-
-        /* Build the complex value reference. */
-        final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-        final ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToServer( url.toExternalForm(), inputClient ), null, null, null );
-        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
-
-        /* Add the input. */
-        inputValues.add( ioValue );
-
-        continue;
-      }
-
-      /* Literal input type */
-      final LiteralInputType literalInput = inputDescription.getLiteralData();
-      if( literalInput != null )
-      {
-        /* Build the literal value type. */
-        final CodeType code = OGCUtilities.buildCodeType( null, input.getId() );
-        final LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( inputPath, literalInput.getDataType().getValue(), null );
-        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
-
-        /* Add the input. */
-        inputValues.add( ioValue );
-
-        continue;
-      }
-
-      /* Supported CRSs type. */
-      final SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
-      if( supportedCRSsType != null )
-      {
-        // TODO Add supported CRSs type (bounding boxes).
-        continue;
-      }
-    }
-
-    return OGCUtilities.buildDataInputsType( inputValues );
-  }
-
-  /**
-   * This function creates the data outputs the clients expects for the wps.
-   * 
-   * @param description
-   *          The description of the process.
-   * @param data
-   *          The modeldata.
-   * @return The output of the model spec in wps format.
-   */
-  public static OutputDefinitionsType getOutputDefinitions( final Modeldata data, final ProcessDescriptionType description ) throws CoreException
-  {
-    /* Get the list with the output. */
-    final List<Output> outputList = data.getOutput();
-
-    /* The storage for the output values. */
-    final List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
-
-    /* Get the output list. */
-    final ProcessOutputs processOutputs = description.getProcessOutputs();
-    final List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
-
-    /* Iterate over all outputs and build the data inputs for the execute request. */
-    for( final OutputDescriptionType outputDescription : outputDescriptions )
-    {
-      final CodeType identifier = outputDescription.getIdentifier();
-
-      /* Check if the output is in our model data, too. */
-      final Output output = findOutput( identifier.getValue(), outputList );
-
-      if( output == null )
-      {
-        /* Ooops, it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
-      }
-
-      final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
-      final OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
-
-      /* Add the output. */
-      outputValues.add( outputDefinition );
-    }
-
-    return OGCUtilities.buildOutputDefinitionsType( outputValues );
   }
 
   /**
@@ -338,6 +104,25 @@ public class SimulationUtilities
     Debug.println( "Input '" + path + "' was no URL ..." );
 
     return null;
+  }
+
+  /**
+   * Reads the contents of an url into an object suitable as value for the ComplexValueType.
+   */
+  public static Object toComplexValueContent( final URL url ) throws IOException
+  {
+    final byte[] bytes = UrlUtilities.toByteArray( url );
+    return DatatypeConverter.printHexBinary( bytes );
+  }
+
+  public static String getDefaultServiceEndpoint( ) throws CoreException
+  {
+    final String endPoint = System.getProperty( SYSPROP_DEFAULT_WPS_SERVICE );
+    if( endPoint == null )
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No default service endpoint is set. Use property '" + SYSPROP_DEFAULT_WPS_SERVICE
+          + "' to define a default WPS-Endpoint.", null ) );
+
+    return endPoint;
   }
 
   /**

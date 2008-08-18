@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,16 +60,24 @@ import net.opengeospatial.wps.DescribeProcess;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
+import net.opengeospatial.wps.InputDescriptionType;
+import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralValueType;
+import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
+import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptions;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
+import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
+import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -89,6 +99,11 @@ import org.kalypso.service.wps.utils.ogc.OGCUtilities;
  */
 public class WPSRequest
 {
+  /**
+   * Commonly used system property for the location of the WPS endpoint. Not every WPS client might use this one.
+   */
+  public final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service";
+
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
    */
@@ -115,20 +130,21 @@ public class WPSRequest
   private Map<String, ComplexValueType> m_complexValues;
 
   /**
-   * The worker, which provides this client with the required data.
-   */
-  private final IWPSDelegate m_delegate;
-
-  /**
    * After this period of time, the job gives up, waiting for a result of the service.
    */
   private final long m_timeout;
 
   /**
-   * Necessary for the monitor update functinality. Stores the last updated value, to prevent, that the monitor is
+   * Necessary for the monitor update functionality. Stores the last updated value, to prevent, that the monitor is
    * updated to often.
    */
   private Integer m_alreadyWorked;
+
+  private final String m_identifier;
+
+  private final String m_serviceEndpoint;
+
+  private ProcessDescriptionType m_processDescription;
 
   /**
    * The constructor.
@@ -138,8 +154,11 @@ public class WPSRequest
    * @param timeout
    *          After this period of time, the job gives up, waiting for a result of the service.
    */
-  public WPSRequest( final IWPSDelegate delegate, final long timeout )
+  public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {
+    m_identifier = identifier;
+    m_serviceEndpoint = serviceEndpoint;
+
     /* No results so far. */
     m_references = null;
     m_literals = null;
@@ -147,49 +166,33 @@ public class WPSRequest
     m_complexValues = null;
 
     /* Initializing of the given variables. */
-    m_delegate = delegate;
     m_timeout = timeout;
 
     /* Initializing the other variables. */
     m_alreadyWorked = new Integer( 0 );
   }
 
-  /**
-   * Starts the simulation.
-   * 
-   * @param monitor
-   *          The progress monitor.
-   */
-  @SuppressWarnings("unchecked")
-  public IStatus run( IProgressMonitor monitor )
+  public ProcessDescriptionType getProcessDescription( )
   {
-    if( monitor == null )
-      monitor = new NullProgressMonitor();
+    return m_processDescription;
+  }
 
-    monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
-
+  public IStatus init( final IProgressMonitor monitor )
+  {
     try
     {
-      /* Init the necessary components. */
-      init();
-
-      /* If the user aborted the job. */
-      monitor.worked( 100 );
-      if( monitor.isCanceled() )
-        return canceled();
-
       /* Build the describe process request. */
       final List<CodeType> identifier = new LinkedList<CodeType>();
-      identifier.add( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ) );
+      identifier.add( OGCUtilities.buildCodeType( "", m_identifier ) );
       final DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
       /* Send the request. */
       monitor.setTaskName( "Frage nach der Prozess-Beschreibung ..." );
       Debug.println( "Asking for a process describtion ..." );
-      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), m_delegate.getServiceURL() );
+      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), m_serviceEndpoint );
 
       // TODO: error handling: our WPS service throws other types of exceptions
-      // (http://www.opengis.net/ows}ExceptionReport) than excpected
+      // (http://www.opengis.net/ows}ExceptionReport) than expected
       // here {http://www.opengeospatial.net/ows}ExceptionReport. We need to fix that... find out what is correct in
       // respect to WPS specification
 
@@ -206,6 +209,16 @@ public class WPSRequest
           final ExceptionReport report = (ExceptionReport) describeProcessObject;
           return StatusUtilities.createErrorStatus( createErrorString( report ) );
         }
+
+        /* Use the process description for building the DataInputs and the OutputDefinitions. */
+        final ProcessDescriptions m_processDescriptions = (ProcessDescriptions) describeProcessObject;
+
+        /* The descriptions of all processes from the process descriptions response. */
+        final List<ProcessDescriptionType> processDescription = m_processDescriptions.getProcessDescription();
+
+        m_processDescription = processDescription.get( 0 );
+
+        return Status.OK_STATUS;
       }
       catch( final Exception e )
       {
@@ -213,47 +226,66 @@ public class WPSRequest
         // WPS implementation return the wrong kind of exception (opengeo in contrast to opengeospatial)
         return StatusUtilities.createErrorStatus( describeProcessResponse );
       }
+    }
+    catch( final Exception e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+  }
 
-      /* Use the process description for building the DataInputs and the OutputDefinitions. */
-      final ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
+  /**
+   * Starts the simulation.
+   * 
+   * @param monitor
+   *          The progress monitor.
+   */
+  @SuppressWarnings("unchecked")
+  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
+  {
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-      /* The descriptions of all processes from the process descriptions response. */
-      final List<ProcessDescriptionType> processDescription = processDescriptions.getProcessDescription();
+    // TODO: clear old results
 
-      /* There could be only one description, because we have asked for a special one. */
-      final ProcessDescriptionType description = processDescription.get( 0 );
+    monitor.beginTask( "Berechnung vorbereiten ...", 1000 );
 
-      /* Copy the data to the server. */
-      monitor.setTaskName( "Kopiere auf den Server ..." );
-      Debug.println( "Copy to the server ..." );
-
-      /* Copy ... */
-      m_delegate.copyInputFiles( description );
+    try
+    {
+      Debug.println( "Checking for service URL ..." );
+      if( m_serviceEndpoint == null )
+      {
+        Debug.println( "No URL to the service is given." );
+        throw new WPSException( "No URL to the the service is given." );
+      }
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
       if( monitor.isCanceled() )
-        return canceled();
+        return Status.CANCEL_STATUS; // WPS does not support cancelling, so we just return
+
+      // check describe process
+      if( m_processDescription == null )
+        return StatusUtilities.createStatus( IStatus.ERROR, "The init() method was not called before the run method.", null );
 
       /* Get the input data. */
-      final DataInputsType dataInputs = m_delegate.getDataInputs( description );
+      final DataInputsType dataInputs = createDataInputs( m_processDescription, inputs );
 
       /* Get the output data. */
-      final OutputDefinitionsType outputDefinitions = m_delegate.getOutputDefinitions( description );
+      final OutputDefinitionsType outputDefinitions = createOutputDefinitions( m_processDescription, outputs );
 
       /* Build the execute request. */
-      final Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", m_delegate.getIdentifier() ), dataInputs, outputDefinitions, true, true );
+      final Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", m_identifier ), dataInputs, outputDefinitions, true, true );
 
       /* If the user aborted the job. */
       monitor.worked( 100 );
       if( monitor.isCanceled() )
-        return canceled();
+        return Status.CANCEL_STATUS;
 
       /* Send the request. */
       monitor.setTaskName( "Starte die Simulation ..." );
       Debug.println( "Start the simulation ..." );
       final String executeRequest = MarshallUtilities.marshall( execute );
-      final String executeResponse = WPSUtilities.send( executeRequest, m_delegate.getServiceURL() );
+      final String executeResponse = WPSUtilities.send( executeRequest, m_serviceEndpoint );
 
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponse );
@@ -276,7 +308,7 @@ public class WPSRequest
       /* If the user aborted the job. */
       monitor.worked( 100 );
       if( monitor.isCanceled() )
-        return canceled();
+        return Status.CANCEL_STATUS;
 
       /* Retrieve the path to the status file of the process. */
       final String statusLocation = value.getStatusLocation();
@@ -304,7 +336,7 @@ public class WPSRequest
 
         /* If the user aborted the job. */
         if( monitor.isCanceled() )
-          return canceled();
+          return Status.CANCEL_STATUS;
 
         Debug.println( "Checking state file of the server ..." );
         final FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
@@ -397,13 +429,10 @@ public class WPSRequest
         return StatusUtilities.createErrorStatus( "The server responded without any outputs ..." );
 
       /* Copy all process output to their destination. */
-      monitor.setTaskName( "Kopiere Ergebnisse zu Client ..." );
       collectOutput( processOutputs );
-      m_delegate.copyResults( m_references );
 
       /* Finish. */
       monitor.worked( 100 );
-      finish();
     }
     catch( final Exception e )
     {
@@ -418,13 +447,146 @@ public class WPSRequest
     return Status.OK_STATUS;
   }
 
-  /**
-   * This function initializes everything.
-   */
-  private void init( ) throws WPSException
+  private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws WPSException
   {
-    /* Init the operation. */
-    m_delegate.init();
+    /* The storage for the input values. */
+    final List<IOValueType> inputValues = new LinkedList<IOValueType>();
+
+    /* Get the input list. */
+    final DataInputs dataInputs = description.getDataInputs();
+    final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+
+    /* Iterate over all inputs and build the data inputs for the execute request. */
+    for( final InputDescriptionType inputDescription : inputDescriptions )
+    {
+      final CodeType identifier = inputDescription.getIdentifier();
+
+      /* Check if the input is in our model data, too. */
+      final String inputId = identifier.getValue();
+      if( inputs.containsKey( inputId ) )
+      {
+        /* Input is here. */
+        final Object inputValue = inputs.get( inputId );
+        inputValues.add( createDataInput( inputDescription, inputValue ) );
+        continue;
+      }
+
+      /* Check, if it is an optional one. */
+      if( inputDescription.getMinimumOccurs().intValue() == 1 )
+      {
+        /* Ooops, it is a mandatory one, but it is missing in our model data. */
+        throw new WPSException( "The data input " + inputId + " is mandatory. Check your input data." );
+      }
+    }
+
+    return OGCUtilities.buildDataInputsType( inputValues );
+  }
+
+  private IOValueType createDataInput( final InputDescriptionType inputDescription, final Object inputValue )
+  {
+    final CodeType identifier = inputDescription.getIdentifier();
+    final String inputId = identifier.getValue();
+
+    /* Supported complex data type. */
+    final SupportedComplexDataType complexData = inputDescription.getComplexData();
+    if( complexData != null )
+    {
+      if( inputValue instanceof URL )
+      {
+        /* Build the complex value reference. */
+        final URL url = (URL) inputValue;
+        final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+        final ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( url.toExternalForm(), null, null, null );
+        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
+
+        /* Add the input. */
+        return ioValue;
+      }
+
+      // REMARK: hack/convention: the input must now be the raw input for the anyType element
+      final List<Object> value = new ArrayList<Object>( 1 );
+      value.add( inputValue );
+
+      /* Build the complex value reference. */
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+      final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
+
+      /* Add the input. */
+      return ioValue;
+    }
+
+    /* Literal input type */
+    final LiteralInputType literalInput = inputDescription.getLiteralData();
+    if( literalInput != null )
+    {
+      /* Build the literal value type. */
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+
+      final String inputType = literalInput.getDataType().getValue();
+      final String value = marshalLiteral( inputValue, inputType );
+
+      final LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( value, inputType, null );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
+
+      /* Add the input. */
+      return ioValue;
+    }
+
+    /* Supported CRSs type. */
+    // TODO: support SupportedCRSsType
+    throw new UnsupportedOperationException();
+  }
+
+  private String marshalLiteral( final Object literalValue, @SuppressWarnings("unused") final String inputType )
+  {
+    // REMARK: (crude) Hack: if it is already a String, we always return this value.
+    if( literalValue instanceof String )
+      return (String) literalValue;
+
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * This function creates the data outputs the clients expects for the wps.
+   * 
+   * @param description
+   *          The description of the process.
+   * @param data
+   *          The modeldata.
+   * @return The output of the model spec in wps format.
+   */
+  private OutputDefinitionsType createOutputDefinitions( final ProcessDescriptionType description, final List<String> outputs ) throws CoreException
+  {
+    /* The storage for the output values. */
+    final List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
+
+    /* Get the output list. */
+    final ProcessOutputs processOutputs = description.getProcessOutputs();
+    final List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
+
+    /* Iterate over all outputs and build the data inputs for the execute request. */
+    for( final OutputDescriptionType outputDescription : outputDescriptions )
+    {
+      final CodeType identifier = outputDescription.getIdentifier();
+
+      /* Check if the output is in our model data, too. */
+      if( !outputs.contains( identifier.getValue() ) )
+      {
+        /* Ooops, it is missing in our model data. */
+        throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+      }
+
+      // TODO: maybe only ask for outputs that are in the list m_outputs?
+
+      final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
+      final OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
+
+      /* Add the output. */
+      outputValues.add( outputDefinition );
+    }
+
+    return OGCUtilities.buildOutputDefinitionsType( outputValues );
   }
 
   /**
@@ -488,11 +650,14 @@ public class WPSRequest
    */
   private void collectOutput( final ExecuteResponseType.ProcessOutputs processOutputs )
   {
+    // TODO: maybe check, if all desired outputs have been created??
+
     /* Collect all data for the client. */
     final List<IOValueType> ioValues = processOutputs.getOutput();
     for( final IOValueType ioValue : ioValues )
     {
       /* Complex value reference. */
+      // TODO: dubios The hashmap should always be non-null!
       final ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
       if( complexValueReference != null )
       {
@@ -556,31 +721,6 @@ public class WPSRequest
         continue;
       }
     }
-  }
-
-  /**
-   * This function will finish the operations on this simulation.
-   * <ol>
-   * <li>All input files will be deleted.</li>
-   * <li>Other things can be disposed here.</li>
-   * </ol>
-   */
-  private void finish( )
-  {
-    /* Finish the oepration. */
-    m_delegate.finish();
-  }
-
-  /**
-   * This function is called, when the job is canceled by the user.<br>
-   * A cancel request has to be send to the server, so that he can stop executing the simulation.
-   */
-  private IStatus canceled( )
-  {
-    /* Cancel the operation. */
-    m_delegate.canceled();
-
-    return Status.CANCEL_STATUS;
   }
 
   /**

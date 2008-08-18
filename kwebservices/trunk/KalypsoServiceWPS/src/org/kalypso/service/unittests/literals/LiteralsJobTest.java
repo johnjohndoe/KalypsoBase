@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,32 +36,21 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests.literals;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.junit.Test;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
-import org.kalypso.service.wps.client.simulation.SimulationDelegate;
-import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.simspec.Modeldata.Input;
 
 /**
  * Small test case for testing the literals simulation.
@@ -70,11 +59,6 @@ import org.kalypso.simulation.core.simspec.Modeldata.Input;
  */
 public class LiteralsJobTest
 {
-  /**
-   * The model data.
-   */
-  private static final String SIMULATION_DATA = "literal_data.xml";
-
   private static final String INPUT_LITERAL = "INPUT_LITERAL";
 
   private static final String OUTPUT_LITERAL = "OUTPUT_LITERAL";
@@ -83,7 +67,7 @@ public class LiteralsJobTest
    * This function starts the simulation client, which will contact the wps to activate the literals simulation.
    */
   @Test
-  public void testJob( ) throws JAXBException, CoreException
+  public void testJob( )
   {
     /* Location of the Server, where the simulations will run: No default. */
     System.setProperty( "org.kalypso.service.wps.service", "http://localhost/ogc" );
@@ -94,60 +78,28 @@ public class LiteralsJobTest
     /* Replacement for providing the URL to the server: No default. */
     System.setProperty( "org.kalypso.service.wps.server.replacement", "" );
 
-    /* Your calc case folder. */
-    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( "LiteralsV1.0" );
-    if( !project.exists() )
-      project.create( null );
-
-    /* Assert. */
-    Assert.assertEquals( true, project.exists() );
-
-    if( !project.isOpen() )
-      project.open( null );
-
-    /* Assert. */
-    Assert.assertEquals( true, project.isOpen() );
-
-    IFolder calcCaseFolder = project.getFolder( new Path( "simulation" ) );
-    if( !calcCaseFolder.exists() )
-      calcCaseFolder.create( true, true, null );
-
-    /* Assert. */
-    Assert.assertEquals( true, calcCaseFolder.exists() );
-
-    /* Get the modeldata. */
-    URL resource = getClass().getResource( SIMULATION_DATA );
-
-    /* Assert. */
-    Assert.assertNotNull( resource );
-
-    /* Unmarshall. */
-    Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-    Modeldata modelData = (Modeldata) unmarshaller.unmarshal( resource );
-
     /* Modify the model data to your needs. */
-    List<Input> inputs = modelData.getInput();
-    for( Input input : inputs )
-    {
-      if( input.getId().equals( INPUT_LITERAL ) )
-        input.setPath( "1.0" );
-    }
+    final Map<String, Object> inputs = new HashMap<String, Object>();
+    inputs.put( INPUT_LITERAL, "1.0" );
+    final List<String> outputs = new ArrayList<String>();
+    outputs.add( OUTPUT_LITERAL );
 
     /* The name of the simulation. */
-    String simulationName = "LiteralsV1.0";
+    final String simulationName = "LiteralsV1.0";
 
     /* Create the delegate which can handle ISimulations. */
-    SimulationDelegate delegate = new SimulationDelegate( simulationName, calcCaseFolder, modelData );
+    final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
 
     /* Start the simulation with a timeout of 300000 ms. */
-    WPSRequest simulationJob = new WPSRequest( delegate, 300000 );
-    IStatus status = simulationJob.run( new NullProgressMonitor() );
+    final WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
+    simulationJob.init( new NullProgressMonitor() );
+    final IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */
     System.out.println( status.getMessage() );
 
     /* Get the result. */
-    Map<String, Object> literals = simulationJob.getLiterals();
+    final Map<String, Object> literals = simulationJob.getLiterals();
 
     /* Assert. */
     Assert.assertNotNull( literals );
