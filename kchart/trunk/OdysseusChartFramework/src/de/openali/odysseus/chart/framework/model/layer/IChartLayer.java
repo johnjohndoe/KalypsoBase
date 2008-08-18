@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.GC;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -86,6 +87,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   public void dispose( );
 
   public ILegendEntry[] getLegendEntries( );
+
 
   // @SuppressWarnings("unchecked")
   // public void setMappers( Map<String, IMapper> mapperMap );

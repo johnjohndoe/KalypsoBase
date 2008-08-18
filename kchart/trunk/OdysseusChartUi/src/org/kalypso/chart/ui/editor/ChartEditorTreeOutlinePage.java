@@ -160,7 +160,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerVisibilityChanged( IChartLayer layer )
       {
-        // updateControl();
+        // nothing Todo
       }
 
       /**
@@ -215,13 +215,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     Object[] children = m_contentProvider.getChildren( layer );
     for( Object object : children )
       m_treeViewer.setChecked( object, checked );
-    IChartModel model = m_chartPart.getChartComposite().getChartModel();
-    if( model.getLayerManager().getLayerPosition( layer ) < 0 )
-    {
-      final Object obj = m_contentProvider.getParent( layer );
-      if( obj instanceof IExpandableChartLayer )
-        ((IExpandableChartLayer) obj).fireLayerVisibilityChanged();
-    }
   }
 
   protected void handleSelectionChanged( final IChartLayer layer )

@@ -17,13 +17,12 @@ public class GenericLinearAxis extends AbstractAxis
 
   private int m_height = 1;
 
-  @SuppressWarnings("unchecked")
+
   public GenericLinearAxis( final String id, final POSITION pos, Class< ? > clazz )
   {
     super( id, pos, clazz );
-    //setting initial (dummy) range
-    setNumericRange( new DataRange<Number>( 0, 1 ) );
-
+    //set initial range, so we can prevent NPEs
+    setNumericRange( new DataRange<Number>(0,1));
   }
 
   public double numericToNormalized( final Number value )

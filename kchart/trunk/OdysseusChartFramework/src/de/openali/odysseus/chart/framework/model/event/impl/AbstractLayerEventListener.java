@@ -51,6 +51,16 @@ public abstract class AbstractLayerEventListener implements ILayerEventListener
 {
 
 	/**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerActivationChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerActivationChanged( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
 	 * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
 	 */
 	public void onLayerContentChanged(IChartLayer layer)

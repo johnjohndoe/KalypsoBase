@@ -53,8 +53,8 @@ public interface IExpandableChartLayer extends IEditableChartLayer
   public IChartLayer removeLayer( final IChartLayer layer );
 
   public boolean moveLayerToPosition( final String source, final IChartLayer target );
-
-  public void fireLayerContentChanged( );
-
-  public void fireLayerVisibilityChanged( );
+//
+//  public void fireLayerContentChanged( );
+//
+//  public void fireLayerVisibilityChanged( );
 }
