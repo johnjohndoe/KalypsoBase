@@ -41,8 +41,9 @@
 
 package org.kalypso.simulation.ui.ant;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -80,16 +81,16 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
   private String m_calcCasePath;
 
-  private Modeldata m_modeldata;
+  private final Modeldata m_modeldata;
 
   private IFolder m_calcCaseFolder;
 
-  public RunCalculationTask()
+  public RunCalculationTask( )
   {
     m_modeldata = OF.createModeldata();
   }
 
-  public String getCalcCaseFolder()
+  public String getCalcCaseFolder( )
   {
     return m_calcCasePath;
   }
@@ -99,7 +100,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     m_calcCasePath = calcCaseFolder;
   }
 
-  public void setTypeID( String typeID )
+  public void setTypeID( final String typeID )
   {
     m_modeldata.setTypeID( typeID );
   }
@@ -119,7 +120,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     m_modeldata.getClearAfterCalc().add( clearAfterCalc );
   }
 
-  private void validateInput()
+  private void validateInput( )
   {
     if( m_calcCasePath == null )
       throw new BuildException( "calcCaseFolder is not set" );
@@ -134,17 +135,16 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     // give implementing class a chance to validate its input
     validateInput();
 
     final Project antProject = getProject();
     final Hashtable references = antProject == null ? null : antProject.getReferences();
-    final IProgressMonitor monitor = references == null ? null : (IProgressMonitor)references
-        .get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
+    final IProgressMonitor monitor = references == null ? null : (IProgressMonitor) references.get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
 
-    IStatus status = null;;
+    IStatus status = null;
     try
     {
       status = execute( new SubProgressMonitor( monitor, 1 ) );
@@ -153,7 +153,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     {
       status = StatusUtilities.statusFromThrowable( t );
     }
-    
+
     if( PlatformUI.isWorkbenchRunning() )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -175,9 +175,9 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird durchgeführt", 2500 );
+    monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
 
     try
     {
@@ -185,14 +185,29 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
         return Status.CANCEL_STATUS;
 
       // TODO: we now always calculate via WPS...
-      // So local calculation (for NA) does not work any more? Probably we should add a switch for that 
-//      final IProject calcProject = m_calcCaseFolder.getProject();
-//      final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
-//      return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
-      
+      // So local calculation (for NA) does not work any more? Probably we should add a switch for that
+// final IProject calcProject = m_calcCaseFolder.getProject();
+// final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
+// return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
+
+      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
+      final WPSRequest simulationJob = new WPSRequest( m_modeldata.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
+      simulationJob.init( new SubProgressMonitor( monitor, 1000 ) );
+
       final SimulationDelegate delegate = new SimulationDelegate( m_modeldata.getTypeID(), m_calcCaseFolder, m_modeldata );
-      final WPSRequest simulationJob = new WPSRequest( delegate, 1000 * 60 * 60 ); // 1 hour
-      return simulationJob.run( monitor );
+      delegate.init();
+      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), new SubProgressMonitor( monitor, 500 ) );
+      final List<String> outputs = delegate.createOutputs();
+
+      final IStatus status = simulationJob.run( inputs, outputs, new SubProgressMonitor( monitor, 1500 ) );
+      if( !status.isOK() )
+        return status;
+
+      delegate.finish();
+
+      delegate.copyResults( simulationJob.getReferences() );
+
+      return status;
     }
     finally
     {
@@ -204,10 +219,9 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
   {
     shell.getDisplay().syncExec( new Runnable()
     {
-      public void run()
+      public void run( )
       {
-        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR
-            | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
+        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
       }
     } );
   }

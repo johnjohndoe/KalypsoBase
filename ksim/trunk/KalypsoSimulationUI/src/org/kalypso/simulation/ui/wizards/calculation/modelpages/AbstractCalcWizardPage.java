@@ -1141,7 +1141,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( activeTheme instanceof GisTemplateFeatureTheme )
         {
           final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme) activeTheme;
-          m_selectionRestorer = new RestoreSelectionHelper( gtft.getLayerKey(), m_selectionManager );
+          if( gtft.getStatus().isOK() )
+            m_selectionRestorer = new RestoreSelectionHelper( gtft.getLayerKey(), m_selectionManager );
         }
       }
 
