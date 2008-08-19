@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -177,13 +177,10 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird durchgeführt", 3000 );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Berechnung wird durchgeführt", 3000 );
 
     try
     {
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
       // TODO: we now always calculate via WPS...
       // So local calculation (for NA) does not work any more? Probably we should add a switch for that
 // final IProject calcProject = m_calcCaseFolder.getProject();
@@ -192,14 +189,14 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
       final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
       final WPSRequest simulationJob = new WPSRequest( m_modeldata.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
-      simulationJob.init( new SubProgressMonitor( monitor, 1000 ) );
+      simulationJob.init( progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
 
       final SimulationDelegate delegate = new SimulationDelegate( m_modeldata.getTypeID(), m_calcCaseFolder, m_modeldata );
       delegate.init();
-      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), new SubProgressMonitor( monitor, 500 ) );
+      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
       final List<String> outputs = delegate.createOutputs();
 
-      final IStatus status = simulationJob.run( inputs, outputs, new SubProgressMonitor( monitor, 1500 ) );
+      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 2000, SubMonitor.SUPPRESS_NONE ) );
       if( !status.isOK() )
         return status;
 
