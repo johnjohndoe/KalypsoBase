@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -142,7 +142,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
     {
       final UnmarshallResultEater eater = new UnmarshallResultEater()
       {
-        public void unmarshallSuccesful( Object value ) throws SAXParseException
+        public void unmarshallSuccesful( final Object value ) throws SAXParseException
         {
           final Node node = (Node) value;
           if( node == null )
@@ -154,7 +154,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
               final Object object = internalUnmarshall( node );
               marshalResultEater.unmarshallSuccesful( object );
             }
-            catch( TypeRegistryException e )
+            catch( final TypeRegistryException e )
             {
               throw new SAXParseException( e.getLocalizedMessage(), null, e );
             }

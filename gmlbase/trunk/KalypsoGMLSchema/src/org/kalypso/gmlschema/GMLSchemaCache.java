@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
@@ -133,8 +133,12 @@ public class GMLSchemaCache
       return sw.getSchema();
     }
 
+    if( schemaURL == null )
+      throw new InvocationTargetException( new GMLSchemaException( "Unable to load schema, unknown namespace: " + namespace ) );
+
     try
     {
+
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
       m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity ) );
 

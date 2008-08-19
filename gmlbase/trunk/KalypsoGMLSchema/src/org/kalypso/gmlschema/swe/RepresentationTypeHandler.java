@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.swe;
 
@@ -381,10 +381,11 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
   private static void handleUnit( final RepresentationType type, final Document doc, final Element elt )
   {
-    if( type.getUnit().length() > 0 )
+    final String unit = type.getUnit();
+    if( unit != null && unit.length() > 0 )
     {
       final Element eltUom = doc.createElementNS( NS.GML3, "unitOfMeasure" );
-      eltUom.setAttribute( "uom", type.getUnit() );
+      eltUom.setAttribute( "uom", unit );
 
       elt.appendChild( eltUom );
     }
