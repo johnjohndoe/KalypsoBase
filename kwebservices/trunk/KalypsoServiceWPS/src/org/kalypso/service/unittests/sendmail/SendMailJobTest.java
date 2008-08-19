@@ -40,29 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests.sendmail;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.junit.Test;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.service.calcjobs.sendmail.utils.MailUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
-import org.kalypso.service.wps.client.simulation.SimulationDelegate;
-import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.simspec.Modeldata.Input;
 
 /**
  * Small test case for testing the literals simulation.
@@ -71,11 +60,6 @@ import org.kalypso.simulation.core.simspec.Modeldata.Input;
  */
 public class SendMailJobTest
 {
-  /**
-   * The model data.
-   */
-  private static final String SIMULATION_DATA = "mail_data.xml";
-
   private static final String INPUT_SENDER = "SENDER";
 
   private static final String INPUT_RECEIVER = "RECEIVER";
@@ -92,7 +76,7 @@ public class SendMailJobTest
    * This function starts the simulation client, which will contact the wps to activate the literals simulation.
    */
   @Test
-  public void testJob( ) throws JAXBException, CoreException
+  public void testJob( )
   {
     /* Location of the Server, where the simulations will run: No default. */
     System.setProperty( "org.kalypso.service.wps.service", "http://localhost/ogc" );
@@ -103,66 +87,28 @@ public class SendMailJobTest
     /* Replacement for providing the URL to the server: No default. */
     System.setProperty( "org.kalypso.service.wps.server.replacement", "" );
 
-    /* Your calc case folder. */
-    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( "SendMailV1.0" );
-    if( !project.exists() )
-      project.create( null );
+    /* Create the inputs. */
+    Map<String, Object> inputs = new HashMap<String, Object>();
+    inputs.put( INPUT_SENDER, "h.albert@bjoernsen.de" );
+    inputs.put( INPUT_RECEIVER, "h.albert@bjoernsen.de" );
+    inputs.put( INPUT_TYPE, MailUtilities.TEXT_PLAIN );
+    inputs.put( INPUT_TITLE, "Eine Test-JavaMail" );
+    inputs.put( INPUT_TEXT, "Wenn du diese Mail bekommen hast, hat das Senden funktioniert." );
 
-    /* Assert. */
-    Assert.assertEquals( true, project.exists() );
-
-    if( !project.isOpen() )
-      project.open( null );
-
-    /* Assert. */
-    Assert.assertEquals( true, project.isOpen() );
-
-    IFolder calcCaseFolder = project.getFolder( new Path( "simulation" ) );
-    if( !calcCaseFolder.exists() )
-      calcCaseFolder.create( true, true, null );
-
-    /* Assert. */
-    Assert.assertEquals( true, calcCaseFolder.exists() );
-
-    /* Get the modeldata. */
-    URL resource = getClass().getResource( SIMULATION_DATA );
-
-    /* Assert. */
-    Assert.assertNotNull( resource );
-
-    /* Unmarshall. */
-    Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-    Modeldata modelData = (Modeldata) unmarshaller.unmarshal( resource );
-
-    /* Modify the model data to your needs. */
-    List<Input> inputs = modelData.getInput();
-    for( Input input : inputs )
-    {
-      if( input.getId().equals( INPUT_SENDER ) )
-        input.setPath( "h.albert@bjoernsen.de" );
-
-      if( input.getId().equals( INPUT_RECEIVER ) )
-        input.setPath( "h.albert@bjoernsen.de" );
-
-      if( input.getId().equals( INPUT_TYPE ) )
-        input.setPath( MailUtilities.TEXT_PLAIN );
-
-      if( input.getId().equals( INPUT_TITLE ) )
-        input.setPath( "Eine Test-JavaMail" );
-
-      if( input.getId().equals( INPUT_TEXT ) )
-        input.setPath( "Wenn du diese Mail bekommen hast, hat das Senden funktioniert." );
-    }
+    /* Create the outputs. */
+    List<String> outputs = new ArrayList<String>();
+    outputs.add( OUTPUT_RESULT );
 
     /* The name of the simulation. */
     String simulationName = "SendMailV1.0";
 
     /* Create the delegate which can handle ISimulations. */
-    SimulationDelegate delegate = new SimulationDelegate( simulationName, calcCaseFolder, modelData );
+    String serviceEndpoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
 
     /* Start the simulation with a timeout of 300000 ms. */
-    WPSRequest simulationJob = new WPSRequest( delegate, 300000 );
-    IStatus status = simulationJob.run( new NullProgressMonitor() );
+    WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
+    simulationJob.init( new NullProgressMonitor() );
+    IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */
     System.out.println( status.getMessage() );

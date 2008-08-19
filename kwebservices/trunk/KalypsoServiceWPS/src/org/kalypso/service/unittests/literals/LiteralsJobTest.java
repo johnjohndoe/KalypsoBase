@@ -78,28 +78,30 @@ public class LiteralsJobTest
     /* Replacement for providing the URL to the server: No default. */
     System.setProperty( "org.kalypso.service.wps.server.replacement", "" );
 
-    /* Modify the model data to your needs. */
-    final Map<String, Object> inputs = new HashMap<String, Object>();
+    /* Create the inputs. */
+    Map<String, Object> inputs = new HashMap<String, Object>();
     inputs.put( INPUT_LITERAL, "1.0" );
-    final List<String> outputs = new ArrayList<String>();
+
+    /* Create the outputs. */
+    List<String> outputs = new ArrayList<String>();
     outputs.add( OUTPUT_LITERAL );
 
     /* The name of the simulation. */
-    final String simulationName = "LiteralsV1.0";
+    String simulationName = "LiteralsV1.0";
 
     /* Create the delegate which can handle ISimulations. */
-    final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
+    String serviceEndpoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
 
     /* Start the simulation with a timeout of 300000 ms. */
-    final WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
+    WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
     simulationJob.init( new NullProgressMonitor() );
-    final IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
+    IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */
     System.out.println( status.getMessage() );
 
     /* Get the result. */
-    final Map<String, Object> literals = simulationJob.getLiterals();
+    Map<String, Object> literals = simulationJob.getLiterals();
 
     /* Assert. */
     Assert.assertNotNull( literals );

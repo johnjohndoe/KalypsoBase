@@ -51,19 +51,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
 /**
- * Provides functions, that should help handling the model specification and model data with the WPS.
+ * Provides functions, that should help handling simulations with the WPS.
  * 
  * @author Holger Albert
  */
 public class SimulationUtilities
 {
-  private static final String SYSPROP_DEFAULT_WPS_SERVICE = "org.kalypso.service.wps.service";
-
   /**
    * The constructor.
    */
@@ -76,12 +75,12 @@ public class SimulationUtilities
    * 
    * @return An URL, if the path is an URL (and additionally no file URL), otherwise null.
    */
-  public static URL isURL( final String path )
+  public static URL isURL( String path )
   {
     try
     {
       /* Check if it is an real URL. */
-      final URL url = new URL( path );
+      URL url = new URL( path );
 
       /* If it is a file URL, it is no remote URL. */
       if( url.getProtocol().equals( "file" ) )
@@ -95,7 +94,7 @@ public class SimulationUtilities
 
       return url;
     }
-    catch( final MalformedURLException e )
+    catch( MalformedURLException e )
     {
       /* No need to give feedback on this error, because it was expected, if the path was no real URL. */
     }
@@ -107,19 +106,28 @@ public class SimulationUtilities
   }
 
   /**
-   * Reads the contents of an url into an object suitable as value for the ComplexValueType.
+   * Reads the contents of an URL into an object suitable as value for the ComplexValueType.
+   * 
+   * @param url
+   *          The url.
+   * @return The contents of the URL as hex string.
    */
-  public static Object toComplexValueContent( final URL url ) throws IOException
+  public static Object toComplexValueContent( URL url ) throws IOException
   {
-    final byte[] bytes = UrlUtilities.toByteArray( url );
+    byte[] bytes = UrlUtilities.toByteArray( url );
     return DatatypeConverter.printHexBinary( bytes );
   }
 
+  /**
+   * This function returns the default service endpoint, if defined. Otherwise it throws an exception.
+   * 
+   * @return The default service endpoint.
+   */
   public static String getDefaultServiceEndpoint( ) throws CoreException
   {
-    final String endPoint = System.getProperty( SYSPROP_DEFAULT_WPS_SERVICE );
+    String endPoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
     if( endPoint == null )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No default service endpoint is set. Use property '" + SYSPROP_DEFAULT_WPS_SERVICE
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No default service endpoint is set. Use property '" + WPSRequest.SYSTEM_PROP_WPS_ENDPOINT
           + "' to define a default WPS-Endpoint.", null ) );
 
     return endPoint;
@@ -134,11 +142,11 @@ public class SimulationUtilities
    *          The input of the model data.
    * @return The found input or null, if none is found for that ID.
    */
-  public static Input findInput( final String ID, final List<Input> inputList )
+  public static Input findInput( String ID, List<Input> inputList )
   {
     for( int i = 0; i < inputList.size(); i++ )
     {
-      final Input input = inputList.get( i );
+      Input input = inputList.get( i );
       if( input.getId().equals( ID ) )
         return input;
     }
@@ -155,11 +163,11 @@ public class SimulationUtilities
    *          The output of the model data.
    * @return The found output or null, if none is found for that ID.
    */
-  public static Output findOutput( final String ID, final List<Output> outputList )
+  public static Output findOutput( String ID, List<Output> outputList )
   {
     for( int i = 0; i < outputList.size(); i++ )
     {
-      final Output output = outputList.get( i );
+      Output output = outputList.get( i );
       if( output.getId().equals( ID ) )
         return output;
     }
@@ -167,9 +175,14 @@ public class SimulationUtilities
     return null;
   }
 
-  public static String getProtocol( final String path )
+  /**
+   * This function returns the protocol of a given path or null.
+   * 
+   * @return The protocol of the given path or null.
+   */
+  public static String getProtocol( String path )
   {
-    final int index = path.indexOf( ':' );
+    int index = path.indexOf( ':' );
     if( index == -1 )
       return null;
 
