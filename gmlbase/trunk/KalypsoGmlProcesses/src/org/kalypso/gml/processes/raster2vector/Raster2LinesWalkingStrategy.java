@@ -46,11 +46,11 @@ import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoGridArea;
 import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author jung
@@ -64,9 +64,9 @@ public class Raster2LinesWalkingStrategy implements IGeoWalkingStrategy
    * </p>
    * 
    * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
-   *      com.vividsolutions.jts.geom.Geometry, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypso.grid.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final Geometry walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
+  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
   {
     final int sizeX = grid.getSizeX();
     final int sizeY = grid.getSizeY();
