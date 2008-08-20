@@ -102,7 +102,7 @@ public class SendMailJobTest
     /* The name of the simulation. */
     String simulationName = "SendMailV1.0";
 
-    /* Create the delegate which can handle ISimulations. */
+    /* Get the service endpoint. */
     String serviceEndpoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
 
     /* Start the simulation with a timeout of 300000 ms. */

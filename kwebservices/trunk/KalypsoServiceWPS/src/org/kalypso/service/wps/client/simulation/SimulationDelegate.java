@@ -496,7 +496,7 @@ public class SimulationDelegate
             String relativePathTo = inputResource.getProjectRelativePath().toString();
             FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
             String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
-            wpsInputs.put( identifier.getValue(), serverUrl );
+            wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
           }
           else
           // maybe check the protocols?
