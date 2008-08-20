@@ -233,6 +233,7 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
         m_editInfo.m_editFigure.paint( gcw );
 
       // draw tooltip
+      ChartUtilities.resetGC( gcw );
 
       final Rectangle screen = gcw.getClipping();
 

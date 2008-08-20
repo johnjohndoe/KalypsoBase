@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -112,9 +113,12 @@ public class ChartComposite extends Canvas implements IChartView
         {
           IAxis axis = (IAxis) mapper;
 
-          IChartLayer[] changedLayers = getChartModel().getAxis2Layers().get( axis ).toArray( new IChartLayer[] {} );
-          m_plot.invalidate( changedLayers );
-
+          List<IChartLayer> layerList = getChartModel().getAxis2Layers().get( axis );
+          if (layerList!=null)
+          {
+            IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
+            m_plot.invalidate( changedLayers );
+          }
           AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
           ac.layout();
         }
