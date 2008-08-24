@@ -1551,7 +1551,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void handleExecutionFailure( final Exception exception )
   {
     if( AbstractCalcWizardPage.this.isCurrentPage() )
-      ErrorDialog.openError( getShell(), "", exception.getMessage(), null );
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( exception );
+      ErrorDialog.openError( getShell(), "", exception.getMessage(), status );
+    }
   }
 
   protected void handlePreExecute( final ExecutionEvent event )

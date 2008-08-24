@@ -181,6 +181,8 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
     try
     {
+      // TODO: why don't we call ModelNature#runCalculation instead? Refaktor...
+      
       // TODO: we now always calculate via WPS...
       // So local calculation (for NA) does not work any more? Probably we should add a switch for that
 // final IProject calcProject = m_calcCaseFolder.getProject();

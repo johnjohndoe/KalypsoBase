@@ -52,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -83,6 +84,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.IValueVariable;
@@ -104,9 +106,8 @@ import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypso.model.xml.CalcCaseConfig;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationService;
-import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
-import org.kalypso.simulation.core.calccase.CalcJobHandler;
+import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -307,7 +308,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         project.isNatureEnabled( ModelNature.ID );
         return null;
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
 
@@ -328,7 +329,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     else
     {
-    return false;
+      return false;
     }
   }
 
@@ -425,7 +426,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
               final String logfile = arguments[j + 1];
               final File logFileFile = new File( logfile );
               final IStatus[] logStati = LogAnalyzer
-                  .logfileToStatus( logFileFile, Charset.defaultCharset().name() );
+              .logfileToStatus( logFileFile, Charset.defaultCharset().name() );
               final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
               return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: "
                   + logfile, null );
@@ -490,7 +491,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         {
           // add each variable separatedly, because it may have allready been registered
           svm.addVariables( new IValueVariable[]
-          { valueVariable } );
+                                               { valueVariable } );
         }
         else
         {
@@ -601,14 +602,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus createCalculationCaseInFolder( final IFolder folder, final Map antProperties,
       final IProgressMonitor monitor ) throws CoreException
-  {
+      {
     final String message = "Rechenvariante wird erzeugt";
 
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
     return launchAnt( message, "createCalcCase", antProperties, folder, monitor );
-  }
+      }
 
   /**
    * Aktualisiert eine vorhandene Rechenvariante
@@ -662,7 +663,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
         default:
           transList = null;
-          break;
+        break;
       }
 
       if( transList == null )
@@ -914,17 +915,38 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   }
 
   // TODO: move this one to simulation plugins
-  public IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
+  public static IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
-    monitor.beginTask( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
+    final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
 
     try
     {
-      final String typeID = modelspec.getTypeID();
-      final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-      monitor.worked( 500 );
-      final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-      return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
+      // TODO: we now always calculate via WPS...
+      // So local calculation (for NA) does not work any more? Probably we should add a switch for that
+// final String typeID = modelspec.getTypeID();
+// final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+// monitor.worked( 500 );
+// final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
+// return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
+
+      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
+      final WPSRequest simulationJob = new WPSRequest( modelspec.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
+      simulationJob.init( progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
+
+      final SimulationDelegate delegate = new SimulationDelegate( modelspec.getTypeID(), calcCaseFolder, modelspec );
+      delegate.init();
+      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
+      final List<String> outputs = delegate.createOutputs();
+
+      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 2000, SubMonitor.SUPPRESS_NONE ) );
+      if( !status.isOK() )
+        return status;
+
+      delegate.finish();
+
+      delegate.copyResults( simulationJob.getReferences() );
+
+      return status;
     }
     finally
     {
