@@ -110,31 +110,35 @@ public class DefaultTableViewer extends TableViewer
 
         isResizing = true;
 
-        final Table table = getTable();
-        final int totalWidth = table.getSize().x;
-
-        final TableColumn[] columns = table.getColumns();
-        for( final TableColumn tableColumn : columns )
+        try
         {
-          if( tableColumn.getText() == null )
-            continue;
+          final Table table = getTable();
+          final int totalWidth = table.getSize().x;
 
-          final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
-          final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
-
-          if( minWidth == -1 )
-            tableColumn.pack();
-          else if( widthPercent == -1 )
-            tableColumn.setWidth( minWidth );
-          else
+          final TableColumn[] columns = table.getColumns();
+          for( final TableColumn tableColumn : columns )
           {
-            final int width = totalWidth * widthPercent / 100;
-            final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
-            tableColumn.setWidth( widthToSet );
+            if( tableColumn.getText() == null )
+              continue;
+
+            final Integer minWidth = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH );
+            final Integer widthPercent = (Integer) tableColumn.getData( COLUMN_PROP_WIDTH_PERCENT );
+            if( minWidth == null || minWidth == -1 )
+              tableColumn.pack();
+            else if( widthPercent == -1 )
+              tableColumn.setWidth( minWidth );
+            else
+            {
+              final int width = totalWidth * widthPercent / 100;
+              final int widthToSet = Math.max( width - 2, minWidth ); // 2 pixels less, else we always get a scrollbar
+              tableColumn.setWidth( widthToSet );
+            }
           }
         }
-
-        isResizing = false;
+        finally
+        {
+          isResizing = false;
+        }
       }
     } );
   }
