@@ -71,6 +71,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.ToolBarManager;
@@ -100,7 +101,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.kalypso.commons.arguments.Arguments;
@@ -111,6 +111,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
@@ -1180,12 +1181,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     runSomething( new ICoreExceptionRunnable()
     {
-
       public IStatus run( final IProgressMonitor monitor ) throws CoreException
       {
         final ModelNature nature = (ModelNature) getCalcFolder().getProject().getNature( ModelNature.ID );
         final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
-        return nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 2000 ), modelspec );
+        return nature.runCalculation( getCalcFolder(), monitor, modelspec );
       }
     }, "Berechnung wird durchgeführt", "Modellrechnung", "Modellrechnung fehlgeschlagen" );
   }
@@ -1208,21 +1208,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final CalcWizard calcWizard = (CalcWizard) wizard;
 
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       @Override
-      public void execute( final IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( taskName, 3000 );
+        final SubMonitor progress = SubMonitor.convert( monitor, taskName, 3000 );
 
         try
         {
-          final IStatus saveStatus = calcWizard.saveAllPages( monitor );
+          final IStatus saveStatus = calcWizard.saveAllPages( progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
           if( !saveStatus.isOK() )
             throw new CoreException( saveStatus );
 
-          final IStatus status = runnable.run( monitor );
-
+          final IStatus status = runnable.run( progress.newChild( 2500, SubMonitor.SUPPRESS_NONE ) );
           throw new CoreException( status );
         }
         finally
@@ -1564,7 +1563,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // MAGIC: we add the 'mapPanel' variable to this context, so the command handler can access the MapPanel
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Object mapPanel = getMapPanel();
-      if( mapPanel != null )
+      if( mapPanel != null && context != null )
         context.addVariable( "mapPanel", mapPanel );
     }
   }

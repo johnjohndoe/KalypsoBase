@@ -249,13 +249,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
           if( templateFile == null || !templateFile.exists() )
             return Status.OK_STATUS;
 
-// if( templateFile == null )
-// return StatusUtilities.createErrorStatus( "FeatureTemplateFile does not exist: "
-// + templateFile.getFullPath() );
-//
-// final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
-// m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
-
           final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( templateFile );
 
           final String featurePath = featureTemplateProps.getProperty( "featurepath", "" );
