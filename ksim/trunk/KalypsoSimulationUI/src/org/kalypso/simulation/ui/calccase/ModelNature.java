@@ -917,7 +917,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   // TODO: move this one to simulation plugins
   public static IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 5500 );
+    final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 1000 );
 
     try
     {
@@ -931,14 +931,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
       final WPSRequest simulationJob = new WPSRequest( modelspec.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
-      simulationJob.init( progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
+      simulationJob.init( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
 
       final SimulationDelegate delegate = new SimulationDelegate( modelspec.getTypeID(), calcCaseFolder, modelspec );
       delegate.init();
-      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
+      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final List<String> outputs = delegate.createOutputs();
 
-      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 2000, SubMonitor.SUPPRESS_NONE ) );
+      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
       if( !status.isOK() )
         return status;
 
@@ -950,7 +950,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-      monitor.done();
+      progress.done();
     }
   }
 
