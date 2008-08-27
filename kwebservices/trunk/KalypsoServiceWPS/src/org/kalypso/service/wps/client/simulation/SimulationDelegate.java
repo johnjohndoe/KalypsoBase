@@ -317,12 +317,12 @@ public class SimulationDelegate
           VFSUtilities.copy( source, destination );
 
           final IResource destResource = baseresource.findMember( new Path( outputPath ) );
-          if( destResource != null && destResource.getType() == IResource.FILE )
+          if( destResource != null )
           {
-            final IFile destFile = (IFile) destResource;
-            destFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+            destResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
             // TODO: NO!!!! We do not know that!
-            destFile.setCharset( "UTF-8", new NullProgressMonitor() );
+            if( destResource.getType() == IResource.FILE )
+              ((IFile) destResource).setCharset( "UTF-8", new NullProgressMonitor() );
           }
         }
       }
