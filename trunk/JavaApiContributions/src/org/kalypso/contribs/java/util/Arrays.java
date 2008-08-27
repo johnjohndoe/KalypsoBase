@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
@@ -86,12 +86,12 @@ public final class Arrays
    * @throws IllegalArgumentException
    *             if argument is null
    */
-  public static int[] rawIntegers( Integer[] objDs )
+  public static int[] rawIntegers( final Integer[] objDs )
   {
     if( objDs == null )
       throw new IllegalArgumentException( "Integer array is null" );
 
-    int[] rawDs = new int[objDs.length];
+    final int[] rawDs = new int[objDs.length];
 
     for( int i = 0; i < objDs.length; i++ )
       rawDs[i] = objDs[i].intValue();
@@ -105,12 +105,12 @@ public final class Arrays
    * @throws IllegalArgumentException
    *             if argument is null
    */
-  public static double[] rawDoubles( Double[] objDs )
+  public static double[] rawDoubles( final Double[] objDs )
   {
     if( objDs == null )
       throw new IllegalArgumentException( "Double array is null" );
 
-    double[] rawDs = new double[objDs.length];
+    final double[] rawDs = new double[objDs.length];
 
     for( int i = 0; i < objDs.length; i++ )
       rawDs[i] = objDs[i].doubleValue();
@@ -124,12 +124,12 @@ public final class Arrays
    * @throws IllegalArgumentException
    *             if argument is null
    */
-  public static Double[] objectDoubles( double[] rawDs )
+  public static Double[] objectDoubles( final double[] rawDs )
   {
     if( rawDs == null )
       throw new IllegalArgumentException( "double array is null" );
 
-    Double[] objDs = new Double[rawDs.length];
+    final Double[] objDs = new Double[rawDs.length];
 
     for( int i = 0; i < rawDs.length; i++ )
       objDs[i] = new Double( rawDs[i] );
@@ -165,7 +165,7 @@ public final class Arrays
   /**
    * returns the index of the first minimum value found in ds. If ds is empty, returns -1.
    */
-  public static int indexOfMin( double[] ds )
+  public static int indexOfMin( final double[] ds )
   {
     if( ds.length == 0 )
       return -1;
@@ -188,7 +188,7 @@ public final class Arrays
   /**
    * returns the index of the first minimum value found in is. If is is empty, returns -1.
    */
-  public static int indexOfMin( int[] is )
+  public static int indexOfMin( final int[] is )
   {
     if( is.length == 0 )
       return -1;
@@ -211,7 +211,7 @@ public final class Arrays
   /**
    * returns the index of the first maximum value found in is. If is is empty, returns -1.
    */
-  public static int indexOfMax( int[] is )
+  public static int indexOfMax( final int[] is )
   {
     if( is.length == 0 )
       return -1;
@@ -231,9 +231,9 @@ public final class Arrays
     return pos;
   }
 
-  public static String dump( double[] ds )
+  public static String dump( final double[] ds )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < (ds.length - 1); i++ )
       buf.append( ds[i] ).append( ", " );
@@ -244,9 +244,9 @@ public final class Arrays
     return buf.toString();
   }
 
-  public static String dump( int[] is )
+  public static String dump( final int[] is )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < (is.length - 1); i++ )
       buf.append( is[i] ).append( ", " );
@@ -257,9 +257,9 @@ public final class Arrays
     return buf.toString();
   }
 
-  public static String dump( Object[] os )
+  public static String dump( final Object[] os )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < (os.length - 1); i++ )
       buf.append( os[i] ).append( ", " );
@@ -280,7 +280,7 @@ public final class Arrays
    *            the value that will serve as upper bound when truncating. It will be added into the resulting array if
    *            it is not already inside
    */
-  public static double[] truncSmaller( double[] arr, double value )
+  public static double[] truncSmaller( final double[] arr, final double value )
   {
     int pos = java.util.Arrays.binarySearch( arr, value );
 
@@ -290,20 +290,20 @@ public final class Arrays
 
       if( pos > arr.length )
       {
-        double[] newArr = new double[arr.length + 1];
+        final double[] newArr = new double[arr.length + 1];
         System.arraycopy( arr, 0, newArr, 0, arr.length );
         newArr[pos - 1] = value;
 
         return newArr;
       }
-      double[] newArr = new double[pos];
+      final double[] newArr = new double[pos];
       System.arraycopy( arr, 0, newArr, 0, pos - 1 );
       newArr[pos - 1] = value;
 
       return newArr;
     }
 
-    double[] newArr = new double[pos];
+    final double[] newArr = new double[pos];
     System.arraycopy( arr, 0, newArr, 0, pos );
 
     return newArr;
@@ -319,7 +319,7 @@ public final class Arrays
    *            the value that will serve as lower bound when truncating. It will be added into the resulting array if
    *            it is not already inside
    */
-  public static double[] truncBigger( double[] arr, double value )
+  public static double[] truncBigger( final double[] arr, final double value )
   {
     int pos = java.util.Arrays.binarySearch( arr, value );
 
@@ -331,15 +331,15 @@ public final class Arrays
       {
         return new double[] { value };
       }
-      double[] newArr = new double[arr.length - pos + 1];
+      final double[] newArr = new double[arr.length - pos + 1];
       System.arraycopy( arr, pos, newArr, 1, arr.length - pos );
       newArr[0] = value;
 
       return newArr;
     }
 
-    int length = arr.length - pos;
-    double[] newArr = new double[length];
+    final int length = arr.length - pos;
+    final double[] newArr = new double[length];
     System.arraycopy( arr, pos, newArr, 0, length );
 
     return newArr;
@@ -349,9 +349,9 @@ public final class Arrays
    * Merges the contents of the given array into one String, separating the elements with separator. You can restrict
    * the elements to fetch from the array by setting from and to.
    */
-  public static String implode( String[] array, String separator, int from, int to )
+  public static String implode( final String[] array, final String separator, final int from, final int to )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     for( int i = from; i < to; i++ )
       buf.append( array[i] ).append( separator );
@@ -366,13 +366,13 @@ public final class Arrays
    * sequentially, checking if the elements at position i and i+1 are equal. <br>
    * If you call this method on a potentially unsorted array, it might not change anything.
    */
-  public static double[] removeDupicates( double[] da, double delta )
+  public static double[] removeDupicates( final double[] da, final double delta )
   {
-    DoubleComparator dc = new DoubleComparator( delta );
+    final DoubleComparator dc = new DoubleComparator( delta );
 
     int i = 0;
 
-    double[] dtmp = new double[da.length];
+    final double[] dtmp = new double[da.length];
     int itmp = 0;
 
     while( i < da.length )
@@ -386,7 +386,7 @@ public final class Arrays
       i++;
     }
 
-    double[] dres = new double[itmp];
+    final double[] dres = new double[itmp];
 
     System.arraycopy( dtmp, 0, dres, 0, itmp );
 
@@ -415,18 +415,22 @@ public final class Arrays
   }
 
   /**
-   * @deprecated You should use java.util.Arrays.sort() and doubleArray[ doubleArray.length - 1 ] to get the max
+   * Linear search for max in an array of doubles.
+   * 
+   * @return The maximal value or <code>Double.NaN</code> if the array is empty.
    */
-  @Deprecated
-  public static double findMax( double[] doubleArray )
+  public static double findMax( final double[] doubleArray )
   {
-    double result = doubleArray[0];
+    if( doubleArray.length == 0 )
+      return Double.NaN;
+
+    double max = doubleArray[0];
     for( int i = 1; i < doubleArray.length; i++ )
     {
-      if( doubleArray[i] > result )
-        result = doubleArray[i];
+      if( doubleArray[i] > max )
+        max = doubleArray[i];
     }
-    return result;
+    return max;
   }
 
   /**
@@ -437,7 +441,7 @@ public final class Arrays
    * @param lengthB
    *            the length of b to merge
    */
-  public static byte[] append( byte[] a, byte[] b, int lengthB )
+  public static byte[] append( final byte[] a, final byte[] b, final int lengthB )
   {
     final byte[] result = new byte[a.length + b.length];
     for( int i = 0; i < a.length; i++ )
@@ -455,7 +459,7 @@ public final class Arrays
    * @param length
    *            compare till this position
    */
-  public static boolean equals( byte[] a, byte[] b, int length )
+  public static boolean equals( final byte[] a, final byte[] b, final int length )
   {
     for( int i = 0; i < length; i++ )
     {
@@ -471,7 +475,7 @@ public final class Arrays
    * @param fromPos
    * @param toPos
    */
-  public static byte[] copyPart( byte[] array, int fromPos, int toPos )
+  public static byte[] copyPart( final byte[] array, final int fromPos, final int toPos )
   {
     final byte[] result = new byte[toPos - fromPos];
     for( int i = fromPos; i < toPos; i++ )
