@@ -52,5 +52,5 @@ public interface ILayerEventListener
 
   public void onLayerContentChanged( IChartLayer layer );
   
-  public void onLayerActivationChanged( IChartLayer layer );
+  public void onActiveLayerChanged( IChartLayer layer );
 }

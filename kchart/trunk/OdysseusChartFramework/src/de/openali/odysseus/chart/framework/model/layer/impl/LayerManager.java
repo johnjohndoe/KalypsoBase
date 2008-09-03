@@ -29,6 +29,15 @@ public class LayerManager implements ILayerManager
     ILayerEventListener lel = new AbstractLayerEventListener()
     {
       /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onActiveLayerChanged( IChartLayer layer1 )
+      {
+        m_handler.fireActiveLayerChanged( layer1 );
+      }
+
+      /**
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
@@ -95,7 +104,7 @@ public class LayerManager implements ILayerManager
   {
     for( final IChartLayer layer : m_layers )
     {
-      if( layer.getId().equals( id ) )
+      if(layer!=null&& layer.getId().equals( id ) )
       {
         return layer;
       }

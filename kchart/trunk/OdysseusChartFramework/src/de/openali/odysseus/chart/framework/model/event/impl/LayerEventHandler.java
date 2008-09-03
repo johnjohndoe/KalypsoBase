@@ -64,11 +64,11 @@ public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener
 			l.onLayerVisibilityChanged(layer);
 		}
 	}
-	public void fireLayerActivationChanged(final IChartLayer layer)
+	public void fireActiveLayerChanged(final IChartLayer layer)
     {
         for (final ILayerEventListener l : getListeners())
         {
-            l.onLayerActivationChanged(layer);
+            l.onActiveLayerChanged(layer);
         }
     }
 }

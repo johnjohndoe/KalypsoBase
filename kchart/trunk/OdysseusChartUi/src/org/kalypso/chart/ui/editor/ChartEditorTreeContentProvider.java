@@ -50,12 +50,11 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
  * @author alibu
- * 
  */
 public class ChartEditorTreeContentProvider implements ITreeContentProvider
 {
 
-  private final IChartModel m_model;
+  private IChartModel m_model;
 
   public ChartEditorTreeContentProvider( IChartModel model )
   {
@@ -82,14 +81,14 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     }
     if( element instanceof IExpandableChartLayer )
     {
-      return ((IExpandableChartLayer) element).getLayers();
+      return ((IExpandableChartLayer) element).getLayerManager().getLayers();
     }
 
     if( element instanceof IChartLayer )
     {
       IChartLayer layer = (IChartLayer) element;
       ILegendEntry[] entries = layer.getLegendEntries();
-      if( entries!= null && entries.length > 1 )
+      if( entries != null && entries.length > 1 )
       {
         return entries;
       }
@@ -132,7 +131,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     if( element instanceof IExpandableChartLayer )
     {
       IExpandableChartLayer layer = (IExpandableChartLayer) element;
-      return (layer.getLayers().length > 0);
+      return (layer.getLayerManager().getLayers().length > 0);
     }
     if( element instanceof IChartLayer )
     {
@@ -166,8 +165,10 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    // TODO Auto-generated method stub
-
+    if( oldInput == newInput )
+      return;
+    if( newInput instanceof IChartModel )
+      m_model = (IChartModel) newInput;
   }
 
   private final Object findParent( final Object parent, final IChartLayer[] childs, final IChartLayer child )
@@ -178,7 +179,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
         return parent;
       if( layer instanceof IExpandableChartLayer )
       {
-        final Object o = findParent( layer, ((IExpandableChartLayer) layer).getLayers(), child );
+        final Object o = findParent( layer, ((IExpandableChartLayer) layer).getLayerManager().getLayers(), child );
         if( o != null )
           return o;
       }

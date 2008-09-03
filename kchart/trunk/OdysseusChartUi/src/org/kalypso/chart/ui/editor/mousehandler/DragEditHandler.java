@@ -71,8 +71,8 @@ public class DragEditHandler implements IChartDragHandler
     }
     else if( (m_clickInfo != null) && (m_clickInfo.m_layer instanceof IEditableChartLayer) )
     {
-      IEditableChartLayer layer = (IEditableChartLayer) m_editInfo.m_layer;
-      layer.commitDrag( m_clickInfo.m_pos, m_clickInfo );
+      if( m_editInfo != null )
+        ((IEditableChartLayer) (m_editInfo.m_layer)).commitDrag( m_clickInfo.m_pos, m_clickInfo );
       m_clickInfo = null;
     }
   }
@@ -82,10 +82,10 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
-    if( m_clickInfo == null )
+    if( m_clickInfo == null || m_clickInfo.m_layer == null )
       return;
-
-    final boolean allowEditing = (Math.abs( e.x - m_clickInfo.m_pos.x ) > m_trashHold) || (Math.abs( e.y - m_clickInfo.m_pos.y ) > m_trashHold);
+    final boolean isLocked = m_clickInfo.m_layer instanceof IEditableChartLayer ? ((IEditableChartLayer) m_clickInfo.m_layer).isLocked() : true;
+    final boolean allowEditing = !isLocked && ((Math.abs( e.x - m_clickInfo.m_pos.x ) > m_trashHold) || (Math.abs( e.y - m_clickInfo.m_pos.y ) > m_trashHold));
     if( (m_editInfo == null) && allowEditing )
       m_editInfo = new EditInfo( m_clickInfo );
 
@@ -100,9 +100,6 @@ public class DragEditHandler implements IChartDragHandler
         final EditInfo editMoveInfo = eLayer.drag( editPoint, m_editInfo );
         plot.setIsEditing( true );
         plot.setTooltipInfo( editMoveInfo );
-
-        // TODO: @kim: Brauchst Du das? Es macht den Editiervorgang sehr sehr langsam
-        // plot.invalidate( new IChartLayer[] { layer } );
       }
     }
   }

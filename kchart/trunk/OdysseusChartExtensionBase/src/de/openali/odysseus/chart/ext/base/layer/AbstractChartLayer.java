@@ -102,11 +102,10 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   public void setActive( final boolean isActive )
   {
-    if( m_isActive != isActive )
-    {
-      m_isActive = isActive;
-      m_handler.fireLayerActivationChanged( this );
-    }
+    if( m_isActive == isActive )
+      return;
+    m_isActive = isActive;
+    getEventHandler().fireActiveLayerChanged(  this );
   }
 
   /**

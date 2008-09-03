@@ -155,6 +155,33 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     {
 
       /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerContentChanged( IChartLayer layer )
+      {
+        m_treeViewer.refresh();
+      }
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerRemoved( IChartLayer layer )
+      {
+        updateControl();
+      }
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerAdded( IChartLayer layer )
+      {
+        updateControl();
+      }
+
+      /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
@@ -169,7 +196,13 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerMoved( IChartLayer layer )
       {
-        updateControl();
+        m_treeViewer.refresh();
+      }
+
+      @Override
+      public void onActivLayerChanged( IChartLayer layer )
+      {
+       
       }
     };
 
@@ -321,35 +354,30 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         {
           String id = (String) data;
           ILayerManager lm = m_chartPart.getChartComposite().getChartModel().getLayerManager();
+          IChartLayer draggedLayer = lm.getLayerById( id );
           IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
+
+          // find Layermanager
+          if( draggedLayer == null )
+          {
+            final Object obj = m_contentProvider.getParent( selectedObject );
+            lm = obj instanceof IExpandableChartLayer ? ((IExpandableChartLayer) obj).getLayerManager() : null;
+            draggedLayer = lm == null ? null : lm.getLayerById( id );
+          }
+          if( draggedLayer == null )
+            return false;
 
           // either the dragged layer is dropped on another layer, then it will be
           // moved to its position
           if( selectedObject != null )
-          {
-            IChartLayer draggedLayer = lm.getLayerById( id );
-            if( lm.getLayerById( selectedObject.getId() ) == null )
-            {
-              final Object obj = m_contentProvider.getParent( selectedObject );
-              if( obj instanceof IExpandableChartLayer )
-              {
-                ((IExpandableChartLayer) obj).moveLayerToPosition( id, selectedObject );
-                updateControl();
-              }
-            }
-            else
-              lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
-            return true;
-          }
+            lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
           // or it was dropped at the end of the list, then it will be moved to the lowest position
           else
-          {
-            IChartLayer draggedLayer = lm.getLayerById( id );
             lm.moveLayerToPosition( draggedLayer, 0 );
-            return true;
-          }
+          return true;
         }
         return false;
+
       }
 
       @Override
@@ -373,7 +401,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.addDropSupport( ops, new Transfer[] { ChartLayerTransfer.getInstance() }, vda );
   }
 
-  public TreeViewer getTreeViewer( )
+  public CheckboxTreeViewer getTreeViewer( )
   {
     return m_treeViewer;
   }
