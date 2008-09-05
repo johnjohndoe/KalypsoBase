@@ -113,7 +113,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     if( file.isDirectory() && !m_bShowDir )
       return false;
 
-    // falls Pattern nicht auf Verzeichnis engewendet werden soll, gleich zurück
+    // falls Pattern nicht auf Verzeichnis angewendet werden soll, gleich zurück
     if( file.isDirectory() && !m_bFilterDirs )
       return true;
 

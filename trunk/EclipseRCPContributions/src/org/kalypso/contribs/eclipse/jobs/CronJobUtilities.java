@@ -117,6 +117,7 @@ public class CronJobUtilities
    * 
    * @param job
    *          The cron job.
+   * @return A status, indicating, if the cron job was started.
    */
   public static IStatus startCronJob( Job job )
   {
