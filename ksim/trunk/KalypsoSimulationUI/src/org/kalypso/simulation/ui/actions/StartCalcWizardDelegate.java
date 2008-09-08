@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
@@ -70,7 +70,6 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener;
-import org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
@@ -179,7 +178,7 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
         wizardView.setTitleImage( imageDescriptor );
 
         // if wizard finishes, close view
-        final WizardContainerAdapter wizardContainerAdapter = new WizardContainerAdapter()
+        final IWizardContainerListener wizardContainerAdapter = new IWizardContainerListener()
         {
           /**
            * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
@@ -215,17 +214,17 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
               wizardView.removeWizardContainerListener( wizardContainerAdapter );
 
 //              activePage.resetPerspective(); // to crass; open StartScreen and maximize instead
-              
+
               try
               {
                 activePage.showView( IKalypsoSimulationUIConstants.ID_PROGNOSE_VIEW );
               }
-              catch( PartInitException e )
+              catch( final PartInitException e )
               {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
               }
-              
+
               activePage.setPerspective( lastPerspective );
             }
           }
