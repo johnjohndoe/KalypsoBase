@@ -1,10 +1,8 @@
 package org.kalypso.simulation.ui;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.io.File;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -14,9 +12,6 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin
 {
   // The shared instance.
   private static KalypsoSimulationUIPlugin plugin;
-
-  // Resource bundle.
-  private ResourceBundle resourceBundle;
 
   public static String getID( )
   {
@@ -30,23 +25,13 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin
   {
     super();
     plugin = this;
-    try
-    {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.simulation.ui.KalypsoSimulationUIPluginResources" );
-    }
-    catch( MissingResourceException x )
-    {
-      resourceBundle = null;
-    }
-    // force to initialize
-    /* KalypsoGisPlugin default1 = */KalypsoGisPlugin.getDefault();
   }
 
   /**
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -55,7 +40,7 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
   }
@@ -68,27 +53,13 @@ public class KalypsoSimulationUIPlugin extends AbstractUIPlugin
     return plugin;
   }
 
-  /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not found.
-   */
-  public static String getResourceString( String key )
+  public static File getServerModelRoot( )
   {
-    ResourceBundle bundle = KalypsoSimulationUIPlugin.getDefault().getResourceBundle();
-    try
-    {
-      return (bundle != null) ? bundle.getString( key ) : key;
-    }
-    catch( MissingResourceException e )
-    {
-      return key;
-    }
+    final String property = System.getProperty( "kalypso.hwv.prognose.dir", null );
+    if( property == null )
+      return null;
+
+    return new File( property );
   }
 
-  /**
-   * Returns the plugin's resource bundle,
-   */
-  public ResourceBundle getResourceBundle( )
-  {
-    return resourceBundle;
-  }
 }

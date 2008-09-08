@@ -62,7 +62,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -76,6 +75,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -109,12 +112,14 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreExceptionRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -125,7 +130,8 @@ import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.RestoreSelectionHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
+import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
+import org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -134,6 +140,7 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
@@ -288,8 +295,17 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
-  /** Argument: ID of the map-widget to use. Default is: {@link org.kalypso.ogc.gml.map.MapPanel#WIDGET_SINGLE_SELECT} */
-  private static final String PROP_MAP_WIDGETID = "mapWidgetID";
+  /**
+   * Argument: Full class name of the map-widget to use. Default is:
+   * {@link org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget}. If empty, no widget will be selected initially.
+   */
+  private static final String PROP_MAP_WIDGETCLASS = "mapWidgetClass";
+
+  /**
+   * Argument: Plug-in id (symbolic name) of the plug.in containing the given widget class. If none if given,
+   * 'org.kalypso.ui' is assumed.
+   */
+  private static final String PROP_MAP_WIDGETPLUGIN = "mapWidgetPlugin";
 
   /**
    * Argument: Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonsten wie üblich auf die
@@ -397,6 +413,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private Obsdiagview m_obsdiagviewType;
 
+  /**
+   * This listeners reports failure of command executions within this page <br>
+   * TODO: may now be moved to a more central place.
+   */
   private final IExecutionListener m_cmdExecutionListener = new IExecutionListener()
   {
     public void notHandled( final String commandId, final org.eclipse.core.commands.NotHandledException exception )
@@ -415,9 +435,30 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     public void preExecute( final String commandId, final ExecutionEvent event )
     {
-      handlePreExecute( event );
     }
   };
+
+  private final IPageChangingListener m_pageChangingListener = new IPageChangingListener()
+  {
+    @Override
+    public void handlePageChanging( final PageChangingEvent event )
+    {
+      if( event.getCurrentPage() == AbstractCalcWizardPage.this )
+        event.doit = AbstractCalcWizardPage.this.handlePageChanging();
+    }
+  };
+
+  private final IPageChangedListener m_pageChangedListener = new IPageChangedListener()
+  {
+    @Override
+    public void pageChanged( final PageChangedEvent event )
+    {
+      if( event.getSelectedPage() == AbstractCalcWizardPage.this )
+        handlePageSelected();
+    }
+  };
+
+  private MapPanelSourceProvider m_sourceProvider;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -445,6 +486,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         final IWorkbenchPartSite site = view.getSite();
         final ICommandService cmdService = (ICommandService) site.getService( ICommandService.class );
         cmdService.addExecutionListener( m_cmdExecutionListener );
+
+        view.addPageChangingListener( m_pageChangingListener );
+        view.addPageChangedListener( m_pageChangedListener );
       }
     }
 
@@ -462,6 +506,23 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         final IWorkbenchPartSite site = view.getSite();
         final ICommandService cmdService = (ICommandService) site.getService( ICommandService.class );
         cmdService.removeExecutionListener( m_cmdExecutionListener );
+
+        view.removePageChangingListener( m_pageChangingListener );
+        view.removePageChangedListener( m_pageChangedListener );
+      }
+
+      destroyContext( container );
+    }
+  }
+
+  private void destroyContext( final IWizardContainer container )
+  {
+    if( container instanceof WizardView )
+    {
+      if( m_sourceProvider != null )
+      {
+        m_sourceProvider.dispose();
+        m_sourceProvider = null;
       }
     }
   }
@@ -643,15 +704,30 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.setMapModell( m_mapModell );
     m_mapPanel.repaint();
 
-    final String widgetID = getArguments().getProperty( PROP_MAP_WIDGETID, MapPanel.WIDGET_SINGLE_SELECT );
-    m_mapPanel.getWidgetManager().setActualWidget( WidgetHelper.createWidget( widgetID ) );
-
-    // only do this, when map has loaded
-    // m_mapPanel.setBoundingBox( m_wishBoundingBox );
     if( manager != null )
       fillMapToolbar( manager );
 
     return mapAndToolbar;
+  }
+
+  protected IWidget createWidget( )
+  {
+    try
+    {
+      final String widgetClass = getArguments().getProperty( PROP_MAP_WIDGETCLASS, SelectSingleFeatureWidget.class.getName() );
+      final String widgetPlugin = getArguments().getProperty( PROP_MAP_WIDGETPLUGIN, KalypsoGisPlugin.getId() );
+
+      if( widgetClass.isEmpty() )
+        return null;
+
+      final Class<IWidget> widgetCls = PluginUtilities.findClass( widgetClass, widgetPlugin );
+      return ClassUtilities.newInstance( widgetCls );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -699,6 +775,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_mapModell;
   }
 
+  // TODO: why object?
   protected Object getMapPanel( )
   {
     return m_mapPanel;
@@ -1272,10 +1349,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection, final boolean forceSelectFeatureFromMap )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
+    final MapPanel mapPanel = m_mapPanel;
     final IMapModell mapModell = getMapModell();
 
     // this may happen, if the page was never created
-    if( mapModell == null )
+    if( mapPanel == null || mapModell == null )
       return;
 
     final String showZmlTable = m_showZmlTable;
@@ -1358,6 +1436,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         }
 
         maximizeMap();
+
+        final IWidget widget = createWidget();
+        mapPanel.getWidgetManager().setActualWidget( widget );
       }
     } ).start();
   }
@@ -1556,15 +1637,37 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
-  protected void handlePreExecute( final ExecutionEvent event )
+  /**
+   * Will be called if this page is about to be closed (i.e another page is selected).<br>
+   * Default behaviour is to unhook any registered context-activations.<br>
+   * Client who want to override should call the super implementation, if they return <code>true</code>.
+   * 
+   * @return <code>false</code>, if the the page shall not be exited now.
+   */
+  protected boolean handlePageChanging( )
   {
-    if( AbstractCalcWizardPage.this.isCurrentPage() )
+    final IWizardContainer container = getContainer();
+    destroyContext( container );
+
+    return true;
+  }
+
+  /**
+   * Will be called after this page has been selected.<br>
+   * Default behaviour is to regsiter context-activations for this page if necessary (for example the map-context is
+   * registered here, if the the page has any map.<br>
+   * Client who want to override should always call the super implementation.
+   */
+  protected void handlePageSelected( )
+  {
+    final IWizardContainer container = getContainer();
+    if( container instanceof WizardView && m_mapPanel != null )
     {
-      // MAGIC: we add the 'mapPanel' variable to this context, so the command handler can access the MapPanel
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final Object mapPanel = getMapPanel();
-      if( mapPanel != null && context != null )
-        context.addVariable( "mapPanel", mapPanel );
+      final WizardView view = (WizardView) container;
+
+      final IWorkbenchPartSite site = view.getSite();
+      m_sourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
     }
   }
+
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
@@ -49,21 +49,21 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 
 /**
- * @author tgu
+ * @author Gernot Belger
  */
 public class ModelActionHelper
 {
   private ModelActionHelper( )
   {
-    // wir nicht instatiiert
+    // wird nicht instatiiert
   }
 
   public static File getServerRoot( ) throws CoreException
   {
-    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+    final File serverRoot = KalypsoSimulationUIPlugin.getServerModelRoot();
     if( serverRoot == null )
       throw new CoreException( StatusUtilities.createWarningStatus( "Die Liste der auf dem Server gespeicherten Modelle ist nicht verfügbar." ) );
 

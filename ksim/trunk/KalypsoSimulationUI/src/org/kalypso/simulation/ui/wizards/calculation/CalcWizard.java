@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation;
 
@@ -84,6 +84,7 @@ import org.kalypso.model.xml.ArgListType;
 import org.kalypso.model.xml.ArgType;
 import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.AddNewCalcCaseChoice;
@@ -94,7 +95,6 @@ import org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseC
 import org.kalypso.simulation.ui.wizards.calculation.createchoices.IChoiceListener;
 import org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -143,7 +143,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     m_project = project;
 
-    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+    final File serverRoot = KalypsoSimulationUIPlugin.getServerModelRoot();
     final File serverProject = new File( serverRoot, project.getName() );
 
     m_synchronizer = new ModelSynchronizer( project, serverProject );

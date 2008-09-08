@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.startscreen;
 
@@ -99,7 +99,6 @@ import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.actions.StartCalcWizardDelegate;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 import org.kalypso.simulation.ui.dialogs.OrganisePrognosesDialog;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
@@ -400,7 +399,7 @@ public class PrognosePanel
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+        final File serverRoot = KalypsoSimulationUIPlugin.getServerModelRoot();
 
         if( serverRoot == null )
           throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Kein serverseitiges Modellverzeichnis definiert. Prognose kann nicht gestartet werden.", null ) );
@@ -416,7 +415,7 @@ public class PrognosePanel
 
     /* Do not synchronize, if 'kalypso.prognose.synchronize-models' is set to false. */
     final String doSyncProperty = System.getProperty( IKalypsoSimulationUIConstants.CONFIG_DO_SYNCHRONIZE_MODELS,
-        "true" );
+    "true" );
     final boolean doSync = Boolean.valueOf( doSyncProperty ).booleanValue();
 
     final IStatus status;
