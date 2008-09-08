@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +50,13 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.CommandEvent;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.ICommandListener;
 import org.eclipse.core.commands.IExecutionListener;
-import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -65,6 +64,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -73,6 +73,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
@@ -82,16 +83,18 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.resource.DisabledImageDescriptor;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -100,9 +103,52 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class DropDownToolbarItem extends CompoundContributionItem implements IExecutableExtension
 {
+  private final IExecutionListener executionListener = new ExecutionAdapter()
+  {
+    /**
+     * Listen for pre-execution: if any of my commands is executed, put it as the current command on top.<br>
+     * TODO: is this always intended? This happens also if the command is executed by another mean (key-binding, etc.)
+     * 
+     * @see org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter#preExecute(java.lang.String,
+     *      org.eclipse.core.commands.ExecutionEvent)
+     */
+    @Override
+    public void preExecute( final String commandId, final ExecutionEvent event )
+    {
+      final Command cmd = m_commandService.getCommand( commandId );
+      final ParameterizedCommand thisCommand = ParameterizedCommand.generateCommand( cmd, event.getParameters() );
+
+      // TODO: for each call to getContribution items, we must dispose the items; that is quite difficult, as this also
+      // holds for the current item
+      for( final CommandContributionItem item : getContributionItems() )
+      {
+        if( item.getCommand().equals( thisCommand ) )
+        {
+          setCurrentCommand( item );
+          update();
+        }
+      }
+    }
+  };
+
+  /**
+   * Command-Listener: any change of the current command will update this widget.
+   */
+  private final ICommandListener m_commandListener = new ICommandListener()
+  {
+    @Override
+    public void commandChanged( final CommandEvent commandEvent )
+    {
+      if( m_currentCommand != null && commandEvent.getCommand() == m_currentCommand.getCommand().getCommand() )
+        update();
+    }
+  };
+
   protected Command[] m_commands = new Command[] {};
 
-  private final Map<Command, IExecutionListener> m_commandListeners = new HashMap<Command, IExecutionListener>();
+  private final Map<Command, IExecutionListener> m_executionListeners = new HashMap<Command, IExecutionListener>();
+
+  private final Map<Command, ICommandListener> m_commandListeners = new HashMap<Command, ICommandListener>();
 
   protected CommandContributionItem m_currentCommand;
 
@@ -110,17 +156,21 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   public DropDownToolbarItem( )
   {
-    // REMARK: we are using the most global service locator here, that is not
-    // the very best choice... however, how do we find a better one?
-    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
+    final IServiceLocator serviceLocator = getServiceLocator();
     m_commandService = (ICommandService) serviceLocator.getService( ICommandService.class );
     m_handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
+  }
+
+  protected IServiceLocator getServiceLocator( )
+  {
+    // REMARK: we are using the most global service locator here, that is not
+    // the very best choice... however, how do we find a better one?
+    return PlatformUI.getWorkbench();
   }
 
   /**
    * @see org.eclipse.ui.actions.CompoundContributionItem#getContributionItems()
    */
-  @SuppressWarnings("unchecked")
   @Override
   protected CommandContributionItem[] getContributionItems( )
   {
@@ -128,7 +178,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
     final CommandContributionItem[] items = new CommandContributionItem[m_commands.length];
     for( int i = 0; i < m_commands.length; i++ )
-      items[i] = new CommandContributionItem( locator, m_commands[i].getId(), m_commands[i].getId(), new HashMap(), null, null, null, null, null, null, SWT.PUSH );
+      items[i] = new CommandContributionItem( locator, m_commands[i].getId(), m_commands[i].getId(), new HashMap<Object, Object>(), null, null, null, null, null, null, SWT.PUSH );
 
     return items;
   }
@@ -143,7 +193,6 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     final Set<Command> commands = new LinkedHashSet<Command>();
     if( data instanceof Map< ? , ? > )
     {
-
       /* REMARK: map ht is unsorted - sort commands by param id! */
       final Map<String, String> ht = (Map<String, String>) data;
 
@@ -163,63 +212,21 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     }
 
     if( m_commands.length > 0 )
-    {
-      m_currentCommand = getContributionItems()[0];
-    }
+      setCurrentCommand( getContributionItems()[0] );
 
     registerCommandListeners( commands.toArray( new Command[commands.size()] ) );
   }
 
-  // COPIED FRMO COMMAND CONTRIBUTION ITEM
+  // COPIED FROM COMMAND CONTRIBUTION ITEM
 
-  protected void registerCommandListeners( Command[] commands )
+  protected void registerCommandListeners( final Command[] commands )
   {
     for( final Command command : commands )
     {
-      final IExecutionListener listener = new ExecutionAdapter()
-      {
-        /**
-         * @see org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter#preExecute(java.lang.String,
-         *      org.eclipse.core.commands.ExecutionEvent)
-         */
-        @SuppressWarnings("unchecked")
-        @Override
-        public void preExecute( String commandId, ExecutionEvent event )
-        {
-          final Command cmd = m_commandService.getCommand( commandId );
-          final ArrayList<Parameterization> parmList = new ArrayList<Parameterization>();
-          final Iterator<Map.Entry<String, String>> i = event.getParameters().entrySet().iterator();
-          while( i.hasNext() )
-          {
-            final Map.Entry<String, String> entry = i.next();
-            final String parmName = entry.getKey();
-            IParameter parm;
-            try
-            {
-              parm = cmd.getParameter( parmName );
-            }
-            catch( final NotDefinedException e )
-            {
-              e.printStackTrace();
-              return;
-            }
-            parmList.add( new Parameterization( parm, entry.getValue() ) );
-          }
-          final ParameterizedCommand thisCommand = new ParameterizedCommand( cmd, parmList.toArray( new Parameterization[parmList.size()] ) );
-
-          for( final CommandContributionItem item : getContributionItems() )
-          {
-            if( item.getCommand().equals( thisCommand ) )
-            {
-              m_currentCommand = item;
-              update();
-            }
-          }
-        }
-      };
-
-      command.addExecutionListener( listener );
-      m_commandListeners.put( command, listener );
+      command.addCommandListener( m_commandListener );
+      command.addExecutionListener( executionListener );
+      m_commandListeners.put( command, m_commandListener );
+      m_executionListeners.put( command, executionListener );
     }
   }
 
@@ -231,7 +238,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   protected ICommandService m_commandService;
 
-  private IElementReference elementRef;
+  private IElementReference m_elementReference = null;
 
   private boolean checkedState;
 
@@ -316,7 +323,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     {
       if( m_currentCommand != null )
       {
-        final IServiceLocator locator = PlatformUI.getWorkbench();
+        final IServiceLocator locator = getServiceLocator();
         final ICommandImageService service = (ICommandImageService) locator.getService( ICommandImageService.class );
 
         ImageDescriptor icon = service.getImageDescriptor( m_currentCommand.getId(), ICommandImageService.TYPE_DEFAULT );
@@ -324,17 +331,11 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
         ImageDescriptor hoverIcon = service.getImageDescriptor( m_currentCommand.getId(), ICommandImageService.TYPE_HOVER );
 
         if( icon == null )
-        {
           icon = m_currentCommand.getIcon();
-        }
         if( disabledIcon == null )
-        {
           disabledIcon = m_currentCommand.getDisabledIcon();
-        }
         if( hoverIcon == null )
-        {
           hoverIcon = m_currentCommand.getHoverIcon();
-        }
 
         updateIcons( icon, disabledIcon, hoverIcon );
 
@@ -366,6 +367,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
             item.setSelection( checkedState );
           }
 
+          item.setEnabled( m_currentCommand.isEnabled() );
           final boolean shouldBeEnabled = isEnabled();
           if( item.getEnabled() != shouldBeEnabled )
           {
@@ -393,24 +395,40 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   private void updateIcons( final ImageDescriptor icon, final ImageDescriptor disabledIcon, final ImageDescriptor hoverIcon )
   {
+    final LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
+
+    final Image imageIcon = icon == null ? null : m.createImage( icon );
+    final Image disabledImageIcon = disabledIcon == null ? null : m.createImage( disabledIcon );
+
+    // If the command is currently not enabled, show a disabled icon as the default image
+    Image imageIcon2;
+    if( m_currentCommand.isEnabled() || imageIcon == null )
+      imageIcon2 = imageIcon;
+    else if( disabledImageIcon != null )
+      imageIcon2 = disabledImageIcon;
+    else
+    {
+      final ImageDescriptor disabledDescriptor = new DisabledImageDescriptor( imageIcon );
+      imageIcon2 = m.createImage( disabledDescriptor );
+    }
+
     if( widget instanceof MenuItem )
     {
       final MenuItem item = (MenuItem) widget;
-      final LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
-      item.setImage( icon == null ? null : m.createImage( icon ) );
-      disposeOldImages();
-      localResourceManager = m;
+      item.setImage( imageIcon2 );
     }
     else if( widget instanceof ToolItem )
     {
+      final Image hoverImageIcon = hoverIcon == null ? null : m.createImage( hoverIcon );
+
       final ToolItem item = (ToolItem) widget;
-      final LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
-      item.setDisabledImage( disabledIcon == null ? null : m.createImage( disabledIcon ) );
-      item.setHotImage( hoverIcon == null ? null : m.createImage( hoverIcon ) );
-      item.setImage( icon == null ? null : m.createImage( icon ) );
-      disposeOldImages();
-      localResourceManager = m;
+      item.setDisabledImage( disabledImageIcon );
+      item.setHotImage( hoverImageIcon );
+      item.setImage( imageIcon2 );
     }
+
+    disposeOldImages();
+    localResourceManager = m;
   }
 
   private void updateText( final String label, final String tooltip )
@@ -423,11 +441,11 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     else if( widget instanceof ToolItem )
     {
       final ToolItem itm = (ToolItem) widget;
-// itm.setText( label );
+      // itm.setText( label );
       itm.setToolTipText( tooltip );
     }
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
 
   }
 
@@ -448,20 +466,20 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   @Override
   public void dispose( )
   {
-    if( elementRef != null )
+    if( m_elementReference != null )
     {
-      m_commandService.unregisterElement( elementRef );
-      elementRef = null;
+      m_commandService.unregisterElement( m_elementReference );
+      m_elementReference = null;
     }
+
     m_commandService = null;
     disposeOldImages();
 
-    final Set<Entry<Command, IExecutionListener>> entrySet = m_commandListeners.entrySet();
+    final Set<Entry<Command, IExecutionListener>> entrySet = m_executionListeners.entrySet();
     for( final Entry<Command, IExecutionListener> entry : entrySet )
-    {
       entry.getKey().removeExecutionListener( entry.getValue() );
-    }
-    m_commandListeners.clear();
+
+    m_executionListeners.clear();
 
     super.dispose();
   }
@@ -490,14 +508,13 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
               break;
             case SWT.Selection:
               if( event.widget != null )
-              {
                 handleWidgetSelection( event );
-              }
               break;
           }
         }
       };
     }
+
     return menuItemListener;
   }
 
@@ -509,38 +526,39 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
     if( ((event.type & SWT.MouseDown) != 0) )
     {
-      if( m_currentCommand != null )
-        new UIJob( "executing comannd..." )
-        {
+      if( m_currentCommand == null || !m_currentCommand.isEnabled() )
+        return;
 
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
+      new UIJob( "executing comannd..." )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          try
           {
-            try
-            {
-              m_handlerService.executeCommand( m_currentCommand.getCommand(), event );
-            }
-            catch( final ExecutionException e )
-            {
-              return Status.CANCEL_STATUS;
-            }
-            catch( final NotHandledException e )
-            {
-              return Status.CANCEL_STATUS;
-            }
-            catch( NotDefinedException e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-            catch( NotEnabledException e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-            return Status.OK_STATUS;
+            m_handlerService.executeCommand( m_currentCommand.getCommand(), event );
           }
-        }.schedule();
+          catch( final ExecutionException e )
+          {
+            return Status.CANCEL_STATUS;
+          }
+          catch( final NotHandledException e )
+          {
+            return Status.CANCEL_STATUS;
+          }
+          catch( final NotDefinedException e )
+          {
+            e.printStackTrace();
+            return StatusUtilities.statusFromThrowable( e );
+          }
+          catch( final NotEnabledException e )
+          {
+            e.printStackTrace();
+            return StatusUtilities.statusFromThrowable( e );
+          }
+          return Status.OK_STATUS;
+        }
+      }.schedule();
     }
 
   }
@@ -566,6 +584,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
           final ToolItem ti = (ToolItem) item;
 
           final MenuManager menuManager = new MenuManager();
+          menuManager.setRemoveAllWhenShown( true );
           final Menu menu = menuManager.createContextMenu( ti.getParent() );
           menuManager.addMenuListener( new IMenuListener()
           {
@@ -597,7 +616,83 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   @Override
   public boolean isEnabled( )
   {
-    return getContributionItems().length > 0;
+    final CommandContributionItem[] contributionItems = getContributionItems();
+    for( final ContributionItem item : contributionItems )
+    {
+      if( item.isEnabled() )
+        return true;
+    }
+
+    return false;
+  }
+
+  protected void setCurrentCommand( final CommandContributionItem item )
+  {
+    if( m_elementReference != null )
+    {
+      m_commandService.unregisterElement( m_elementReference );
+      m_elementReference = null;
+    }
+
+    m_currentCommand = item;
+
+    if( m_currentCommand == null )
+      return;
+
+    final UIElement callback = new UIElement( getServiceLocator() )
+    {
+      @Override
+      public void setChecked( final boolean checked )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setDisabledIcon( final ImageDescriptor desc )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setHoverIcon( final ImageDescriptor desc )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setIcon( final ImageDescriptor desc )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setText( final String text )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setTooltip( final String text )
+      {
+        update( null );
+      }
+
+      @Override
+      public void setDropDownId( final String id )
+      {
+        update( null );
+      }
+    };
+
+    try
+    {
+      final ParameterizedCommand command = m_currentCommand.getCommand();
+      m_elementReference = m_commandService.registerElementForCommand( command, callback );
+    }
+    catch( final NotDefinedException e )
+    {
+      e.printStackTrace();
+    }
   }
 
 }
