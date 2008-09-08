@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,18 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 
 /**
+ * Listener for wizard change events.
  * 
- * TODO: insert type comment here
- * 
- * @author belger
+ * @author Gernot Belger
  */
 public interface IWizardContainerListener
 {
@@ -63,15 +61,7 @@ public interface IWizardContainerListener
    * @param newwizard
    *          The newly set wizard. May be null
    * @param reason
-   *          If the wizard was canceled or finished, the reason is set to one of those flags.
+   *          If the wizard was cancelled or finished, the reason is set to one of those flags.
    */
   public void onWizardChanged( final IWizard newwizard, final int reason );
-
-  /**
-   * Called after the current wizard page changes.
-   * 
-   * @param newpage
-   *          The newly shown page.
-   */
-  public void onPageChanged( final IWizardPage newpage );
 }
