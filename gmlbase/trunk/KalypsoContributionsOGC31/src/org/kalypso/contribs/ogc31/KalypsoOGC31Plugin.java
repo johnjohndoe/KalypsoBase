@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31;
 
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * @author Gernot Belger
@@ -53,7 +54,7 @@ public class KalypsoOGC31Plugin extends Plugin
   public KalypsoOGC31Plugin( )
   {
     super();
-    
+
     m_plugin = this;
   }
 
@@ -63,5 +64,19 @@ public class KalypsoOGC31Plugin extends Plugin
   public static KalypsoOGC31Plugin getDefault( )
   {
     return m_plugin;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void start( final BundleContext context ) throws Exception
+  {
+    super.start( context );
+
+    // PERFORMANCE: as soon as this plug-in is started, we initialise the GML3.1 context
+    // as this takes quite some time. This enables clients to initialise the context on
+    // startup by starting this plug-in immediately.
+    KalypsoOGC31JAXBcontext.getContext();
   }
 }

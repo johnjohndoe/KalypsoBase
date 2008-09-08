@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,30 +36,15 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 
 import ogc31.www.opengis.net.gml.ObjectFactory;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * Just contains the singleton for the JAXBContext of the binding stuff used in this plugin
@@ -73,70 +58,16 @@ public final class KalypsoOGC31JAXBcontext
   private static JAXBContext s_context = null;
 
   // create the context on all of these factories else the binding won't work
-  public static Class< ? >[] s_contextClasses = new Class[] {//  
-  ogc31.www.opengis.net.gml.ObjectFactory.class// 
-      , ogc31.www.opengis.net.swe.ObjectFactory.class//
-      , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
-      , au.csiro.seegrid.xml.st.ObjectFactory.class };
+  private static Class< ? >[] s_contextClasses = new Class[] {//
+    ogc31.www.opengis.net.gml.ObjectFactory.class//
+    , ogc31.www.opengis.net.swe.ObjectFactory.class//
+    , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
+    , au.csiro.seegrid.xml.st.ObjectFactory.class };
 
   public static synchronized JAXBContext getContext( )
   {
     if( s_context == null )
-    {
-      final KalypsoOGC31Plugin plugin = KalypsoOGC31Plugin.getDefault();
-      final IPath stateLocation = plugin.getStateLocation();
-      final IPath contextLocation = stateLocation.append( "context.ser" );
-      final File contextFile = contextLocation.toFile();
-
-      final XStream xstream = new XStream( new DomDriver() );
-
-      if( contextFile.exists() )
-      {
-        // Context was already generated, read from file
-        InputStream ois = null;
-        try
-        {
-          ois = new BufferedInputStream( new FileInputStream( contextFile ) );
-          s_context = (JAXBContext) xstream.fromXML( ois );
-          ois.close();
-        }
-        catch( final Throwable e )
-        {
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to retrieve ogc31-context from binary file", e );
-          plugin.getLog().log( status );
-          contextFile.delete();
-        }
-        finally
-        {
-          IOUtils.closeQuietly( ois );
-        }
-      }
-
-      // Default and fall-back: generate really
-      if( s_context == null )
-        s_context = JaxbUtilities.createQuiet( s_contextClasses );
-
-      if( false && !contextFile.exists() )
-      {
-        // Write context into file; next time the platform starts, the context will be read from here
-        OutputStream oos = null;
-        try
-        {
-          oos = new BufferedOutputStream( new FileOutputStream( contextFile ) );
-          xstream.toXML( s_context, oos );
-          oos.close();
-        }
-        catch( final Throwable e )
-        {
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to store ogc31-context as binary file", e );
-          plugin.getLog().log( status );
-        }
-        finally
-        {
-          IOUtils.closeQuietly( oos );
-        }
-      }
-    }
+      s_context = JaxbUtilities.createQuiet( s_contextClasses );
 
     return s_context;
   }

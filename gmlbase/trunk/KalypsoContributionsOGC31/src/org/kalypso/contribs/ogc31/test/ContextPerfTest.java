@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31.test;
 
@@ -59,10 +59,10 @@ public class ContextPerfTest extends TestCase
   {
     final TimeLogger logger = new TimeLogger( "Start loading JAXBContext" );
 
-    final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-    final Class CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
-    final Class CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
-    final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
+    final Class< ? > CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
+    final Class< ? > CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
+    final Class< ? > CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
+    final Class< ? > CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
 
     JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
     logger.takeInterimTime();
