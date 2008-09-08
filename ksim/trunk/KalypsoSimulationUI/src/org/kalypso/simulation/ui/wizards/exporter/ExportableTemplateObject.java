@@ -163,7 +163,7 @@ public class ExportableTemplateObject implements IExportableObject
       if( m_exportableObject != null )
       {
         /* Export it. */
-        IStatus status = m_exportableObject.exportObject( output, new SubProgressMonitor( monitor, 1 ) );
+        final IStatus status = m_exportableObject.exportObject( output, new SubProgressMonitor( monitor, 1 ) );
 
         return StatusUtilities.createStatus( new IStatus[] { m_status, status }, "Fehler während des Exports der Vorlage: " + m_templateUrl.getFile() );
       }
@@ -208,6 +208,9 @@ public class ExportableTemplateObject implements IExportableObject
    */
   public String getStationIDs( )
   {
+    if( m_exportableObject == null )
+      return "";
+
     return m_exportableObject.getStationIDs();
   }
 
@@ -228,8 +231,8 @@ public class ExportableTemplateObject implements IExportableObject
       if( m_replaceTokens != null )
         reader = ReaderUtilities.createTokenReplaceReader( reader, m_replaceTokens, '%', '%' );
 
-      DiagView tpl = new DiagView();
-      ObservationChart chart = new ObservationChart( tpl, true );
+      final DiagView tpl = new DiagView();
+      final ObservationChart chart = new ObservationChart( tpl, true );
       chart.setBackgroundPaint( Color.WHITE );
 
       /* For later disposal. */
@@ -255,7 +258,7 @@ public class ExportableTemplateObject implements IExportableObject
 
       return new ExportableChart( chart, format, width, height, getIdentifier(), getCategory() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_disposeHelper.dispose();
       m_status = StatusUtilities.statusFromThrowable( e );
@@ -284,8 +287,8 @@ public class ExportableTemplateObject implements IExportableObject
       if( m_replaceTokens != null )
         reader = ReaderUtilities.createTokenReplaceReader( reader, m_replaceTokens, '%', '%' );
 
-      TableView tpl = new TableView();
-      ObservationTable table = new ObservationTable( tpl, true, false );
+      final TableView tpl = new TableView();
+      final ObservationTable table = new ObservationTable( tpl, true, false );
 
       /* For later disposal. */
       m_disposeHelper.addDisposeCandidate( tpl ).addDisposeCandidate( table );
@@ -304,7 +307,7 @@ public class ExportableTemplateObject implements IExportableObject
       // We are using the documentTitle as preferredDocumentName here, it will be written as first line of the table
       return new ExportableObservationTable( table, getIdentifier(), getCategory(), documentTitle );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_disposeHelper.dispose();
       m_status = StatusUtilities.statusFromThrowable( e );

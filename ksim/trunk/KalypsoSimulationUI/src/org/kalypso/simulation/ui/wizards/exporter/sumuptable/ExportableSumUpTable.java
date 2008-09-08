@@ -154,10 +154,6 @@ public final class ExportableSumUpTable implements IExportableObject
       if( m_documentTitle != null )
       {
         writer.write( m_documentTitle );
-        for( int i = 0; i < cols.length; i++ )
-          writer.write( sep );
-        for( int i = 0; i < items.length; i++ )
-          table.writeEmptyRow( writer, sep );
         writer.newLine();
       }
 
