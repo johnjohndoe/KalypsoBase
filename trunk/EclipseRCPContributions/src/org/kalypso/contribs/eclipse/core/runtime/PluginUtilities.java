@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.runtime;
 
@@ -70,8 +70,8 @@ public class PluginUtilities
    * Logs the given data to the plugin *
    * 
    * @param severity
-   *          the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>,
-   *          or <code>CANCEL</code>
+   *          the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+   *          <code>CANCEL</code>
    */
   public final static void logToPlugin( final Plugin plugin, final int severity, final String messsage, final Throwable t )
   {
@@ -129,6 +129,25 @@ public class PluginUtilities
   public static String id( final Plugin plugin )
   {
     return plugin.getBundle().getSymbolicName();
+  }
+
+  /**
+   * Loads a class from a given bundle.
+   * 
+   * @throws ClassNotFoundException
+   *           If either the class or the bundle cannot be found.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> findClass( final String className, final String pluginId ) throws ClassNotFoundException
+  {
+    final Bundle bundle = Platform.getBundle( pluginId );
+    if( bundle == null || !BundleUtility.isReady( bundle ) )
+    {
+      final String msg = String.format( "Could not load class %s: Bundle not fond or not ready: %s", className, pluginId );
+      throw new ClassNotFoundException( msg );
+    }
+
+    return bundle.loadClass( className );
   }
 
 }
