@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.ogc31;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -77,6 +81,18 @@ public class KalypsoOGC31Plugin extends Plugin
     // PERFORMANCE: as soon as this plug-in is started, we initialise the GML3.1 context
     // as this takes quite some time. This enables clients to initialise the context on
     // startup by starting this plug-in immediately.
-    KalypsoOGC31JAXBcontext.getContext();
+    // Runs in a separate job, as else plug-in initialisation may fail due to timeout
+    final Job job = new Job( "Initialising OGC31-Binding-Classes" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        KalypsoOGC31JAXBcontext.getContext();
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.setPriority( Job.LONG );
+    job.schedule();
   }
 }
