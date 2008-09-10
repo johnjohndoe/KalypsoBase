@@ -58,19 +58,16 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
  */
 public class StationLineLayer extends AbstractProfilLayer
 {
-  final private ILineStyle m_style;
 
   public StationLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( profil, targetRangeProperty, null );
-    m_style = (ILineStyle) styleProvider.getStyleFor( getDomainComponent() + "LINE", LineStyle.class );
+    super( profil, targetRangeProperty, styleProvider );
   }
 
   @Override
   public String getId( )
   {
-    final IComponent dom = getDomainComponent();
-    return dom == null ? super.getId() : dom.getId();
+    return super.getId() + "_STATIONLINE";
   }
 
   @Override
@@ -94,19 +91,13 @@ public class StationLineLayer extends AbstractProfilLayer
     IAxis targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
     final PolylineFigure pf = new PolylineFigure();
-    pf.setStyle( getLineStyle() );
+    pf.setStyle( getLineStyle_hover() );
     for( IRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
       pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
       pf.paintFigure( gc );
     }
-  }
-
-  @Override
-  public ILineStyle getLineStyle( )
-  {
-    return m_style;
   }
 
 }
