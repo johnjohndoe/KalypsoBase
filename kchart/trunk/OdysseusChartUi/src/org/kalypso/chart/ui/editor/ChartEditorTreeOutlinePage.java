@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -126,7 +125,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       {
         Object elt = event.getElement();
         if( elt instanceof IChartLayer )
+        {
           handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
+        }
         else
         {
           // children of layers cannot be unchecked
@@ -145,70 +146,51 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         final Object element = struct.getFirstElement();
         if( element instanceof IChartLayer )
           handleSelectionChanged( (IChartLayer) element );
-
       }
     } );
-
-    updateControl();
 
     AbstractLayerManagerEventListener cmel = new AbstractLayerManagerEventListener()
     {
 
       /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de
+       *      .openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
       public void onLayerContentChanged( IChartLayer layer )
       {
-        m_treeViewer.refresh();
+        refreshItems( layer );
       }
 
       /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali
+       *      .odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
       public void onLayerRemoved( IChartLayer layer )
       {
-        updateControl();
+        m_treeViewer.remove( layer );
       }
 
       /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.
+       *      odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
       public void onLayerAdded( IChartLayer layer )
       {
-        updateControl();
+        refreshItems( m_contentProvider.getParent( layer) );
+        m_treeViewer.setChecked( layer, true );
+        handleCheckStateChanged( layer, true );
       }
 
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerVisibilityChanged( IChartLayer layer )
-      {
-        // nothing Todo
-      }
-
-      /**
-       * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerMoved( IChartLayer layer )
-      {
-        m_treeViewer.refresh();
-      }
-
-      @Override
-      public void onActivLayerChanged( IChartLayer layer )
-      {
-       
-      }
     };
 
     m_chartPart.getChartComposite().getChartModel().getLayerManager().addListener( cmel );
 
     addDropSupport();
+
+    updateControl();
   }
 
   /**
@@ -229,7 +211,12 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       m_treeViewer.setChecked( layer, checked );
       Object[] children = m_contentProvider.getChildren( layer );
       for( Object object : children )
-        m_treeViewer.setChecked( object, true );
+      {
+        if( object instanceof IChartLayer )
+          m_treeViewer.setChecked( object, ((IChartLayer) object).isVisible() );
+        else
+          m_treeViewer.setChecked( object, checked );
+      }
     }
 
   }
@@ -245,9 +232,23 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
   {
     layer.setVisible( checked );
+
     Object[] children = m_contentProvider.getChildren( layer );
-    for( Object object : children )
-      m_treeViewer.setChecked( object, checked );
+    for( Object child : children )
+    {
+      if( child instanceof IChartLayer )
+      {
+        ((IChartLayer) child).setVisible( checked );
+        m_treeViewer.setChecked( child, checked );
+      }
+    }
+    if( checked )
+    {
+      Object parent = m_contentProvider.getParent( layer );
+      if( parent instanceof IChartLayer )
+        ((IChartLayer) parent).setVisible( true );
+      m_treeViewer.setChecked( parent, true );
+    }
   }
 
   protected void handleSelectionChanged( final IChartLayer layer )
@@ -305,6 +306,13 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.removeSelectionChangedListener( listener );
   }
 
+  protected void refreshItems( final Object parent )
+  {
+    Object[] o = m_treeViewer.getCheckedElements();
+    m_treeViewer.refresh( parent );
+    m_treeViewer.setCheckedElements( o );
+  }
+
   protected void addDropSupport( )
   {
     // Drag'n drop
@@ -354,30 +362,31 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         {
           String id = (String) data;
           ILayerManager lm = m_chartPart.getChartComposite().getChartModel().getLayerManager();
+          Object targetLayer = getCurrentTarget();
+          Object parent = null;
+          // find dragged
           IChartLayer draggedLayer = lm.getLayerById( id );
-          IChartLayer selectedObject = (IChartLayer) getCurrentTarget();
-
-          // find Layermanager
           if( draggedLayer == null )
           {
-            final Object obj = m_contentProvider.getParent( selectedObject );
-            lm = obj instanceof IExpandableChartLayer ? ((IExpandableChartLayer) obj).getLayerManager() : null;
+            parent = m_contentProvider.getParent( targetLayer );
+            lm = parent instanceof IExpandableChartLayer ? ((IExpandableChartLayer) parent).getLayerManager() : null;
             draggedLayer = lm == null ? null : lm.getLayerById( id );
           }
           if( draggedLayer == null )
             return false;
-
           // either the dragged layer is dropped on another layer, then it will be
           // moved to its position
-          if( selectedObject != null )
-            lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( selectedObject ) );
+
+          if( targetLayer != null && targetLayer instanceof IChartLayer )
+            lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( (IChartLayer) targetLayer ) );
           // or it was dropped at the end of the list, then it will be moved to the lowest position
           else
             lm.moveLayerToPosition( draggedLayer, 0 );
+
+          refreshItems( parent );
           return true;
         }
         return false;
-
       }
 
       @Override
