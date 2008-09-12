@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.ksp.org/service/odsimpl" 
+    xmlns:odsi="http://www.ksp.org/service/odsimpl" 
+    xmlns="http://www.w3.org/2001/XMLSchema" 
+    xmlns:ows="http://www.opengis.net/ows"
+    xmlns:kcc="http://www.ksp.org/chart/factory"
+    elementFormDefault="qualified" version="0.1.0" xml:lang="en">
+    <import namespace="http://www.opengis.net/ows" schemaLocation="../../ows/1.0.0/owsAll.xsd"/>
+    <import namespace="http://www.ksp.org/chart/factory" schemaLocation="../../../../../../KalypsoChartFactory/etc/binding/schema/ChartConfiguration.xsd"/>
+    
+    <element name="ODSScene"  type="odsi:ODSSceneType"></element>
+    
+    <complexType name="ODSSceneType">
+        <sequence>
+            <element ref="ows:ServiceIdentification" minOccurs="0"></element>
+            <element ref="ows:ServiceProvider" minOccurs="0"></element>
+            <element ref="kcc:ChartConfiguration"></element>
+        </sequence>
+        
+    </complexType>
+    </schema>
+    

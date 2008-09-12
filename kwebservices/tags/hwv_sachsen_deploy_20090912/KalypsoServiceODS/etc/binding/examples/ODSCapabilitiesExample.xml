@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ODS_Capabilities xmlns="http://www.openali.de/ods/capabilities/xsd"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+    xsi:schemaLocation="http://www.openali.de/ods/capabilities/xsd file:/home/alibu/dev/workspaceChart/ODSOperations/etc/binding/capabilities/ODSCapabilities.xsd" version="">
+<ServiceIdentification xmlns="http://www.opengis.net/ows">
+    <Title>Observation Diagram Service</Title>
+    <Abstract>Observation Diagram Service maintained by Example Corp.</Abstract>
+    <Keywords>
+        <Keyword>Diagram</Keyword>
+        <Keyword>Observation</Keyword>
+        <Keyword>Chart</Keyword>
+        <Keyword>Legend</Keyword>
+    </Keywords>
+    <ServiceType>ODS</ServiceType>
+    <ServiceTypeVersion>0.0.1</ServiceTypeVersion>
+    <Fees>None</Fees>
+    <AccessConstraints>None</AccessConstraints>
+</ServiceIdentification>
+<ServiceProvider xmlns="http://www.opengis.net/ows">
+    <ProviderName>Example Corp.</ProviderName>
+    <ProviderSite xlink:href="http://www.example.org" />
+    <ServiceContact>
+        <IndividualName>Manfred Musterman</IndividualName>
+        <PositionName>ODS Administrator</PositionName>
+        <ContactInfo>
+            <Phone>
+                <Voice>+49-261-123456-7</Voice>
+                <Facsimile>+49-261-123456-8</Facsimile>
+            </Phone>
+            <Address>
+                <DeliveryPoint>Small Street 1</DeliveryPoint>
+                <City>Koblenz</City>
+                <AdministrativeArea>Rhineland-Palatinate</AdministrativeArea>
+                <PostalCode>56073</PostalCode>
+                <Country>Germany</Country>
+                <ElectronicMailAddress>mm@example.org</ElectronicMailAddress>
+            </Address>
+            <HoursOfService>08:00 AM - 04:00 PM on weekdays</HoursOfService>
+        </ContactInfo>
+        <Role>Point of contact</Role>
+    </ServiceContact>
+</ServiceProvider>
+<OperationsMetadata xmlns="http://www.opengis.net/ows">
+<Operation name="GetChart">
+<DCP>
+    <HTTP>
+        <Get xlink:href="http://www.example.org/ods?">
+        </Get>
+    </HTTP>
+</DCP>  
+ <Parameter name="NAME">  
+      <Value>Wasserstand</Value>
+     <Value>Niederschlag</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">paramater defining the chart to be returned as an image file</ODSMetaData>
+        </Metadata> 
+    </Parameter>
+ <Parameter name="WIDTH">  
+     <Value>200</Value>
+     <Value>2000</Value>
+     <Metadata>
+         <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">parameter defining width of requested chart image; value should be something in between those two given above; if no value is spezified, a default value will be used</ODSMetaData>
+     </Metadata> 
+ </Parameter>
+   <Parameter name="HEIGHT">  
+        <Value>200</Value>
+        <Value>2000</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">parameter defining height of requested chart image; value should be something in between those two given above; if no value is spezified, a default value will be used</ODSMetaData>
+        </Metadata> 
+   </Parameter>
+    <Parameter name="LAYERS">
+        <Value>all</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">
+                sorted list of layers to be displayed in chart image; indivudual layers are separated by semicolon; use layers id from diagrams section as identifier; layers mentioned first are drawn first;
+                if parameter is omitted, all layers are drawn 
+            </ODSMetaData>
+        </Metadata>
+    </Parameter>
+    <Parameter name="TYPE">  
+        <Value>PNG</Value>
+        <Value>JPG</Value>
+        <Value>GIF</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">paramater defining the type of the image to return; PNG is default</ODSMetaData>
+        </Metadata> 
+    </Parameter>
+    <Parameter name="TRANSPARENT">  
+        <Value>TRUE</Value>
+        <Value>FALSE</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">paramater defining if the returned image should be transparent, FALSE is default</ODSMetaData>
+        </Metadata> 
+    </Parameter>
+</Operation>
+<Operation name="GetLegend">
+    <DCP>
+        <HTTP>
+            <Get xlink:href="http://www.example.org/ods?">
+            </Get>
+        </HTTP>
+    </DCP>  
+    <Parameter name="NAME">  
+        <Value>Wasserstand</Value>
+        <Value>Niederschlag</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">paramater defining the legend to be returned as an image file</ODSMetaData>
+        </Metadata> 
+    </Parameter>
+    <Parameter name="LAYERS">
+        <Value>all</Value>
+        <Metadata>
+            <ODSMetaData xmlns="http://www.openali.de/ods/capabilities/xsd">
+                sorted list of layers to be displayed in legend image; indivudual layers are separated by semicolon; use layers id from diagrams section as identifier; layers mentioned first are drawn first;
+                if parameter is omitted, all layers are drawn 
+            </ODSMetaData>
+        </Metadata>
+    </Parameter>
+</Operation>
+</OperationsMetadata>
+    <Diagrams>
+        <Diagram>
+            <id>GR</id>
+            <title>Gauge and rainfall observations at station 12345 at river Rhine</title>
+            <description></description>
+            <Layers>
+                <Layer queryable="1">
+                    <id>gauge</id>
+                    <title>gauge observation</title>
+                    <description></description>
+                </Layer>
+                <Layer queryable="1">
+                    <id>rainfall</id>
+                    <title>rainfall observation</title>
+                    <description></description>
+                </Layer>
+            </Layers>
+        </Diagram>
+    </Diagrams>
+</ODS_Capabilities>
