@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.createchoices;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -94,13 +96,13 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private ListViewer m_viewer;
 
-  private Collection<File> m_serverDirs = new LinkedList<File>();
+  private final Collection<File> m_serverDirs = new LinkedList<File>();
 
   private final CreateCalcCasePage m_page;
 
   private String m_name;
 
-  private File m_serverPrognoseDir;
+  private final File m_serverPrognoseDir;
 
   private final ModelSynchronizer m_synchronizer;
 
@@ -132,7 +134,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     edit.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
     edit.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         setName( edit.getText() );
       }
@@ -171,7 +173,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final Job job = new Job( "Archivierte Rechenvarianten werden ermittelt" )
     {
       @Override
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( final IProgressMonitor monitor )
       {
         refresh( new NullProgressMonitor() );
         return Status.OK_STATUS;
@@ -207,14 +209,14 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
   public void refresh( final IProgressMonitor monitor )
   {
     // alle Prognosen finden
-    final File[] serverCalcCases = m_serverPrognoseDir.listFiles();
+    final File[] serverCalcCases = m_serverPrognoseDir.listFiles( (FileFilter) DirectoryFileFilter.INSTANCE );
     final boolean bEnabled = m_serverPrognoseDir.exists() && serverCalcCases != null;
 
     m_serverDirs.clear();
     if( serverCalcCases != null )
     {
-      for( int i = 0; i < serverCalcCases.length; i++ )
-        m_serverDirs.add( serverCalcCases[i] );
+      for( final File serverCalcCase : serverCalcCases )
+        m_serverDirs.add( serverCalcCase );
     }
 
     final File newSelectFinal = ( serverCalcCases == null || serverCalcCases.length == 0 ) ? null : serverCalcCases[0];

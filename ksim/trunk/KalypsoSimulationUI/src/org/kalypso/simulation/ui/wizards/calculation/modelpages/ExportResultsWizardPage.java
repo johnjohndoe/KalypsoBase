@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.calculation.modelpages;
 
@@ -98,7 +98,6 @@ import org.kalypso.metadoc.impl.MultiExporter;
 import org.kalypso.metadoc.impl.MultiExporter.ISupplierCreator;
 import org.kalypso.metadoc.ui.ExportDocumentsObjectFactory;
 import org.kalypso.metadoc.ui.ExportWizard;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.SensorException;
@@ -143,7 +142,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
   // <arg name="rightSash" value="40"/>
   // <arg name="grafikToolTemplate" value=".modellTyp/grafik.exe_"/>
   // </page>
-  //  
+  //
 
   private static final String STR_EXPORT_PROGNOSEN = "Vorhersagen exportieren";
 
@@ -444,7 +443,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
       final FeatureList selectedFeatures = filterForValidTimeseriesLinks( getSelectedFeatures(), resultProperty, context );
       // view it!
       final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-      final IFeatureType featureType = ((IKalypsoFeatureTheme) getMapModell().getActiveTheme()).getFeatureType();
+// final IFeatureType featureType = ((IKalypsoFeatureTheme) getMapModell().getActiveTheme()).getFeatureType();
+      final IFeatureType featureType = features[0].getFeatureType();
       final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( nameProperty );
       if( ftp == null )
       {

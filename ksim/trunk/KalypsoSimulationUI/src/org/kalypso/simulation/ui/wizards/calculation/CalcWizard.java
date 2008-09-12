@@ -710,9 +710,11 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           monitor.worked( 1 );
       }
 
+      // TRICKY: in order to see the selection during calculation, we already call 'restoreState' here,
+      // so features get reselected.
       final IWizardPage currentPage = getContainer().getCurrentPage();
       if( currentPage instanceof IModelWizardPage )
-        ((IModelWizardPage) currentPage).restoreState();
+        ((IModelWizardPage) currentPage).restoreState( false );
     }
     finally
     {
@@ -744,7 +746,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         {
           public void run( ) throws Exception
           {
-            ((IModelWizardPage) page).restoreState();
+            ((IModelWizardPage) page).restoreState( true );
           }
         };
         SafeRunnable.run( runnable );

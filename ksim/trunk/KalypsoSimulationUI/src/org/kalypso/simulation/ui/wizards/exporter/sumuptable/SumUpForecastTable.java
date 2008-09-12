@@ -58,6 +58,7 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.DateRange;
@@ -146,8 +147,11 @@ public class SumUpForecastTable
 
     // seek for alarm level
     final MetadataList md = obs.getMetadataList();
-    final Double[] alarms = new Double[] { Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) ),
-        Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ), Double.valueOf( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ) };
+    final Double alarm1 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) );
+    final Double alarm2 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) );
+    final Double alarm3 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) );
+    final Double alarm4 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) );
+    final Double[] alarms = new Double[] { alarm1, alarm2, alarm3, alarm4 };
 
     String strAlarm = cNoAlarm;
     double alarm = 0;
@@ -256,16 +260,6 @@ public class SumUpForecastTable
       writer.write( row.dumpRow( sep, nf, df, dates ) );
     else
       writer.write( "<keine Daten vorhanden, Zeitreihe möglicherweise ungültig>" );
-  }
-
-  public void writeEmptyRow( final Writer writer, final String sep ) throws IOException
-  {
-    for( int i = 0; i < 3; i++ )
-      writer.write( sep );
-    
-    final Date[] dates = m_colHeader.getDates();
-    for( int i = 0; i < dates.length; i++ )
-      writer.write( sep );
   }
 
   public void dispose( )

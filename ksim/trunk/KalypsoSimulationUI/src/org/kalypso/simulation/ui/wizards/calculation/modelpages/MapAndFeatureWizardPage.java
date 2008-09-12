@@ -217,12 +217,12 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   }
 
   /**
-   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState()
+   * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState(boolean)
    */
   @Override
-  public void restoreState( ) throws CoreException
+  public void restoreState( final boolean clearState ) throws CoreException
   {
-    super.restoreState();
+    super.restoreState( clearState );
 
     // zusätzlich das Diagramm aktualisieren, sonst passiert es evtl. nicht
     refreshDiagram();

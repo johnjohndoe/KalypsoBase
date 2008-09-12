@@ -1238,16 +1238,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @throws CoreException
-   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState()
+   * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState(boolean)
    */
-  public void restoreState( ) throws CoreException
+  public void restoreState( final boolean clearState ) throws CoreException
   {
     if( m_selectionRestorer != null )
-    {
       m_selectionRestorer.restoreSelection();
+
+    if( clearState )
       m_selectionRestorer = null;
-    }
   }
 
   /**
@@ -1324,7 +1323,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // TRICKY: this should only happen, if the workspaces are really reloaded.
     // This HACK just gives one second to do this. Is this always enough?
     // Better would be some code, which is called, after all Worspace-Modification events of
-    // operastion 1 are handled. Is this possible?
+    // operation 1 are handled. Is this possible?
     job.schedule( 1000 );
   }
 

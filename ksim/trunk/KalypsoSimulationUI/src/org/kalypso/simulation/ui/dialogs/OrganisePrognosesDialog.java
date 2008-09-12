@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.dialogs;
 
@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -79,13 +80,13 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   private static final String VORHERSAGEN_ORGANISIEREN = "Vorhersagen verwalten";
 
 
-  private Image m_titleImage;
+  private final Image m_titleImage;
 
   private CalcCaseTableTreeViewer m_viewer;
 
-  private IFolder m_prognoseFolder;
+  private final IFolder m_prognoseFolder;
 
-  private Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
+  private final Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -97,7 +98,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     }
   };
 
-  private Action m_archiveAction = new Action( "Archivieren", SimulationImageProvider.IMAGE_CALCCASE_COPY2SERVER )
+  private final Action m_archiveAction = new Action( "Archivieren", SimulationImageProvider.IMAGE_CALCCASE_COPY2SERVER )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -139,7 +140,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     setTitleImage( m_titleImage );
 
@@ -165,7 +166,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     m_viewer.setAutoExpandLevel( 2 );
 
     m_viewer.setInput( m_prognoseFolder );
-    
+
     return super.createDialogArea( parent );
   }
 
@@ -178,9 +179,8 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final Object[] objects = selection.toArray();
     boolean enable = !selection.isEmpty();
-    for( int i = 0; i < objects.length; i++ )
+    for( final Object element : objects )
     {
-      final Object element = objects[i];
       if( !(element instanceof IFolder) || !ModelNature.isCalcCalseFolder( (IFolder)element ) )
       {
         enable = false;
@@ -197,8 +197,19 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
     final List<?> list = selection.toList();
 
-    final DeleteResourceAction action = new DeleteResourceAction( getParentShell() )
+    // TODO: does now work any more, as the workbench
+    // now relies on the fact that the resources MUST be selected ni the
+    final DeleteResourceAction action = new DeleteResourceAction( new SameShellProvider( getContents() ) )
     {
+      /**
+       * @see org.eclipse.ui.actions.BaseSelectionListenerAction#getStructuredSelection()
+       */
+      @Override
+      public IStructuredSelection getStructuredSelection( )
+      {
+        return selection;
+      }
+
       @Override
       protected List<?> getSelectedResources()
       {
@@ -213,12 +224,15 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   protected void archiveCalcCases()
   {
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
+    if( selection.isEmpty() )
+      return;
+
     final Object[] calcCaseObjs = selection.toArray();
-    final IFolder[] calcCases = Arrays.castArray( calcCaseObjs, null );
-    
+    final IFolder[] calcCases = Arrays.castArray( calcCaseObjs, new IFolder[calcCaseObjs.length] );
+
     final CommitCalcCaseJob job = new CommitCalcCaseDelegate.CommitCalcCaseJob( m_prognoseFolder.getProject(),
         calcCases );
-    
+
     // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getParentShell(), VORHERSAGEN_ORGANISIEREN,
         CommitCalcCaseDelegate.RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false, false ) );

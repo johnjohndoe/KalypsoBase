@@ -406,7 +406,12 @@ public class PrognosePanel
 
         final File serverProject = new File( serverRoot, modelName );
         if( !serverProject.exists() )
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Servermodell existiert nicht! Prognose kann nicht gestartet werden.", null ) );
+        {
+          if( project.exists() )
+            throw new CoreException( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Servermodell existiert nicht! Prognose wird mit lokaler Kopie durchgeführt.", null ) );
+          else
+            throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Servermodell existiert nicht! Prognose kann nicht gestartet werden.", null ) );
+        }
 
         final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
         synchronizer.updateLocal( monitor );
@@ -414,8 +419,7 @@ public class PrognosePanel
     };
 
     /* Do not synchronize, if 'kalypso.prognose.synchronize-models' is set to false. */
-    final String doSyncProperty = System.getProperty( IKalypsoSimulationUIConstants.CONFIG_DO_SYNCHRONIZE_MODELS,
-    "true" );
+    final String doSyncProperty = System.getProperty( IKalypsoSimulationUIConstants.CONFIG_DO_SYNCHRONIZE_MODELS, "true" );
     final boolean doSync = Boolean.valueOf( doSyncProperty ).booleanValue();
 
     final IStatus status;
@@ -431,11 +435,13 @@ public class PrognosePanel
     }
 
     if( !status.isOK() )
-    {
       KalypsoSimulationUIPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
+    ErrorDialog.openError( window.getShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", status );
+    if( status.matches( IStatus.ERROR ) )
       return null;
-    }
+
+    if( project == null || !project.exists() )
+      return null;
 
     return project;
   }
