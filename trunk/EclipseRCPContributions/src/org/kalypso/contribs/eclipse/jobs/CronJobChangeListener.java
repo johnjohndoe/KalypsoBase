@@ -62,20 +62,20 @@ public class CronJobChangeListener extends JobChangeAdapter
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void done( IJobChangeEvent event )
+  public void done( final IJobChangeEvent event )
   {
     /* Get the job. */
-    Job job = event.getJob();
+    final Job job = event.getJob();
 
     /* Is it a cron job. */
     if( !(job instanceof CronJob) )
       return;
 
     /* Cast. */
-    CronJob cronJob = (CronJob) job;
+    final CronJob cronJob = (CronJob) job;
 
     /* Get the reschedule delay. */
-    long rescheduleDelay = cronJob.getRescheduleDelay();
+    final long rescheduleDelay = cronJob.getRescheduleDelay();
 
     /* Don't reschedule, if there is a negative value given. */
     if( rescheduleDelay < 0 )
