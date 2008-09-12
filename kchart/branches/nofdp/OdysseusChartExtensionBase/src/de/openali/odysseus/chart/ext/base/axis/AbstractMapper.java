@@ -95,7 +95,12 @@ public abstract class AbstractMapper implements IMapper
     for( Class c : m_dataOperators.keySet() )
       if( c.isAssignableFrom( clazz ) )
         return (IDataOperator<T>) m_dataOperators.get( c );
-    return getRegistry().getDataOperator( clazz );
+
+    IMapperRegistry registry = getRegistry();
+    if( registry != null )
+      return registry.getDataOperator( clazz );
+
+    return null;
   }
 
   /**

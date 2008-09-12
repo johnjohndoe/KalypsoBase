@@ -38,23 +38,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   /**
    * @param foreground
-   *          Color of axis, ticks and text
+   *            Color of axis, ticks and text
    * @param lineWidth
-   *          Width of ticks and axis line
+   *            Width of ticks and axis line
    * @param tickLength
    * @param tickLabelInsets
-   *          <ul>
-   *          <li>top: distance between ticklabel and axis</li>
-   *          <li>bottom: distance between ticklabel and outside</li>
-   *          <li>left: distance between ticklabel and previous ticklabel</li>
-   *          <li>right: distance between ticklabel and next ticklabel</li>
-   *          </ul>
+   *            <ul>
+   *            <li>top: distance between ticklabel and axis</li>
+   *            <li>bottom: distance between ticklabel and outside</li>
+   *            <li>left: distance between ticklabel and previous ticklabel</li>
+   *            <li>right: distance between ticklabel and next ticklabel</li>
+   *            </ul>
    * @param maxDigits
    * @param labelInsets
    * @param gap
-   *          space between axis and component border
+   *            space between axis and component border
    * @param fixedWidth
-   *          if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
+   *            if > 0, no actual width is calculated - the getWidth() will always return the value of fixed width
    */
   public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILabelCreator labelCreator, ITickCalculator tickCalculator, Number minTickInterval, boolean hideCut, int fixedWidth, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
   {
@@ -74,6 +74,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   public Point calcTickLabelSize( GC gc, final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
+    if( range == null )
+      return null;
 
     final String logicalfrom = m_labelCreator.getLabel( range.getMin(), range );
     final String logicalto = m_labelCreator.getLabel( range.getMax(), range );
