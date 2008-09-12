@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,57 +36,46 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jobs;
+package org.kalypso.contribs.java.util;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import org.junit.Test;
 
 /**
- * This listener will check, if the job has to be rescheduled.
- * 
- * @author Holger Albert
+ * @author belger
+ *
  */
-public class CronJobChangeListener extends JobChangeAdapter
+public class DateParseTest
 {
-  /**
-   * The constructor.
-   */
-  public CronJobChangeListener( )
+  @Test
+  public void parseDates() throws ParseException
   {
+    final SimpleDateFormat DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+
+    final String midnight2000 = "01.01.2000 00:00";
+
+    final Date utcDate = DF.parse( midnight2000 );
+    final Calendar utcCal = Calendar.getInstance();
+    utcCal.setTime( utcDate );
+    utcCal.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+
+    final Date utc1Date = DF.parse( midnight2000 );
+    final Calendar utc1Cal = Calendar.getInstance();
+    utc1Cal.setTime( utc1Date );
+    utc1Cal.setTimeZone( TimeZone.getTimeZone( "UTC+1" ) );
+
+    final long utcMillis = utcCal.getTimeInMillis();
+    final long utc1Millis = utc1Cal.getTimeInMillis();
+
+    // / ?????????
+
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-   */
-  @Override
-  public void done( final IJobChangeEvent event )
-  {
-    /* Get the job. */
-    final Job job = event.getJob();
-
-    /* Is it a cron job. */
-    if( !(job instanceof CronJob) )
-      return;
-
-    /* Cast. */
-    final CronJob cronJob = (CronJob) job;
-
-    /* Get the reschedule delay. */
-    final long rescheduleDelay = cronJob.getRescheduleDelay();
-
-    /* Don't reschedule, if there is a negative value given. */
-    if( rescheduleDelay < 0 )
-    {
-      /* Remove myself as listener. */
-      job.removeJobChangeListener( this );
-
-      return;
-    }
-
-    /* Schedule (leave myself as listener). */
-    job.schedule( rescheduleDelay );
-  }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
 <stringAttribute key="application" value="org.eclipse.pde.junit.runtime.coretestapplication"/>
 <booleanAttribute key="askclear" value="false"/>
@@ -7,17 +7,24 @@
 <stringAttribute key="bootstrap" value=""/>
 <booleanAttribute key="clearConfig" value="true"/>
 <booleanAttribute key="clearws" value="true"/>
-<stringAttribute key="configLocation" value=""/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/EclipseRCPContributions Plugin-Test"/>
 <booleanAttribute key="default" value="false"/>
 <booleanAttribute key="includeFragments" value="true"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}\..\junit-workbench-workspace"/>
 <stringAttribute key="location1" value="${workspace_loc}\..\junit-workbench-workspace"/>
 <stringAttribute key="location2" value="C:\Eclipse\junit-workbench-workspace"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/EclipseRCPContributions"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
-<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=EclipseRCPContributions"/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
@@ -27,12 +34,12 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="EclipseRCPContributions"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="pde.version" value="3.3"/>
-<stringAttribute key="product" value="com.bce.profil.wspprofilapp.profileditor"/>
-<stringAttribute key="selected_target_plugins" value="com.ibm.icu,org.eclipse.ant.core,org.eclipse.core.commands,org.eclipse.core.contenttype,org.eclipse.core.expressions,org.eclipse.core.filesystem,org.eclipse.core.filesystem.win32.x86,org.eclipse.core.jobs,org.eclipse.core.resources,org.eclipse.core.resources.compatibility,org.eclipse.core.resources.win32,org.eclipse.core.runtime,org.eclipse.core.runtime.compatibility,org.eclipse.core.runtime.compatibility.auth,org.eclipse.core.runtime.compatibility.registry,org.eclipse.core.variables,org.eclipse.equinox.common,org.eclipse.equinox.preferences,org.eclipse.equinox.registry,org.eclipse.help,org.eclipse.jface,org.eclipse.osgi,org.eclipse.swt,org.eclipse.swt.win32.win32.x86,org.eclipse.ui,org.eclipse.ui.workbench,org.eclipse.ui.workbench.compatibility,org.eclipse.update.configurator,org.junit,org.eclipse.equinox.app"/>
-<stringAttribute key="selected_workspace_plugins" value="org.kalypso.contribs.java,org.kalypso.contribs.eclipsercp"/>
+<stringAttribute key="product" value="org.eclipse.equinox.p2.director.app.product"/>
+<stringAttribute key="selected_target_plugins" value="org.eclipse.core.runtime.compatibility,com.ibm.icu,org.eclipse.core.filesystem,org.eclipse.core.commands,org.eclipse.equinox.app,org.eclipse.update.configurator,org.eclipse.ui.workbench,org.eclipse.core.expressions,org.eclipse.osgi,org.eclipse.core.jobs,org.eclipse.ui.workbench.compatibility,org.eclipse.core.resources,org.eclipse.core.resources.compatibility,org.eclipse.ant.core,org.eclipse.core.runtime.compatibility.registry,org.junit,org.eclipse.help,org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.equinox.common,org.eclipse.core.runtime.compatibility.auth,org.eclipse.swt,org.eclipse.jface,org.eclipse.core.filesystem.win32.x86,org.eclipse.equinox.registry,org.eclipse.swt.win32.win32.x86,org.eclipse.core.contenttype,org.eclipse.equinox.preferences,org.eclipse.core.variables"/>
+<stringAttribute key="selected_workspace_plugins" value="org.kalypso.contribs.eclipsercp,org.kalypso.contribs.java"/>
+<booleanAttribute key="show_selected_only" value="false"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useDefaultConfig" value="true"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
 <booleanAttribute key="useProduct" value="false"/>
-<stringAttribute key="vminstall" value="KALYPSO_JRE"/>
 </launchConfiguration>
