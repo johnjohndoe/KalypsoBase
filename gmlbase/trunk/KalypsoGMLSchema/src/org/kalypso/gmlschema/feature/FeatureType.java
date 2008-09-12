@@ -231,7 +231,6 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   }
 
   // TODO: remove; change GmlSchemaContentProvider for that
-  @SuppressWarnings("deprecation")
   @Deprecated
   public IFeatureContentType getFeatureContentType( )
   {
@@ -290,7 +289,6 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    * @deprecated use getProperty(IPropertyType)
    */
-  @SuppressWarnings("deprecation")
   @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
