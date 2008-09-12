@@ -108,6 +108,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final Insets tickLabelInsets = getTickLabelInsets();
 
     IDataRange<Number> range = axis.getNumericRange();
+    if( range == null )
+      return;
+
     final int axisMin = axis.numericToScreen( range.getMin() );
     final int axisMax = axis.numericToScreen( range.getMax() );
     final int screenMin = Math.min( axisMin, axisMax );
@@ -429,6 +432,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       final Point textExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
 
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
+      if( tickLabelExtent == null )
+        return;
 
       int x = 0;
       int y = 0;
@@ -522,6 +527,9 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     if( tickMapElement == null )
     {
       Point tickLabelSize = calcTickLabelSize( gc, axis );
+      if( tickLabelSize == null )
+        return new Number[0];
+
       Number[] ticks = m_tickCalculator.calcTicks( gc, axis, m_minTickInterval, tickLabelSize );
       setTickMapElement( axis, ticks );
       tickMapElement = getTickMapElement( axis );
@@ -554,6 +562,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final GC gc = new GC( img );
 
     final Point tls = calcTickLabelSize( gc, axis );
+    if( tls == null )
+      return m_fixedWidth;
 
     // Ticks+Labels
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
