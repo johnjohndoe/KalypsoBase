@@ -83,6 +83,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -183,7 +184,8 @@ public class WPSRequest
   }
 
   /**
-   * This function initializes the request.
+   * This function initialises the request.<br>
+   * TODO: let it throw an CoreException instead of returning the status; makes error handling much easier.
    * 
    * @param monitor
    *          A progress monitor.
@@ -256,12 +258,16 @@ public class WPSRequest
       {
         // We always will reach this point in case of an exception, as the kalypso
         // WPS implementation return the wrong kind of exception (opengeo in contrast to opengeospatial)
-        return StatusUtilities.createErrorStatus( describeProcessResponse );
+        final IStatus status = StatusUtilities.createErrorStatus( describeProcessResponse );
+        Activator.getDefault().getLog().log( status );
+        return status;
       }
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      Activator.getDefault().getLog().log( status );
+      return status;
     }
     finally
     {

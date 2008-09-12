@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils;
 
@@ -84,36 +84,44 @@ public class WPSUtilities
    * This function is responsible for sending a request to a server.
    * 
    * @param body
-   *            The XML string to be send.
+   *          The XML string to be send.
    * @param url
-   *            The address of the server.
+   *          The address of the server.
    * @return The response as String.
    */
-  public static String send( String xml, String url ) throws CoreException, HttpException, IOException
+  public static String send( final String xml, final String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
 
     /* Build the method. */
-    PostMethod post = new PostMethod( url );
+    final PostMethod post = new PostMethod( url );
+    // TODO: this is maybe a bit heavy, if the request is big (got an OutOfMemory once at marshalling the xml string)
+
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
 
     /* Let the method handle the authentication, if any. */
     post.setDoAuthentication( true );
 
     /* Execute the method. */
-    int status = client.executeMethod( post );
+    final int status = client.executeMethod( post );
 
     /* Handle the response. */
     Debug.println( "Status code: " + String.valueOf( status ) );
 
     if( status != 200 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
+    {
+      // TODO: we should also add the body into a sub-status; so we could show it to the user if he examines it more
+      // closely
+// final String body = post.getResponseBodyAsString();
+      final String msg = String.format( "Request failed! Server response code %d.", status );
+      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+    }
 
-    InputStream is = post.getResponseBodyAsStream();
+    final InputStream is = post.getResponseBodyAsStream();
     if( is == null )
       return null;
 
@@ -124,10 +132,10 @@ public class WPSUtilities
    * Returns the simulation with the given type id.
    * 
    * @param simulationType
-   *            The simulations type id.
+   *          The simulations type id.
    * @return The simulation.
    */
-  public static ISimulation getSimulation( String simulationType ) throws OWSException
+  public static ISimulation getSimulation( final String simulationType ) throws OWSException
   {
     ISimulation simulation = null;
     try
@@ -142,7 +150,7 @@ public class WPSUtilities
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "The simulation \"" + simulationType + "\" is not available.", "" );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
@@ -163,7 +171,7 @@ public class WPSUtilities
     {
       return KalypsoSimulationCoreExtensions.createSimulations();
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       Debug.println( "Error retrieving the simulations!" );
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
@@ -174,24 +182,24 @@ public class WPSUtilities
    * This function converts the URL that, the server has used and converts it to an URL, which the client can use.
    * 
    * @param serverUrl
-   *            The URL, which the server has used internally to copy the results.<br>
-   *            Example:<br>
-   *            Server URL: file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results<br>
-   *            Replacement URL: http://informdss.bafg.de/webdav/results<br>
-   *            ----------------------------------------------------------------------------------<br>
-   *            serverUrl param : file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results/xxx<br>
-   *            ----------------------------------------------------------------------------------<br>
-   *            Result: http://informdss.bafg.de/webdav/results/xxx
+   *          The URL, which the server has used internally to copy the results.<br>
+   *          Example:<br>
+   *          Server URL: file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results<br>
+   *          Replacement URL: http://informdss.bafg.de/webdav/results<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          serverUrl param : file://var/lib/wwwrun/apache/informdss/htdocs/webdav/results/xxx<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          Result: http://informdss.bafg.de/webdav/results/xxx
    */
-  public static String convertInternalToClient( String serverUrl )
+  public static String convertInternalToClient( final String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
-    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
+    final String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
     if( clientProperty == null )
       return serverUrl;
 
-    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
-    String clientUrl = serverUrl.replace( serverProperty, clientProperty );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    final String clientUrl = serverUrl.replace( serverProperty, clientProperty );
     Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
 
     return clientUrl;
@@ -202,25 +210,25 @@ public class WPSUtilities
    * the server can use to retrieve them.
    * 
    * @param clientUrl
-   *            The URL, which the client has used internally to copy the input data.<br>
-   *            Example:<br>
-   *            Client URL: webdav://informdss.bafg.de/webdav/input<br>
-   *            Replacement URL: http://informdss.bafg.de/webdav/input<br>
-   *            ----------------------------------------------------------------------------------<br>
-   *            clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
-   *            ----------------------------------------------------------------------------------<br>
-   *            Result: http://informdss.bafg.de/webdav/input/xxx
+   *          The URL, which the client has used internally to copy the input data.<br>
+   *          Example:<br>
+   *          Client URL: webdav://informdss.bafg.de/webdav/input<br>
+   *          Replacement URL: http://informdss.bafg.de/webdav/input<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          clientUrl param : webdav://informdss.bafg.de/webdav/input/xxx<br>
+   *          ----------------------------------------------------------------------------------<br>
+   *          Result: http://informdss.bafg.de/webdav/input/xxx
    * @param clientProperty
-   *            The client URL.
+   *          The client URL.
    */
-  public static String convertInternalToServer( String clientUrl, String clientProperty )
+  public static String convertInternalToServer( final String clientUrl, final String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */
-    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
     if( serverProperty == null )
       return clientUrl;
 
-    String serverUrl = clientUrl.replace( clientProperty, serverProperty );
+    final String serverUrl = clientUrl.replace( clientProperty, serverProperty );
     Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
 
     return serverUrl;
