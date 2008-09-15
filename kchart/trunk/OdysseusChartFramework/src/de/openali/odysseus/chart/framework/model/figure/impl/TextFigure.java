@@ -22,7 +22,7 @@ public class TextFigure extends AbstractFigure<ITextStyle>
    * 
    * @param points
    *            center position of the figure
-   */
+   */   
   public void setPoints( Point[] points )
   {
     m_centerPoints = points;
@@ -36,7 +36,7 @@ public class TextFigure extends AbstractFigure<ITextStyle>
   }
 
   @Override
-  public void paintFigure( GC gc )
+  protected void paintFigure( GC gc )
   {
     IStyle style = getStyle();
     if( style != null && m_centerPoints != null )

@@ -68,7 +68,7 @@ public class EmptyRectangleFigure extends AbstractFigure<ILineStyle>
    * @see de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure#paintFigure(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paintFigure( GC gc )
+  protected void paintFigure( GC gc )
   {
     gc.drawRectangle( m_rect );
   }

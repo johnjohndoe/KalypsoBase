@@ -71,8 +71,7 @@ public class DragEditHandler implements IChartDragHandler
     }
     else if( (m_clickInfo != null) && (m_clickInfo.m_layer instanceof IEditableChartLayer) )
     {
-      if( m_editInfo != null )
-        ((IEditableChartLayer) (m_editInfo.m_layer)).commitDrag( m_clickInfo.m_pos, m_clickInfo );
+      ((IEditableChartLayer) (m_clickInfo.m_layer)).commitDrag( m_clickInfo.m_pos, m_clickInfo );
       m_clickInfo = null;
     }
   }

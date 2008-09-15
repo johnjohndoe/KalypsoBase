@@ -29,7 +29,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   }
 
   @Override
-  public void paintFigure( GC gc )
+  protected void paintFigure( GC gc )
   {
     IPointStyle style = getStyle();
     if( (style != null) && (m_centerPoints != null) )

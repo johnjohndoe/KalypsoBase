@@ -14,7 +14,7 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
   private Point[] m_points = new Point[] { new Point( 10, 10 ), new Point( 100, 100 ) };
 
   @Override
-  public void paintFigure( GC gc )
+  protected void paintFigure( GC gc )
   {
     if( m_points != null )
     {
