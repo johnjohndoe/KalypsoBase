@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -77,7 +77,7 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
 @SuppressWarnings("restriction")
 public class UrlResolver implements IUrlResolver
 {
-  private Properties m_replaceTokenMap = new Properties();
+  private final Properties m_replaceTokenMap = new Properties();
 
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
@@ -104,10 +104,7 @@ public class UrlResolver implements IUrlResolver
 
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
       {
-        throw new MalformedURLException( 
-            "Protocol 'project:' need a resource url as context"+
-            "\n\turl="+baseURL+
-            "\n\trelativeURL="+relativeURL);
+        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL );
       }
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
