@@ -160,6 +160,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       public void onLayerContentChanged( IChartLayer layer )
       {
         refreshItems( layer );
+
       }
 
       /**
@@ -179,7 +180,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerAdded( IChartLayer layer )
       {
-        refreshItems( m_contentProvider.getParent( layer) );
+        refreshItems( m_contentProvider.getParent( layer ) );
         m_treeViewer.setChecked( layer, true );
         handleCheckStateChanged( layer, true );
       }
