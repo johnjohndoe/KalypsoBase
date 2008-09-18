@@ -133,7 +133,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     if( area < 0.001 )
       return;
 
-    poly = JTSUtilities.cleanPolygon( poly );
+    poly = JTSUtilities.cleanPolygonInteriorRings( poly );
 
     final GM_Object gmGeo = JTSAdapter.wrap( poly );
 
@@ -146,6 +146,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
     CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
     m_dataList.add( dataProvider );
+
   }
 
   /**
