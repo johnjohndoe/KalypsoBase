@@ -130,7 +130,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       return;
 
     double area = poly.getArea();
-    if( area < 0.001 )
+    if( area < 0.1 )
       return;
 
     poly = JTSUtilities.cleanPolygonInteriorRings( poly );
