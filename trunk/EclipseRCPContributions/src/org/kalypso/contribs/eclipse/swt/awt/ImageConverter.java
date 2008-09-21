@@ -92,6 +92,11 @@ public class ImageConverter
     }
   }
 
+  /**
+   * Converts a {@link BufferedImage} into an {@link ImageData} by interpreting the first three bands of the image as
+   * RGB, the 4 (optional) as alpha value.<br>
+   * TODO: check if this is always ok.
+   */
   public static ImageData convertToSWT( final BufferedImage bufferedImage )
   {
     if( bufferedImage.getColorModel() instanceof DirectColorModel )
@@ -100,7 +105,11 @@ public class ImageConverter
       final PaletteData palette = new PaletteData( colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask() );
       final ImageData data = new ImageData( bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette );
       final WritableRaster raster = bufferedImage.getRaster();
-      final int[] pixelArray = new int[3];
+      final int numBands = raster.getNumBands();
+      if( numBands < 3 )
+        throw new IllegalArgumentException( "Image must have at least 3 bands" );
+
+      final int[] pixelArray = new int[numBands];
       for( int y = 0; y < data.height; y++ )
       {
         for( int x = 0; x < data.width; x++ )
@@ -108,6 +117,8 @@ public class ImageConverter
           raster.getPixel( x, y, pixelArray );
           final int pixel = palette.getPixel( new RGB( pixelArray[0], pixelArray[1], pixelArray[2] ) );
           data.setPixel( x, y, pixel );
+          if( numBands > 3 )
+            data.setAlpha( x, y, pixelArray[3] );
         }
       }
       return data;
