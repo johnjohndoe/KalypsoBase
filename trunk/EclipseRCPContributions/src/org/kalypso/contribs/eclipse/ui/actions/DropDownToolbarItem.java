@@ -136,7 +136,6 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
    */
   private final ICommandListener m_commandListener = new ICommandListener()
   {
-    @Override
     public void commandChanged( final CommandEvent commandEvent )
     {
       if( m_currentCommand != null && commandEvent.getCommand() == m_currentCommand.getCommand().getCommand() )
