@@ -440,7 +440,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private final IPageChangingListener m_pageChangingListener = new IPageChangingListener()
   {
-    @Override
     public void handlePageChanging( final PageChangingEvent event )
     {
       if( event.getCurrentPage() == AbstractCalcWizardPage.this )
@@ -450,7 +449,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private final IPageChangedListener m_pageChangedListener = new IPageChangedListener()
   {
-    @Override
     public void pageChanged( final PageChangedEvent event )
     {
       if( event.getSelectedPage() == AbstractCalcWizardPage.this )
@@ -1286,7 +1284,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         final SubMonitor progress = SubMonitor.convert( monitor, taskName, 3000 );

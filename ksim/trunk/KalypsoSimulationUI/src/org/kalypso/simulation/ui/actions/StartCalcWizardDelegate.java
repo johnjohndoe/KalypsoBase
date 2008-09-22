@@ -184,7 +184,6 @@ public class StartCalcWizardDelegate implements IWorkbenchWindowActionDelegate
            * @see org.kalypso.contribs.eclipse.jface.wizard.view.WizardContainerAdapter#onWizardChanged(org.eclipse.jface.wizard.IWizard,
            *      int)
            */
-          @Override
           public void onWizardChanged( final IWizard newwizard, final int reason )
           {
             if( reason == IWizardContainerListener.REASON_FINISHED || reason == IWizardContainerListener.REASON_CANCELED )
