@@ -69,7 +69,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.ui.forms.IMessage#getControl()
      */
-    @Override
     public Control getControl( )
     {
       return null;
@@ -78,7 +77,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.ui.forms.IMessage#getData()
      */
-    @Override
     public Object getData( )
     {
       return m_status;
@@ -87,7 +85,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.ui.forms.IMessage#getKey()
      */
-    @Override
     public Object getKey( )
     {
       return m_key;
@@ -96,7 +93,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.ui.forms.IMessage#getPrefix()
      */
-    @Override
     public String getPrefix( )
     {
       return null;
@@ -105,7 +101,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.jface.dialogs.IMessageProvider#getMessage()
      */
-    @Override
     public String getMessage( )
     {
       return m_status.getMessage();
@@ -114,7 +109,6 @@ public class MessageUtilitites
     /**
      * @see org.eclipse.jface.dialogs.IMessageProvider#getMessageType()
      */
-    @Override
     public int getMessageType( )
     {
       return convertStatusSeverity( m_status.getSeverity() );
