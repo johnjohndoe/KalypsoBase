@@ -143,7 +143,7 @@ public class GetCapabilities implements IOperation
    * Checks for the parameter AcceptVersions and returns it. No POST/XML allowed!
    * 
    * @param request
-   *          The request.
+   *            The request.
    * @return The AcceptVersions parameter or null if not present.
    */
   private String getAcceptVersions( RequestBean request )
@@ -170,7 +170,7 @@ public class GetCapabilities implements IOperation
     List<String> serviceTypeVersion = new LinkedList<String>();
     serviceTypeVersion.add( OGCUtilities.VERSION );
 
-    return OGCUtilities.buildServiceIdentification( null, null, null, OGCUtilities.buildCodeType( "WPS", "ISimulation" ), serviceTypeVersion, null, null );
+    return OGCUtilities.buildServiceIdentification( null, null, null, OGCUtilities.buildCodeType( "kalypso:wps", "ISimulation" ), serviceTypeVersion, null, null );
   }
 
   /**

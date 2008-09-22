@@ -41,6 +41,7 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -217,7 +218,9 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         Object valueFormChoice = null;
         if( complexOutput != null )
         {
-          if( result instanceof File )
+          if( result instanceof URL )
+            valueFormChoice = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( ((URL) result).toExternalForm() ), null, null, null );
+          else if( result instanceof File )
             valueFormChoice = addComplexValueReference( (File) result );
           else if( result instanceof ComplexValueType )
             valueFormChoice = result;

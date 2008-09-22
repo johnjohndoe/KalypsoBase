@@ -142,13 +142,14 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
 
         // TODO Inspect further. Perhaps use QName(XS, "string") and so on. Don't forget the WPSSimulationResultEater
         // and the SimulationJob, if you change this.
-        if( "string".equals( dataType ) )
+        // maybe dataType is xs:...
+        if( dataType.endsWith( "string" ) )
           return DatatypeConverter.parseString( value );
-        else if( "int".equals( dataType ) )
+        else if( dataType.endsWith( "int" ) )
           return DatatypeConverter.parseInt( value );
-        else if( "double".equals( dataType ) )
+        else if( dataType.endsWith( "double" ) )
           return DatatypeConverter.parseDouble( value );
-        else if( "boolean".equals( dataType ) )
+        else if( dataType.endsWith( "boolean" ) )
           return DatatypeConverter.parseBoolean( value );
 
         return null;
