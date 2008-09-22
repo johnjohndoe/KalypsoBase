@@ -109,6 +109,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
 
   }
 
+  @Deprecated
   public void dispose( )
   {
   }
@@ -116,7 +117,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   /**
    * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#copy()
    */
-  @Override
   public ITextStyle copy( )
   {
     return new TextStyle( getHeight(), getFamily(), getTextColor(), getFillColor(), getFontStyle(), getWeight(), getAlpha(), isVisible() );

@@ -47,7 +47,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.kalypso.chart.ext.observation.mapper.MarkerIconMapper;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
@@ -63,7 +62,6 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
   /**
    * @see de.openali.odysseus.chart.factory.provider.IMapperProvider#getMapper()
    */
-  @Override
   public IRetinalMapper getMapper( ) throws ConfigurationException
   {
     LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();
@@ -71,7 +69,7 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
     Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" );
     for( Entry<String, String> e : mapping.entrySet() )
     {
-      ImageLoader il = new ImageLoader();
+      // ImageLoader il = new ImageLoader();
       // ImageData id = ChartFactoryUtilities.loadImageData( getContext(), e.getValue(), 0, 0 );
       ImageDescriptor id = null;
       try

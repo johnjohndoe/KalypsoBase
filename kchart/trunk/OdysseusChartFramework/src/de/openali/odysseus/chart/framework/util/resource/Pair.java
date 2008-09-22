@@ -59,7 +59,6 @@ public class Pair<T1, T2> implements IPair<T1, T2>
   /**
    * @see de.openali.odysseus.chart.framework.util.IPair#getDomain()
    */
-  @Override
   public T1 getDomain( )
   {
     return m_domain;
@@ -68,7 +67,6 @@ public class Pair<T1, T2> implements IPair<T1, T2>
   /**
    * @see de.openali.odysseus.chart.framework.util.IPair#getTarget()
    */
-  @Override
   public T2 getTarget( )
   {
     return m_target;
