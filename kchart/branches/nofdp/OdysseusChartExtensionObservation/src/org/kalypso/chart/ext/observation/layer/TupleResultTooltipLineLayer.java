@@ -22,7 +22,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 /**
  * ATTENTION: This is a hack! Some componente ids are hard coded, so roght now this can not be used outside of Nofdp
  * 
- * @author kuch
+ * @author Dirk Kuch
  * 
  */
 public class TupleResultTooltipLineLayer extends TupleResultLineLayer implements ITooltipChartLayer
