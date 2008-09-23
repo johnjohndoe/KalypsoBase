@@ -8,7 +8,6 @@ import java.util.HashMap;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import net.opengeospatial.ows.CapabilitiesBaseType;
 import net.opengeospatial.ows.GetCapabilitiesType;
 import net.opengeospatial.wps.RequestBaseType;
 
@@ -88,13 +87,15 @@ public class WPSService implements IOGCService
         else if( object instanceof JAXBElement )
         {
           // check type of contained value
-          final JAXBElement< ? > element = (JAXBElement< ? >) object;
-          final Object value = element.getValue();
+          JAXBElement< ? > element = (JAXBElement< ? >) object;
+          Object value = element.getValue();
           if( value instanceof GetCapabilitiesType )
-          {
             parameterValue = "GetCapabilities";
-          }
+
+          // TODO What, if it is another type? Throw an exception?
         }
+
+        // TODO What, if none of this matches? Throw an exception?
       }
       catch( JAXBException e )
       {
@@ -173,7 +174,7 @@ public class WPSService implements IOGCService
 
         if( object instanceof RequestBaseType )
         {
-          final RequestBaseType requestBase = (RequestBaseType) object;
+          RequestBaseType requestBase = (RequestBaseType) object;
           if( !requestBase.getService().equals( "WPS" ) )
           {
             Debug.println( "No, the request was send to another service using the same binding classes." );
@@ -186,8 +187,8 @@ public class WPSService implements IOGCService
         else if( object instanceof JAXBElement )
         {
           // check type of contained value
-          final JAXBElement< ? > element = (JAXBElement< ? >) object;
-          final Object value = element.getValue();
+          JAXBElement< ? > element = (JAXBElement< ? >) object;
+          Object value = element.getValue();
           if( value instanceof GetCapabilitiesType )
           {
             Debug.println( "This is a GetCababilities request. This WPS feels responsible for it." );
@@ -195,6 +196,7 @@ public class WPSService implements IOGCService
           }
 
           Debug.println( "This is a known binding class, but it is not a valid request for this service." );
+          return false;
         }
 
         Debug.println( "No, the request was send to another service using the same binding classes." );
