@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FCVSimpleDateDelegate implements IFCVDelegate
 {

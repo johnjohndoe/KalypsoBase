@@ -45,7 +45,7 @@ import java.io.PrintStream;
 import org.kalypso.contribs.java.io.MyPrintStream;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConsoleHelper
 {

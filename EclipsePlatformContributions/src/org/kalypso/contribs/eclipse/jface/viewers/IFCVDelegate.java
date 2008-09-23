@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ISelection;
  * IFacadeComboViewerDelegate<br>
  * used by FacadeComboViewer
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 
 public interface IFCVDelegate

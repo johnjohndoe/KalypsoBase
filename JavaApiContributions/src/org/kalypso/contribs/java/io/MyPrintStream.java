@@ -48,7 +48,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class MyPrintStream
 {

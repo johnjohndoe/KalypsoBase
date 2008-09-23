@@ -96,7 +96,7 @@ import org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * @author kuch, kurzbach
+ * @author Dirk Kuch, kurzbach
  */
 public class DropDownToolbarItem extends CompoundContributionItem implements IExecutableExtension
 {

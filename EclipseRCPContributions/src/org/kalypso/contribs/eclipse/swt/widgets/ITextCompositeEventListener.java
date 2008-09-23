@@ -41,7 +41,7 @@
 package org.kalypso.contribs.eclipse.swt.widgets;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ITextCompositeEventListener
 {
