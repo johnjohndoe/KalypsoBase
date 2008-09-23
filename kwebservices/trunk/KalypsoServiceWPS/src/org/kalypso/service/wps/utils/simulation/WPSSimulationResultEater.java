@@ -122,13 +122,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * The constructor.
    * 
    * @param processDescription
-   *            The process description.
+   *          The process description.
    * @param execute
-   *            The execute request.
+   *          The execute request.
    * @param tmpDir
-   *            The temporary directory for that simulation.
+   *          The temporary directory for that simulation.
    * @param resultDir
-   *            The FileObject contains information, where the results should be put, so that the client can read them.
+   *          The FileObject contains information, where the results should be put, so that the client can read them.
    */
   public WPSSimulationResultEater( final ProcessDescriptionType processDescription, final Execute execute, final File tmpDir, final FileObject resultDir ) throws SimulationException
   {
@@ -223,21 +223,22 @@ public class WPSSimulationResultEater implements ISimulationResultEater
           else if( result instanceof File )
             valueFormChoice = addComplexValueReference( (File) result );
           else if( result instanceof ComplexValueType )
-            valueFormChoice = result;
+            valueFormChoice = result;// TODO The client can send now complex data, so it should be done here simalarly
           else
-            throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a File (ComplexValueReference) or a ComplexValueType ...", null );
+            throw new SimulationException( "The type of the output with the identifier '" + clientKey
+                + "' must be an URL (ComplexValueReference), a File (ComplexValueReference) or a ComplexValueType ...", null );
         }
         else if( literalOutput != null )
         {
           final String value = literalOutput.getDataType().getValue();
-          if( "string".equals( value ) )
+          if( value.endsWith( "string" ) )
           {
             if( result instanceof String )
               valueFormChoice = addLiteralValueType( result );
             else
               throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a String (Literal) ...: " + result, null );
           }
-          else if( "int".equals( value ) )
+          else if( value.endsWith( "int" ) )
           {
             if( result instanceof Integer )
               valueFormChoice = addLiteralValueType( result );
@@ -245,14 +246,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
               throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be an Integer (Literal) ...", null );
 
           }
-          else if( "double".equals( value ) )
+          else if( value.endsWith( "double" ) )
           {
             if( result instanceof Double )
               valueFormChoice = addLiteralValueType( result );
             else
               throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a Double (Literal) ...", null );
           }
-          else if( "boolean".equals( value ) )
+          else if( value.endsWith( "boolean" ) )
           {
             if( result instanceof String )
               valueFormChoice = addLiteralValueType( result );
@@ -293,7 +294,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * This function will create ComplexValueReference with the given file and copies it directly to the result directory.
    * 
    * @param sourceFile
-   *            The file to reference in the ComplexValueReference.
+   *          The file to reference in the ComplexValueReference.
    * @return A ComplexValueReference with the given file.
    */
   private ComplexValueReference addComplexValueReference( final File sourceFile ) throws Exception
@@ -341,7 +342,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * This function will add create with the given object (String, Integer, Double, Boolean) a LiteralValueType.
    * 
    * @param result
-   *            One of the types String, Integer, Double and Boolean.
+   *          One of the types String, Integer, Double and Boolean.
    * @return A LiteralValueType with the given value.
    */
   private LiteralValueType addLiteralValueType( final Object result )
@@ -382,7 +383,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * Indexes the output values with their id.
    * 
    * @param processDescription
-   *            The process description, containing the input data.
+   *          The process description, containing the input data.
    * @return The indexed map.
    */
   private Map<String, OutputDescriptionType> index( final ProcessDescriptionType processDescription )
@@ -402,7 +403,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * This function indexes the expected output from the client with their id.
    * 
    * @param execute
-   *            The execute request contains the ouput expected from the client.
+   *          The execute request contains the ouput expected from the client.
    * @return The indexed map.
    */
   private Map<String, OutputDefinitionType> indexClient( final Execute execute )
