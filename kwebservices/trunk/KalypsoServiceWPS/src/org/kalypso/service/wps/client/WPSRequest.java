@@ -550,7 +550,7 @@ public class WPSRequest
       final List<Object> value = new ArrayList<Object>( 1 );
       value.add( inputValue );
 
-      /* Build the complex value reference. */
+      /* Build the complex value. */
       final CodeType code = OGCUtilities.buildCodeType( null, inputId );
       final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
       final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
