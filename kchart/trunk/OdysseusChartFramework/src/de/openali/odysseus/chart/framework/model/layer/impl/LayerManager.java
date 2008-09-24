@@ -96,7 +96,10 @@ public class LayerManager implements ILayerManager
   public void moveLayerToPosition( IChartLayer layer, int position )
   {
     m_layers.remove( layer );
-    m_layers.add( position, layer );
+    if( position < m_layers.size() )
+      m_layers.add( position, layer );
+    else
+      m_layers.add( layer );
     m_handler.fireLayerMoved( layer );
   }
 
@@ -104,7 +107,7 @@ public class LayerManager implements ILayerManager
   {
     for( final IChartLayer layer : m_layers )
     {
-      if(layer!=null&& layer.getId().equals( id ) )
+      if( layer != null && layer.getId().equals( id ) )
       {
         return layer;
       }

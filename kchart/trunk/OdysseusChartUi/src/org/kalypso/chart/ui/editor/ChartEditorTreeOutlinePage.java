@@ -118,7 +118,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_contentProvider = new ChartEditorTreeContentProvider( m_chartPart.getChartComposite().getChartModel() );
     m_treeViewer.setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( new ChartTreeLabelProvider( m_chartPart ) );
-
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
@@ -151,6 +150,15 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
     AbstractLayerManagerEventListener cmel = new AbstractLayerManagerEventListener()
     {
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerMoved( IChartLayer layer )
+      {
+        refreshItems( layer );
+      }
 
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de
