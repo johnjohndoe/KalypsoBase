@@ -129,7 +129,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.RestoreSelectionHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -160,6 +160,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.mapeditor.MapPartHelper;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -364,7 +365,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private GisTemplateMapModell m_mapModell = null;
 
-  private MapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   GM_Envelope m_wishBoundingBox;
 
@@ -670,9 +671,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
     m_mapModell = new GisTemplateMapModell( context, crs, mapFile.getProject(), m_selectionManager );
     m_mapModell.createFromTemplate( gisview );
-    m_mapPanel = new MapPanel( this, m_selectionManager );
-
-    m_mapPanel.addSelectionChangedListener( this );
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
 
@@ -691,16 +689,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( manager != null )
       manager.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Composite mapComposite = new Composite( mapAndToolbar, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
-    mapComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
-
-    virtualFrame.setVisible( true );
-    m_mapPanel.setVisible( true );
-    virtualFrame.add( m_mapPanel );
+    m_mapPanel = MapPartHelper.createMapPanel( mapAndToolbar, SWT.BORDER, new GridData( SWT.FILL, SWT.FILL, true, true ), this, m_selectionManager );
+    m_mapPanel.addSelectionChangedListener( this );
 
     m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.repaint();
+    m_mapPanel.repaintMap();
 
     if( manager != null )
       fillMapToolbar( manager );
@@ -1345,7 +1338,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void selectFeaturesInMap( final String[] fids, final boolean noDefaultSelection, final boolean forceSelectFeatureFromMap )
   {
     final IFeatureSelectionManager selectionManager = m_selectionManager;
-    final MapPanel mapPanel = m_mapPanel;
+    final IMapPanel mapPanel = m_mapPanel;
     final IMapModell mapModell = getMapModell();
 
     // this may happen, if the page was never created
