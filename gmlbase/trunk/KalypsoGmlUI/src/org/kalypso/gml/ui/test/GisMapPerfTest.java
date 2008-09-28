@@ -54,18 +54,20 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.ThemePainter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -77,11 +79,11 @@ import org.xml.sax.SAXException;
 public class GisMapPerfTest extends TestCase
 {
   public static String[][] RESOURCES = { //
-  { "dgm2m.zip", "dgm2m.gmt", "dgm2m.gml" }, //
-      { "points.zip", "points.gmt", "Shapes/point" }, //
-      { "tin.zip", "tin.gmt", "tin_DEPTH.gml" }, //
-      { "tin_isolines.zip", "tin.gmt", "tin_DEPTH.gml" }, //
-      { "polyWithHoles.zip", "poly.gmt", "Shapes/polygon" } //
+    { "dgm2m.zip", "dgm2m.gmt", "dgm2m.gml" }, //
+    { "points.zip", "points.gmt", "Shapes/point" }, //
+    { "tin.zip", "tin.gmt", "tin_DEPTH.gml" }, //
+    { "tin_isolines.zip", "tin.gmt", "tin_DEPTH.gml" }, //
+    { "polyWithHoles.zip", "poly.gmt", "Shapes/polygon" } //
   };
 
   public void testZips( ) throws Exception
@@ -124,13 +126,11 @@ public class GisMapPerfTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "Map data was loaded: " );
 
-    final MapPanel panel = new MapPanel( null, featureSelectionManager2 );
+    final IMapPanel panel = new MapPanel( null, featureSelectionManager2 );
     panel.setMapModell( modell );
     panel.setBoundingBox( modell.getFullExtentBoundingBox() );
     final GeoTransform transform = panel.getProjection();
     transform.setDestRect( 0, 0, 1024, 1024, null );
-
-    final ThemePainter themePainter = new ThemePainter( panel );
 
     final BufferedImage image = new BufferedImage( 1024, 1024, BufferedImage.TYPE_INT_ARGB );
 
@@ -138,7 +138,7 @@ public class GisMapPerfTest extends TestCase
     {
       logger.takeInterimTime();
 
-      paintPanel( image, themePainter );
+      paintPanel( image, panel );
 
       logger.takeInterimTime();
       logger.printCurrentInterim( "Rendered map #" + i + ": " );
@@ -153,14 +153,18 @@ public class GisMapPerfTest extends TestCase
     panel.dispose();
   }
 
-  private void paintPanel( final BufferedImage image, final ThemePainter painter ) throws CoreException
+  private void paintPanel( final BufferedImage image, final IMapPanel panel ) throws CoreException
   {
     Graphics2D gr = null;
     try
     {
       gr = (Graphics2D) image.getGraphics();
 
-      painter.paintThemes( gr, false, null );
+      final IMapModell mapModell = panel.getMapModell();
+      final GM_Envelope bbox = panel.getBoundingBox();
+      final GeoTransform p = panel.getProjection();
+      final double scale = panel.getCurrentScale();
+      mapModell.paint( gr, p, bbox, scale, false, new NullProgressMonitor() );
     }
     finally
     {

@@ -102,6 +102,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
@@ -122,7 +123,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -130,7 +131,6 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider;
@@ -166,7 +166,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 {
   private static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
   {
-    public boolean decide( IKalypsoTheme theme )
+    public boolean decide( final IKalypsoTheme theme )
     {
       if( !(theme instanceof IKalypsoFeatureTheme) )
         return false;
@@ -178,8 +178,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( coveragesFeature == null )
         return false;
 
-      IRelationType targetPropertyType = featureList.getParentFeatureTypeProperty();
-      IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
+      final IRelationType targetPropertyType = featureList.getParentFeatureTypeProperty();
+      final IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
 
       return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
       // return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
@@ -197,7 +197,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
      *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeActivated( IMapModell source, IKalypsoTheme previouslyActive, IKalypsoTheme nowActive )
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
       refreshThemeCombo();
     }
@@ -207,7 +207,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       refreshThemeCombo();
     }
@@ -217,7 +217,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
      *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
-    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
+    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       refreshThemeCombo();
     }
@@ -256,13 +256,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final ModellEventListener m_modellistener = new ModellEventListener()
   {
-    public void onModellChange( ModellEvent modellEvent )
+    public void onModellChange( final ModellEvent modellEvent )
     {
       refreshControl();
     }
   };
 
-  private Action[] m_customActions;
+  private final Action[] m_customActions;
 
   /**
    * The constructor.
@@ -293,7 +293,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * @param tooltip
    *            The tooltip of the widget.
    */
-  public CoverageManagementWidget( final String name, final String tooltip, Action[] customActions )
+  public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions )
   {
     super( name, tooltip );
 
@@ -302,10 +302,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -515,7 +515,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     m_themeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleThemeComboSelected( event );
@@ -561,7 +560,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_themeCombo == null || m_themeCombo.getControl().isDisposed() )
       return;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
 
@@ -632,7 +631,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     panel.setSize( size );
     sc.setMinHeight( size.y );
 
-    getMapPanel().repaint();
+    getMapPanel().repaintMap();
   }
 
   /**
@@ -769,15 +768,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Speichere Styles", styles.length );
 
-        for( UserStyle userStyle : styles )
+        for( final UserStyle userStyle : styles )
         {
           if( userStyle instanceof GisTemplateUserStyle )
           {
-            GisTemplateUserStyle style = (GisTemplateUserStyle) userStyle;
+            final GisTemplateUserStyle style = (GisTemplateUserStyle) userStyle;
 
             style.save( new SubProgressMonitor( monitor, 1 ) );
             style.fireStyleChanged();
@@ -937,8 +936,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       return;
 
     /* Add custom actions. */
-    for( int i = 0; i < customActions.length; i++ )
-      createButton( toolkit, parent, customActions[i] );
+    for( final Action customAction : customActions )
+      createButton( toolkit, parent, customAction );
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
@@ -947,7 +946,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Button button = toolkit.createButton( parent, null, SWT.PUSH );
 
     /* If an image is set in the action, use it for the button. */
-    ImageDescriptor imageDescriptor = action.getImageDescriptor();
+    final ImageDescriptor imageDescriptor = action.getImageDescriptor();
     if( imageDescriptor != null )
     {
       final Image image = imageDescriptor.createImage( true );
@@ -994,11 +993,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( surface.getEnvelope(), 1.05 );
       getMapPanel().setBoundingBox( scaledBox );
     }
-    catch( GeoGridException e )
+    catch( final GeoGridException e )
     {
       e.printStackTrace();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -1057,7 +1056,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           /* save the model */
           // we cannot allow the model not to be saved, as the underlying files will then not be deleted
           theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
-          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
           final CommandableWorkspace workspace = theme.getWorkspace();
           pool.saveObject( workspace, new NullProgressMonitor() );
 
@@ -1100,7 +1099,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
@@ -1118,7 +1117,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           theme.postCommand( command, refreshRunnable );
 
           /* save the model */
-          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
           pool.saveObject( workspace, monitor );
 
           return Status.OK_STATUS;
@@ -1207,11 +1206,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         g.setColor( Color.RED );
         g.drawRect( x, y, width, height );
       }
-      catch( GeoGridException e )
+      catch( final GeoGridException e )
       {
         e.printStackTrace();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
