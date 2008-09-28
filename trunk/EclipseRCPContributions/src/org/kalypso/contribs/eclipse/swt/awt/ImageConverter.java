@@ -24,20 +24,22 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 /**
+ * Some adaptions made by:
+ * 
  * @author Gernot Belger
  */
 public class ImageConverter
 {
   public static BufferedImage convertToAWT( final ImageData data )
   {
-    ColorModel colorModel = null;
     final PaletteData palette = data.palette;
     if( palette.isDirect )
     {
-      colorModel = new DirectColorModel( data.depth, palette.redMask, palette.greenMask, palette.blueMask );
+      if( data.getTransparencyType() != 0 )
+        System.out.println( "Autsch!" );
+
+      final ColorModel colorModel = new DirectColorModel( data.depth, palette.redMask, palette.greenMask, palette.blueMask );
       final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-// final BufferedImage bufferedImage = new BufferedImage( data.width, data.height, BufferedImage.TYPE_INT_ARGB );
-      colorModel = bufferedImage.getColorModel();
 
       final WritableRaster raster = bufferedImage.getRaster();
       final int[] pixelArray = new int[3];
@@ -55,41 +57,37 @@ public class ImageConverter
       }
       return bufferedImage;
     }
-    else
+
+    /* Palette is not direct */
+    final RGB[] rgbs = palette.getRGBs();
+    final byte[] red = new byte[rgbs.length];
+    final byte[] green = new byte[rgbs.length];
+    final byte[] blue = new byte[rgbs.length];
+    for( int i = 0; i < rgbs.length; i++ )
     {
-      final RGB[] rgbs = palette.getRGBs();
-      final byte[] red = new byte[rgbs.length];
-      final byte[] green = new byte[rgbs.length];
-      final byte[] blue = new byte[rgbs.length];
-      for( int i = 0; i < rgbs.length; i++ )
-      {
-        final RGB rgb = rgbs[i];
-        red[i] = (byte) rgb.red;
-        green[i] = (byte) rgb.green;
-        blue[i] = (byte) rgb.blue;
-      }
-      if( data.transparentPixel != -1 )
-      {
-        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue, data.transparentPixel );
-      }
-      else
-      {
-        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
-      }
-      final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-      final WritableRaster raster = bufferedImage.getRaster();
-      final int[] pixelArray = new int[1];
-      for( int y = 0; y < data.height; y++ )
-      {
-        for( int x = 0; x < data.width; x++ )
-        {
-          final int pixel = data.getPixel( x, y );
-          pixelArray[0] = pixel;
-          raster.setPixel( x, y, pixelArray );
-        }
-      }
-      return bufferedImage;
+      final RGB rgb = rgbs[i];
+      red[i] = (byte) rgb.red;
+      green[i] = (byte) rgb.green;
+      blue[i] = (byte) rgb.blue;
     }
+    ColorModel colorModel;
+    if( data.transparentPixel != -1 )
+      colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue, data.transparentPixel );
+    else
+      colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
+    final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+    final WritableRaster raster = bufferedImage.getRaster();
+    final int[] pixelArray = new int[1];
+    for( int y = 0; y < data.height; y++ )
+    {
+      for( int x = 0; x < data.width; x++ )
+      {
+        final int pixel = data.getPixel( x, y );
+        pixelArray[0] = pixel;
+        raster.setPixel( x, y, pixelArray );
+      }
+    }
+    return bufferedImage;
   }
 
   /**
