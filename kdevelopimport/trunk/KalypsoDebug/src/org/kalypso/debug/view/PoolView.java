@@ -172,7 +172,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
         {
           final KeyInfo info = (KeyInfo) ((IStructuredSelection) selection).getFirstElement();
 
-          final IPoolListener[] listeners = info.getListeners();
+          final IPoolListener[] listeners = info.getPoolListeners();
 
           final LabelProvider labelProvider = new LabelProvider()
           {
@@ -283,7 +283,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       @Override
       public String getValue( final KeyInfo info )
       {
-        return "" + info.getListeners().length;
+        return "" + info.getPoolListeners().length;
       }
     } );
 
