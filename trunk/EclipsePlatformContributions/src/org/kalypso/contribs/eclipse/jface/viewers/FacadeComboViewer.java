@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Composite;
  * <br>
  * IFacadeComboViewerDelegate handles the processing of your input data and default selection of your combobox
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FacadeComboViewer
 {

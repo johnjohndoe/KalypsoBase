@@ -64,11 +64,11 @@ public final class Arrays
    * or subclasses will be accepted.
    * 
    * @param source
-   *            object from this source will be added to dest if they are instances of the desiredclass
+   *          object from this source will be added to dest if they are instances of the desiredclass
    * @param dest
-   *            destination
+   *          destination
    * @param desiredclass
-   *            instances of this class or subclasses of it will be added to dest
+   *          instances of this class or subclasses of it will be added to dest
    */
   @SuppressWarnings("unchecked")
   public static void addAllOfClass( final Collection source, final Collection dest, final Class< ? > desiredclass )
@@ -84,7 +84,7 @@ public final class Arrays
    * creates an array of raw ints with a given array of Integer Objects by copying the int values.
    * 
    * @throws IllegalArgumentException
-   *             if argument is null
+   *           if argument is null
    */
   public static int[] rawIntegers( final Integer[] objDs )
   {
@@ -103,7 +103,7 @@ public final class Arrays
    * creates an array of raw doubles with a given array of Double Objects by copying the double values
    * 
    * @throws IllegalArgumentException
-   *             if argument is null
+   *           if argument is null
    */
   public static double[] rawDoubles( final Double[] objDs )
   {
@@ -122,7 +122,7 @@ public final class Arrays
    * creates an array of object doubles with a given array of doubles by copying the double values
    * 
    * @throws IllegalArgumentException
-   *             if argument is null
+   *           if argument is null
    */
   public static Double[] objectDoubles( final double[] rawDs )
   {
@@ -143,7 +143,6 @@ public final class Arrays
    * <pre>
    *  Call example:  Double[] ds = Arrays.castArray(someArray, new Double[0]);
    * </pre>
-   * 
    * <p>
    * NOTE: the type of the elements in someArray must be the same as the type of the elements of the desired array.
    * </p>
@@ -275,10 +274,10 @@ public final class Arrays
    * the array if it is not already contained.
    * 
    * @param arr
-   *            array to be truncated, must be sorted. Unpredictable results if not sorted
+   *          array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
-   *            the value that will serve as upper bound when truncating. It will be added into the resulting array if
-   *            it is not already inside
+   *          the value that will serve as upper bound when truncating. It will be added into the resulting array if it
+   *          is not already inside
    */
   public static double[] truncSmaller( final double[] arr, final double value )
   {
@@ -314,10 +313,10 @@ public final class Arrays
    * the array if it is not already contained.
    * 
    * @param arr
-   *            array to be truncated, must be sorted. Unpredictable results if not sorted
+   *          array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
-   *            the value that will serve as lower bound when truncating. It will be added into the resulting array if
-   *            it is not already inside
+   *          the value that will serve as lower bound when truncating. It will be added into the resulting array if it
+   *          is not already inside
    */
   public static double[] truncBigger( final double[] arr, final double value )
   {
@@ -439,7 +438,7 @@ public final class Arrays
    * @param a
    * @param b
    * @param lengthB
-   *            the length of b to merge
+   *          the length of b to merge
    */
   public static byte[] append( final byte[] a, final byte[] b, final int lengthB )
   {
@@ -457,7 +456,7 @@ public final class Arrays
    * @param a
    * @param b
    * @param length
-   *            compare till this position
+   *          compare till this position
    */
   public static boolean equals( final byte[] a, final byte[] b, final int length )
   {
@@ -471,7 +470,7 @@ public final class Arrays
 
   /**
    * @param array
-   *            the data
+   *          the data
    * @param fromPos
    * @param toPos
    */
@@ -504,11 +503,11 @@ public final class Arrays
    * Concatenate the two given arrays in a new one containing all of the elements.
    * 
    * @param array1
-   *            first array to append
+   *          first array to append
    * @param array2
-   *            second array to append
+   *          second array to append
    * @param type
-   *            type of the array to create
+   *          type of the array to create
    * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
    */
   public static <T extends Object> T[] concat( final T[] array1, final T[] array2, final T[] type )
@@ -524,9 +523,9 @@ public final class Arrays
    * Return new array containing the given one with the given object appended at the end of it.
    * 
    * @param object
-   *            object to append to array
+   *          object to append to array
    * @param type
-   *            type of the array to create
+   *          type of the array to create
    * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
    */
   public static <T extends Object> T[] concat( final T[] array, final T object, final T[] type )

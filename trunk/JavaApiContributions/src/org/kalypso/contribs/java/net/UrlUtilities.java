@@ -68,9 +68,9 @@ public class UrlUtilities implements IUrlResolver
    * </p>
    * 
    * @param baseURL
-   *            URL, to which the relative url will be resolved
+   *          URL, to which the relative url will be resolved
    * @param relativeURL
-   *            a string designating an absolute or relative URL
+   *          a string designating an absolute or relative URL
    * @return if relativeURL is relative, return new URL( baseURL, relativeURL ), else return new URL( relativeURL )
    * @throws MalformedURLException
    */
