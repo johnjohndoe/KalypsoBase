@@ -56,13 +56,13 @@ import org.eclipse.ui.navigator.ICommonContentProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolListener;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
