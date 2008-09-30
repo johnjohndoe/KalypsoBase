@@ -70,6 +70,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
       IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
       IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
 
+      if( dopDomain == null || dopTarget == null )
+        return;
+
       for( int i = 0; i < result.size(); i++ )
       {
         final Object domainValue = domainValues[i];

@@ -59,11 +59,13 @@ public class DragEditHandler implements IChartDragHandler
   public void mouseUp( final MouseEvent e )
   {
     if( (m_editInfo != null) && (m_editInfo.m_layer instanceof IEditableChartLayer) )
+
     {
       IEditableChartLayer layer = (IEditableChartLayer) m_editInfo.m_layer;
       final Point editPoint = new Point( e.x, e.y );
       layer.commitDrag( editPoint, m_editInfo );
       m_clickInfo = null;
+
       m_editInfo = null;
       final PlotCanvas plot = m_chart.getPlot();
       plot.setIsEditing( false );
@@ -81,6 +83,7 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseMove( final MouseEvent e )
   {
+
     if( m_clickInfo == null || m_clickInfo.m_layer == null )
       return;
     final boolean isLocked = m_clickInfo.m_layer instanceof IEditableChartLayer ? ((IEditableChartLayer) m_clickInfo.m_layer).isLocked() : true;
