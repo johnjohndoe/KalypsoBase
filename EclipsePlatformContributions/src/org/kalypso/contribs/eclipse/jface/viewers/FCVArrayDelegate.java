@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FCVArrayDelegate implements IFCVDelegate
 {

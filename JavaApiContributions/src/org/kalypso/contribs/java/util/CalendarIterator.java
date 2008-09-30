@@ -44,7 +44,6 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /**
- * 
  * @author doemming
  */
 public class CalendarIterator implements Iterator<Calendar>
@@ -55,15 +54,15 @@ public class CalendarIterator implements Iterator<Calendar>
 
   private final int m_amount;
 
-  private Calendar m_currentCal;
+  private final Calendar m_currentCal;
 
-  private Calendar m_start;
+  private final Calendar m_start;
 
   public CalendarIterator( final Calendar start, final Calendar end, final int calendarField, final int amount )
   {
-    m_start = (Calendar)start.clone();
-    m_currentCal = (Calendar)start.clone();
-    m_end = (Calendar)end.clone();
+    m_start = (Calendar) start.clone();
+    m_currentCal = (Calendar) start.clone();
+    m_end = (Calendar) end.clone();
     m_calendarField = calendarField;
     m_amount = amount;
   }
@@ -71,7 +70,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#remove()
    */
-  public void remove()
+  public void remove( )
   {
     throw new UnsupportedOperationException( getClass().getName() + " does not support remove()" );
   }
@@ -79,7 +78,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#hasNext()
    */
-  public boolean hasNext()
+  public boolean hasNext( )
   {
     return !m_currentCal.after( m_end );
   }
@@ -87,7 +86,7 @@ public class CalendarIterator implements Iterator<Calendar>
   /**
    * @see java.util.Iterator#next()
    */
-  public Calendar next()
+  public Calendar next( )
   {
     final Calendar result = (Calendar) m_currentCal.clone();
     // iterate the member
@@ -97,12 +96,12 @@ public class CalendarIterator implements Iterator<Calendar>
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return "current : " + m_currentCal.getTime().toString() + "\n" + "    end : " + m_end.getTime().toString();
   }
 
-  public int size()
+  public int size( )
   {
     int result = 0;
     for( final Iterator<Calendar> iterator = new CalendarIterator( m_start, m_end, m_calendarField, m_amount ); iterator.hasNext(); iterator.next() )
