@@ -12,6 +12,7 @@ import org.kalypso.gml.processes.raster2vector.ringtree.RingTreeElement;
 import org.kalypso.gml.processes.raster2vector.ringtree.RingTreeWalker;
 import org.kalypso.jts.CoordOrientation;
 import org.kalypso.jts.CoordOrientationException;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -122,11 +123,17 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    * @param poly
    * @throws GM_Exception
    */
-  private void appendFeature( final Interval interval, final Polygon poly ) throws GM_Exception
+  private void appendFeature( final Interval interval, Polygon poly ) throws GM_Exception
   {
     // first and last intervals will not added
     if( ArrayUtils.indexOf( m_intervals, interval ) == 0 || ArrayUtils.indexOf( m_intervals, interval ) == m_intervals.length - 1 )
       return;
+
+    double area = poly.getArea();
+    if( area < 0.1 )
+      return;
+
+    poly = JTSUtilities.cleanPolygonInteriorRings( poly );
 
     final GM_Object gmGeo = JTSAdapter.wrap( poly );
 
@@ -139,6 +146,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
     CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
     m_dataList.add( dataProvider );
+
   }
 
   /**

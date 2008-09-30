@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 /**
  * extracted from RectifiedGridCoverageImportWizard
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWithProgress
 {
