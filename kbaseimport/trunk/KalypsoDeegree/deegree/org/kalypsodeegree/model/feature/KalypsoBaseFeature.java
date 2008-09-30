@@ -54,7 +54,9 @@ public interface KalypsoBaseFeature extends BaseFeature
   // TODO: put deprecated comments into javadoc (@deprecated)
 
   @Deprecated
-  // use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
+  /*
+   * use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
+   */
   GM_Object getDefaultGeometryProperty( );
 
   @Deprecated
