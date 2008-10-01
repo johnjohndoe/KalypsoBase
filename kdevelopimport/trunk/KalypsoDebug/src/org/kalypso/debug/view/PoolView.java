@@ -65,11 +65,11 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.core.util.pool.IPoolListener;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.KeyInfo;
-import org.kalypso.util.pool.ResourcePool;
 
 /**
  * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
