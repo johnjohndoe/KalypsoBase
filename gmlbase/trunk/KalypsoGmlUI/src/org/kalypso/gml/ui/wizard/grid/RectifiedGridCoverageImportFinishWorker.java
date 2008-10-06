@@ -41,35 +41,24 @@
 package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.dialogs.IOverwriteQuery;
-import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
-import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.grid.ConvertAscii2Binary;
-import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -99,7 +88,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   private final IContainer m_outputGridFolder;
 
   private ICoverage m_newCoverage;
-  
+
   private final String m_sourceCRS;
 
   public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder, final String sourceCRS )
@@ -120,33 +109,20 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Rasterdaten Import", 100 );
 
-    File convertedGridFile = null;
+    final File convertedGridFile = null;
     try
     {
       monitor.subTask( "- importiere Daten in den Arbeitsbereich" );
 
-      try
-      {
-        /* Convert .asc files to .bin files if necessary */
-        convertedGridFile = convertToBinary( m_inputGridFile, progress.newChild( 70 ) );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, "Fehler beim ASC-BIN Konvertieren: " + e.getLocalizedMessage() );
-      }
-
-      final IStatus importStatus = importExternalFiles( progress.newChild( 10 ), convertedGridFile );
-      if( !importStatus.isOK() )
-        return importStatus;
+      final File[] convertedGrids = ImportGridUtilities.convertGrids( new File[] { m_inputGridFile }, m_sourceCRS, progress.newChild( 70 ) );
+      final IFile[] importedFiles = ImportGridUtilities.importExternalFiles( m_shell, convertedGrids, m_outputGridFolder, progress.newChild( 10 ) );
 
       /* Fill workspace */
       final IContainer container = m_gmlFile == null ? null : m_gmlFile.getParent();
 
       final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
 
-      final IFile outputGridFile = m_outputGridFolder.getFile( new Path( convertedGridFile.getName() ) );
-      m_newCoverage = createGmlWorkspace( outputGridFile, coverages, progress.newChild( 20 ) );
+      m_newCoverage = createGmlWorkspace( importedFiles[0], coverages, progress.newChild( 20 ) );
 
       return Status.OK_STATUS;
     }
@@ -204,54 +180,6 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     return newCoverage;
-  }
-
-  private IStatus importExternalFiles( final IProgressMonitor monitor, final File gridFile ) throws InvocationTargetException, InterruptedException
-  {
-    final Shell shell = m_shell;
-    final IOverwriteQuery overwriteQuery = new IOverwriteQuery()
-    {
-      public String queryOverwrite( final String pathString )
-      {
-        if( MessageDialog.openQuestion( shell, "Datei import", "Die Datei " + pathString + " exisitert bereits.\nSoll Sie überschrieben werden?" ) )
-          return IOverwriteQuery.YES;
-        return IOverwriteQuery.NO;
-      }
-    };
-
-    final List<File> fileList = new ArrayList<File>( 1 );
-    fileList.add( gridFile );
-    final ImportOperation operation = new ImportOperation( m_outputGridFolder.getFullPath(), FileSystemStructureProvider.INSTANCE, overwriteQuery, fileList );
-    operation.setOverwriteResources( false );
-    operation.setCreateContainerStructure( false );
-    operation.setContext( m_shell );
-    operation.run( monitor );
-
-    return operation.getStatus();
-  }
-
-  /**
-   * Special: converts any .asc to an internal binary format. Replaces these occurences in the list of files.
-   * 
-   * @param files2delete
-   *            This list get filled with the newly generated temp files.
-   */
-  private File convertToBinary( final File gridFile, final IProgressMonitor monitor ) throws IOException
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, 1 );
-
-    if( gridFile.getName().toLowerCase().endsWith( ".asc" ) || gridFile.getName().toLowerCase().endsWith( ".asg" ) )
-    {
-      final File binFile = File.createTempFile( gridFile.getName(), ".bin" );
-      binFile.deleteOnExit();
-
-      final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURL(), binFile, 2, m_sourceCRS );
-      converter.doConvert( progress.newChild( 1 ) );
-
-      return binFile;
-    }
-
-    return gridFile;
   }
 
   public ICoverage getNewCoverage( )

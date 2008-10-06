@@ -119,9 +119,6 @@ public class PageSelectGeodataFile extends WizardPage
   {
     super( "importGeoData" );
     m_creationPage = creationPage;
-
-    setTitle( "Rasterdaten-Import" );
-    setDescription( "Wählen Sie aus, welche Rasterdatei importiert werden soll." );
   }
 
   /**
@@ -132,17 +129,19 @@ public class PageSelectGeodataFile extends WizardPage
     setPageComplete( false );
 
     final Composite container = new Composite( parent, SWT.NULL );
-    container.setLayout( new GridLayout( 2, false ) );
+    container.setLayout( new GridLayout() );
     setControl( container );
 
-    final Label lFiller = new Label( container, SWT.NONE );
-    lFiller.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    final Group fileGroup = new Group( container, SWT.NONE );
+    fileGroup.setLayout( new GridLayout( 2, false ) );
+    fileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    fileGroup.setText( "Rasterdatei" );
 
-    final Label label = new Label( container, SWT.NONE );
-    label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    label.setText( "Selektieren Sie die Rasterdatei, die importiert werden soll:" );
+// final Label label = new Label( container, SWT.NONE );
+// label.setLayoutData( new GridData( GridData.BEGINNING, GridData.CENTER, false, false, 2, 0 ) );
+// label.setText( "Selektieren Sie die Rasterdatei, die importiert werden soll:" );
 
-    m_tFile = new Text( container, SWT.BORDER );
+    m_tFile = new Text( fileGroup, SWT.BORDER );
     m_tFile.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -163,7 +162,7 @@ public class PageSelectGeodataFile extends WizardPage
     } );
     m_tFile.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    m_buttonFile = new Button( container, SWT.NONE );
+    m_buttonFile = new Button( fileGroup, SWT.NONE );
     m_buttonFile.setText( "..." );
     m_buttonFile.addSelectionListener( new SelectionAdapter()
     {
@@ -175,20 +174,9 @@ public class PageSelectGeodataFile extends WizardPage
     } );
 
     /* Coordinate system combo */
-    final Composite crsContainer = new Composite( container, SWT.NULL );
-    final GridLayout crsGridLayout = new GridLayout();
-    crsGridLayout.numColumns = 1;
-    crsContainer.setLayout( crsGridLayout );
-
-    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    crsGridData.horizontalSpan = 3;
-    crsContainer.setLayoutData( crsGridData );
-
-    m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
+    m_crsPanel = new CRSSelectionPanel( container, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_crsPanel.setToolTipText( "Koordinatensystem der Raster-Datei" );
-
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
@@ -202,13 +190,10 @@ public class PageSelectGeodataFile extends WizardPage
 
     } );
 
-    final Label lSpacer = new Label( container, SWT.NONE );
-    lSpacer.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
-
     m_detailsGroup = new Group( container, SWT.NONE );
     m_detailsGroup.setText( "Details" );
     m_detailsGroup.setLayout( new GridLayout( 2, false ) );
-    m_detailsGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    m_detailsGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_detailsGroup.setVisible( false );
 
     // VectorXx
@@ -323,7 +308,7 @@ public class PageSelectGeodataFile extends WizardPage
     verifier = new GridFileVerifier();
     try
     {
-      if( !verifier.verify( toFile.toURL() ) )
+      if( !verifier.verify( toFile.toURI().toURL() ) )
       {
         setMessage( null );
         setErrorMessage( "Please select a valid geodata file " );
@@ -349,7 +334,7 @@ public class PageSelectGeodataFile extends WizardPage
     {
       try
       {
-        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), m_crs );
+        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURI().toURL(), m_crs );
       }
       catch( final MalformedURLException e )
       {
@@ -450,15 +435,12 @@ public class PageSelectGeodataFile extends WizardPage
   private IPath browse( )
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-
-    dialog.setFilterExtensions( new String[] { "*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat", "*.tif", "*.jpg", "*.gif", "*.asc;*.dat;*.asg" } );
-    dialog.setFilterNames( new String[] { "All supported files", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF image (*.gif)", "ASCII grid (*.asc, *.dat, *.asg)" } );
+    dialog.setFilterExtensions( ImportGridUtilities.SUPPORTED_GRID_FILE_PATTERNS );
+    dialog.setFilterNames( ImportGridUtilities.SUPPORTED_GRID_FILE_NAMES );
 
     final String result = dialog.open();
     if( result == null )
-    {
       return null;
-    }
 
     return new Path( result );
   }
@@ -496,6 +478,7 @@ public class PageSelectGeodataFile extends WizardPage
 
   public Double[] getUpperLeftCorner( )
   {
+    // TOD: user Number utils
     return new Double[] { Double.valueOf( tUlcX.getText().replaceAll( ",", "." ) ), Double.valueOf( tUlcY.getText().replaceAll( ",", "." ) ) };
   }
 

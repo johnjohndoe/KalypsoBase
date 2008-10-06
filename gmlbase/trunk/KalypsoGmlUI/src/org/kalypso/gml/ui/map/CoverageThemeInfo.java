@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map;
 
@@ -113,7 +113,6 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
-  @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
     try
@@ -123,7 +122,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
         return;
       formatter.format( m_formatString, value );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       formatter.format( "Fehler: %s%n", e.toString() );
@@ -140,7 +139,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     if( featureList == null )
       return null;
 
-    final List coverages = featureList.query( pos, null );
+    final List< ? > coverages = featureList.query( pos, null );
     for( final Object object : coverages )
     {
       /* Search for the first grid which provides a value */
@@ -148,10 +147,11 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
       final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
       final Coordinate crd = JTSAdapter.export( pos );
-      final double value = grid.getValue( GeoGridUtilities.transformCoordinate( grid, crd, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
+      final Coordinate gridCrd = GeoGridUtilities.transformCoordinate( grid, crd, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+      final double value = GeoGridUtilities.getValueChecked( grid, gridCrd );
       if( !Double.isNaN( value ) )
         return value;
-      return null;
     }
     return null;
   }

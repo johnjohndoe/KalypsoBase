@@ -12,9 +12,7 @@
          <selection
                class="org.eclipse.core.resources.IContainer">
          </selection>
-         <description>
-            Import Rasterdaten (.asc, .tif) in den Arbeitsbereich und erzeugt zusätzlich ein diese referenzierendes GML.
-         </description>
+         <description>%org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.description</description>
       </wizard>
    </extension>
    <extension
@@ -52,6 +50,7 @@
             id="org.kalypso.gml.ui.exportGridCommand"
             name="Raster exportieren">
       </command>
+      <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -63,6 +62,7 @@
             commandId="org.kalypso.gml.ui.exportGridCommand"
             icon="icons/obj16/gridImport.gif">
       </image>
+      <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -102,6 +102,19 @@
             </with>
          </enabledWhen>
       </handler>
+		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
+			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.gml.ui.map.CoverageManagementWidget" />
+			</class>
+			<enabledWhen>
+				<and>
+					<reference definitionId="mapContext" />
+					<with variable="activeMapPanel">
+						<test property="org.kalypso.ui.activeThemeQName" value="{http://www.opengis.net/gml}_Coverage" />
+					</with>
+				</and>
+			</enabledWhen>
+		</handler>
    </extension>
    <extension
          point="org.kalypso.core.themeInfo">
@@ -110,5 +123,51 @@
             id="org.kalypso.gml.ui.map.CoverageThemeInfo">
       </themeInfo>
    </extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:org.kalypso.ui.editor.GmlEditor">
+			<menu id="imports" label="%menuContribution.menu.imports.label">
+				<command commandId="org.kalypso.gml.ui.importGridCommand">
+					<visibleWhen checkEnabled="false">
+						<with variable="selection">
+							<iterate ifEmpty="false" operator="and">
+								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{org.kalypso.gml.common.coverage}CoverageCollection">
+								</test>
+							</iterate>
+						</with>
+					</visibleWhen>
+				</command>
+			</menu>
+			<menu id="exports" label="%menuContribution.menu.exports.label">
+				<command commandId="org.kalypso.gml.ui.exportGridCommand">
+					<visibleWhen checkEnabled="false">
+						<with variable="selection">
+							<iterate ifEmpty="false" operator="and">
+								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{http://www.opengis.net/gml}_Coverage">
+								</test>
+							</iterate>
+						</with>
+					</visibleWhen>
+				</command>
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?after=additions">
+			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<reference definitionId="mapContext" />
+						<with variable="activeMapPanel">
+							<test property="org.kalypso.ui.activeThemeQName" value="{http://www.opengis.net/gml}_Coverage" />
+						</with>
+					</and>
+				
+					<!--
+					<with variable="activeEditorId">
+						<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+					</with>
+					-->
+				</visibleWhen>
+			</command>		
+		</menuContribution>
+	</extension>
 
 </plugin>

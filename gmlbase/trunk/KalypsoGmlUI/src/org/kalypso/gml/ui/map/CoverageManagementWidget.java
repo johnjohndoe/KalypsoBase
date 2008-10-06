@@ -50,11 +50,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -64,6 +62,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -94,6 +93,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.EmptyCommand;
@@ -106,8 +109,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard;
 import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard;
-import org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -158,7 +161,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove raster data to / from the collection and change the order of the elements of the
- * collection. In addition he can jump to the extend of an collection element in the map.
+ * collection. In addition he can jump to the extent of an collection element in the map.
  * 
  * @author Thomas Jung
  */
@@ -182,7 +185,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
 
       return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
-      // return GMLSchemaUtilities.substitutes( coveragesFeature.getFeatureType(), ICoverageCollection.QNAME );
     }
   };
 
@@ -1032,21 +1034,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final Shell shell = event.display.getActiveShell();
 
-    // TODO: what to do if gridFolder is null? Maybe ask user for target folder?
-    Assert.isNotNull( m_gridFolder );
-
-    final RectifiedGridCoverageImportWizard wizard = new RectifiedGridCoverageImportWizard();
-    wizard.setCoverageCollection( coverages );
-    wizard.init( PlatformUI.getWorkbench(), null );
-    wizard.setGridFolder( m_gridFolder );
-
+    final ISelection selection = getSelectionForAdd();
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, (IStructuredSelection) selection, m_gridFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return;
 
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( wizard.getNewCoverage().getEnvelope(), 1.05 );
+    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( wizard.getBoundingBox(), 1.05 );
     getMapPanel().setBoundingBox( scaledBox );
 
+    // TODO: move into finish method? / very slow, why?
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
@@ -1054,11 +1051,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         try
         {
           /* save the model */
+          monitor.beginTask( "GML wird gespeichert", IProgressMonitor.UNKNOWN );
           // we cannot allow the model not to be saved, as the underlying files will then not be deleted
           theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
           final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
           final CommandableWorkspace workspace = theme.getWorkspace();
-          pool.saveObject( workspace, new NullProgressMonitor() );
+          pool.saveObject( workspace, monitor );
 
           return Status.OK_STATUS;
         }
@@ -1073,6 +1071,35 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, "Kachel hinzufügen", "Die Kachel konnte nicht hinzugeladen werden.", status );
+  }
+
+  /**
+   * Used to find the potential parent folder for new grids in the case if no folder is explicitly set from outside.<br>
+   * At the moment, tries to find the selection from eclipses Resource-Navigator resp. ProjectExplorer.
+   */
+  private ISelection getSelectionForAdd( )
+  {
+    /* No selection if gridFolder is set; in this case, the new grid will be automatically created inside this folder */
+    if( m_gridFolder != null )
+      return null;
+
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if( window == null )
+      return null;
+
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return null;
+
+    final IViewPart navView = page.findView( IPageLayout.ID_RES_NAV );
+    if( navView != null )
+      return navView.getSite().getSelectionProvider().getSelection();
+
+    final IViewPart explView = page.findView( "org.eclipse.ui.navigator.ProjectExplorer" );
+    if( explView != null )
+      return explView.getSite().getSelectionProvider().getSelection();
+
+    return null;
   }
 
   protected void handleCoverageExport( final Event event )

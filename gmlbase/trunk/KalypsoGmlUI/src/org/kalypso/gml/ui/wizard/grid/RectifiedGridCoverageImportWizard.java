@@ -44,7 +44,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -55,11 +54,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.grid.IGridMetaReader;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 
@@ -74,43 +72,18 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
 
   private PageSelectGeodataFile m_pageSelect;
 
-  private ICoverageCollection m_coverages;
-
-  private IFolder m_gridFolder;
-
-  private ICoverage m_newCoverage;
-
+  /**
+   * @param gridFolder
+   *          The new grid gets imported into this folder. If <code>null</code>, the user will be asked for the folder.
+   */
   public RectifiedGridCoverageImportWizard( )
   {
-    final IDialogSettings dialogSettings = KalypsoGmlUIPlugin.getDefault().getDialogSettings();
-    final IDialogSettings settings = createDialogSettings( dialogSettings, "ImportRectifiedGridCoverageWizardSettings" );
+    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" );
+
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( "Rasterdaten Import" );
-  }
-
-  /**
-   * Sets the coverage, into which to import the new grids.
-   * <p>
-   * If not set before this wizard is started, the user will be asked for a file-location where a new gml file will be
-   * created.
-   * </p>
-   */
-  public void setCoverageCollection( final ICoverageCollection coverages )
-  {
-    m_coverages = coverages;
-  }
-
-  private IDialogSettings createDialogSettings( final IDialogSettings dialogSettings, final String name )
-  {
-    final IDialogSettings section = dialogSettings.getSection( name );
-    if( section != null )
-    {
-      return section;
-    }
-
-    return dialogSettings.addNewSection( name );
+    setWindowTitle( "Import" );
   }
 
   /**
@@ -128,22 +101,17 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   @Override
   public void addPages( )
   {
-    if( m_gridFolder == null )
-    {
-      /* Only ask user for gml-file if no coverage collection is set */
-      m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
-    }
+    /* Only ask user for gml-file if no coverage collection is set */
+    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
+    m_fileCreationPage.setTitle( "Neue GML-Datei" );
+    m_fileCreationPage.setDescription( "Wählen Sie Speicherort und Namen der neuen Datei aus. Die GML-Datei indiziert das importierte Raster. Für eine Kachelung können weitere Raster in die gleiche Datei importiert werden." );
 
     m_pageSelect = new PageSelectGeodataFile( m_fileCreationPage );
+    m_pageSelect.setTitle( "Rasterdatei" );
+    m_pageSelect.setDescription( "Wählen Sie die Rasterdatei aus. Die Rasterdatei wird in den Arbeitsbereich neben die GML Datei (nächste Seite) kopiert." );
+
     addPage( m_pageSelect );
-
-    if( m_fileCreationPage != null )
-    {
-      m_fileCreationPage.setTitle( "Auswahl der Datei" );
-      m_fileCreationPage.setDescription( "Wählen Sie Speicherort und Name der neuen Datei aus." );
-
-      addPage( m_fileCreationPage );
-    }
+    addPage( m_fileCreationPage );
 
     super.addPages();
   }
@@ -161,25 +129,21 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     final OffsetVector offsetY = m_pageSelect.getOffsetY();
     final Double[] ulc = m_pageSelect.getUpperLeftCorner();
 
-    final IPath containerName = m_fileCreationPage == null ? null : m_fileCreationPage.getContainerFullPath();
-    final String gmlFileName = m_fileCreationPage == null ? null : m_fileCreationPage.getFileName();
+    final IPath containerName = m_fileCreationPage.getContainerFullPath();
+    final String gmlFileName = m_fileCreationPage.getFileName();
     try
     {
       final IGridMetaReader reader = m_pageSelect.getReader();
       final RectifiedGridDomain coverage = reader.getCoverage( offsetX, offsetY, ulc, crs );
 
-      final IFile gmlFile;
-      if( containerName != null && gmlFileName != null )
-        gmlFile = ResourcesPlugin.getWorkspace().getRoot().getFolder( containerName ).getFile( gmlFileName );
-      else
-        gmlFile = null;
-      final IContainer gridFolder = m_gridFolder == null ? gmlFile.getParent() : m_gridFolder;
+      final IFile gmlFile = ResourcesPlugin.getWorkspace().getRoot().getFolder( containerName ).getFile( gmlFileName );
 
-      final RectifiedGridCoverageImportFinishWorker op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, m_coverages, coverage, gmlFile, gridFolder, null );
+      // TODO: maybe also ask user for the location of the grid file
+      final IContainer gridFolder = gmlFile.getParent();
+
+      final RectifiedGridCoverageImportFinishWorker op = new RectifiedGridCoverageImportFinishWorker( getShell(), selectedFile, null, coverage, gmlFile, gridFolder, null );
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
-
-      m_newCoverage = op.getNewCoverage();
 
       ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Import einer Datei", status );
       return status.isOK();
@@ -190,23 +154,5 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     }
 
     return false;
-  }
-
-  /**
-   * Sets the target forlder for the imported grid file.
-   * <p>
-   * If no set, the user will be asked for the folder.
-   * </p>
-   * <p>
-   * Must be called before {@link #createPageControls(org.eclipse.swt.widgets.Composite)}.
-   */
-  public void setGridFolder( final IFolder gridFolder )
-  {
-    m_gridFolder = gridFolder;
-  }
-
-  public ICoverage getNewCoverage( )
-  {
-    return m_newCoverage;
   }
 }
