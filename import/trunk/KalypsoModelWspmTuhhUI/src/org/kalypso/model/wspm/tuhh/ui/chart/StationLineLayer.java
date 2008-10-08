@@ -42,12 +42,9 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
